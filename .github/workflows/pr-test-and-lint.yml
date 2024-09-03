@@ -16,12 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install
@@ -29,7 +29,7 @@ jobs:
 
       - name: Cache Manifest
         id: destiny-manifest
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: manifest-cache
           key: destiny-manifest-${{ github.run_id }}
@@ -52,16 +52,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Cache ESLint
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-eslint
         with:
@@ -81,18 +81,17 @@ jobs:
         run: pnpm lint:stylelint
 
       - name: ESLint (Forked)
-        if: github.event.pull_request.head.repo.full_name != github.repository
+        if: ${{ github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]' }}
         run: pnpm lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
-        if: github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         run: pnpm lint-report:cached
         continue-on-error: true
 
       - name: Annotate ESLint Results
-        if: github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         uses: ataylorme/eslint-annotate-action@v2
-        continue-on-error: true
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           report-json: "eslint.results.json"

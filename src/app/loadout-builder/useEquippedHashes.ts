@@ -1,6 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getSubclassPlugHashes } from 'app/loadout/item-utils';
+import { getSubclassPlugHashes } from 'app/loadout/loadout-item-utils';
+import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useMemo } from 'react';
 
 export default function useEquippedHashes(

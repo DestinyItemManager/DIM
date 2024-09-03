@@ -5,7 +5,7 @@ import styles from './powercaps.m.scss';
 
 interface PowerCapValue {
   powercap: keyof typeof powerLevelByKeyword;
-  label: String | null;
+  label: string | null;
 }
 
 export function PowerCaps() {

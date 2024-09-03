@@ -10,8 +10,8 @@ import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { findSameLoadoutItemIndex, fromEquippedTypes } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';

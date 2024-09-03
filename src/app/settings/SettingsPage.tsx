@@ -1,4 +1,4 @@
-import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
+import { LoadoutSort, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -18,16 +18,16 @@ import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSet
 import { clearAppBadge } from 'app/utils/app-badge';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
-import i18next from 'i18next';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
-import { AppIcon, faGrid, faList, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
+import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { CustomStatsSettings } from './CustomStatsSettings';
+import LanguageSetting from './LanguageSetting';
 import Select, { mapToOptions } from './Select';
 import styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
@@ -37,26 +37,12 @@ import { setCharacterOrder } from './actions';
 import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
-import './settings.scss';
 
-const languageOptions = mapToOptions({
-  de: 'Deutsch',
-  en: 'English',
-  es: 'Español (España)',
-  'es-mx': 'Español (México)',
-  fr: 'Français',
-  it: 'Italiano',
-  ko: '한국어',
-  pl: 'Polski',
-  'pt-br': 'Português (Brasil)',
-  ru: 'Русский',
-  ja: '日本語',
-  'zh-cht': '繁體中文', // Chinese (Traditional)
-  'zh-chs': '简体中文', // Chinese (Simplified)
-});
+const TAG = 'settings';
 
-// This state is outside the settings page because the settings loses its
-let languageChanged = false;
+export const settingClass = styles.setting;
+export const fineprintClass = styles.fineprint;
+export const horizontalClass = styles.horizontal;
 
 const themeOptions = mapToOptions({
   default: 'Default (Beyond Light)',
@@ -88,17 +74,25 @@ export default function SettingsPage() {
     (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
   );
   const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
+  const exampleArchivedArmor = allItems.find(
+    (i) => i !== exampleArmor && i.bucket.sort === 'Armor' && !i.isExotic,
+  );
+  const godRoll = {
+    wishListPerks: new Set<number>(),
+    notes: undefined,
+    isUndesirable: false,
+  };
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     setSetting(name, checked);
   };
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
@@ -110,7 +104,7 @@ export default function SettingsPage() {
 
   const onChangeNumeric: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     setSetting(e.target.name as keyof Settings, parseInt(e.target.value, 10));
@@ -127,15 +121,6 @@ export default function SettingsPage() {
     onCheckChange(checked, name);
   };
 
-  const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    languageChanged = true;
-    const language = e.target.value;
-    localStorage.setItem('dimLanguage', language);
-    i18next.changeLanguage(language, () => {
-      setSetting('language', language);
-    });
-  };
-
   const changeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const theme = e.target.value;
     setSetting('theme', theme);
@@ -148,12 +133,6 @@ export default function SettingsPage() {
   const resetItemSize = (e: React.MouseEvent) => {
     e.preventDefault();
     setSetting('itemSize', 50);
-    return false;
-  };
-
-  const reloadDim = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.reload();
     return false;
   };
 
@@ -191,7 +170,6 @@ export default function SettingsPage() {
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     season: t('Settings.SortBySeason'),
-    sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
     elementWeapon: t('Settings.SortByWeaponElement'),
     masterworked: t('Settings.Masterworked'),
@@ -248,7 +226,7 @@ export default function SettingsPage() {
 
   const menuItems = _.compact([
     { id: 'general', title: t('Settings.Language') },
-    $featureFlags.themePicker ? { id: 'theme', title: t('Settings.Theme') } : undefined,
+    { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
@@ -269,43 +247,28 @@ export default function SettingsPage() {
             </PageWithMenu.MenuButton>
           ))}
       </PageWithMenu.Menu>
-      <PageWithMenu.Contents className="settings">
+      <PageWithMenu.Contents className={styles.settings}>
         <h1>{t('Settings.Settings')}</h1>
         <form>
           <section id="general">
             <h2>{t('Settings.Language')}</h2>
-            <div className="setting">
-              <Select
-                label={t('Settings.Language')}
-                name="language"
-                value={settings.language}
-                options={languageOptions}
-                onChange={changeLanguage}
-              />
-              {languageChanged && (
-                <div>
-                  <button type="button" className="dim-button" onClick={reloadDim}>
-                    <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>
-                  </button>
-                </div>
-              )}
+            <div className={styles.setting}>
+              <LanguageSetting />
             </div>
           </section>
 
-          {$featureFlags.themePicker && (
-            <section id="theme">
-              <h2>{t('Settings.Theme')}</h2>
-              <div className="setting">
-                <Select
-                  label={t('Settings.Theme')}
-                  name="theme"
-                  value={settings.theme}
-                  options={themeOptions}
-                  onChange={changeTheme}
-                />
-              </div>
-            </section>
-          )}
+          <section id="theme">
+            <h2>{t('Settings.Theme')}</h2>
+            <div className={styles.setting}>
+              <Select
+                label={t('Settings.Theme')}
+                name="theme"
+                value={settings.theme}
+                options={themeOptions}
+                onChange={changeTheme}
+              />
+            </div>
+          </section>
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
@@ -315,7 +278,8 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleWeapon}
                   isNew={settings.showNewItems}
-                  tag="favorite"
+                  tag="keep"
+                  wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
@@ -323,7 +287,8 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleWeaponMasterworked}
                   isNew={settings.showNewItems}
-                  tag="keep"
+                  tag="favorite"
+                  wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
@@ -331,15 +296,23 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleArmor}
                   isNew={settings.showNewItems}
-                  tag="keep"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleArchivedArmor && (
+                <InventoryItem
+                  item={exampleArchivedArmor}
+                  isNew={settings.showNewItems}
+                  tag="archive"
+                  searchHidden={true}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
             </div>
 
             {!isPhonePortrait && (
-              <div className="setting">
-                <div className="horizontal itemSize">
+              <div className={styles.setting}>
+                <div className={styles.itemSize}>
                   <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
                   <input
                     value={settings.itemSize}
@@ -354,28 +327,27 @@ export default function SettingsPage() {
                     {t('Settings.ResetToDefault')}
                   </button>
                 </div>
-                <div className="fineprint">{t('Settings.DefaultItemSizeNote')}</div>
+                <div className={styles.fineprint}>{t('Settings.DefaultItemSizeNote')}</div>
               </div>
             )}
-            <div className="setting">
+            <div className={styles.setting}>
               <Checkbox
                 label={t('Settings.ShowNewItems')}
                 name="showNewItems"
                 value={settings.showNewItems}
                 onChange={onCheckChange}
               />
-              <div className="subSetting">
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={() => dispatch(clearAllNewItems())}
-                >
-                  <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                className="dim-button"
+                onClick={() => dispatch(clearAllNewItems())}
+              >
+                <NewItemIndicator className={styles.newItem} />{' '}
+                <span>{t('Hotkey.ClearNewItems')}</span>
+              </button>
             </div>
 
-            <div className="setting">
+            <div className={styles.setting}>
               <Select
                 label={t('Settings.SetVaultWeaponGrouping')}
                 name="vaultWeaponGrouping"
@@ -383,44 +355,74 @@ export default function SettingsPage() {
                 options={vaultWeaponGroupingOptions}
                 onChange={changeVaultWeaponGrouping}
               />
+              {settings.vaultWeaponGrouping && (
+                <Checkbox
+                  label={t('Settings.VaultWeaponGroupingStyle')}
+                  name="vaultWeaponGroupingStyle"
+                  value={settings.vaultWeaponGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                  onChange={(checked, setting) =>
+                    setSetting(
+                      setting,
+                      checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                    )
+                  }
+                />
+              )}
+              <Checkbox
+                label={t('Settings.VaultArmorGroupingStyle')}
+                name="vaultArmorGroupingStyle"
+                value={settings.vaultArmorGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                onChange={(checked, setting) =>
+                  setSetting(
+                    setting,
+                    checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                  )
+                }
+              />
             </div>
 
-            <div className="setting">
+            <div className={styles.setting}>
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
 
               <SortOrderEditor order={itemSortCustom} onSortOrderChanged={itemSortOrderChanged} />
-              <div className="fineprint">{t('Settings.DontForgetDupes')}</div>
+              <div className={styles.fineprint}>{t('Settings.DontForgetDupes')}</div>
             </div>
 
-            <CustomStatsSettings />
+            <div className={styles.setting}>
+              <CustomStatsSettings />
+            </div>
 
-            <div className="setting">
-              <label>{t('Settings.PerkDisplay')}</label>
-              <div className="radioOptions">
-                <label>
-                  <input
-                    type="radio"
-                    name="perkDisplay"
-                    checked={settings.perkList}
-                    value="true"
-                    onChange={onChangePerkList}
-                  />
-                  <AppIcon icon={faList} /> {t('Settings.PerkList')}
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="perkDisplay"
-                    checked={!settings.perkList}
-                    value="false"
-                    onChange={onChangePerkList}
-                  />
-                  <AppIcon icon={faGrid} /> {t('Settings.PerkGrid')}
-                </label>
-              </div>
+            <div className={styles.setting}>
+              {t('Settings.PerkDisplay')}
+              <ul className={styles.radioOptions}>
+                <li>
+                  <label>
+                    <input
+                      type="radio"
+                      name="perkDisplay"
+                      checked={settings.perkList}
+                      value="true"
+                      onChange={onChangePerkList}
+                    />
+                    <AppIcon icon={faList} /> {t('Settings.PerkList')}
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input
+                      type="radio"
+                      name="perkDisplay"
+                      checked={!settings.perkList}
+                      value="false"
+                      onChange={onChangePerkList}
+                    />
+                    <AppIcon icon={faGrid} /> {t('Settings.PerkGrid')}
+                  </label>
+                </li>
+              </ul>
             </div>
             {$featureFlags.clarityDescriptions && (
-              <div className="setting">
+              <div className={styles.setting}>
                 <Select
                   label={t('Settings.CommunityData')}
                   name="descriptionsToDisplay"
@@ -429,7 +431,7 @@ export default function SettingsPage() {
                   onChange={changeDescriptionDisplay}
                 />
                 <div
-                  className="fineprint"
+                  className={styles.fineprint}
                   dangerouslySetInnerHTML={{
                     __html: t('Views.About.CommunityInsight', {
                       clarityLink,
@@ -440,21 +442,23 @@ export default function SettingsPage() {
               </div>
             )}
             {hasD1Account && (
-              <Checkbox
-                label={t('Settings.EnableAdvancedStats')}
-                name="itemQuality"
-                value={settings.itemQuality}
-                onChange={onCheckChange}
-              />
+              <div className={styles.setting}>
+                <Checkbox
+                  label={t('Settings.EnableAdvancedStats')}
+                  name="itemQuality"
+                  value={settings.itemQuality}
+                  onChange={onCheckChange}
+                />
+              </div>
             )}
-            <div className="setting">
+            <div className={styles.setting}>
               <Checkbox
                 label={t('Settings.AutoLockTagged')}
                 name="autoLockTagged"
                 value={settings.autoLockTagged}
                 onChange={onCheckChange}
               />
-              <div className="fineprint">{t('Settings.AutoLockTaggedExplanation')}</div>
+              <div className={styles.fineprint}>{t('Settings.AutoLockTaggedExplanation')}</div>
               <table className={styles.autoTagTable}>
                 <tbody>
                   <tr>
@@ -485,87 +489,99 @@ export default function SettingsPage() {
 
           <section id="inventory">
             <h2>{t('Settings.Inventory')}</h2>
-            <div className="setting">
+            <div className={styles.setting}>
               <Checkbox
                 label={t('Settings.SingleCharacter')}
                 name="singleCharacter"
                 value={settings.singleCharacter}
                 onChange={onCheckChange}
               />
-              <div className="fineprint">{t('Settings.SingleCharacterExplanation')}</div>
+              <div className={styles.fineprint}>{t('Settings.SingleCharacterExplanation')}</div>
             </div>
             {!settings.singleCharacter && (
-              <div className="setting">
+              <div className={styles.setting}>
                 <label>{t('Settings.CharacterOrder')}</label>
-                <div className="radioOptions">
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'mostRecent'}
-                      value="mostRecent"
-                      onChange={onChange}
-                    />
-                    <span>{t('Settings.CharacterOrderRecent')}</span>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'mostRecentReverse'}
-                      value="mostRecentReverse"
-                      onChange={onChange}
-                    />
-                    <span>{t('Settings.CharacterOrderReversed')}</span>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'fixed'}
-                      value="fixed"
-                      onChange={onChange}
-                    />
-                    <span>{t('Settings.CharacterOrderFixed')}</span>
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="characterOrder"
-                      checked={settings.characterOrder === 'custom'}
-                      value="custom"
-                      onChange={onChange}
-                    />
-                    <span>{t('Settings.SortCustom')}</span>
-                  </label>
+                <ul className={styles.radioOptions}>
+                  <li>
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'mostRecent'}
+                        value="mostRecent"
+                        onChange={onChange}
+                      />
+                      <span>{t('Settings.CharacterOrderRecent')}</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'mostRecentReverse'}
+                        value="mostRecentReverse"
+                        onChange={onChange}
+                      />
+                      <span>{t('Settings.CharacterOrderReversed')}</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'fixed'}
+                        value="fixed"
+                        onChange={onChange}
+                      />
+                      <span>{t('Settings.CharacterOrderFixed')}</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input
+                        type="radio"
+                        name="characterOrder"
+                        checked={settings.characterOrder === 'custom'}
+                        value="custom"
+                        onChange={onChange}
+                      />
+                      <span>{t('Settings.SortCustom')}</span>
+                    </label>
+                  </li>
                   {settings.characterOrder === 'custom' && (
                     <CharacterOrderEditor onSortOrderChanged={characterSortOrderChanged} />
                   )}
-                </div>
+                </ul>
               </div>
             )}
 
-            {isPhonePortrait ? (
-              <div className="setting">
+            <div className={styles.setting}>
+              {isPhonePortrait ? (
+                <>
+                  <Select
+                    label={t('Settings.InventoryColumnsMobile')}
+                    name="charColMobile"
+                    value={settings.charColMobile}
+                    options={charColOptions}
+                    onChange={onChangeNumeric}
+                  />
+                  <div className={styles.fineprint}>
+                    {t('Settings.InventoryColumnsMobileLine2')}
+                  </div>
+                </>
+              ) : (
                 <Select
-                  label={t('Settings.InventoryColumnsMobile')}
-                  name="charColMobile"
-                  value={settings.charColMobile}
+                  label={t('Settings.InventoryColumns')}
+                  name="charCol"
+                  value={settings.charCol}
                   options={charColOptions}
                   onChange={onChangeNumeric}
                 />
-                <div className="fineprint">{t('Settings.InventoryColumnsMobileLine2')}</div>
-              </div>
-            ) : (
-              <Select
-                label={t('Settings.InventoryColumns')}
-                name="charCol"
-                value={settings.charCol}
-                options={charColOptions}
-                onChange={onChangeNumeric}
-              />
-            )}
-            <div className="setting">
+              )}
+            </div>
+            <div className={styles.setting}>
               <Checkbox
                 label={t('Settings.HidePullFromPostmaster')}
                 name="hidePullFromPostmaster"
@@ -573,25 +589,27 @@ export default function SettingsPage() {
                 onChange={onCheckChange}
               />
             </div>
-            <div className="setting">
+            <div className={styles.setting}>
               <Checkbox
                 label={t('Settings.BadgePostmaster')}
                 name="badgePostmaster"
                 value={settings.badgePostmaster}
                 onChange={onBadgePostmasterChanged}
               />
-              <div className="fineprint">{t('Settings.BadgePostmasterExplanation')}</div>
+              <div className={styles.fineprint}>{t('Settings.BadgePostmasterExplanation')}</div>
             </div>
-            <Select
-              label={t('Settings.InventoryNumberOfSpacesToClear')}
-              name="inventoryClearSpaces"
-              value={settings.inventoryClearSpaces}
-              options={numberOfSpacesOptions}
-              onChange={onChangeNumeric}
-            />
-            <div className="setting">
+            <div className={styles.setting}>
+              <Select
+                label={t('Settings.InventoryNumberOfSpacesToClear')}
+                name="inventoryClearSpaces"
+                value={settings.inventoryClearSpaces}
+                options={numberOfSpacesOptions}
+                onChange={onChangeNumeric}
+              />
+            </div>
+            <div className={styles.setting}>
               <label>{t('Settings.LoadoutSort')}</label>
-              <div className="radioOptions">
+              <div className={styles.radioOptions}>
                 <label>
                   <input
                     type="radio"
@@ -627,7 +645,9 @@ export default function SettingsPage() {
           {$featureFlags.elgatoStreamDeck && !isPhonePortrait && <StreamDeckSettings />}
 
           {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
-            <TroubleshootingSettings />
+            <div className={styles.setting}>
+              <TroubleshootingSettings />
+            </div>
           )}
         </form>
       </PageWithMenu.Contents>

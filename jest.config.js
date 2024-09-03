@@ -1,5 +1,5 @@
 import { pathsToModuleNameMapper } from 'ts-jest';
-import tsconfig from './tsconfig.json' assert { type: 'json' };
+import tsconfig from './tsconfig.json' with { type: 'json' };
 
 export default {
   testEnvironment: 'jsdom',
@@ -28,6 +28,7 @@ export default {
     $featureFlags: {
       dimApi: true,
       runLoInBackground: true,
+      sentry: false,
     },
   },
 };

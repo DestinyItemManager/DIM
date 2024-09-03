@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import D1CharacterStats from 'app/store-stats/D1CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import _ from 'lodash';

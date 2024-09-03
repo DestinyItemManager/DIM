@@ -12,13 +12,13 @@ import {
 } from 'app/inventory/selectors';
 import { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { inGameArmorEnergyRules } from 'app/loadout-builder/types';
-import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   getLoadoutStats,
   newLoadoutFromEquipped,
   pickBackingStore,
 } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
+import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
@@ -33,7 +33,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { fullyResolveLoadout } from './ingame/selectors';
-import { getSubclassPlugs } from './item-utils';
+import { getSubclassPlugs } from './loadout-item-utils';
 import { includesRuntimeStatMods } from './stats';
 
 export function downloadLoadoutsCsv(): ThunkResult {

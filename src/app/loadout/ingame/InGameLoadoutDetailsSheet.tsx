@@ -5,11 +5,9 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimStore } from 'app/inventory/store-types';
 import Socket from 'app/item-popup/Socket';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { InGameLoadout, Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { convertInGameLoadoutToDimLoadout } from 'app/loadout/loadout-type-converters';
+import { InGameLoadout, Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
-import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByCategoryHashes, socketContainsIntrinsicPlug } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -57,11 +55,6 @@ export function InGameLoadoutDetails({
     </div>
   );
 
-  const streamDeckSelection = $featureFlags.elgatoStreamDeck
-    ? // eslint-disable-next-line
-      useSelector(streamDeckSelectionSelector)
-    : null;
-
   return (
     <Sheet onClose={onClose} header={header} sheetClassName={styles.sheet} allowClickThrough>
       <div className={styles.controls}>
@@ -91,15 +84,6 @@ export function InGameLoadoutDetails({
         <ConfirmButton danger onClick={() => dispatch(deleteInGameLoadout(loadout))}>
           {t('InGameLoadout.ClearSlot', { index: loadout.index + 1 })}
         </ConfirmButton>
-        {streamDeckSelection === 'loadout' && (
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => dispatch(streamDeckSelectLoadout({ type: 'game', loadout }, store))}
-          >
-            {t('StreamDeck.SelectLoadout')}
-          </button>
-        )}
       </div>
       <div className={styles.itemGroups}>
         {_.partition(gameLoadoutCompatibleBuckets, (h) => buckets.byHash[h].sort !== 'Armor').map(

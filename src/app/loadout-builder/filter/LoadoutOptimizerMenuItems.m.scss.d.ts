@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'area': string;
-  'buttons': string;
   'itemGrid': string;
 }
 export const cssExports: CssExports;

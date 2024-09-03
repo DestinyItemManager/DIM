@@ -1,13 +1,14 @@
 @use '../variables' as *;
 
 .editor {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 4px;
   padding: 4px 0 0 0;
 }
 
 .item {
   background: black;
   padding: 4px 8px 4px 0;
-  margin-bottom: 4px;
   display: flex;
   flex-direction: row;
   align-items: center;

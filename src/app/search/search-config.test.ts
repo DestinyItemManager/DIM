@@ -1,9 +1,9 @@
 import { canonicalFilterFormats } from './filter-types';
-import { buildFiltersMap } from './search-config';
-import { parseAndValidateQuery } from './search-utils';
+import { buildItemFiltersMap } from './items/item-search-filter';
+import { parseAndValidateQuery } from './search-filter';
 
 describe('buildSearchConfig', () => {
-  const searchConfig = buildFiltersMap(2);
+  const searchConfig = buildItemFiltersMap(2);
 
   test('generates a reasonable filter map', () => {
     expect(Object.keys(searchConfig.isFilters).sort()).toMatchSnapshot('is filters');
@@ -26,14 +26,16 @@ describe('buildSearchConfig', () => {
       let formats = canonicalFilterFormats(filter.format);
 
       if (formats.length < 1) {
-        throw new Error(`filter ${filter.keywords} has no formats`);
+        throw new Error(`filter ${filter.keywords.toString()} has no formats`);
       }
 
       formats = formats.filter(
         (f) => f === 'query' || f === 'freeform' || (f === 'range' && filter.overload),
       );
       if (formats.length > 1) {
-        throw new Error(`filter ${filter.keywords} specifies ambiguous formats ${formats}`);
+        throw new Error(
+          `filter ${filter.keywords.toString()} specifies ambiguous formats ${formats.toString()}`,
+        );
       }
     }
   });
@@ -46,7 +48,7 @@ describe('buildSearchConfig', () => {
  * exhaustively is not a goal of this test.
  */
 describe('validateQuery', () => {
-  const searchConfig = buildFiltersMap(2);
+  const searchConfig = buildItemFiltersMap(2);
 
   const simpleCases: [filterString: string, valid: boolean][] = [
     ['is:crafted', true],

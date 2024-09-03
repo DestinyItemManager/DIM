@@ -7,8 +7,8 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
@@ -190,15 +190,11 @@ function ItemBucket({
   const showAddUnequipped = equipped.length > 0 && unequipped.length < maxSlots - 1;
 
   const addUnequipped = showAddUnequipped && (
-    <button
-      type="button"
+    <AddItemButton
       key="addbutton"
-      className={styles.addButton}
       onClick={() => handlePlaceholderClick(false)}
       title={t('Loadouts.AddUnequippedItems')}
-    >
-      <AppIcon icon={addIcon} />
-    </button>
+    />
   );
 
   const renderItem = (li: ResolvedLoadoutItem) => (
@@ -294,6 +290,20 @@ function DraggableItem({
         </ItemPopupTrigger>
       </DraggableInventoryItem>
     </ClosableContainer>
+  );
+}
+
+export function AddItemButton({
+  onClick,
+  title,
+}: {
+  onClick: React.MouseEventHandler;
+  title: string;
+}) {
+  return (
+    <button type="button" className={styles.addButton} onClick={onClick} title={title}>
+      <AppIcon icon={addIcon} />
+    </button>
   );
 }
 

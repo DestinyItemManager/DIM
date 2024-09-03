@@ -4,18 +4,33 @@ import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
 
-export interface MinMax {
-  min: number;
-  max: number;
+export interface MinMaxTier {
+  minTier: number;
+  maxTier: number;
 }
 
 /**
- * Normally stat constraints are simply missing if ignored - the resolved
- * version still exists but has an ignored flag. Also, values cannot be undefined.
+ * Resolved stat constraints take the compact form of the API stat constraints
+ * and expand them so that each stat has a corresponding constraint, the min and
+ * max are defined, and the ignored flag is set. In the API version, stat
+ * constraints are simply missing if ignored, and min-0/max-10 is omitted as
+ * implied.
  */
 export interface ResolvedStatConstraint extends Required<StatConstraint> {
+  /**
+   * An ignored stat has an effective maximum tier of 0, so that any
+   * stat tiers in excess of T0 are deemed worthless.
+   */
   ignored: boolean;
 }
+
+/**
+ * When a stat is ignored, we treat it as if it were effectively a constraint
+ * with a max desired tier of 0. ResolvedStatContraintRange is the same as
+ * DesiredStatRange, but with the ignored flag removed, and maxTier set to
+ * 0 for ignored sets.
+ */
+export type DesiredStatRange = Required<StatConstraint>;
 
 /** A map from bucketHash to the pinned item if there is one. */
 export interface PinnedItems {
@@ -100,7 +115,7 @@ export type ArmorStatHashes =
   | StatHashes.Intellect
   | StatHashes.Strength;
 
-export type StatRanges = { [statHash in ArmorStatHashes]: MinMax };
+export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxTier };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
@@ -159,7 +174,7 @@ export const inGameArmorEnergyRules: ArmorEnergyRules = {
  * Armor energy rules that allow fully masterworking everything.
  */
 export const permissiveArmorEnergyRules: ArmorEnergyRules = {
-  assumeArmorMasterwork: AssumeArmorMasterwork.All,
+  assumeArmorMasterwork: AssumeArmorMasterwork.ArtificeExotic,
   // implied to be 10 by the above
   minItemEnergy: 1,
 };

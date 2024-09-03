@@ -14,6 +14,8 @@ import {
 } from './types';
 import { calcArmorStats, genSetHash, getBestArmor, getBonusConfig } from './utils';
 
+const TAG = 'loadout optimizer';
+
 export async function getSetBucketsStep(
   defs: D1ManifestDefinitions,
   activeGuardianBucket: ItemBucket,
@@ -182,7 +184,7 @@ export async function getSetBucketsStep(
 
                 processedCount++;
                 if (cancelToken.cancelled) {
-                  infoLog('loadout optimizer', 'cancelled processing');
+                  infoLog(TAG, 'cancelled processing');
                   return;
                 }
                 if (processedCount % 50000 === 0) {
@@ -226,12 +228,12 @@ export async function getSetBucketsStep(
   }
 
   if (cancelToken.cancelled) {
-    infoLog('loadout optimizer', 'cancelled processing');
+    infoLog(TAG, 'cancelled processing');
     return;
   }
 
   // Finish progress
-  infoLog('loadout optimizer', 'processed', combos, 'combinations.');
+  infoLog(TAG, 'processed', combos, 'combinations.');
 
   return {
     allSetTiers,

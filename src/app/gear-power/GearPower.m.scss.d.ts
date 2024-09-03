@@ -19,11 +19,12 @@ interface CssExports {
   'leg': string;
   'negative': string;
   'neutral': string;
-  'notes': string;
   'positive': string;
   'power': string;
   'powerLevel': string;
+  'powerToggleButton': string;
   'statMeta': string;
+  'toggle': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -22,10 +22,6 @@
   background-color: var(--theme-dropdown-menu-bg);
   will-change: transform;
 
-  [role='button'] {
-    outline: none;
-  }
-
   // The phone layout version
   @include phone-portrait {
     position: fixed;
@@ -35,9 +31,13 @@
       var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
     );
   }
+
+  [role='button'] {
+    outline: none;
+  }
 }
 
 .characterHeader {
-  max-width: $emblem-width + 16px;
-  width: calc(6px + var(--character-column-width) - var(--item-margin));
+  max-width: $emblem-width + 16px !important;
+  width: calc(6px + var(--character-column-width) - var(--item-margin)) !important;
 }

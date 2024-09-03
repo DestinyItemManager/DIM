@@ -3,6 +3,7 @@ import { percent } from 'app/shell/formatters';
 
 import styles from './Game2Give.m.scss';
 // import heroimage from './bungie-day-giving-festival.jpg';
+import heroimage from './g2g-banner.jpg';
 import useGame2GiveData from './useGame2GiveData';
 
 export default function Game2Give() {
@@ -14,17 +15,18 @@ export default function Game2Give() {
         <div className={styles.item}>
           <div className={styles.info}>
             <p className={styles.cta}>
-              Support the Bungie Foundation so together we can make an impact on the world.
+              Support the Bungie Foundation so together we can make an impact on the world. Donate
+              $100 to enter a raffle for a custom painted Nerf Gjallarhorn!
             </p>
             <div className={styles.buttons}>
               <ExternalLink
-                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donate.participant&participantID=19805"
+                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donate.participant&participantID=22881"
                 className="dim-button"
               >
                 Donate
               </ExternalLink>
               <ExternalLink
-                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donorDrive.participant&participantID=19805"
+                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donorDrive.participant&participantID=22881"
                 className="dim-button"
               >
                 Learn More
@@ -52,7 +54,7 @@ export default function Game2Give() {
               <div className={styles.goal}>${game2GiveState.goal.toLocaleString()}</div>
             </div>
           </div>
-          <img src="" className={styles.hero} />
+          <img src={heroimage} className={styles.hero} />
           {/* {game2GiveState.error && <div>Error loading latest</div>} */}
         </div>
       )}

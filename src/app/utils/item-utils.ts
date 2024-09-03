@@ -68,6 +68,8 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
       (socket) =>
         // check plugged -- non-artifice GoA armor still has the socket but nothing in it
         socket.plugged &&
+        // exotic armor 2.0 has this socket hidden if not upgraded to artifice armor yet
+        socket.visibleInGame &&
         specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash),
     );
     if (specialtySockets?.length) {
@@ -110,23 +112,13 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
     specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
-/** accepts a DimMasterwork or lack thereof, & always returns a string */
+/** accepts a DimMasterwork or lack thereof */
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
-  return (
-    mw?.stats
-      ?.filter((stat) => stat.isPrimary)
-      .map((stat) => stat.name)
-      .filter(Boolean)
-      .join(', ') ?? ''
-  );
-}
-
-/**
- * Items that are sunset are always sunset.
- */
-export function isSunset(item: DimItem): boolean {
-  // 1310 is the last power cap value before sunsetting was sunsetted
-  return item.powerCap !== null && item.powerCap < 1310;
+  return mw?.stats
+    ?.filter((stat) => stat.isPrimary)
+    .map((stat) => stat.name)
+    .filter(Boolean)
+    .join(', ');
 }
 
 /** Can this item be equipped by the given store? */
@@ -371,8 +363,18 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
  * the user to bump a stat by a small amount?
  */
 export function isArtifice(item: DimItem) {
+  return Boolean(item.sockets?.allSockets.some(isArtificeSocket));
+}
+
+export function isArtificeSocket(socket: DimSocket) {
+  // exotic armor has the artifice slot all the time, and it's usable when it's reported as visible
   return Boolean(
-    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === ARTIFICE_PERK_HASH),
+    socket.visibleInGame &&
+      socket.plugged &&
+      // in a better world, you'd only need to check this, because there's a "empty mod slot" item specifically for artifice slots.
+      (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice ||
+        // but some of those have the *generic* "empty mod slot" item plugged in, so we fall back to keeping an eye out for the intrinsic
+        socket.plugged.plugDef.hash === ARTIFICE_PERK_HASH),
   );
 }
 
@@ -396,4 +398,12 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
  */
 export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
   return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
+}
+
+/** "shiny" special-edtion items from Into The Light, with a unique ornament and extra perks */
+export function isShiny(item: DimItem) {
+  return item.sockets?.allSockets.some(
+    (s) =>
+      s.plugOptions.some((s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared'), //
+  );
 }

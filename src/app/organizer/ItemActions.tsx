@@ -133,11 +133,21 @@ function ItemActions({
         <AppIcon icon={unlockedIcon} />
         <span className={styles.label}>{t('Organizer.Unlock')}</span>
       </button>
-      <Dropdown disabled={!itemsAreSelected} options={tagItems} className={styles.actionButton}>
+      <Dropdown
+        label={t('Organizer.BulkTag')}
+        disabled={!itemsAreSelected}
+        options={tagItems}
+        className={styles.actionButton}
+      >
         <AppIcon icon={tagIcon} />
         <span className={styles.label}>{t('Organizer.BulkTag')}</span>
       </Dropdown>
-      <Dropdown disabled={!itemsAreSelected} options={moveItems} className={styles.actionButton}>
+      <Dropdown
+        label={t('Organizer.BulkMove')}
+        disabled={!itemsAreSelected}
+        options={moveItems}
+        className={styles.actionButton}
+      >
         <AppIcon icon={moveIcon} />
         <span className={styles.label}>{t('Organizer.BulkMove')}</span>
       </Dropdown>

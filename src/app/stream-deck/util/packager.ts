@@ -1,10 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import {
-  allItemsSelector,
-  currenciesSelector,
-  profileResponseSelector,
-  vaultSelector,
-} from 'app/inventory/selectors';
+import { allItemsSelector, currenciesSelector, vaultSelector } from 'app/inventory/selectors';
 import { AccountCurrency, DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket, getArtifactBonus } from 'app/inventory/stores-helpers';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
@@ -13,7 +8,6 @@ import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
-import { MaxPowerArgs, MetricsArgs, PostmasterArgs, VaultArgs } from 'app/stream-deck/interfaces';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 
@@ -28,7 +22,7 @@ function getCurrency(currencies: AccountCurrency[], hash: number) {
 }
 
 // create the postmaster update data
-function streamDeckPostMasterUpdate(store: DimStore): PostmasterArgs {
+function postmaster(store: DimStore) {
   const items = findItemsByBucket(store, BucketHashes.LostItems);
   return {
     total: totalPostmasterItems(store),
@@ -39,20 +33,20 @@ function streamDeckPostMasterUpdate(store: DimStore): PostmasterArgs {
 }
 
 // create the max power update data
-function streamDeckMaxPowerUpdate(store: DimStore, state: RootState): MaxPowerArgs {
+function maxPower(store: DimStore, state: RootState) {
   const allItems = allItemsSelector(state);
   const maxLight = getLight(store, maxLightItemSet(allItems, store).equippable);
   const artifact = getArtifactBonus(store);
 
   return {
-    total: (maxLight + artifact).toFixed(2),
-    base: maxLight.toFixed(2),
+    total: (maxLight + artifact).toFixed(0),
+    base: maxLight.toFixed(0),
     artifact,
   };
 }
 
 // create the vault update data
-function streamDeckVaultUpdate(state: RootState): VaultArgs | undefined {
+function vault(state: RootState) {
   const vault = vaultSelector(state);
   if (!vault) {
     return;
@@ -91,8 +85,8 @@ function getCurrentSeason(
 }
 
 // create the metrics update data
-function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
-  const profile = profileResponseSelector(state);
+function metrics(state: RootState) {
+  const profile = state.inventory.profileResponse;
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
   const { lifetimeScore, activeScore } = profile?.profileRecords?.data || {};
   const [battlePassHash, prestigeLevel, artifactIcon] = getCurrentSeason(state, profile);
@@ -100,10 +94,11 @@ function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
   // battle pass level calc from src/app/progress/SeasonalRank.tsx
   const seasonProgress = progression[battlePassHash!];
   const prestigeProgress = progression[prestigeLevel!];
+
   const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
 
   const seasonalRank = prestigeMode
-    ? prestigeProgress?.level + seasonProgress.levelCap
+    ? prestigeProgress.level + seasonProgress.levelCap
     : seasonProgress.level;
 
   return {
@@ -120,14 +115,82 @@ function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
   };
 }
 
-function streamDeckEquippedItems(store?: DimStore) {
-  return store?.items.filter((it) => it.equipment).map((it) => it.id) ?? [];
+export function streamDeckClearId(id: string) {
+  return id.replace(/-.*/, '');
+}
+
+function equippedItems(store?: DimStore) {
+  return store?.items.filter((it) => it.equipment).map((it) => streamDeckClearId(it.index)) ?? [];
+}
+
+function character(store: DimStore) {
+  return {
+    class: store.classType,
+    icon: store.icon,
+    background: store.background,
+  };
+}
+
+const PerksCategory = [3708671066, 1052191496];
+
+const WeaponsHashes = [
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+];
+
+interface PerkDefinition {
+  title: string;
+  image: string;
+}
+
+function perks(state: RootState) {
+  const perks = new Map<string, PerkDefinition>();
+  const items = allItemsSelector(state);
+  for (const item of items) {
+    if (item.isExotic || WeaponsHashes.every((hash) => item.bucket.hash !== hash)) {
+      continue;
+    }
+
+    const sockets = item.sockets?.allSockets;
+
+    if (!sockets) {
+      continue;
+    }
+
+    for (const socket of Object.values(sockets)) {
+      if (
+        socket.isMod ||
+        !PerksCategory.some((hash) => socket.plugged?.plugDef?.itemCategoryHashes?.includes(hash))
+      ) {
+        continue;
+      }
+
+      const plug = socket.plugged?.plugDef.displayProperties;
+
+      if (!plug) {
+        continue;
+      }
+
+      const definition = {
+        title: plug.name,
+        image: plug.icon,
+      };
+      if (!perks.has(definition.title)) {
+        perks.set(definition.title, definition);
+      }
+    }
+  }
+
+  return Array.from(perks.values());
 }
 
 export default {
-  metrics: streamDeckMetricsUpdate,
-  vault: streamDeckVaultUpdate,
-  maxPower: streamDeckMaxPowerUpdate,
-  postmaster: streamDeckPostMasterUpdate,
-  equippedItems: streamDeckEquippedItems,
+  character,
+  perks,
+  metrics,
+  vault,
+  maxPower,
+  postmaster,
+  equippedItems,
 };

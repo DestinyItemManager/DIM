@@ -19,7 +19,9 @@ export const sortPursuits = chainComparator(
   compareBy(showPursuitAsExpired),
   compareBy((item) => !item.tracked),
   compareBy((item) => item.complete),
-  compareBy((item) => (item.pursuit?.expirationDate || defaultExpirationDate).getTime()),
+  compareBy((item) =>
+    (item.pursuit?.expiration?.expirationDate || defaultExpirationDate).getTime(),
+  ),
   compareBy((item) => item.typeName),
   compareBy((item) => item.icon),
   compareBy((item) => item.name),
@@ -75,13 +77,11 @@ export function PursuitsGroup({
   defs,
   store,
   pursuits,
-  hideDescriptions,
   pursuitsInfo = pursuitsInfoFile,
 }: {
   defs: D2ManifestDefinitions;
   store: DimStore;
   pursuits: DimItem[];
-  hideDescriptions?: boolean;
   pursuitsInfo?: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
   const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
@@ -101,7 +101,6 @@ export function PursuitsGroup({
             item={item}
             key={item.index}
             searchHidden={!matchBountyFilters(defs, item, bountyFilters, pursuitsInfo)}
-            hideDescription={hideDescriptions}
           />
         ))}
       </PursuitGrid>

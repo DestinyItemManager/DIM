@@ -36,7 +36,7 @@ export default function StoreBucketDropTarget({
   const [{ isOver, canDrop }, dropRef] = useDrop<
     DimItem,
     unknown,
-    { isOver: Boolean; canDrop: boolean }
+    { isOver: boolean; canDrop: boolean }
   >(
     () => ({
       accept: bucket.inPostmaster
@@ -63,7 +63,7 @@ export default function StoreBucketDropTarget({
       className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
         [styles.over]: canDrop && isOver,
         [styles.canDrop]: canDrop,
-        grouped,
+        [styles.grouped]: grouped,
       })}
       onClick={onClick}
       aria-label={bucket.name}

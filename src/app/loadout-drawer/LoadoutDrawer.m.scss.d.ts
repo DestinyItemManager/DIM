@@ -2,6 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'body': string;
+  'classType': string;
+  'header': string;
+  'headerDetails': string;
   'inputGroup': string;
   'notes': string;
 }

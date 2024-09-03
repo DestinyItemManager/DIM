@@ -72,7 +72,14 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
-import { savePreviousLoadout } from './actions';
+import { savePreviousLoadout } from '../loadout/actions';
+import {
+  Assignment,
+  InGameLoadout,
+  Loadout,
+  LoadoutItem,
+  PluggingAction,
+} from '../loadout/loadout-types';
 import {
   LoadoutApplyPhase,
   LoadoutItemState,
@@ -86,13 +93,15 @@ import {
   setModResult,
   setSocketOverrideResult,
 } from './loadout-apply-state';
-import { Assignment, InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
 import {
   backupLoadout,
   findItemForLoadout,
   getLoadoutSubclassFragmentCapacity,
   getModsFromLoadout,
+  isFashionPlug,
 } from './loadout-utils';
+
+const TAG = 'loadout';
 
 // TODO: move this whole file to "loadouts" folder
 
@@ -145,9 +154,9 @@ export function applyLoadout(
     }
 
     if ($featureFlags.debugMoves) {
-      infoLog('loadout', 'Apply loadout', loadout.name, 'to', store.name);
+      infoLog(TAG, 'Apply loadout', loadout.name, 'to', store.name);
     }
-    const stopTimer = timer('Loadout Application');
+    const stopTimer = timer(TAG, 'Loadout Application');
 
     const [cancelToken, cancel] = withCancel();
 
@@ -178,7 +187,7 @@ export function applyLoadout(
     try {
       await loadoutPromise;
     } catch (e) {
-      errorLog('loadout', 'failed loadout', getLoadoutState(), e);
+      errorLog(TAG, 'failed loadout', getLoadoutState(), e);
     } finally {
       stopTimer();
     }
@@ -297,7 +306,7 @@ function doApplyLoadout(
 
       // Don't apply mods when moving to the vault
       const modsToApply = (
-        (defs.isDestiny2() &&
+        (defs.isDestiny2 &&
           !store.isVault &&
           getModsFromLoadout(defs, loadout, unlockedPlugSetItems()).map(
             (mod) => mod.resolvedMod.hash,
@@ -466,7 +475,7 @@ function doApplyLoadout(
             if (e instanceof CanceledError) {
               throw e;
             }
-            errorLog('loadout dequip', 'Failed to dequip items from', owner, e);
+            errorLog(TAG, 'Failed to dequip items from', owner, e);
             setLoadoutState(
               produce((state) => {
                 for (const item of dequipItems) {
@@ -519,7 +528,7 @@ function doApplyLoadout(
           }
           const updatedItem = getLoadoutItem(loadoutItem);
           if (updatedItem) {
-            errorLog('loadout', 'Failed to apply loadout item', updatedItem.name, e);
+            errorLog(TAG, 'Failed to apply loadout item', updatedItem.name, e);
             setLoadoutState(
               produce((state) => {
                 // If it made it to the right store, the failure was in equipping, not moving
@@ -575,7 +584,7 @@ function doApplyLoadout(
           if (e instanceof CanceledError) {
             throw e;
           }
-          errorLog('loadout equip', 'Failed to equip items', e);
+          errorLog(TAG, 'Failed to equip items', e);
           setLoadoutState(
             produce((state) => {
               for (const item of realItemsToEquip) {
@@ -591,7 +600,7 @@ function doApplyLoadout(
       if (itemsWithOverrides.length) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.SocketOverrides));
 
-        infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
+        infoLog(TAG, 'Socket overrides to apply', itemsWithOverrides);
         await dispatch(
           applySocketOverrides(itemsWithOverrides, setLoadoutState, getLoadoutItem, cancelToken),
         );
@@ -614,7 +623,7 @@ function doApplyLoadout(
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
       if (modsToApply.length || !_.isEmpty(modsByBucketToApply) || clearMods) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
-        infoLog('loadout mods', 'Mods to apply', modsToApply);
+        infoLog(TAG, 'Mods to apply', modsToApply);
         await dispatch(
           applyLoadoutMods(
             applicableLoadoutItems,
@@ -1139,7 +1148,7 @@ function applyLoadoutMods(
       !clearUnassignedSocketsPerItem &&
       allModsAreAlreadyApplied(armor, modHashes, modsByBucket)
     ) {
-      infoLog('loadout mods', 'all mods are already there. loadout already applied');
+      infoLog(TAG, 'all mods are already there. loadout already applied');
       setLoadoutState((state) => ({
         ...state,
         modStates: modHashes
@@ -1167,8 +1176,6 @@ function applyLoadoutMods(
       );
     }
 
-    const applyModsPromises: Promise<void>[] = [];
-
     const handleSuccess = ({ mod, requested }: Assignment) =>
       requested &&
       setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Applied }));
@@ -1188,6 +1195,9 @@ function applyLoadoutMods(
             ...state,
             equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
           }));
+
+    const modAssigns: { item: DimItem; actions: PluggingAction[] }[] = [];
+    const fashionAssigns: { item: DimItem; actions: PluggingAction[] }[] = [];
 
     for (const item of armor) {
       const assignments = pickPlugPositions(
@@ -1217,17 +1227,23 @@ function applyLoadoutMods(
 
       const pluggingSteps = createPluggingStrategy(defs, item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
-      infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
-      if (assignmentSequence) {
-        applyModsPromises.push(
-          dispatch(
-            equipModsToItem(item, assignmentSequence, handleSuccess, handleFailure, cancelToken),
-          ),
-        );
+      infoLog(TAG, 'Applying mods', assignmentSequence, 'to', item.name);
+
+      if (assignmentSequence.length) {
+        const [f, m] = _.partition(assignmentSequence, (a) => isFashionPlug(a.mod));
+        modAssigns.push({ item, actions: m });
+        fashionAssigns.push({ item, actions: f });
       }
     }
 
-    await Promise.all(applyModsPromises);
+    // given limited time, slow API, impatient teammates, we'll plug all mods into all armor pieces, *then* all fashion
+    for (const assignGroup of [modAssigns, fashionAssigns]) {
+      await Promise.all(
+        assignGroup.map(({ item, actions }) =>
+          dispatch(equipModsToItem(item, actions, handleSuccess, handleFailure, cancelToken)),
+        ),
+      );
+    }
   };
 }
 
@@ -1274,7 +1290,7 @@ function allModsAreAlreadyApplied(
       return false;
     } else {
       // the mod was found, but we have consumed this copy of it
-      delete existingMods[foundAt];
+      existingMods.splice(foundAt, 1);
       return true;
     }
   });

@@ -57,10 +57,20 @@
   }
   .cannotRollSection {
     @include tooltip-section-color($red);
+    p::before {
+      content: '';
+      display: inline-block;
+      padding: 6px;
+      margin-bottom: -3px;
+      margin-right: 3px;
+      border: 1px dashed white;
+      border-radius: 50%;
+    }
   }
   .automaticallyPickedSection {
-    @include tooltip-section-color($dim-brand);
     border-radius: 0 0 $theme-tooltip-corner-radius $theme-tooltip-corner-radius;
+
+    @include tooltip-section-color($dim-brand);
 
     // Re-define colors using accent if browser supports color-mix
     @supports (background: color-mix(in srgb, black 50%, white)) {
@@ -122,4 +132,8 @@
     vertical-align: bottom;
     margin-right: 2px;
   }
+}
+
+.stackable {
+  margin-top: 4px;
 }

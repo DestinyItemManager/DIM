@@ -1,22 +1,19 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
-import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
-import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getSubclassPlugs } from '../item-utils';
+import { getSubclassPlugs } from '../loadout-item-utils';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutEditSubclass.m.scss';
@@ -28,14 +25,14 @@ export default function LoadoutEditSubclass({
   classType,
   storeId,
   power,
-  onRemove,
   onPick,
+  onClick,
 }: {
   subclass?: ResolvedLoadoutItem;
   classType: DestinyClass;
   storeId: string;
   power: number;
-  onRemove: () => void;
+  onClick: () => void;
   onPick: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
@@ -48,17 +45,7 @@ export default function LoadoutEditSubclass({
     item.owner === storeId &&
     itemCanBeInLoadout(item);
 
-  const subclassItems = _.sortBy(allItems.filter(subclassItemFilter), (i) => {
-    if (i.sockets) {
-      // Sort by super damage hash
-      const superPlug = getFirstSocketByCategoryHash(i.sockets, SocketCategoryHashes.Super)?.plugged
-        ?.plugDef;
-      if (superPlug) {
-        return getDamageTypeForSubclassPlug(superPlug);
-      }
-    }
-    return undefined;
-  });
+  const subclassItems = _.sortBy(allItems.filter(subclassItemFilter), (i) => i.element?.enumValue);
 
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
@@ -82,6 +69,7 @@ export default function LoadoutEditSubclass({
         [styles.isOver]: isOverEquipped,
         [styles.canDrop]: canDropEquipped,
       })}
+      onClick={subclass ? onClick : undefined}
     >
       {!subclass && subclassItems.length > 0 && (
         <>
@@ -100,9 +88,7 @@ export default function LoadoutEditSubclass({
       )}
       {subclass && (
         <div className={styles.subclass}>
-          <ClosableContainer
-            onClose={onRemove}
-            showCloseIconOnHover
+          <div
             className={clsx({
               [styles.missingItem]: subclass?.missing,
             })}
@@ -118,7 +104,7 @@ export default function LoadoutEditSubclass({
                 />
               )}
             </ItemPopupTrigger>
-          </ClosableContainer>
+          </div>
           {power !== 0 && (
             <div className={styles.power}>
               <AppIcon icon={powerActionIcon} />

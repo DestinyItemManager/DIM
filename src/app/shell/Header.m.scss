@@ -55,7 +55,8 @@ $header-height: 44px;
       @include phone-portrait {
         font-size: 24px;
       }
-      &:hover {
+
+      @include interactive($hover: true) {
         color: var(--theme-accent-primary);
         cursor: pointer;
         transition: color 0.2s linear;
@@ -83,14 +84,18 @@ $header-height: 44px;
   user-select: none;
   white-space: nowrap;
 
+  color: var(--theme-text);
+  cursor: pointer;
+
   @include phone-portrait {
     margin: 0 12px;
   }
 
-  color: var(--theme-text);
-  cursor: pointer;
+  @include interactive($hover: true) {
+    color: var(--theme-accent-primary);
+    transition: color 0.2s linear;
+  }
 
-  &:hover,
   &.active {
     color: var(--theme-accent-primary);
     transition: color 0.2s linear;
@@ -118,15 +123,15 @@ $header-height: 44px;
 .logo {
   height: 24px;
   width: 68px;
+  color: var(--theme-accent-primary) !important;
+  font-size: 16px !important;
+  font-weight: bold;
+  font-weight: 400;
 
   @include phone-portrait {
     height: 24px * 1.2;
     width: 68px * 1.2;
   }
-  color: var(--theme-accent-primary) !important;
-  font-size: 16px !important;
-  font-weight: bold;
-  font-weight: 400;
   &.dev {
     filter: grayscale(100%) brightness(150%);
   }
@@ -174,7 +179,6 @@ $header-height: 44px;
 }
 
 .dropdown {
-  @include below-header;
   box-sizing: border-box;
   position: absolute;
   display: flex;
@@ -188,6 +192,8 @@ $header-height: 44px;
   padding-left: env(safe-area-inset-left);
   padding-bottom: Max(4px, env(safe-area-inset-bottom));
   flex-direction: column;
+
+  @include below-header;
 
   hr {
     margin: 8px 0 6px 0;
@@ -209,22 +215,21 @@ $header-height: 44px;
     margin: 0;
     transition: none;
 
-    &.active {
-      color: var(--theme-text);
-      border-left: 4px solid var(--theme-accent-primary);
-      padding-left: calc(1rem - 4px);
-    }
-
     @include phone-portrait {
       font-size: 18px;
       padding-top: 6px;
       padding-bottom: 6px;
     }
 
-    &:hover,
-    &:focus {
+    @include interactive($hover: true, $focus: true) {
       background-color: var(--theme-accent-primary);
       color: var(--theme-text-invert);
+    }
+
+    &.active {
+      color: var(--theme-text);
+      border-left: 4px solid var(--theme-accent-primary);
+      padding-left: calc(1rem - 4px);
     }
 
     .launchSeparateIcon {
@@ -241,7 +246,6 @@ $header-height: 44px;
 
 .searchLink {
   flex: 1;
-  font-size: 13px;
   margin: 0 8px;
 
   @include phone-portrait {

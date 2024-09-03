@@ -10,11 +10,6 @@
   padding: 4px 0 calc(var(--item-margin) + 4px) 0;
   position: relative;
 
-  &.grouped {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
   &:empty {
     min-height: 0;
     padding: 0;
@@ -104,7 +99,8 @@
   padding: 4px;
   opacity: 0.3;
   transition: opacity 0.3s ease-in-out;
-  &:hover {
+
+  @include interactive($hover: true) {
     opacity: 1;
   }
 }
@@ -121,5 +117,9 @@
 
   &:last-of-type {
     border-bottom: none;
+  }
+
+  .inlineGroups & {
+    display: contents;
   }
 }

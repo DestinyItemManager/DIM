@@ -83,11 +83,7 @@ export function removeAccessToken() {
  * @return UTC epoch milliseconds timestamp
  */
 function getTokenExpiration(token?: Token): number {
-  if (
-    token &&
-    Object.prototype.hasOwnProperty.call(token, 'inception') &&
-    Object.prototype.hasOwnProperty.call(token, 'expires')
-  ) {
+  if (token && 'inception' in token && 'expires' in token) {
     const inception = token.inception;
     return inception + token.expires * 1000;
   }

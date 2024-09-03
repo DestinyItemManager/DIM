@@ -3,7 +3,6 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
-import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -12,11 +11,11 @@ import {
   ArmorEnergyRules,
   ArmorSet,
   AutoModDefs,
+  DesiredStatRange,
   ItemGroup,
   ItemsByBucket,
   LockableBucketHash,
   ModStatChanges,
-  ResolvedStatConstraint,
 } from '../types';
 import {
   hydrateArmorSet,
@@ -46,7 +45,7 @@ export function runProcess({
   lockedModMap,
   modStatChanges,
   armorEnergyRules,
-  resolvedStatConstraints,
+  desiredStatRanges,
   anyExotic,
   autoStatMods,
   getUserItemTag,
@@ -58,7 +57,7 @@ export function runProcess({
   lockedModMap: ModMap;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   anyExotic: boolean;
   autoStatMods: boolean;
   getUserItemTag?: (item: DimItem) => TagValue | undefined;
@@ -100,7 +99,7 @@ export function runProcess({
 
     const groupedItems = mapItemsToGroups(
       items,
-      resolvedStatConstraints,
+      desiredStatRanges,
       armorEnergyRules,
       activityMods,
       bucketSpecificMods[bucketHash] || [],
@@ -113,29 +112,17 @@ export function runProcess({
     }
   }
 
-  // NB this looks like a no-op but what's sorted here aren't the array entries but the object keys.
-  // Ensuring all array members have properties in the same order helps the JIT keep the code monomorphic...
-  const sortedResolvedStatConstraints: ResolvedStatConstraint[] = resolvedStatConstraints.map(
-    (c) => ({
-      minTier: c.minTier,
-      maxTier: c.maxTier,
-      statHash: c.statHash,
-      ignored: c.ignored,
-    }),
-  );
-
   // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
 
   return {
     cleanup,
     resultPromise: new Promise((resolve) => {
-      const workerStart = performance.now();
       worker
         .process(
           processItems,
           _.mapValues(modStatChanges, (stat) => stat.value),
           lockedProcessMods,
-          sortedResolvedStatConstraints,
+          desiredStatRanges,
           anyExotic,
           autoModsData,
           autoStatMods,
@@ -143,13 +130,8 @@ export function runProcess({
           stopOnFirstSet,
         )
         .then((result) => {
-          infoLog(
-            'loadout optimizer',
-            `useProcess: worker time ${performance.now() - workerStart}ms`,
-          );
           const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
           const processTime = performance.now() - processStart;
-          infoLog('loadout optimizer', `useProcess ${processTime}ms`);
           resolve({ ...result, sets: hydratedSets, processTime });
         })
         // Cleanup the worker, we don't need it anymore.
@@ -207,7 +189,7 @@ const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
  */
 function mapItemsToGroups(
   items: readonly DimItem[],
-  resolvedStatConstraints: ResolvedStatConstraint[],
+  resolvedStatConstraints: DesiredStatRange[],
   armorEnergyRules: ArmorEnergyRules,
   activityMods: PluggableInventoryItemDefinition[],
   modsForSlot: PluggableInventoryItemDefinition[],

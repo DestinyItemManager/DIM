@@ -21,7 +21,7 @@ export async function toHttpStatusError(response: Response) {
   try {
     const responseBody = await response.text();
     return new HttpStatusError(response, responseBody);
-  } catch (e) {
+  } catch {
     return new HttpStatusError(response);
   }
 }

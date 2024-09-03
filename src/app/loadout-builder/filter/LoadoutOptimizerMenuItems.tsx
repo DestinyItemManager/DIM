@@ -1,9 +1,10 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { AddItemButton } from 'app/loadout/loadout-edit/LoadoutEditBucket';
+import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ItemFilter } from 'app/search/filter-types';
-import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { objectValues } from 'app/utils/util-types';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback } from 'react';
@@ -24,12 +25,14 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
   pinnedItems,
   searchFilter,
   lbDispatch,
+  className,
 }: {
   chooseItem: ChooseItemFunction;
   selectedStore: DimStore;
   pinnedItems: PinnedItems;
   searchFilter: ItemFilter;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  className?: string;
 }) {
   /**
    * Lock currently equipped items on a character
@@ -46,6 +49,11 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
     [lbDispatch],
   );
   const unpinItem = (item: DimItem) => lbDispatch({ type: 'unpinItem', item });
+  const clear = () =>
+    lbDispatch({
+      type: 'setPinnedItems',
+      items: [],
+    });
 
   const chooseLockItem = chooseItem(
     pinItem,
@@ -58,23 +66,21 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
   );
 
   return (
-    <LoadoutBucketDropTarget className={styles.area} onItemLocked={pinItem}>
-      {Boolean(allPinnedItems.length) && (
+    <LoadoutEditSection
+      className={className}
+      title={t('LoadoutBuilder.PinnedItems')}
+      onClear={clear}
+      onSyncFromEquipped={lockEquipped}
+    >
+      <LoadoutBucketDropTarget className={styles.area} onItemLocked={pinItem}>
         <div className={styles.itemGrid}>
           {allPinnedItems.map((lockedItem) => (
             <LockedItem key={lockedItem.id} lockedItem={lockedItem} onRemove={unpinItem} />
           ))}
+          <AddItemButton onClick={chooseLockItem} title={t('LoadoutBuilder.LockItem')} />
         </div>
-      )}
-      <div className={styles.buttons}>
-        <button type="button" className="dim-button" onClick={chooseLockItem}>
-          <AppIcon icon={pinIcon} /> {t('LoadoutBuilder.LockItem')}
-        </button>
-        <button type="button" className="dim-button" onClick={lockEquipped}>
-          <AppIcon icon={pinIcon} /> {t('LoadoutBuilder.LockEquipped')}
-        </button>
-      </div>
-    </LoadoutBucketDropTarget>
+      </LoadoutBucketDropTarget>
+    </LoadoutEditSection>
   );
 });
 
@@ -83,11 +89,13 @@ export const LoadoutOptimizerExcludedItems = memo(function LoadoutOptimizerExclu
   excludedItems,
   searchFilter,
   lbDispatch,
+  className,
 }: {
   chooseItem: ChooseItemFunction;
   excludedItems: ExcludedItems;
   searchFilter: ItemFilter;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  className?: string;
 }) {
   const excludeItem = useCallback(
     (item: DimItem) => lbDispatch({ type: 'excludeItem', item }),
@@ -100,21 +108,23 @@ export const LoadoutOptimizerExcludedItems = memo(function LoadoutOptimizerExclu
   const allExcludedItems = _.sortBy(_.compact(objectValues(excludedItems)).flat(), (i) =>
     LockableBucketHashes.indexOf(i.bucket.hash),
   );
+
+  const clear = () => lbDispatch({ type: 'clearExcludedItems' });
   return (
-    <LoadoutBucketDropTarget className={styles.area} onItemLocked={excludeItem}>
-      {Boolean(allExcludedItems.length) && (
+    <LoadoutEditSection
+      className={className}
+      title={t('LoadoutBuilder.ExcludedItems')}
+      onClear={clear}
+    >
+      <LoadoutBucketDropTarget className={styles.area} onItemLocked={excludeItem}>
         <div className={styles.itemGrid}>
           {allExcludedItems.map((lockedItem) => (
             <LockedItem key={lockedItem.id} lockedItem={lockedItem} onRemove={unExcludeItem} />
           ))}
+          <AddItemButton onClick={chooseExcludeItem} title={t('LoadoutBuilder.ExcludeItem')} />
         </div>
-      )}
-      <div className={styles.buttons}>
-        <button type="button" className="dim-button" onClick={chooseExcludeItem}>
-          <AppIcon icon={faTimesCircle} /> {t('LoadoutBuilder.ExcludeItem')}
-        </button>
-      </div>
-    </LoadoutBucketDropTarget>
+      </LoadoutBucketDropTarget>
+    </LoadoutEditSection>
   );
 });
 

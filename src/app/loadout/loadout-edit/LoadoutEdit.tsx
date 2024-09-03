@@ -44,15 +44,15 @@ import {
   updateModsByBucket,
   useLoadoutUpdaters,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import {
   findSameLoadoutItemIndex,
   getUnequippedItemsForLoadout,
 } from 'app/loadout-drawer/loadout-utils';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
+import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { emptyObject } from 'app/utils/empty';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -203,6 +203,7 @@ export function LoadoutEditSubclassSection({
   const handleSyncSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleRandomizeSubclass = useDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleClearSubclass = useDefsUpdater(clearSubclass);
+  const handleOpenPlugDrawer = () => setPlugDrawerOpen(true);
 
   return (
     <LoadoutEditSection
@@ -217,13 +218,13 @@ export function LoadoutEditSubclassSection({
         classType={loadout.classType}
         storeId={store.id}
         power={power}
-        onRemove={handleClearSubclass}
+        onClick={handleOpenPlugDrawer}
         onPick={handleAddItem}
       />
       {subclass && (
         <div className={styles.buttons}>
           {subclass.item.sockets ? (
-            <button type="button" className="dim-button" onClick={() => setPlugDrawerOpen(true)}>
+            <button type="button" className="dim-button" onClick={handleOpenPlugDrawer}>
               {t('LB.SelectSubclassOptions')}
             </button>
           ) : (

@@ -1,26 +1,76 @@
+@use '../../variables.scss' as *;
+
 .tiers {
-  display: flex;
+  display: inline-flex;
   flex-flow: row nowrap;
-  gap: 12px;
+  box-shadow: 0 6px 12px 0 #061a1f;
 }
 
 .tier {
   display: flex;
+  flex-shrink: 1;
+  padding: 6px;
   flex-flow: column nowrap;
-  gap: 6px;
+  gap: var(--item-margin);
+  opacity: 0.6;
+  background-color: hsla(189, 65%, 15%, 0.25);
+  border-right: 1px solid hsla(182, 85%, 29%, 0.5);
+}
+
+.stat {
+  text-transform: uppercase;
+  max-width: 305px;
+  margin: 0 0 8px;
+  color: var(--theme-header-characters-txt);
+  line-height: 11px;
+  font-size: 11px;
+  font-weight: 300;
+  text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+  display: flex;
+  place-content: start space-between;
+  align-items: auto;
+}
+
+.unlockedTier {
+  opacity: 1;
+  background-color: #0d373e;
+  border-right: 1px solid #0af3f3;
 }
 
 .item {
-  background-size: 100%;
-  border: 1px solid var(--theme-item-socket-border);
+  background-size: 84%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 4px;
+  background-blend-mode: hard-light;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.75);
   cursor: pointer;
+
+  @include interactive($hover: true) {
+    border: 1px solid white;
+  }
 }
 
 .unlocked {
-  background-color: #0a3b40;
+  background-color: #0b878b;
+  border: 1px solid #0b878b;
+  border-top: 1px solid #0af3f3;
 }
 
 .locked {
-  background-color: #020808;
-  filter: brightness(0.6);
+  background-color: #061a1f;
+  border: 1px solid #061a1f;
+  border-top: 1px solid #0a1a1e;
+  background-blend-mode: hard-light;
+}
+
+@media screen and (max-width: 540px) {
+  .item {
+    /* smaller since double width tier column margins */
+    max-width: 15vw;
+    max-height: 15vw;
+  }
+  .stat {
+    max-width: 100%;
+  }
 }

@@ -3,11 +3,11 @@
 .notification {
   margin: 0 0 8px;
   width: 350px;
+  box-shadow: 0 -1px 24px 4px #222;
 
   @include phone-portrait {
     width: 100%;
   }
-  box-shadow: 0 -1px 24px 4px #222;
 }
 
 .inner {
@@ -18,7 +18,8 @@
   user-select: none;
 
   transition: transform 150ms ease-in-out;
-  &:hover {
+
+  @include interactive($hover: true) {
     transform: scale(1.02);
   }
 }

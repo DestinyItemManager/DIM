@@ -36,7 +36,7 @@ export function showItemPopup(
   } else {
     // Log the item so it's easy to inspect item structure by clicking on an item
     if ($DIM_FLAVOR !== 'release') {
-      infoLog('clicked item', `https://data.destinysets.com/i/InventoryItem%3A${item.hash}`, item);
+      infoLog('clicked item', item);
     }
     showItemPopup$.next({ item, element, extraInfo });
   }

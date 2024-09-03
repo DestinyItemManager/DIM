@@ -14,19 +14,19 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@v1.15.2
+        uses: crowdin/github-action@v2.1.1
         with:
           upload_sources: false
           upload_translations: false
@@ -51,7 +51,7 @@ jobs:
         run: pnpm bcu
 
       - name: porcelain check
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         id: filter
         with:
           base: HEAD

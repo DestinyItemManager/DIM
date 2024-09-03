@@ -1,17 +1,20 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { isValidWishListUrlDomain, wishListAllowedHosts } from 'app/settings/WishListSettings';
 import { setSettingAction } from 'app/settings/actions';
 import { settingsReady } from 'app/settings/settings';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
+import _ from 'lodash';
 import { loadWishLists, touchWishLists } from './actions';
 import type { WishListsState } from './reducer';
 import { wishListsSelector } from './selectors';
 import { WishListAndInfo } from './types';
+import { validateWishListURLs } from './utils';
 import { toWishList } from './wishlist-file';
+
+const TAG = 'wishlist';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
@@ -45,32 +48,22 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     }
 
     // Pipe | seperated URLs
-    const wishlistUrlsToFetch = wishlistToFetch.split('|').map((url) => url.trim());
-
-    // there's a source if we reached this far, but check if it's invalid
-    if (wishlistUrlsToFetch.some((list) => !isValidWishListUrlDomain(list))) {
-      showNotification({
-        type: 'warning',
-        title: t('WishListRoll.Header'),
-        body: `${t('WishListRoll.InvalidExternalSource')}\n${wishListAllowedHosts
-          .map((h) => `https://${h}`)
-          .join('\n')}`,
-        duration: 10000,
-      });
-      return;
-    }
+    const wishlistUrlsToFetch = validateWishListURLs(wishlistToFetch);
 
     const {
       lastFetched: wishListLastUpdated,
-      wishListAndInfo: { source: loadedWishListSource },
+      wishListAndInfo: { source: loadedWishListSource, wishListRolls: loadedWishListRolls },
     } = wishListsSelector(getState());
+
+    const wishListURLsChanged =
+      loadedWishListSource !== undefined && loadedWishListSource !== wishlistToFetch;
 
     // Throttle updates if:
     if (
       // this isn't a settings update, and
       !newWishlistSource &&
       // if the intended fetch target is already the source of the loaded list
-      (loadedWishListSource === undefined || loadedWishListSource === wishlistToFetch) &&
+      !wishListURLsChanged &&
       // we already checked the wishlist today
       hoursAgo(wishListLastUpdated) < 24
     ) {
@@ -101,26 +94,30 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
         title: t('WishListRoll.Header'),
         body: t('WishListRoll.ImportFailed'),
       });
-      errorLog('wishlist', 'Unable to load wish list', e);
+      errorLog(TAG, 'Unable to load wish list', e);
       return;
     }
 
-    const wishListAndInfo = toWishList(...wishListTexts);
-    wishListAndInfo.source = wishlistToFetch;
+    const wishLists: [string, string][] = wishlistUrlsToFetch.map((url, idx) => [
+      url,
+      wishListTexts[idx],
+    ]);
 
-    const existingWishLists = wishListsSelector(getState());
+    const wishListAndInfo = toWishList(...wishLists);
+    wishListAndInfo.source = wishlistToFetch;
 
     // Only update if the length changed. The wish list may actually be different - we don't do a deep check -
     // but this is good enough to avoid re-doing the work over and over.
     if (
-      existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
-      wishListAndInfo.wishListRolls.length
+      loadedWishListRolls?.length !== wishListAndInfo.wishListRolls.length ||
+      wishListURLsChanged
     ) {
       await dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
-      infoLog('wishlist', 'Refreshed wishlist, but it matched the one we already have');
+      infoLog(TAG, 'Refreshed wishlist, but it matched the one we already have');
       dispatch(touchWishLists());
     }
+    await dispatch(transformAndStoreWishList(wishListAndInfo));
   };
 }
 
@@ -151,11 +148,22 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
         return;
       }
 
+      // Previously we didn't save the URLs together with the source info,
+      // but we want this now.
+      if (wishListState?.wishListAndInfo.source) {
+        const urls = _.once(() => validateWishListURLs(wishListState.wishListAndInfo.source!));
+        for (const [idx, entry] of wishListState.wishListAndInfo.infos.entries()) {
+          if (entry.url === undefined) {
+            entry.url = urls()[idx];
+          }
+        }
+      }
+
       if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
         dispatch(loadWishLists(wishListState));
       }
     } catch (e) {
-      errorLog('wishlist', 'unable to load wishlists from IDB', e);
+      errorLog(TAG, 'unable to load wishlists from IDB', e);
     }
   };
 }

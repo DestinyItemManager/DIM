@@ -13,6 +13,7 @@ export const D2SeasonInfo: Record<
     releaseDate: string;
     resetTime: string;
     numWeeks: number;
+    episode?: number;
   }
 > = {
   1: {
@@ -337,6 +338,21 @@ export const D2SeasonInfo: Record<
     resetTime: '17:00:00Z',
     numWeeks: 27,
   },
+  24: {
+    DLCName: 'The Final Shape',
+    seasonName: 'Episode: Echoes',
+    seasonTag: 'echoes',
+    season: 24,
+    maxLevel: 50,
+    powerFloor: 1900,
+    softCap: 1940,
+    powerfulCap: 1990,
+    pinnacleCap: 2000,
+    releaseDate: '2024-06-04',
+    resetTime: '17:00:00Z',
+    numWeeks: 18,
+    episode: 1,
+  },
 };
 
-export const D2CalculatedSeason = 23;
+export const D2CalculatedSeason = 24;

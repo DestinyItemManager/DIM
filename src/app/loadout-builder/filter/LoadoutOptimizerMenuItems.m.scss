@@ -16,13 +16,3 @@
   composes: flexColumn from '../../dim-ui/common.m.scss';
   gap: 4px;
 }
-
-.buttons {
-  display: flex;
-  flex-direction: row;
-  > * {
-    flex: 1;
-  }
-
-  gap: 4px;
-}

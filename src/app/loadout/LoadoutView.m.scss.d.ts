@@ -5,6 +5,7 @@ interface CssExports {
   'artifactMods': string;
   'classIcon': string;
   'contents': string;
+  'disableEvents': string;
   'fadeIn': string;
   'finding': string;
   'findings': string;

@@ -38,13 +38,13 @@
   margin-right: -2px;
   padding-left: 6px;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
-  :global(.app-icon) {
-    transition: transform 150ms ease-in-out;
-  }
 
-  @media (hover: hover) {
-    &:hover :global(.app-icon) {
+  @include interactive($hover: true) {
+    :global(.app-icon) {
       transform: scale(1.3);
     }
+  }
+  :global(.app-icon) {
+    transition: transform 150ms ease-in-out;
   }
 }

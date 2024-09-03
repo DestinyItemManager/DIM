@@ -21,6 +21,7 @@ $solar: #f0631e;
 $void: #8e749e;
 $stasis: #4d88ff;
 $strand: #35e366;
+$prismatic: #e3619b;
 
 // Item rarities
 $common: #dcdcdc;
@@ -134,4 +135,34 @@ $tempContainerZindex: 1000;
 // Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.
 @function dim-rgb-values-to-rgba($values, $alpha: 1) {
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
+}
+
+@mixin interactive($hover: false, $focus: false, $focusWithin: false, $active: false) {
+  // Declares hover rules only if a device can hover over elements. This avoids issues on mobile
+  // browsers where tapping an element triggers and persists its hover state.
+  @if $hover == true {
+    @media (any-hover: hover) {
+      &:hover {
+        @content;
+      }
+    }
+  }
+
+  @if $focus == true {
+    &:focus-visible {
+      @content;
+    }
+  }
+
+  @if $focusWithin == true {
+    &:focus-within {
+      @content;
+    }
+  }
+
+  @if $active == true {
+    &:active {
+      @content;
+    }
+  }
 }

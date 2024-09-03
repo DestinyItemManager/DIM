@@ -15,10 +15,12 @@ import {
   DestinyMetricComponent,
   DestinyMetricDefinition,
   DestinyPresentationNodeCollectibleChildEntry,
+  DestinyPresentationNodeComponent,
   DestinyPresentationNodeCraftableChildEntry,
   DestinyPresentationNodeDefinition,
   DestinyPresentationNodeMetricChildEntry,
   DestinyPresentationNodeRecordChildEntry,
+  DestinyPresentationNodeState,
   DestinyProfileResponse,
   DestinyRecordComponent,
   DestinyRecordDefinition,
@@ -43,6 +45,7 @@ export interface DimPresentationNode extends DimPresentationNodeLeaf {
    * or generated with fake info.
    */
   nodeDef: DestinyPresentationNodeDefinition | undefined;
+  nodeComponent: DestinyPresentationNodeComponent | undefined;
   /** May or may not be an actual hash */
   hash: number;
   name: string;
@@ -111,13 +114,20 @@ export function toPresentationNodeTree(
     return null;
   }
 
+  const nodeComponent =
+    profileResponse.profilePresentationNodes?.data?.nodes[presentationNodeDef.hash];
+
+  if ((nodeComponent?.state ?? 0) & DestinyPresentationNodeState.Invisible) {
+    return null;
+  }
+
   // For titles, display the title, completion and gilding count
   const titleInfo =
     presentationNodeDef.completionRecordHash && genderHash
       ? getTitleInfo(
           presentationNodeDef.completionRecordHash,
           defs,
-          itemCreationContext.profileResponse.profileRecords.data,
+          profileResponse.profileRecords.data,
           genderHash,
         )
       : undefined;
@@ -128,6 +138,7 @@ export function toPresentationNodeTree(
     name: titleInfo?.title || presentationNodeDef.displayProperties.name,
     icon: presentationNodeDef.displayProperties.icon,
     titleInfo,
+    nodeComponent,
   };
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
@@ -250,6 +261,7 @@ function buildPlugSetPresentationNode(
     visible: plugSetItems.length,
     acquired,
     plugs: plugEntries,
+    nodeComponent: undefined,
   };
   return subnode;
 }
@@ -303,6 +315,7 @@ export function filterPresentationNodesToSearch(
   filterItems: ItemFilter,
   path: DimPresentationNode[] = [],
   defs: D2ManifestDefinitions,
+  catalystItemsByRecordHash: Map<number, DimItem>,
 ): DimPresentationNodeSearchResult[] {
   // If the node itself matches
   if (searchNode(node, searchQuery)) {
@@ -313,7 +326,14 @@ export function filterPresentationNodesToSearch(
   if (node.childPresentationNodes) {
     // TODO: build up the tree?
     return node.childPresentationNodes.flatMap((c) =>
-      filterPresentationNodesToSearch(c, searchQuery, filterItems, [...path, node], defs),
+      filterPresentationNodesToSearch(
+        c,
+        searchQuery,
+        filterItems,
+        [...path, node],
+        defs,
+        catalystItemsByRecordHash,
+      ),
     );
   }
 
@@ -334,7 +354,8 @@ export function filterPresentationNodesToSearch(
     const records = node.records.filter(
       (r) =>
         searchDisplayProperties(r.recordDef.displayProperties, searchQuery) ||
-        searchRewards(r.recordDef, searchQuery, defs),
+        searchRewards(r.recordDef, searchQuery, defs) ||
+        searchCatalysts(r.recordDef.hash, filterItems, catalystItemsByRecordHash),
     );
 
     return records.length
@@ -593,4 +614,13 @@ function getMetricComponent(
   profileResponse: DestinyProfileResponse,
 ): DestinyMetricComponent | undefined {
   return profileResponse.metrics?.data?.metrics[metricDef.hash];
+}
+
+function searchCatalysts(
+  recordHash: number,
+  filterItems: ItemFilter,
+  catalystItemsByRecordHash: Map<number, DimItem>,
+): unknown {
+  const exoticForCatalyst = catalystItemsByRecordHash.get(recordHash);
+  return exoticForCatalyst && filterItems(exoticForCatalyst);
 }

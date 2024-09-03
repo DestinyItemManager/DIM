@@ -15,8 +15,8 @@ import {
 import { getStore } from 'app/inventory/stores-helpers';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { inGameLoadoutItemsFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { ThunkResult } from 'app/store/types';
 import { errorMessage } from 'app/utils/errors';
@@ -24,7 +24,8 @@ import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 /**
- * Ask the API to equip an ingame loadout. You can pass false for apply if you only want to prep the loadout for ingame apply.
+ * Ask the API to equip an in-game loadout. You can pass false for apply if you
+ * only want to prep the loadout for in-game apply.
  */
 export function applyInGameLoadout(loadout: InGameLoadout, apply = true): ThunkResult {
   return async (dispatch, getState) => {
@@ -42,7 +43,7 @@ export function applyInGameLoadout(loadout: InGameLoadout, apply = true): ThunkR
       return await dispatch(
         applyLoadout(targetStore, moveLoadout, apply ? { inGameLoadout: loadout } : {}),
       );
-    } catch (e) {}
+    } catch {}
   };
 }
 

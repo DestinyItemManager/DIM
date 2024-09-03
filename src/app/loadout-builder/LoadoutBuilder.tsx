@@ -12,19 +12,19 @@ import { getStore } from 'app/inventory/stores-helpers';
 import { useHideItemPicker, useItemPicker } from 'app/item-picker/item-picker';
 import { mergeStrictUpgradeStatConstraints } from 'app/loadout-analyzer/utils';
 import { LoadoutUpdateFunction } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import {
   LoadoutEditModsSection,
   LoadoutEditSubclassSection,
 } from 'app/loadout/loadout-edit/LoadoutEdit';
+import { Loadout } from 'app/loadout/loadout-types';
 import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
@@ -44,7 +44,7 @@ import {
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
 import ModPicker from '../loadout/ModPicker';
-import { isLoadoutBuilderItem } from '../loadout/item-utils';
+import { isLoadoutBuilderItem } from '../loadout/loadout-item-utils';
 import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';
@@ -244,10 +244,12 @@ export default memo(function LoadoutBuilder({
     [classType, defs, includeRuntimeStatBenefits, modsToAssign, subclass],
   );
 
-  const { mergedConstraints, mergedConstraintsImplyStrictUpgrade } = useMemo(
-    () => mergeStrictUpgradeStatConstraints(strictUpgradesStatConstraints, resolvedStatConstraints),
-    [resolvedStatConstraints, strictUpgradesStatConstraints],
-  );
+  const { mergedDesiredStatRanges: desiredStatRanges, mergedConstraintsImplyStrictUpgrade } =
+    useMemo(
+      () =>
+        mergeStrictUpgradeStatConstraints(strictUpgradesStatConstraints, resolvedStatConstraints),
+      [resolvedStatConstraints, strictUpgradesStatConstraints],
+    );
 
   // Run the actual loadout generation process in a web worker
   const { result, processing } = useProcess({
@@ -256,7 +258,7 @@ export default memo(function LoadoutBuilder({
     lockedModMap,
     modStatChanges,
     armorEnergyRules,
-    resolvedStatConstraints: mergedConstraints,
+    desiredStatRanges,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
     strictUpgrades: Boolean(strictUpgradesStatConstraints && !mergedConstraintsImplyStrictUpgrade),
@@ -265,8 +267,8 @@ export default memo(function LoadoutBuilder({
   const resultSets = result?.sets;
 
   const sortedSets = useMemo(
-    () => resultSets && sortGeneratedSets(resultSets, statConstraints),
-    [statConstraints, resultSets],
+    () => resultSets && sortGeneratedSets(resultSets, desiredStatRanges),
+    [desiredStatRanges, resultSets],
   );
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
@@ -303,6 +305,7 @@ export default memo(function LoadoutBuilder({
 
   const menuContent = (
     <>
+      <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol>
@@ -310,7 +313,6 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
-      <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
       <StatConstraintEditor
         resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
@@ -361,12 +363,14 @@ export default memo(function LoadoutBuilder({
         pinnedItems={pinnedItems}
         searchFilter={searchFilter}
         lbDispatch={lbDispatch}
+        className={styles.subclassSection}
       />
       <LoadoutOptimizerExcludedItems
         chooseItem={chooseItem}
         excludedItems={excludedItems}
         searchFilter={searchFilter}
         lbDispatch={lbDispatch}
+        className={styles.subclassSection}
       />
       {isPhonePortrait && (
         <div className={styles.guide}>
@@ -383,9 +387,7 @@ export default memo(function LoadoutBuilder({
 
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu
-        className={clsx(styles.menuContent, { [styles.wide]: $featureFlags.statConstraintEditor })}
-      >
+      <PageWithMenu.Menu className={clsx(styles.menuContent, styles.wide)}>
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
@@ -454,7 +456,7 @@ export default memo(function LoadoutBuilder({
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
-            resolvedStatConstraints={resolvedStatConstraints}
+            desiredStatRanges={desiredStatRanges}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             armorEnergyRules={result.armorEnergyRules}

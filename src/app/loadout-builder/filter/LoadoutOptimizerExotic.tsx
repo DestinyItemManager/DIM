@@ -1,4 +1,3 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
@@ -56,6 +55,8 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
     }
   };
 
+  const handleClickEdit = () => setShowExoticPicker(true);
+
   return (
     <LoadoutEditSection
       title={t('LoadoutBuilder.Exotic')}
@@ -64,8 +65,8 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
       onSyncFromEquipped={handleSyncFromEquipped}
       onRandomize={handleRandomize}
     >
-      <ChosenExoticOption lockedExoticHash={lockedExoticHash} onRemove={handleClear} />
-      <button type="button" className="dim-button" onClick={() => setShowExoticPicker(true)}>
+      <ChosenExoticOption lockedExoticHash={lockedExoticHash} onClick={handleClickEdit} />
+      <button type="button" className="dim-button" onClick={handleClickEdit}>
         {t('LB.SelectExotic')}
       </button>
       {showExoticPicker && (
@@ -85,10 +86,10 @@ export default LoadoutOptimizerExotic;
 
 function ChosenExoticOption({
   lockedExoticHash,
-  onRemove,
+  onClick,
 }: {
   lockedExoticHash: number | undefined;
-  onRemove: () => void;
+  onClick: () => void;
 }) {
   const defs = useD2Definitions()!;
   const itemCreationContext = useSelector(createItemContextSelector);
@@ -150,17 +151,11 @@ function ChosenExoticOption({
   const { icon, title, description } = info!;
 
   return (
-    <div className={styles.infoCard}>
-      {lockedExoticHash === undefined ? (
-        icon
-      ) : (
-        <ClosableContainer showCloseIconOnHover onClose={onRemove}>
-          {icon}
-        </ClosableContainer>
-      )}
+    <div className={styles.infoCard} onClick={onClick}>
+      {icon}
       <div className={styles.details}>
         <div className={styles.title}>{title}</div>
-        {description}
+        <div>{description}</div>
       </div>
     </div>
   );

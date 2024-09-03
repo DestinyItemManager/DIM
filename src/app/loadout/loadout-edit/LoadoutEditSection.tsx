@@ -134,7 +134,7 @@ export default function LoadoutEditSection({
             <AppIcon icon={disabledIcon} />
           </button>
         )}
-        <Dropdown kebab options={options} />
+        <Dropdown label={t('Loadouts.Actions', { title })} kebab options={options} />
       </div>
       {children}
     </div>

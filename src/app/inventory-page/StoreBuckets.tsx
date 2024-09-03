@@ -81,7 +81,9 @@ export function StoreBuckets({
   const checkPostmaster = bucket.hash === BucketHashes.LostItems;
   return (
     <div
-      className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
+      className={clsx('store-row', `bucket-${bucket.hash}`, {
+        'account-wide': bucket.accountWide,
+      })}
     >
       {labels && (
         <div className={styles.bucketLabel}>

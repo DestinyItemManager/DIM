@@ -18,14 +18,14 @@ import { compareBy } from './comparators';
 import { isPlugStatActive } from './item-utils';
 import { LookupTable } from './util-types';
 
-interface DimPlugPerkDescription {
+export interface DimPlugPerkDescription {
   perkHash: number;
   name?: string;
   description?: string;
   requirement?: string;
 }
 
-interface DimPlugDescriptions {
+export interface DimPlugDescriptions {
   perks: DimPlugPerkDescription[];
   communityInsight: Perk | undefined;
 }
@@ -46,18 +46,10 @@ export function usePlugDescriptions(
     value: number;
     statHash: number;
   }[],
-  /**
-   * If set, returns Bungie descriptions even when the descriptions setting is on Community only.
-   * Consumers set this if they can't display community descriptions.
-   */
-  forceUseBungieDescriptions?: boolean,
 ): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
-  let descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  if (forceUseBungieDescriptions) {
-    descriptionsToDisplay = 'bungie';
-  }
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
 
   const result: DimPlugDescriptions = {
     perks: [],

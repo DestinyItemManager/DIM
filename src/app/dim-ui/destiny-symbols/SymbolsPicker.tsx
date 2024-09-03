@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { SearchInput } from 'app/search/SearchInput';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import React, {
   HTMLProps,
   memo,
@@ -116,12 +116,15 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
   const [open, setOpen] = useState(false);
   const pressTipRoot = useContext(PressTipRoot);
 
-  usePopper({
-    contents: tooltipContents,
-    reference: controlRef,
-    arrowClassName: '',
-    placement: 'top',
-  });
+  usePopper(
+    {
+      contents: tooltipContents,
+      reference: controlRef,
+      arrowClassName: '',
+      placement: 'top',
+    },
+    [open, pressTipRoot],
+  );
 
   // A user should be able to click multiple symbols to insert multiple symbols sequentially,
   // so we need to internally maintain where the cursor is (even when the element isn't actually focused)

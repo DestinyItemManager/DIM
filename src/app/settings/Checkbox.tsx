@@ -1,5 +1,6 @@
 import Switch from 'app/dim-ui/Switch';
 import HelpLink from '../dim-ui/HelpLink';
+import { horizontalClass } from './SettingsPage';
 import { Settings } from './initial-settings';
 
 export default function Checkbox({
@@ -10,7 +11,7 @@ export default function Checkbox({
   name,
   onChange,
 }: {
-  label: string;
+  label: React.ReactNode;
   value: boolean;
   title?: string;
   helpLink?: string;
@@ -18,7 +19,7 @@ export default function Checkbox({
   onChange: (checked: boolean, name: keyof Settings) => void;
 }) {
   return (
-    <div className="setting horizontal">
+    <div className={horizontalClass}>
       <label htmlFor={name} title={title}>
         {label}
       </label>

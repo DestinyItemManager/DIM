@@ -31,6 +31,7 @@ interface Props {
   offset?: number;
   fixed?: boolean;
   placement?: Placement;
+  label: string;
 }
 
 function isDropdownOption(option: Option): option is DropdownOption {
@@ -54,6 +55,7 @@ export default function Dropdown({
   offset,
   fixed,
   placement = kebab ? 'bottom-end' : 'bottom-start',
+  label,
 }: Props) {
   const { isOpen, getToggleButtonProps, getMenuProps, highlightedIndex, getItemProps, reset } =
     useSelect({
@@ -72,19 +74,22 @@ export default function Dropdown({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  usePopper({
-    contents: menuRef,
-    reference: buttonRef,
-    placement,
-    offset,
-    fixed,
-  });
+  usePopper(
+    {
+      contents: menuRef,
+      reference: buttonRef,
+      placement,
+      offset,
+      fixed,
+    },
+    [isOpen, items],
+  );
 
   return (
     <div className={className}>
       <button
         type="button"
-        {...getToggleButtonProps({ ref: buttonRef, disabled })}
+        {...getToggleButtonProps({ ref: buttonRef, disabled, title: label })}
         className={kebab ? styles.kebabButton : styles.button}
       >
         {kebab ? (

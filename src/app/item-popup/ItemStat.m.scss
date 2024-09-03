@@ -6,12 +6,12 @@
   text-align: right;
   margin-right: 8px;
   max-width: 130px;
+  text-overflow: ellipsis;
+  overflow-x: clip;
 
   @include phone-portrait {
     max-width: 40vw;
   }
-  text-overflow: ellipsis;
-  overflow-x: clip;
 }
 
 // The numeric value of the stat
@@ -71,11 +71,8 @@
 }
 
 .quality {
-  display: none;
+  display: inline;
   margin-left: 4px;
-  :global(.itemQuality) & {
-    display: inline;
-  }
 }
 
 // Colors for the stat bars
