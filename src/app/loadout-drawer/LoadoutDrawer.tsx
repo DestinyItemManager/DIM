@@ -175,7 +175,8 @@ export default function LoadoutDrawer({
     setLoadout(setClassType(checked ? DestinyClass.Unknown : store.classType));
 
   const showInGameLoadoutIdentifiers =
-    Boolean(loadout.parameters?.inGameIdentifiers) || loadout.items.length > 0;
+    $featureFlags.editInGameLoadoutIdentifiers &&
+    (Boolean(loadout.parameters?.inGameIdentifiers) || loadout.items.length > 0);
 
   const header = (
     <div className={styles.header}>

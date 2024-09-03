@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { RadioButton } from './RadioButton';
 import styles from './SelectInGameLoadoutIdentifiers.m.scss';
 
-/** Selection controls for choosing an ingame loadout identifier (name, color,
+/** Selection controls for choosing an in-game loadout identifier (name, color,
  * icon). A controlled component. */
 export default function SelectInGameLoadoutIdentifiers({
   nameHash,

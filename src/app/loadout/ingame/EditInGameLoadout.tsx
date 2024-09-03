@@ -16,7 +16,7 @@ import SelectInGameLoadoutIdentifiers, {
 import { editInGameLoadout, snapshotInGameLoadout } from './ingame-loadout-apply';
 import { availableLoadoutSlotsSelector, inGameLoadoutsForCharacterSelector } from './selectors';
 
-/** An editor sheet for whatever we can edit with ingame loadouts. Name, color, icon. */
+/** An editor sheet for whatever we can edit with in-game loadouts. Name, color, icon. */
 export default function EditInGameLoadout({
   loadout,
   characterId,
