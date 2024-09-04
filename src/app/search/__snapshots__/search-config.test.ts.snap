@@ -27,6 +27,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "deepsight",
   "dupe",
   "dupelower",
+  "dupeperks",
   "emblems",
   "emotes",
   "energy",

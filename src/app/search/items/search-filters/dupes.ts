@@ -205,8 +205,8 @@ const dupeFilters: ItemFilterDefinition[] = [
     },
   },
   {
-    keywords: ['perksdupe'],
-    description: tl('Filter.PerksDupe'),
+    keywords: ['dupeperks'],
+    description: tl('Filter.DupePerks'),
     filter: ({ allItems }) => {
       const duplicates = new Map<string, PerksSet>();
       for (const i of allItems) {
