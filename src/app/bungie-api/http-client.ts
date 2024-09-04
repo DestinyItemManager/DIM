@@ -125,7 +125,7 @@ export function createFetchWithNonStoppingTimeout(
 // HTTPCLIENT UTILS
 //
 
-export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): HttpClient {
+export function createHttpClient(fetchFunction: typeof fetch, apiKey?: string): HttpClient {
   return async <T>(config: HttpClientConfig) => {
     let url = config.url;
     if (config.params) {
@@ -136,7 +136,7 @@ export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): H
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
       headers: {
-        'X-API-Key': apiKey,
+        ...(apiKey ? { 'X-API-Key': apiKey } : undefined),
         ...(config.body ? { 'Content-Type': 'application/json' } : undefined),
       },
       credentials: 'omit',

@@ -63,7 +63,7 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
 /** used to get manifest and global alerts */
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
-    createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout), API_KEY),
+    createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout)),
     logThrottle,
   ),
 );
