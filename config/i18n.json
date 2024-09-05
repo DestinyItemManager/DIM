@@ -242,7 +242,7 @@
     "Energy": "Shows items that have energy capacity (Armor 2.0).",
     "Engrams": "Shows engrams.",
     "EnhancedPerk": "Shows weapons that have the specified number of enhanced perks.",
-    "Enhanced": "Shows weapons that have been enhanced.",
+    "Enhanced": "Shows weapons based on their enhancement tier.",
     "Enhanceable": "Shows weapons that can be enhanced.",
     "Equipment": "Items that can be equipped.",
     "Equipped": "Items that are currently equipped on a character.",
