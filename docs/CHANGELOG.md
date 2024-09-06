@@ -5,6 +5,9 @@
 * Add Enhancement tier to weapon level bar.
 * Update `enhanced` search keyword to allow range of values (0/1/2/3). Old `is:enhanced` behavior is now `enhanced:3`.
 * Update `is:enhanceable` search keyword to exclude Tier 3 Enhanced items.
+* Added `is:dupeperks` search that shows items that either are a duplicate of another item's perks, or a subset of another item's perks (taking into account which column perks appear in).
+* Added a Loadouts CSV export, accessible from the Settings page.
+* Improved how conditional stats for perks are calculated, including fixups for exotic catalyst stats, Enhanced Bipod, and more.
 
 ## 8.35.1 <span class="changelog-date">(2024-09-01)</span>
 
