@@ -8,6 +8,7 @@
 * Added `is:dupeperks` search that shows items that either are a duplicate of another item's perks, or a subset of another item's perks (taking into account which column perks appear in).
 * Added a Loadouts CSV export, accessible from the Settings page.
 * Improved how conditional stats for perks are calculated, including fixups for exotic catalyst stats, Enhanced Bipod, and more.
+* The notes text area now has a maximum editable size of 1024 characters, up from 120.
 
 ## 8.35.1 <span class="changelog-date">(2024-09-01)</span>
 
