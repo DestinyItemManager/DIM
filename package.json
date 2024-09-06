@@ -228,6 +228,7 @@
     "memoize-one": "^6.0.0",
     "papaparse": "^5.4.1",
     "react": "^18.3.1",
+    "react-aria": "^3.34.3",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dnd-multi-backend": "^8.0.3",

@@ -2,21 +2,17 @@
 
 // These classes are used in item-picker, mod-picker, exotic-picker and search results
 
-.item-picker {
-  .item {
-    cursor: pointer;
-  }
-}
-
-.item-picker-grid {
+.grid {
+  composes: sub-bucket from global;
   margin: 10px;
 }
 
-.item-picker-item {
+.itemPickerItem {
+  composes: resetButton from '../dim-ui/common.m.scss';
   position: relative;
 }
 
-.item-picker-item-class-icon {
+.classIcon {
   box-sizing: border-box;
   width: calc(var(--item-size) / 4) !important;
   height: calc(var(--item-size) / 4) !important;
