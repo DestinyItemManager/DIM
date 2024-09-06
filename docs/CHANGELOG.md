@@ -9,6 +9,8 @@
 * Added a Loadouts CSV export, accessible from the Settings page.
 * Improved how conditional stats for perks are calculated, including fixups for exotic catalyst stats, Enhanced Bipod, and more.
 * The notes text area now has a maximum editable size of 1024 characters, up from 120.
+* Added a tooltip with information about the selected super on the Loadouts page.
+* Clicking on the subclass on the loadouts page will open its item popup, with the correct aspects/fragments previewed.
 
 ## 8.35.1 <span class="changelog-date">(2024-09-01)</span>
 

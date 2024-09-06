@@ -1,7 +1,9 @@
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { PlugDefTooltip } from 'app/item-popup/PlugTooltip';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
@@ -25,6 +27,7 @@ export default function LoadoutSubclassSection({
   const defs = useD2Definitions()!;
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
+  const superPlug = plugs.find((p) => p.socketCategoryHash === SocketCategoryHashes.Super);
 
   return (
     <div className={styles.subclassContainer}>
@@ -34,19 +37,30 @@ export default function LoadoutSubclassSection({
         })}
       >
         {subclass ? (
-          <DraggableInventoryItem item={subclass.item}>
-            <ItemPopupTrigger item={subclass.item}>
-              {(ref, onClick) => (
-                <ConnectedInventoryItem
-                  innerRef={ref}
-                  // Disable the popup when plugs are available as we are showing
-                  // plugs in the loadout and they may be different to the popup
-                  onClick={plugs.length ? undefined : onClick}
-                  item={subclass.item}
-                />
-              )}
-            </ItemPopupTrigger>
-          </DraggableInventoryItem>
+          <PressTip
+            tooltip={() =>
+              superPlug && (
+                <PlugDefTooltip def={superPlug?.plug} classType={subclass?.item.classType} />
+              )
+            }
+          >
+            <DraggableInventoryItem item={subclass.item}>
+              <ItemPopupTrigger
+                item={subclass.item}
+                extraData={{ socketOverrides: subclass.loadoutItem.socketOverrides }}
+              >
+                {(ref, onClick) => (
+                  <ConnectedInventoryItem
+                    innerRef={ref}
+                    // Disable the popup when plugs are available as we are showing
+                    // plugs in the loadout and they may be different to the popup
+                    onClick={onClick}
+                    item={subclass.item}
+                  />
+                )}
+              </ItemPopupTrigger>
+            </DraggableInventoryItem>
+          </PressTip>
         ) : (
           <EmptySubclass />
         )}
