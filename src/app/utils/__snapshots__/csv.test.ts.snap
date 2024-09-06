@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`csv basic 1`] = `
+"str,num,undef,nul,bool
+123,5,,,true
+734,4,,,false
+567,4,,,false"
+`;
+
+exports[`csv no unpack 1`] = `
+"str,arr,str2
+123,"one,two,three",something
+123,"one,two,three,four",blah"
+`;
+
+exports[`csv undef keys in first object 1`] = `
+"str,num
+123,
+123,5"
+`;
+
+exports[`csv unpack 1`] = `
+"str,arr 0,arr 1,arr 2,arr 3,str2
+123,one,two,three,,something
+123,one,two,three,four,blah"
+`;

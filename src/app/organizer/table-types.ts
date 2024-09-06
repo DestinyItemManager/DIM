@@ -1,5 +1,6 @@
 import { SortDirection } from 'app/dim-ui/table-columns';
 import { DimItem } from 'app/inventory/item-types';
+import { CsvValue } from 'app/utils/csv';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 
@@ -16,7 +17,7 @@ export interface ColumnGroup {
   dropdownLabel?: React.ReactNode;
 }
 
-export type CSVColumn = [name: string, value: string | string[] | number | boolean | undefined];
+export type CSVColumn = [name: string, value: CsvValue];
 
 // TODO: column groupings?
 // TODO: custom configs like the total column?
@@ -69,17 +70,12 @@ export interface ColumnDefinition<V extends Value = Value> {
   csv?:
     | string
     | {
-        bivarianceHack(
-          value: V,
-          item: DimItem,
-          spreadsheetContext: SpreadsheetContext,
-        ): CSVColumn | CSVColumn[];
+        bivarianceHack(value: V, item: DimItem, spreadsheetContext: SpreadsheetContext): CSVColumn;
       }['bivarianceHack'];
 }
 
 export interface SpreadsheetContext {
   storeNamesById: { [key: string]: string };
-  maxPerks: number;
 }
 
 export interface Row {
