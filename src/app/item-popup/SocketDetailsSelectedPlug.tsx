@@ -12,6 +12,10 @@ import {
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
+import {
+  isPlugStatActive,
+  mapAndFilterInvestmentStats,
+} from 'app/inventory/store/stats-conditional';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
@@ -20,7 +24,6 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
-import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -133,7 +136,7 @@ export default function SocketDetailsSelectedPlug({
     ? defs.Collectible.get(plug.collectibleHash)?.sourceString
     : undefined;
 
-  const stats = filterMap(plug.investmentStats, (stat) => {
+  const stats = filterMap(mapAndFilterInvestmentStats(plug), (stat) => {
     if (costStatHashes.includes(stat.statTypeHash)) {
       return undefined;
     }
@@ -142,7 +145,7 @@ export default function SocketDetailsSelectedPlug({
       return undefined;
     }
 
-    if (!isPlugStatActive(item, plug, stat.statTypeHash, stat.isConditionallyActive)) {
+    if (!isPlugStatActive(stat.activityRule, item)) {
       return undefined;
     }
 
@@ -151,9 +154,7 @@ export default function SocketDetailsSelectedPlug({
     );
 
     const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
-    const currentModValue =
-      currentPlug?.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statTypeHash)
-        ?.value || 0;
+    const currentModValue = currentPlug?.stats?.[stat.statTypeHash]?.investmentValue ?? 0;
 
     let modValue = stat.value;
     const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;

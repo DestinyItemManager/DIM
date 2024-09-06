@@ -3,11 +3,10 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { isClassCompatible, isPlugStatActive } from 'app/utils/item-utils';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/memoize';
 import {
   DestinyInventoryItemDefinition,
-  DestinyItemInvestmentStatDefinition,
   DestinyStatAggregationType,
   DestinyStatCategory,
   DestinyStatDefinition,
@@ -15,18 +14,12 @@ import {
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
-import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
-import {
-  DimItem,
-  DimPlug,
-  DimSocket,
-  DimStat,
-  PluggableInventoryItemDefinition,
-} from '../item-types';
+import { DimItem, DimPlug, DimPlugInvestmentStat, DimSocket, DimStat } from '../item-types';
+import { isPlugStatActive, mapAndFilterInvestmentStats } from './stats-conditional';
 import { makeCustomStat } from './stats-custom';
 
 /**
@@ -342,7 +335,7 @@ function applyPlugsToStats(
         continue;
       }
 
-      for (const pluggedInvestmentStat of socket.plugged.plugDef.investmentStats) {
+      for (const pluggedInvestmentStat of mapAndFilterInvestmentStats(socket.plugged.plugDef)) {
         const affectedStatHash = pluggedInvestmentStat.statTypeHash;
 
         const existingStat = existingStatsByHash[affectedStatHash];
@@ -352,23 +345,12 @@ function applyPlugsToStats(
         }
 
         // check special conditionals
-        if (
-          !isPlugStatActive(
-            createdItem,
-            socket.plugged.plugDef,
-            affectedStatHash,
-            pluggedInvestmentStat.isConditionallyActive,
-          )
-        ) {
+        if (!isPlugStatActive(pluggedInvestmentStat.activityRule, createdItem)) {
           continue;
         }
 
         // we've ruled out reasons to ignore this investment stat. apply its effects to the investmentValue
-        existingStat.investmentValue += getPlugStatValue(
-          createdItem,
-          socket.plugged.plugDef,
-          pluggedInvestmentStat,
-        );
+        existingStat.investmentValue += getPlugStatValue(createdItem, pluggedInvestmentStat);
 
         // finally, re-interpolate the stat value
         const statDisplay = statDisplaysByStatHash[affectedStatHash];
@@ -402,14 +384,9 @@ function applyPlugsToStats(
  * basis for this behavior in the defs, so we cheat when we calculate live stats and attribute
  * these stats to the intrinsic since that's the "masterwork".
  */
-function getPlugStatValue(
-  createdItem: DimItem,
-  plug: PluggableInventoryItemDefinition,
-  stat: DestinyItemInvestmentStatDefinition,
-) {
+function getPlugStatValue(createdItem: DimItem, stat: DimPlugInvestmentStat) {
   if (
-    stat.isConditionallyActive &&
-    enhancedIntrinsics.has(plug.hash) &&
+    stat.activityRule?.rule === 'enhancedIntrinsic' &&
     adeptWeaponHashes.includes(createdItem.hash)
   ) {
     return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1);
@@ -432,7 +409,7 @@ function attachPlugStats(
   const activePlug = socket.plugged;
 
   // This holds the item's 'base' investment stat values without any plug additions.
-  const baseItemInvestmentStats: DimPlug['stats'] = {};
+  const baseItemInvestmentStats: { [statHash: number]: number | undefined } = {};
 
   // The active plug is already contributing to the item's stats in statsByHash. Thus we treat it separately
   // here for two reasons,
@@ -443,13 +420,14 @@ function attachPlugStats(
   if (activePlug) {
     const activePlugStats: DimPlug['stats'] = {};
 
-    for (const plugInvestmentStat of getPlugInvestmentStats(activePlug.plugDef.investmentStats)) {
-      let plugStatValue = getPlugStatValue(createdItem, activePlug.plugDef, plugInvestmentStat);
+    for (const plugInvestmentStat of mapAndFilterInvestmentStats(activePlug.plugDef)) {
+      const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
+      let plugStatValue = plugStatInvestmentValue;
       if (itemStat) {
-        const baseInvestmentStat = itemStat.investmentValue - plugStatValue;
+        const baseInvestmentStat = itemStat.investmentValue - plugStatInvestmentValue;
         baseItemInvestmentStats[plugInvestmentStat.statTypeHash] = baseInvestmentStat;
 
         // Figure out what the interpolated stat value would be without the active perk's contribution
@@ -464,7 +442,10 @@ function attachPlugStats(
         }
       }
 
-      activePlugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
+      activePlugStats[plugInvestmentStat.statTypeHash] = {
+        value: plugStatValue,
+        investmentValue: plugStatInvestmentValue,
+      };
     }
 
     // We can mutate the stats here, as the plug has just been freshly constructed. If that ever changes we will need
@@ -480,11 +461,12 @@ function attachPlugStats(
 
     const plugStats: DimPlug['stats'] = {};
 
-    for (const plugInvestmentStat of getPlugInvestmentStats(plug.plugDef.investmentStats)) {
-      let plugStatValue = getPlugStatValue(createdItem, plug.plugDef, plugInvestmentStat);
+    for (const plugInvestmentStat of mapAndFilterInvestmentStats(plug.plugDef)) {
+      const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
+      let plugStatValue = plugStatInvestmentValue;
       if (itemStat) {
         // User our calculated baseItemInvestment stat, which is the items investment stat value minus
         // the active plugs investment stat value
@@ -498,7 +480,7 @@ function attachPlugStats(
           // This is an interpolated stat type, so we need to compare interpolated values with and without this perk
           const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
           const valueWithPerk = interpolateStatValue(
-            baseInvestmentStat + plugStatValue,
+            baseInvestmentStat + plugStatInvestmentValue,
             statDisplay,
           );
 
@@ -507,47 +489,24 @@ function attachPlugStats(
           const baseInvestmentStat =
             baseItemInvestmentStats[plugInvestmentStat.statTypeHash] ?? itemStat.value;
           const valueWithoutPerk = Math.min(baseInvestmentStat, itemStat.maximumValue);
-          const valueWithPerk = Math.min(baseInvestmentStat + plugStatValue, itemStat.maximumValue);
+          const valueWithPerk = Math.min(
+            baseInvestmentStat + plugStatInvestmentValue,
+            itemStat.maximumValue,
+          );
 
           plugStatValue = valueWithPerk - valueWithoutPerk;
         }
       }
 
-      plugStats[plugInvestmentStat.statTypeHash] = plugStatValue;
+      plugStats[plugInvestmentStat.statTypeHash] = {
+        value: plugStatValue,
+        investmentValue: plugStatInvestmentValue,
+      };
     }
 
     // Yes, we are mutating the stats in place! This relies on the plugs being built fresh every time.
     (plug as Draft<DimPlug>).stats = plugStats;
   }
-}
-
-/**
- * We can't use the investment stats for plugs directly, because some enhanced
- * perks have multiple entries for the same stat, which need to be added
- * together. e.g. https://data.destinysets.com/i/InventoryItem:1167468626 This
- * function combines those entries so that downstream processing can stay
- * simple.
- */
-function getPlugInvestmentStats(
-  investmentStats: DestinyItemInvestmentStatDefinition[],
-): DestinyItemInvestmentStatDefinition[] {
-  const processedStats: DestinyItemInvestmentStatDefinition[] = [];
-  for (const investmentStat of investmentStats) {
-    const existingStatIndex = processedStats.findIndex(
-      (s) => s.statTypeHash === investmentStat.statTypeHash,
-    );
-    if (existingStatIndex >= 0) {
-      const existingStat = processedStats[existingStatIndex];
-      // Add the value into the existing stat
-      processedStats[existingStatIndex] = {
-        ...existingStat,
-        value: existingStat.value + investmentStat.value,
-      };
-    } else {
-      processedStats.push(investmentStat);
-    }
-  }
-  return processedStats;
 }
 
 /**

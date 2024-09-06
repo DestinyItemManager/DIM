@@ -5,8 +5,11 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inventory/store/stats';
+import {
+  isPlugStatActive,
+  mapAndFilterInvestmentStats,
+} from 'app/inventory/store/stats-conditional';
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
-import { isModStatActive } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
@@ -15,7 +18,6 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
 import { compareBy } from './comparators';
-import { isPlugStatActive } from './item-utils';
 import { LookupTable } from './util-types';
 
 export interface DimPlugPerkDescription {
@@ -280,18 +282,27 @@ function getPerkDescriptions(
   return results;
 }
 
+/**
+ * Get plug stats based entirely on a static definition. Since we don't have an item,
+ * the returned stats will be investment stats and not scaled to items; and any conditions
+ * that depend on an item will succeed.
+ */
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
   classType: DestinyClass | undefined,
 ) {
-  return plugDef.investmentStats
+  return mapAndFilterInvestmentStats(plugDef)
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isModStatActive(classType, plugDef.hash, stat)),
+        (classType === undefined || isPlugStatActive(stat.activityRule, undefined, classType)),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,
+      // We completely lie here and turn investment stats 1:1 into displayed stats,
+      // but that's a necessary consequence of operating without an item. It's mostly
+      // correct for the 6 character stats that loadout mods and subclass plugs give,
+      // which is where this function is used most.
       value: stat.value,
     }))
     .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
@@ -302,23 +313,14 @@ export function getDimPlugStats(item: DimItem, plug: DimPlug) {
     return Object.entries(plug.stats)
       .map(([statHash, value]) => ({
         statHash: parseInt(statHash, 10),
-        value,
+        value: value.value,
       }))
       .filter(
         (stat) =>
           // Item stats are only shown if the item can actually benefit from them
-          ((isAllowedItemStat(stat.statHash) &&
+          (isAllowedItemStat(stat.statHash) &&
             item.stats?.some((itemStat) => itemStat.statHash === stat.statHash)) ||
-            isAllowedPlugStat(stat.statHash)) &&
-          isPlugStatActive(
-            item,
-            plug.plugDef,
-            stat.statHash,
-            Boolean(
-              plug.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
-                ?.isConditionallyActive,
-            ),
-          ),
+          isAllowedPlugStat(stat.statHash),
       )
       .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
   }

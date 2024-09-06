@@ -11,7 +11,6 @@ import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-kno
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
-import { isPlugStatActive } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -45,7 +44,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const armor2MasterworkSockets =
     item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
-    armor2MasterworkSockets && getTotalPlugEffects(armor2MasterworkSockets, [stat.statHash], item);
+    armor2MasterworkSockets && getTotalPlugEffects(armor2MasterworkSockets, [stat.statHash]);
 
   const masterworkValue =
     item?.masterworkInfo?.stats?.find((s) => s.hash === stat.statHash)?.value ?? 0;
@@ -308,7 +307,7 @@ function getTotalModEffects(item: DimItem, statHash: number) {
  */
 function getModEffects(item: DimItem, statHash: number) {
   const modSockets = getNonReusableModSockets(item);
-  return getPlugEffects(modSockets, [statHash], item);
+  return getPlugEffects(modSockets, [statHash]);
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
@@ -321,8 +320,8 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  * includes a check for conditionally active stats.
  * passing the item parameter will make this more accurate
  */
-function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[], item: DimItem) {
-  return _.sumBy(getPlugEffects(sockets, armorStatHashes, item), ([s]) => s);
+function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[]) {
+  return _.sumBy(getPlugEffects(sockets, armorStatHashes), ([s]) => s);
 }
 
 /**
@@ -334,7 +333,7 @@ function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[], it
  * returns a list of tuples of
  * [ the mod's name, its numeric effect upon selected stats ]
  */
-function getPlugEffects(sockets: DimSocket[], statHashes: number[], item: DimItem) {
+function getPlugEffects(sockets: DimSocket[], statHashes: number[]) {
   const modEffects: [number, string][] = [];
 
   for (const socket of sockets) {
@@ -348,20 +347,7 @@ function getPlugEffects(sockets: DimSocket[], statHashes: number[], item: DimIte
         continue;
       }
 
-      const isConditionallyActive = Boolean(
-        socket.plugged.plugDef.investmentStats.find((s) => s.statTypeHash === statHash)
-          ?.isConditionallyActive,
-      );
-
-      const considerActive = isPlugStatActive(
-        item,
-        socket.plugged.plugDef,
-        statHash,
-        isConditionallyActive,
-      );
-      if (considerActive) {
-        modEffects.push([modificationAmount, socket.plugged.plugDef.displayProperties.name]);
-      }
+      modEffects.push([modificationAmount.value, socket.plugged.plugDef.displayProperties.name]);
     }
   }
   return modEffects;
@@ -375,9 +361,9 @@ function breakDownTotalValue(
   const modSockets = getNonReusableModSockets(item);
 
   // Armor 1.0 doesn't increase stats when masterworked
-  const totalModsValue = getTotalPlugEffects(modSockets, armorStats, item);
+  const totalModsValue = getTotalPlugEffects(modSockets, armorStats);
   const totalMasterworkValue = masterworkSockets
-    ? getTotalPlugEffects(masterworkSockets, armorStats, item)
+    ? getTotalPlugEffects(masterworkSockets, armorStats)
     : 0;
   return { baseTotalValue, totalModsValue, totalMasterworkValue };
 }

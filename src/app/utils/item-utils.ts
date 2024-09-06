@@ -12,7 +12,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
   ARTIFICE_PERK_HASH,
-  ModsWithConditionalStats,
   armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
@@ -23,18 +22,13 @@ import modSocketMetadata, {
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import artifactBreakerMods from 'data/d2/artifact-breaker-weapon-types.json';
-import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import {
   BreakerTypeHashes,
   BucketHashes,
   ItemCategoryHashes,
   PlugCategoryHashes,
-  StatHashes,
-  TraitHashes,
 } from 'data/d2/generated-enums';
-import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { filterMap, objectifyArray } from './collections';
 
@@ -277,75 +271,6 @@ export function getItemYear(
   } else {
     return undefined;
   }
-}
-
-/**
- * This function indicates whether a mod's stat effect is active on the item.
- *
- * For example, some subclass plugs reduce a different stat per character class,
- * which we identify using the passed subclass item.
- *
- * If the plugHash isn't recognized then the default is to return true.
- */
-export function isPlugStatActive(
-  item: DimItem,
-  plug: DestinyInventoryItemDefinition,
-  statHash: number,
-  isConditionallyActive: boolean,
-): boolean {
-  /*
-  Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
-  In these cases, the catalyst effects are only applied once the objectives are complete.
-  We'll assume that the item can only be masterworked if its associated catalyst has been completed.
-  */
-  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && !item.masterwork) {
-    return false;
-  }
-
-  if (!isConditionallyActive) {
-    return true;
-  }
-
-  // These are preview stats for the Adept enhancing plugs to indicate that enhancing
-  // implicitly upgrades the masterwork to T10
-  if (plug.plug?.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers) {
-    return false;
-  }
-
-  const plugHash = plug.hash;
-  if (
-    plugHash === ModsWithConditionalStats.ElementalCapacitor ||
-    plugHash === ModsWithConditionalStats.EnhancedElementalCapacitor
-  ) {
-    return false;
-  }
-
-  if (
-    plugHash === ModsWithConditionalStats.EchoOfPersistence ||
-    plugHash === ModsWithConditionalStats.SparkOfFocus
-  ) {
-    // "-10 to the stat that governs your class ability recharge"
-    return (
-      (item.classType === DestinyClass.Hunter && statHash === StatHashes.Mobility) ||
-      (item.classType === DestinyClass.Titan && statHash === StatHashes.Resilience) ||
-      (item.classType === DestinyClass.Warlock && statHash === StatHashes.Recovery)
-    );
-  }
-  if (masterworksWithCondStats.includes(plugHash)) {
-    return adeptWeaponHashes.includes(item.hash);
-  }
-  if (enhancedIntrinsics.has(plugHash)) {
-    return (
-      // Crafted weapons get bonus stats from enhanced intrinsics at Level 20+.
-      // The number 20 isn't in the definitions, so just hardcoding it here.
-      (item.craftedInfo?.level || 0) >= 20 ||
-      // Alternatively, enhancing an adept weapon gives it an enhanced intrinsic
-      // that gives bonus stats simply because it's an adept weapon, and more if Level 20+.
-      // stats.ts:getPlugStatValue actually takes care of scaling this to the correct bonus.
-      adeptWeaponHashes.includes(item.hash)
-    );
-  }
-  return true;
 }
 
 /**
