@@ -1,6 +1,7 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
+import { maxLength } from 'app/item-popup/NotesArea';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
 import { buildStatInfo, getColumns } from 'app/organizer/Columns';
 import { SpreadsheetContext } from 'app/organizer/table-types';
@@ -311,7 +312,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
           row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
           dispatch(
             setItemNote({
-              note: row.Notes,
+              note: row.Notes.substring(0, maxLength),
               itemId: row.Id,
             }),
           );
