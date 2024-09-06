@@ -312,28 +312,30 @@ const socketFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) =>
       Boolean(
-        item.sockets?.allSockets.some(
-          (s) =>
-            s.plugged?.plugDef.plug.plugCategoryHash ===
-            PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
-        ),
+        (item.craftedInfo?.enhancementTier || 0) < 3 &&
+          item.sockets?.allSockets.some(
+            (s) =>
+              s.plugged?.plugDef.plug.plugCategoryHash ===
+              PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
+          ),
       ),
   },
   {
-    // this currently tests for full enhancedness, returning false for partially-enhanced items
     keywords: 'enhanced',
     description: tl('Filter.Enhanced'),
     destinyVersion: 2,
-    format: ['simple'], // TO-DO: add 'range' here
-    filter:
-      ({ lhs }) =>
-      (item) => {
-        if (lhs === 'is') {
-          // rules out partially-enhanced items
-          // the game explicitly warns you that partially-enhanced items stop looking masterworked
-          return item.crafted === 'enhanced' && item.masterwork;
-        }
-      },
+    format: ['simple', 'range'],
+    filter: ({ lhs, compare }) => {
+      if (compare) {
+        return (item) => compare(item.craftedInfo?.enhancementTier || 0);
+      }
+      if (lhs === 'is') {
+        return (item) =>
+          item.crafted === 'enhanced' && (item.craftedInfo?.enhancementTier || 0) > 0;
+      }
+      // shouldn't ever get here but need the default case
+      return (_item) => false;
+    },
   },
   {
     keywords: 'retiredperk',
