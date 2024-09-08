@@ -211,15 +211,16 @@ const dupeFilters: ItemFilterDefinition[] = [
       const duplicates = new Map<string, PerksSet>();
       for (const i of allItems) {
         if (i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible)) {
-          if (!duplicates.has(i.typeName)) {
-            duplicates.set(i.typeName, new PerksSet());
+          const dupeId = i.classType + i.type;
+          if (!duplicates.has(dupeId)) {
+            duplicates.set(dupeId, new PerksSet());
           }
-          duplicates.get(i.typeName)!.insert(i);
+          duplicates.get(dupeId)!.insert(i);
         }
       }
       return (item) =>
         item.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible) &&
-        Boolean(duplicates.get(item.typeName)?.hasPerkDupes(item));
+        Boolean(duplicates.get(item.classType + item.type)?.hasPerkDupes(item));
     },
   },
 ];
