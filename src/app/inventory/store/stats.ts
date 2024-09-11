@@ -345,7 +345,7 @@ function applyPlugsToStats(
         }
 
         // check special conditionals
-        if (!isPlugStatActive(pluggedInvestmentStat.activityRule, createdItem)) {
+        if (!isPlugStatActive(pluggedInvestmentStat.activationRule, createdItem)) {
           continue;
         }
 
@@ -386,7 +386,7 @@ function applyPlugsToStats(
  */
 function getPlugStatValue(createdItem: DimItem, stat: DimPlugInvestmentStat) {
   if (
-    stat.activityRule?.rule === 'enhancedIntrinsic' &&
+    stat.activationRule?.rule === 'enhancedIntrinsic' &&
     adeptWeaponHashes.includes(createdItem.hash)
   ) {
     return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1);
@@ -421,6 +421,9 @@ function attachPlugStats(
     const activePlugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(activePlug.plugDef)) {
+      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+        continue;
+      }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
@@ -462,6 +465,9 @@ function attachPlugStats(
     const plugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(plug.plugDef)) {
+      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+        continue;
+      }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
