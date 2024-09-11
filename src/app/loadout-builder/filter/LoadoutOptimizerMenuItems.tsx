@@ -16,7 +16,7 @@ import LockedItem from './LockedItem';
 
 export type ChooseItemFunction = (
   updateFunc: (item: DimItem) => void,
-  filter?: ((item: DimItem) => boolean) | undefined,
+  filter?: (item: DimItem) => boolean,
 ) => (e: React.MouseEvent) => Promise<void>;
 
 export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedItems({

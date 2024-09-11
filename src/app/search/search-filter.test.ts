@@ -29,7 +29,7 @@ describe('generateSuggestionsForFilter', () => {
       format: ItemFilterDefinition['format'],
       keywords: string | string[],
       suggestions?: string[],
-      overload?: { [key: string]: number } | undefined,
+      overload?: { [key: string]: number },
     ) => {
       const candidates = generateSuggestionsForFilter(
         {
