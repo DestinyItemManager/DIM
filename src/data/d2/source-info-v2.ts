@@ -418,17 +418,13 @@ const D2Sources: {
   events: {
     itemHashes: [
       495940989, // Avalanche
-      586671776, // Something New
       1280894514, // Mechabre
-      2326578623, //
       2812100428, // Stay Frosty
       2814093983, // Cold Front
       3240434620, // Something New
       3400256755, // Zephyr
       3559361670, // The Title
       3573686365, // Glacioclasm
-      4106757302, // Crowning Duologue
-      4169225313, // Compass Rose
     ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
@@ -452,6 +448,7 @@ const D2Sources: {
       1919933822, // Source: Festival of the Lost 2020
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
+      2050870152, // Source: Solstice
       2187511136, // Source: Earned during the seasonal Revelry event.
       2364515524, // Source: Dawning 2022
       2473294025, // Source: Guardian Games 2023
@@ -501,6 +498,7 @@ const D2Sources: {
       2055289873, // Source: "The Evidence Board" Exotic Quest
       2068312112, // Source: Exotic Mission "Zero Hour"
       2171520631, // Source: "Lost Lament" Exotic Quest
+      2296534980, // Source: Exotic Mission Encore
       2745272818, // Source: "Presage" Exotic Quest
       2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
       3597879858, // Source: "Presage" Exotic Quest

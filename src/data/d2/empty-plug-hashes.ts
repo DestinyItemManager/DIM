@@ -72,7 +72,7 @@ export const emptyPlugHashes = new Set<number>([
   1728096240, // Empty Mod Socket (King's Fall Mod, enhancements.raid_v620)
   4144354978, // Empty Mod Socket (Root of Nightmares Armor Mod, enhancements.raid_v700)
   717667840, // Empty Mod Socket (Crota's End Mod, enhancements.raid_v720)
-  4059283783, // Empty Mod Socket (Salvation's Edge Armor Mod, enhancements.raid_v800)
+  4059283783, // Empty Mod Socket (This mod's perks are only active in the "Salvation's Edge" raid.  Multiple copies of this mod stack and improve its effects., enhancements.raid_v800)
   720857, // Empty Mod Socket (Legacy Armor Mod, enhancements.season_forge)
   1180997867, // Empty Mod Socket (Nightmare Mod, enhancements.season_maverick)
   2620967748, // Empty Mod Socket (Legacy Armor Mod, enhancements.season_maverick)

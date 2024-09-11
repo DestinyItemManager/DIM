@@ -346,6 +346,7 @@ const missingSources: { [key: string]: number[] } = {
     3164547673, // Atonement Tau
     3174394351, // The Outlander's Grip
     3174771856, // Stasis Scavenger
+    3181984586, // Charged Up
     3183585337, // Legion-Bane
     3184690956, // Absolution
     3188328909, // Stasis Siphon
@@ -905,27 +906,32 @@ const missingSources: { [key: string]: number[] } = {
     140842223, // Solstice Mask (Drained)
     143299650, // Solstice Plate (Renewed)
     153144587, // Solstice Cloak (Drained)
+    179654396, // Sublime Vest
     226436555, // Solstice Mask (Renewed)
     231432261, // Solstice Bond (Resplendent)
     234970842, // Solstice Boots (Resplendent)
     250513201, // Solstice Greaves (Resplendent)
+    327680457, // Sublime Boots
     335763433, // Solstice Plate (Resplendent)
     346065606, // Solstice Cloak (Rekindled)
+    350054538, // Sublime Strides
     391889347, // Solstice Robes (Drained)
     419435523, // Inaugural Revelry Grips
     450844637, // Solstice Robes (Majestic)
+    464814870, // Sublime Greaves
     492834021, // Inaugural Revelry Hood
     495940989, // Avalanche
+    503145555, // Sublime Gloves
     518930465, // Solstice Grasps (Rekindled)
     531005896, // Solstice Cloak (Resplendent)
     540653483, // Solstice Vest (Scorched)
     574167778, // Solstice Gauntlets (Drained)
     574790717, // Solstice Gloves (Drained)
-    586671776, // Something New
     627596132, // Solstice Hood (Drained)
     677939288, // Solstice Helm (Scorched)
     721146704, // Solstice Mask (Rekindled)
     784499738, // Solstice Bond (Renewed)
+    807693916, // Sublime Hood
     830497630, // Solstice Helm (Resplendent)
     929148730, // Solstice Vest (Drained)
     967650555, // Solstice Greaves (Scorched)
@@ -947,15 +953,18 @@ const missingSources: { [key: string]: number[] } = {
     1556831535, // Inaugural Revelry Gauntlets
     1561249470, // Inaugural Revelry Boots
     1589318419, // Solstice Strides (Rekindled)
+    1609141880, // Sublime Plate
     1649929380, // Solstice Mark (Resplendent)
     1651275175, // Solstice Helm (Renewed)
     1683482799, // Solstice Mark (Drained)
     1706764072, // Quilted Winter Mark
     1706874193, // Inaugural Revelry Greaves
+    1752648948, // Sublime Sleeves
     1775707016, // Solstice Grasps (Majestic)
     1812385587, // Festive Winter Bond
     1862324869, // Solstice Boots (Majestic)
     1897528210, // Solstice Robes (Scorched)
+    2079349511, // Sublime Helm
     2105409832, // Solstice Greaves (Renewed)
     2111111693, // Solstice Strides (Resplendent)
     2120905920, // Inaugural Revelry Cloak
@@ -974,8 +983,10 @@ const missingSources: { [key: string]: number[] } = {
     2477028154, // Inaugural Revelry Mask
     2492769187, // Solstice Bond (Scorched)
     2523388612, // Solstice Hood (Renewed)
+    2543971899, // Sublime Mark
     2546370410, // Solstice Hood (Majestic)
     2578820926, // Solstice Greaves (Majestic)
+    2616697701, // Sublime Robes
     2618313500, // Solstice Greaves (Drained)
     2685001662, // Solstice Gloves (Rekindled)
     2696245301, // Solstice Grasps (Scorched)
@@ -999,14 +1010,17 @@ const missingSources: { [key: string]: number[] } = {
     3104384024, // Solstice Boots (Rekindled)
     3159052337, // Solstice Mask (Majestic)
     3192336962, // Solstice Cloak (Scorched)
+    3232831379, // Sublime Mask
     3236510875, // Solstice Grasps (Resplendent)
     3240434620, // Something New
+    3329514528, // Sublime Gauntlets
     3400256755, // Zephyr
     3559361670, // The Title
     3573686365, // Glacioclasm
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)
     3748622249, // Solstice Hood (Resplendent)
+    3809902215, // Sublime Cloak
     3829285960, // Horror Story
     3892841518, // Solstice Gauntlets (Renewed)
     3929403535, // Solstice Gauntlets (Resplendent)
@@ -1014,13 +1028,12 @@ const missingSources: { [key: string]: number[] } = {
     3943394479, // Solstice Plate (Scorched)
     3965417933, // Inaugural Revelry Vest
     3968560442, // Solstice Bond (Drained)
+    3970040886, // Sublime Bond
     3987442049, // Solstice Mark (Majestic)
     4075522049, // Inaugural Revelry Bond
     4100029812, // Solstice Strides (Renewed)
-    4106757302, // Crowning Duologue
     4128297107, // Solstice Mark (Renewed)
     4142792564, // Solstice Helm (Rekindled)
-    4169225313, // Compass Rose
     4245469491, // Solstice Plate (Rekindled)
     4272367383, // Solstice Strides (Scorched)
   ],
