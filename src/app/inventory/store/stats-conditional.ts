@@ -14,7 +14,7 @@ import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import {
   DimItem,
   DimPlugInvestmentStat,
-  PlugStatActivityRule,
+  PlugStatActivationRule,
   PluggableInventoryItemDefinition,
 } from '../item-types';
 
@@ -23,10 +23,10 @@ import {
  * a given `stat` in that itemDef's `investmentStats` is active. Returns undefined
  * when the stat is always active.
  */
-function getPlugInvestmentStatActivityRule(
+function getPlugInvestmentStatActivationRule(
   itemDef: DestinyInventoryItemDefinition,
   stat: DestinyItemInvestmentStatDefinition,
-): PlugStatActivityRule | undefined {
+): PlugStatActivationRule | undefined {
   // Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
   // In these cases, the catalyst effects are only applied once the objectives are complete.
   // We'll assume that the item can only be masterworked if its associated catalyst has been completed.
@@ -93,7 +93,7 @@ function getPlugInvestmentStatActivityRule(
  * setups that do not include a particular item.
  */
 export function isPlugStatActive(
-  rule: PlugStatActivityRule,
+  rule: PlugStatActivationRule,
   item: DimItem | undefined,
   classType?: DestinyClass,
 ): boolean {
@@ -165,7 +165,7 @@ function getPlugInvestmentStats(
 
 /**
  * Turn the investmentStats from `itemDef` into an elaborated form
- * that more explicitly contains the plug stat activity rules and
+ * that more explicitly contains the plug stat activation rules and
  * fixes some data errors/problems.
  *
  * TODO: If/when https://github.com/DestinyItemManager/DIM/issues/9076
@@ -179,7 +179,7 @@ export const mapAndFilterInvestmentStats = weakMemoize(
     const investmentStats = getPlugInvestmentStats(itemDef.investmentStats);
 
     // Fast path in case all stats are active and we need no postprocessing.
-    // This needs some knowledge of how `getPlugInvestmentStatActivityRule` works...
+    // This needs some knowledge of how `getPlugInvestmentStatActivationRule` works...
     if (
       !itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) &&
       investmentStats.every((s) => !s.isConditionallyActive)
@@ -203,11 +203,11 @@ export const mapAndFilterInvestmentStats = weakMemoize(
           warnLog('plug stats', 'enhanced bipod workaround does not apply anymore');
         }
       }
-      const activityRule = getPlugInvestmentStatActivityRule(itemDef, stat);
-      if (activityRule?.rule === 'never') {
+      const activationRule = getPlugInvestmentStatActivationRule(itemDef, stat);
+      if (activationRule?.rule === 'never') {
         return undefined;
       }
-      return { activityRule, statTypeHash: stat.statTypeHash, value: stat.value };
+      return { activationRule, statTypeHash: stat.statTypeHash, value: stat.value };
     });
 
     // If there are duplicate stats, consolidate them.
@@ -216,7 +216,7 @@ export const mapAndFilterInvestmentStats = weakMemoize(
       for (let idx = stats.length - 2; idx >= 0; idx--) {
         for (let idx2 = stats.length - 1; idx2 > idx; idx2--) {
           if (stats[idx].statTypeHash === stats[idx2].statTypeHash) {
-            if (stats[idx].activityRule?.rule === stats[idx2].activityRule?.rule) {
+            if (stats[idx].activationRule?.rule === stats[idx2].activationRule?.rule) {
               stats[idx].value += stats[idx2].value;
               stats.splice(idx2, 1);
               infoLog('plug stats', 'consolidating stat index', idx2, 'into', idx, itemDef);

@@ -295,7 +295,7 @@ export function getPlugDefStats(
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isPlugStatActive(stat.activityRule, undefined, classType)),
+        (classType === undefined || isPlugStatActive(stat.activationRule, undefined, classType)),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,

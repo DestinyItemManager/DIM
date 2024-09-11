@@ -382,7 +382,7 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
 }
 
 /** Describes the conditions under which a plug stat is active */
-export type PlugStatActivityRule =
+export type PlugStatActivationRule =
   | /** always active */ undefined
   | {
       /** never active */
@@ -412,11 +412,11 @@ export type PlugStatActivityRule =
  *
  * The idea is that DestinyItemInvestmentStatDefinition[] is assignable to DimPlugInvestmentStat[].
  * That way we can reuse the plug def's investmentStats array if it has no conditional stats or doesn't
- * require fixup in general, and map to our own format with a PlugStatActivityRule if need be
+ * require fixup in general, and map to our own format with a PlugStatActivationRule if need be
  */
 export interface DimPlugInvestmentStat
   extends Omit<DestinyItemInvestmentStatDefinition, 'isConditionallyActive'> {
-  activityRule?: PlugStatActivityRule;
+  activationRule?: PlugStatActivationRule;
 }
 
 /**

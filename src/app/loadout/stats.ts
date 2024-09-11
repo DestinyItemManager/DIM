@@ -115,7 +115,7 @@ export function getTotalModStatChanges(
       for (const stat of mapAndFilterInvestmentStats(mod)) {
         if (
           stat.statTypeHash in totals &&
-          isPlugStatActive(stat.activityRule, undefined, characterClass)
+          isPlugStatActive(stat.activationRule, undefined, characterClass)
         ) {
           const value = stat.value * modCount;
           totals[stat.statTypeHash as ArmorStatHashes].value += value;
