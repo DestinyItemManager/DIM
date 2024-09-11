@@ -357,6 +357,9 @@ const ichToBreakerType = Object.entries(artifactBreakerMods).reduce<
  * season's artifact mods.
  */
 export function getBreakerTypeHash(item: DimItem): number | undefined {
+  if (item.destinyVersion === 1) {
+    return;
+  }
   if (item.breakerType) {
     return item.breakerType.hash;
   } else if (item.bucket.inWeapons) {
