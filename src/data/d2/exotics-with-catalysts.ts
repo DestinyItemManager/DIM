@@ -76,6 +76,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3654674561, // Dead Man's Tale
   3659414143, // Verglas Curve
   3664831848, // Heartshadow
+  3698448090, // Choir of One
   3761898871, // Lorentz Driver
   3766045777, // Black Talon
   3821409356, // Ex Diris

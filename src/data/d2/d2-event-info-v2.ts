@@ -23,7 +23,7 @@ export const D2EventInfo = {
   [D2EventEnum.SOLSTICE_OF_HEROES]: {
     name: 'Solstice',
     shortname: 'solstice',
-    sources: [151416041, 641018908, 1666677522, 3724111213],
+    sources: [151416041, 641018908, 1666677522, 2050870152, 3724111213],
     engram: [821844118],
   },
   [D2EventEnum.FESTIVAL_OF_THE_LOST]: {
