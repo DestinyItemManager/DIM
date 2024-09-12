@@ -1,5 +1,7 @@
 ## Next
 
+## 8.36.1 <span class="changelog-date">(2024-09-12)</span>
+
 * Fixed stat bar display for mods that conditionally apply stats.
 * Fix breaker type showing up on D1 items, and some crashes in D1 inventories.
 * `is:dupeperks` no longer compares armor from different classes.
