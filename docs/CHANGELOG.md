@@ -1,5 +1,10 @@
 ## Next
 
+* Fixed stat bar display for mods that conditionally apply stats.
+* Fix breaker type showing up on D1 items, and some crashes in D1 inventories.
+* `is:dupeperks` no longer compares armor from different classes.
+* Updated the list of breaker-granting artifact mods.
+
 ## 8.36.0 <span class="changelog-date">(2024-09-08)</span>
 
 * In the item picker, you can long-press or shift-click an item to see its item details. A regular click still pulls that item.
