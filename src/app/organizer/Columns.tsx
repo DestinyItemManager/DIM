@@ -482,7 +482,7 @@ export function getColumns(
         id: 'Category',
         header: 'Category',
         csv: 'Category',
-        value: (i) => i.type,
+        value: (i) => i.bucket.name,
       }),
     isSpreadsheet &&
       c({

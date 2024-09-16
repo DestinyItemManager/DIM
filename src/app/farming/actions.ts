@@ -118,7 +118,7 @@ function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResul
   return (dispatch, getState) => {
     const buckets = bucketsSelector(getState())!;
     const makeRoomBuckets = Object.values(buckets.byHash).filter(
-      (b) => b.category === BucketCategory.Equippable && b.type,
+      (b) => b.category === BucketCategory.Equippable && b.vaultBucket,
     );
     return dispatch(makeRoomForItemsInBuckets(store, makeRoomBuckets, cancelToken));
   };

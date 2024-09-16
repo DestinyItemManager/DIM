@@ -47,11 +47,17 @@ export interface DimItem {
   /** The version of Destiny this comes from. */
   destinyVersion: DestinyVersion;
   /**
-   * This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. It should generally be avoided in favor of using bucket hash.
+   * This is the type of the item (see InventoryBuckets) regardless of location.
+   * This string is a DIM concept with no direct correlation to the API types.
+   * It should generally be avoided in favor of using bucket hash.
    * @deprecated use bucket.hash instead.
    */
   type: DimBucketType;
-  /** Localized name of this item's type. */
+  /**
+   * Localized name of this item's type. Only used for display - use bucket.hash
+   * or itemCategoryHashes to figure out what kind of item this is
+   * programmatically.
+   */
   typeName: string;
   /** The bucket the item normally resides in (even though it may currently be elsewhere, such as in the postmaster). */
   bucket: InventoryBucket;
