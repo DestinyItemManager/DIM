@@ -202,7 +202,7 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@hello-pangea/dnd": "^16.6.0",
+    "@hello-pangea/dnd": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "@react-hook/resize-observer": "^2.0.2",
     "@sentry/browser": "^8.30.0",
