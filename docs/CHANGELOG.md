@@ -1,5 +1,7 @@
 ## Next
 
+## 8.37.0 <span class="changelog-date">(2024-09-15)</span>
+
 ## 8.36.1 <span class="changelog-date">(2024-09-12)</span>
 
 * Fixed stat bar display for mods that conditionally apply stats.
