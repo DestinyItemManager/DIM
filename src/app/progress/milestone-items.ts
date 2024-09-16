@@ -248,8 +248,6 @@ function makeFakePursuitItem(
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
     bucket: bucket,
     hash,
-    // This is the type of the item (see DimCategory/DimBuckets) regardless of location
-    type: 'Milestone',
     itemCategoryHashes: [], // see defs.ItemCategory
     tier: 'Rare',
     isExotic: false,

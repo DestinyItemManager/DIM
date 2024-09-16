@@ -6,6 +6,7 @@ import {
   D1StatDefinition,
   D1TalentGridDefinition,
 } from 'app/destiny1/d1-manifest-types';
+import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
@@ -269,8 +270,6 @@ function makeItem(
     }
   }
 
-  const itemType = normalBucket.type || 'Unknown';
-
   const element =
     (item.damageTypeHash && toD2DamageType(defs.DamageType.get(item.damageTypeHash))) || null;
 
@@ -290,8 +289,6 @@ function makeItem(
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
     bucket: normalBucket,
     hash: item.itemHash,
-    // This is the type of the item (see dimCategory/dimBucketService) regardless of location
-    type: itemType,
     itemCategoryHashes: itemDef.itemCategoryHashes || [],
     tier: tiers[itemDef.tierType] || 'Common',
     isExotic: tiers[itemDef.tierType] === 'Exotic',
@@ -322,7 +319,7 @@ function makeItem(
     classType: itemDef.classType,
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
-    ammoType: getAmmoType(itemType),
+    ammoType: getAmmoType(normalBucket.hash),
     sourceHashes: itemDef.sourceHashes,
     lockable:
       normalBucket.hash !== BucketHashes.Subclass &&
@@ -406,10 +403,22 @@ function makeItem(
   );
 
   try {
-    createdItem.stats = buildStats(item, itemDef, defs.Stat, createdItem.talentGrid, itemType);
+    createdItem.stats = buildStats(
+      item,
+      itemDef,
+      defs.Stat,
+      createdItem.talentGrid,
+      createdItem.bucket.hash,
+    );
 
     if (createdItem.stats?.length === 0) {
-      createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
+      createdItem.stats = buildStats(
+        item,
+        item,
+        defs.Stat,
+        createdItem.talentGrid,
+        createdItem.bucket.hash,
+      );
     }
   } catch (e) {
     errorLog(TAG, `Error building stats for ${createdItem.name}`, item, itemDef, e);
@@ -428,7 +437,11 @@ function makeItem(
 
   if (createdItem.talentGrid && createdItem.infusable && item.primaryStat) {
     try {
-      createdItem.quality = getQualityRating(createdItem.stats, item.primaryStat, itemType);
+      createdItem.quality = getQualityRating(
+        createdItem.stats,
+        item.primaryStat,
+        createdItem.bucket.hash,
+      );
     } catch (e) {
       errorLog(
         'd1-stores',
@@ -476,17 +489,17 @@ function makeItem(
   return createdItem;
 }
 
-function getAmmoType(itemType: string) {
-  switch (itemType) {
-    case 'Primary':
+function getAmmoType(bucketHash: BucketHashes) {
+  switch (bucketHash) {
+    case BucketHashes.KineticWeapons:
       return DestinyAmmunitionType.Primary;
-    case 'Special':
+    case BucketHashes.EnergyWeapons:
       return DestinyAmmunitionType.Special;
-    case 'Heavy':
+    case BucketHashes.PowerWeapons:
       return DestinyAmmunitionType.Heavy;
+    default:
+      return DestinyAmmunitionType.None;
   }
-
-  return DestinyAmmunitionType.None;
 }
 
 function buildTalentGrid(
@@ -679,7 +692,7 @@ function buildStats(
   itemDef: D1InventoryItemDefinition | D1ItemComponent,
   statDefs: DefinitionTable<D1StatDefinition>,
   grid: D1TalentGrid | null,
-  type: string,
+  bucketHash: ArmorTypes,
 ): D1Stat[] | null {
   if (!item.stats?.length || !itemDef.stats) {
     return null;
@@ -747,7 +760,7 @@ function buildStats(
           (identifier === 'STAT_STRENGTH' &&
             armorNodes.find((n) => n.hash === 193091484 /* Increase Strength */)))
       ) {
-        bonus = getBonus(item.primaryStat.value, type);
+        bonus = getBonus(item.primaryStat.value, bucketHash);
 
         if (
           activeArmorNode &&
