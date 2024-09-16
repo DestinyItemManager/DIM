@@ -20,7 +20,7 @@ import {
   DestinySocketCategoryDefinition,
   DestinyStat,
 } from 'bungie-api-ts/destiny2';
-import { DimBucketType, InventoryBucket } from './inventory-buckets';
+import { InventoryBucket } from './inventory-buckets';
 
 /**
  * A generic DIM item, representing almost anything. This completely represents any D2 item, and most D1 items,
@@ -46,13 +46,6 @@ export interface DimItem {
   classified: boolean;
   /** The version of Destiny this comes from. */
   destinyVersion: DestinyVersion;
-  /**
-   * This is the type of the item (see InventoryBuckets) regardless of location.
-   * This string is a DIM concept with no direct correlation to the API types.
-   * It should generally be avoided in favor of using bucket hash.
-   * @deprecated use bucket.hash instead.
-   */
-  type: DimBucketType;
   /**
    * Localized name of this item's type. Only used for display - use bucket.hash
    * or itemCategoryHashes to figure out what kind of item this is
