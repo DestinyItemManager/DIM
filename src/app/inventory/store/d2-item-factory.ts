@@ -798,8 +798,8 @@ function buildPursuitInfo(
   }
 }
 
-function getItemCategoryHashes(itemDef: DestinyInventoryItemDefinition): number[] {
-  let itemCategoryHashes = itemDef.itemCategoryHashes || emptyArray();
+function getItemCategoryHashes(itemDef: DestinyInventoryItemDefinition): ItemCategoryHashes[] {
+  let itemCategoryHashes: ItemCategoryHashes[] = itemDef.itemCategoryHashes || emptyArray();
 
   if (
     itemCategoryHashes.includes(ItemCategoryHashes.Weapon) &&

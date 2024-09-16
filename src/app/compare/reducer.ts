@@ -4,7 +4,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
 import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas, isD1Item } from 'app/utils/item-utils';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ActionType, Reducer, getType } from 'typesafe-actions';
 import * as actions from './actions';
 import { compareNameQuery } from './compare-utils';
@@ -14,7 +14,7 @@ export interface CompareSession {
    * A list of itemCategoryHashes must be provided in order to limit the type of items which can be compared.
    * This list should match the item category drill-down from Organizer's ItemTypeSelector.
    */
-  readonly itemCategoryHashes: number[];
+  readonly itemCategoryHashes: ItemCategoryHashes[];
   /**
    * The query further filters the items to be shown. Since this query is modified
    * when adding or removing items, external queries must be parenthesized first
@@ -258,11 +258,14 @@ function getItemCategoryHashesFromExampleItem(item: DimItem) {
 
   // Dive two layers down (weapons/armor => type)
   for (const node of itemSelectionTree.subCategories!) {
-    if (item.itemCategoryHashes.includes(node.itemCategoryHash)) {
+    if (node.itemCategoryHash && item.itemCategoryHashes.includes(node.itemCategoryHash)) {
       hashes.push(node.itemCategoryHash);
       if (node.subCategories) {
         for (const subNode of node.subCategories) {
-          if (item.itemCategoryHashes.includes(subNode.itemCategoryHash)) {
+          if (
+            subNode.itemCategoryHash &&
+            item.itemCategoryHashes.includes(subNode.itemCategoryHash)
+          ) {
             hashes.push(subNode.itemCategoryHash);
             break;
           }
