@@ -1,5 +1,7 @@
 import { DimCharacterStat } from 'app/inventory/store-types';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { D1GridNode, D1Item } from '../../inventory/item-types';
 
 export interface D1ItemWithNormalStats extends D1Item {
@@ -17,13 +19,13 @@ export interface D1ItemWithNormalStats extends D1Item {
 }
 
 export type ArmorTypes =
-  | 'Helmet'
-  | 'Gauntlets'
-  | 'Chest'
-  | 'Leg'
-  | 'ClassItem'
-  | 'Artifact'
-  | 'Ghost';
+  | BucketHashes.Helmet
+  | BucketHashes.Gauntlets
+  | BucketHashes.ChestArmor
+  | BucketHashes.LegArmor
+  | BucketHashes.ClassArmor
+  | D1BucketHashes.Artifact
+  | BucketHashes.Ghost;
 
 export type ClassTypes = DestinyClass.Titan | DestinyClass.Warlock | DestinyClass.Hunter;
 
