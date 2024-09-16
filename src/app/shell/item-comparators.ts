@@ -5,7 +5,7 @@ import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
 import { Comparator, chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -123,7 +123,7 @@ interface VaultGroupIconTag {
 
 interface VaultGroupIconTypeName {
   type: 'typeName';
-  itemCategoryHashes: number[];
+  itemCategoryHashes: ItemCategoryHashes[];
 }
 
 interface VaultGroupIconAmmoType {

@@ -7,6 +7,7 @@ import { setSearchQuery } from 'app/shell/actions';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { usePageTitle } from 'app/utils/hooks';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
@@ -25,7 +26,7 @@ interface Props {
  */
 function drillToSelection(
   selectionTree: ItemCategoryTreeNode | undefined,
-  selectedItemCategoryHashes: number[],
+  selectedItemCategoryHashes: ItemCategoryHashes[],
 ): ItemCategoryTreeNode[] {
   const selectedItemCategoryHash = selectedItemCategoryHashes[0];
 

@@ -1,5 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import store from 'app/store/store';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { vaultWeaponGroupingSelector, vaultWeaponGroupingSettingSelector } from './vault-grouping';
 
@@ -45,7 +46,7 @@ describe('vaultWeaponGroupingSelector', () => {
       {
         ...firstItem,
         typeName: undefined as unknown as string,
-        itemCategoryHashes: [0],
+        itemCategoryHashes: [0 as ItemCategoryHashes],
       },
       {
         ...firstItem,
