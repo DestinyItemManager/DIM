@@ -17,6 +17,7 @@ export type InventoryBucket = {
   readonly capacity: number;
   readonly accountWide: boolean;
   readonly category: BucketCategory;
+  /** @deprecated use bucket hash */
   readonly type?: DimBucketType;
   readonly sort?: BucketSortType;
   /**
