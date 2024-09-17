@@ -22,6 +22,7 @@ import {
   TierType,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 export interface AllD1DestinyManifestComponents {
   DestinyRecordDefinition: { [hash: number]: D1RecordDefinition };
@@ -140,7 +141,7 @@ export interface D1InventoryItemDefinition {
   itemSubType: DestinyItemSubType;
   classType: DestinyClass;
   sources: D1ItemSourceDefinition[];
-  itemCategoryHashes: number[];
+  itemCategoryHashes: ItemCategoryHashes[];
   sourceHashes: number[];
   nonTransferrable: boolean;
   exclusive: BungieMembershipType;

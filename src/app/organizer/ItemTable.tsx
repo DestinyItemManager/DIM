@@ -105,7 +105,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     if (!terminal) {
       return emptyArray<DimItem>();
     }
-    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter(Boolean);
+    const categoryHashes = categories.map((s) => s.itemCategoryHash).filter((h) => h !== 0);
     // a top level class-specific category implies armor
     if (armorTopLevelCatHashes.some((h) => categoryHashes.includes(h))) {
       categoryHashes.push(ItemCategoryHashes.Armor);

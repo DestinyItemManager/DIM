@@ -364,8 +364,8 @@ export function getBreakerTypeHash(item: DimItem): number | undefined {
     return item.breakerType.hash;
   } else if (item.bucket.inWeapons) {
     for (const ich of item.itemCategoryHashes) {
-      if (ichToBreakerType[ich as ItemCategoryHashes]) {
-        return ichToBreakerType[ich as ItemCategoryHashes];
+      if (ichToBreakerType[ich]) {
+        return ichToBreakerType[ich];
       }
     }
   }

@@ -20,6 +20,7 @@ import {
   DestinySocketCategoryDefinition,
   DestinyStat,
 } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { DimBucketType, InventoryBucket } from './inventory-buckets';
 
 /**
@@ -53,7 +54,7 @@ export interface DimItem {
   /** The bucket the item normally resides in (even though it may currently be elsewhere, such as in the postmaster). */
   bucket: InventoryBucket;
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
-  itemCategoryHashes: number[];
+  itemCategoryHashes: ItemCategoryHashes[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
   tier: ItemTierName;
   /** Is this an Exotic item? */
