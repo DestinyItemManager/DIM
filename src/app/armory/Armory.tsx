@@ -14,6 +14,7 @@ import {
   useSocketOverrides,
 } from 'app/inventory/store/override-sockets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
+import BreakerType from 'app/item-popup/BreakerType';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
 import { AmmoIcon, ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import ItemSockets from 'app/item-popup/ItemSockets';
@@ -26,7 +27,7 @@ import { Reward } from 'app/progress/Reward';
 import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { getBreakerTypeHash, getItemYear } from 'app/utils/item-utils';
+import { getItemYear } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -91,14 +92,6 @@ export default function Armory({
   const screenshot = ornamentSocket?.plugged?.plugDef.screenshot || itemDef.screenshot;
   const flavorText = itemDef.flavorText || itemDef.displaySource;
 
-  let breakerType = item.breakerType;
-  if (!breakerType) {
-    const breakerTypeHash = getBreakerTypeHash(item);
-    if (breakerTypeHash) {
-      breakerType = defs.BreakerType.get(breakerTypeHash);
-    }
-  }
-
   // TODO: Show Catalyst benefits for exotics
 
   return (
@@ -123,7 +116,7 @@ export default function Armory({
         <div className={styles.headerContent}>
           <div className={styles.subtitle}>
             <ElementIcon element={item.element} className={styles.element} />
-            {breakerType && <BungieImage src={breakerType.displayProperties.icon} height={15} />}
+            <BreakerType item={item} />
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
             {item.pursuit?.questLine && (

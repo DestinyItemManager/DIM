@@ -1,13 +1,10 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
-import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
-import { getBreakerTypeHash } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -17,6 +14,7 @@ import primary from 'destiny-icons/general/ammo-primary.svg';
 import special from 'destiny-icons/general/ammo-special.svg';
 import { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
+import BreakerType from './BreakerType';
 import styles from './ItemPopupHeader.m.scss';
 
 const tierClassName: LookupTable<ItemTierName, string> = {
@@ -35,21 +33,12 @@ export default function ItemPopupHeader({
   /** Don't allow opening Armory from the header link */
   noLink?: boolean;
 }) {
-  const defs = useD2Definitions()!;
   const [showArmory, setShowArmory] = useState(false);
   useHotkey('a', t('Hotkey.Armory'), () => setShowArmory(true));
 
   const showElementIcon = Boolean(item.element);
 
   const linkToArmory = !noLink && item.destinyVersion === 2;
-
-  let breakerType = item.breakerType;
-  if (!breakerType) {
-    const breakerTypeHash = getBreakerTypeHash(item);
-    if (breakerTypeHash) {
-      breakerType = defs.BreakerType.get(breakerTypeHash);
-    }
-  }
 
   return (
     <button
@@ -75,9 +64,7 @@ export default function ItemPopupHeader({
         <div className={styles.type}>
           <ItemTypeName item={item} className={styles.itemType} />
           {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
-          {breakerType && (
-            <BungieImage className={styles.breakerIcon} src={breakerType.displayProperties.icon} />
-          )}
+          <BreakerType item={item} />
         </div>
 
         <div className={styles.details}>

@@ -352,17 +352,13 @@ const ichToBreakerType = Object.entries(artifactBreakerMods).reduce<
 }, {});
 
 /**
- * Get the effective breaker type of a weapon, which is either its intrinsic
- * breaker type (for some exotics) or one of the breaker types enabled by this
- * season's artifact mods.
+ * Get the effective breaker type of a weapon as granted by the seasonal
+ * artifact. This does not include intrinsic breaker types (e.g. on some
+ * exotics) so you should check item.breakerType first if you want the effective
+ * overall breaker type, as intrinsic breaker beats artifact breaker.
  */
-export function getBreakerTypeHash(item: DimItem): number | undefined {
-  if (item.destinyVersion === 1) {
-    return;
-  }
-  if (item.breakerType) {
-    return item.breakerType.hash;
-  } else if (item.bucket.inWeapons) {
+export function getSeasonalBreakerTypeHash(item: DimItem): number | undefined {
+  if (item.destinyVersion === 2 && item.bucket.inWeapons && !item.breakerType) {
     for (const ich of item.itemCategoryHashes) {
       if (ichToBreakerType[ich]) {
         return ichToBreakerType[ich];
