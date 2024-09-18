@@ -36,6 +36,7 @@ import {
   ItemPerkVisibility,
   ItemState,
   SingleComponentResponse,
+  TierType,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
@@ -347,7 +348,7 @@ export function makeItem(
   let primaryStat: DimItem['primaryStat'] = null;
   if (
     itemInstanceData.primaryStat &&
-    normalBucket.hash !== BucketHashes.ClassArmor &&
+    normalBucket.hash !== BucketHashes.Subclass &&
     !itemDef.stats?.disablePrimaryStatDisplay
   ) {
     primaryStat = itemInstanceData.primaryStat;
@@ -452,7 +453,7 @@ export function makeItem(
     hash: item.itemHash,
     itemCategoryHashes: getItemCategoryHashes(itemDef),
     tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
-    isExotic: D2ItemTiers[itemDef.inventory!.tierType] === 'Exotic',
+    isExotic: itemDef.inventory!.tierType === TierType.Exotic,
     name,
     description: displayProperties.description,
     icon: overrideStyleItem?.displayProperties.icon || displayProperties.icon || d2MissingIcon,
@@ -489,7 +490,7 @@ export function makeItem(
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork:
-      Boolean(item.state & ItemState.Masterwork) && normalBucket.hash !== BucketHashes.ClassArmor,
+      Boolean(item.state & ItemState.Masterwork) && normalBucket.hash !== BucketHashes.Subclass,
     crafted: item.state & ItemState.Crafted ? 'crafted' : false,
     highlightedObjective: Boolean(item.state & ItemState.HighlightedObjective),
     classified: Boolean(itemDef.redacted),

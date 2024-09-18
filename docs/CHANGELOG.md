@@ -1,5 +1,8 @@
 ## Next
 
+* Renamed `is:class` to `is:subclass`.
+* Fixed D1 item category searches such as `is:primary` and `is:horn`. Now they're up to parity with the D2 categories.
+
 ## 8.37.0 <span class="changelog-date">(2024-09-15)</span>
 
 ## 8.36.1 <span class="changelog-date">(2024-09-12)</span>

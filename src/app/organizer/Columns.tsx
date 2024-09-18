@@ -67,6 +67,7 @@ import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import {
   BreakerTypeHashes,
+  BucketHashes,
   ItemCategoryHashes,
   PlugCategoryHashes,
   StatHashes,
@@ -482,7 +483,18 @@ export function getColumns(
         id: 'Category',
         header: 'Category',
         csv: 'Category',
-        value: (i) => i.bucket.name,
+        value: (i) => {
+          switch (i.bucket.hash) {
+            case BucketHashes.KineticWeapons:
+              return i.destinyVersion === 2 ? 'KineticSlot' : 'Primary';
+            case BucketHashes.EnergyWeapons:
+              return i.destinyVersion === 2 ? 'Energy' : 'Special';
+            case BucketHashes.PowerWeapons:
+              return i.destinyVersion === 2 ? 'Power' : 'Heavy';
+            default:
+              return i.bucket.name;
+          }
+        },
       }),
     isSpreadsheet &&
       c({

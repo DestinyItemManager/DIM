@@ -24,6 +24,7 @@ import {
   ItemBindStatus,
   ItemLocation,
   ItemState,
+  TierType,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import missingSources from 'data/d1/missing_sources.json';
@@ -291,7 +292,7 @@ function makeItem(
     hash: item.itemHash,
     itemCategoryHashes: itemDef.itemCategoryHashes || [],
     tier: tiers[itemDef.tierType] || 'Common',
-    isExotic: tiers[itemDef.tierType] === 'Exotic',
+    isExotic: itemDef.tierType === TierType.Exotic,
     name: itemDef.itemName,
     description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
     icon: itemDef.icon,
