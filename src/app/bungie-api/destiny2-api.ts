@@ -212,7 +212,7 @@ export async function transfer(
   try {
     return await response;
   } catch (e) {
-    return handleUniquenessViolation(e, item, store);
+    return handleUniquenessViolation(e, item);
   }
 }
 

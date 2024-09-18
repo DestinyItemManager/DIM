@@ -13,7 +13,7 @@ import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
 import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import clsx from 'clsx';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
@@ -76,14 +76,14 @@ export default function ItemDetails({
         <BungieImage className={styles.itemShader} src={item.icon} width="96" height="96" />
       )}
 
-      {(item.type === 'Milestone' ||
+      {(item.bucket.hash === BucketHashes.Quests ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
         item.secondaryIcon && (
           <BungieImage
             src={item.secondaryIcon}
             width="100%"
             className={clsx(styles.fullImage, {
-              [styles.milestoneImage]: item.type === 'Milestone',
+              [styles.milestoneImage]: item.bucket.hash === BucketHashes.Quests,
             })}
           />
         )}

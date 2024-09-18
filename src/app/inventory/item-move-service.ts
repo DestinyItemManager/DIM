@@ -331,7 +331,7 @@ function equipItem(item: DimItem, cancelToken: CancelToken): ThunkResult<DimItem
     try {
       const store = getStore(storesSelector(getState()), item.owner)!;
       if ($featureFlags.debugMoves) {
-        infoLog('equip', 'Equip', item.name, item.type, 'to', store.name);
+        infoLog('equip', 'Equip', item.name, item.typeName, 'to', store.name);
       }
       cancelToken.checkCanceled();
       await equipApi(item)(currentAccountSelector(getState())!, item);
@@ -385,13 +385,22 @@ function moveToStore(
 
     if ($featureFlags.debugMoves) {
       item.location.inPostmaster
-        ? infoLog(TAG, 'Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
+        ? infoLog(
+            TAG,
+            'Pull',
+            amount,
+            item.name,
+            item.typeName,
+            'to',
+            store.name,
+            'from Postmaster',
+          )
         : infoLog(
             'move',
             'Move',
             amount,
             item.name,
-            item.type,
+            item.typeName,
             'to',
             store.name,
             'from',
@@ -478,7 +487,7 @@ function canEquipExotic(
         throw new Error(
           t('ItemService.ExoticError', {
             itemname: item.name,
-            slot: otherExotic.type,
+            slot: otherExotic.typeName,
             error: errorMessage(e),
           }),
         );
@@ -625,7 +634,7 @@ function chooseMoveAsideItem(
       if (item.maxStackSize > 1) {
         return store.id + item.hash;
       } else {
-        return store.id + item.type;
+        return store.id + item.bucket.hash;
       }
     },
   );
@@ -826,7 +835,7 @@ function ensureCanMoveToStore(
           ? moveAsideItem.destinyVersion === 1
             ? moveAsideItem.bucket.sort!
             : ''
-          : moveAsideItem.type;
+          : moveAsideItem.typeName;
 
         throw new DimError(
           'no-space',

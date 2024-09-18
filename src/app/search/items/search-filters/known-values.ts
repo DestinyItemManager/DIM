@@ -1,9 +1,9 @@
+import { D1Categories } from 'app/destiny1/d1-bucket-categories';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
-import { bucketToType } from 'app/destiny2/d2-buckets';
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
-import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
+import { D1BucketHashes, D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
   D2ItemCategoryHashesByName,
   ItemTierName,
@@ -22,7 +22,7 @@ import {
 import artifactBreakerMods from 'data/d2/artifact-breaker-weapon-types.json';
 import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
-import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BreakerTypeHashes, BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import powerfulSources from 'data/d2/powerful-rewards.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 import D2Sources from './d2-sources';
@@ -110,22 +110,122 @@ export const classFilter = {
     item.classType === DestinyClass.Unknown ? '' : `is:${classes[item.classType]}`,
 } satisfies ItemFilterDefinition;
 
+// A mapping from the bucket hash to DIM item types
+const bucketToType: LookupTable<BucketHashes, string> = {
+  [BucketHashes.Engrams]: 'engrams',
+  [BucketHashes.LostItems]: 'lostitems',
+  [BucketHashes.Messages]: 'messages',
+  [BucketHashes.SpecialOrders]: 'specialorders',
+
+  [BucketHashes.KineticWeapons]: 'kineticslot',
+  [BucketHashes.EnergyWeapons]: 'energy',
+  [BucketHashes.PowerWeapons]: 'power',
+
+  [BucketHashes.Helmet]: 'helmet',
+  [BucketHashes.Gauntlets]: 'gauntlets',
+  [BucketHashes.ChestArmor]: 'chest',
+  [BucketHashes.LegArmor]: 'leg',
+  [BucketHashes.ClassArmor]: 'classitem',
+
+  [BucketHashes.Subclass]: 'subclass',
+  [BucketHashes.Ghost]: 'ghost',
+  [BucketHashes.Emblems]: 'emblems',
+  [BucketHashes.Ships]: 'ships',
+  [BucketHashes.Vehicle]: 'vehicle',
+  [BucketHashes.Emotes_Invisible]: 'emotes',
+  [BucketHashes.Finishers]: 'finishers',
+  [BucketHashes.SeasonalArtifact]: 'seasonalartifacts',
+
+  [BucketHashes.Consumables]: 'consumables',
+  [BucketHashes.Modifications]: 'modifications',
+};
+
+const d1BucketToType: LookupTable<BucketHashes | D1BucketHashes, string> = {
+  [BucketHashes.LostItems]: 'lostitems',
+  [BucketHashes.SpecialOrders]: 'specialorders',
+  [BucketHashes.Messages]: 'messages',
+
+  [BucketHashes.KineticWeapons]: 'primary',
+  [BucketHashes.EnergyWeapons]: 'special',
+  [BucketHashes.PowerWeapons]: 'heavy',
+
+  [BucketHashes.Helmet]: 'helmet',
+  [BucketHashes.Gauntlets]: 'gauntlets',
+  [BucketHashes.ChestArmor]: 'chest',
+  [BucketHashes.LegArmor]: 'leg',
+  [BucketHashes.ClassArmor]: 'classitem',
+
+  [BucketHashes.Subclass]: 'subclass',
+  [D1BucketHashes.Artifact]: 'artifact',
+  [BucketHashes.Ghost]: 'ghost',
+  [BucketHashes.Consumables]: 'consumables',
+  [BucketHashes.Materials]: 'material',
+  [BucketHashes.Modifications]: 'ornaments',
+  [BucketHashes.Emblems]: 'emblems',
+  [D1BucketHashes.Shader]: 'shader',
+  [BucketHashes.Emotes_Equippable]: 'emote',
+  [BucketHashes.Ships]: 'ships',
+  [BucketHashes.Vehicle]: 'vehicle',
+  [D1BucketHashes.Horn]: 'horn',
+
+  [D1BucketHashes.Bounties]: 'bounties',
+  [D1BucketHashes.Quests]: 'quests',
+  [D1BucketHashes.Missions]: 'missions',
+};
+
 export const itemTypeFilter = {
   keywords: Object.values(D2Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
     .flat()
     .map((v) => {
       const type = bucketToType[v];
       if (!type && $DIM_FLAVOR === 'dev') {
-        throw new Error(`You forgot to map a string type name for bucket hash ${v}`);
+        throw new Error(
+          `itemTypeFilter: You forgot to map a string type name for bucket hash ${v}`,
+        );
       }
-      return type!.toLowerCase();
+      return type!;
     }),
+  destinyVersion: 2,
   description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
-  filter:
-    ({ filterValue }) =>
-    (item) =>
-      item.type.toLowerCase() === filterValue,
-  fromItem: (item) => `is:${item.type.toLowerCase()}`,
+  filter: ({ filterValue }) => {
+    let bucketHash: BucketHashes;
+    for (const [bucketHashStr, type] of Object.entries(bucketToType)) {
+      if (type === filterValue) {
+        bucketHash = parseInt(bucketHashStr, 10);
+        break;
+      }
+    }
+    return (item) => item.bucket.hash === bucketHash;
+  },
+  fromItem: (item) => `is:${bucketToType[item.bucket.hash as BucketHashes]}`,
+} satisfies ItemFilterDefinition;
+
+// D1 has different item types, otherwise this is the same as itemTypeFilter.
+export const d1itemTypeFilter = {
+  keywords: Object.values(D1Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
+    .flat()
+    .map((v) => {
+      const type = d1BucketToType[v];
+      if (!type && $DIM_FLAVOR === 'dev') {
+        throw new Error(
+          `d1itemTypeFilter You forgot to map a string type name for bucket hash ${v}`,
+        );
+      }
+      return type!;
+    }),
+  destinyVersion: 1,
+  description: tl('Filter.ArmorCategory'), // or 'Filter.WeaponClass'
+  filter: ({ filterValue }) => {
+    let bucketHash: BucketHashes | D1BucketHashes;
+    for (const [bucketHashStr, type] of Object.entries(d1BucketToType)) {
+      if (type === filterValue) {
+        bucketHash = parseInt(bucketHashStr, 10);
+        break;
+      }
+    }
+    return (item) => item.bucket.hash === bucketHash;
+  },
+  fromItem: (item) => `is:${d1BucketToType[item.bucket.hash as BucketHashes]}`,
 } satisfies ItemFilterDefinition;
 
 export const itemCategoryFilter = {
@@ -174,6 +274,7 @@ const knownValuesFilters: ItemFilterDefinition[] = [
   classFilter,
   itemCategoryFilter,
   itemTypeFilter,
+  d1itemTypeFilter,
   {
     keywords: [
       'common',

@@ -27,7 +27,7 @@ export const makeDupeID = (item: DimItem) =>
     item.tier
   }${
     // The engram that dispenses the Taraxippos scout rifle is also called Taraxippos
-    item.type
+    item.bucket.hash
   }`;
 
 const sortDupes = (
@@ -209,9 +209,13 @@ const dupeFilters: ItemFilterDefinition[] = [
     description: tl('Filter.DupePerks'),
     filter: ({ allItems }) => {
       const duplicates = new Map<string, PerksSet>();
+      function getDupeId(item: DimItem) {
+        // Don't compare across buckets or across types (e.g. Titan armor vs Hunter armor)
+        return `${item.bucket.hash}|${item.classType}`;
+      }
       for (const i of allItems) {
         if (i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible)) {
-          const dupeId = i.classType + i.type;
+          const dupeId = getDupeId(i);
           if (!duplicates.has(dupeId)) {
             duplicates.set(dupeId, new PerksSet());
           }
@@ -220,7 +224,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       }
       return (item) =>
         item.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible) &&
-        Boolean(duplicates.get(item.classType + item.type)?.hasPerkDupes(item));
+        Boolean(duplicates.get(getDupeId(item))?.hasPerkDupes(item));
     },
   },
 ];

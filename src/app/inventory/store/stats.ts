@@ -14,7 +14,7 @@ import {
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
@@ -157,7 +157,7 @@ export function buildStats(
     investmentStats.push(tStat!);
 
     // synthesize custom stats for meaningfully stat-bearing items
-    if (createdItem.type !== 'ClassItem') {
+    if (createdItem.bucket.hash !== BucketHashes.ClassArmor) {
       for (const customStat of customStats) {
         if (isClassCompatible(customStat.class, createdItem.classType)) {
           const cStat = makeCustomStat(
