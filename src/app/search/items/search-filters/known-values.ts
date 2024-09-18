@@ -219,9 +219,12 @@ const knownValuesFilters: ItemFilterDefinition[] = [
     keywords: 'breaker',
     description: tl('Filter.Breaker'),
     format: 'query',
-    suggestions: Object.keys(breakerTypes),
+    suggestions: [...Object.keys(breakerTypes), 'intrinsic'],
     destinyVersion: 2,
     filter: ({ filterValue }) => {
+      if (filterValue === 'intrinsic') {
+        return (item) => Boolean(item.breakerType);
+      }
       const breakerType = breakerTypes[filterValue as keyof typeof breakerTypes];
       if (!breakerType) {
         throw new Error(`Unknown breaker type ${filterValue}`);

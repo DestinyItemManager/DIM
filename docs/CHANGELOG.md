@@ -1,5 +1,7 @@
 ## Next
 
+* Add `breaker:intrinsic` search that highlights items that have an intrinsic breaker ability (i.e. not granted by the seasonal artifact).
+
 ## 8.37.0 <span class="changelog-date">(2024-09-15)</span>
 
 ## 8.36.1 <span class="changelog-date">(2024-09-12)</span>
