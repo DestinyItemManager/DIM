@@ -155,7 +155,7 @@ const d1BucketToType: LookupTable<BucketHashes | D1BucketHashes, string> = {
   [BucketHashes.LegArmor]: 'leg',
   [BucketHashes.ClassArmor]: 'classitem',
 
-  [BucketHashes.Subclass]: 'subclass',
+  [BucketHashes.Subclass]: 'class',
   [D1BucketHashes.Artifact]: 'artifact',
   [BucketHashes.Ghost]: 'ghost',
   [BucketHashes.Consumables]: 'consumables',
