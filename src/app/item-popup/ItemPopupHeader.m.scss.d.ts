@@ -3,7 +3,6 @@
 interface CssExports {
   'ammoIcon': string;
   'armory': string;
-  'breakerIcon': string;
   'common': string;
   'details': string;
   'elementIcon': string;
