@@ -293,7 +293,7 @@ function checkIfStatMatchesMaxValue(
   const statHashes: number[] = statName === 'any' ? armorStatHashes : [statHashByName[statName]];
   const byWhichValue = byBaseValue ? 'base' : 'value';
   const useWhichMaxes = item.isExotic ? 'all' : 'nonexotic';
-  const itemSlot = `${item.classType}${item.type}`;
+  const itemSlot = `${item.bucket.hash}|${item.classType}`;
   const maxStatsForSlot = maxStatValues[useWhichMaxes][itemSlot];
   const matchingStats = item.stats?.filter(
     (s) =>
@@ -312,7 +312,7 @@ function gatherHighestStats(allItems: DimItem[]) {
       continue;
     }
 
-    const itemSlot = `${i.classType}${i.type}`;
+    const itemSlot = `${i.bucket.hash}|${i.classType}`;
     // if this is an exotic item, update overall maxes, but don't ruin the curve for the nonexotic maxes
     const itemTiers: ('all' | 'nonexotic')[] = i.isExotic ? ['all'] : ['all', 'nonexotic'];
     const thisSlotMaxGroups = itemTiers.map((t) => (maxStatValues[t][itemSlot] ??= {}));

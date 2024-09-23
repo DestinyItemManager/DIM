@@ -3,6 +3,11 @@
 * Add `breaker:intrinsic` search that highlights items that have an intrinsic breaker ability (i.e. not granted by the seasonal artifact).
 * Breaker type granted by the seasonal artifact now has a green box around it, reminiscent of the artifact mod that grants it.
 
+## 8.38.0 <span class="changelog-date">(2024-09-22)</span>
+
+* Renamed `is:class` to `is:subclass`.
+* Fixed D1 item category searches such as `is:primary` and `is:horn`. Now they're up to parity with the D2 categories.
+
 ## 8.37.0 <span class="changelog-date">(2024-09-15)</span>
 
 ## 8.36.1 <span class="changelog-date">(2024-09-12)</span>

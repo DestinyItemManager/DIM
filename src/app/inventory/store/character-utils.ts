@@ -1,7 +1,8 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D1Character, D1StatLabel } from 'app/destiny1/d1-manifest-types';
-import { warnLog } from 'app/utils/log';
-import { StatHashes } from 'data/d2/generated-enums';
+import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
+import { D1BucketHashes } from 'app/search/d1-known-values';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimCharacterStat } from '../store-types';
 
 // Cooldowns
@@ -13,15 +14,13 @@ const cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 // thanks to /u/iihavetoes for the bonuses at each level
 // thanks to /u/tehdaw for the spreadsheet with bonuses
 // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
-export function getBonus(light: number, type: string): number {
-  switch (type.toLowerCase()) {
-    case 'helmet':
-    case 'helmets':
+export function getBonus(light: number, bucketHash: ArmorTypes): number {
+  switch (bucketHash) {
+    case BucketHashes.Helmet:
       return light < 292 ? 15 : light < 307 ? 16 : light < 319 ? 17 : light < 332 ? 18 : 19;
-    case 'gauntlets':
+    case BucketHashes.Gauntlets:
       return light < 287 ? 13 : light < 305 ? 14 : light < 319 ? 15 : light < 333 ? 16 : 17;
-    case 'chest':
-    case 'chest armor':
+    case BucketHashes.ChestArmor:
       return light < 287
         ? 20
         : light < 300
@@ -33,8 +32,7 @@ export function getBonus(light: number, type: string): number {
               : light < 328
                 ? 24
                 : 25;
-    case 'leg':
-    case 'leg armor':
+    case BucketHashes.LegArmor:
       return light < 284
         ? 18
         : light < 298
@@ -46,13 +44,10 @@ export function getBonus(light: number, type: string): number {
               : light < 329
                 ? 22
                 : 23;
-    case 'classitem':
-    case 'class items':
-    case 'ghost':
-    case 'ghosts':
+    case BucketHashes.ClassArmor:
+    case BucketHashes.Ghost:
       return light < 295 ? 8 : light < 319 ? 9 : 10;
-    case 'artifact':
-    case 'artifacts':
+    case D1BucketHashes.Artifact:
       return light < 287
         ? 34
         : light < 295
@@ -73,8 +68,6 @@ export function getBonus(light: number, type: string): number {
                         ? 42
                         : 43;
   }
-  warnLog('getBonus', 'item bonus not found', type);
-  return 0;
 }
 
 export const statsWithTiers = [StatHashes.Discipline, StatHashes.Intellect, StatHashes.Strength];

@@ -98,15 +98,7 @@ export function calcArmorStats(
 }
 
 export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorTypes]: string } {
-  return {
-    Helmet: armor.Helmet.bonusType,
-    Gauntlets: armor.Gauntlets.bonusType,
-    Chest: armor.Chest.bonusType,
-    Leg: armor.Leg.bonusType,
-    ClassItem: armor.ClassItem.bonusType,
-    Artifact: armor.Artifact.bonusType,
-    Ghost: armor.Ghost.bonusType,
-  };
+  return _.mapValues(armor, (armorPiece) => armorPiece.bonusType);
 }
 
 export function genSetHash(armorPieces: ItemWithBonus[]) {
@@ -139,11 +131,11 @@ export function getBestArmor(
   let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];
   let curbest;
   let bestCombs: { item: D1ItemWithNormalStats; bonusType: string }[];
-  let armortype: ArmorTypes;
 
   const excludedIndices = new Set(excluded.map((i) => i.index));
 
-  for (armortype in bucket) {
+  for (const armortypestr in bucket) {
+    const armortype = parseInt(armortypestr, 10) as ArmorTypes;
     const combined = includeVendors
       ? bucket[armortype].concat(vendorBucket[armortype])
       : bucket[armortype];
@@ -191,7 +183,7 @@ export function getBestArmor(
         curbest = getBestItem(filtered, hash.stats, hash.type, scaleTypeArg);
         best.push(curbest);
         // add the best -> if best is exotic -> get best legendary
-        if (curbest.item.isExotic && armortype !== 'ClassItem') {
+        if (curbest.item.isExotic && armortype !== BucketHashes.ClassArmor) {
           best.push(getBestItem(filtered, hash.stats, hash.type, scaleTypeArg, true));
         }
       }
@@ -243,7 +235,9 @@ export function mergeBuckets<T extends any[]>(
 ) {
   const merged: Partial<{ [armorType in ArmorTypes]: T }> = {};
   for (const [type, bucket] of Object.entries(bucket1)) {
-    merged[type as ArmorTypes] = bucket.concat(bucket2[type as ArmorTypes]) as T;
+    merged[parseInt(type, 10) as ArmorTypes] = bucket.concat(
+      bucket2[parseInt(type, 10) as ArmorTypes],
+    ) as T;
   }
   return merged as { [armorType in ArmorTypes]: T };
 }
@@ -265,13 +259,13 @@ export function loadVendorsBucket(
 ): ItemBucket {
   if (!vendors) {
     return {
-      Helmet: [],
-      Gauntlets: [],
-      Chest: [],
-      Leg: [],
-      ClassItem: [],
-      Artifact: [],
-      Ghost: [],
+      [BucketHashes.Helmet]: [],
+      [BucketHashes.Gauntlets]: [],
+      [BucketHashes.ChestArmor]: [],
+      [BucketHashes.LegArmor]: [],
+      [BucketHashes.ClassArmor]: [],
+      [D1BucketHashes.Artifact]: [],
+      [BucketHashes.Ghost]: [],
     };
   }
   return Object.values(vendors)
@@ -307,19 +301,27 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
 
 function getBuckets(items: D1Item[]): ItemBucket {
   return {
-    Helmet: items.filter((item) => item.bucket.hash === BucketHashes.Helmet).map(normalizeStats),
-    Gauntlets: items
+    [BucketHashes.Helmet]: items
+      .filter((item) => item.bucket.hash === BucketHashes.Helmet)
+      .map(normalizeStats),
+    [BucketHashes.Gauntlets]: items
       .filter((item) => item.bucket.hash === BucketHashes.Gauntlets)
       .map(normalizeStats),
-    Chest: items.filter((item) => item.bucket.hash === BucketHashes.ChestArmor).map(normalizeStats),
-    Leg: items.filter((item) => item.bucket.hash === BucketHashes.LegArmor).map(normalizeStats),
-    ClassItem: items
+    [BucketHashes.ChestArmor]: items
+      .filter((item) => item.bucket.hash === BucketHashes.ChestArmor)
+      .map(normalizeStats),
+    [BucketHashes.LegArmor]: items
+      .filter((item) => item.bucket.hash === BucketHashes.LegArmor)
+      .map(normalizeStats),
+    [BucketHashes.ClassArmor]: items
       .filter((item) => item.bucket.hash === BucketHashes.ClassArmor)
       .map(normalizeStats),
-    Artifact: items
+    [D1BucketHashes.Artifact]: items
       .filter((item) => item.bucket.hash === D1BucketHashes.Artifact)
       .map(normalizeStats),
-    Ghost: items.filter((item) => item.bucket.hash === BucketHashes.Ghost).map(normalizeStats),
+    [BucketHashes.Ghost]: items
+      .filter((item) => item.bucket.hash === BucketHashes.Ghost)
+      .map(normalizeStats),
   };
 }
 

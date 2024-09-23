@@ -29,7 +29,7 @@ export const loVendorItemsSelector = currySelector(
       (item) =>
         allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1) &&
         // filters out some dummy exotics
-        item.type !== 'Unknown',
+        item.bucket.hash !== -1,
     );
     // some signs that vendor items aren't yet loaded. to prevent recalcs, only add in vendor items once they're all ready
     return !relevantItems.length || relevantItems.some((i) => i.missingSockets === 'not-loaded')

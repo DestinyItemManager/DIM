@@ -126,7 +126,7 @@ export function moveItemTo(
             'User initiated move:',
             moveAmount,
             item.name,
-            item.type,
+            item.typeName,
             'to',
             store.name,
             'from',
