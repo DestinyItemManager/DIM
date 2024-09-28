@@ -1,29 +1,32 @@
 import { t } from 'app/i18next-t';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
   AwaAuthorizationResult,
-  awaGetActionToken,
-  awaInitializeRequest,
   AwaType,
   BungieMembershipType,
-  clearLoadout,
   DestinyComponentType,
+  DestinyItemComponentSetOfint32,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
   DestinyProfileResponse,
+  DestinyVendorResponse,
   DestinyVendorsResponse,
+  PlatformErrorCodes,
+  ServerResponse,
+  awaGetActionToken,
+  awaInitializeRequest,
+  clearLoadout,
   equipItem,
   equipItems as equipItemsApi,
   equipLoadout,
   getDestinyManifest,
   getLinkedProfiles,
   getProfile as getProfileApi,
+  getVendor as getVendorApi,
   getVendors as getVendorsApi,
-  PlatformErrorCodes,
   pullFromPostmaster,
-  ServerResponse,
   setItemLockState,
   setQuestTrackedState,
   snapshotLoadout,
@@ -95,14 +98,12 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ProfileProgression,
     DestinyComponentType.Transitory,
     DestinyComponentType.CharacterLoadouts,
+    DestinyComponentType.PresentationNodes,
 
     // This is a lot of data and currently not used.
     // DestinyComponentType.Craftables,
   ];
 
-  if ($featureFlags.solsticePresentationNodes) {
-    components.push(DestinyComponentType.PresentationNodes);
-  }
   return getProfile(platform, ...components);
 }
 
@@ -138,10 +139,17 @@ async function getProfile(
   return response.Response;
 }
 
+export type LimitedDestinyVendorsResponse = Omit<DestinyVendorsResponse, 'itemComponents'> &
+  Partial<{
+    itemComponents: {
+      [key: number]: Partial<DestinyItemComponentSetOfint32>;
+    };
+  }>;
+
 export async function getVendors(
   account: DestinyAccount,
   characterId: string,
-): Promise<DestinyVendorsResponse> {
+): Promise<LimitedDestinyVendorsResponse> {
   const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,
@@ -149,16 +157,33 @@ export async function getVendors(
     components: [
       DestinyComponentType.Vendors,
       DestinyComponentType.VendorSales,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.CurrencyLookups,
+    ],
+  });
+  return response.Response;
+}
+
+/** a single-vendor API fetch, focused on getting the sale item details. see loadAllVendors */
+export async function getVendorSaleComponents(
+  account: DestinyAccount,
+  characterId: string,
+  vendorHash: number,
+): Promise<DestinyVendorResponse> {
+  const response = await getVendorApi(authenticatedHttpClient, {
+    characterId,
+    destinyMembershipId: account.membershipId,
+    membershipType: account.originalPlatformType,
+    components: [
       DestinyComponentType.ItemInstances,
       DestinyComponentType.ItemObjectives,
       DestinyComponentType.ItemSockets,
-      DestinyComponentType.ItemCommonData,
-      DestinyComponentType.CurrencyLookups,
       DestinyComponentType.ItemPlugStates,
       DestinyComponentType.ItemReusablePlugs,
       // TODO: We should try to defer this until the popup is open!
       DestinyComponentType.ItemPlugObjectives,
     ],
+    vendorHash,
   });
   return response.Response;
 }
@@ -187,7 +212,7 @@ export async function transfer(
   try {
     return await response;
   } catch (e) {
-    return handleUniquenessViolation(e, item, store);
+    return handleUniquenessViolation(e, item);
   }
 }
 

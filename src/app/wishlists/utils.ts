@@ -23,7 +23,7 @@ export function validateWishListURLs(url: string): string[] {
         if (parsedUrl.protocol !== 'https:' || !wishListAllowedHosts.includes(parsedUrl.host)) {
           return false;
         }
-      } catch (e) {
+      } catch {
         return false;
       }
 

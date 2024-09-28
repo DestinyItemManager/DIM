@@ -44,15 +44,15 @@ import {
   updateModsByBucket,
   useLoadoutUpdaters,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import {
   findSameLoadoutItemIndex,
   getUnequippedItemsForLoadout,
 } from 'app/loadout-drawer/loadout-utils';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
+import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { emptyObject } from 'app/utils/empty';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

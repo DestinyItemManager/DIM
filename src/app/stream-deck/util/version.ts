@@ -13,5 +13,5 @@ export const checkStreamDeckVersion = (version: string | undefined) => {
   if (minor < minMinor) {
     return false;
   }
-  return !(patch < minPatch);
+  return patch >= minPatch;
 };

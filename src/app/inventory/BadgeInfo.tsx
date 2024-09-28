@@ -1,6 +1,6 @@
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getColor } from 'app/shell/formatters';
-import { shapedIcon } from 'app/shell/icons';
+import { enhancedIcon, shapedIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
@@ -74,7 +74,10 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
 
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
   const summaryIcon = item.crafted ? (
-    <AppIcon className={styles.shapedIcon} icon={shapedIcon} />
+    <AppIcon
+      className={styles.shapedIcon}
+      icon={item.crafted === 'enhanced' ? enhancedIcon : shapedIcon}
+    />
   ) : (
     wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />
   );

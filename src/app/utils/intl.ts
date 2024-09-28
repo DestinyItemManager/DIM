@@ -4,13 +4,14 @@
 import { DimLanguage, browserLangToDimLang } from 'app/i18n';
 import _, { stubTrue } from 'lodash';
 import memoizeOne from 'memoize-one';
+import { Comparator } from './comparators';
 import { LookupTable } from './util-types';
 
 // Our locale names don't line up with the BCP 47 tags for Chinese
 const dimLangToBrowserLang: LookupTable<DimLanguage, string> = _.invert(browserLangToDimLang);
 
 /** Map DIM's locale values to a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646) */
-function mapLocale(language: DimLanguage): Intl.BCP47LanguageTag {
+function mapLocale(language: DimLanguage): Intl.UnicodeBCP47LocaleIdentifier {
   return dimLangToBrowserLang[language] ?? language;
 }
 
@@ -36,9 +37,12 @@ const cachedSearchCollator = memoizeOne(
  * @example
  * ["foo10", "foo9"].sort(localizedSorter("en")) // ["foo9", "foo10"]
  */
-export function localizedSorter<T>(language: DimLanguage, iteratee: (input: T) => string) {
+export function localizedSorter<T>(
+  language: DimLanguage,
+  iteratee: (input: T) => string,
+): Comparator<T> {
   const sortCollator = cachedSortCollator(language);
-  return (a: T, b: T) => sortCollator.compare(iteratee(a), iteratee(b));
+  return (a: T, b: T) => sortCollator.compare(iteratee(a), iteratee(b)) as 0 | 1 | -1;
 }
 
 /**

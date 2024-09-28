@@ -6,7 +6,6 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
-import { DimStore } from '../inventory/store-types';
 import { FatalTokenError, fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
 import {
@@ -216,7 +215,7 @@ function handleErrors(error: unknown): never {
 }
 
 // Handle "DestinyUniquenessViolation" (1648)
-export function handleUniquenessViolation(error: unknown, item: DimItem, store: DimStore): never {
+export function handleUniquenessViolation(error: unknown, item: DimItem): never {
   if (
     error instanceof BungieError &&
     error.code === PlatformErrorCodes.DestinyUniquenessViolation
@@ -225,9 +224,6 @@ export function handleUniquenessViolation(error: unknown, item: DimItem, store: 
       'BungieService.ItemUniquenessExplanation',
       t('BungieService.ItemUniquenessExplanation', {
         name: item.name,
-        type: item.type.toLowerCase(),
-        character: store.name,
-        context: store.genderName,
       }),
     ).withError(error);
   }

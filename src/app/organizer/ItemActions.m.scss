@@ -1,9 +1,11 @@
 .itemActions {
   flex: 1;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 4px;
 }
 
 .actionButton {
-  margin: 0 2px;
   display: inline-block;
 }
 

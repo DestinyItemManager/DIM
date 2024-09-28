@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'arc': string;
+  'prismatic': string;
   'stasis': string;
   'strand': string;
   'thermal': string;

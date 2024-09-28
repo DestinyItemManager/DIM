@@ -22,7 +22,7 @@ export function makeFeatureFlags(env: {
     // Community-curated wish lists
     wishLists: true,
     // Show a banner for supporting a charitable cause
-    issueBanner: true,
+    issueBanner: false,
     // Show the triage tab in the item popup
     triage: true,
     // Advanced Write Actions (inserting mods)
@@ -41,8 +41,6 @@ export function makeFeatureFlags(env: {
     simulateBungieMaintenance: false,
     // Pretend that Bungie.net is not returning sockets info
     simulateMissingSockets: false,
-    // Show a "pills" UI for filtering loadouts
-    loadoutFilterPills: true,
     // Request the PresentationNodes component only needed during
     // Solstice to associate each character with a set of triumphs.
     // Solstice 2022 had a set of challenges for each character,
@@ -51,12 +49,10 @@ export function makeFeatureFlags(env: {
     solsticePresentationNodes: false,
     // not ready to turn these on but the code is there
     customStatWeights: false,
-    // Allow for non-default visual themes
-    themePicker: true,
-    // New LO stat picker
-    statConstraintEditor: !env.release,
     // On the Loadouts page, run Loadout Optimizer to find better tiers for loadouts.
     runLoInBackground: true,
+    // Whether to allow setting in-game loadout identifiers on DIM loadouts.
+    editInGameLoadoutIdentifiers: false,
   };
 }
 

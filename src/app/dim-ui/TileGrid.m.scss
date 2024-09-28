@@ -19,6 +19,8 @@
 }
 
 .tile {
+  // Don't scale up items even if users have item tiles set to large
+  --item-size: 50px;
   display: grid;
   grid-template-columns: min-content auto min-content;
   grid-template-rows: max-content auto;
@@ -31,16 +33,14 @@
   gap: 8px;
   box-sizing: border-box;
   position: relative;
-  &:hover {
+
+  @include interactive($hover: true) {
     background-color: rgba(255, 255, 255, 0.1);
   }
   &:focus-visible {
     border-color: var(--theme-accent-secondary);
     outline: none;
   }
-
-  // Don't scale up items even if users have item tiles set to large
-  --item-size: 50px;
 
   &.compact {
     grid-template-areas:

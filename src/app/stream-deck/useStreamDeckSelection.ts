@@ -1,7 +1,7 @@
 import { LoadoutItem } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import store from 'app/store/store';
 import { RootState } from 'app/store/types';
@@ -75,8 +75,8 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
         icon: item.icon,
         overlay: item.iconOverlay,
         isExotic: item.isExotic,
-        isSubClass: data.isSubClass ?? false,
-        isCrafted: item.crafted,
+        isSubClass: data.isSubClass,
+        isCrafted: Boolean(item.crafted),
         element:
           item.element?.enumValue === DamageType.Kinetic
             ? undefined

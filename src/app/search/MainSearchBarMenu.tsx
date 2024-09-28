@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { searchButtonAnimateVariants } from './SearchBar';
-import { filteredItemsSelector, queryValidSelector } from './search-filter';
+import { filteredItemsSelector, queryValidSelector } from './items/item-search-filter';
 
 /**
  * The three-dots dropdown menu of actions for the search bar that act on searched items.

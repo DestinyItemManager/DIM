@@ -3,9 +3,9 @@ import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
-import { isD1Item, isSunset } from 'app/utils/item-utils';
+import { isD1Item } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
 import { Comparator, chainComparator, compareBy, reverseComparator } from '../utils/comparators';
@@ -123,7 +123,7 @@ interface VaultGroupIconTag {
 
 interface VaultGroupIconTypeName {
   type: 'typeName';
-  itemCategoryHashes: number[];
+  itemCategoryHashes: ItemCategoryHashes[];
 }
 
 interface VaultGroupIconAmmoType {
@@ -263,8 +263,6 @@ const ITEM_COMPARATORS: {
       compareBy((item) => item.iconOverlay ?? ''),
     ),
   ),
-  // sunset -> not sunset
-  sunset: compareBy(isSunset),
   // new -> old
   acquisitionRecency: acquisitionRecencyComparator,
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
@@ -374,7 +372,7 @@ export function groupItems(
 ): readonly VaultGroup[] {
   const comparatorsAndGetters = GROUP_BY_GETTERS_AND_COMPARATORS[vaultGrouping];
 
-  // If there are no items, or the grouping is not suppored, return all items in a single group
+  // If there are no items, or the grouping is not supported, return all items in a single group
   if (!items.length || !comparatorsAndGetters) {
     return [{ groupingValue: undefined, icon: { type: 'none' }, items: [...items] }];
   }

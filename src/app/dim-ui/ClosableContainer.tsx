@@ -10,20 +10,14 @@ import styles from './ClosableContainer.m.scss';
 export default function ClosableContainer({
   children,
   className,
-  showCloseIconOnHover = false,
   onClose,
 }: {
   children: React.ReactNode;
   className?: string;
-  showCloseIconOnHover?: boolean;
   onClose?: (e: React.MouseEvent) => void;
 }) {
   return (
-    <div
-      className={clsx(className, styles.container, {
-        [styles.showCloseOnHover]: showCloseIconOnHover,
-      })}
-    >
+    <div className={clsx(className, styles.container)}>
       {children}
       {Boolean(onClose) && (
         <div className={styles.close} onClick={onClose} role="button" tabIndex={0} />

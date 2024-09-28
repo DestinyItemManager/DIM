@@ -10,7 +10,7 @@ import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/invent
 import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
@@ -520,10 +520,7 @@ function FashionSocket({
       ).length > 0);
 
   return (
-    <ClosableContainer
-      onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}
-      showCloseIconOnHover
-    >
+    <ClosableContainer onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}>
       {plug && canSlotOrnament ? (
         <PlugDef
           onClick={handleOrnamentClick}

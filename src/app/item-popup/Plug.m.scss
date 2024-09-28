@@ -7,19 +7,21 @@
   width: var(--item-size);
   border: none;
 
-  &:hover .perkOutline {
-    stroke: var(--theme-accent-primary);
-    stroke-width: 6px;
+  @include interactive($hover: true) {
+    .perkOutline {
+      stroke: var(--theme-accent-primary);
+      stroke-width: 6px;
+    }
   }
 }
 
 // A global class because some things still tweak the size of the plug image.
 // TODO: customize with CSS vars instead
 :global(.plug) {
+  --item-size-adjusted: calc(32 / 50 * var(--item-size));
   position: relative; // to position the thumbs-up correctly
   display: flex;
   flex-direction: row;
-  --item-size-adjusted: calc(32 / 50 * var(--item-size));
 
   @include phone-portrait {
     --item-size-adjusted: 32px;
@@ -63,15 +65,9 @@
 }
 
 .cannotRoll {
-  fill: #ba594880;
-
-  &.plugged {
-    fill: #ba5948b8;
-  }
-
-  &.selected {
-    fill: #ba5948;
-  }
+  stroke-dasharray: 12 6;
+  stroke-width: 3;
+  stroke-dashoffset: -4;
 }
 
 .disabled {
@@ -84,8 +80,8 @@
 
 .hasMenu {
   cursor: pointer;
-  &:hover,
-  &:focus-visible {
+
+  @include interactive($hover: true, $focus: true) {
     outline: 1px solid var(--theme-accent-primary);
   }
 

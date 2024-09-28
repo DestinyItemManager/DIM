@@ -31,7 +31,7 @@
   width: var(--item-size);
   cursor: grab;
 
-  &:hover {
+  @include interactive($hover: true) {
     @include draggable-hover-border;
   }
 }

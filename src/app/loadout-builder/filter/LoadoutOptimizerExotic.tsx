@@ -155,7 +155,7 @@ function ChosenExoticOption({
       {icon}
       <div className={styles.details}>
         <div className={styles.title}>{title}</div>
-        {description}
+        <div>{description}</div>
       </div>
     </div>
   );

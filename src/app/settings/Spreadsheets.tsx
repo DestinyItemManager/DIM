@@ -3,6 +3,8 @@ import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import { downloadLoadoutsCsv } from 'app/loadout/spreadsheets';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorMessage } from 'app/utils/errors';
@@ -15,6 +17,7 @@ import styles from './Spreadsheets.m.scss';
 export default function Spreadsheets() {
   const dispatch = useThunkDispatch();
   const disabled = !useSelector(storesLoadedSelector);
+  const d2Defs = useD2Definitions();
 
   const [confirmDialog, confirm] = useConfirm();
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
@@ -34,7 +37,7 @@ export default function Spreadsheets() {
     }
   };
 
-  const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => dispatch(downloadCsvFiles(type));
+  const downloadCsv = (type: 'armor' | 'weapon' | 'ghost') => dispatch(downloadCsvFiles(type));
 
   return (
     <section id="spreadsheets">
@@ -48,7 +51,7 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Weapons')}
+            onClick={() => downloadCsv('weapon')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
@@ -56,7 +59,7 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Armor')}
+            onClick={() => downloadCsv('armor')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
@@ -64,7 +67,7 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Ghost')}
+            onClick={() => downloadCsv('ghost')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
@@ -76,6 +79,23 @@ export default function Spreadsheets() {
           onDrop={importCsv}
         />
       </div>
+      {d2Defs && (
+        <div className={settingClass}>
+          <label htmlFor="spreadsheetLinks" title={t('Settings.ExportLoadoutSSHelp')}>
+            {t('Settings.ExportLoadoutSS')}
+          </label>
+          <div>
+            <button
+              type="button"
+              className="dim-button"
+              onClick={() => dispatch(downloadLoadoutsCsv())}
+              disabled={disabled}
+            >
+              <AppIcon icon={spreadsheetIcon} /> <span>{t('Loadouts.Loadouts')}</span>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

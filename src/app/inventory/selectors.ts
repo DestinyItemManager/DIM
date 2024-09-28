@@ -90,7 +90,6 @@ export const isNewSelector = (item: DimItem) => (state: RootState) =>
 
 const visibleCurrencies = [
   3159615086, // Glimmer
-  1022552290, // Legendary Shards
   2817410917, // Bright Dust
   3147280338, // Silver
   2534352370, // Legendary Marks (D1)
@@ -135,9 +134,8 @@ export const vendorCurrencyEngramsSelector = createSelector(
 
 const materialsWithMissingICH = [
   3702027555, // InventoryItem "Spoils of Conquest"
-  2329379380, // InventoryItem "Salvage Key"
-  2329379381, // InventoryItem "Deep Dive Key",
   1289622079, // InventoryItem "Strand Meditations"
+  3467984096, // InventoryItem "Exotic Cipher"
 ];
 
 /** materials/currencies that aren't top level stuff */
@@ -156,7 +154,14 @@ export const profileResponseSelector = (state: RootState) =>
 
 /** Whether or not the user is currently playing Destiny 2 */
 const userIsPlayingSelector = (state: RootState) =>
-  Boolean(state.inventory.profileResponse?.profileTransitoryData?.data);
+  Boolean(
+    // the user's playing if their transitory component acts like they're in-game
+    state.inventory.profileResponse?.profileTransitoryData?.data ||
+      // or, as a grace period for character swaps, if they've been playing in the last 10 minutes
+      Date.now() -
+        Date.parse(state.inventory.profileResponse?.profile.data?.dateLastPlayed || '0') <
+        10 * 60 * 1000,
+  );
 
 /** The time when the currently displayed profile was last refreshed from live game data */
 export const profileMintedSelector = createSelector(
@@ -168,7 +173,7 @@ export const profileErrorSelector = (state: RootState) => state.inventory.profil
 
 /** A variant of profileErrorSelector which returns undefined if we still have a valid profile to use despite the error. */
 export const blockingProfileErrorSelector = (state: RootState) =>
-  state.inventory.profileResponse ? undefined : state.inventory.profileError;
+  currentStoreSelector(state) ? undefined : state.inventory.profileError;
 
 /** Whether DIM will automatically refresh on a schedule */
 export const autoRefreshEnabledSelector = (state: RootState) =>

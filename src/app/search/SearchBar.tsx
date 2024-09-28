@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
@@ -13,6 +14,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
 import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
@@ -49,9 +51,12 @@ import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
 import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
+import { searchConfigSelector, validateQuerySelector } from './items/item-search-filter';
+import {
+  loadoutSearchConfigSelector,
+  validateLoadoutQuerySelector,
+} from './loadouts/loadout-search-filter';
 import { canonicalizeQuery, parseQuery } from './query-parser';
-import { searchConfigSelector } from './search-config';
-import { validateQuerySelector } from './search-filter';
 import './search-filter.scss';
 
 export const searchButtonAnimateVariants: Variants = {
@@ -73,6 +78,12 @@ const armoryIndexSelector = createSelector(d2ManifestSelector, languageSelector,
 const autoCompleterSelector = createSelector(
   searchConfigSelector,
   armoryIndexSelector,
+  createAutocompleter,
+);
+
+const loadoutAutoCompleterSelector = createSelector(
+  loadoutSearchConfigSelector,
+  () => undefined,
   createAutocompleter,
 );
 
@@ -175,6 +186,8 @@ export interface SearchFilterRef {
   clearFilter: () => void;
 }
 
+const resultItemHeight = 32;
+
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay. This is the new version of the component
@@ -194,6 +207,7 @@ function SearchBar(
     onClear,
     className,
     menu,
+    searchType = SearchType.Item,
   }: {
     /** Placeholder text when nothing has been typed */
     placeholder: string;
@@ -207,6 +221,8 @@ function SearchBar(
     children?: React.ReactNode;
     /** An optional menu of actions that can be executed on the search. Always shown. */
     menu?: React.ReactNode;
+    /** Whether this search bar applies to loadouts rather than items. */
+    searchType?: SearchType;
     instant?: boolean;
     className?: string;
     /** Fired whenever the query changes (already debounced) */
@@ -218,9 +234,13 @@ function SearchBar(
 ) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
-  const recentSearches = useSelector(recentSearchesSelector);
-  const autocompleter = useSelector(autoCompleterSelector);
-  const validateQuery = useSelector(validateQuerySelector);
+  const recentSearches = useSelector(recentSearchesSelector(searchType));
+  const autocompleter = useSelector(
+    searchType === SearchType.Loadout ? loadoutAutoCompleterSelector : autoCompleterSelector,
+  );
+  const validateQuery = useSelector(
+    searchType === SearchType.Loadout ? validateLoadoutQuerySelector : validateQuerySelector,
+  );
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
@@ -250,7 +270,7 @@ function SearchBar(
     if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
       // we use the ref to only fire if the query changed since the last blur
-      dispatch(searchUsed(liveQuery));
+      dispatch(searchUsed({ query: liveQuery, type: searchType }));
       lastBlurQuery.current = liveQuery;
     }
   };
@@ -261,8 +281,15 @@ function SearchBar(
 
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
-    dispatch(saveSearch({ query: liveQuery, saved: !saved }));
+    dispatch(saveSearch({ query: liveQuery, saved: !saved, type: searchType }));
   };
+
+  // Try to fill up the screen with search results
+  const maxResults = isPhonePortrait
+    ? 7 // TODO: do this dynamically on mobile too, but the timing of when the virtual keyboard shows up is a nightmare
+    : menuMaxHeight
+      ? Math.floor((0.7 * menuMaxHeight) / resultItemHeight)
+      : 10;
 
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
@@ -272,8 +299,9 @@ function SearchBar(
         caretPosition,
         recentSearches,
         /* includeArmory */ Boolean(mainSearchBar),
+        maxResults,
       ),
-    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches],
+    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches, maxResults],
   );
 
   // useCombobox from Downshift manages the state of the dropdown
@@ -354,8 +382,6 @@ function SearchBar(
       const { height: viewportHeight } = window.visualViewport;
       // pixels remaining in viewport minus offset minus 10px for padding
       const pxAvailable = viewportHeight - y - height - 10;
-      const resultItemHeight = 30;
-
       // constrain to size that would allow only whole items to be seen
       setMenuMaxHeight(Math.floor(pxAvailable / resultItemHeight) * resultItemHeight);
     }
@@ -364,9 +390,9 @@ function SearchBar(
   const deleteSearch = useCallback(
     (e: React.MouseEvent, item: SearchItem) => {
       e.stopPropagation();
-      dispatch(searchDeleted(item.query.fullText));
+      dispatch(searchDeleted({ query: item.query.fullText, type: searchType }));
     },
-    [dispatch],
+    [dispatch, searchType],
   );
 
   // Add some methods for refs to use
@@ -414,7 +440,7 @@ function SearchBar(
       items[highlightedIndex]?.type === SearchItemType.Recent
     ) {
       e.preventDefault();
-      dispatch(searchDeleted(items[highlightedIndex].query.fullText));
+      dispatch(searchDeleted({ query: items[highlightedIndex].query.fullText, type: searchType }));
     } else if (e.key === 'Enter' && !isOpen && liveQuery) {
       // Show search results on "Enter" with a closed menu
       dispatch(toggleSearchResults());
@@ -489,6 +515,7 @@ function SearchBar(
             placeholder,
             type: 'text',
             name: 'filter',
+            'aria-label': placeholder,
           })}
           enterKeyHint="search"
         />
@@ -545,21 +572,30 @@ function SearchBar(
         </LayoutGroup>
 
         {filterHelpOpen && (
-          <Sheet
-            onClose={() => setFilterHelpOpen(false)}
-            header={
-              <>
-                <h1>{t('Header.Filters')}</h1>
-                <UserGuideLink topic="Item-Search" />
-              </>
+          <Suspense
+            fallback={
+              <Portal>
+                <Loading message={t('Loading.FilterHelp')} />
+              </Portal>
             }
-            freezeInitialHeight
-            sheetClassName={styles.filterHelp}
           >
-            <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
-              <LazyFilterHelp />
-            </Suspense>
-          </Sheet>
+            {/* Because FilterHelp suspends, the entire sheet will suspend while it is loaded.
+             * This stops us having issues with incorrect frozen initial heights as it will
+             * get locked to the fallback height if we don't do this. */}
+            <Sheet
+              onClose={() => setFilterHelpOpen(false)}
+              header={
+                <>
+                  <h1>{t('Header.Filters')}</h1>
+                  <UserGuideLink topic="Item-Search" />
+                </>
+              }
+              freezeInitialHeight
+              sheetClassName={styles.filterHelp}
+            >
+              <LazyFilterHelp searchType={searchType} />
+            </Sheet>
+          </Suspense>
         )}
 
         {autocompleteMenu}

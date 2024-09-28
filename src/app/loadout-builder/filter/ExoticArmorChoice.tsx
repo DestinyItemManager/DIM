@@ -47,13 +47,7 @@ export default function ExoticArmorChoice({
 
   return (
     <div className={styles.exoticArmorChoice}>
-      {onClose ? (
-        <ClosableContainer showCloseIconOnHover={true} onClose={onClose}>
-          {icon}
-        </ClosableContainer>
-      ) : (
-        icon
-      )}
+      {onClose ? <ClosableContainer onClose={onClose}>{icon}</ClosableContainer> : icon}
       <span>{name}</span>
     </div>
   );

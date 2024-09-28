@@ -10,8 +10,8 @@
 }
 
 .notes {
-  margin-top: 8px;
   font-size: 14px;
+  margin-top: 4px;
 
   summary {
     font-weight: bold;
@@ -28,4 +28,25 @@
   flex-flow: row wrap;
   align-items: center;
   gap: 4px;
+}
+
+.header {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  gap: 0 12px;
+}
+
+.headerDetails {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  flex: 1;
+  gap: 4px;
+}
+
+.classType {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 0.25em;
+
+  svg {
+    height: 16px;
+  }
 }

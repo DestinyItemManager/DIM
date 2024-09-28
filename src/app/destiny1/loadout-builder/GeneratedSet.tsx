@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import D1CharacterStats from 'app/store-stats/D1CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import _ from 'lodash';
@@ -77,13 +77,16 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
             </div>
             <div className="label">
               <small>
-                {setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] === 'int'
+                {setType.tiers[activesets].configs[0][armorpiece.item.bucket.hash as ArmorTypes] ===
+                'int'
                   ? t('Stats.Intellect')
-                  : setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] ===
-                      'dis'
+                  : setType.tiers[activesets].configs[0][
+                        armorpiece.item.bucket.hash as ArmorTypes
+                      ] === 'dis'
                     ? t('Stats.Discipline')
-                    : setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] ===
-                        'str'
+                    : setType.tiers[activesets].configs[0][
+                          armorpiece.item.bucket.hash as ArmorTypes
+                        ] === 'str'
                       ? t('Stats.Strength')
                       : t('Stats.NoBonus')}
               </small>
@@ -94,11 +97,11 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
                 !collapsed && (
                   <div key={i} className="other-configs">
                     <small>
-                      {config[armorpiece.item.type as ArmorTypes] === 'int'
+                      {config[armorpiece.item.bucket.hash as ArmorTypes] === 'int'
                         ? t('Stats.Intellect')
-                        : config[armorpiece.item.type as ArmorTypes] === 'dis'
+                        : config[armorpiece.item.bucket.hash as ArmorTypes] === 'dis'
                           ? t('Stats.Discipline')
-                          : config[armorpiece.item.type as ArmorTypes] === 'str'
+                          : config[armorpiece.item.bucket.hash as ArmorTypes] === 'str'
                             ? t('Stats.Strength')
                             : t('Stats.NoBonus')}
                     </small>

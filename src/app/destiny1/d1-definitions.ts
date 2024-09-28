@@ -1,6 +1,6 @@
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/sentry';
-import { HashLookupFailure, ManifestDefinitions } from '../destiny2/definitions';
+import { HashLookupFailure } from '../destiny2/definitions';
 import { setD1Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/d1-manifest-service';
 import {
@@ -48,7 +48,7 @@ export interface DefinitionTable<T> {
   readonly getAll: () => { [hash: number]: T };
 }
 
-export interface D1ManifestDefinitions extends ManifestDefinitions {
+export interface D1ManifestDefinitions {
   InventoryBucket: DefinitionTable<D1InventoryBucketDefinition>;
   Class: DefinitionTable<D1ClassDefinition>;
   Race: DefinitionTable<D1RaceDefinition>;
@@ -66,6 +66,8 @@ export interface D1ManifestDefinitions extends ManifestDefinitions {
   Activity: DefinitionTable<D1ActivityDefinition>;
   ActivityType: DefinitionTable<D1ActivityTypeDefinition>;
   DamageType: DefinitionTable<D1DamageTypeDefinition>;
+  /** Check if these defs are from D2. Inside an if statement, these defs will be narrowed to type D2ManifestDefinitions. */
+  readonly isDestiny2: false;
 }
 
 /**
@@ -73,20 +75,19 @@ export interface D1ManifestDefinitions extends ManifestDefinitions {
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
+export function getDefinitions(force = false): ThunkResult<D1ManifestDefinitions> {
   return async (dispatch, getState) => {
     let existingManifest = getState().manifest.d1Manifest;
-    if (existingManifest) {
+    if (existingManifest && !force) {
       return existingManifest;
     }
     const db = await dispatch(getManifest());
     existingManifest = getState().manifest.d1Manifest;
-    if (existingManifest) {
+    if (existingManifest && !force) {
       return existingManifest;
     }
-    const defs: ManifestDefinitions & { [table: string]: any } = {
-      isDestiny1: () => true,
-      isDestiny2: () => false,
+    const defs: { [table: string]: any; isDestiny2: false } = {
+      isDestiny2: false,
     };
     for (const tableShort of allTables) {
       const table = `Destiny${tableShort}Definition` as const;

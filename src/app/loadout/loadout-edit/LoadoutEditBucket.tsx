@@ -7,8 +7,8 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
@@ -263,11 +263,7 @@ function DraggableItem({
   onToggleEquipped: () => void;
 }) {
   return (
-    <ClosableContainer
-      key={resolvedLoadoutItem.item.id}
-      onClose={onRemoveItem}
-      showCloseIconOnHover
-    >
+    <ClosableContainer key={resolvedLoadoutItem.item.id} onClose={onRemoveItem}>
       <DraggableInventoryItem item={resolvedLoadoutItem.item}>
         <ItemPopupTrigger
           item={resolvedLoadoutItem.item}

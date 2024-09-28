@@ -14,6 +14,7 @@ import {
   useSocketOverrides,
 } from 'app/inventory/store/override-sockets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
+import BreakerType from 'app/item-popup/BreakerType';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
 import { AmmoIcon, ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import ItemSockets from 'app/item-popup/ItemSockets';
@@ -28,7 +29,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getItemYear } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import { D2EventInfo } from 'data/d2/d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 import AllWishlistRolls from './AllWishlistRolls';
@@ -59,7 +60,7 @@ export default function Armory({
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
-  const itemWithoutSockets = makeFakeItem(itemCreationContext, itemHash);
+  const itemWithoutSockets = makeFakeItem(itemCreationContext, itemHash, { allowWishList: true });
 
   if (!itemWithoutSockets) {
     return (
@@ -115,9 +116,7 @@ export default function Armory({
         <div className={styles.headerContent}>
           <div className={styles.subtitle}>
             <ElementIcon element={item.element} className={styles.element} />
-            {item.breakerType && (
-              <BungieImage src={item.breakerType.displayProperties.icon} height={15} />
-            )}
+            <BreakerType item={item} />
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
             {item.pursuit?.questLine && (
@@ -138,7 +137,7 @@ export default function Armory({
                   season: season.seasonNumber,
                   year: getItemYear(item) ?? '?',
                 })}
-                ){event && <span> - {D2EventInfo[getEvent(item)].name}</span>}
+                ){Boolean(event) && <span> - {D2EventInfo[getEvent(item)!].name}</span>}
               </div>
             )}
           </div>
@@ -162,13 +161,13 @@ export default function Armory({
         </div>
       )}
 
-      {defs.isDestiny2() && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
+      {defs.isDestiny2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">
           <EmblemPreview item={item} />
         </div>
       )}
 
-      {defs.isDestiny2() && item.availableMetricCategoryNodeHashes && (
+      {defs.isDestiny2 && item.availableMetricCategoryNodeHashes && (
         <div className="item-details">
           <MetricCategories
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
@@ -196,7 +195,7 @@ export default function Armory({
               ))}
             </div>
           )}
-          {defs.isDestiny2() && item.pursuit.rewards.length !== 0 && (
+          {defs.isDestiny2 && item.pursuit.rewards.length !== 0 && (
             <div className={styles.section}>
               <div>{t('MovePopup.Rewards')}</div>
               {item.pursuit.rewards.map((reward) => (
@@ -229,7 +228,7 @@ export default function Armory({
         </>
       )}
 
-      {!isPhonePortrait && <WishListEntry item={item} />}
+      {!isPhonePortrait && item.wishListEnabled && <WishListEntry item={item} />}
 
       {storeItems.length > 0 && (
         <>
@@ -251,7 +250,9 @@ export default function Armory({
           <ItemGrid items={storeItems} noLink />
         </>
       )}
-      <AllWishlistRolls item={item} realAvailablePlugHashes={realAvailablePlugHashes} />
+      {item.wishListEnabled && (
+        <AllWishlistRolls item={item} realAvailablePlugHashes={realAvailablePlugHashes} />
+      )}
     </div>
   );
 }

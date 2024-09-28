@@ -162,7 +162,7 @@ export async function transfer(
       }),
     );
   } catch (e) {
-    return handleUniquenessViolation(e, item, store);
+    return handleUniquenessViolation(e, item);
   }
 }
 

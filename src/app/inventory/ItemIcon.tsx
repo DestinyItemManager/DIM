@@ -2,6 +2,7 @@ import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { D2ItemTiers, d2MissingIcon, ItemTierName } from 'app/search/d2-known-values';
+import { isShiny } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -59,6 +60,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   const classifiedPlaceholder =
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
+  const itemIsShiny = isShiny(item);
   return (
     <>
       {classifiedPlaceholder ? (
@@ -77,7 +79,8 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       {(item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
-            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
+            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !itemIsShiny,
+            [styles.shinyMasterwork]: itemIsShiny,
             [styles.exoticMasterwork]: item.masterwork && item.isExotic,
             [styles.deepsightBorder]: item.deepsightInfo,
           })}

@@ -2,6 +2,7 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { PressTip } from 'app/dim-ui/PressTip';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
+import type { BucketSortType } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -10,11 +11,11 @@ import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
 import { LoadoutFinding } from 'app/loadout-analyzer/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { count, filterMap } from 'app/utils/collections';
+import { filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { addDividers } from 'app/utils/react';
@@ -24,6 +25,7 @@ import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutView.m.scss';
+import { InGameLoadoutIconFromIdentifiers } from './ingame/InGameLoadoutIcon';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
 import { LoadoutArtifactUnlocks, LoadoutMods } from './loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
@@ -111,16 +113,22 @@ export default function LoadoutView({
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
-  const categories = Object.groupBy(
+  const loadoutItemsByCategory: Record<BucketSortType, ResolvedLoadoutItem[]> = Object.groupBy(
     items.concat(warnitems),
     (li) => li.item.bucket.sort ?? 'Unknown',
   );
-  const power = loadoutPower(store, categories);
+  const power = loadoutPower(store, loadoutItemsByCategory);
 
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
         <h2>
+          {$featureFlags.editInGameLoadoutIdentifiers && loadout.parameters?.inGameIdentifiers && (
+            <InGameLoadoutIconFromIdentifiers
+              size={24}
+              identifiers={loadout.parameters.inGameIdentifiers}
+            />
+          )}
           {loadout.classType === DestinyClass.Unknown && (
             <ClassIcon className={styles.classIcon} classType={loadout.classType} />
           )}
@@ -168,7 +176,7 @@ export default function LoadoutView({
                 category={category}
                 subclass={subclass}
                 store={store}
-                items={categories[category]}
+                items={loadoutItemsByCategory[category]}
                 allMods={modDefinitions}
                 modsByBucket={modsByBucket}
                 loadout={loadout}
@@ -200,14 +208,14 @@ export default function LoadoutView({
 export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedLoadoutItem[]>) {
   const isEquipped = (li: ResolvedLoadoutItem) =>
     Boolean(!li.missing && li.item.power && li.loadoutItem.equip);
-  const showPower =
-    count(categories.Weapons ?? [], isEquipped) === 3 &&
-    count(categories.Armor ?? [], isEquipped) === 5;
+  const equippedWeapons = categories.Weapons?.filter(isEquipped) ?? [];
+  const equippedArmor = categories.Armor?.filter(isEquipped) ?? [];
+  const showPower = equippedWeapons.length === 3 && equippedArmor.length === 5;
   const power = showPower
     ? Math.floor(
         getLight(
           store,
-          [...categories.Weapons, ...categories.Armor].map((li) => li.item),
+          [...equippedWeapons, ...equippedArmor].map((li) => li.item),
         ),
       )
     : 0;

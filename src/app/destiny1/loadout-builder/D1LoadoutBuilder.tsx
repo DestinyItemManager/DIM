@@ -6,14 +6,14 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD1Definitions } from 'app/manifest/selectors';
-import { D1_StatHashes } from 'app/search/d1-known-values';
+import { D1_StatHashes, D1BucketHashes } from 'app/search/d1-known-values';
 import { getColor } from 'app/shell/formatters';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { uniqBy } from 'app/utils/collections';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -22,10 +22,10 @@ import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
 import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
-import { bucketsSelector, storesSelector } from '../../inventory/selectors';
+import { bucketsSelector, sortedStoresSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import { AppIcon, refreshIcon } from '../../shell/icons';
-import { Vendor, loadVendors } from '../vendors/vendor.service';
+import { loadVendors, Vendor } from '../vendors/vendor.service';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import GeneratedSet from './GeneratedSet';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
@@ -69,11 +69,20 @@ interface State {
   loadingVendors: boolean;
 }
 
+const armorTypes = [
+  BucketHashes.Helmet,
+  BucketHashes.Gauntlets,
+  BucketHashes.ChestArmor,
+  BucketHashes.LegArmor,
+  BucketHashes.ClassArmor,
+  D1BucketHashes.Artifact,
+  BucketHashes.Ghost,
+] as ArmorTypes[];
 const allClassTypes: ClassTypes[] = [DestinyClass.Titan, DestinyClass.Warlock, DestinyClass.Hunter];
 
 const initialState: State = {
   activesets: '5/5/2',
-  type: 'Helmet',
+  type: BucketHashes.Helmet,
   scaleType: 'scaled',
   progress: 0,
   fullMode: false,
@@ -85,28 +94,28 @@ const initialState: State = {
   highestsets: {},
   excludeditems: [],
   lockeditems: {
-    Helmet: null,
-    Gauntlets: null,
-    Chest: null,
-    Leg: null,
-    ClassItem: null,
-    Artifact: null,
-    Ghost: null,
+    [BucketHashes.Helmet]: null,
+    [BucketHashes.Gauntlets]: null,
+    [BucketHashes.ChestArmor]: null,
+    [BucketHashes.LegArmor]: null,
+    [BucketHashes.ClassArmor]: null,
+    [D1BucketHashes.Artifact]: null,
+    [BucketHashes.Ghost]: null,
   },
   lockedperks: {
-    Helmet: {},
-    Gauntlets: {},
-    Chest: {},
-    Leg: {},
-    ClassItem: {},
-    Artifact: {},
-    Ghost: {},
+    [BucketHashes.Helmet]: {},
+    [BucketHashes.Gauntlets]: {},
+    [BucketHashes.ChestArmor]: {},
+    [BucketHashes.LegArmor]: {},
+    [BucketHashes.ClassArmor]: {},
+    [D1BucketHashes.Artifact]: {},
+    [BucketHashes.Ghost]: {},
   },
 };
 
 export default function D1LoadoutBuilder({ account }: { account: DestinyAccount }) {
   const buckets = useSelector(bucketsSelector);
-  const stores = useSelector(storesSelector) as D1Store[];
+  const stores = useSelector(sortedStoresSelector) as D1Store[];
   const defs = useD1Definitions();
 
   const [state, setStateFull] = useState(initialState);
@@ -211,61 +220,61 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
     const perks: { [classType in ClassTypes]: PerkCombination } = {
       [DestinyClass.Warlock]: {
-        Helmet: [],
-        Gauntlets: [],
-        Chest: [],
-        Leg: [],
-        ClassItem: [],
-        Ghost: [],
-        Artifact: [],
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+        [D1BucketHashes.Artifact]: [],
+        [BucketHashes.Ghost]: [],
       },
       [DestinyClass.Titan]: {
-        Helmet: [],
-        Gauntlets: [],
-        Chest: [],
-        Leg: [],
-        ClassItem: [],
-        Ghost: [],
-        Artifact: [],
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+        [D1BucketHashes.Artifact]: [],
+        [BucketHashes.Ghost]: [],
       },
       [DestinyClass.Hunter]: {
-        Helmet: [],
-        Gauntlets: [],
-        Chest: [],
-        Leg: [],
-        ClassItem: [],
-        Ghost: [],
-        Artifact: [],
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+        [D1BucketHashes.Artifact]: [],
+        [BucketHashes.Ghost]: [],
       },
     };
 
     const vendorPerks: { [classType in ClassTypes]: PerkCombination } = {
       [DestinyClass.Warlock]: {
-        Helmet: [],
-        Gauntlets: [],
-        Chest: [],
-        Leg: [],
-        ClassItem: [],
-        Ghost: [],
-        Artifact: [],
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+        [D1BucketHashes.Artifact]: [],
+        [BucketHashes.Ghost]: [],
       },
       [DestinyClass.Titan]: {
-        Helmet: [],
-        Gauntlets: [],
-        Chest: [],
-        Leg: [],
-        ClassItem: [],
-        Ghost: [],
-        Artifact: [],
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+        [D1BucketHashes.Artifact]: [],
+        [BucketHashes.Ghost]: [],
       },
       [DestinyClass.Hunter]: {
-        Helmet: [],
-        Gauntlets: [],
-        Chest: [],
-        Leg: [],
-        ClassItem: [],
-        Ghost: [],
-        Artifact: [],
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+        [D1BucketHashes.Artifact]: [],
+        [BucketHashes.Ghost]: [],
       },
     };
 
@@ -287,7 +296,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
       // Build a map of perks
       for (const item of items) {
-        const itemType = item.type as ArmorTypes;
+        const itemType = item.bucket.hash as ArmorTypes;
         if (item.classType === DestinyClass.Unknown) {
           for (const classType of allClassTypes) {
             perks[classType][itemType] = filterPerks(perks[classType][itemType], item);
@@ -306,14 +315,16 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
             .map((i) => i.item)
             .filter(
               (item) =>
-                item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost',
+                item.bucket.sort === 'Armor' ||
+                item.bucket.hash === D1BucketHashes.Artifact ||
+                item.bucket.hash === BucketHashes.Ghost,
             ),
         );
         vendorItems = vendorItems.concat(vendItems);
 
         // Build a map of perks
         for (const item of vendItems) {
-          const itemType = item.type as ArmorTypes;
+          const itemType = item.bucket.hash as ArmorTypes;
           if (item.classType === DestinyClass.Unknown) {
             for (const classType of allClassTypes) {
               vendorPerks[classType][itemType] = filterPerks(
@@ -367,10 +378,17 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       errorLog('loadout optimizer', new Error('You need to have a name on the form input'));
     }
 
-    setState({
-      [e.target.name as 'type' | 'scaleType']: e.target.value,
-      progress: 0,
-    });
+    if (e.target.name === 'type') {
+      setState({
+        [e.target.name]: parseInt(e.target.value, 10),
+        progress: 0,
+      });
+    } else {
+      setState({
+        [e.target.name]: e.target.value,
+        progress: 0,
+      });
+    }
   };
 
   const onActiveSetsChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -422,7 +440,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   const onItemLocked = (item: DimItem) => {
     setStateFull((state) => ({
       ...state,
-      lockeditems: { ...state.lockeditems, [item.type]: item },
+      lockeditems: { ...state.lockeditems, [item.bucket.hash]: item },
       progress: 0,
     }));
   };
@@ -454,39 +472,28 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   };
 
   const lockEquipped = () => {
-    const lockEquippedTypes = [
-      'helmet',
-      'gauntlets',
-      'chest',
-      'leg',
-      'classitem',
-      'artifact',
-      'ghost',
-    ];
-    const items = Object.groupBy(
+    const items = Map.groupBy(
       selectedCharacter!.items.filter(
         (item) =>
-          itemCanBeInLoadout(item) &&
-          item.equipped &&
-          lockEquippedTypes.includes(item.type.toLowerCase()),
+          itemCanBeInLoadout(item) && item.equipped && armorTypes.includes(item.bucket.hash),
       ),
-      (i) => i.type.toLowerCase(),
+      (i) => i.bucket.hash as ArmorTypes,
     );
 
-    function nullWithoutStats(items: DimItem[]) {
-      return items[0].stats ? (items[0] as D1Item) : null;
+    function nullWithoutStats(items: DimItem[] | undefined) {
+      return items?.[0].stats ? (items[0] as D1Item) : null;
     }
 
     // Do not lock items with no stats
     setState({
       lockeditems: {
-        Helmet: nullWithoutStats(items.helmet),
-        Gauntlets: nullWithoutStats(items.gauntlets),
-        Chest: nullWithoutStats(items.chest),
-        Leg: nullWithoutStats(items.leg),
-        ClassItem: nullWithoutStats(items.classitem),
-        Artifact: nullWithoutStats(items.artifact),
-        Ghost: nullWithoutStats(items.ghost),
+        [BucketHashes.Helmet]: nullWithoutStats(items.get(BucketHashes.Helmet)),
+        [BucketHashes.Gauntlets]: nullWithoutStats(items.get(BucketHashes.Gauntlets)),
+        [BucketHashes.ChestArmor]: nullWithoutStats(items.get(BucketHashes.ChestArmor)),
+        [BucketHashes.LegArmor]: nullWithoutStats(items.get(BucketHashes.LegArmor)),
+        [BucketHashes.ClassArmor]: nullWithoutStats(items.get(BucketHashes.ClassArmor)),
+        [D1BucketHashes.Artifact]: nullWithoutStats(items.get(D1BucketHashes.Artifact)),
+        [BucketHashes.Ghost]: nullWithoutStats(items.get(BucketHashes.Ghost)),
       },
       progress: 0,
     });
@@ -495,13 +502,13 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   const clearLocked = () => {
     setState({
       lockeditems: {
-        Helmet: null,
-        Gauntlets: null,
-        Chest: null,
-        Leg: null,
-        ClassItem: null,
-        Artifact: null,
-        Ghost: null,
+        [BucketHashes.Helmet]: null,
+        [BucketHashes.Gauntlets]: null,
+        [BucketHashes.ChestArmor]: null,
+        [BucketHashes.LegArmor]: null,
+        [BucketHashes.ClassArmor]: null,
+        [D1BucketHashes.Artifact]: null,
+        [BucketHashes.Ghost]: null,
       },
       activesets: '',
       progress: 0,
@@ -530,18 +537,20 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  const i18nItemNames: { [key: string]: string } = _.zipObject(
-    ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'],
-    [
-      ItemCategoryHashes.Helmets,
-      ItemCategoryHashes.Arms,
-      ItemCategoryHashes.Chest,
-      ItemCategoryHashes.Legs,
-      ItemCategoryHashes.ClassItems,
-      38, // D1 Artifact
-      ItemCategoryHashes.Ghost,
-    ].map((key) => defs.ItemCategory.get(key).title),
-  );
+  const i18nItemNames = Object.fromEntries(
+    _.zip(
+      armorTypes,
+      [
+        ItemCategoryHashes.Helmets,
+        ItemCategoryHashes.Arms,
+        ItemCategoryHashes.Chest,
+        ItemCategoryHashes.Legs,
+        ItemCategoryHashes.ClassItems,
+        38, // D1 Artifact
+        ItemCategoryHashes.Ghost,
+      ].map((key) => defs.ItemCategory.get(key).title),
+    ) as [ArmorTypes, string][],
+  ) as { [key in ArmorTypes]: string };
 
   // Armor of each type on a particular character
   // TODO: don't even need to load this much!
@@ -575,9 +584,9 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
             {/* TODO: break into its own component */}
             <span>{t('Bucket.Armor')}</span>:{' '}
             <select name="type" value={type} onChange={onChange}>
-              {Object.entries(i18nItemNames).map(([type, name]) => (
+              {armorTypes.map((type) => (
                 <option key={type} value={type}>
-                  {name}
+                  {i18nItemNames[type]}
                 </option>
               ))}
             </select>
@@ -641,7 +650,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
                 lockeditem={lockeditem}
                 activePerks={activePerks}
                 lockedPerks={lockedperks}
-                type={type as ArmorTypes}
+                type={parseInt(type, 10) as ArmorTypes}
                 i18nItemNames={i18nItemNames}
                 onRemove={onRemove}
                 onPerkLocked={onPerkLocked}

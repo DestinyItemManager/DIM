@@ -13,11 +13,11 @@ import { I18nKey, t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
-import { filterFactorySelector } from 'app/search/search-filter';
-import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
+import { isInGameLoadout } from 'app/loadout/loadout-types';
+import { loadoutsByItemSelector } from 'app/loadout/selectors';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
+import { loadoutToSearchString } from 'app/search/items/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon } from 'app/shell/icons';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { wishListSelector } from 'app/wishlists/selectors';
@@ -28,8 +28,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
-// eslint-disable-next-line css-modules/no-unused-class
-import popupStyles from '../item-popup/ItemDescription.m.scss';
+import popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import styles from './ItemTriage.m.scss';
 import { Factor } from './triage-factors';
 import {
@@ -82,7 +81,7 @@ export function TriageTabToggle({ tabActive, item }: { tabActive: boolean; item:
 export function ItemTriage({ item, id }: { item: DimItem; id: string }) {
   return (
     <div id={id} role="tabpanel" aria-labelledby={`${id}-tab`} className={styles.itemTriagePane}>
-      {item.bucket.inWeapons && <WishlistTriageSection item={item} />}
+      {item.wishListEnabled && <WishlistTriageSection item={item} />}
       <LoadoutsTriageSection item={item} />
       <SimilarItemsTriageSection item={item} />
       {item.bucket.inArmor && item.bucket.hash !== BucketHashes.ClassArmor && (

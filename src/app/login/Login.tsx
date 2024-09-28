@@ -7,7 +7,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
@@ -16,7 +15,10 @@ const loginHelpLink = userGuideUrl('Accounts-and-Login');
 
 export default function Login() {
   const dispatch = useThunkDispatch();
-  const authorizationState = useMemo(() => (isAppStoreVersion() ? 'dimauth-' : '') + uuidv4(), []);
+  const authorizationState = useMemo(
+    () => (isAppStoreVersion() ? 'dimauth-' : '') + globalThis.crypto.randomUUID(),
+    [],
+  );
   const clientId = oauthClientId();
   const location = useLocation();
   const state = location.state as { path?: string } | undefined;

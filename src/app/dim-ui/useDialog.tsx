@@ -1,15 +1,13 @@
-import dialogPolyfill from 'dialog-polyfill';
-import 'dialog-polyfill/dist/dialog-polyfill.css';
 import styles from './useDialog.m.scss';
 
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import ClickOutsideRoot from './ClickOutsideRoot';
 
 // Redecalare forwardRef
 declare module 'react' {
-  function forwardRef<T, P = {}>(
+  function forwardRef<T, P = object>(
     render: (props: P, ref: Ref<T>) => ReactElement | null,
   ): (props: P & RefAttributes<T>) => ReactElement | null;
 }
@@ -84,14 +82,6 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
 
   useImperativeHandle(ref, () => ({ showDialog }), [showDialog]);
 
-  // Need to polyfill dialog, which only arrived in Safari 15.4
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (dialog) {
-      dialogPolyfill.registerDialog(dialog);
-    }
-  }, [dialogRef]);
-
   // We block click event propagation or else it'll trigger click handlers of the parent.
   return (
     <Portal>
@@ -122,7 +112,7 @@ export default function useDialog<Args = [], Result = void>(
 ): [element: React.ReactNode, showDialog: (args: Args) => Promise<Result>] {
   const dialogRef = useRef<DialogRef<Args, Result>>(null);
   const showDialog = useCallback((args: Args) => dialogRef.current!.showDialog(args), []);
-  // eslint-disable-next-line react/jsx-key
+  // eslint-disable-next-line @eslint-react/no-missing-key
   return [<Dialog ref={dialogRef}>{children}</Dialog>, showDialog];
 }
 

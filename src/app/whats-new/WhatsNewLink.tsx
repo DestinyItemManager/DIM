@@ -28,7 +28,7 @@ export default function WhatsNewLink({
   if (dimNeedsUpdate) {
     return (
       <a className={className({ isActive: false })} onClick={reloadDIM}>
-        <AppIcon className={styles.upgrade} icon={updateIcon} />
+        <AppIcon className={styles.upgrade} icon={updateIcon} ariaHidden />
         {t('Header.UpgradeDIM')}
       </a>
     );

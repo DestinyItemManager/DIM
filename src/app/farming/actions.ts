@@ -6,14 +6,14 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
-import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
+import { isInInGameLoadoutForSelector } from 'app/loadout/selectors';
 import { D1BucketHashes, supplies } from 'app/search/d1-known-values';
 import { refresh } from 'app/shell/refresh-events';
+import { observe, unobserve } from 'app/store/observerMiddleware';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
 import { infoLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/promises';
-import { observeStore } from 'app/utils/redux';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { InventoryBucket } from '../inventory/inventory-buckets';
@@ -27,6 +27,8 @@ import { D1Store, DimStore } from '../inventory/store-types';
 import { clearItemsOffCharacter } from '../loadout-drawer/loadout-apply';
 import * as actions from './basic-actions';
 import { farmingInterruptedSelector, farmingStoreSelector } from './selectors';
+
+const FARMING_OBSERVER_ID = 'farming-observer';
 
 // These are things you may pick up frequently out in the wild
 const makeRoomTypes = [
@@ -77,16 +79,23 @@ export function startFarming(storeId: string): ThunkResult {
       }
     });
 
-    const unsubscribe = observeStore(farmingStoreSelector, (_prev, farmingStore) => {
-      const [cancelToken, cancel] = withCancel();
+    dispatch(
+      observe({
+        id: FARMING_OBSERVER_ID,
+        runInitially: true,
+        getObserved: (rootState) => farmingStoreSelector(rootState),
+        sideEffect: ({ current: farmingStore }) => {
+          const [cancelToken, cancel] = withCancel();
 
-      if (!farmingStore || farmingStore.id !== storeId) {
-        unsubscribe();
-        cancel();
-        return;
-      }
-      doFarm(farmingStore, cancelToken);
-    });
+          if (!farmingStore || farmingStore.id !== storeId) {
+            dispatch(unobserve(FARMING_OBSERVER_ID));
+            cancel();
+            return;
+          }
+          doFarm(farmingStore, cancelToken);
+        },
+      }),
+    );
 
     window.clearInterval(intervalId);
     intervalId = window.setInterval(refresh, FARMING_REFRESH_RATE);
@@ -109,7 +118,7 @@ function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResul
   return (dispatch, getState) => {
     const buckets = bucketsSelector(getState())!;
     const makeRoomBuckets = Object.values(buckets.byHash).filter(
-      (b) => b.category === BucketCategory.Equippable && b.type,
+      (b) => b.category === BucketCategory.Equippable && b.vaultBucket,
     );
     return dispatch(makeRoomForItemsInBuckets(store, makeRoomBuckets, cancelToken));
   };

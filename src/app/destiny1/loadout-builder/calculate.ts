@@ -1,6 +1,7 @@
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import { infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
 import { D1ManifestDefinitions } from '../d1-definitions';
@@ -13,6 +14,8 @@ import {
   SetType,
 } from './types';
 import { calcArmorStats, genSetHash, getBestArmor, getBonusConfig } from './utils';
+
+const TAG = 'loadout optimizer';
 
 export async function getSetBucketsStep(
   defs: D1ManifestDefinitions,
@@ -46,31 +49,31 @@ export async function getSetBucketsStep(
   const helms: {
     item: D1Item;
     bonusType: string;
-  }[] = bestArmor.Helmet || [];
+  }[] = bestArmor[BucketHashes.Helmet] || [];
   const gauntlets: {
     item: D1Item;
     bonusType: string;
-  }[] = bestArmor.Gauntlets || [];
+  }[] = bestArmor[BucketHashes.Gauntlets] || [];
   const chests: {
     item: D1Item;
     bonusType: string;
-  }[] = bestArmor.Chest || [];
+  }[] = bestArmor[BucketHashes.ChestArmor] || [];
   const legs: {
     item: D1Item;
     bonusType: string;
-  }[] = bestArmor.Leg || [];
+  }[] = bestArmor[BucketHashes.LegArmor] || [];
   const classItems: {
     item: D1Item;
     bonusType: string;
-  }[] = bestArmor.ClassItem || [];
+  }[] = bestArmor[BucketHashes.ClassArmor] || [];
   const ghosts: {
     item: D1Item;
     bonusType: string;
-  }[] = bestArmor.Ghost || [];
+  }[] = bestArmor[BucketHashes.Ghost] || [];
   const artifacts: {
     item: D1Item;
     bonusType: string;
-  }[] = bestArmor.Artifact || [];
+  }[] = bestArmor[D1BucketHashes.Artifact] || [];
   const setMap: { [setHash: string]: SetType } = {};
   const tiersSet = new Set<string>();
   const combos =
@@ -111,13 +114,13 @@ export async function getSetBucketsStep(
                 if (validSet) {
                   const set: ArmorSet = {
                     armor: {
-                      Helmet: helm,
-                      Gauntlets: gauntlet,
-                      Chest: chest,
-                      Leg: leg,
-                      ClassItem: classItem,
-                      Artifact: artifact,
-                      Ghost: ghost,
+                      [BucketHashes.Helmet]: helm,
+                      [BucketHashes.Gauntlets]: gauntlet,
+                      [BucketHashes.ChestArmor]: chest,
+                      [BucketHashes.LegArmor]: leg,
+                      [BucketHashes.ClassArmor]: classItem,
+                      [D1BucketHashes.Artifact]: artifact,
+                      [BucketHashes.Ghost]: ghost,
                     },
                     stats: {
                       144602215: {
@@ -182,7 +185,7 @@ export async function getSetBucketsStep(
 
                 processedCount++;
                 if (cancelToken.cancelled) {
-                  infoLog('loadout optimizer', 'cancelled processing');
+                  infoLog(TAG, 'cancelled processing');
                   return;
                 }
                 if (processedCount % 50000 === 0) {
@@ -226,12 +229,12 @@ export async function getSetBucketsStep(
   }
 
   if (cancelToken.cancelled) {
-    infoLog('loadout optimizer', 'cancelled processing');
+    infoLog(TAG, 'cancelled processing');
     return;
   }
 
   // Finish progress
-  infoLog('loadout optimizer', 'processed', combos, 'combinations.');
+  infoLog(TAG, 'processed', combos, 'combinations.');
 
   return {
     allSetTiers,

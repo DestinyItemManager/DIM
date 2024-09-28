@@ -15,23 +15,28 @@
 }
 
 .armory {
-  &:hover,
-  &:focus-visible {
+  @include interactive($hover: true, $focus: true) {
     outline: none;
+    cursor: pointer;
     h1 {
       text-decoration: underline;
     }
-    cursor: pointer;
   }
 }
 
 .title {
-  @include destiny-header;
   font-size: 21px !important;
   line-height: 24px;
   text-decoration: none;
   margin: 0 !important;
   padding: 0;
+
+  @include destiny-header;
+
+  // Prevent the title running into the sheet close button
+  @include phone-portrait {
+    margin: 0 32px 0 0 !important;
+  }
 }
 
 .subtitle {
@@ -64,12 +69,6 @@
   }
 }
 
-.breakerIcon {
-  margin: 0 4px;
-  width: 15px;
-  height: 15px;
-}
-
 .ammoIcon {
   margin: 0 2px 0 6px;
   height: 14px;
@@ -82,13 +81,6 @@
 
 .power {
   margin: 0 4px 0 2px;
-}
-
-.powerCap {
-  color: #efe59d;
-  font-size: 12px;
-  line-height: 16px;
-  align-self: flex-start;
 }
 
 .primary {
@@ -116,9 +108,6 @@
   a {
     color: #222;
   }
-  .powerCap {
-    color: #0009ff;
-  }
 }
 
 .uncommon {
@@ -140,9 +129,6 @@
 
 .legendary {
   background-color: $legendary;
-  .primary {
-    opacity: 0.8;
-  }
 }
 
 .exotic {

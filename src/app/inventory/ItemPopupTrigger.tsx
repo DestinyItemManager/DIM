@@ -12,17 +12,6 @@ import {
 import { clearNewItem } from './actions';
 import { DimItem } from './item-types';
 
-interface Props {
-  item: DimItem;
-  extraData?: ItemPopupExtraInfo;
-  /** Don't allow adding to compare */
-  noCompare?: boolean;
-  children: (
-    ref: React.Ref<HTMLDivElement>,
-    onClick: (e: React.MouseEvent) => void,
-  ) => React.ReactNode;
-}
-
 /**
  * This provides a ref and onclick function for a component that will show the move popup for the provided item.
  */
@@ -31,7 +20,16 @@ export default function ItemPopupTrigger({
   extraData,
   children,
   noCompare,
-}: Props): JSX.Element {
+}: {
+  item: DimItem;
+  extraData?: ItemPopupExtraInfo;
+  /** Don't allow adding to compare */
+  noCompare?: boolean;
+  children: (
+    ref: React.Ref<HTMLDivElement>,
+    onClick: (e: React.MouseEvent) => void,
+  ) => React.ReactNode;
+}): JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useThunkDispatch();
 

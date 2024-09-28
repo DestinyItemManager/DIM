@@ -1,3 +1,5 @@
+import { D1BucketHashes } from 'app/search/d1-known-values';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { D1Stat } from '../item-types';
 
 /**
@@ -14,7 +16,7 @@ import { D1Stat } from '../item-types';
 export function getQualityRating(
   stats: D1Stat[] | null,
   light: { value: number },
-  type: string,
+  bucketHash: BucketHashes | D1BucketHashes,
 ): {
   min: number;
   max: number;
@@ -25,24 +27,24 @@ export function getQualityRating(
   }
 
   let split = 0;
-  switch (type.toLowerCase()) {
-    case 'helmet':
+  switch (bucketHash) {
+    case BucketHashes.Helmet:
       split = 46; // bungie reports 48, but i've only seen 46
       break;
-    case 'gauntlets':
+    case BucketHashes.Gauntlets:
       split = 41; // bungie reports 43, but i've only seen 41
       break;
-    case 'chest':
+    case BucketHashes.ChestArmor:
       split = 61;
       break;
-    case 'leg':
+    case BucketHashes.LegArmor:
       split = 56;
       break;
-    case 'classitem':
-    case 'ghost':
+    case BucketHashes.ClassArmor:
+    case BucketHashes.Ghost:
       split = 25;
       break;
-    case 'artifact':
+    case D1BucketHashes.Artifact:
       split = 38;
       break;
     default:
@@ -102,7 +104,7 @@ export function getQualityRating(
     range: '',
   };
 
-  if (type.toLowerCase() !== 'artifact') {
+  if (bucketHash !== D1BucketHashes.Artifact) {
     for (const stat of stats) {
       if (stat.qualityPercentage) {
         stat.qualityPercentage = {

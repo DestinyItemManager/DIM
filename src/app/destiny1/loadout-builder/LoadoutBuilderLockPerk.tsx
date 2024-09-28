@@ -1,7 +1,5 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
-import { D1BucketHashes } from 'app/search/d1-known-values';
-import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import { D1GridNode, DimItem } from '../../inventory/item-types';
@@ -10,27 +8,6 @@ import LoadoutBucketDropTarget from './LoadoutBuilderDropTarget';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
 import { ArmorTypes, D1ItemWithNormalStats, LockedPerkHash, PerkCombination } from './types';
-
-interface Props {
-  type: ArmorTypes;
-  lockeditem: D1ItemWithNormalStats | null;
-  lockedPerks: { [armorType in ArmorTypes]: LockedPerkHash };
-  activePerks: PerkCombination;
-  i18nItemNames: { [key: string]: string };
-  onRemove: ({ type }: { type: ArmorTypes }) => void;
-  onPerkLocked: (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => void;
-  onItemLocked: (item: DimItem) => void;
-}
-
-const typeToHash: { [key in ArmorTypes]: BucketHashes | D1BucketHashes } = {
-  Helmet: BucketHashes.Helmet,
-  Gauntlets: BucketHashes.Gauntlets,
-  Chest: BucketHashes.ChestArmor,
-  Leg: BucketHashes.LegArmor,
-  ClassItem: BucketHashes.ClassArmor,
-  Ghost: BucketHashes.Ghost,
-  Artifact: D1BucketHashes.Artifact,
-};
 
 export default function LoadoutBuilderLockPerk({
   type,
@@ -41,7 +18,16 @@ export default function LoadoutBuilderLockPerk({
   onRemove,
   onPerkLocked,
   onItemLocked,
-}: Props) {
+}: {
+  type: ArmorTypes;
+  lockeditem: D1ItemWithNormalStats | null;
+  lockedPerks: { [armorType in ArmorTypes]: LockedPerkHash };
+  activePerks: PerkCombination;
+  i18nItemNames: { [key in ArmorTypes]: string };
+  onRemove: ({ type }: { type: ArmorTypes }) => void;
+  onPerkLocked: (perk: D1GridNode, type: ArmorTypes, $event: React.MouseEvent) => void;
+  onItemLocked: (item: DimItem) => void;
+}) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const closeDialog = () => setDialogOpen(false);
@@ -57,7 +43,7 @@ export default function LoadoutBuilderLockPerk({
 
   return (
     <div className="locked-item">
-      <LoadoutBucketDropTarget bucketHash={typeToHash[type]} onItemLocked={onItemLocked}>
+      <LoadoutBucketDropTarget bucketHash={type} onItemLocked={onItemLocked}>
         {lockeditem === null ? (
           <div className="empty-item">
             <div className="perk-addition" onClick={addPerkClicked}>

@@ -3,6 +3,13 @@ import { deepEqual } from 'fast-equals';
 import { isPhonePortraitSelector } from './shell/selectors';
 import { StoreObserver } from './store/observerMiddleware';
 
+/**
+ * Visual viewport diffs greater than this value will cause --viewport-bottom-offset
+ * to be set. A threshold of 50px accounts for full size keyboards as well as the
+ * iPad layout that only shows the predictive text bar.
+ */
+const KEYBOARD_THRESHOLD = 50;
+
 function setCSSVariable(property: string, value: { toString: () => string }) {
   if (value) {
     document.querySelector('html')!.style.setProperty(property, value.toString());
@@ -62,11 +69,19 @@ export function setCssVariableEventListeners() {
       const viewport = window.visualViewport!;
       const viewportHeight = Math.round(viewport.height);
       setCSSVariable('--viewport-height', `${viewportHeight}px`);
-      // The amount the bottom of the visual viewport is offset from the layout viewport
-      setCSSVariable(
-        '--viewport-bottom-offset',
-        `${window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop))}px`,
-      );
+      /**
+       * The amount the bottom of the visual viewport is offset from the layout viewport
+       * This is calculated so elements such as sheets are not hidden by the keyboard.
+       * However, other viewport changes such as a scrollbar appearing can cause the visual
+       * viewport to change. As a result, we only apply the following CSS Variable if the
+       * viewport size change is large enough (such as when the keyboard opens).
+       */
+      const bottomOffset = window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop));
+
+      // bottomOffset === 0 means the visual viewport has been reset to its initial size
+      if (bottomOffset === 0 || bottomOffset >= KEYBOARD_THRESHOLD) {
+        setCSSVariable('--viewport-bottom-offset', `${bottomOffset}px`);
+      }
     };
     defineVH();
     window.visualViewport.addEventListener('resize', () => defineVH());

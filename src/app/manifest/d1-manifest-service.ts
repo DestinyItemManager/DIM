@@ -12,6 +12,8 @@ import { reportException } from 'app/utils/sentry';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
 
+const TAG = 'manifest';
+
 // This file exports D1ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
 
@@ -63,7 +65,7 @@ function doGetManifest(): ThunkResult<AllD1DestinyManifestComponents> {
       }
 
       const statusText = t('Manifest.Error', { error: message });
-      errorLog('manifest', 'Manifest loading error', { error: e }, e);
+      errorLog(TAG, 'Manifest loading error', { error: e }, e);
       reportException('manifest load', e);
       throw new Error(statusText);
     } finally {
@@ -84,8 +86,8 @@ function loadManifest(): ThunkResult<AllD1DestinyManifestComponents> {
 
     try {
       return await loadManifestFromCache(version);
-    } catch (e) {
-      return await dispatch(loadManifestRemote(version, path));
+    } catch {
+      return dispatch(loadManifestRemote(version, path));
     }
   };
 }
@@ -119,10 +121,10 @@ function loadManifestRemote(
 async function saveManifestToIndexedDB(typedArray: unknown, version: string) {
   try {
     await set(idbKey, typedArray);
-    infoLog('manifest', `Successfully stored manifest file.`);
+    infoLog(TAG, `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
   } catch (e) {
-    errorLog('manifest', 'Error saving manifest file', e);
+    errorLog(TAG, 'Error saving manifest file', e);
     showNotification({
       title: t('Help.NoStorage'),
       body: t('Help.NoStorageMessage'),

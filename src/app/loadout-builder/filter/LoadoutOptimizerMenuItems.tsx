@@ -1,9 +1,9 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { AddItemButton } from 'app/loadout/loadout-edit/LoadoutEditBucket';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ItemFilter } from 'app/search/filter-types';
 import { objectValues } from 'app/utils/util-types';
 import _ from 'lodash';
@@ -16,7 +16,7 @@ import LockedItem from './LockedItem';
 
 export type ChooseItemFunction = (
   updateFunc: (item: DimItem) => void,
-  filter?: ((item: DimItem) => boolean) | undefined,
+  filter?: (item: DimItem) => boolean,
 ) => (e: React.MouseEvent) => Promise<void>;
 
 export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedItems({

@@ -38,9 +38,14 @@ export default function EnergyOptions({
         value: AssumeArmorMasterwork.Legendary,
       },
       {
-        label: t('LoadoutBuilder.All'),
+        label: `+ ${t('LoadoutBuilder.MwExotic')}`, // used to be t('LoadoutBuilder.All')
         tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.All'),
         value: AssumeArmorMasterwork.All,
+      },
+      {
+        label: `+ ${t('LoadoutBuilder.Artifice')}`,
+        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.AllWithArtificeExotic'), // includes t('LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic')
+        value: AssumeArmorMasterwork.ArtificeExotic,
       },
     ],
     [],

@@ -47,11 +47,11 @@
 }
 
 .unequipped {
+  --item-icon-size: calc(var(--item-size) - 6px);
   composes: sub-bucket from global;
   width: 100%;
   padding: 0;
   gap: 4px;
-  --item-icon-size: calc(var(--item-size) - 6px);
   grid-template-columns: var(--item-icon-size);
   > * {
     --item-size: var(--item-icon-size);

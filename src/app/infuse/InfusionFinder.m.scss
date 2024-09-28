@@ -9,12 +9,11 @@
 }
 
 .infuseHeader {
-  :global(.item) {
-    margin-bottom: 0;
-  }
-
   @include phone-portrait {
     flex-direction: column;
+  }
+  :global(.item) {
+    margin-bottom: 0;
   }
 }
 

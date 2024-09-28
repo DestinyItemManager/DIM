@@ -91,6 +91,7 @@ export const faDiscord = 'fab fa-discord';
 export const faGithub = 'fab fa-github';
 export const saveIcon = 'fas fa-save';
 export const greaterThanIcon = 'fas fa-greater-than-equal';
+export const lessThanIcon = 'fas fa-less-than-equal';
 export const equalsIcon = 'fas fa-equals';
 export const stackIcon = 'fas fa-layer-group';
 export const slashIcon = 'fas fa-slash';

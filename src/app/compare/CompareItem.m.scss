@@ -88,7 +88,8 @@
   background-image: url('images/close.png');
   background-position: center;
   background-repeat: no-repeat;
-  &:hover {
+
+  @include interactive($hover: true) {
     background-color: var(--theme-accent-primary);
   }
 }

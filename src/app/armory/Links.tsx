@@ -3,6 +3,7 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -82,24 +83,20 @@ function buildSocketParam(item: DimItem): string {
 }
 
 /**
- * Light.gg's socket format is highly similar to that of D2Gunsmith: [...<first four perks, padded out if necessary, origin trait, masterwork, weapon mod].join(',')
+ * Light.gg's socket format is highly similar to that of D2Gunsmith: [...base perks, masterwork, weapon mod].join(',')
  */
 function buildLightGGSockets(item: DimItem) {
   const perkValues = getWeaponSocketInfo(item);
 
   if (perkValues) {
-    return perkValues.originTrait
-      ? `?p=${perkValues.traits.join(',')},${perkValues.originTrait},${perkValues.masterwork},${
-          perkValues.weaponMod
-        }`
-      : `?p=${perkValues.traits.join(',')},${perkValues.masterwork},${perkValues.weaponMod}`;
+    return `?p=${[...perkValues.largePerks, ...perkValues.traits, perkValues.masterwork, perkValues.weaponMod].map((s) => s || '').join(',')}`;
   }
 
   return '';
 }
 
 /**
- * Foundry's socket format is: ?p=perkHashes,...&mw=masterworkStatHash&mw_l=masterworkLevel&m=weaponMod
+ * Foundry's socket format is: ?p=perkHashes,...&m=weaponMod&mw=masterworkStatHash
  */
 function buildFoundrySockets(item: DimItem) {
   const perkValues = getWeaponSocketInfo(item);
@@ -108,11 +105,9 @@ function buildFoundrySockets(item: DimItem) {
     const primaryMasterworkStat =
       item.sockets?.allSockets.find(isWeaponMasterworkSocket)?.plugged?.plugDef
         .investmentStats?.[0];
-    const mwStatHash = primaryMasterworkStat?.statTypeHash;
-    const mwVal = primaryMasterworkStat?.value;
-    return `?p=${perkValues.traits.join(',')},${
-      perkValues.originTrait
-    }&mw=${mwStatHash}&mw_l=${mwVal}&m=${perkValues.weaponMod}`;
+    const mwHash = primaryMasterworkStat?.statTypeHash || perkValues.largePerks[0] || 0; // `mw` for crafted exo intrinsic
+    const modHash = perkValues.weaponMod || perkValues.masterwork || 0; // `m` for non-crafted exo mw
+    return `?p=${perkValues.traits.join(',')}&m=${modHash || ''}&mw=${mwHash || ''}`;
   }
 
   return '';
@@ -121,39 +116,40 @@ function buildFoundrySockets(item: DimItem) {
 /**
  * Gathers general socket information for link generation in D2Gunsmith and Light.gg.
  */
-function getWeaponSocketInfo(
-  item: DimItem,
-): null | { traits: number[]; originTrait: number; masterwork: number; weaponMod: number } {
+function getWeaponSocketInfo(item: DimItem): null | {
+  traits: number[];
+  masterwork: number;
+  weaponMod: number;
+  largePerks: number[];
+} {
   if (item.sockets && item.bucket?.inWeapons) {
-    const traits: number[] = [0, 0, 0, 0];
-    const perks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
-    perks.unshift(); // remove the archetype perk
-    let i = 0;
-    // First 4 perks are on all weapons
-    for (const perk of _.take(perks, 4)) {
-      traits[i] = perk.plugged?.plugDef.hash ?? 0;
-      i++;
-    }
-
-    const origin = item.sockets.allSockets.find((s) =>
-      s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
-    );
-    const originTrait = origin?.plugged!.plugDef.hash ?? 0;
-
     // TODO: Map enhanced intrinsic frames with their corresponding stat masterworks
-    const masterworkSocket = item.sockets.allSockets.find(isWeaponMasterworkSocket);
+    const masterworkSocket = item.sockets.allSockets.find(
+      (s) => isWeaponMasterworkSocket(s) && !s.isReusable,
+    );
     const masterwork =
       masterworkSocket?.plugged?.plugDef.plug.plugCategoryHash ===
       PlugCategoryHashes.CraftingPlugsFrameIdentifiers
         ? 0
-        : masterworkSocket?.plugged?.plugDef.hash ?? 0;
+        : (masterworkSocket?.plugged?.plugDef.hash ?? 0);
 
     const weaponModSocket = item.sockets.allSockets.find((s) =>
       s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
     );
     const weaponMod = weaponModSocket?.plugged!.plugDef.hash ?? 0;
 
-    return { traits, originTrait, masterwork, weaponMod };
+    const trackerSocket = item.sockets.allSockets.find(isKillTrackerSocket);
+    const largePerks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.LargePerk)
+      .filter((s) => s.hasRandomizedPlugItems)
+      .map((s) => s.plugged?.plugDef.hash ?? 0);
+    const perkSockets = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
+    const traits = perkSockets
+      .filter(
+        (s) => ![trackerSocket?.socketIndex, weaponModSocket?.socketIndex].includes(s.socketIndex),
+      )
+      .map((s) => s.plugged?.plugDef.hash ?? 0);
+
+    return { traits, masterwork, weaponMod, largePerks };
   }
 
   return null;

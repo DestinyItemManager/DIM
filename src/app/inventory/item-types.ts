@@ -8,9 +8,9 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
+  DestinyItemInvestmentStatDefinition,
   DestinyItemPerkEntryDefinition,
   DestinyItemPlugBase,
-  DestinyItemQualityBlockDefinition,
   DestinyItemQuantity,
   DestinyItemSocketEntryDefinition,
   DestinyItemTooltipNotification,
@@ -20,7 +20,8 @@ import {
   DestinySocketCategoryDefinition,
   DestinyStat,
 } from 'bungie-api-ts/destiny2';
-import { DimBucketType, InventoryBucket } from './inventory-buckets';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { InventoryBucket } from './inventory-buckets';
 
 /**
  * A generic DIM item, representing almost anything. This completely represents any D2 item, and most D1 items,
@@ -46,14 +47,16 @@ export interface DimItem {
   classified: boolean;
   /** The version of Destiny this comes from. */
   destinyVersion: DestinyVersion;
-  /** This is the type of the item (see InventoryBuckets) regardless of location. This string is a DIM concept with no direct correlation to the API types. It should generally be avoided in favor of using bucket hash. */
-  type: DimBucketType;
-  /** Localized name of this item's type. */
+  /**
+   * Localized name of this item's type. Only used for display - use bucket.hash
+   * or itemCategoryHashes to figure out what kind of item this is
+   * programmatically.
+   */
   typeName: string;
   /** The bucket the item normally resides in (even though it may currently be elsewhere, such as in the postmaster). */
   bucket: InventoryBucket;
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
-  itemCategoryHashes: number[];
+  itemCategoryHashes: ItemCategoryHashes[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
   tier: ItemTierName;
   /** Is this an Exotic item? */
@@ -128,10 +131,8 @@ export interface DimItem {
   loreHash?: number;
   /** Metrics that can be used with this item. */
   availableMetricCategoryNodeHashes?: number[];
-  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
-  powerCap: number | null;
-  /** Information about how this item works with infusion. */
-  infusionQuality: DestinyItemQualityBlockDefinition | null;
+  /** If any two items share at least one number on this list, they can be infused into each other. */
+  infusionCategoryHashes: number[] | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
@@ -186,8 +187,8 @@ export interface DimItem {
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
-  /** Is this crafted? (D2 only) */
-  crafted: boolean;
+  /** If truthy, Bungie indicated this item is crafted. This could just mean the item has a level and a crafting date, like enhanced weapons, even partially-enhanced ones. */
+  crafted: 'crafted' | 'enhanced' | false;
   /** Does this have a highlighted (crafting) objective? (D2 Only) */
   highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
@@ -195,7 +196,7 @@ export interface DimItem {
   /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
   sockets: DimSockets | null;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
-  missingSockets: boolean;
+  missingSockets: false | 'missing' | 'not-loaded';
   /** Detailed stats for the item. */
   stats: DimStat[] | null;
   /** Any objectives associated with the item. */
@@ -270,6 +271,8 @@ export interface DimCrafted {
   progress: number;
   /** when this weapon was crafted, UTC epoch seconds timestamp */
   craftedDate: number;
+  /** the enhancement tier for this weapon, if enhanced. 0 otherwise. */
+  enhancementTier: number;
 }
 
 export interface DimCatalyst {
@@ -381,6 +384,44 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
   plug: NonNullable<DestinyInventoryItemDefinition['plug']>;
 }
 
+/** Describes the conditions under which a plug stat is active */
+export type PlugStatActivationRule =
+  | /** always active */ undefined
+  | {
+      /** never active */
+      rule: 'never';
+    }
+  | {
+      /** only active for a specific class */
+      rule: 'classType';
+      classType: DestinyClass;
+    }
+  | {
+      /** only active if the weapon is an adept weapon */
+      rule: 'adeptWeapon';
+    }
+  | {
+      /** only active if the weapon is masterworked */
+      rule: 'masterwork';
+    }
+  | {
+      /** Only active if the weapon is crafted and either adept or at level 20 */
+      rule: 'enhancedIntrinsic';
+    };
+
+/**
+ * A single investment stat from a plug, together with an activity rule that
+ * describes when the plug stat is active.
+ *
+ * The idea is that DestinyItemInvestmentStatDefinition[] is assignable to DimPlugInvestmentStat[].
+ * That way we can reuse the plug def's investmentStats array if it has no conditional stats or doesn't
+ * require fixup in general, and map to our own format with a PlugStatActivationRule if need be
+ */
+export interface DimPlugInvestmentStat
+  extends Omit<DestinyItemInvestmentStatDefinition, 'isConditionallyActive'> {
+  activationRule?: PlugStatActivationRule;
+}
+
 /**
  * DIM's view of a "Plug" - an item that can go into a socket.
  * In D2, both perk grids and mods/shaders are sockets with plugs.
@@ -394,9 +435,12 @@ export interface DimPlug {
   readonly enabled: boolean;
   /** If not enabled, this is the localized reasons why, as a single string. */
   readonly enableFailReasons: string;
-  /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
+  /**
+   * Stats this plug modifies. Only present for dimPlugs attached to an item.
+   * If present, it's a map from the stat hash to the amount the stat is modified.
+   */
   readonly stats: {
-    [statHash: number]: number;
+    [statHash: number]: { value: number; investmentValue: number };
   } | null;
   /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
   readonly cannotCurrentlyRoll?: boolean;
@@ -422,6 +466,7 @@ export interface DimPlugSet {
 
   /** A precomputed list of plug hashes that can not roll on current versions of the item. */
   readonly plugHashesThatCannotRoll: number[];
+  readonly plugHashesThatCanRoll: number[];
 }
 
 export interface DimSocket {

@@ -1,8 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
-import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
+import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import {
   ItemTierName,
   MAX_ARMOR_ENERGY_CAPACITY,
@@ -25,7 +26,7 @@ import {
 import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
-import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
+import { calculateAssumedItemEnergy, isAssumedArtifice } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
 import { getModExclusionGroup, plugCategoryHashToBucketHash } from './mod-utils';
@@ -132,12 +133,15 @@ export function categorizeArmorMods(
 }
 
 const materialsInRarityOrder = [
+  3467984096, // InventoryItem "Exotic Cipher"
   4257549985, // InventoryItem "Ascendant Shard"
   4257549984, // InventoryItem "Enhancement Prism"
   3853748946, // InventoryItem "Enhancement Core"
-  1022552290, // InventoryItem "Legendary Shards"
   3159615086, // InventoryItem "Glimmer"
 ];
+
+/** Armor 2.0 Exotics can be enhanced to artifice armor after reaching T10, which costs a bunch of stuff */
+const upgradeToArtificePlug = 720825311; // Upgrade to Artifice Armor
 
 /**
  * Upgrading the energy capacity of an item costs materials. However, exotics cost more than legendaries,
@@ -153,6 +157,7 @@ function getUpgradeCost(
   item: ItemEnergy,
   dimItem: DimItem,
   newEnergy: number,
+  needsArtifice: boolean,
 ) {
   if (!model.byRarity[item.rarity]) {
     const plugs = getEnergyUpgradePlugs(dimItem);
@@ -178,9 +183,18 @@ function getUpgradeCost(
     }
     model.byRarity[dimItem.tier] = costsPerTier;
   }
+  const needsEnhancing = item.rarity === 'Exotic' && needsArtifice && !isArtifice(dimItem);
+  const targetEnergy = needsEnhancing ? MAX_ARMOR_ENERGY_CAPACITY : newEnergy;
   const tierModel = model.byRarity[dimItem.tier]!;
   const alreadyPaidCosts = tierModel[item.originalCapacity];
-  return tierModel[newEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
+
+  const costs = tierModel[targetEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
+  if (needsEnhancing && model.exoticArtificeCosts) {
+    for (let i = 0; i < costs.length; i++) {
+      costs[i] += model.exoticArtificeCosts[i];
+    }
+  }
+  return costs;
 }
 
 /**
@@ -192,6 +206,22 @@ interface EnergyUpgradeCostModel {
   defs: D2ManifestDefinitions;
   /** Cumulative costs to reach the indexed capacity. Subtract the costs for current capacity. */
   byRarity: { [rarity in ItemTierName]?: number[][] };
+  exoticArtificeCosts?: number[];
+}
+
+function getExoticArtificeCosts(defs: D2ManifestDefinitions): number[] | undefined {
+  const plug = defs.InventoryItem.get(upgradeToArtificePlug);
+  if (!plug || !isPluggableItem(plug)) {
+    return undefined;
+  }
+
+  const costs = defs.MaterialRequirementSet.get(plug.plug.insertionMaterialRequirementHash);
+  if (costs) {
+    return materialsInRarityOrder.map(
+      (hash) => costs.materials.find((m) => m.itemHash === hash)?.count ?? 0,
+    );
+  }
+  return undefined;
 }
 
 /**
@@ -202,6 +232,7 @@ const createUpgradeCostModel = memoizeOne(
   (defs: D2ManifestDefinitions): EnergyUpgradeCostModel => ({
     defs,
     byRarity: {},
+    exoticArtificeCosts: getExoticArtificeCosts(defs),
   }),
 );
 
@@ -307,13 +338,18 @@ export function fitMostMods({
   }
 
   // Artifice mods are free and thus can be greedily assigned.
-  const artificeItems = items.filter(isArtifice);
+  const artificeItems = items.filter((i) => isAssumedArtifice(i, armorEnergyRules));
   for (const artificeMod of artificeMods) {
     let targetItemIndex = artificeItems.findIndex((item) =>
       item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash),
     );
-    if (targetItemIndex === -1) {
-      targetItemIndex = artificeItems.length ? 0 : -1;
+    if (targetItemIndex === -1 && artificeItems.length) {
+      // Prefer plugging into non-exotic pieces since exotics may need costly upgrading
+      targetItemIndex = artificeItems.findIndex((i) => !i.isExotic);
+      if (targetItemIndex === -1) {
+        // Otherwise use any
+        targetItemIndex = 0;
+      }
     }
 
     if (targetItemIndex !== -1) {
@@ -385,6 +421,7 @@ export function fitMostMods({
         items,
         itemEnergies,
         assignments,
+        bucketSpecificAssignments,
         upgradeCostModel,
       );
       const upgradeCostsResult = compareCosts(energyUpgradeCost, assignmentUpgradeCost);
@@ -441,12 +478,19 @@ export function fitMostMods({
     }
     const bucketIndependent = bucketIndependentAssignments[item.id].assigned;
     const bucketSpecific = bucketSpecificAssignments[item.id].assigned;
+    const requiresArtificeEnhancement =
+      item.isExotic &&
+      bucketSpecific.some(
+        (i) => i.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
+      );
     const modsForItem = [...bucketIndependent, ...bucketSpecific];
     itemModAssignments[item.id] = modsForItem;
     if (item.energy) {
       resultingItemEnergies[item.id] = {
         energyCapacity: itemEnergies[item.id].originalCapacity,
-        energyUsed: _.sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
+        energyUsed: requiresArtificeEnhancement
+          ? MAX_ARMOR_ENERGY_CAPACITY
+          : _.sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
       };
     }
   }
@@ -853,15 +897,25 @@ function calculateUpgradeCost(
   items: DimItem[],
   itemEnergies: { [itemId: string]: ItemEnergy },
   assignments: ModAssignments,
+  bucketSpecificAssignments: ModAssignments,
   upgradeCostModel: EnergyUpgradeCostModel,
 ) {
   return items.reduce((existingCost: number[] | undefined, item: DimItem) => {
     const itemEnergy = itemEnergies[item.id];
     const assignedMods = assignments[item.id].assigned;
+    const hasArtificeMod = bucketSpecificAssignments[item.id].assigned.some(
+      (i) => i.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
+    );
     const totalModCost =
       itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
     const newItemCapacity = Math.max(totalModCost, itemEnergy.originalCapacity);
-    const thisItemUpgradeCost = getUpgradeCost(upgradeCostModel, itemEnergy, item, newItemCapacity);
+    const thisItemUpgradeCost = getUpgradeCost(
+      upgradeCostModel,
+      itemEnergy,
+      item,
+      newItemCapacity,
+      hasArtificeMod,
+    );
     return existingCost
       ? existingCost.map((val, idx) => val + thisItemUpgradeCost[idx])
       : thisItemUpgradeCost;

@@ -7,14 +7,14 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
-import { quoteFilterString } from 'app/search/query-parser';
 import {
   classFilter,
   damageFilter,
   itemCategoryFilter,
   itemTypeFilter,
-} from 'app/search/search-filters/known-values';
-import { modslotFilter } from 'app/search/search-filters/sockets';
+} from 'app/search/items/search-filters/known-values';
+import { modslotFilter } from 'app/search/items/search-filters/sockets';
+import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import {
   getIntrinsicArmorPerkSocket,

@@ -10,7 +10,7 @@ import { useLocation } from 'react-router';
 import styles from './MainSearchBarActions.m.scss';
 import { searchButtonAnimateVariants } from './SearchBar';
 import SearchResults from './SearchResults';
-import { filteredItemsSelector, queryValidSelector } from './search-filter';
+import { filteredItemsSelector, queryValidSelector } from './items/item-search-filter';
 
 /**
  * The extra buttons that appear in the main search bar when there are matched items.

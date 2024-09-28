@@ -16,7 +16,7 @@ const urls = {
   statsVersion: `${CLARITY_BASE}Character-Stats/update.json`,
 } as const;
 
-const CLARITY_STATS_SUPPORTED_SCHEMA = '1.8';
+const CLARITY_STATS_SUPPORTED_SCHEMA = '1.9';
 
 const fetchClarity = async <T>(type: keyof typeof urls, version?: string) => {
   const url = urls[type];

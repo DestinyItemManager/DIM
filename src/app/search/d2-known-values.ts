@@ -40,6 +40,9 @@ export const DEFAULT_ORNAMENTS: number[] = [
   702981643, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
 ];
 
+/** a weird set of 3 solstice ornaments that provide a single resilience stat point */
+export const statfulOrnaments = [4245469491, 2978747767, 2287277682];
+
 /** if a socket contains these, consider it empty */
 export const emptySocketHashes = [
   2323986101, // InventoryItem "Empty Mod Socket"
@@ -243,6 +246,8 @@ export const enum VendorHashes {
   Xur = 2190858386,
   DevrimKay = 396892126,
   Failsafe = 1576276905,
+  RivensWishesExotics = 2388521577,
+  XurLegendaryItems = 3751514131, // Vendor "Strange Gear Offers"
 }
 
 /** used to snag the icon for display */
@@ -282,14 +287,21 @@ export type ItemTierName =
 
 export const breakerTypes = {
   any: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],
-  barrier: [BreakerTypeHashes.ShieldPiercing],
   antibarrier: [BreakerTypeHashes.ShieldPiercing],
   shieldpiercing: [BreakerTypeHashes.ShieldPiercing],
-  overload: [BreakerTypeHashes.Disruption],
+  barrier: [BreakerTypeHashes.ShieldPiercing],
   disruption: [BreakerTypeHashes.Disruption],
-  unstoppable: [BreakerTypeHashes.Stagger],
+  overload: [BreakerTypeHashes.Disruption],
   stagger: [BreakerTypeHashes.Stagger],
+  unstoppable: [BreakerTypeHashes.Stagger],
 };
+
+export const breakerTypeNames = Object.entries(breakerTypes)
+  .filter(([, hashes]) => hashes.length === 1)
+  .reduce<Partial<Record<BreakerTypeHashes, string>>>((memo, [name, [hash]]) => {
+    memo[hash] = name;
+    return memo;
+  }, {});
 
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"

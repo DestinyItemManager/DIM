@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .confirmButton {
   overflow: hidden;
   max-width: 100%;
@@ -20,18 +22,18 @@
   }
 
   &.confirmMode {
+    color: var(--theme-text) !important;
+
+    @include interactive($hover: true) {
+      background-color: #af7d27 !important;
+    }
     // as elements transition into confirm mode, snap confirm message into place quickly
     & > div {
       transition: height 0.1s;
     }
-    color: var(--theme-text) !important;
-
-    &:hover {
-      background-color: #af7d27 !important;
-    }
 
     &[class~='danger'] {
-      &:hover {
+      @include interactive($hover: true) {
         background-color: #a22 !important;
       }
     }

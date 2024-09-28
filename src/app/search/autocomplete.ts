@@ -4,9 +4,10 @@ import { uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
+import { canonicalFilterFormats } from './filter-types';
 import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
-import freeformFilters, { plainString } from './search-filters/freeform';
+import { plainString } from './text-utils';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 export const enum SearchItemType {
@@ -96,6 +97,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
     caretIndex: number,
     recentSearches: Search[],
     includeArmory?: boolean,
+    maxResults = 7,
   ): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem: SearchItem | undefined = query
@@ -140,7 +142,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
           _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
           (i) => i.query.fullText,
         ),
-        7,
+        maxResults,
       ),
       ...armorySuggestions,
       helpItem,
@@ -238,7 +240,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   });
 }
 
-const caretEndRegex = /([\s)]|$)/;
+const caretEndRegex = /[\s)]|$/;
 
 /**
  * Find the position of the last "incomplete" filter segment of the query before the caretIndex.
@@ -360,10 +362,6 @@ function findFilter<I, FilterCtx, SuggestionsCtx>(
   return filterName === 'is' ? filtersMap.isFilters[filterValue] : filtersMap.kvFilters[filterName];
 }
 
-// these filters might include quotes, so we search for two text segments to ignore quotes & colon
-// i.e. `name:test` can find `name:"test item"`
-const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s}:`);
-
 /**
  * This builds a filter-complete function that uses the given search config's keywords to
  * offer autocomplete suggestions for a partially typed term.
@@ -371,6 +369,13 @@ const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s
 export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
   searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
 ) {
+  // these filters might include quotes, so we search for two text segments to ignore quotes & colon
+  // i.e. `name:test` can find `name:"test item"`
+  const freeformTerms = Object.values(searchConfig.filtersMap.kvFilters)
+    .filter((f) => canonicalFilterFormats(f.format).includes('freeform'))
+    .flatMap((f) => f.keywords)
+    .map((s) => `${s}:`);
+
   // TODO: also search filter descriptions
   return (typed: string): string[] => {
     if (!typed) {

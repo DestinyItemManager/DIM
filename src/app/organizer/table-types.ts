@@ -1,11 +1,12 @@
 import { SortDirection } from 'app/dim-ui/table-columns';
 import { DimItem } from 'app/inventory/item-types';
+import { CsvValue } from 'app/utils/csv';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 
 export { SortDirection, type ColumnSort } from 'app/dim-ui/table-columns';
 
-export type Value = string | number | boolean | undefined | null;
+export type Value = string | number | boolean | undefined;
 
 /**
  * Columns can optionally belong to a column group - if so, they're shown/hidden as a group.
@@ -15,6 +16,8 @@ export interface ColumnGroup {
   header: React.ReactNode;
   dropdownLabel?: React.ReactNode;
 }
+
+export type CSVColumn = [name: string, value: CsvValue];
 
 // TODO: column groupings?
 // TODO: custom configs like the total column?
@@ -46,12 +49,33 @@ export interface ColumnDefinition<V extends Value = Value> {
   /** A generator for search terms matching this item. Default: No filtering. */
   filter?(value: V, item: DimItem): string | undefined;
   /** A custom sort function. Default: Something reasonable. */
-  sort?(firstValue: V, secondValue: V): 0 | 1 | -1;
+  sort?(this: void, firstValue: V, secondValue: V): 0 | 1 | -1;
   /**
    * a column def needs to exist all the time, so enabledness setting is aware of it,
    * but sometimes a custom stat should be limited to only displaying for a certain class
    */
   limitToClass?: DestinyClass;
+
+  /**
+   * A name for this column when it is output as CSV. This will reuse the value
+   * function as-is. We could reuse the header, but that's localized, while
+   * historically our CSV column names haven't been.
+   *
+   * Alternately, provide a function to override both the column name and the
+   * value, or emit multiple columns at once. This is mostly to achieve
+   * compatibility with the existing CSV format, but sometimes it's used to
+   * output complex data for CSV. For example, perks are output as multiple
+   * columns.
+   */
+  csv?:
+    | string
+    | {
+        bivarianceHack(value: V, item: DimItem, spreadsheetContext: SpreadsheetContext): CSVColumn;
+      }['bivarianceHack'];
+}
+
+export interface SpreadsheetContext {
+  storeNamesById: { [key: string]: string };
 }
 
 export interface Row {

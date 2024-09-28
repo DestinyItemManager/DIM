@@ -82,7 +82,7 @@
     background-blend-mode: multiply;
     background: #666;
 
-    &:hover {
+    @include interactive($hover: true) {
       background: #aaa;
     }
   }

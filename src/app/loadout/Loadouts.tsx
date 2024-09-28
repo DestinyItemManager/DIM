@@ -11,26 +11,32 @@ import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols'
 import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import {
   MakeLoadoutAnalysisAvailable,
   useUpdateLoadoutAnalysisContext,
 } from 'app/loadout-analyzer/hooks';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
+import {
+  getLoadoutSeason,
+  newLoadout,
+  newLoadoutFromEquipped,
+} from 'app/loadout-drawer/loadout-utils';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
+import { loadoutsForClassTypeSelector } from 'app/loadout/loadouts-selector';
+import { selectedLoadoutStoreSelector } from 'app/loadout/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
+import { updateLoadoutStore } from './actions';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
@@ -73,16 +79,29 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
 }
 
 function Loadouts({ account }: { account: DestinyAccount }) {
-  const location = useLocation();
-  const locationStoreId = (location.state as { storeId: string } | undefined)?.storeId;
+  const dispatch = useDispatch();
+
   const stores = useSelector(sortedStoresSelector);
-  const currentStore = getCurrentStore(stores)!;
-  const [selectedStoreId, setSelectedStoreId] = useState(
-    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id,
+  const selectedStore = useSelector(selectedLoadoutStoreSelector);
+
+  const setSelectedStoreId = useCallback(
+    (storeId: string) => {
+      dispatch(updateLoadoutStore({ storeId }));
+    },
+    [dispatch],
   );
+
+  useEffect(
+    () => () => {
+      // Unset selected loadout on unmount so that the selection is not
+      // remembered across page navigations.
+      dispatch(updateLoadoutStore({ storeId: undefined }));
+    },
+    [dispatch],
+  );
+
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
-  const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
   const isPhonePortrait = useIsPhonePortrait();
   const query = useSelector(querySelector);
@@ -93,17 +112,17 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const savedLoadouts = useSelector(loadoutsForClassTypeSelector(classType));
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
-  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStore.id));
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, artifactUnlocks),
     [artifactUnlocks, selectedStore],
   );
 
-  useUpdateLoadoutAnalysisContext(selectedStoreId);
+  useUpdateLoadoutAnalysisContext(selectedStore.id);
 
   const [showSnapshot, setShowSnapshot] = useState(false);
-  const handleSnapshot = useCallback(() => setShowSnapshot(true), []);
+  const handleSnapshot = useCallback(() => setShowSnapshot(true), [setShowSnapshot]);
   const handleSnapshotSheetClose = useCallback(() => setShowSnapshot(false), []);
 
   const [editingInGameLoadout, setEditingInGameLoadout] = useState<InGameLoadout>();
@@ -123,7 +142,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const filteringLoadouts = Boolean(query || hasSelectedFilters);
 
-  const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
+  const loadoutFilterFactory = useSelector(loadoutFilterFactorySelector);
+  const loadouts = searchAndSortLoadoutsByQuery(
+    filteredLoadouts,
+    loadoutFilterFactory,
+    query,
+    language,
+    loadoutSort,
+  );
   if (!filteringLoadouts) {
     loadouts.unshift(currentLoadout);
   }
@@ -258,7 +284,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       )}
       {loadoutImportOpen && (
         <LoadoutImportSheet
-          currentStoreId={selectedStoreId}
+          currentStoreId={selectedStore.id}
           onClose={() => setLoadoutImportOpen(false)}
         />
       )}
@@ -274,7 +300,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       {showSnapshot && (
         <EditInGameLoadout
           key="snapshot"
-          characterId={selectedStoreId}
+          characterId={selectedStore.id}
           onClose={handleSnapshotSheetClose}
         />
       )}
@@ -297,13 +323,7 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
       .sort((a, b) => b.seasonNumber - a.seasonNumber)
       .filter((s) => s.startDate);
 
-    const grouped = Map.groupBy(
-      loadouts,
-      (loadout) =>
-        seasons.find(
-          (s) => new Date(s.startDate!).getTime() <= (loadout.lastUpdatedAt ?? Date.now()),
-        )!,
-    );
+    const grouped = Map.groupBy(loadouts, (loadout) => getLoadoutSeason(loadout, seasons)!);
 
     loadoutRows = [...grouped.entries()].flatMap(([season, loadouts]) => [season, ...loadouts]);
   }

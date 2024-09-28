@@ -2,8 +2,6 @@
 
 .container {
   position: fixed;
-
-  @include below-header;
   right: 0;
   z-index: $tempContainerZindex + 1;
   padding: 8px;
@@ -15,6 +13,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+
+  @include below-header;
 
   @include phone-portrait {
     bottom: 0;

@@ -2,5 +2,14 @@
 
 .tagButton {
   composes: dim-button from global;
-  margin-right: 4px;
+  flex: 1;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.tagButtons {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  margin-top: 4px;
+  gap: 4px;
+  width: 100%;
 }

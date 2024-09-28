@@ -3,7 +3,6 @@
 interface CssExports {
   'ammoIcon': string;
   'armory': string;
-  'breakerIcon': string;
   'common': string;
   'details': string;
   'elementIcon': string;
@@ -13,7 +12,6 @@ interface CssExports {
   'legendary': string;
   'masterwork': string;
   'power': string;
-  'powerCap': string;
   'primary': string;
   'pursuit': string;
   'rare': string;

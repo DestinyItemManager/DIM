@@ -46,7 +46,7 @@ export default forwardRef<HTMLDivElement, Props>(function ClickOutside(
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(target) &&
-        (!extraRef?.current || !extraRef.current.contains(target))
+        !extraRef?.current?.contains(target)
       ) {
         onClickOutside(event);
       }

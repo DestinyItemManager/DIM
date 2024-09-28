@@ -1,8 +1,8 @@
-import { Span, getCurrentHub } from '@sentry/browser';
+import { startSpan } from '@sentry/browser';
 import { handleAuthErrors } from 'app/accounts/actions';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
+import { isInInGameLoadoutForSelector } from 'app/loadout/selectors';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
@@ -51,6 +51,8 @@ import {
   getVault,
   spaceLeftForItem,
 } from './stores-helpers';
+
+const TAG = 'move';
 
 /**
  * An object we can use to track state across a "session" of move operations.
@@ -155,25 +157,18 @@ function updateItemModel(
   equip: boolean,
   amount: number = item.amount,
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
-  return (dispatch, getState) => {
-    const transaction = getCurrentHub()?.getScope()?.getTransaction();
-    let span: Span | undefined;
-    if (transaction) {
-      span = transaction.startChild({
-        op: 'updateItemModel',
-      });
-    }
-    const stopTimer = timer('itemMovedUpdate');
+  return (dispatch, getState) =>
+    startSpan({ name: 'updateItemModel' }, () => {
+      const stopTimer = timer(TAG, 'itemMovedUpdate');
 
-    try {
-      dispatch(itemMoved({ item, source, target, equip, amount }));
-      const stores = storesSelector(getState());
-      return getItemAcrossStores(stores, item) || item;
-    } finally {
-      stopTimer();
-      span?.finish();
-    }
-  };
+      try {
+        dispatch(itemMoved({ item, source, target, equip, amount }));
+        const stores = storesSelector(getState());
+        return getItemAcrossStores(stores, item) || item;
+      } finally {
+        stopTimer();
+      }
+    });
 }
 
 /**
@@ -336,7 +331,7 @@ function equipItem(item: DimItem, cancelToken: CancelToken): ThunkResult<DimItem
     try {
       const store = getStore(storesSelector(getState()), item.owner)!;
       if ($featureFlags.debugMoves) {
-        infoLog('equip', 'Equip', item.name, item.type, 'to', store.name);
+        infoLog('equip', 'Equip', item.name, item.typeName, 'to', store.name);
       }
       cancelToken.checkCanceled();
       await equipApi(item)(currentAccountSelector(getState())!, item);
@@ -390,13 +385,22 @@ function moveToStore(
 
     if ($featureFlags.debugMoves) {
       item.location.inPostmaster
-        ? infoLog('move', 'Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
+        ? infoLog(
+            TAG,
+            'Pull',
+            amount,
+            item.name,
+            item.typeName,
+            'to',
+            store.name,
+            'from Postmaster',
+          )
         : infoLog(
             'move',
             'Move',
             amount,
             item.name,
-            item.type,
+            item.typeName,
             'to',
             store.name,
             'from',
@@ -453,7 +457,7 @@ function moveToStore(
         try {
           await dispatch(setItemLockState(item, overrideLockState));
         } catch (e) {
-          errorLog('move', 'Lock state override failed', e);
+          errorLog(TAG, 'Lock state override failed', e);
         }
       })();
     }
@@ -483,7 +487,7 @@ function canEquipExotic(
         throw new Error(
           t('ItemService.ExoticError', {
             itemname: item.name,
-            slot: otherExotic.type,
+            slot: otherExotic.typeName,
             error: errorMessage(e),
           }),
         );
@@ -630,72 +634,64 @@ function chooseMoveAsideItem(
       if (item.maxStackSize > 1) {
         return store.id + item.hash;
       } else {
-        return store.id + item.type;
+        return store.id + item.bucket.hash;
       }
     },
   );
-
-  let moveAsideCandidate:
-    | {
-        item: DimItem;
-        target: DimStore;
-      }
-    | undefined;
 
   const vault = getVault(stores)!;
 
   // Iterate through other stores from least recently played to most recently played.
   // The concept is that we prefer filling up the least-recently-played character before even
   // bothering with the others.
+  let moveAsideCandidate = (() => {
+    const otherCharacters = _.sortBy(
+      otherStores.filter((s) => !s.isVault),
+      (s) => s.lastPlayed.getTime(),
+    );
+    for (const targetStore of otherCharacters) {
+      const sortedCandidates = sortMoveAsideCandidatesForStore(
+        moveAsideCandidates,
+        target,
+        targetStore,
+        getTag,
+        isInInGameLoadoutFor,
+        item,
+      );
+      for (const candidate of sortedCandidates) {
+        const spaceLeft = cachedSpaceLeft(targetStore, candidate);
 
-  _.sortBy(
-    otherStores.filter((s) => !s.isVault),
-    (s) => s.lastPlayed.getTime(),
-  ).find((targetStore) =>
-    sortMoveAsideCandidatesForStore(
-      moveAsideCandidates,
-      target,
-      targetStore,
-      getTag,
-      isInInGameLoadoutFor,
-      item,
-    ).find((candidate) => {
-      const spaceLeft = cachedSpaceLeft(targetStore, candidate);
-
-      if (target.isVault) {
-        // If we're moving from the vault
-        // If the target character has any space, put it there
-        if (candidate.amount <= spaceLeft) {
-          moveAsideCandidate = {
-            item: candidate,
-            target: targetStore,
-          };
-          return true;
-        }
-      } else {
-        // If we're moving from a character
-        // If there's exactly one *slot* left on the vault, and
-        // we're not moving the original item *from* the vault, put
-        // the candidate on another character in order to avoid
-        // gumming up the vault.
-        const openVaultAmount = cachedSpaceLeft(vault, candidate);
-        const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
-        const openVaultSlotsAfterMove = Math.max(
-          0,
-          Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize),
-        );
-        if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
-          moveAsideCandidate = {
-            item: candidate,
-            target: targetStore,
-          };
-          return true;
+        if (target.isVault) {
+          // If we're moving from the vault
+          // If the target character has any space, put it there
+          if (candidate.amount <= spaceLeft) {
+            return {
+              item: candidate,
+              target: targetStore,
+            };
+          }
+        } else {
+          // If we're moving from a character
+          // If there's exactly one *slot* left on the vault, and
+          // we're not moving the original item *from* the vault, put
+          // the candidate on another character in order to avoid
+          // gumming up the vault.
+          const openVaultAmount = cachedSpaceLeft(vault, candidate);
+          const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
+          const openVaultSlotsAfterMove = Math.max(
+            0,
+            Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize),
+          );
+          if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
+            return {
+              item: candidate,
+              target: targetStore,
+            };
+          }
         }
       }
-
-      return false;
-    }),
-  );
+    }
+  })();
 
   // If we're moving off a character (into the vault) and we couldn't find a better match,
   // just try to shove it in the vault, and we'll recursively squeeze something else out of the vault.
@@ -839,7 +835,7 @@ function ensureCanMoveToStore(
           ? moveAsideItem.destinyVersion === 1
             ? moveAsideItem.bucket.sort!
             : ''
-          : moveAsideItem.type;
+          : moveAsideItem.typeName;
 
         throw new DimError(
           'no-space',
@@ -993,7 +989,7 @@ export function executeMoveItem(
       item.bucket.hash !== BucketHashes.Consumables
     ) {
       try {
-        infoLog('move', 'Try blind move of', item.name, 'to', target.name);
+        infoLog(TAG, 'Try blind move of', item.name, 'to', target.name);
         return await dispatch(moveToStore(item, target, equip, amount, session));
       } catch (e) {
         if (
@@ -1016,13 +1012,15 @@ export function executeMoveItem(
       }
     }
 
-    await dispatch(
-      ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
-    );
-
-    // Replace the target store - ensureValidTransfer may have reloaded it
-    target = getStore(getStores(), target.id)!;
-    source = getStore(getStores(), item.owner)!;
+    // for any case that's not char-to-char, we can free up space ahead of time
+    if (source.isVault || target.isVault || source.id === target.id || item.bucket.accountWide) {
+      await dispatch(
+        ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
+      );
+      // Replace the target store - ensureValidTransfer may have reloaded it
+      target = getStore(getStores(), target.id)!;
+      source = getStore(getStores(), item.owner)!;
+    }
 
     // Get from postmaster first
     if (item.location.inPostmaster) {
@@ -1044,7 +1042,29 @@ export function executeMoveItem(
         if (item.equipped) {
           item = await dispatch(dequipItem(item, session));
         }
+        // for char to char, two moves are required: char to vault then vault to char
+        // make sure the vault has space before trying to vault the item
+        await dispatch(
+          ensureValidTransfer(
+            false,
+            getVault(getStores())!,
+            item,
+            amount,
+            excludes,
+            reservations,
+            session,
+          ),
+        );
+        target = getStore(getStores(), target.id)!;
+        source = getStore(getStores(), item.owner)!;
         item = await dispatch(moveToVault(item, amount, session));
+
+        // now make sure the target char has space before trying to unvault the item
+        await dispatch(
+          ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
+        );
+        target = getStore(getStores(), target.id)!;
+        source = getStore(getStores(), item.owner)!;
         item = await dispatch(moveToStore(item, target, equip, amount, session));
       }
       if (equip && !item.equipped) {
