@@ -14,7 +14,6 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/lo
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import { count, filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -118,18 +117,8 @@ export default function LoadoutView({
   );
   const power = loadoutPower(store, categories);
 
-  const selectionProps = $featureFlags.elgatoStreamDeck
-    ? // eslint-disable-next-line
-      useStreamDeckSelection({
-        type: 'loadout',
-        loadout,
-        store,
-        equippable: !hideShowModPlacements,
-      })
-    : undefined;
-
   return (
-    <div className={styles.loadout} id={loadout.id} {...selectionProps}>
+    <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
         <h2>
           {loadout.classType === DestinyClass.Unknown && (

@@ -91,7 +91,7 @@ function StreamDeckButton() {
         className={styles.streamDeckButton}
         title={t('StreamDeck.Tooltip.Title')}
       >
-        <img src={streamDeckIcon} className="stream-deck-img" />
+        <img src={streamDeckIcon} />
         {error ? (
           <div className={styles.error}>
             <AppIcon icon={banIcon} />

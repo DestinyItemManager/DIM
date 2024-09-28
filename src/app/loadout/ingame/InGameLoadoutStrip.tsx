@@ -93,6 +93,15 @@ function InGameLoadoutTile({
     onShare(dimLoadout);
   };
 
+  const streamDeckDeepLink = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useStreamDeckSelection({
+        type: 'in-game-loadout',
+        equippable: true,
+        loadout: gameLoadout,
+      })
+    : undefined;
+
   const options: Option[] = _.compact([
     {
       key: 'details',
@@ -123,6 +132,11 @@ function InGameLoadoutTile({
       key: 'share',
       content: t('Loadouts.ShareLoadout'),
       onSelected: handleShare,
+    },
+    streamDeckDeepLink && {
+      key: 'open-on-stream-deck',
+      content: t('Loadouts.OpenOnStreamDeck'),
+      onSelected: () => window.open(streamDeckDeepLink),
     },
     {
       key: 'delete',
@@ -174,18 +188,9 @@ function InGameLoadoutTile({
     );
   }
 
-  const selectionProps = $featureFlags.elgatoStreamDeck
-    ? // eslint-disable-next-line
-      useStreamDeckSelection({
-        type: 'in-game-loadout',
-        equippable: true,
-        loadout: gameLoadout,
-      })
-    : undefined;
-
   const loadoutIcon = (
     <div className={styles.inGameTile} onClick={() => onShowDetails(gameLoadout)}>
-      <div {...selectionProps} className={styles.igtIconHolder}>
+      <div className={styles.igtIconHolder}>
         <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} size={32} />{' '}
       </div>
       <AppIcon
@@ -204,13 +209,9 @@ function InGameLoadoutTile({
       key={gameLoadout.index}
       className={clsx(styles.inGameTileWrapper, { [styles.isEquipped]: isEquipped })}
     >
-      {selectionProps?.ref ? (
-        loadoutIcon
-      ) : (
-        <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
-          {loadoutIcon}
-        </PressTip>
-      )}
+      <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
+        {loadoutIcon}
+      </PressTip>
       <Dropdown kebab options={options} placement="bottom-end" className={styles.kebab} />
     </div>
   );
