@@ -1,5 +1,7 @@
 ## Next
 
+## 8.39.0 <span class="changelog-date">(2024-09-29)</span>
+
 * Add `breaker:intrinsic` search that highlights items that have an intrinsic breaker ability (i.e. not granted by the seasonal artifact).
 * Breaker type granted by the seasonal artifact now has a green box around it, reminiscent of the artifact mod that grants it.
 
