@@ -419,7 +419,7 @@ export const dimApi = (
 
     case getType(actions.searchDeleted):
       return produce(state, (draft) => {
-        deleteSearch(draft, account!.destinyVersion, action.payload.query, action.payload.type);
+        deleteSearch(account!, draft, action.payload.query, action.payload.type);
       });
 
     // *** Triumphs ***
@@ -1145,7 +1145,8 @@ function searchUsed(
       query,
       type,
     },
-    destinyVersion,
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion,
   };
   applyUpdateLocally(draft, updateAction);
   draft.updateQueue.push(updateAction);
@@ -1164,7 +1165,7 @@ function searchUsed(
       const lastSearch = sortedSearches.pop()!;
       // Never try to delete the built-in searches or saved searches
       if (!lastSearch.saved && lastSearch.usageCount > 0) {
-        deleteSearch(draft, destinyVersion, lastSearch.query, lastSearch.type);
+        deleteSearch(account, draft, lastSearch.query, lastSearch.type);
       }
     }
   }
@@ -1205,7 +1206,8 @@ function saveSearch(
         query,
         type,
       },
-      destinyVersion,
+      platformMembershipId: account.membershipId,
+      destinyVersion: account.destinyVersion,
     };
     applyUpdateLocally(draft, searchUsedUpdate);
     draft.updateQueue.push(searchUsedUpdate);
@@ -1218,15 +1220,16 @@ function saveSearch(
       saved,
       type,
     },
-    destinyVersion,
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion,
   };
   applyUpdateLocally(draft, updateAction);
   draft.updateQueue.push(updateAction);
 }
 
 function deleteSearch(
+  account: DestinyAccount,
   draft: Draft<DimApiState>,
-  destinyVersion: DestinyVersion,
   query: string,
   type: SearchType,
 ) {
@@ -1236,7 +1239,8 @@ function deleteSearch(
       query,
       type,
     },
-    destinyVersion,
+    platformMembershipId: account.membershipId,
+    destinyVersion: account.destinyVersion,
   };
   applyUpdateLocally(draft, updateAction);
   draft.updateQueue.push(updateAction);
@@ -1263,7 +1267,7 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       customStats: draft.settings.customStats ?? [],
     } as FilterContext);
     if (!saveInHistory) {
-      deleteSearch(draft, account.destinyVersion, search.query, search.type);
+      deleteSearch(account, draft, search.query, search.type);
     }
   }
 }
