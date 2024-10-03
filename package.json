@@ -205,7 +205,7 @@
     "@hello-pangea/dnd": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "@react-hook/resize-observer": "^2.0.2",
-    "@sentry/browser": "^8.32.0",
+    "@sentry/browser": "^8.33.0",
     "@sentry/react": "^8.32.0",
     "@sentry/types": "^8.32.0",
     "@tanstack/react-virtual": "^3.10.8",
