@@ -157,7 +157,8 @@ export async function analyzeLoadout(
     if (allLegendariesMasterworked) {
       loadoutParameters.assumeArmorMasterwork =
         exoticNotMasterworked &&
-        loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.All
+        loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
+        loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.ArtificeExotic
           ? AssumeArmorMasterwork.Legendary
           : AssumeArmorMasterwork.All;
     } else {
