@@ -154,11 +154,9 @@ export async function analyzeLoadout(
         }
       }
     }
-    if (allLegendariesMasterworked) {
+    if (allLegendariesMasterworked && loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.ArtificeExotic) {
       loadoutParameters.assumeArmorMasterwork =
-        exoticNotMasterworked &&
-        loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
-        loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.ArtificeExotic
+        exoticNotMasterworked && loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.All      
           ? AssumeArmorMasterwork.Legendary
           : AssumeArmorMasterwork.All;
     } else {
