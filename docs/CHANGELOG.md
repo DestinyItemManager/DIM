@@ -1,5 +1,8 @@
 ## Next
 
+* Show the new pathfinders on the Progress page.
+* Add Accessories (Tonic Capsule) to the inventory screen.
+
 ## 8.41.0 <span class="changelog-date">(2024-10-08)</span>
 
 * Updated for Episode: Revenant.
