@@ -353,6 +353,21 @@ export const D2SeasonInfo: Record<
     numWeeks: 18,
     episode: 1,
   },
+  25: {
+    DLCName: 'Revenant',
+    seasonName: 'Episode: Revenant',
+    seasonTag: 'revenant',
+    season: 25,
+    maxLevel: 50,
+    powerFloor: 1900,
+    softCap: 1950,
+    powerfulCap: 2000,
+    pinnacleCap: 2010,
+    releaseDate: '2024-10-08',
+    resetTime: '17:00:00Z',
+    numWeeks: 17,
+    episode: 2,
+  },
 };
 
-export const D2CalculatedSeason = 24;
+export const D2CalculatedSeason = 25;

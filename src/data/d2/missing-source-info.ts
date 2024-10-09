@@ -528,7 +528,10 @@ const missingSources: { [key: string]: number[] } = {
     438224459, // Wing Discipline
     449878234, // Phoenix Strife Type 0
     468899627, // Binary Phoenix Mark
+    494475253, // Ossuary Boots
     530558102, // Phoenix Strife Type 0
+    628604416, // Ossuary Bond
+    631191162, // Ossuary Cover
     636679949, // Ankaa Seeker IV
     657400178, // Swordflight 4.1
     670877864, // Binary Phoenix Mark
@@ -542,6 +545,7 @@ const missingSources: { [key: string]: number[] } = {
     920187221, // Wing Discipline
     929917162, // Wing Theorem
     944242985, // Ankaa Seeker IV
+    979782821, // Hinterland Cloak
     987343638, // Ankaa Seeker IV
     997903134, // Wing Theorem
     1036467370, // Wing Theorem
@@ -551,14 +555,17 @@ const missingSources: { [key: string]: number[] } = {
     1071350799, // Binary Phoenix Cloak
     1084033161, // Wing Contender
     1127237110, // Wing Contender
+    1167444103, // Biosphere Explorer Mark
     1245115841, // Wing Theorem
     1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
     1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
+    1381742107, // Biosphere Explorer Helm
     1464207979, // Wing Discipline
     1467590642, // Binary Phoenix Bond
     1484937602, // Phoenix Strife Type 0
+    1497354980, // Biosphere Explorer Greaves
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
     1648675919, // Binary Phoenix Mark
@@ -573,11 +580,13 @@ const missingSources: { [key: string]: number[] } = {
     1801625827, // Swordflight 4.1
     1828358334, // Swordflight 4.1
     1830829330, // Swordflight 4.1
+    1837817086, // Biosphere Explorer Plate
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
     1852468615, // Ankaa Seeker IV
     1904811766, // Swordflight 4.1
     1929596421, // Ankaa Seeker IV
+    2048762125, // Ossuary Robes
     2070517134, // Wing Contender
     2124666626, // Wing Discipline
     2191401041, // Phoenix Strife Type 0
@@ -591,6 +600,8 @@ const missingSources: { [key: string]: number[] } = {
     2296691422, // Swordflight 4.1
     2323865727, // Wing Theorem
     2331227463, // Wing Contender
+    2339694345, // Hinterland Cowl
+    2402428483, // Ossuary Gloves
     2415711886, // Wing Contender
     2426070307, // Binary Phoenix Cloak
     2466453881, // Wing Discipline
@@ -607,11 +618,14 @@ const missingSources: { [key: string]: number[] } = {
     2754844215, // Swordflight 4.1
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
+    2841023690, // Biosphere Explorer Gauntlets
     3089908066, // Wing Discipline
     3098328572, // The Recluse
     3098458331, // Ankaa Seeker IV
     3119528729, // Wing Contender
+    3121010362, // Hinterland Strides
     3140634552, // Swordflight 4.1
+    3148195144, // Hinterland Vest
     3211001969, // Wing Contender
     3223280471, // Swordflight 4.1
     3298826188, // Swordflight 4.1
@@ -626,6 +640,7 @@ const missingSources: { [key: string]: number[] } = {
     3781722107, // Phoenix Strife Type 0
     3818803676, // Wing Discipline
     3839561204, // Wing Theorem
+    4043189888, // Hinterland Grips
     4043921923, // The Mountaintop
     4043980813, // Ankaa Seeker IV
     4123918087, // Wing Contender
@@ -699,13 +714,18 @@ const missingSources: { [key: string]: number[] } = {
     386367515, // Ancient Apocalypse Boots
     392058749, // Ancient Apocalypse Boots
     485653258, // Ancient Apocalypse Strides
+    494475253, // Ossuary Boots
     509238959, // Ancient Apocalypse Mark
+    628604416, // Ossuary Bond
     629787707, // Ancient Apocalypse Mask
+    631191162, // Ossuary Cover
     759348512, // Ancient Apocalypse Mask
     787909455, // Ancient Apocalypse Robes
     887818405, // Ancient Apocalypse Robes
     978447246, // Ancient Apocalypse Gauntlets
+    979782821, // Hinterland Cloak
     1013137701, // Ancient Apocalypse Hood
+    1167444103, // Biosphere Explorer Mark
     1169857924, // Ancient Apocalypse Strides
     1188039652, // Ancient Apocalypse Gauntlets
     1193646249, // Ancient Apocalypse Boots
@@ -713,14 +733,20 @@ const missingSources: { [key: string]: number[] } = {
     1237661249, // Ancient Apocalypse Plate
     1356064950, // Ancient Apocalypse Grips
     1359908066, // Ancient Apocalypse Gauntlets
+    1381742107, // Biosphere Explorer Helm
     1488486721, // Ancient Apocalypse Bond
+    1497354980, // Biosphere Explorer Greaves
     1548620661, // Ancient Apocalypse Cloak
     1741396519, // Ancient Apocalypse Vest
     1752237812, // Ancient Apocalypse Gloves
+    1837817086, // Biosphere Explorer Plate
     2020166300, // Ancient Apocalypse Mark
     2039976446, // Ancient Apocalypse Boots
+    2048762125, // Ossuary Robes
     2088829612, // Ancient Apocalypse Bond
     2130645994, // Ancient Apocalypse Grips
+    2339694345, // Hinterland Cowl
+    2402428483, // Ossuary Gloves
     2440840551, // Ancient Apocalypse Gloves
     2451538755, // Ancient Apocalypse Strides
     2459422430, // Ancient Apocalypse Bond
@@ -732,9 +758,12 @@ const missingSources: { [key: string]: number[] } = {
     2677967607, // Ancient Apocalypse Gauntlets
     2694124942, // Ancient Apocalypse Greaves
     2728668760, // Ancient Apocalypse Vest
+    2841023690, // Biosphere Explorer Gauntlets
     2858060922, // Ancient Apocalypse Vest
     2881248566, // Ancient Apocalypse Cloak
     3031848199, // Ancient Apocalypse Helm
+    3121010362, // Hinterland Strides
+    3148195144, // Hinterland Vest
     3184912423, // Ancient Apocalypse Cloak
     3339632627, // Ancient Apocalypse Mark
     3404053788, // Ancient Apocalypse Greaves
@@ -747,6 +776,7 @@ const missingSources: { [key: string]: number[] } = {
     3825427923, // Ancient Apocalypse Helm
     3855285278, // Ancient Apocalypse Vest
     3925589496, // Ancient Apocalypse Hood
+    4043189888, // Hinterland Grips
     4115739810, // Ancient Apocalypse Plate
     4188366993, // Ancient Apocalypse Robes
     4255727106, // Ancient Apocalypse Hood
@@ -917,6 +947,7 @@ const missingSources: { [key: string]: number[] } = {
     350054538, // Sublime Strides
     391889347, // Solstice Robes (Drained)
     419435523, // Inaugural Revelry Grips
+    425681240, // Acosmic
     450844637, // Solstice Robes (Majestic)
     464814870, // Sublime Greaves
     492834021, // Inaugural Revelry Hood
@@ -927,8 +958,10 @@ const missingSources: { [key: string]: number[] } = {
     540653483, // Solstice Vest (Scorched)
     574167778, // Solstice Gauntlets (Drained)
     574790717, // Solstice Gloves (Drained)
+    601948197, // Zephyr
     627596132, // Solstice Hood (Drained)
     677939288, // Solstice Helm (Scorched)
+    689294985, // Jurassic Green
     721146704, // Solstice Mask (Rekindled)
     784499738, // Solstice Bond (Renewed)
     807693916, // Sublime Hood
@@ -936,7 +969,9 @@ const missingSources: { [key: string]: number[] } = {
     929148730, // Solstice Vest (Drained)
     967650555, // Solstice Greaves (Scorched)
     1056992393, // Inaugural Revelry Plate
+    1123433952, // Stay Frosty
     1141639721, // Solstice Gauntlets (Scorched)
+    1183116657, // Glacioclasm
     1229961870, // Solstice Vest (Renewed)
     1273510836, // Inaugural Revelry Wraps
     1280894514, // Mechabre
@@ -962,6 +997,8 @@ const missingSources: { [key: string]: number[] } = {
     1752648948, // Sublime Sleeves
     1775707016, // Solstice Grasps (Majestic)
     1812385587, // Festive Winter Bond
+    1845372864, // Albedo Wing
+    1845978721, // Avalanche
     1862324869, // Solstice Boots (Majestic)
     1897528210, // Solstice Robes (Scorched)
     2079349511, // Sublime Helm
@@ -981,11 +1018,13 @@ const missingSources: { [key: string]: number[] } = {
     2419100474, // Solstice Grasps (Renewed)
     2470583197, // Solstice Gloves (Renewed)
     2477028154, // Inaugural Revelry Mask
+    2477980485, // Mechabre
     2492769187, // Solstice Bond (Scorched)
     2523388612, // Solstice Hood (Renewed)
     2543971899, // Sublime Mark
     2546370410, // Solstice Hood (Majestic)
     2578820926, // Solstice Greaves (Majestic)
+    2603335652, // Jurassic Green
     2616697701, // Sublime Robes
     2618313500, // Solstice Greaves (Drained)
     2685001662, // Solstice Gloves (Rekindled)
@@ -999,6 +1038,7 @@ const missingSources: { [key: string]: number[] } = {
     2814093983, // Cold Front
     2824302184, // Solstice Robes (Resplendent)
     2837295684, // Inaugural Revelry Mark
+    2869466318, // BrayTech Werewolf
     2877046370, // Solstice Strides (Majestic)
     2924095235, // Solstice Bond (Rekindled)
     2940416351, // Solstice Boots (Drained)
@@ -1015,6 +1055,7 @@ const missingSources: { [key: string]: number[] } = {
     3240434620, // Something New
     3329514528, // Sublime Gauntlets
     3400256755, // Zephyr
+    3558681245, // BrayTech Werewolf
     3559361670, // The Title
     3573686365, // Glacioclasm
     3611487543, // Solstice Hood (Rekindled)
@@ -1119,13 +1160,18 @@ const missingSources: { [key: string]: number[] } = {
     386367515, // Ancient Apocalypse Boots
     392058749, // Ancient Apocalypse Boots
     485653258, // Ancient Apocalypse Strides
+    494475253, // Ossuary Boots
     509238959, // Ancient Apocalypse Mark
+    628604416, // Ossuary Bond
     629787707, // Ancient Apocalypse Mask
+    631191162, // Ossuary Cover
     759348512, // Ancient Apocalypse Mask
     787909455, // Ancient Apocalypse Robes
     887818405, // Ancient Apocalypse Robes
     978447246, // Ancient Apocalypse Gauntlets
+    979782821, // Hinterland Cloak
     1013137701, // Ancient Apocalypse Hood
+    1167444103, // Biosphere Explorer Mark
     1169857924, // Ancient Apocalypse Strides
     1188039652, // Ancient Apocalypse Gauntlets
     1193646249, // Ancient Apocalypse Boots
@@ -1133,14 +1179,20 @@ const missingSources: { [key: string]: number[] } = {
     1237661249, // Ancient Apocalypse Plate
     1356064950, // Ancient Apocalypse Grips
     1359908066, // Ancient Apocalypse Gauntlets
+    1381742107, // Biosphere Explorer Helm
     1488486721, // Ancient Apocalypse Bond
+    1497354980, // Biosphere Explorer Greaves
     1548620661, // Ancient Apocalypse Cloak
     1741396519, // Ancient Apocalypse Vest
     1752237812, // Ancient Apocalypse Gloves
+    1837817086, // Biosphere Explorer Plate
     2020166300, // Ancient Apocalypse Mark
     2039976446, // Ancient Apocalypse Boots
+    2048762125, // Ossuary Robes
     2088829612, // Ancient Apocalypse Bond
     2130645994, // Ancient Apocalypse Grips
+    2339694345, // Hinterland Cowl
+    2402428483, // Ossuary Gloves
     2440840551, // Ancient Apocalypse Gloves
     2451538755, // Ancient Apocalypse Strides
     2459422430, // Ancient Apocalypse Bond
@@ -1152,9 +1204,12 @@ const missingSources: { [key: string]: number[] } = {
     2677967607, // Ancient Apocalypse Gauntlets
     2694124942, // Ancient Apocalypse Greaves
     2728668760, // Ancient Apocalypse Vest
+    2841023690, // Biosphere Explorer Gauntlets
     2858060922, // Ancient Apocalypse Vest
     2881248566, // Ancient Apocalypse Cloak
     3031848199, // Ancient Apocalypse Helm
+    3121010362, // Hinterland Strides
+    3148195144, // Hinterland Vest
     3184912423, // Ancient Apocalypse Cloak
     3339632627, // Ancient Apocalypse Mark
     3404053788, // Ancient Apocalypse Greaves
@@ -1167,6 +1222,7 @@ const missingSources: { [key: string]: number[] } = {
     3825427923, // Ancient Apocalypse Helm
     3855285278, // Ancient Apocalypse Vest
     3925589496, // Ancient Apocalypse Hood
+    4043189888, // Hinterland Grips
     4115739810, // Ancient Apocalypse Plate
     4188366993, // Ancient Apocalypse Robes
     4255727106, // Ancient Apocalypse Hood
@@ -1295,16 +1351,23 @@ const missingSources: { [key: string]: number[] } = {
   ],
   garden: [
     11974904, // Greaves of Ascendancy
+    147444292, // Omniscient Eye
     281660259, // Temptation's Mark
     519078295, // Helm of Righteousness
     557676195, // Cowl of Righteousness
+    963574173, // Ancient Gospel
     1653741426, // Grips of Exaltation
+    1992309064, // Reckless Oracle
     2015894615, // Gloves of Exaltation
     2054979724, // Strides of Ascendancy
+    2145441168, // Prophet of Doom
+    2241507890, // Sacred Provenance
     2320830625, // Robes of Transcendence
+    2720651699, // Zealot's Reward
     3001934726, // Mask of Righteousness
     3103335676, // Temptation's Bond
     3549177695, // Cloak of Temptation
+    3621336854, // Accrued Redemption
     3824429433, // Boots of Ascendancy
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
@@ -1312,16 +1375,23 @@ const missingSources: { [key: string]: number[] } = {
   ],
   gardenofsalvation: [
     11974904, // Greaves of Ascendancy
+    147444292, // Omniscient Eye
     281660259, // Temptation's Mark
     519078295, // Helm of Righteousness
     557676195, // Cowl of Righteousness
+    963574173, // Ancient Gospel
     1653741426, // Grips of Exaltation
+    1992309064, // Reckless Oracle
     2015894615, // Gloves of Exaltation
     2054979724, // Strides of Ascendancy
+    2145441168, // Prophet of Doom
+    2241507890, // Sacred Provenance
     2320830625, // Robes of Transcendence
+    2720651699, // Zealot's Reward
     3001934726, // Mask of Righteousness
     3103335676, // Temptation's Bond
     3549177695, // Cloak of Temptation
+    3621336854, // Accrued Redemption
     3824429433, // Boots of Ascendancy
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
@@ -1346,16 +1416,23 @@ const missingSources: { [key: string]: number[] } = {
   ],
   gos: [
     11974904, // Greaves of Ascendancy
+    147444292, // Omniscient Eye
     281660259, // Temptation's Mark
     519078295, // Helm of Righteousness
     557676195, // Cowl of Righteousness
+    963574173, // Ancient Gospel
     1653741426, // Grips of Exaltation
+    1992309064, // Reckless Oracle
     2015894615, // Gloves of Exaltation
     2054979724, // Strides of Ascendancy
+    2145441168, // Prophet of Doom
+    2241507890, // Sacred Provenance
     2320830625, // Robes of Transcendence
+    2720651699, // Zealot's Reward
     3001934726, // Mask of Righteousness
     3103335676, // Temptation's Bond
     3549177695, // Cloak of Temptation
+    3621336854, // Accrued Redemption
     3824429433, // Boots of Ascendancy
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
@@ -2274,6 +2351,7 @@ const missingSources: { [key: string]: number[] } = {
     65929376, // Gauntlets of the Great Hunt
     70083888, // Nation of Beasts
     146275556, // Vest of the Great Hunt
+    147444292, // Omniscient Eye
     196235132, // Grips of the Great Hunt
     223783885, // Insigne Shade Bond
     239489770, // Bond of Sekris
@@ -2328,6 +2406,7 @@ const missingSources: { [key: string]: number[] } = {
     874272413, // Shadow's Robes
     917591018, // Grips of the Ace-Defiant
     917591019, // Gloves of the Emperor's Agent
+    963574173, // Ancient Gospel
     972689703, // Vest of the Great Hunt
     974648224, // Shadow's Boots
     1021341893, // Mark of the Great Hunt
@@ -2372,6 +2451,7 @@ const missingSources: { [key: string]: number[] } = {
     1946621757, // Shadow's Grips
     1960303677, // Grips of the Ace-Defiant
     1991039861, // Mask of Nohr
+    1992309064, // Reckless Oracle
     1999427172, // Shadow's Mask
     2013109092, // Helm of the Ace-Defiant
     2015894615, // Gloves of Exaltation
@@ -2381,6 +2461,7 @@ const missingSources: { [key: string]: number[] } = {
     2070062385, // Bond of the Emperor's Minister
     2112541750, // Cloak of the Great Hunt
     2128823667, // Turris Shade Mark
+    2145441168, // Prophet of Doom
     2153222031, // Shadow's Gloves
     2158603584, // Gauntlets of Rull
     2158603585, // Gauntlets of the Emperor's Champion
@@ -2388,6 +2469,7 @@ const missingSources: { [key: string]: number[] } = {
     2193494688, // Boots of the Fulminator
     2194479195, // Penumbral Bond
     2232730708, // Vest of the Emperor's Agent
+    2241507890, // Sacred Provenance
     2274520361, // Helm of the Great Hunt
     2280287728, // Bond of the Great Hunt
     2320830625, // Robes of Transcendence
@@ -2408,6 +2490,7 @@ const missingSources: { [key: string]: number[] } = {
     2676042150, // Wraps of the Fulminator
     2700598111, // Mask of the Fulminator
     2710517999, // Equitis Shade Grips
+    2720651699, // Zealot's Reward
     2722103686, // Equitis Shade Boots
     2758465168, // Greaves of the Emperor's Champion
     2762445138, // Gunsmith's Devotion Gloves
@@ -2465,6 +2548,7 @@ const missingSources: { [key: string]: number[] } = {
     3591141932, // Techeun Force
     3592548938, // Robes of the Fulminator
     3614211816, // Plate of the Great Hunt
+    3621336854, // Accrued Redemption
     3711700026, // Mask of the Emperor's Agent
     3711700027, // Helm of the Ace-Defiant
     3719175804, // Equitis Shade Grips
@@ -2571,7 +2655,10 @@ const missingSources: { [key: string]: number[] } = {
     438224459, // Wing Discipline
     449878234, // Phoenix Strife Type 0
     468899627, // Binary Phoenix Mark
+    494475253, // Ossuary Boots
     530558102, // Phoenix Strife Type 0
+    628604416, // Ossuary Bond
+    631191162, // Ossuary Cover
     636679949, // Ankaa Seeker IV
     657400178, // Swordflight 4.1
     670877864, // Binary Phoenix Mark
@@ -2585,6 +2672,7 @@ const missingSources: { [key: string]: number[] } = {
     920187221, // Wing Discipline
     929917162, // Wing Theorem
     944242985, // Ankaa Seeker IV
+    979782821, // Hinterland Cloak
     987343638, // Ankaa Seeker IV
     997903134, // Wing Theorem
     1036467370, // Wing Theorem
@@ -2594,14 +2682,17 @@ const missingSources: { [key: string]: number[] } = {
     1071350799, // Binary Phoenix Cloak
     1084033161, // Wing Contender
     1127237110, // Wing Contender
+    1167444103, // Biosphere Explorer Mark
     1245115841, // Wing Theorem
     1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
     1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
+    1381742107, // Biosphere Explorer Helm
     1464207979, // Wing Discipline
     1467590642, // Binary Phoenix Bond
     1484937602, // Phoenix Strife Type 0
+    1497354980, // Biosphere Explorer Greaves
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
     1648675919, // Binary Phoenix Mark
@@ -2616,11 +2707,13 @@ const missingSources: { [key: string]: number[] } = {
     1801625827, // Swordflight 4.1
     1828358334, // Swordflight 4.1
     1830829330, // Swordflight 4.1
+    1837817086, // Biosphere Explorer Plate
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
     1852468615, // Ankaa Seeker IV
     1904811766, // Swordflight 4.1
     1929596421, // Ankaa Seeker IV
+    2048762125, // Ossuary Robes
     2070517134, // Wing Contender
     2124666626, // Wing Discipline
     2191401041, // Phoenix Strife Type 0
@@ -2634,6 +2727,8 @@ const missingSources: { [key: string]: number[] } = {
     2296691422, // Swordflight 4.1
     2323865727, // Wing Theorem
     2331227463, // Wing Contender
+    2339694345, // Hinterland Cowl
+    2402428483, // Ossuary Gloves
     2415711886, // Wing Contender
     2426070307, // Binary Phoenix Cloak
     2466453881, // Wing Discipline
@@ -2650,11 +2745,14 @@ const missingSources: { [key: string]: number[] } = {
     2754844215, // Swordflight 4.1
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
+    2841023690, // Biosphere Explorer Gauntlets
     3089908066, // Wing Discipline
     3098328572, // The Recluse
     3098458331, // Ankaa Seeker IV
     3119528729, // Wing Contender
+    3121010362, // Hinterland Strides
     3140634552, // Swordflight 4.1
+    3148195144, // Hinterland Vest
     3211001969, // Wing Contender
     3223280471, // Swordflight 4.1
     3298826188, // Swordflight 4.1
@@ -2669,6 +2767,7 @@ const missingSources: { [key: string]: number[] } = {
     3781722107, // Phoenix Strife Type 0
     3818803676, // Wing Discipline
     3839561204, // Wing Theorem
+    4043189888, // Hinterland Grips
     4043921923, // The Mountaintop
     4043980813, // Ankaa Seeker IV
     4123918087, // Wing Contender
@@ -2806,22 +2905,29 @@ const missingSources: { [key: string]: number[] } = {
     417061387, // Xenos Vale IV
     420247988, // Xenos Vale IV
     432360904, // Vigil of Heroes
+    494475253, // Ossuary Boots
     506100699, // Vigil of Heroes
     508642129, // Vigil of Heroes
     575676771, // Vigil of Heroes
+    628604416, // Ossuary Bond
+    631191162, // Ossuary Cover
     758026143, // Vigil of Heroes
     799187478, // Vigil of Heroes
+    979782821, // Hinterland Cloak
     986111044, // Vigil of Heroes
     1003941622, // Vigil of Heroes
     1007759904, // Vigil of Heroes
     1054960580, // Vigil of Heroes
     1099472035, // The Took Offense
     1130203390, // Vigil of Heroes
+    1167444103, // Biosphere Explorer Mark
     1188816597, // The Took Offense
     1247181362, // Vigil of Heroes
     1320081419, // The Shelter in Place
+    1381742107, // Biosphere Explorer Helm
     1405063395, // Vigil of Heroes
     1490307366, // Vigil of Heroes
+    1497354980, // Biosphere Explorer Greaves
     1514841742, // Mark of Shelter
     1514863327, // Vigil of Heroes
     1538362007, // Vigil of Heroes
@@ -2829,13 +2935,17 @@ const missingSources: { [key: string]: number[] } = {
     1667528443, // The Shelter in Place
     1699493316, // The Last Dance
     1825880546, // The Took Offense
+    1837817086, // Biosphere Explorer Plate
     2011569904, // Vigil of Heroes
+    2048762125, // Ossuary Robes
     2060516289, // Vigil of Heroes
     2072877132, // Vigil of Heroes
     2076567986, // Vigil of Heroes
     2304309360, // Vigil of Heroes
     2337221567, // Vigil of Heroes
+    2339694345, // Hinterland Cowl
     2378296024, // Xenos Vale IV
+    2402428483, // Ossuary Gloves
     2422319309, // Vigil of Heroes
     2442309039, // Vigil of Heroes
     2460793798, // Vigil of Heroes
@@ -2843,12 +2953,15 @@ const missingSources: { [key: string]: number[] } = {
     2671880779, // Vigil of Heroes
     2722966297, // The Shelter in Place
     2764938807, // The Took Offense
+    2841023690, // Biosphere Explorer Gauntlets
     2902263756, // Vigil of Heroes
     2939022735, // Vigil of Heroes
     3027732901, // The Shelter in Place
     3034285946, // Xenos Vale IV
     3074985148, // Vigil of Heroes
+    3121010362, // Hinterland Strides
     3130904371, // Vigil of Heroes
+    3148195144, // Hinterland Vest
     3198744410, // The Took Offense
     3213912958, // Vigil of Heroes
     3215392301, // Xenos Vale Bond
@@ -2870,6 +2983,7 @@ const missingSources: { [key: string]: number[] } = {
     3916064886, // Vigil of Heroes
     3963753111, // Xenos Vale Bond
     4024037919, // Origin Story
+    4043189888, // Hinterland Grips
     4074662489, // Vigil of Heroes
     4087433052, // The Took Offense
     4138296191, // The Shelter in Place
@@ -3027,22 +3141,29 @@ const missingSources: { [key: string]: number[] } = {
     417061387, // Xenos Vale IV
     420247988, // Xenos Vale IV
     432360904, // Vigil of Heroes
+    494475253, // Ossuary Boots
     506100699, // Vigil of Heroes
     508642129, // Vigil of Heroes
     575676771, // Vigil of Heroes
+    628604416, // Ossuary Bond
+    631191162, // Ossuary Cover
     758026143, // Vigil of Heroes
     799187478, // Vigil of Heroes
+    979782821, // Hinterland Cloak
     986111044, // Vigil of Heroes
     1003941622, // Vigil of Heroes
     1007759904, // Vigil of Heroes
     1054960580, // Vigil of Heroes
     1099472035, // The Took Offense
     1130203390, // Vigil of Heroes
+    1167444103, // Biosphere Explorer Mark
     1188816597, // The Took Offense
     1247181362, // Vigil of Heroes
     1320081419, // The Shelter in Place
+    1381742107, // Biosphere Explorer Helm
     1405063395, // Vigil of Heroes
     1490307366, // Vigil of Heroes
+    1497354980, // Biosphere Explorer Greaves
     1514841742, // Mark of Shelter
     1514863327, // Vigil of Heroes
     1538362007, // Vigil of Heroes
@@ -3050,13 +3171,17 @@ const missingSources: { [key: string]: number[] } = {
     1667528443, // The Shelter in Place
     1699493316, // The Last Dance
     1825880546, // The Took Offense
+    1837817086, // Biosphere Explorer Plate
     2011569904, // Vigil of Heroes
+    2048762125, // Ossuary Robes
     2060516289, // Vigil of Heroes
     2072877132, // Vigil of Heroes
     2076567986, // Vigil of Heroes
     2304309360, // Vigil of Heroes
     2337221567, // Vigil of Heroes
+    2339694345, // Hinterland Cowl
     2378296024, // Xenos Vale IV
+    2402428483, // Ossuary Gloves
     2422319309, // Vigil of Heroes
     2442309039, // Vigil of Heroes
     2460793798, // Vigil of Heroes
@@ -3064,12 +3189,15 @@ const missingSources: { [key: string]: number[] } = {
     2671880779, // Vigil of Heroes
     2722966297, // The Shelter in Place
     2764938807, // The Took Offense
+    2841023690, // Biosphere Explorer Gauntlets
     2902263756, // Vigil of Heroes
     2939022735, // Vigil of Heroes
     3027732901, // The Shelter in Place
     3034285946, // Xenos Vale IV
     3074985148, // Vigil of Heroes
+    3121010362, // Hinterland Strides
     3130904371, // Vigil of Heroes
+    3148195144, // Hinterland Vest
     3198744410, // The Took Offense
     3213912958, // Vigil of Heroes
     3215392301, // Xenos Vale Bond
@@ -3091,6 +3219,7 @@ const missingSources: { [key: string]: number[] } = {
     3916064886, // Vigil of Heroes
     3963753111, // Xenos Vale Bond
     4024037919, // Origin Story
+    4043189888, // Hinterland Grips
     4074662489, // Vigil of Heroes
     4087433052, // The Took Offense
     4138296191, // The Shelter in Place

@@ -5,6 +5,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   204878059, // Malfeasance
   219145368, // The Manticore
   347366834, // Ace of Spades
+  370712896, // Salvation's Grip
   374573733, // Delicate Tomb
   400096939, // Outbreak Perfected
   417164956, // Jötunn
@@ -40,6 +41,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2208405142, // Telesto
   2232171099, // Deathbringer
   2286143274, // The Huckleberry
+  2350354266, // Alethonym
   2357297366, // Witherhoard
   2362471601, // Rat King
   2591746970, // Leviathan's Breath
