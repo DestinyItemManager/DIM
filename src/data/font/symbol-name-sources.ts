@@ -1835,7 +1835,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 173702907,
+      hash: 1213975022,
       fromRichText: true,
     },
   },
@@ -1844,7 +1844,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 515179617,
+      hash: 28925697,
       fromRichText: true,
     },
   },
@@ -1862,7 +1862,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 55710818,
+      hash: 75057024,
       fromRichText: true,
     },
   },
@@ -1871,7 +1871,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 241081947,
+      hash: 495917258,
       fromRichText: true,
     },
   },
@@ -1880,7 +1880,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 141911950,
+      hash: 62818926,
       fromRichText: true,
     },
   },
@@ -1889,7 +1889,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 55461852,
+      hash: 102976778,
       fromRichText: true,
     },
   },
@@ -1898,7 +1898,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 139526739,
+      hash: 89840062,
       fromRichText: true,
     },
   },
@@ -1907,7 +1907,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 90309638,
+      hash: 273389628,
       fromRichText: true,
     },
   },
@@ -1916,7 +1916,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 59256363,
+      hash: 273967510,
       fromRichText: true,
     },
   },
@@ -1934,7 +1934,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1089624989,
+      hash: 393380158,
       fromRichText: true,
     },
   },
@@ -1970,7 +1970,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 43313268,
+      hash: 38253124,
       fromRichText: true,
     },
   },
@@ -1988,7 +1988,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 259564494,
+      hash: 298337117,
       fromRichText: true,
     },
   },
@@ -1997,7 +1997,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 675135106,
+      hash: 384756495,
       fromRichText: true,
     },
   },
@@ -2036,7 +2036,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 76026731,
+      hash: 85239849,
       fromRichText: true,
     },
   },
@@ -2063,7 +2063,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 20533663,
+      hash: 270151386,
       fromRichText: true,
     },
   },
@@ -2071,8 +2071,8 @@ export const symbolData: {
     codepoint: 61198,
     glyph: '',
     source: {
-      tableName: 'Objective',
-      hash: 46977068,
+      tableName: 'SandboxPerk',
+      hash: 381243875,
       fromRichText: true,
     },
   },
@@ -2394,7 +2394,7 @@ export const symbolData: {
     glyph: '󰂳',
     source: {
       tableName: 'Objective',
-      hash: 973629371,
+      hash: 436633878,
       fromRichText: false,
     },
   },
