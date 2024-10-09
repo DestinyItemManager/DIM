@@ -37,7 +37,8 @@ $content-cells: 5;
   align-items: center;
   position: sticky;
   left: env(safe-area-inset-left);
-  width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+  // Reserve space for always-on scrollbars :-(
+  width: calc(100vw - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));
   gap: 4px;
 }
 

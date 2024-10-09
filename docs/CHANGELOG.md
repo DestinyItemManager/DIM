@@ -1,6 +1,7 @@
 ## Next
 
 * Updated for Episode: Revenant.
+* Make room for always-on scrollbars in Organizer to avoid extra weird scrolling.
 
 ## 8.40.0 <span class="changelog-date">(2024-10-06)</span>
 
