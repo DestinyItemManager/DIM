@@ -23,7 +23,7 @@ export const D1Categories: {
     BucketHashes.Modifications,
     BucketHashes.Emblems,
     D1BucketHashes.Shader,
-    BucketHashes.Emotes_Equippable,
+    BucketHashes.Emotes,
     BucketHashes.Ships,
     BucketHashes.Vehicle,
     D1BucketHashes.Horn,

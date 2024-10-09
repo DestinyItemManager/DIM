@@ -200,7 +200,7 @@ export const SOME_OTHER_DUMMY_BUCKET = 3621873013;
 // having normal equipment sidecar buttons
 export const uniqueEquipBuckets = [
   BucketHashes.SeasonalArtifact,
-  BucketHashes.Emotes_Invisible,
+  BucketHashes.Emotes,
   BucketHashes.Finishers,
 ];
 

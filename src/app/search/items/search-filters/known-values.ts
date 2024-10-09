@@ -132,7 +132,7 @@ const bucketToType: LookupTable<BucketHashes, string> = {
   [BucketHashes.Emblems]: 'emblems',
   [BucketHashes.Ships]: 'ships',
   [BucketHashes.Vehicle]: 'vehicle',
-  [BucketHashes.Emotes_Invisible]: 'emotes',
+  [BucketHashes.Emotes]: 'emotes',
   [BucketHashes.Finishers]: 'finishers',
   [BucketHashes.SeasonalArtifact]: 'seasonalartifacts',
 
@@ -163,7 +163,7 @@ const d1BucketToType: LookupTable<BucketHashes | D1BucketHashes, string> = {
   [BucketHashes.Modifications]: 'ornaments',
   [BucketHashes.Emblems]: 'emblems',
   [D1BucketHashes.Shader]: 'shader',
-  [BucketHashes.Emotes_Equippable]: 'emote',
+  [BucketHashes.Emotes]: 'emote',
   [BucketHashes.Ships]: 'ships',
   [BucketHashes.Vehicle]: 'vehicle',
   [D1BucketHashes.Horn]: 'horn',

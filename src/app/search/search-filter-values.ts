@@ -81,10 +81,8 @@ export const lightStats = [...D2LightStats, ...D1LightStats];
 
 /** compare against DimItem.bucket.hash */
 export const cosmeticTypes: (BucketHashes | D1BucketHashes)[] = [
-  BucketHashes.Shaders,
   BucketHashes.Modifications,
-  BucketHashes.Emotes_Equippable,
-  BucketHashes.Emotes_Invisible,
+  BucketHashes.Emotes,
   BucketHashes.Emblems,
   BucketHashes.Vehicle,
   D1BucketHashes.Horn,
