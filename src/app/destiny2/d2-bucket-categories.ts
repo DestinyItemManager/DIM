@@ -28,5 +28,5 @@ export const D2Categories: {
     BucketHashes.Finishers,
     BucketHashes.SeasonalArtifact,
   ],
-  Inventory: [BucketHashes.Consumables, BucketHashes.Modifications],
+  Inventory: [BucketHashes.Accessories, BucketHashes.Consumables, BucketHashes.Modifications],
 };

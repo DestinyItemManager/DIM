@@ -136,6 +136,7 @@ const bucketToType: LookupTable<BucketHashes, string> = {
   [BucketHashes.Finishers]: 'finishers',
   [BucketHashes.SeasonalArtifact]: 'seasonalartifacts',
 
+  [BucketHashes.Accessories]: 'accessories',
   [BucketHashes.Consumables]: 'consumables',
   [BucketHashes.Modifications]: 'modifications',
 };
