@@ -1,5 +1,7 @@
 ## Next
 
+* Updated for Episode: Revenant.
+
 ## 8.40.0 <span class="changelog-date">(2024-10-06)</span>
 
 ## 8.39.0 <span class="changelog-date">(2024-09-29)</span>
