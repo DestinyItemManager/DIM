@@ -395,6 +395,11 @@ async function processVendor(
     defs,
     buckets,
   );
+  for (const item of items) {
+    item.instanced = false;
+    item.taggable = false;
+    item.lockable = false;
+  }
   const itemsById = _.keyBy(items, (i) => i.id);
   const categories = filterMap(Object.values(vendor.saleItemCategories), (category) => {
     const categoryInfo = vendorDef.categories[category.categoryIndex];

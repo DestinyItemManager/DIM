@@ -2,6 +2,7 @@
 
 * Updated for Episode: Revenant.
 * Make room for always-on scrollbars in Organizer to avoid extra weird scrolling.
+* Fix vendor finishers offering the "Lock" action, and D1 vendor items offering "tag".
 
 ## 8.40.0 <span class="changelog-date">(2024-10-06)</span>
 
