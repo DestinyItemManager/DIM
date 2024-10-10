@@ -463,23 +463,20 @@ function migrateSettings(state: DimApiState) {
   }
 
   // Replace 'element' sort with 'elementWeapon' and 'elementArmor'
-  const sortOrder = state.settings.itemSortOrderCustom || [];
-  const reversals = state.settings.itemSortReversals || [];
+  const sortOrder = [...new Set(state.settings.itemSortOrderCustom || [])];
+  const reversals = [...new Set(state.settings.itemSortReversals || [])];
 
   if (sortOrder.includes('element')) {
-    state = changeSetting(
-      state,
-      'itemSortOrderCustom',
-      sortOrder.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor'),
-    );
+    sortOrder.splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
   }
-
+  if (sortOrder.length !== (state.settings.itemSortOrderCustom?.length ?? 0)) {
+    state = changeSetting(state, 'itemSortOrderCustom', sortOrder);
+  }
   if (reversals.includes('element')) {
-    state = changeSetting(
-      state,
-      'itemSortReversals',
-      reversals.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor'),
-    );
+    reversals.splice(reversals.indexOf('element'), 1, 'elementWeapon', 'elementArmor');
+  }
+  if (reversals.length !== (state.settings.itemSortReversals?.length ?? 0)) {
+    state = changeSetting(state, 'itemSortReversals', reversals);
   }
 
   // converts any old custom stats stored in the old settings key, to the new format
