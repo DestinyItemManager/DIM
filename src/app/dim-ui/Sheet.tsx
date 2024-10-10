@@ -153,6 +153,7 @@ export default function Sheet({
 }) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
+  const childrenContainer = useRef<HTMLDivElement | null>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
   const frozenHeightIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -204,7 +205,7 @@ export default function Sheet({
     [dragControls],
   );
 
-  useFixOverscrollBehavior(sheetContents);
+  useFixOverscrollBehavior(sheetContents, childrenContainer);
 
   // When drag ends we determine if the sheet should be closed either via the final
   // drag velocity or if the sheet has been dragged halfway the down from its height.
@@ -300,7 +301,9 @@ export default function Sheet({
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContents}
         >
-          {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
+          <div ref={childrenContainer}>
+            {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
+          </div>
         </div>
 
         {Boolean(footer) && (
