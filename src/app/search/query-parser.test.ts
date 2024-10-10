@@ -73,6 +73,7 @@ const cases = [
   [
     '/* My cool search */ (/* armor */ is:armor and is:blue) or (/*weapons*/ is:weapon and perkname:"Kill Clip")',
   ],
+  ['   '],
 ];
 
 // Each of these asserts that the first query is the same as the second query once parsed

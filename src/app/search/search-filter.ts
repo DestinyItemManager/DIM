@@ -256,6 +256,9 @@ export function parseAndValidateQuery<I, FilterCtx, SuggestionsCtx>(
       if (ast.op === 'or' && ast.operands.every((op) => op.op === 'filter' && op.type === 'id')) {
         saveInHistory = false;
       }
+      if (ast.op === 'noop') {
+        saveable = false;
+      }
       canonical = canonicalizeQuery(ast);
       saveable = canonical.length <= 2048;
     }

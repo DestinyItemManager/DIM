@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`parse |   |: ast 1`] = `
+{
+  "length": 0,
+  "op": "noop",
+  "startIndex": 0,
+}
+`;
+
+exports[`parse |   |: lexer 1`] = `[]`;
+
 exports[`parse |  (
     (
     (is:weapon -is:maxpower powerlimit:1060 or tag:junk or is:blue)
