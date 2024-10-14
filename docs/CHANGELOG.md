@@ -1,5 +1,7 @@
 ## Next
 
+## 8.42.0 <span class="changelog-date">(2024-10-13)</span>
+
 ## 8.41.1 <span class="changelog-date">(2024-10-09)</span>
 
 * Show the new pathfinders on the Progress page.
