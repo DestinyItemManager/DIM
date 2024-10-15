@@ -828,6 +828,7 @@ export const enum PlugCategoryHashes {
   V800RepackageAutoRifle0Skins = 1166372799,
   V800RepackagePulseRifle0Masterwork = 606228473,
   V800RepackagePulseRifle0Skins = 794172773,
+  V800RepackageSniperRifle0Masterwork = 2456910795,
   V800TitanNewArms0Skins = 4013059526,
   V800TitanNewChest0Skins = 2397546760,
   V800TitanNewClass0Skins = 3720175165,
