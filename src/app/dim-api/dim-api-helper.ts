@@ -34,6 +34,7 @@ export async function unauthenticatedApi<T>(
   if (!noApiKey) {
     headers['X-API-Key'] = API_KEY;
   }
+  headers['X-DIM-Version'] = $DIM_VERSION;
 
   const response = await fetch(
     new Request(url, {
@@ -82,6 +83,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
   const headers: RequestInit['headers'] = {
     Authorization: `Bearer ${token.accessToken}`,
     'X-API-Key': API_KEY,
+    'X-DIM-Version': $DIM_VERSION,
   };
   if (config.body) {
     headers['Content-Type'] = 'application/json';
