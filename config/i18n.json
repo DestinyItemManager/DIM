@@ -821,6 +821,7 @@
     "Redo": "Redo",
     "RestoreAllItems": "All Items",
     "Save": "Save",
+    "OpenOnStreamDeck": "Open on Stream Deck",
     "SaveLoadout": "Save Loadout",
     "UpdateLoadout": "Update Loadout",
     "SaveAsDIM": "Save as DIM Loadout",
@@ -1001,6 +1002,7 @@
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
     "Store": "Pull to:",
+    "OpenOnStreamDeck": "Open on Stream Deck",
     "StoreWithName": "Pull to {{character}}",
     "Subtitle": {
       "Type": "{{classType}} {{typeName}}",
@@ -1369,6 +1371,7 @@
     "Others": "{{count}}x Ghost Projection"
   },
   "StreamDeck": {
+    "name": "Stream Deck",
     "Tooltip": {
       "Title": "DIM Stream Deck Plugin",
       "Version": "Version:",
