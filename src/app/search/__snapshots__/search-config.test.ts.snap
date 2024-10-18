@@ -2,6 +2,7 @@
 
 exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
 [
+  "accessories",
   "adept",
   "arc",
   "armor",

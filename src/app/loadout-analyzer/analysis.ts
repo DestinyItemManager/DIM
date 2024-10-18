@@ -154,7 +154,10 @@ export async function analyzeLoadout(
         }
       }
     }
-    if (allLegendariesMasterworked) {
+    if (
+      allLegendariesMasterworked &&
+      loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.ArtificeExotic
+    ) {
       loadoutParameters.assumeArmorMasterwork =
         exoticNotMasterworked &&
         loadoutParameters.assumeArmorMasterwork !== AssumeArmorMasterwork.All

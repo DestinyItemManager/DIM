@@ -24,9 +24,9 @@ export const D2Categories: {
     BucketHashes.Emblems,
     BucketHashes.Ships,
     BucketHashes.Vehicle,
-    BucketHashes.Emotes_Invisible,
+    BucketHashes.Emotes,
     BucketHashes.Finishers,
     BucketHashes.SeasonalArtifact,
   ],
-  Inventory: [BucketHashes.Consumables, BucketHashes.Modifications],
+  Inventory: [BucketHashes.Accessories, BucketHashes.Consumables, BucketHashes.Modifications],
 };

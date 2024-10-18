@@ -92,7 +92,9 @@ export default function Progress({ account }: { account: DestinyAccount }) {
     defs.PresentationNode.get(coreSettings.seasonalChallengesPresentationNodeHash);
 
   const paleHeartPathfinderNode = defs.PresentationNode.get(1062988660);
-  const ritualsPathfinderNode = defs.PresentationNode.get(622609416);
+  const gambitPathfinderNode = defs.PresentationNode.get(1190294990);
+  const cruciblePathfinderNode = defs.PresentationNode.get(1289679000);
+  const vanguardPathfinderNode = defs.PresentationNode.get(2968370335);
 
   const menuItems = _.compact([
     { id: 'ranks', title: t('Progress.CrucibleRank') },
@@ -103,7 +105,9 @@ export default function Progress({ account }: { account: DestinyAccount }) {
       id: 'paleHeartPathfinder',
       title: t('Progress.PaleHeartPathfinder'),
     },
-    ritualsPathfinderNode && { id: 'ritualPathfinder', title: t('Progress.RitualPathfinder') },
+    gambitPathfinderNode && { id: 'gambitPathfinder', title: t('Progress.GambitPathfinder') },
+    cruciblePathfinderNode && { id: 'cruciblePathfinder', title: t('Progress.CruciblePathfinder') },
+    vanguardPathfinderNode && { id: 'vanguardPathfinder', title: t('Progress.VanguardPathfinder') },
     seasonalChallengesPresentationNode && {
       id: 'seasonal-challenges',
       title: seasonalChallengesPresentationNode.displayProperties.name,
@@ -191,12 +195,33 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               </ErrorBoundary>
             )}
 
-            {ritualsPathfinderNode && (
-              <ErrorBoundary name={t('Progress.RitualPathfinder')}>
+            {gambitPathfinderNode && (
+              <ErrorBoundary name={t('Progress.GambitPathfinder')}>
                 <Pathfinder
-                  id="ritualPathfinder"
-                  name={t('Progress.RitualPathfinder')}
-                  presentationNode={ritualsPathfinderNode}
+                  id="gambitPathfinder"
+                  name={t('Progress.GambitPathfinder')}
+                  presentationNode={gambitPathfinderNode}
+                  store={selectedStore}
+                />
+              </ErrorBoundary>
+            )}
+
+            {cruciblePathfinderNode && (
+              <ErrorBoundary name={t('Progress.CruciblePathfinder')}>
+                <Pathfinder
+                  id="cruciblePathfinder"
+                  name={t('Progress.CruciblePathfinder')}
+                  presentationNode={cruciblePathfinderNode}
+                  store={selectedStore}
+                />
+              </ErrorBoundary>
+            )}
+            {vanguardPathfinderNode && (
+              <ErrorBoundary name={t('Progress.VanguardPathfinder')}>
+                <Pathfinder
+                  id="vanguardPathfinder"
+                  name={t('Progress.VanguardPathfinder')}
+                  presentationNode={vanguardPathfinderNode}
                   store={selectedStore}
                 />
               </ErrorBoundary>

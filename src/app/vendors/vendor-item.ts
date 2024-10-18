@@ -121,6 +121,9 @@ function makeVendorItem(
     vendorItem.item.id = `${vendorHash}-${vendorItem.vendorItemIndex}`;
     vendorItem.item.index = vendorItem.item.id;
     vendorItem.item.instanced = false;
+    // These would normally be false already, but certain rules like "finishers
+    // are lockable" mess that up, so we set them explicitly here.
+    vendorItem.item.lockable = false;
 
     // since this is sold by a vendor, add vendor information
     vendorItem.item.vendor = { vendorHash, vendorItemIndex, characterId };

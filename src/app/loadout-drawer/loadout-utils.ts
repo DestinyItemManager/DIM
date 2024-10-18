@@ -101,7 +101,7 @@ const inGameLoadoutBuckets: BucketHashes[] = [
 export const singularBucketHashes = [
   BucketHashes.Subclass,
   BucketHashes.Emblems,
-  BucketHashes.Emotes_Invisible,
+  BucketHashes.Emotes,
 ];
 
 // order to display a list of all 8 gear slots
@@ -527,11 +527,10 @@ const oldToNewItems: HashLookup<number> = {
  */
 const matchByHash = [
   BucketHashes.Subclass,
-  BucketHashes.Shaders,
   BucketHashes.Emblems,
-  BucketHashes.Emotes_Invisible,
-  BucketHashes.Emotes_Equippable,
+  BucketHashes.Emotes,
   D1BucketHashes.Horn,
+  D1BucketHashes.Shader,
 ];
 
 /**

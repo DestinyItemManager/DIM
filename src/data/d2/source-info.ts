@@ -307,6 +307,7 @@ const D2Sources: {
     itemHashes: [
       2307365, // The Inquisitor (Adept)
       161675590, // Whistler's Whim (Adept)
+      303107619, // Tomorrow's Answer (Adept)
       501345268, // Shayura's Wrath (Adept)
       548809020, // Exalted Truth
       627188188, // Eye of Sol
@@ -331,7 +332,9 @@ const D2Sources: {
       2022294213, // Shayura's Wrath
       2059255495, // Eye of Sol (Adept)
       2185327324, // The Inquisitor
+      2300143112, // Yesterday's Question
       2314610827, // Igneous Hammer (Adept)
+      2378785953, // Yesterday's Question (Adept)
       2414564781, // Punctuation Marks
       2420153991, // Made Shaxx Proud
       2421180981, // Incisor (Adept)
@@ -345,6 +348,7 @@ const D2Sources: {
       2759251821, // Unwavering Duty (Adept)
       2839600459, // Incisor (Adept)
       3001205424, // Ecliptic Distaff
+      3009199534, // Tomorrow's Answer
       3019024381, // The Prophet (Adept)
       3102421004, // Exalted Truth
       3165143747, // Whistler's Whim
@@ -805,12 +809,23 @@ const D2Sources: {
   },
   events: {
     itemHashes: [
+      425681240, // Acosmic
       495940989, // Avalanche
+      601948197, // Zephyr
+      689294985, // Jurassic Green
+      1123433952, // Stay Frosty
+      1183116657, // Glacioclasm
       1280894514, // Mechabre
+      1845372864, // Albedo Wing
+      1845978721, // Avalanche
+      2477980485, // Mechabre
+      2603335652, // Jurassic Green
       2812100428, // Stay Frosty
       2814093983, // Cold Front
+      2869466318, // BrayTech Werewolf
       3240434620, // Something New
       3400256755, // Zephyr
+      3558681245, // BrayTech Werewolf
       3559361670, // The Title
       3573686365, // Glacioclasm
     ],
@@ -846,6 +861,7 @@ const D2Sources: {
       3112857249, // Completed all 10 Moments of Triumph in Destiny's first year.
       3190938946, // Source: Festival of the Lost 2019
       3388021959, // Source: Guardian Games
+      3482766024, // Source: Festival of the Lost 2024
       3693722471, // Source: Festival of the Lost 2020
       3724111213, // Source: Solstice 2019
       3736521079, // Reached level 1 in the Ages of Triumph record book.
@@ -1106,7 +1122,6 @@ const D2Sources: {
       2520862847, // Source: Iron Banner Iron-Handed Diplomacy
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
-      3966667255, // Source: Iron Banner's Season 9 Seasonal Quest
     ],
     searchString: [],
   },
@@ -1205,6 +1220,13 @@ const D2Sources: {
     sourceHashes: [
       164083100, // Source: Display of Supremacy, Weekly Challenge
       3094114967, // Source: Season of the Lost Ritual Playlists
+    ],
+    searchString: [],
+  },
+  lostsectors: {
+    itemHashes: [],
+    sourceHashes: [
+      2203185162, // Source: Solo Expert and Master Lost Sectors
     ],
     searchString: [],
   },
@@ -1345,6 +1367,7 @@ const D2Sources: {
       2063217087, // Pre Astyanax IV (Adept)
       2074041946, // Mindbender's Ambition (Adept)
       2152484073, // Warden's Law
+      2298039571, // Rake Angle
       2322926844, // Shadow Price
       2450917538, // Uzume RR4
       2591257541, // Scintillation
@@ -1353,14 +1376,17 @@ const D2Sources: {
       2889501828, // The Slammer
       2914913838, // Loaded Question (Adept)
       2932922810, // Pre Astyanax IV
+      3106557243, // PLUG ONE.1 (Adept)
       3125454907, // Loaded Question
       3183283212, // Wendigo GL3
       3250744600, // Warden's Law (Adept)
+      3293524502, // PLUG ONE.1
       3610521673, // Uzume RR4 (Adept)
       3667553455, // BrayTech Osprey
       3686538757, // Undercurrent
       3832743906, // Hung Jury SR4
       3915197957, // Wendigo GL3 (Adept)
+      3997086838, // Rake Angle (Adept)
       4074251943, // Hung Jury SR4 (Adept)
       4162642204, // The Militia's Birthright (Adept)
     ],
@@ -1583,6 +1609,15 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  revenant: {
+    itemHashes: [],
+    sourceHashes: [
+      792439255, // Source: Tonic Laboratory in the Last City
+      1605890568, // Source: Episode Revenant Seasonal Activities
+      2463956052, // Source: Vesper's Host
+    ],
+    searchString: [],
+  },
   'ritual-weapon': {
     itemHashes: [
       805677041, // Buzzard
@@ -1699,6 +1734,7 @@ const D2Sources: {
   servitor: {
     itemHashes: [
       599895591, // Sojourner's Tale
+      2130875369, // Sojourner's Tale
       2434225986, // Shattered Cipher
     ],
     sourceHashes: [
@@ -1724,6 +1760,7 @@ const D2Sources: {
     itemHashes: [
       2307365, // The Inquisitor (Adept)
       161675590, // Whistler's Whim (Adept)
+      303107619, // Tomorrow's Answer (Adept)
       501345268, // Shayura's Wrath (Adept)
       548809020, // Exalted Truth
       627188188, // Eye of Sol
@@ -1748,7 +1785,9 @@ const D2Sources: {
       2022294213, // Shayura's Wrath
       2059255495, // Eye of Sol (Adept)
       2185327324, // The Inquisitor
+      2300143112, // Yesterday's Question
       2314610827, // Igneous Hammer (Adept)
+      2378785953, // Yesterday's Question (Adept)
       2414564781, // Punctuation Marks
       2420153991, // Made Shaxx Proud
       2421180981, // Incisor (Adept)
@@ -1762,6 +1801,7 @@ const D2Sources: {
       2759251821, // Unwavering Duty (Adept)
       2839600459, // Incisor (Adept)
       3001205424, // Ecliptic Distaff
+      3009199534, // Tomorrow's Answer
       3019024381, // The Prophet (Adept)
       3102421004, // Exalted Truth
       3165143747, // Whistler's Whim
@@ -1891,6 +1931,7 @@ const D2Sources: {
       1974641289, // Nightshade
       1999754402, // The Showrunner
       2152484073, // Warden's Law
+      2298039571, // Rake Angle
       2322926844, // Shadow Price
       2450917538, // Uzume RR4
       2523776412, // Vanguard Burnished Steel
@@ -1907,6 +1948,7 @@ const D2Sources: {
       3125454907, // Loaded Question
       3183283212, // Wendigo GL3
       3215252549, // Determination
+      3293524502, // PLUG ONE.1
       3667553455, // BrayTech Osprey
       3686538757, // Undercurrent
       3832743906, // Hung Jury SR4
@@ -2201,6 +2243,7 @@ const D2Sources: {
       1974641289, // Nightshade
       1999754402, // The Showrunner
       2152484073, // Warden's Law
+      2298039571, // Rake Angle
       2322926844, // Shadow Price
       2450917538, // Uzume RR4
       2523776412, // Vanguard Burnished Steel
@@ -2217,6 +2260,7 @@ const D2Sources: {
       3125454907, // Loaded Question
       3183283212, // Wendigo GL3
       3215252549, // Determination
+      3293524502, // PLUG ONE.1
       3667553455, // BrayTech Osprey
       3686538757, // Undercurrent
       3832743906, // Hung Jury SR4

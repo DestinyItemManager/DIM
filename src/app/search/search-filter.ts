@@ -257,7 +257,7 @@ export function parseAndValidateQuery<I, FilterCtx, SuggestionsCtx>(
         saveInHistory = false;
       }
       canonical = canonicalizeQuery(ast);
-      saveable = canonical.length <= 2048;
+      saveable = canonical.length <= 2048 && canonical.length > 0;
     }
   } catch {
     valid = false;

@@ -1,5 +1,22 @@
 ## Next
 
+## 8.42.0 <span class="changelog-date">(2024-10-13)</span>
+
+## 8.41.1 <span class="changelog-date">(2024-10-09)</span>
+
+* Show the new pathfinders on the Progress page.
+* Add Accessories (Tonic Capsule) to the inventory screen.
+
+## 8.41.0 <span class="changelog-date">(2024-10-08)</span>
+
+* Updated for Episode: Revenant.
+* Make room for always-on scrollbars in Organizer to avoid extra weird scrolling.
+* Fix vendor finishers offering the "Lock" action, and D1 vendor items offering "tag".
+
+## 8.40.0 <span class="changelog-date">(2024-10-06)</span>
+
+## 8.39.0 <span class="changelog-date">(2024-09-29)</span>
+
 * Add `breaker:intrinsic` search that highlights items that have an intrinsic breaker ability (i.e. not granted by the seasonal artifact).
 * Breaker type granted by the seasonal artifact now has a green box around it, reminiscent of the artifact mod that grants it.
 

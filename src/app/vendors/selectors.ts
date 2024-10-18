@@ -12,6 +12,7 @@ import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import {
@@ -120,7 +121,8 @@ export const characterVendorItemsSelector = createSelector(
       vendorGroups
         .flatMap((vg) => vg.vendors)
         .concat(Object.values(subVendors))
-        .flatMap((vs) => vs.items.map((vi) => vi.item)),
+        .flatMap((vs) => vs.items.map((vi) => vi.item))
+        .filter((i) => !i?.itemCategoryHashes.includes(ItemCategoryHashes.Dummies)),
     );
   },
 );

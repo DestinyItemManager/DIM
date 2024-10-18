@@ -1094,7 +1094,9 @@
   },
   "Progress": {
     "Bounties": "Bounties",
+    "CruciblePathfinder": "Crucible Pathfinder",
     "CrucibleRank": "Ranks",
+    "GambitPathfinder": "Gambit Pathfinder",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "NoEventChallenges": "You have completed all event challenges",
@@ -1114,10 +1116,10 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "RitualPathfinder": "Ritual Pathfinder",
     "SecretTriumph": "Secret Triumph",
     "StatTrackers": "Stat Trackers",
-    "TrackedTriumphs": "Tracked Triumphs"
+    "TrackedTriumphs": "Tracked Triumphs",
+    "VanguardPathfinder": "Vanguard Pathfinder"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
