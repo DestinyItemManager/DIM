@@ -1,4 +1,4 @@
-export const STREAM_DECK_MINIMUM_VERSION = '3.0.0';
+export const STREAM_DECK_MINIMUM_VERSION = '3.1.0';
 
 const [minMajor, minMinor, minPatch] = STREAM_DECK_MINIMUM_VERSION.split('.');
 
