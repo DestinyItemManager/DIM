@@ -10,6 +10,7 @@ import { D1_StatHashes, D1BucketHashes } from 'app/search/d1-known-values';
 import { getColor } from 'app/shell/formatters';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { uniqBy } from 'app/utils/collections';
+import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -601,35 +602,35 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
               {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
             </label>
             <div className="loadout-builder-section">
-              {_.sortBy(
-                bucket[type].filter((i) => i.power >= 280),
-                (i) => (i.quality ? -i.quality.min : 0),
-              ).map((item) => (
-                <div key={item.index} className="item-container">
-                  <div className="item-stats">
-                    {item.stats?.map((stat) => (
-                      <div
-                        key={stat.statHash}
-                        style={getColor(
-                          item.normalStats![stat.statHash].qualityPercentage,
-                          'color',
-                        )}
-                      >
-                        {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
-                        {item.normalStats![stat.statHash].scaled > 0 && (
-                          <span>
-                            <small>{item.normalStats![stat.statHash].scaled}</small>/
-                            <small>{stat.split}</small>
-                          </span>
-                        )}
-                      </div>
-                    ))}
+              {bucket[type]
+                .filter((i) => i.power >= 280)
+                .sort(reverseComparator(compareBy((i) => i.quality?.min ?? 0)))
+                .map((item) => (
+                  <div key={item.index} className="item-container">
+                    <div className="item-stats">
+                      {item.stats?.map((stat) => (
+                        <div
+                          key={stat.statHash}
+                          style={getColor(
+                            item.normalStats![stat.statHash].qualityPercentage,
+                            'color',
+                          )}
+                        >
+                          {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
+                          {item.normalStats![stat.statHash].scaled > 0 && (
+                            <span>
+                              <small>{item.normalStats![stat.statHash].scaled}</small>/
+                              <small>{stat.split}</small>
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
+                    </div>
                   </div>
-                  <div>
-                    <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </CollapsibleTitle>

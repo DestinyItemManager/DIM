@@ -6,7 +6,6 @@ import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
 import { Comparator, chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 
@@ -311,10 +310,12 @@ export function sortItems(
   }
 
   if (specificSortOrder.length > 0 && !itemSortSettings.sortOrder.includes('rarity')) {
-    items = _.sortBy(items, (item) => {
-      const ix = specificSortOrder.indexOf(item.hash);
-      return ix === -1 ? 999 : ix;
-    });
+    items = items.toSorted(
+      compareBy((item) => {
+        const ix = specificSortOrder.indexOf(item.hash);
+        return ix === -1 ? 999 : ix;
+      }),
+    );
     return items;
   }
 

@@ -170,8 +170,9 @@ export function getColumns(
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
   type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
-  const statColumns: ColumnWithStat[] = _.sortBy(
-    filterMap(Object.entries(statHashes), ([statHashStr, statInfo]): ColumnWithStat | undefined => {
+  const statColumns: ColumnWithStat[] = filterMap(
+    Object.entries(statHashes),
+    ([statHashStr, statInfo]): ColumnWithStat | undefined => {
       const statHash = parseInt(statHashStr, 10) as StatHashes;
       if (customStatHashes.includes(statHash)) {
         // Exclude custom total, it has its own column
@@ -218,9 +219,8 @@ export function getColumns(
           return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
         },
       };
-    }),
-    (s) => getStatSortOrder(s.statHash),
-  );
+    },
+  ).sort(compareBy((s) => getStatSortOrder(s.statHash)));
 
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
@@ -262,8 +262,8 @@ export function getColumns(
 
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
-      ? _.sortBy(
-          Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat => {
+      ? Object.entries(statHashes)
+          .map(([statHashStr, statInfo]): ColumnWithStat => {
             const statHash = parseInt(statHashStr, 10) as StatHashes;
             return {
               statHash,
@@ -297,9 +297,8 @@ export function getColumns(
                 ];
               },
             };
-          }),
-          (s) => getStatSortOrder(s.statHash),
-        )
+          })
+          .sort(compareBy((s) => getStatSortOrder(s.statHash)))
       : [];
 
   /**
@@ -830,10 +829,7 @@ export function getColumns(
           inloadouts &&
           inloadouts.length > 0 && (
             <LoadoutsCell
-              loadouts={_.sortBy(
-                inloadouts.map((l) => l.loadout),
-                (l) => l.name,
-              )}
+              loadouts={inloadouts.map((l) => l.loadout).sort(compareBy((l) => l.name))}
               owner={item.owner}
             />
           )

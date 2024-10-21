@@ -2,6 +2,7 @@
 
 import { StatConstraint, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
+import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { ResolvedStatConstraint } from './types';
 
@@ -18,13 +19,16 @@ export function resolveStatConstraints(
     return { statHash, minTier: c?.minTier ?? 0, maxTier: c ? (c.maxTier ?? 10) : 0, ignored: !c };
   });
 
-  return _.sortBy(resolvedStatConstraints, (h) => {
-    const index = statConstraints.findIndex((c) => c.statHash === h.statHash);
-    return index >= 0
-      ? index
-      : // Fall back to hardcoded defaults
-        100 + defaultLoadoutParameters.statConstraints!.findIndex((c) => c.statHash === h.statHash);
-  });
+  return resolvedStatConstraints.sort(
+    compareBy((h) => {
+      const index = statConstraints.findIndex((c) => c.statHash === h.statHash);
+      return index >= 0
+        ? index
+        : // Fall back to hardcoded defaults
+          100 +
+            defaultLoadoutParameters.statConstraints!.findIndex((c) => c.statHash === h.statHash);
+    }),
+  );
 }
 
 export function unresolveStatConstraints(

@@ -261,6 +261,12 @@ export default tseslint.config(
           property: 'throttle',
           message: 'Use throttle from "es-toolkit" instead.',
         },
+        {
+          object: '_',
+          property: 'sortBy',
+          message:
+            'Use the native .sort or .toSorted functions with compareBy and chainComparator.',
+        },
       ],
       'no-restricted-imports': [
         'error',

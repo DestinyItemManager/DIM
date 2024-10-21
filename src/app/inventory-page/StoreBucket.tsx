@@ -24,6 +24,7 @@ import {
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { compareBy } from 'app/utils/comparators';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -205,10 +206,12 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
 
   // The vault divides armor by class
   const itemsByClass = Map.groupBy(items, (item) => item.classType);
-  const classTypeOrder = _.sortBy([...itemsByClass.keys()], (classType) => {
-    const index = storeClassList.findIndex((s) => s === classType);
-    return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
-  });
+  const classTypeOrder = [...itemsByClass.keys()].sort(
+    compareBy((classType) => {
+      const index = storeClassList.findIndex((s) => s === classType);
+      return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
+    }),
+  );
 
   return (
     <StoreBucketDropTarget

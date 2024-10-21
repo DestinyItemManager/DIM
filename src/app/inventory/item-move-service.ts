@@ -212,15 +212,17 @@ export function getSimilarItem(
   const target = getStore(stores, item.owner)!;
 
   // Try each store, preferring getting something from the same character, then vault, then any other character
-  const sortedStores = _.sortBy(stores, (store) => {
-    if (target.id === store.id) {
-      return 0;
-    } else if (store.isVault) {
-      return 1;
-    } else {
-      return 2;
-    }
-  });
+  const sortedStores = stores.sort(
+    compareBy((store) => {
+      if (target.id === store.id) {
+        return 0;
+      } else if (store.isVault) {
+        return 1;
+      } else {
+        return 2;
+      }
+    }),
+  );
 
   let result: DimItem | undefined;
   for (const store of sortedStores) {
@@ -645,10 +647,9 @@ function chooseMoveAsideItem(
   // The concept is that we prefer filling up the least-recently-played character before even
   // bothering with the others.
   let moveAsideCandidate = (() => {
-    const otherCharacters = _.sortBy(
-      otherStores.filter((s) => !s.isVault),
-      (s) => s.lastPlayed.getTime(),
-    );
+    const otherCharacters = otherStores
+      .filter((s) => !s.isVault)
+      .sort(compareBy((s) => s.lastPlayed.getTime()));
     for (const targetStore of otherCharacters) {
       const sortedCandidates = sortMoveAsideCandidatesForStore(
         moveAsideCandidates,

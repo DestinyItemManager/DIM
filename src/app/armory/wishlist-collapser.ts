@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { compareBy } from 'app/utils/comparators';
 import { WishListRoll } from 'app/wishlists/types';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -106,10 +107,9 @@ export function consolidateRollsForOneWeapon(
       for (const secondaryPerkKey in rollsGroupedBySecondaryStuff) {
         const rollsWithSameSecondaryPerks = rollsGroupedBySecondaryStuff[secondaryPerkKey];
 
-        const commonPrimaryPerks = _.sortBy(
-          [...new Set(rollsWithSameSecondaryPerks.flatMap((r) => r.primaryPerksList))],
-          (h) => socketIndexByPerkHash[h],
-        );
+        const commonPrimaryPerks = [
+          ...new Set(rollsWithSameSecondaryPerks.flatMap((r) => r.primaryPerksList)),
+        ].sort(compareBy((h) => socketIndexByPerkHash[h]));
 
         const commonPrimaryPerksKey = commonPrimaryPerks.join();
         if (

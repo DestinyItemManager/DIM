@@ -11,6 +11,7 @@ import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { filterMap, uniqBy } from 'app/utils/collections';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
@@ -672,7 +673,12 @@ function buildTalentGrid(
   const maxColumn = _.maxBy(gridNodes, (n) => n.column)!.column;
 
   return {
-    nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
+    nodes: gridNodes.sort(
+      chainComparator(
+        compareBy((node) => node.column),
+        compareBy((node) => node.row),
+      ),
+    ),
     xpComplete: totalXPRequired <= totalXP,
     totalXPRequired,
     totalXP: Math.min(totalXPRequired, totalXP),
@@ -707,8 +713,9 @@ function buildStats(
     }
   }
 
-  return _.sortBy(
-    filterMap(Object.values(itemDef.stats), (stat: D1Stat | DestinyInventoryItemStatDefinition) => {
+  return filterMap(
+    Object.values(itemDef.stats),
+    (stat: D1Stat | DestinyInventoryItemStatDefinition) => {
       const def = statDefs.get(stat.statHash);
       if (!def) {
         return undefined;
@@ -787,7 +794,6 @@ function buildStats(
         additive: primaryStatDef?.statIdentifier === 'STAT_DEFENSE',
         isConditionallyActive: false,
       };
-    }),
-    (s) => s.sort,
-  );
+    },
+  ).sort(compareBy((s) => s.sort));
 }

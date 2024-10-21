@@ -11,9 +11,9 @@ import { allItemsSelector, getTagSelector } from 'app/inventory/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { getItemRecencyKey, isNewerThan } from 'app/shell/item-comparators';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -52,10 +52,9 @@ const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | 
 });
 
 const filteredItemsSelector = createSelector(allItemsSelector, (allItems) =>
-  _.sortBy(
-    allItems.filter((i) => i.equipment && i.power > 0 && i.taggable),
-    getItemRecencyKey,
-  ).reverse(),
+  allItems
+    .filter((i) => i.equipment && i.power > 0 && i.taggable)
+    .sort(reverseComparator(compareBy(getItemRecencyKey))),
 );
 
 const estimatedSize = 120;

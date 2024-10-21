@@ -1,6 +1,7 @@
+import { CharacterOrder } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
-import _ from 'lodash';
+import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
 import { DimStore } from '../inventory/store-types';
 
@@ -8,36 +9,44 @@ export const characterOrderSelector = (state: RootState) => settingsSelector(sta
 const customCharacterSortSelector = (state: RootState) =>
   settingsSelector(state).customCharacterSort;
 
-export const characterSortSelector = createSelector(
-  characterOrderSelector,
-  customCharacterSortSelector,
-  (order, customCharacterSort) => {
-    switch (order) {
-      case 'mostRecent':
-        return (stores: DimStore[]) => _.sortBy(stores, (store) => -store.lastPlayed.getTime());
+function sortCharacters(
+  order: CharacterOrder,
+  customCharacterSort: string[],
+): (stores: readonly DimStore[]) => readonly DimStore[] {
+  switch (order) {
+    case 'mostRecent':
+      return (stores) =>
+        stores.toSorted(reverseComparator(compareBy((store) => store.lastPlayed.getTime())));
 
-      case 'mostRecentReverse':
-        return (stores: DimStore[]) =>
-          _.sortBy(stores, (store) => {
+    case 'mostRecentReverse':
+      return (stores) =>
+        stores.toSorted(
+          compareBy((store) => {
             if (store.isVault) {
               return Infinity;
             } else {
-              return store.lastPlayed;
+              return store.lastPlayed.getTime();
             }
-          });
+          }),
+        );
 
-      case 'custom': {
-        const customSortOrder = customCharacterSort;
-        return (stores: DimStore[]) =>
-          _.sortBy(stores, (s) => (s.isVault ? 999 : customSortOrder.indexOf(s.id)));
-      }
-
-      default:
-      case 'fixed': // "Age"
-        // https://github.com/Bungie-net/api/issues/614
-        return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
+    case 'custom': {
+      const customSortOrder = customCharacterSort;
+      return (stores) =>
+        stores.toSorted(compareBy((s) => (s.isVault ? 999 : customSortOrder.indexOf(s.id))));
     }
-  },
+
+    default:
+    case 'fixed': // "Age"
+      // https://github.com/Bungie-net/api/issues/614
+      return (stores) => stores.toSorted(compareBy((s) => s.id));
+  }
+}
+
+export const characterSortSelector = createSelector(
+  characterOrderSelector,
+  customCharacterSortSelector,
+  sortCharacters,
 );
 
 /**
@@ -48,22 +57,6 @@ export const characterSortSelector = createSelector(
 export const characterSortImportanceSelector = createSelector(
   characterOrderSelector,
   customCharacterSortSelector,
-  (order, customCharacterSort) => {
-    switch (order) {
-      case 'mostRecent':
-      case 'mostRecentReverse':
-        return (stores: DimStore[]) => _.sortBy(stores, (store) => -store.lastPlayed.getTime());
-
-      case 'custom': {
-        const customSortOrder = customCharacterSort;
-        return (stores: DimStore[]) =>
-          _.sortBy(stores, (s) => (s.isVault ? 999 : customSortOrder.indexOf(s.id)));
-      }
-
-      default:
-      case 'fixed': // "Age"
-        // https://github.com/Bungie-net/api/issues/614
-        return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
-    }
-  },
+  (order, customCharacterSort) =>
+    sortCharacters(order === 'mostRecentReverse' ? 'mostRecent' : order, customCharacterSort),
 );

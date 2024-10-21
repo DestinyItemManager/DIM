@@ -4,6 +4,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { count } from 'app/utils/collections';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -150,10 +151,14 @@ export default function RecordBooks({ account }: Props) {
   };
 
   const rawRecordBooks = stores[0].advisors.recordBooks;
-  const recordBooks = _.sortBy(
-    Object.values(rawRecordBooks ?? {}).map((rb) => processRecordBook(defs, rb)),
-    (rb) => [rb.complete, new Date(rb.startDate).getTime()],
-  );
+  const recordBooks = Object.values(rawRecordBooks ?? {})
+    .map((rb) => processRecordBook(defs, rb))
+    .sort(
+      chainComparator(
+        compareBy((rb) => rb.complete),
+        compareBy((rb) => new Date(rb.startDate).getTime()),
+      ),
+    );
 
   return (
     <div

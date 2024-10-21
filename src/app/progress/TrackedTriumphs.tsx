@@ -5,8 +5,8 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { RecordGrid } from 'app/records/Record';
 import { searchDisplayProperties, toRecord } from 'app/records/presentation-nodes';
 import { filterMap } from 'app/utils/collections';
+import { compareBy } from 'app/utils/comparators';
 import { DestinyPresentationNodeDefinition, DestinyRecordDefinition } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './TrackedTriumphs.m.scss';
 
@@ -42,7 +42,7 @@ export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
   };
 
   // sort by parent node groups (alphabetically)
-  records = _.sortBy(records, (record) => recordPath(record.recordDef).join('/'));
+  records = records.sort(compareBy((record) => recordPath(record.recordDef).join('/')));
 
   if (!records.length) {
     return (

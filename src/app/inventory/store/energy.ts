@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { compareBy } from 'app/utils/comparators';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import {
   DestinyInventoryItemDefinition,
@@ -6,7 +7,6 @@ import {
   PlugAvailabilityMode,
 } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../item-types';
 
 /**
@@ -47,7 +47,7 @@ export function getEnergyUpgradePlugs(item: DimItem) {
     }
   }
 
-  return _.sortBy(energyMods, (i) => i.plug.energyCapacity);
+  return energyMods.sort(compareBy((i) => i.plug?.energyCapacity?.capacityValue ?? 0));
 }
 
 export function getEnergyUpgradeHashes(item: DimItem, newEnergyCapacity: number) {

@@ -45,33 +45,31 @@ export function toVendorGroups(
 
   const { defs } = context;
 
-  return _.sortBy(
-    Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
+  return Object.values(vendorsResponse.vendorGroups.data.groups)
+    .map((group) => {
       const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
       return {
         def: groupDef,
-        vendors: _.sortBy(
-          filterMap(group.vendorHashes, (vendorHash) => {
-            const vendor = toVendor(
-              // Override the item components from the profile with this vendor's item components
-              { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
-              vendorHash,
-              vendorsResponse.vendors.data?.[vendorHash],
-              characterId,
-              vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-              vendorsResponse,
-            );
-            return vendor?.items.length ? vendor : undefined;
-          }),
-          (v) => {
+        vendors: filterMap(group.vendorHashes, (vendorHash) => {
+          const vendor = toVendor(
+            // Override the item components from the profile with this vendor's item components
+            { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
+            vendorHash,
+            vendorsResponse.vendors.data?.[vendorHash],
+            characterId,
+            vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+            vendorsResponse,
+          );
+          return vendor?.items.length ? vendor : undefined;
+        }).sort(
+          compareBy((v) => {
             const index = vendorOrder.indexOf(v.def.hash);
             return index >= 0 ? index : v.def.hash;
-          },
+          }),
         ),
       };
-    }),
-    (g) => g.def.order,
-  );
+    })
+    .sort(compareBy((g) => g.def.order));
 }
 
 export function toVendor(

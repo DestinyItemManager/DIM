@@ -341,11 +341,8 @@ export function fitMostMods({
   // Artifice mods are free and thus can be greedily assigned.
   const artificeItems = items.filter((i) => isAssumedArtifice(i, armorEnergyRules));
   for (const artificeMod of artificeMods) {
-    let targetItemIndex = artificeItems.findIndex(
-      (item) =>
-        item.sockets?.allSockets.some(
-          (socket) => socket.plugged?.plugDef.hash === artificeMod.hash,
-        ),
+    let targetItemIndex = artificeItems.findIndex((item) =>
+      item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash),
     );
     if (targetItemIndex === -1 && artificeItems.length) {
       // Prefer plugging into non-exotic pieces since exotics may need costly upgrading
@@ -518,7 +515,7 @@ export function fitMostMods({
  */
 function getArmorSocketsAndMods(
   sockets: DimSockets | null,
-  mods: PluggableInventoryItemDefinition[],
+  mods: readonly PluggableInventoryItemDefinition[],
 ) {
   const orderedSockets = getSocketsByCategoryHash(sockets, SocketCategoryHashes.ArmorMods)
     // If a socket is not plugged (even with an empty socket) we consider it disabled
@@ -539,8 +536,8 @@ function getArmorSocketsAndMods(
   // Naively inserting those mods finds the artifact mods in their position,
   // but the artifact-only socket can't slot the normal resist mod. Thus,
   // we must assign the regular resist mod first.
-  const orderedMods = _.sortBy(mods, (mod) =>
-    count(orderedSockets, (s) => plugFitsIntoSocket(s, mod.hash)),
+  const orderedMods = mods.toSorted(
+    compareBy((mod) => count(orderedSockets, (s) => plugFitsIntoSocket(s, mod.hash))),
   );
 
   return { orderedSockets, orderedMods };

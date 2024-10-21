@@ -83,7 +83,9 @@ export function getArmorySuggestions(
   }
 
   // Prefer suggestions that start with the query as opposed to those where it's in the middle
-  const sortedEntries = _.sortBy(armoryEntries, (entry) => !entry.plainName.startsWith(plainQuery));
+  const sortedEntries = armoryEntries.sort(
+    compareBy((entry) => !entry.plainName.startsWith(plainQuery)),
+  );
 
   // If there are more than 10 entries, the user's query is probably not descriptive enough to show many items,
   // But if they've typed enough characters, maybe show some?

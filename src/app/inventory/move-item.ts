@@ -5,6 +5,7 @@ import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, neverCanceled, withCancel } from 'app/utils/cancel';
+import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { errorMessage } from 'app/utils/errors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -251,7 +252,9 @@ export function distribute(actionableItem: DimItem): ThunkResult {
       loadingTracker.addPromise(
         (async () => {
           // Sort vault to the end
-          const stores = _.sortBy(storesSelector(getState()), (s) => (s.id === 'vault' ? 2 : 1));
+          const stores = storesSelector(getState()).toSorted(
+            compareBy((s) => (s.id === 'vault' ? 2 : 1)),
+          );
           const moveSession = createMoveSession(neverCanceled, [actionableItem]);
 
           let total = 0;

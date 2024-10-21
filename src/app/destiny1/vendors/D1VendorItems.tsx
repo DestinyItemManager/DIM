@@ -1,4 +1,5 @@
 import { ownedItemsSelector } from 'app/inventory/selectors';
+import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import BungieImage from '../../dim-ui/BungieImage';
@@ -48,7 +49,7 @@ export default function D1VendorItems({
           <div key={category.index}>
             <h3 className={styles.categoryTitle}>{category.title || 'Unknown'}</h3>
             <div className={styles.vendorItems}>
-              {_.sortBy(category.saleItems, (i) => i.item.name).map((item) => (
+              {category.saleItems.toSorted(compareBy((i) => i.item.name)).map((item) => (
                 <D1VendorItem
                   key={item.index}
                   saleItem={item}

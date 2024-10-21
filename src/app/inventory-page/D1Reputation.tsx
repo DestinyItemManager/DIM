@@ -1,5 +1,5 @@
 import { D1Store } from 'app/inventory/store-types';
-import _ from 'lodash';
+import { compareBy } from 'app/utils/comparators';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import DiamondProgress from '../dim-ui/DiamondProgress';
 import { PressTip, Tooltip } from '../dim-ui/PressTip';
@@ -9,7 +9,7 @@ export default function D1Reputation({ store }: { store: D1Store }) {
   if (!store.progressions.length) {
     return null;
   }
-  const progressions = _.sortBy(store.progressions, (p) => p.order);
+  const progressions = store.progressions.toSorted(compareBy((p) => p.order));
   return (
     <div className="reputation-bucket">
       {progressions.map(

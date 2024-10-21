@@ -7,13 +7,13 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { compareBy } from 'app/utils/comparators';
 import { errorMessage } from 'app/utils/errors';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
-import _ from 'lodash';
 import { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
 
@@ -140,14 +140,14 @@ function EnergyUpgradePreview({
   const costs = sumModCosts(
     defs,
     energyModHashes.map((h) => defs.InventoryItem.get(h)),
-  );
+  ).sort(compareBy((c) => c.quantity));
 
   return (
     <>
       <span>
         {item.energy.energyCapacity} &rarr; {previewCapacity}
       </span>
-      {_.sortBy(costs, (c) => c.quantity).map((cost) => (
+      {costs.map((cost) => (
         <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
       ))}
     </>

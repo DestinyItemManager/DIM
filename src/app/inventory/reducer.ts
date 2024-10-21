@@ -1,3 +1,4 @@
+import { compareBy } from 'app/utils/comparators';
 import { warnLog } from 'app/utils/log';
 import {
   DestinyItemChangeResponse,
@@ -7,7 +8,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
-import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
@@ -312,28 +312,24 @@ function itemMoved(
     // Items to be decremented
     const sourceItems = stackable
       ? // For stackables, pull from all the items as a pool
-        _.sortBy(
-          findItemsByBucket(source, item.location.hash).filter(
-            (i) => i.hash === item.hash && i.id === item.id,
-          ),
-          (i) => i.amount,
-        )
+        findItemsByBucket(source, item.location.hash)
+          .filter((i) => i.hash === item.hash && i.id === item.id)
+          .sort(compareBy((i) => i.amount))
       : // Otherwise we're moving the exact item we passed in
         [item];
 
     // Items to be incremented. There's really only ever at most one of these, but
     // it's easier to deal with as a list. An empty list means we'll vivify a new item there.
     const targetItems = stackable
-      ? _.sortBy(
-          findItemsByBucket(target, item.bucket.hash).filter(
+      ? findItemsByBucket(target, item.bucket.hash)
+          .filter(
             (i) =>
               i.hash === item.hash &&
               i.id === item.id &&
               // Don't consider full stacks as targets
               i.amount !== i.maxStackSize,
-          ),
-          (i) => i.amount,
-        )
+          )
+          .sort(compareBy((i) => i.amount))
       : [];
 
     // moveAmount could be more than maxStackSize if there is more than one stack on a character!
@@ -487,10 +483,9 @@ function awaItemChanged(
     } else {
       // uninstanced (stacked, likely) item.
       const source = getSource(removedItemComponent);
-      const sourceItems = _.sortBy(
-        source.items.filter((i) => i.hash === removedItemComponent.itemHash),
-        (i) => i.amount,
-      );
+      const sourceItems = source.items
+        .filter((i) => i.hash === removedItemComponent.itemHash)
+        .sort(compareBy((i) => i.amount));
 
       // TODO: refactor!
       let removeAmount = removedItemComponent.quantity;
@@ -532,10 +527,9 @@ function awaItemChanged(
     } else {
       // Uninstanced (probably stacked) item
       const target = getSource(addedItemComponent);
-      const targetItems = _.sortBy(
-        target.items.filter((i) => i.hash === addedItemComponent.itemHash),
-        (i) => i.amount,
-      );
+      const targetItems = target.items
+        .filter((i) => i.hash === addedItemComponent.itemHash)
+        .sort(compareBy((i) => i.amount));
       let addAmount = addedItemComponent.quantity;
       const addedItem = makeItem(itemCreationContext, addedItemComponent, target);
       if (!addedItem) {

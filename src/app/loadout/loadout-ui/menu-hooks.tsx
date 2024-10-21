@@ -85,19 +85,20 @@ export function useLoadoutFilterPills(
     return loadoutsByHashtag;
   }, [savedLoadouts]);
 
-  const filterOptions: Option<FilterPillType>[] = _.sortBy(
-    Object.entries(loadoutsByHashtag).map(([hashtag, loadouts]) => ({
-      key: hashtag,
-      value: { tag: 'hashtag', hashtag },
-      content: (
-        <>
-          <ColorDestinySymbols text={hashtag} />
-          {` (${loadouts.length})`}
-        </>
-      ),
-    })),
-    (o) => o.key,
-  );
+  const filterOptions = Object.entries(loadoutsByHashtag)
+    .map(
+      ([hashtag, loadouts]): Option<FilterPillType> => ({
+        key: hashtag,
+        value: { tag: 'hashtag', hashtag },
+        content: (
+          <>
+            <ColorDestinySymbols text={hashtag} />
+            {` (${loadouts.length})`}
+          </>
+        ),
+      }),
+    )
+    .sort(compareBy((o) => o.key));
 
   const loadoutsByType = useMemo(() => {
     const loadoutsByType: Record<LoadoutSpecialization, Loadout[]> | undefined = defs && {

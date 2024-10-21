@@ -6,11 +6,11 @@ import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { compareBy } from 'app/utils/comparators';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getSubclassPlugs } from '../loadout-item-utils';
@@ -45,7 +45,9 @@ export default function LoadoutEditSubclass({
     item.owner === storeId &&
     itemCanBeInLoadout(item);
 
-  const subclassItems = _.sortBy(allItems.filter(subclassItemFilter), (i) => i.element?.enumValue);
+  const subclassItems = allItems
+    .filter(subclassItemFilter)
+    .sort(compareBy((i) => i.element?.enumValue));
 
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);

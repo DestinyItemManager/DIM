@@ -7,6 +7,7 @@ import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 
 import { DimTitle } from 'app/inventory/store-types';
 import { getTitleInfo } from 'app/inventory/store/d2-store-factory';
+import { compareBy } from 'app/utils/comparators';
 import {
   DestinyCollectibleDefinition,
   DestinyCollectibleState,
@@ -517,9 +518,8 @@ function toCraftables(
   itemCreationContext: ItemCreationContext,
   craftableChildren: DestinyPresentationNodeCraftableChildEntry[],
 ): DimCraftable[] {
-  return filterMap(
-    _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority),
-    (c) => toCraftable(itemCreationContext, c.craftableItemHash),
+  return filterMap(craftableChildren.toSorted(compareBy((c) => c.nodeDisplayPriority)), (c) =>
+    toCraftable(itemCreationContext, c.craftableItemHash),
   );
 }
 

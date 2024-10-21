@@ -16,6 +16,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
+import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
@@ -63,9 +64,10 @@ export default function LoadoutItemCategorySection({
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
-      : _.sortBy(
-          Array.from(itemsByBucket.keys(), (bucketHash) => buckets.byHash[bucketHash]),
-          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash),
+      : Array.from(itemsByBucket.keys(), (bucketHash) => buckets.byHash[bucketHash]).sort(
+          compareBy((bucket) =>
+            buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash),
+          ),
         );
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];

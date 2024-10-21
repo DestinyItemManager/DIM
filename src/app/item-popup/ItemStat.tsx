@@ -11,6 +11,7 @@ import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-kno
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
+import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -51,8 +52,10 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const isMasterworkedStat = masterworkValue !== 0;
   const masterworkDisplayValue = masterworkValue ?? armor2MasterworkValue;
 
-  const modEffects = item && _.sortBy(getModEffects(item, stat.statHash), ([n]) => -n);
-  const modEffectsTotal = modEffects ? _.sumBy(modEffects, ([n]) => n) : 0;
+  const modEffects =
+    item &&
+    getModEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
+  const modEffectsTotal = modEffects ? _.sumBy(modEffects, ([value]) => value) : 0;
 
   const baseBar = item?.bucket.inArmor
     ? // if it's armor, the base bar length should be
@@ -334,7 +337,7 @@ function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[]) {
  * [ the mod's name, its numeric effect upon selected stats ]
  */
 function getPlugEffects(sockets: DimSocket[], statHashes: number[]) {
-  const modEffects: [number, string][] = [];
+  const modEffects: [value: number, name: string][] = [];
 
   for (const socket of sockets) {
     if (!socket.plugged?.enabled || !socket.plugged.stats || socketContainsIntrinsicPlug(socket)) {

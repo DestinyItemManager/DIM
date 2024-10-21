@@ -5,6 +5,7 @@ import { AddItemButton } from 'app/loadout/loadout-edit/LoadoutEditBucket';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ItemFilter } from 'app/search/filter-types';
+import { compareBy } from 'app/utils/comparators';
 import { objectValues } from 'app/utils/util-types';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback } from 'react';
@@ -61,8 +62,8 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
     (item) => Boolean(!pinnedItems[item.bucket.hash] && searchFilter(item)),
   );
 
-  const allPinnedItems = _.sortBy(_.compact(objectValues(pinnedItems)), (i) =>
-    LockableBucketHashes.indexOf(i.bucket.hash),
+  const allPinnedItems = _.compact(objectValues(pinnedItems)).sort(
+    compareBy((i) => LockableBucketHashes.indexOf(i.bucket.hash)),
   );
 
   return (
@@ -105,9 +106,9 @@ export const LoadoutOptimizerExcludedItems = memo(function LoadoutOptimizerExclu
 
   const chooseExcludeItem = chooseItem(excludeItem, (item) => Boolean(searchFilter(item)));
 
-  const allExcludedItems = _.sortBy(_.compact(objectValues(excludedItems)).flat(), (i) =>
-    LockableBucketHashes.indexOf(i.bucket.hash),
-  );
+  const allExcludedItems = _.compact(objectValues(excludedItems))
+    .flat()
+    .sort(compareBy((i) => LockableBucketHashes.indexOf(i.bucket.hash)));
 
   const clear = () => lbDispatch({ type: 'clearExcludedItems' });
   return (

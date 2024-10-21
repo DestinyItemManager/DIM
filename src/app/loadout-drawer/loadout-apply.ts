@@ -52,6 +52,7 @@ import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { count, filterMap } from 'app/utils/collections';
+import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
 import { convertToError, errorMessage } from 'app/utils/errors';
@@ -258,10 +259,14 @@ function doApplyLoadout(
       }
 
       // Sort loadout items by their bucket so we move items in the order that DIM displays them
-      const applicableLoadoutItems = _.sortBy(resolvedItems, ({ item }) => {
-        const sortIndex = bucketHashToIndex[item.bucket.hash as BucketHashes];
-        return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
-      }).map(({ loadoutItem }) => loadoutItem);
+      const applicableLoadoutItems = resolvedItems
+        .sort(
+          compareBy(({ item }) => {
+            const sortIndex = bucketHashToIndex[item.bucket.hash as BucketHashes];
+            return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
+          }),
+        )
+        .map(({ loadoutItem }) => loadoutItem);
 
       // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!

@@ -11,6 +11,7 @@ import {
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
+import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
@@ -57,15 +58,16 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
         const numNeededToMove = Math.max(0, count + items.length - capacity);
         if (numNeededToMove > 0) {
           // We'll move the lowest-value item to the vault.
-          const candidates = _.sortBy(
-            items.filter((i) => !i.equipped && !i.notransfer),
-            (i) => {
-              let value = moveAsideWeighting[i.tier];
-              // And low-stat
-              value += i.power / 1000;
-              return value;
-            },
-          );
+          const candidates = items
+            .filter((i) => !i.equipped && !i.notransfer)
+            .sort(
+              compareBy((i) => {
+                let value = moveAsideWeighting[i.tier];
+                // And low-stat
+                value += i.power / 1000;
+                return value;
+              }),
+            );
           itemsToMove.push(..._.take(candidates, numNeededToMove));
         }
       }

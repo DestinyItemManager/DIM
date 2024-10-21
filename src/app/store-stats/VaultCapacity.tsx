@@ -8,6 +8,7 @@ import {
   showMaterialCount,
 } from 'app/material-counts/MaterialCountsWrappers';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { compareBy } from 'app/utils/comparators';
 import { emptyObject } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
@@ -15,7 +16,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
-import _ from 'lodash';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -104,8 +104,9 @@ export default memo(function VaultCapacity() {
 
   return (
     <>
-      {_.sortBy(Object.keys(vaultCounts), (id) => vaultBucketOrder.indexOf(parseInt(id, 10))).map(
-        (bucketIdStr) => {
+      {Object.keys(vaultCounts)
+        .sort(compareBy((id) => vaultBucketOrder.indexOf(parseInt(id, 10))))
+        .map((bucketIdStr) => {
           const bucketId = parseInt(bucketIdStr, 10) as BucketHashes;
           const { count, bucket } = vaultCounts[bucketId];
           const isConsumables = bucketId === BucketHashes.Consumables;
@@ -136,8 +137,7 @@ export default memo(function VaultCapacity() {
               </PressTip>
             </React.Fragment>
           );
-        },
-      )}
+        })}
     </>
   );
 });

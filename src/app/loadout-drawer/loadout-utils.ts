@@ -25,6 +25,7 @@ import {
   deprecatedPlaceholderArmorModHash,
 } from 'app/search/d2-known-values';
 import { filterMap } from 'app/utils/collections';
+import { compareBy } from 'app/utils/comparators';
 import {
   isClassCompatible,
   isItemLoadoutCompatible,
@@ -364,8 +365,8 @@ export function optimalItemSet(
     anyClassItemsByBucket,
     (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
   );
-  const classUnrestricted = _.sortBy(Object.values(anyClassBestItemByBucket), (i) =>
-    gearSlotOrder.indexOf(i.bucket.hash),
+  const classUnrestricted = Object.values(anyClassBestItemByBucket).sort(
+    compareBy((i) => gearSlotOrder.indexOf(i.bucket.hash)),
   );
 
   const thisClassItemsByBucket = Object.groupBy(
@@ -376,8 +377,8 @@ export function optimalItemSet(
     thisClassItemsByBucket,
     (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
   );
-  const equipUnrestricted = _.sortBy(Object.values(thisClassBestItemByBucket), (i) =>
-    gearSlotOrder.indexOf(i.bucket.hash),
+  const equipUnrestricted = Object.values(thisClassBestItemByBucket).sort(
+    compareBy((i) => gearSlotOrder.indexOf(i.bucket.hash)),
   );
 
   let equippableBestItemByBucket = { ...thisClassBestItemByBucket };
@@ -426,8 +427,8 @@ export function optimalItemSet(
     }
   }
 
-  const equippable = _.sortBy(Object.values(equippableBestItemByBucket), (i) =>
-    gearSlotOrder.indexOf(i.bucket.hash),
+  const equippable = Object.values(equippableBestItemByBucket).sort(
+    compareBy((i) => gearSlotOrder.indexOf(i.bucket.hash)),
   );
 
   return { equippable, equipUnrestricted, classUnrestricted };
