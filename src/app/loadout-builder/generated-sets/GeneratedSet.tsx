@@ -7,7 +7,7 @@ import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
-import { compareBy } from 'app/utils/comparators';
+import { compareByIndex } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -288,7 +288,7 @@ function getStatsBreakdown(
     }
   }
   for (const val of Object.values(totals)) {
-    val.breakdown!.sort(compareBy((val) => statSourceOrder.indexOf(val.source)));
+    val.breakdown!.sort(compareByIndex(statSourceOrder, (val) => val.source));
   }
   return totals;
 }

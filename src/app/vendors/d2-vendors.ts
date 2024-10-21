@@ -4,7 +4,7 @@ import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VendorHashes, silverItemHash } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { filterMap } from 'app/utils/collections';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparators';
 import {
   DestinyCollectibleState,
   DestinyDestinationDefinition,
@@ -61,12 +61,7 @@ export function toVendorGroups(
             vendorsResponse,
           );
           return vendor?.items.length ? vendor : undefined;
-        }).sort(
-          compareBy((v) => {
-            const index = vendorOrder.indexOf(v.def.hash);
-            return index >= 0 ? index : v.def.hash;
-          }),
-        ),
+        }).sort(compareByIndex(vendorOrder, (v) => v.def.hash)),
       };
     })
     .sort(compareBy((g) => g.def.order));

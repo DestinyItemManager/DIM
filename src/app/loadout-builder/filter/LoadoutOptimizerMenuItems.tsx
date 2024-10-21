@@ -5,7 +5,7 @@ import { AddItemButton } from 'app/loadout/loadout-edit/LoadoutEditBucket';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ItemFilter } from 'app/search/filter-types';
-import { compareBy } from 'app/utils/comparators';
+import { compareByIndex } from 'app/utils/comparators';
 import { objectValues } from 'app/utils/util-types';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback } from 'react';
@@ -63,7 +63,7 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
   );
 
   const allPinnedItems = _.compact(objectValues(pinnedItems)).sort(
-    compareBy((i) => LockableBucketHashes.indexOf(i.bucket.hash)),
+    compareByIndex(LockableBucketHashes, (i) => i.bucket.hash),
   );
 
   return (
@@ -108,7 +108,7 @@ export const LoadoutOptimizerExcludedItems = memo(function LoadoutOptimizerExclu
 
   const allExcludedItems = _.compact(objectValues(excludedItems))
     .flat()
-    .sort(compareBy((i) => LockableBucketHashes.indexOf(i.bucket.hash)));
+    .sort(compareByIndex(LockableBucketHashes, (i) => i.bucket.hash));
 
   const clear = () => lbDispatch({ type: 'clearExcludedItems' });
   return (

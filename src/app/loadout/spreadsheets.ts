@@ -22,7 +22,7 @@ import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
-import { compareBy } from 'app/utils/comparators';
+import { compareByIndex } from 'app/utils/comparators';
 import { CsvRow, downloadCsv } from 'app/utils/csv';
 import {
   aspectSocketCategoryHashes,
@@ -123,8 +123,9 @@ export function downloadLoadoutsCsv(): ThunkResult {
 
       const bucketOrder = Object.values(D2Categories).flat();
 
-      const sortItems = compareBy((item: ResolvedLoadoutItem) =>
-        bucketOrder.indexOf(item.item.bucket.hash),
+      const sortItems = compareByIndex(
+        bucketOrder,
+        (item: ResolvedLoadoutItem) => item.item.bucket.hash,
       );
 
       const equippedItems = resolvedLoadout.resolvedLoadoutItems

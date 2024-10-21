@@ -8,7 +8,7 @@ import {
   showMaterialCount,
 } from 'app/material-counts/MaterialCountsWrappers';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { compareBy } from 'app/utils/comparators';
+import { compareByIndex } from 'app/utils/comparators';
 import { emptyObject } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
@@ -105,7 +105,7 @@ export default memo(function VaultCapacity() {
   return (
     <>
       {Object.keys(vaultCounts)
-        .sort(compareBy((id) => vaultBucketOrder.indexOf(parseInt(id, 10))))
+        .sort(compareByIndex(vaultBucketOrder, (id) => parseInt(id, 10)))
         .map((bucketIdStr) => {
           const bucketId = parseInt(bucketIdStr, 10) as BucketHashes;
           const { count, bucket } = vaultCounts[bucketId];

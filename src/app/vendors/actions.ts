@@ -4,7 +4,7 @@ import { settingsSelector } from 'app/dim-api/selectors';
 import { manifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparators';
 import { convertToError } from 'app/utils/errors';
 import { infoLog } from 'app/utils/log';
 import { DestinyItemType, DestinyVendorResponse, TierType } from 'bungie-api-ts/destiny2';
@@ -106,7 +106,7 @@ export function loadAllVendors(
           // deprioritize vendors whose sections are collapsed on the vendors page
           compareBy((h) => Boolean(collapsedSections[`d2vendor-${h}`])),
           // sort by their position on the page
-          compareBy((h) => displayVendors.indexOf(h)),
+          compareByIndex(displayVendors, (h) => h),
         ),
       );
 

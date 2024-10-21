@@ -31,7 +31,12 @@ import {
   transfer as d2Transfer,
   equip as d2equip,
 } from '../bungie-api/destiny2-api';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import {
+  chainComparator,
+  compareBy,
+  compareByIndex,
+  reverseComparator,
+} from '../utils/comparators';
 import { itemLockStateChanged, itemMoved } from './actions';
 import {
   TagValue,
@@ -1159,12 +1164,12 @@ export function sortMoveAsideCandidatesForStore(
       // TRYING TO ESTIMATE USER INTENTION AND ITEM VALUE
 
       // Tagged items sort by orders defined in dim-item-info
-      compareBy((displaced) => {
-        const tag = getTag(displaced);
-        return -(fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
-          tag || 'none',
-        );
-      }),
+      reverseComparator(
+        compareByIndex(
+          fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority,
+          (displaced) => getTag(displaced) ?? 'none',
+        ),
+      ),
       // Prefer moving lower-tier into the vault and higher tier out
       compareBy((i) =>
         fromStore.isVault ? moveAsideWeighting[i.tier] : -moveAsideWeighting[i.tier],
@@ -1225,10 +1230,7 @@ function searchForSimilarItem(
       compareBy((i) => !i.equippingLabel),
       // try to match type (e.g. scout rifle). TODO: look into using ItemSubType instead
       compareBy((i) => i.typeName === item.typeName),
-      compareBy((i) => {
-        const tag = getTag(i);
-        return -equipReplacePriority.indexOf(tag || 'none');
-      }),
+      reverseComparator(compareByIndex(equipReplacePriority, (i) => getTag(i) ?? 'none')),
       // Prefer higher-tier items
       compareBy((i) => moveAsideWeighting[i.tier]),
       // Prefer higher-stat items

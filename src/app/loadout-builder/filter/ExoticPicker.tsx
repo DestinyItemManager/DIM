@@ -11,7 +11,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
 import { startWordRegexp } from 'app/search/text-utils';
 import { uniqBy } from 'app/utils/collections';
-import { compareBy } from 'app/utils/comparators';
+import { compareBy, compareByIndex } from 'app/utils/comparators';
 import {
   socketContainsIntrinsicPlug,
   socketContainsPlugWithCategory,
@@ -40,7 +40,7 @@ export function findLockableExotics(
   const exotics = uniqBy(
     [...allItems, ...vendorItems]
       .filter((item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item))
-      .sort(compareBy((item) => LockableBucketHashes.indexOf(item.bucket.hash))),
+      .sort(compareByIndex(LockableBucketHashes, (item) => item.bucket.hash)),
     (item) => item.hash,
   );
 
@@ -129,7 +129,7 @@ function filterAndGroupExotics(
     (exotic) => exotic.def.inventory!.bucketTypeHash,
   );
   const orderedAndGroupedExotics = [...groupedExotics.values()].sort(
-    compareBy((exotics) => filteredExotics.indexOf(exotics[0])),
+    compareByIndex(filteredExotics, (exotics) => exotics[0]),
   );
 
   // Sort each of the individual groups by name

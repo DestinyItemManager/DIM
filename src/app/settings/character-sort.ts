@@ -1,7 +1,7 @@
 import { CharacterOrder } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
-import { compareBy, reverseComparator } from 'app/utils/comparators';
+import { compareBy, compareByIndex, reverseComparator } from 'app/utils/comparators';
 import { createSelector } from 'reselect';
 import { DimStore } from '../inventory/store-types';
 
@@ -32,8 +32,7 @@ function sortCharacters(
 
     case 'custom': {
       const customSortOrder = customCharacterSort;
-      return (stores) =>
-        stores.toSorted(compareBy((s) => (s.isVault ? 999 : customSortOrder.indexOf(s.id))));
+      return (stores) => stores.toSorted(compareByIndex(customSortOrder, (s) => s.id));
     }
 
     default:

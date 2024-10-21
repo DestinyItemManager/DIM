@@ -16,7 +16,7 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
-import { compareBy } from 'app/utils/comparators';
+import { compareByIndex } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
@@ -219,12 +219,7 @@ export default function SettingsPage() {
         reversed: sortSettings.sortReversals.includes(id),
       }),
     )
-    .sort(
-      compareBy((o) => {
-        const index = sortSettings.sortOrder.indexOf(o.id);
-        return index >= 0 ? index : 999;
-      }),
-    );
+    .sort(compareByIndex(sortSettings.sortOrder, (o) => o.id));
 
   const menuItems = _.compact([
     { id: 'general', title: t('Settings.Language') },
