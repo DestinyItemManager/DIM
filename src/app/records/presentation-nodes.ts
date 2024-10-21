@@ -145,7 +145,7 @@ export function toPresentationNodeTree(
       itemCreationContext,
       presentationNodeDef.children.collectibles,
     );
-    const visible = collectibles.filter((c) => !c.fake).length;
+    const visible = count(collectibles, (c) => !c.fake);
     const acquired = count(
       collectibles,
       (c) => !c.fake && !(c.state & DestinyCollectibleState.NotAcquired),

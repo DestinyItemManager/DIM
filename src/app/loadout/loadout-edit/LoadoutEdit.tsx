@@ -53,6 +53,7 @@ import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/lo
 import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
+import { count } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -523,7 +524,7 @@ function disableFillInForCategory(
   items: ResolvedLoadoutItem[],
   category: D2BucketCategory,
 ) {
-  const currentItems = items?.filter((i) => i.loadoutItem.equip).length ?? 0;
+  const currentItems = items ? count(items, (i) => i.loadoutItem.equip) : 0;
   const maxItems = getLoadoutBucketHashesFromCategory(defs, category).length;
 
   return currentItems >= maxItems;

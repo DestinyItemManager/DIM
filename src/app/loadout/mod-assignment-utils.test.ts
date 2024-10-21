@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { buildDefinedPlug } from 'app/inventory/store/sockets';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
+import { count } from 'app/utils/collections';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { produce } from 'immer';
@@ -153,7 +154,7 @@ describe('mod-assignment-utils plugging strategy', () => {
   }
 
   function checkNumRequiredActions(strategy: PluggingAction[], num: number) {
-    expect(strategy.filter((action) => action.required).length).toBe(num);
+    expect(count(strategy, (action) => action.required)).toBe(num);
   }
 
   it('keeps existing mod in place if removal optional', () => {

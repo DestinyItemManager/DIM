@@ -20,6 +20,7 @@ import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import { count } from 'app/utils/collections';
 import styles from './CustomStatsSettings.m.scss';
 import { useSetSetting } from './hooks';
 
@@ -149,7 +150,7 @@ function CustomStatEditor({
     originalLabel.current !== label.trim() ||
     originalClass.current !== classType;
   const isNewStat = originalLabel.current === '';
-  const weightedStatCount = Object.values(weights).filter(Boolean).length;
+  const weightedStatCount = count(Object.values(weights), Boolean);
 
   return (
     <div className={clsx(className, styles.customStatEditor)}>
@@ -318,7 +319,7 @@ function useSaveStat() {
       // if there's any invalid values
       !everyValueValid ||
       // or too few included stats
-      weightValues.filter(Boolean).length < 2
+      count(weightValues, Boolean) < 2
     ) {
       warnInvalidCustomStat(t('Settings.CustomErrorValues'));
       return false;

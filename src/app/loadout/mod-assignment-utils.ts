@@ -10,6 +10,7 @@ import {
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
+import { count } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -340,8 +341,11 @@ export function fitMostMods({
   // Artifice mods are free and thus can be greedily assigned.
   const artificeItems = items.filter((i) => isAssumedArtifice(i, armorEnergyRules));
   for (const artificeMod of artificeMods) {
-    let targetItemIndex = artificeItems.findIndex((item) =>
-      item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash),
+    let targetItemIndex = artificeItems.findIndex(
+      (item) =>
+        item.sockets?.allSockets.some(
+          (socket) => socket.plugged?.plugDef.hash === artificeMod.hash,
+        ),
     );
     if (targetItemIndex === -1 && artificeItems.length) {
       // Prefer plugging into non-exotic pieces since exotics may need costly upgrading
@@ -535,9 +539,8 @@ function getArmorSocketsAndMods(
   // Naively inserting those mods finds the artifact mods in their position,
   // but the artifact-only socket can't slot the normal resist mod. Thus,
   // we must assign the regular resist mod first.
-  const orderedMods = _.sortBy(
-    mods,
-    (mod) => orderedSockets.filter((s) => plugFitsIntoSocket(s, mod.hash)).length,
+  const orderedMods = _.sortBy(mods, (mod) =>
+    count(orderedSockets, (s) => plugFitsIntoSocket(s, mod.hash)),
   );
 
   return { orderedSockets, orderedMods };

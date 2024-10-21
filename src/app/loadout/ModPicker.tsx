@@ -214,9 +214,8 @@ function useUnlockedPlugSets(
     // Order our mods so that we assign the most picky mods first (the mods that have the fewest
     // plugSets containing them). This is necessary for artifact mods in artificer sockets and
     // essentially the same logic that actual mod assignment uses.
-    const orderedMods = _.sortBy(
-      lockedMods,
-      (mod) => plugSets.filter((s) => s.plugs.some((p) => p.hash === mod.resolvedMod.hash)).length,
+    const orderedMods = _.sortBy(lockedMods, (mod) =>
+      count(plugSets, (s) => s.plugs.some((p) => p.hash === mod.resolvedMod.hash)),
     );
 
     // Now we populate the plugsets with their corresponding plugs.
