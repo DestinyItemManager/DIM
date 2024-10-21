@@ -4,6 +4,7 @@ import { D1Character } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import { epicIcon, faPlayStation, faSteam, faXbox } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
+import { compact } from 'app/utils/collections';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import { LookupTable } from 'app/utils/util-types';
@@ -14,7 +15,6 @@ import {
   PlatformErrorCodes,
 } from 'bungie-api-ts/destiny2';
 import { UserInfoCard } from 'bungie-api-ts/user';
-import _ from 'lodash';
 import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { removeToken } from '../bungie-api/oauth-tokens';
@@ -178,8 +178,7 @@ export async function generatePlatforms(
       }),
     );
 
-  const allPromise = Promise.all(accountPromises);
-  return _.compact(await allPromise);
+  return compact(await Promise.all(accountPromises));
 }
 
 async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount | null> {

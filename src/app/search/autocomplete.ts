@@ -1,6 +1,6 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
-import { uniqBy } from 'app/utils/collections';
+import { compact, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
@@ -139,7 +139,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
     return [
       ..._.take(
         uniqBy(
-          _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
+          compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
           (i) => i.query.fullText,
         ),
         maxResults,

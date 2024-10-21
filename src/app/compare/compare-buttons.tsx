@@ -6,7 +6,7 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
 import {
   getExtraIntrinsicPerkSockets,
@@ -16,7 +16,6 @@ import {
 import clsx from 'clsx';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import React from 'react';
 import styles from './CompareButtons.m.scss';
 import { compareNameQuery, stripAdept } from './compare-utils';
@@ -59,7 +58,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         .reverse()) ||
     [];
 
-  let comparisonSets: CompareButton[] = _.compact([
+  let comparisonSets: CompareButton[] = compact([
     // same slot on the same class
     {
       buttonLabel: [
@@ -157,7 +156,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
   const adeptStripped = stripAdept(exampleItem.name);
 
-  let comparisonSets: CompareButton[] = _.compact([
+  let comparisonSets: CompareButton[] = compact([
     // same weapon type
     {
       // TODO: replace typeName with a lookup of itemCategoryHash
@@ -225,7 +224,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
  * Generate possible comparisons for non-armor/weapon, given a reference item
  */
 export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
-  let comparisonSets: CompareButton[] = _.compact([
+  let comparisonSets: CompareButton[] = [
     // same item type
     {
       // TODO: replace typeName with a lookup of itemCategoryHash
@@ -238,7 +237,7 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
       buttonLabel: [exampleItem.name],
       query: compareNameQuery(exampleItem),
     },
-  ]);
+  ];
 
   comparisonSets = comparisonSets.reverse();
   return comparisonSets;

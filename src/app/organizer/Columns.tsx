@@ -39,7 +39,7 @@ import {
   thumbsUpIcon,
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { Comparator, compareBy } from 'app/utils/comparators';
 import {
   getInterestingSocketMetadatas,
@@ -314,7 +314,7 @@ export function getColumns(
 
   const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs);
 
-  const columns: ColumnDefinition[] = _.compact([
+  const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
       c({
         id: 'icon',

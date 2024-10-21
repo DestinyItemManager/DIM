@@ -12,9 +12,9 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { compact } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
 import { PanInfo, motion } from 'framer-motion';
-import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -96,7 +96,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const cruciblePathfinderNode = defs.PresentationNode.get(1289679000);
   const vanguardPathfinderNode = defs.PresentationNode.get(2968370335);
 
-  const menuItems = _.compact([
+  const menuItems = compact([
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
     eventCard && { id: 'event', title: eventCard.displayProperties.name },

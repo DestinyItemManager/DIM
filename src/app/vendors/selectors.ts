@@ -13,7 +13,7 @@ import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { compact } from 'es-toolkit';
 import { createSelector } from 'reselect';
 import {
   D2Vendor,
@@ -117,7 +117,7 @@ export const characterVendorItemsSelector = createSelector(
     if (!vendorCharacterId) {
       return emptyArray<DimItem>();
     }
-    return _.compact(
+    return compact(
       vendorGroups
         .flatMap((vg) => vg.vendors)
         .concat(Object.values(subVendors))

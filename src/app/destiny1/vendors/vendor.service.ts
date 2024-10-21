@@ -5,7 +5,7 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -144,7 +144,7 @@ export function loadVendors(): ThunkResult<{ [vendorHash: number]: Vendor }> {
       // Narrow down to only visible vendors (not packages and such)
       const vendorList = Object.values(defs.Vendor.getAll()).filter((v) => v.summary.visible);
 
-      const vendors = _.compact(
+      const vendors = compact(
         await Promise.all(
           vendorList.flatMap((vendorDef) =>
             fetchVendor(vendorDef, characters, account, defs, buckets),
@@ -173,9 +173,9 @@ async function fetchVendor(
   const vendorsForCharacters = await Promise.all(
     characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs, buckets)),
   );
-  const nonNullVendors = _.compact(vendorsForCharacters);
+  const nonNullVendors = compact(vendorsForCharacters);
   if (nonNullVendors.length) {
-    return mergeVendors(_.compact(nonNullVendors));
+    return mergeVendors(nonNullVendors);
   } else {
     return null;
   }

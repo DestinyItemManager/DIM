@@ -11,7 +11,6 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import fs from 'fs';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import _ from 'lodash';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
@@ -305,7 +304,7 @@ export default (env: Env) => {
         {
           test: /\.tsx?$/,
           exclude: [/testing/, /\.test\.ts$/],
-          use: _.compact([
+          use: [
             {
               loader: 'babel-loader',
               options: {
@@ -317,7 +316,7 @@ export default (env: Env) => {
               : {
                   loader: 'ts-loader',
                 },
-          ]),
+          ].filter((l) => l !== null),
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {

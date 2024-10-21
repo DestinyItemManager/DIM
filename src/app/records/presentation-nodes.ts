@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
-import { count, filterMap } from 'app/utils/collections';
+import { compact, count, filterMap } from 'app/utils/collections';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 
 import { DimTitle } from 'app/inventory/store-types';
@@ -445,14 +445,14 @@ function toCollectibles(
   collectibleChildren: DestinyPresentationNodeCollectibleChildEntry[],
 ): DimCollectible[] {
   const { defs, profileResponse } = itemCreationContext;
-  return _.compact(
+  return compact(
     collectibleChildren.flatMap(({ collectibleHash }) => {
       const fakeItemHash = extraItemCollectibles[collectibleHash];
       const collectibleDef = defs.Collectible.get(collectibleHash);
       if (!collectibleDef) {
         return null;
       }
-      const itemHashes = _.compact([collectibleDef.itemHash, fakeItemHash]);
+      const itemHashes = compact([collectibleDef.itemHash, fakeItemHash]);
       return itemHashes.map((itemHash) => {
         const state = getCollectibleState(collectibleDef, profileResponse);
         if (

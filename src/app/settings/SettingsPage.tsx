@@ -16,6 +16,7 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
+import { compact } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
@@ -221,7 +222,7 @@ export default function SettingsPage() {
     )
     .sort(compareByIndex(sortSettings.sortOrder, (o) => o.id));
 
-  const menuItems = _.compact([
+  const menuItems = compact([
     { id: 'general', title: t('Settings.Language') },
     { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },

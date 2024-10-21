@@ -6,10 +6,10 @@ import {
   vendorCurrencyEngramsSelector,
 } from 'app/inventory/selectors';
 import { AccountCurrency } from 'app/inventory/store-types';
+import { compact } from 'app/utils/collections';
 import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import glimmerMats from 'data/d2/spider-mats.json';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './MaterialCounts.m.scss';
@@ -71,7 +71,7 @@ export function MaterialCounts({
   return (
     <div className={clsx(styles.materialCounts, { [styles.wide]: wide })}>
       {addDividers(
-        _.compact(content),
+        compact(content),
         <span className={styles.spanGrid}>
           <hr />
         </span>,

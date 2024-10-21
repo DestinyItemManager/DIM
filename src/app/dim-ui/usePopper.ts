@@ -13,7 +13,7 @@ import {
   preventOverflow,
 } from '@popperjs/core';
 import computeSidecarPosition from 'app/item-popup/sidecar-popper-modifier';
-import _ from 'lodash';
+import { compact } from 'app/utils/collections';
 import React, { useLayoutEffect, useRef } from 'react';
 
 // ensure this stays in sync with '$theme-tooltip-arrow-size' in '_variables.scss'
@@ -58,7 +58,7 @@ const popperOptions = (
   return {
     strategy: fixed ? 'fixed' : 'absolute',
     placement,
-    modifiers: _.compact([
+    modifiers: compact([
       {
         name: 'preventOverflow',
         options: {

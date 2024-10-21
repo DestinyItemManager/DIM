@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VendorHashes, silverItemHash } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparators';
 import {
   DestinyCollectibleState,
@@ -16,7 +16,6 @@ import {
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -107,7 +106,7 @@ export function toVendor(
 
   const vendorCurrencyHashes = new Set<number>();
   gatherVendorCurrencies(defs, vendorDef, vendorsResponse, sales, vendorCurrencyHashes);
-  const currencies = _.compact(
+  const currencies = compact(
     Array.from(vendorCurrencyHashes, (h) => defs.InventoryItem.get(h)).filter(
       (i) =>
         !i?.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders) &&

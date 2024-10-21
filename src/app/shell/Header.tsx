@@ -12,12 +12,12 @@ import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { compact } from 'app/utils/collections';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import logo from 'images/logo-type-right-light.svg';
-import _ from 'lodash';
 import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -185,7 +185,7 @@ export default function Header() {
   }[] = [];
   if (account) {
     const path = accountRoute(account);
-    links = _.compact([
+    links = compact([
       {
         to: `${path}/inventory`,
         text: t('Header.Inventory'),

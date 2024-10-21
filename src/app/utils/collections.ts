@@ -95,3 +95,12 @@ export function reorder<T>(list: T[], startIndex: number, endIndex: number): T[]
 
   return result;
 }
+
+type NotFalsey<T> = Exclude<T, false | null | 0 | 0n | '' | undefined>;
+
+/**
+ * Removes falsey values (false, null, 0, 0n, '', undefined, NaN) from an array.
+ */
+export function compact<T>(arr: readonly T[]): NotFalsey<T>[] {
+  return arr.filter((item) => item) as NotFalsey<T>[];
+}

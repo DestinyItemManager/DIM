@@ -540,7 +540,7 @@ function buildTalentGrid(
 
   const possibleNodes = talentGridDef.nodes;
 
-  let gridNodes = item.nodes.map((node): D1GridNode | undefined => {
+  let gridNodes = filterMap(item.nodes, (node): D1GridNode | undefined => {
     const talentNodeGroup = possibleNodes[node.nodeHash];
     const talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
@@ -643,10 +643,10 @@ function buildTalentGrid(
       // talentNodeSelected: talentNodeSelected,
       // itemNode: node
     };
-  }) as D1GridNode[];
+  });
 
   // We need to unique-ify because Ornament nodes show up twice!
-  gridNodes = uniqBy(_.compact(gridNodes), (n) => n.hash);
+  gridNodes = uniqBy(gridNodes, (n) => n.hash);
 
   if (!gridNodes.length) {
     return null;

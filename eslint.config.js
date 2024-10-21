@@ -267,6 +267,11 @@ export default tseslint.config(
           message:
             'Use the native .sort or .toSorted functions with compareBy and chainComparator.',
         },
+        {
+          object: '_',
+          property: 'compact',
+          message: 'Use the compact function from app/util/collections instead.',
+        },
       ],
       'no-restricted-imports': [
         'error',

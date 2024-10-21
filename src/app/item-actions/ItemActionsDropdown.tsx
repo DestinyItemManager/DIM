@@ -17,7 +17,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
-import _ from 'lodash';
+import { compact } from 'app/utils/collections';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -118,7 +118,7 @@ export default memo(function ItemActionsDropdown({
   const onInventory = location.pathname.endsWith('inventory');
   const showSearchResults = onInventory;
 
-  const dropdownOptions: Option[] = _.compact([
+  const dropdownOptions: Option[] = compact([
     isPhonePortrait && {
       key: 'favoriteSearch',
       onSelected: toggleSaved,
