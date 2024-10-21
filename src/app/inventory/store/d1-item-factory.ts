@@ -217,11 +217,11 @@ function makeItem(
     return null;
   }
 
-  const numStats = _.size(itemDef.stats);
+  const numStats = Object.keys(itemDef.stats).length;
 
   // fix itemDef for defense items with missing nodes
   if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
-    const defaultMinMax = _.find(itemDef.stats, (stat) =>
+    const defaultMinMax = Object.values(itemDef.stats).find((stat) =>
       [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength].includes(stat.statHash),
     );
 
@@ -565,10 +565,7 @@ function buildTalentGrid(
       // If only one can be activated, the cost only needs to be
       // paid once per row.
       (exclusiveInColumn &&
-        _.some(
-          talentNodeGroup.exlusiveWithNodes,
-          (nodeIndex: number) => item.nodes[nodeIndex].isActivated,
-        ));
+        talentNodeGroup.exlusiveWithNodes.some((nodeIndex) => item.nodes[nodeIndex].isActivated));
 
     // Calculate relative XP for just this node
     const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
@@ -684,7 +681,7 @@ function buildTalentGrid(
     infusable: gridNodes.some((n) => n.hash === 1270552711),
     complete:
       totalXPRequired <= totalXP &&
-      _.every(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),
+      gridNodes.every((n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),
   };
 }
 
@@ -723,7 +720,7 @@ function buildStats(
       const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
       let secondaryIndex = -1;
 
-      let sort = _.findIndex(item.stats, (s) => s.statHash === stat.statHash);
+      let sort = item.stats.findIndex((s) => s.statHash === stat.statHash);
       let itemStat;
       if (sort < 0) {
         secondaryIndex = secondarySort.indexOf(identifier);

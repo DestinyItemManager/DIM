@@ -4,7 +4,6 @@ import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
-import _ from 'lodash';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
 import { D1Store, DimStore } from '../store-types';
 import { getCharacterStatsData } from './character-utils';
@@ -61,8 +60,7 @@ export function makeCharacter(
       defs.Progression.get(prog.progressionHash),
       progressionMeta[prog.progressionHash],
     );
-    const faction = _.find(
-      defs.Faction.getAll(),
+    const faction = Object.values(defs.Faction.getAll()).find(
       (f) => f.progressionHash === prog.progressionHash,
     );
     if (faction) {

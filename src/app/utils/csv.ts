@@ -28,7 +28,7 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
           _.max(
             data.map((row) => {
               const val = row[key];
-              if (_.isArray(val)) {
+              if (Array.isArray(val)) {
                 return val.length;
               }
               errorLog('csv export', `key ${key} is not an array in CSV export data`);
@@ -61,7 +61,7 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
         }
         if (maxCountsByKey[key] === undefined) {
           return [[key, value]] as const;
-        } else if (!_.isArray(value)) {
+        } else if (!Array.isArray(value)) {
           const entryKey = `${key} 0`;
           return [[entryKey, value]] as const;
         } else {

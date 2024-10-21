@@ -1,7 +1,6 @@
 import { Placement } from '@popperjs/core';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import _ from 'lodash';
 import React, {
   MutableRefObject,
   createContext,
@@ -134,7 +133,7 @@ function Control({
             )}
             <div className={styles.content}>
               <TooltipContext.Provider value={customizeTooltip}>
-                {_.isFunction(tooltip) ? tooltip() : tooltip}
+                {typeof tooltip === 'function' ? tooltip() : tooltip}
               </TooltipContext.Provider>
             </div>
             <div className={styles.arrow} />

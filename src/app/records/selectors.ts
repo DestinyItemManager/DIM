@@ -2,7 +2,6 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { SHADER_NODE } from 'app/search/d2-known-values';
 import { DestinyCollectibleState, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { getCollectibleState } from './presentation-nodes';
 
@@ -26,7 +25,7 @@ export const collectionsVisibleShadersSelector = createSelector(
       const visibleChildCollectibles = node.children.presentationNodes.flatMap((childNode) =>
         getVisibleCollectibles(defs.PresentationNode.get(childNode.presentationNodeHash)),
       );
-      return _.concat(visibleChildCollectibles, visibleCollectibles);
+      return visibleChildCollectibles.concat(visibleCollectibles);
     };
 
     return new Set(getVisibleCollectibles(defs.PresentationNode.get(SHADER_NODE)));
