@@ -13,6 +13,7 @@ import {
   ServerResponse,
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
+import { once } from 'es-toolkit';
 import i18next from 'i18next';
 import fetchMock from 'jest-fetch-mock';
 import en from 'locale/en.json';
@@ -108,7 +109,7 @@ async function getLocalManifest(cacheDir: string) {
   }
 }
 
-export const getTestDefinitions = _.once(async () => {
+export const getTestDefinitions = once(async () => {
   const [manifestJson] = await getTestManifestJson();
   return buildDefinitionsFromManifest(manifestJson);
 });
@@ -128,7 +129,7 @@ export const getTestProfile = () =>
 export const getTestVendors = () =>
   (vendors as unknown as ServerResponse<DestinyVendorsResponse>).Response;
 
-export const getTestStores = _.once(async () => {
+export const getTestStores = once(async () => {
   const manifest = await getTestDefinitions();
 
   const stores = buildStores({

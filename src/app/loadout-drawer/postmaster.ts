@@ -15,6 +15,7 @@ import { DimError } from 'app/utils/dim-error';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { throttle } from 'es-toolkit';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
@@ -141,7 +142,7 @@ export function totalPostmasterItems(store: DimStore) {
   return findItemsByBucket(store, BucketHashes.LostItems).length;
 }
 
-const showNoSpaceError = _.throttle(
+const showNoSpaceError = throttle(
   (e: Error) =>
     showNotification({
       type: 'error',
@@ -149,7 +150,7 @@ const showNoSpaceError = _.throttle(
       body: t('Loadouts.NoSpace', { error: e.message }),
     }),
   1000,
-  { leading: true, trailing: false },
+  { edges: ['leading'] },
 );
 
 // D2 only

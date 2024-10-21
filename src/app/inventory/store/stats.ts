@@ -15,6 +15,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { once } from 'es-toolkit';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
@@ -110,8 +111,8 @@ export interface StatLookup {
 }
 
 // apparently worth it, when needing this 100s of times per inv build
-const memoTotalName = _.once((): string => t('Stats.Total'));
-const memoCustomDesc = _.once((): string => t('Stats.CustomDesc'));
+const memoTotalName = once((): string => t('Stats.Total'));
+const memoCustomDesc = once((): string => t('Stats.CustomDesc'));
 
 const memoStatDisplaysByStatHash = weakMemoize((statGroup: DestinyStatGroupDefinition) =>
   keyByStatHash(statGroup.scaledStats),

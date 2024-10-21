@@ -17,6 +17,7 @@ import {
 import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-generation';
 import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { once } from 'es-toolkit';
 import _ from 'lodash';
 import { ItemFilterDefinition } from '../item-filter-types';
 
@@ -248,7 +249,7 @@ function createStatCombiner(
   return (item: DimItem) => {
     const statValuesByHash = getStatValuesByHash(item, byWhichValue);
     // Computed lazily
-    const sortStats = _.once(() =>
+    const sortStats = once(() =>
       (item.stats ?? [])
         .filter((s) => armorAnyStatHashes.includes(s.statHash))
         .map((s) => [s.statHash, s[byWhichValue]])

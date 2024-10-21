@@ -11,6 +11,7 @@ import { compareBy } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
+import { once } from 'es-toolkit';
 import _ from 'lodash';
 import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -115,10 +116,10 @@ export default memo(function GeneratedSet({
   }, [lockedMods, autoMods, defs, displayedItems, armorEnergyRules]);
 
   // Compute a presentable stat breakdown, lazily. This is a bit expensive, so we calculate it only
-  // when it's actually needed (in the tooltip), and memoize this via _.once (no need to memoize
+  // when it's actually needed (in the tooltip), and memoize this via once (no need to memoize
   // the memoized function since this component itself is memoized and the dependency array would
   // include most props).
-  const getStatsBreakdownOnce = _.once(() =>
+  const getStatsBreakdownOnce = once(() =>
     getStatsBreakdown(defs, selectedStore.classType, set, autoMods, modStatChanges),
   );
 

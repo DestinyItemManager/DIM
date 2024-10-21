@@ -70,6 +70,7 @@ import {
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { once, throttle } from 'es-toolkit';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from '../loadout/actions';
@@ -105,7 +106,7 @@ const TAG = 'loadout';
 
 // TODO: move this whole file to "loadouts" folder
 
-const outOfSpaceWarning = _.throttle((store: DimStore) => {
+const outOfSpaceWarning = throttle((store: DimStore) => {
   showNotification({
     type: 'info',
     title: t('FarmingMode.OutOfRoomTitle'),
@@ -295,7 +296,7 @@ function doApplyLoadout(
       });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
-      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
+      const unlockedPlugSetItems = once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
       const checkMod = (h: number) => {
         const mod = defs.InventoryItem.get(h);
         return (

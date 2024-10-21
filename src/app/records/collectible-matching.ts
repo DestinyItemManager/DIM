@@ -8,6 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
+import { once } from 'es-toolkit';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 
@@ -42,7 +43,7 @@ function collectPresentationNodes(
 export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) => {
   const cache: { [itemHash: number]: DestinyCollectibleDefinition | null } = {};
 
-  const armorCollectiblesByClassType = _.once(() => {
+  const armorCollectiblesByClassType = once(() => {
     // The Titan/Hunter/Warlock armor presentation nodes, in that order (matches enum order)
     const classPresentationNodes = defs.PresentationNode.get(ARMOR_NODE).children.presentationNodes;
     return Object.fromEntries(

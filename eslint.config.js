@@ -251,6 +251,16 @@ export default tseslint.config(
           property: 'cloneDeep',
           message: 'Use structuredClone instead.',
         },
+        {
+          object: '_',
+          property: 'once',
+          message: 'Use once from "es-toolkit" instead.',
+        },
+        {
+          object: '_',
+          property: 'throttle',
+          message: 'Use throttle from "es-toolkit" instead.',
+        },
       ],
       'no-restricted-imports': [
         'error',

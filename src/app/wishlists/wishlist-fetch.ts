@@ -6,7 +6,7 @@ import { settingsReady } from 'app/settings/settings';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
-import _ from 'lodash';
+import { once } from 'es-toolkit';
 import { loadWishLists, touchWishLists } from './actions';
 import type { WishListsState } from './reducer';
 import { wishListsSelector } from './selectors';
@@ -151,7 +151,7 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
       // Previously we didn't save the URLs together with the source info,
       // but we want this now.
       if (wishListState?.wishListAndInfo.source) {
-        const urls = _.once(() => validateWishListURLs(wishListState.wishListAndInfo.source!));
+        const urls = once(() => validateWishListURLs(wishListState.wishListAndInfo.source!));
         for (const [idx, entry] of wishListState.wishListAndInfo.infos.entries()) {
           if (entry.url === undefined) {
             entry.url = urls()[idx];

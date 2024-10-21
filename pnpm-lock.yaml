@@ -77,6 +77,9 @@ dependencies:
   downshift:
     specifier: ^9.0.8
     version: 9.0.8(react@18.3.1)
+  es-toolkit:
+    specifier: ^1.25.2
+    version: 1.25.2
   fast-equals:
     specifier: ^5.0.1
     version: 5.0.1
@@ -7323,6 +7326,10 @@ packages:
       is-date-object: 1.0.5
       is-symbol: 1.0.4
     dev: true
+
+  /es-toolkit@1.25.2:
+    resolution: {integrity: sha512-zEh2aJUwnlDwashas6JN+oFVN08F2s2qBaEwTo6EOACjO9PdPH4eGRBZC2JP/3SDLeANiMTEtVnOGhoG7GwZcA==}
+    dev: false
 
   /escalade@3.2.0:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}

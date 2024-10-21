@@ -15,13 +15,14 @@ import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
+import { once } from 'es-toolkit';
 import _ from 'lodash';
 
 /**
  * Font of X mods conditionally boost a single stat. This maps from
  * mod hash to boosted stat hash.
  */
-const fontModHashToStatHash = _.once(() => {
+const fontModHashToStatHash = once(() => {
   const baseFontModHashToStatHash: HashLookup<ArmorStatHashes> = {
     4046357305: StatHashes.Mobility, // InventoryItem "Font of Agility"
     686455429: StatHashes.Resilience, // InventoryItem "Font of Endurance"
