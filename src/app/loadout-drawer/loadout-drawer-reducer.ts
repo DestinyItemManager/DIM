@@ -12,7 +12,7 @@ import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
@@ -431,17 +431,17 @@ export function fillLoadoutFromEquipped(
     }
 
     // Populate mods if they aren't already there
-    if (!category && _.isEmpty(loadout.parameters?.mods)) {
+    if (!category && !loadout.parameters?.mods?.length) {
       loadout = syncModsFromEquipped(store)(loadout);
     }
 
     // Populate artifactUnlocks if they aren't already there
-    if (!category && _.isEmpty(loadout.parameters?.artifactUnlocks)) {
+    if (!category && isEmpty(loadout.parameters?.artifactUnlocks)) {
       loadout = syncArtifactUnlocksFromEquipped(artifactUnlocks)(loadout);
     }
 
     // Save "fashion" mods for newly equipped items, but don't overwrite existing fashion
-    if (!_.isEmpty(modsByBucket)) {
+    if (!isEmpty(modsByBucket)) {
       loadout = updateModsByBucket({ ...modsByBucket, ...loadout.parameters?.modsByBucket })(
         loadout,
       );
@@ -489,7 +489,7 @@ export function syncLoadoutCategoryFromEquipped(
         modsByBucket[item.bucket.hash] = plugs;
       }
     }
-    if (!_.isEmpty(modsByBucket)) {
+    if (!isEmpty(modsByBucket)) {
       loadout = setLoadoutParameters({ modsByBucket })(loadout);
     }
     return loadout;
@@ -644,7 +644,7 @@ export function updateModsByBucket(
   modsByBucket: { [bucketHash: number]: number[] } | undefined,
 ): LoadoutUpdateFunction {
   return setLoadoutParameters({
-    modsByBucket: _.isEmpty(modsByBucket) ? undefined : modsByBucket,
+    modsByBucket: isEmpty(modsByBucket) ? undefined : modsByBucket,
   });
 }
 

@@ -24,7 +24,7 @@ import {
   armorStats,
   deprecatedPlaceholderArmorModHash,
 } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import {
   isClassCompatible,
@@ -215,7 +215,7 @@ export function newLoadoutFromEquipped(
       modsByBucket[item.bucket.hash] = plugs;
     }
   }
-  if (!_.isEmpty(modsByBucket)) {
+  if (!isEmpty(modsByBucket)) {
     loadout.parameters = {
       ...loadout.parameters,
       modsByBucket,

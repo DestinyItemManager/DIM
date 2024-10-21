@@ -272,6 +272,11 @@ export default tseslint.config(
           property: 'compact',
           message: 'Use the compact function from app/util/collections instead.',
         },
+        {
+          object: '_',
+          property: 'isEmpty',
+          message: 'Use the isEmpty function from app/util/collections instead.',
+        },
       ],
       'no-restricted-imports': [
         'error',

@@ -16,6 +16,7 @@ import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { faCheckCircle, refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
+import { isEmpty } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { localizedSorter } from 'app/utils/intl';
@@ -191,7 +192,7 @@ export function useLoadoutFilterPills(
         onOptionsSelected={setSelectedFilters}
         className={className}
         darkBackground={darkBackground}
-        extra={_.isEmpty(loadoutsByHashtag) ? extra : undefined}
+        extra={isEmpty(loadoutsByHashtag) ? extra : undefined}
       />
     ) : null;
 

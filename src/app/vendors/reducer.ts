@@ -1,6 +1,6 @@
 import { LimitedDestinyVendorsResponse } from 'app/bungie-api/destiny2-api';
+import { isEmpty } from 'app/utils/collections';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
@@ -64,7 +64,7 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
           if (
             // nothing about state needs changing if we didn't get back components
             // (maybe sockets/etc are disabled at bnet right now?)
-            _.isEmpty(vendorResponse.itemComponents) ||
+            isEmpty(vendorResponse.itemComponents) ||
             // or if there's no main response to inject these components into
             !thisCharVendorState?.vendorsResponse
           ) {

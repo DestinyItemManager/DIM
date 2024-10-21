@@ -16,6 +16,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
+import { isEmpty } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
@@ -73,7 +74,7 @@ export default function LoadoutItemCategorySection({
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
 
   const isArmor = category === 'Armor';
-  const hasFashion = isArmor && !_.isEmpty(modsByBucket);
+  const hasFashion = isArmor && !isEmpty(modsByBucket);
 
   const [optimizeLoadout, constraints]: [Loadout, ResolvedStatConstraint[] | undefined] =
     useMemo(() => {

@@ -2,7 +2,7 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { infoLog, warnLog } from 'app/utils/log';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
@@ -136,7 +136,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
 
     const infos = itemInfosSelector(getState());
 
-    if (_.isEmpty(infos)) {
+    if (isEmpty(infos)) {
       return;
     }
 

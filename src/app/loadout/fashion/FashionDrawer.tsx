@@ -15,7 +15,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { HashLookup } from 'app/utils/util-types';
 import {
@@ -333,7 +333,7 @@ export default function FashionDrawer({
           type="button"
           className="dim-button"
           onClick={() => setModsByBucket({})}
-          disabled={_.isEmpty(modsByBucket)}
+          disabled={isEmpty(modsByBucket)}
         >
           {t('FashionDrawer.Reset')}
         </button>

@@ -1,6 +1,6 @@
 import { ownedItemsSelector } from 'app/inventory/selectors';
+import { isEmpty } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import BungieImage from '../../dim-ui/BungieImage';
 import styles from '../../vendors/VendorItems.m.scss';
@@ -30,7 +30,7 @@ export default function D1VendorItems({
 
   return (
     <div className={styles.vendorContents}>
-      {!_.isEmpty(allCurrencies) && (
+      {!isEmpty(allCurrencies) && (
         <div className={styles.currencies}>
           {Object.values(allCurrencies).map((currency) => (
             <div key={currency.itemHash}>

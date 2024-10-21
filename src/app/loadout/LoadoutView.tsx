@@ -16,7 +16,7 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout/loadout-t
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { addDividers } from 'app/utils/react';
@@ -181,7 +181,7 @@ export default function LoadoutView({
         <ColorDestinySymbols className={styles.loadoutNotes} text={loadout.notes} />
       )}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass || allMods.length > 0 || !_.isEmpty(modsByBucket)) && (
+        {(items.length > 0 || subclass || allMods.length > 0 || !isEmpty(modsByBucket)) && (
           <>
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection subclass={subclass} power={power} />

@@ -96,6 +96,20 @@ export function reorder<T>(list: T[], startIndex: number, endIndex: number): T[]
   return result;
 }
 
+/**
+ * A fast/light alternative to Object.keys(obj).length === 0.
+ */
+export function isEmpty(obj: Record<string, unknown> | Record<number, unknown> | undefined | null) {
+  if (!obj) {
+    return true;
+  }
+  // eslint-disable-next-line no-unreachable-loop
+  for (const _key in obj) {
+    return false;
+  }
+  return true;
+}
+
 type NotFalsey<T> = Exclude<T, false | null | 0 | 0n | '' | undefined>;
 
 /**

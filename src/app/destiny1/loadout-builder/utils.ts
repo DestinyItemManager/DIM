@@ -1,5 +1,5 @@
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
-import { uniqBy } from 'app/utils/collections';
+import { isEmpty, uniqBy } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -147,7 +147,7 @@ export function getBestArmor(
 
       let hasPerks: (item: D1Item) => boolean = (_i) => true;
 
-      if (!_.isEmpty(lockedPerks[armortype])) {
+      if (!isEmpty(lockedPerks[armortype])) {
         const lockedPerkKeys = Object.keys(lockedPerks[armortype]).map((k) => parseInt(k, 10));
         const andPerkHashes = lockedPerkKeys
           .filter((perkHash) => lockedPerks[armortype][perkHash].lockType === 'and')

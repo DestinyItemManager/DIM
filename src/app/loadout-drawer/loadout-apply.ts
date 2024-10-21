@@ -51,7 +51,7 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
-import { count, filterMap } from 'app/utils/collections';
+import { count, filterMap, isEmpty } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
@@ -627,7 +627,7 @@ function doApplyLoadout(
 
       const clearMods = Boolean(loadout.parameters?.clearMods);
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
-      if (modsToApply.length || !_.isEmpty(modsByBucketToApply) || clearMods) {
+      if (modsToApply.length || !isEmpty(modsByBucketToApply) || clearMods) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog(TAG, 'Mods to apply', modsToApply);
         await dispatch(
@@ -1284,7 +1284,7 @@ function allModsAreAlreadyApplied(
     }
   }
 
-  if (!_.isEmpty(modsByBucket)) {
+  if (!isEmpty(modsByBucket)) {
     return false;
   }
 

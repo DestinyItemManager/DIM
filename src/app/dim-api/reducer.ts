@@ -20,7 +20,7 @@ import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/items/item-filter-types';
 import { buildItemFiltersMap } from 'app/search/items/item-search-filter';
 import { parseAndValidateQuery } from 'app/search/search-filter';
-import { count, uniqBy } from 'app/utils/collections';
+import { count, isEmpty, uniqBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog } from 'app/utils/log';
 import { reportException } from 'app/utils/sentry';
@@ -481,7 +481,7 @@ function migrateSettings(state: DimApiState) {
 
   // converts any old custom stats stored in the old settings key, to the new format
   const oldCustomStats = state.settings.customTotalStatsByClass;
-  if (!_.isEmpty(oldCustomStats)) {
+  if (!isEmpty(oldCustomStats)) {
     // this existing array should 100% be empty if the user's stats are in old format...
     // but not taking any chances. we'll preserve what's there.
     const customStats = [...state.settings.customStats];
@@ -686,7 +686,7 @@ function compactUpdate(
             delete before[typedKey];
           }
         }
-        if (_.isEmpty(payload)) {
+        if (isEmpty(payload)) {
           break;
         }
 
