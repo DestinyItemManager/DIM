@@ -503,21 +503,15 @@ function FashionSocket({
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
 
-  const unlockedPlugsWithoutTheDefault = Array.from(unlockedPlugSetItems).filter(
-    (plugHash) => plugHash !== defaultPlug.hash,
+  const unlockedPlugsWithoutTheDefault = new Set(
+    Array.from(unlockedPlugSetItems).filter((plugHash) => plugHash !== defaultPlug.hash),
   );
 
   const canSlotOrnament =
-    (socket?.plugSet &&
-      _.intersection(
-        unlockedPlugsWithoutTheDefault,
-        socket.plugSet.plugs.map((plug) => plug.plugDef.hash),
-      ).length > 0) ||
-    (socket?.reusablePlugItems &&
-      _.intersection(
-        unlockedPlugsWithoutTheDefault,
-        socket.reusablePlugItems.filter((p) => p.enabled).map((p) => p.plugItemHash),
-      ).length > 0);
+    socket?.plugSet?.plugs.some((plug) => unlockedPlugsWithoutTheDefault.has(plug.plugDef.hash)) ||
+    socket?.reusablePlugItems?.some(
+      (plug) => plug.enabled && unlockedPlugsWithoutTheDefault.has(plug.plugItemHash),
+    );
 
   return (
     <ClosableContainer onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}>

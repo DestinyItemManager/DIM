@@ -292,7 +292,7 @@ function profileLastLoaded(dimApi: DimApiState, account: DestinyAccount | undefi
   return (
     Date.now() -
     (account
-      ? (dimApi.profiles[makeProfileKeyFromAccount(account)]?.profileLastLoaded ?? 0)
+      ? dimApi.profiles[makeProfileKeyFromAccount(account)]?.profileLastLoaded ?? 0
       : dimApi.profileLastLoaded)
   );
 }

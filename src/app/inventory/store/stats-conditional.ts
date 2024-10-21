@@ -1,5 +1,5 @@
 import { ModsWithConditionalStats } from 'app/search/d2-known-values';
-import { filterMap, uniqBy } from 'app/utils/collections';
+import { filterMap } from 'app/utils/collections';
 import { infoLog, warnLog } from 'app/utils/log';
 import { weakMemoize } from 'app/utils/memoize';
 import {
@@ -184,7 +184,8 @@ export const mapAndFilterInvestmentStats = weakMemoize(
       !itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) &&
       investmentStats.every((s) => !s.isConditionallyActive)
     ) {
-      hasDupes = uniqBy(investmentStats, (s) => s.statTypeHash).length !== investmentStats.length;
+      hasDupes =
+        new Set(investmentStats.map((s) => s.statTypeHash)).size !== investmentStats.length;
       if (!hasDupes) {
         return investmentStats;
       }

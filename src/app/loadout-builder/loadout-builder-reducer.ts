@@ -27,7 +27,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
-import { reorder } from 'app/utils/collections';
+import { count, reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -480,11 +480,12 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'addGeneralMods': {
         const newMods = [...(state.loadout.parameters?.mods ?? [])];
         let currentGeneralModsCount =
-          newMods.filter(
+          count(
+            newMods,
             (mod) =>
               defs.InventoryItem.get(mod)?.plug?.plugCategoryHash ===
               armor2PlugCategoryHashesByName.general,
-          ).length ?? 0;
+          ) ?? 0;
 
         const failures: string[] = [];
 
