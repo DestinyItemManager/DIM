@@ -10,12 +10,13 @@ import { DimItem } from './item-types';
 
 interface Props {
   item: DimItem;
+  anyBucket?: boolean;
   children?: React.ReactNode;
 }
 
 let dragTimeout: number | null = null;
 
-export default function DraggableInventoryItem({ children, item }: Props) {
+export default function DraggableInventoryItem({ children, item, anyBucket = false }: Props) {
   const selectionProps = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
       useStreamDeckSelection({
@@ -33,11 +34,12 @@ export default function DraggableInventoryItem({ children, item }: Props) {
 
   const [_collect, dragRef] = useDrag<DimItem>(
     () => ({
-      type: item.location.inPostmaster
-        ? 'postmaster'
-        : item.notransfer
-          ? `${item.owner}-${item.bucket.hash}`
-          : item.bucket.hash.toString(),
+      type:
+        item.location.inPostmaster || anyBucket
+          ? 'postmaster'
+          : item.notransfer
+            ? `${item.owner}-${item.bucket.hash}`
+            : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
 
