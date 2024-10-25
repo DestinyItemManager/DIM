@@ -44,9 +44,11 @@ export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined
   }
 }
 
-const nameToDamageType = invert(damageNamesByEnum);
+const nameToDamageType: Record<string, DamageType> = invert(damageNamesByEnum);
 
-export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinition) {
+export function getDamageTypeForSubclassPlug(
+  item: PluggableInventoryItemDefinition,
+): DamageType | null {
   // ignore empty plugs because they'll be present across all subclasses
   if (emptyPlugHashes.has(item.hash)) {
     return null;

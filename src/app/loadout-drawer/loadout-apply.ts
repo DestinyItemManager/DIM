@@ -352,7 +352,7 @@ function doApplyLoadout(
             if (item) {
               state.socketOverrideStates[item.index] = {
                 item,
-                results: mapValues(loadoutItem.socketOverrides, (plugHash) => ({
+                results: mapValues(loadoutItem.socketOverrides ?? {}, (plugHash) => ({
                   plugHash,
                   state: LoadoutSocketOverrideState.Pending,
                 })),

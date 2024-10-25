@@ -18,7 +18,7 @@ import {
 import { Loadout } from 'app/loadout/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { maxOf, sumBy } from 'app/utils/collections';
-import { stubTrue } from 'app/utils/functions';
+import { noop, stubTrue } from 'app/utils/functions';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { normalToReducedMod } from 'data/d2/reduced-cost-mod-mappings';
 import { produce } from 'immer';

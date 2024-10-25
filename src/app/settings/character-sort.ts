@@ -12,7 +12,7 @@ const customCharacterSortSelector = (state: RootState) =>
 function sortCharacters(
   order: CharacterOrder,
   customCharacterSort: string[],
-): (stores: readonly DimStore[]) => readonly DimStore[] {
+): (stores: readonly DimStore[]) => DimStore[] {
   switch (order) {
     case 'mostRecent':
       return (stores) =>

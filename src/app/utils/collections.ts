@@ -99,7 +99,7 @@ export function reorder<T>(list: T[], startIndex: number, endIndex: number): T[]
 /**
  * A fast/light alternative to Object.keys(obj).length === 0.
  */
-export function isEmpty(obj: Record<string, unknown> | Record<number, unknown> | undefined | null) {
+export function isEmpty<T extends object | undefined | null>(obj: T) {
   if (!obj) {
     return true;
   }
