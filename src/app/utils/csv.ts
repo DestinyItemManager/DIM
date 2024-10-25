@@ -1,6 +1,6 @@
 import { gaEvent } from 'app/google';
-import _ from 'lodash';
 import Papa from 'papaparse';
+import { maxOf } from './collections';
 import { download } from './download';
 import { errorLog } from './log';
 
@@ -25,16 +25,14 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
       (key) =>
         [
           key,
-          _.max(
-            data.map((row) => {
-              const val = row[key];
-              if (Array.isArray(val)) {
-                return val.length;
-              }
-              errorLog('csv export', `key ${key} is not an array in CSV export data`);
-              return 0;
-            }),
-          ),
+          maxOf(data, (row) => {
+            const val = row[key];
+            if (Array.isArray(val)) {
+              return val.length;
+            }
+            errorLog('csv export', `key ${key} is not an array in CSV export data`);
+            return 0;
+          }),
         ] as const,
     ),
   );

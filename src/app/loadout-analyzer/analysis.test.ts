@@ -17,11 +17,11 @@ import {
 } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
-import { sumBy } from 'app/utils/collections';
+import { maxOf, sumBy } from 'app/utils/collections';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { normalToReducedMod } from 'data/d2/reduced-cost-mod-mappings';
 import { produce } from 'immer';
-import _, { noop, stubTrue } from 'lodash';
+import { noop, stubTrue } from 'lodash';
 import {
   DestinyClass,
   DestinyProfileResponse,
@@ -143,7 +143,7 @@ describe('basic loadout analysis finding tests', () => {
     expect(results.findings).not.toContain(LoadoutFinding.EmptyFragmentSlots);
     expect(results.findings).not.toContain(LoadoutFinding.TooManyFragments);
 
-    const maxFragmentIndex = _.max(Object.keys(config).map((idx) => parseInt(idx, 10)))!;
+    const maxFragmentIndex = maxOf(Object.keys(config), (idx) => parseInt(idx, 10));
     const resultsWithTooManyFragments = await analyze(
       addItem(defs, subclass, true, {
         ...config,
