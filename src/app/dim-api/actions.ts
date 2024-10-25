@@ -15,9 +15,8 @@ import { RootState, ThunkResult } from 'app/store/types';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
-import { once } from 'es-toolkit';
+import { debounce, once } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
-import _ from 'lodash';
 import { AnyAction, Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { getPlatforms } from '../accounts/platforms';
@@ -73,7 +72,7 @@ const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, Any
     observe({
       id: 'profile-observer',
       getObserved: (state) => state.dimApi,
-      sideEffect: _.debounce(
+      sideEffect: debounce(
         ({ previous, current }: { previous: DimApiState | undefined; current: DimApiState }) => {
           if (
             // Avoid writing back what we just loaded from IDB
@@ -112,7 +111,7 @@ const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, Any
     observe({
       id: 'queue-observer',
       getObserved: (state) => state.dimApi.updateQueue,
-      sideEffect: _.debounce(({ current }: { current: ProfileUpdateWithRollback[] }) => {
+      sideEffect: debounce(({ current }: { current: ProfileUpdateWithRollback[] }) => {
         if (current.length) {
           dispatch(flushUpdates());
         }
