@@ -295,7 +295,15 @@ export default tseslint.config(
             },
             {
               name: 'es-toolkit',
-              importNames: ['compact', 'mapValues', 'isEmpty', 'uniqBy', 'sortBy', 'count'],
+              importNames: [
+                'compact',
+                'mapValues',
+                'isEmpty',
+                'uniqBy',
+                'sortBy',
+                'count',
+                'invert',
+              ],
               message: 'Please use the version from app/util/collections instead.',
             },
           ],

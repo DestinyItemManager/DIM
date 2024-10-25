@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
-import { mapValues } from 'app/utils/collections';
+import { invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { WishListRoll } from 'app/wishlists/types';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
@@ -8,7 +8,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 
-export const enhancedToPerk = mapValues(_.invert(perkToEnhanced), Number);
+export const enhancedToPerk = invert(perkToEnhanced, Number);
 
 interface Roll {
   /** rampage, outlaw, etc. */

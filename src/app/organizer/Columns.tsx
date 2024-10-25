@@ -39,7 +39,7 @@ import {
   thumbsUpIcon,
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { compact, filterMap } from 'app/utils/collections';
+import { compact, filterMap, invert } from 'app/utils/collections';
 import { Comparator, compareBy } from 'app/utils/comparators';
 import {
   getInterestingSocketMetadatas,
@@ -73,7 +73,6 @@ import {
   StatHashes,
 } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
@@ -209,7 +208,7 @@ export function getColumns(
         },
         defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
         filter: (value) => {
-          const statName = _.invert(statHashByName)[statHash];
+          const statName = invert(statHashByName)[statHash];
           return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
         },
         csv: (_value, item) => {
@@ -247,7 +246,7 @@ export function getColumns(
             }
             return <ItemStatValue stat={stat} item={item} baseStat />;
           },
-          filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
+          filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
           csv: (_value, item) => {
             // Re-find the stat instead of using the value passed in, because the
             // value passed in can be different if it's Recoil.

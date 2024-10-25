@@ -144,3 +144,27 @@ export function mapValues<T extends object, K extends keyof T & string, V>(
     {} as { [K in keyof T]: V },
   );
 }
+
+/**
+ * Invert produces a new object where the keys and values are swapped. This is
+ * slightly faster than es-toolkit's invert and handles undefined values plus
+ * optional conversion of string keys to values.
+ */
+export function invert<K extends string, V extends PropertyKey | undefined, VV = string>(
+  obj: Record<K, V>,
+  keyTransform?: (key: string) => VV,
+): Record<Exclude<V, undefined>, VV> {
+  return Object.entries<V>(obj).reduce(
+    (acc, [key, value]) => {
+      if (value !== undefined) {
+        const newValue = keyTransform ? keyTransform(key) : key;
+        if (newValue !== undefined) {
+          // @ts-expect-error ts(2322)
+          acc[value] = newValue as VV;
+        }
+      }
+      return acc;
+    },
+    {} as Record<Exclude<V, undefined>, VV>,
+  );
+}

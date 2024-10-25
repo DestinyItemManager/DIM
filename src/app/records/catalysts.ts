@@ -1,6 +1,6 @@
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { invert } from 'app/utils/collections';
 import exoticToCatalystRecordHash from 'data/d2/exotic-to-catalyst-record.json';
-import _ from 'lodash';
 
 export function makeItemsForCatalystRecords(itemCreationContext: ItemCreationContext) {
   return new Map(
@@ -11,12 +11,14 @@ export function makeItemsForCatalystRecords(itemCreationContext: ItemCreationCon
   );
 }
 
+const catalystRecordHashToExoticHash = invert(exoticToCatalystRecordHash, Number);
+
 export function makeItemForCatalystRecord(
   recordHash: number,
   itemCreationContext: ItemCreationContext,
 ) {
-  const exoticHash = _.invert(exoticToCatalystRecordHash)[recordHash];
+  const exoticHash = catalystRecordHashToExoticHash[recordHash];
   if (exoticHash) {
-    return makeFakeItem(itemCreationContext, parseInt(exoticHash, 10))!;
+    return makeFakeItem(itemCreationContext, exoticHash)!;
   }
 }

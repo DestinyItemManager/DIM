@@ -1,4 +1,5 @@
 import { damageNamesByEnum } from 'app/search/search-filter-values';
+import { invert } from 'app/utils/collections';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { DamageType } from 'bungie-api-ts/destiny2';
@@ -10,7 +11,6 @@ import subclassSolar from 'images/subclass-solar.png';
 import subclassStasis from 'images/subclass-stasis.png';
 import subclassStrand from 'images/subclass-strand.png';
 import subclassVoid from 'images/subclass-void.png';
-import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from './item-types';
 
 const baseImagesByDamageType: LookupTable<DamageType, string> = {
@@ -44,7 +44,7 @@ export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined
   }
 }
 
-const nameToDamageType = _.invert(damageNamesByEnum);
+const nameToDamageType = invert(damageNamesByEnum);
 
 export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinition) {
   // ignore empty plugs because they'll be present across all subclasses
@@ -59,7 +59,7 @@ export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinit
 
   for (const name in nameToDamageType) {
     if (item.plug.plugCategoryIdentifier.includes(name)) {
-      return parseInt(nameToDamageType[name], 10) as DamageType;
+      return nameToDamageType[name];
     }
   }
   return null;
