@@ -314,8 +314,7 @@ export default tseslint.config(
       'no-restricted-syntax': [
         'error',
         {
-          selector:
-            "CallExpression[callee.property.name='compact'][callee.object.name='_'][arguments.0.callee.property.name='map']",
+          selector: "CallExpression[callee.name='compact'][arguments.0.callee.property.name='map']",
           message: 'Please use `filterMap` instead',
         },
         {

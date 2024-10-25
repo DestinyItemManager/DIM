@@ -8,7 +8,6 @@ import { ThunkResult } from 'app/store/types';
 import { compact, filterMap, isEmpty, sumBy } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { keyBy } from 'es-toolkit';
-import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
 import { D1Item } from '../../inventory/item-types';
@@ -413,10 +412,13 @@ async function processVendor(
       return {
         index: saleItem.vendorItemIndex,
         costs: saleItem.costs
-          .map((cost) => ({
-            value: cost.value,
-            currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash'),
-          }))
+          .map((cost) => {
+            const { itemName, icon, itemHash } = defs.InventoryItem.get(cost.itemHash);
+            return {
+              value: cost.value,
+              currency: { itemName, icon, itemHash },
+            };
+          })
           .filter((c) => c.value > 0),
         item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
         // TODO: caveat, this won't update very often!

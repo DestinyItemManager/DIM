@@ -70,7 +70,7 @@ interface State {
   loadingVendors: boolean;
 }
 
-const armorTypes = [
+export const d1ArmorTypes = [
   BucketHashes.Helmet,
   BucketHashes.Gauntlets,
   BucketHashes.ChestArmor,
@@ -476,7 +476,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     const items = Map.groupBy(
       selectedCharacter!.items.filter(
         (item) =>
-          itemCanBeInLoadout(item) && item.equipped && armorTypes.includes(item.bucket.hash),
+          itemCanBeInLoadout(item) && item.equipped && d1ArmorTypes.includes(item.bucket.hash),
       ),
       (i) => i.bucket.hash as ArmorTypes,
     );
@@ -540,7 +540,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
   const i18nItemNames = Object.fromEntries(
     _.zip(
-      armorTypes,
+      d1ArmorTypes,
       [
         ItemCategoryHashes.Helmets,
         ItemCategoryHashes.Arms,
@@ -585,7 +585,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
             {/* TODO: break into its own component */}
             <span>{t('Bucket.Armor')}</span>:{' '}
             <select name="type" value={type} onChange={onChange}>
-              {armorTypes.map((type) => (
+              {d1ArmorTypes.map((type) => (
                 <option key={type} value={type}>
                   {i18nItemNames[type]}
                 </option>
