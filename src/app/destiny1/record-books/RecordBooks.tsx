@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
-import { count } from 'app/utils/collections';
+import { count, sumBy } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
@@ -140,7 +140,7 @@ export default function RecordBooks({ account }: Props) {
       rawRecordBook.progress = rawRecordBook.progression;
       rawRecordBook.percentComplete =
         rawRecordBook.progress.currentProgress /
-        _.sumBy(rawRecordBook.progress.steps, (s) => s.progressTotal);
+        sumBy(rawRecordBook.progress.steps, (s) => s.progressTotal);
     } else {
       recordBook.percentComplete = count(records, (r) => r.complete) / records.length;
     }

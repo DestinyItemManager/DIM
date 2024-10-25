@@ -303,6 +303,7 @@ export default tseslint.config(
                 'sortBy',
                 'count',
                 'invert',
+                'sumBy',
               ],
               message: 'Please use the version from app/util/collections instead.',
             },

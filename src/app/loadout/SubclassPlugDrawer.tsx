@@ -6,7 +6,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSelectionType, PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { uniqBy } from 'app/utils/collections';
+import { sumBy, uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import {
   aspectSocketCategoryHashes,
@@ -17,7 +17,6 @@ import {
 } from 'app/utils/socket-utils';
 import { objectValues } from 'app/utils/util-types';
 import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
@@ -120,11 +119,11 @@ function getPlugsForSubclass(
   }
 
   const getFragmentCapacity = (allSelectedPlugs: PluggableInventoryItemDefinition[]) =>
-    _.sumBy(
+    sumBy(
       allSelectedPlugs.filter((p) => aspects.has(p)),
       (aspect) =>
         aspect.investmentStats.find((stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity)
-          ?.value || 0,
+          ?.value ?? 0,
     );
 
   for (const category of subclass.sockets.categories) {

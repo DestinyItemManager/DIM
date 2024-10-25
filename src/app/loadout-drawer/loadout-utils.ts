@@ -24,7 +24,7 @@ import {
   armorStats,
   deprecatedPlaceholderArmorModHash,
 } from 'app/search/d2-known-values';
-import { filterMap, isEmpty, mapValues } from 'app/utils/collections';
+import { filterMap, isEmpty, mapValues, sumBy } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import {
   isClassCompatible,
@@ -249,7 +249,7 @@ export function inGameLoadoutItemsFromEquipped(store: DimStore): DestinyLoadoutI
 export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
   if (store.destinyVersion === 2) {
-    const exactLight = _.sumBy(items, (i) => i.power) / items.length;
+    const exactLight = sumBy(items, (i) => i.power) / items.length;
     return Math.floor(exactLight * 1000) / 1000;
   } else {
     const itemWeight: LookupTable<BucketSortType, number> = {
@@ -423,7 +423,7 @@ export function optimalItemSet(
 
     // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
     if (options.length > 0) {
-      const bestOption = maxBy(options, (opt) => _.sumBy(Object.values(opt), bestItemFn))!;
+      const bestOption = maxBy(options, (opt) => sumBy(Object.values(opt), bestItemFn))!;
       equippableBestItemByBucket = bestOption;
     }
   }
@@ -893,9 +893,12 @@ function getSubclassFragmentCapacity(subclassItem: DimItem): number {
 function sumAspectCapacity(
   aspects: (DestinyInventoryItemDefinition | DimSocket | undefined)[] | undefined,
 ) {
-  return _.sumBy(aspects, (aspect) => {
+  if (!aspects?.length) {
+    return 0;
+  }
+  return sumBy(aspects, (aspect) => {
     const aspectDef = aspect && 'plugged' in aspect ? aspect.plugged?.plugDef : aspect;
-    return aspectDef?.plug?.energyCapacity?.capacityValue || 0;
+    return aspectDef?.plug?.energyCapacity?.capacityValue ?? 0;
   });
 }
 

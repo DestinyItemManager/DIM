@@ -1,3 +1,4 @@
+import { sumBy } from 'app/utils/collections';
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { ArmorSet, ArmorStatHashes, ArmorStats, DesiredStatRange } from '../types';
@@ -40,7 +41,7 @@ export function calculateTotalTier(stats: ArmorStats) {
 }
 
 export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
-  return _.sumBy(desiredStatRanges, (constraint) =>
+  return sumBy(desiredStatRanges, (constraint) =>
     Math.min(statTier(stats[constraint.statHash as ArmorStatHashes]), constraint.maxTier),
   );
 }

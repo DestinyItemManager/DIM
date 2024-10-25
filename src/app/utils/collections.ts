@@ -204,3 +204,13 @@ export function minOf<T>(items: readonly T[], getValue: (element: T) => number):
 
   return min;
 }
+
+/**
+ * Sum the results of calling a mapping function on each element of the array.
+ * If the array is empty, this function returns `0`. This is more
+ * memory-efficient than es-toolkit's sumBy but could be removed if
+ * https://github.com/toss/es-toolkit/pull/753 is merged.
+ */
+export function sumBy<T>(items: readonly T[], getValue: (element: T) => number): number {
+  return items.reduce((total, x) => total + getValue(x), 0);
+}

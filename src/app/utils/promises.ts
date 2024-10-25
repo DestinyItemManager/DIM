@@ -20,6 +20,8 @@ export function dedupePromise<T extends unknown[], K>(
 }
 
 // setTimeout as a promise
+// TODO: consider using delay from 'es-toolkit' if we want to be able to cancel
+// the delay with an abort signal
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

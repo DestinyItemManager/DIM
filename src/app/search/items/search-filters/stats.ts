@@ -15,11 +15,10 @@ import {
   weaponStatNames,
 } from 'app/search/search-filter-values';
 import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-generation';
-import { mapValues, maxOf } from 'app/utils/collections';
+import { mapValues, maxOf, sumBy } from 'app/utils/collections';
 import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { once } from 'es-toolkit';
-import _ from 'lodash';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
@@ -257,10 +256,10 @@ function createStatCombiner(
         .sort((a, b) => b[1] - a[1]),
     );
 
-    return _.sumBy(nestedAddends, (averageGroup) => {
-      const averaged = _.meanBy(averageGroup, (statFn) =>
-        statFn(statValuesByHash, sortStats, item),
-      );
+    return sumBy(nestedAddends, (averageGroup) => {
+      const averaged =
+        sumBy(averageGroup, (statFn) => statFn(statValuesByHash, sortStats, item)) /
+        averageGroup.length;
 
       return averaged;
     });

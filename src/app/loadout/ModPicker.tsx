@@ -9,7 +9,7 @@ import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
-import { count, uniqBy } from 'app/utils/collections';
+import { count, sumBy, uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible, modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
@@ -18,7 +18,6 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import unstackableModHashes from 'data/d2/unstackable-mods.json';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -358,7 +357,7 @@ function isModSelectable(
     // exceed the maximum and that energy all aligns. This doesn't check other mods that could be on the
     // item because we haven't assigned those to specific pieces.
     const lockedModCost = isSlotSpecificCategory
-      ? _.sumBy(associatedLockedMods, (mod) => mod.plug.energyCost?.energyCost || 0)
+      ? sumBy(associatedLockedMods, (mod) => mod.plug.energyCost?.energyCost ?? 0)
       : 0;
     const modCost = energyCost?.energyCost || 0;
 

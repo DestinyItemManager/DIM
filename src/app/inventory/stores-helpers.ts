@@ -1,7 +1,6 @@
-import { count } from 'app/utils/collections';
+import { count, sumBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 /**
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
@@ -58,7 +57,7 @@ export function getArtifactBonus(store: DimStore) {
  * excluding stuff in the postmaster.
  */
 export function amountOfItem(store: DimStore, item: { hash: number }) {
-  return _.sumBy(store.items, (i) =>
+  return sumBy(store.items, (i) =>
     i.hash === item.hash && !i.location?.inPostmaster ? i.amount : 0,
   );
 }

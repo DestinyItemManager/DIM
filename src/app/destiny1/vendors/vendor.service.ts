@@ -5,7 +5,7 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { compact, filterMap, isEmpty } from 'app/utils/collections';
+import { compact, filterMap, isEmpty, sumBy } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -472,7 +472,7 @@ export function countCurrencies(
           currencies.find((c) => c.itemHash === currencyHash)?.quantity || 0;
         break;
       default:
-        totalCoins[currencyHash] = _.sumBy(stores, (store) =>
+        totalCoins[currencyHash] = sumBy(stores, (store) =>
           amountOfItem(store, { hash: currencyHash }),
         );
         break;

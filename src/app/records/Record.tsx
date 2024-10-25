@@ -9,6 +9,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
+import { sumBy } from 'app/utils/collections';
 import { HashLookup } from 'app/utils/util-types';
 import {
   DestinyItemQuantity,
@@ -122,11 +123,11 @@ function Record({
 
   let scoreValue = <>{t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}</>;
   if (intervals.length > 1) {
-    const currentScore = _.sumBy(
+    const currentScore = sumBy(
       _.take(intervals, recordComponent.intervalsRedeemedCount),
       (i) => i.score,
     );
-    const totalScore = _.sumBy(intervals, (i) => i.score);
+    const totalScore = sumBy(intervals, (i) => i.score);
     scoreValue = (
       <>
         <span className={styles.currentScore}>{currentScore}</span> /{' '}

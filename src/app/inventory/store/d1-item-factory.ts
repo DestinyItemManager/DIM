@@ -10,7 +10,7 @@ import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
-import { filterMap, maxOf, minOf, uniqBy } from 'app/utils/collections';
+import { filterMap, maxOf, minOf, sumBy, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -461,7 +461,7 @@ function makeItem(
     createdItem.complete =
       (!createdItem.talentGrid || createdItem.complete) &&
       createdItem.objectives.every((o) => o.complete);
-    createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
+    createdItem.percentComplete = sumBy(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
         return (
           Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length

@@ -10,9 +10,8 @@ import {
   MAX_ARMOR_ENERGY_CAPACITY,
   armorStats,
 } from 'app/search/d2-known-values';
-import { filterMap, mapValues } from 'app/utils/collections';
+import { filterMap, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
@@ -78,7 +77,7 @@ export function mapDimItemToProcessItem({
 
   const modMetadatas = getSpecialtySocketMetadatas(dimItem);
   const modsCost = modsForSlot
-    ? _.sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost || 0)
+    ? sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost ?? 0)
     : 0;
 
   const assumeArtifice = isAssumedArtifice(dimItem, armorEnergyRules);

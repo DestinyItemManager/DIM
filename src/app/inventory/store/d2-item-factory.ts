@@ -10,6 +10,7 @@ import {
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
+import { sumBy } from 'app/utils/collections';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -635,7 +636,7 @@ export function makeItem(
     const length = createdItem.objectives.length;
     if (length > 0) {
       createdItem.complete = createdItem.objectives.every((o) => o.complete);
-      createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
+      createdItem.percentComplete = sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
           const checkTrialsPassage = isTrialsPassage(createdItem.hash);
           // Only the "Wins" objective should count towards completion

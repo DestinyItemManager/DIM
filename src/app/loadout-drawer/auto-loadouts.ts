@@ -4,7 +4,7 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
-import { mapValues } from 'app/utils/collections';
+import { mapValues, sumBy } from 'app/utils/collections';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -237,7 +237,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
 function addUpStackables(items: DimItem[]) {
   return Object.values(Object.groupBy(items, (t) => t.hash)).flatMap((items) => {
     if (items[0].maxStackSize > 1) {
-      const item = { ...items[0], amount: _.sumBy(items, (i) => i.amount) };
+      const item = { ...items[0], amount: sumBy(items, (i) => i.amount) };
       return [item];
     } else {
       return items;

@@ -5,6 +5,7 @@ import { DimItem, DimPursuitExpiration } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { DimRecord } from 'app/records/presentation-nodes';
 import { d2MissingIcon } from 'app/search/d2-known-values';
+import { sumBy } from 'app/utils/collections';
 import { isClassCompatible } from 'app/utils/item-utils';
 import {
   DestinyAmmunitionType,
@@ -400,7 +401,7 @@ export function recordToPursuitItem(
 
 function calculatePercentComplete(objectives: DestinyObjectiveProgress[]) {
   const length = objectives.length;
-  return _.sumBy(objectives, (objective) => {
+  return sumBy(objectives, (objective) => {
     if (objective.completionValue) {
       return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
     } else {

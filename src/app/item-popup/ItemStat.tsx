@@ -11,6 +11,7 @@ import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-kno
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
+import { sumBy } from 'app/utils/collections';
 import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -55,7 +56,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const modEffects =
     item &&
     getModEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
-  const modEffectsTotal = modEffects ? _.sumBy(modEffects, ([value]) => value) : 0;
+  const modEffectsTotal = modEffects ? sumBy(modEffects, ([value]) => value) : 0;
 
   const baseBar = item?.bucket.inArmor
     ? // if it's armor, the base bar length should be
@@ -302,7 +303,7 @@ function getNonReusableModSockets(item: DimItem) {
  * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
 function getTotalModEffects(item: DimItem, statHash: number) {
-  return _.sumBy(getModEffects(item, statHash), ([s]) => s);
+  return sumBy(getModEffects(item, statHash), ([s]) => s);
 }
 /**
  * Looks through the item sockets to find any weapon/armor mods that modify this stat.
@@ -324,7 +325,7 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  * passing the item parameter will make this more accurate
  */
 function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[]) {
-  return _.sumBy(getPlugEffects(sockets, armorStatHashes), ([s]) => s);
+  return sumBy(getPlugEffects(sockets, armorStatHashes), ([s]) => s);
 }
 
 /**
