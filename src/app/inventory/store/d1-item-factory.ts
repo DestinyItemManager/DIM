@@ -30,6 +30,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import missingSources from 'data/d1/missing_sources.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { clamp } from 'es-toolkit';
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
@@ -572,7 +573,7 @@ function buildTalentGrid(
     const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
     const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
     const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
-    const xp = _.clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
+    const xp = clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
 
     // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
     let dtrHash: string | null = null;

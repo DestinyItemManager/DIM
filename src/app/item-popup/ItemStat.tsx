@@ -17,7 +17,7 @@ import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { clamp } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
@@ -77,7 +77,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
     }
   } else if (modEffectsTotal < 0 && masterworkDisplayValue) {
-    segments.push([_.clamp(masterworkDisplayValue, 0, stat.value), styles.masterworkStatBar]);
+    segments.push([clamp(masterworkDisplayValue, 0, stat.value), styles.masterworkStatBar]);
   } else if (masterworkDisplayValue) {
     segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }

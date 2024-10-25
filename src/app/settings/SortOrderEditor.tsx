@@ -2,7 +2,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea
 import { t } from 'app/i18next-t';
 import { reorder } from 'app/utils/collections';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { clamp } from 'es-toolkit';
 import React, { memo } from 'react';
 import {
   AppIcon,
@@ -45,7 +45,7 @@ export default function SortOrderEditor({
   onSortOrderChanged: (order: SortProperty[]) => void;
 }) {
   const moveItem = (oldIndex: number, newIndex: number, fromDrag = false) => {
-    newIndex = _.clamp(newIndex, 0, order.length);
+    newIndex = clamp(newIndex, 0, order.length);
     const newOrder = reorder(order, oldIndex, newIndex);
     if (fromDrag) {
       newOrder[newIndex] = {
