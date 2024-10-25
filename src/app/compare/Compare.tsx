@@ -23,7 +23,7 @@ import { useShiftHeld } from 'app/utils/hooks';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -92,7 +92,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         const plugSet = y2MasterworkSocket?.plugSet;
         const plugged = y2MasterworkSocket?.plugged;
         if (plugSet && plugged) {
-          const fullMasterworkPlug = _.maxBy(
+          const fullMasterworkPlug = maxBy(
             plugSet.plugs.filter(
               (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
             ),

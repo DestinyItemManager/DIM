@@ -53,6 +53,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { maxBy } from 'es-toolkit';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
@@ -363,7 +364,7 @@ export function optimalItemSet(
   const anyClassItemsByBucket = Object.groupBy(applicableItems, (i) => i.bucket.hash);
   const anyClassBestItemByBucket = mapValues(
     anyClassItemsByBucket,
-    (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
+    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn)!,
   );
   const classUnrestricted = Object.values(anyClassBestItemByBucket).sort(
     compareByIndex(gearSlotOrder, (i) => i.bucket.hash),
@@ -375,7 +376,7 @@ export function optimalItemSet(
   );
   const thisClassBestItemByBucket = mapValues(
     thisClassItemsByBucket,
-    (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
+    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn)!,
   );
   const equipUnrestricted = Object.values(thisClassBestItemByBucket).sort(
     compareByIndex(gearSlotOrder, (i) => i.bucket.hash),
@@ -408,7 +409,7 @@ export function optimalItemSet(
           (i) => !i.equippingLabel,
         );
         if (nonExotics.length) {
-          option[otherItem.bucket.hash] = _.maxBy(nonExotics, bestItemFn)!;
+          option[otherItem.bucket.hash] = maxBy(nonExotics, bestItemFn)!;
         } else {
           // this option isn't usable because we couldn't swap this exotic for any non-exotic
           optionValid = false;
@@ -422,7 +423,7 @@ export function optimalItemSet(
 
     // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
     if (options.length > 0) {
-      const bestOption = _.maxBy(options, (opt) => _.sumBy(Object.values(opt), bestItemFn))!;
+      const bestOption = maxBy(options, (opt) => _.sumBy(Object.values(opt), bestItemFn))!;
       equippableBestItemByBucket = bestOption;
     }
   }

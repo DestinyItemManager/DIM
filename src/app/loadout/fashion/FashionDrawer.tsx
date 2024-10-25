@@ -24,6 +24,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { maxBy } from 'es-toolkit';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { useState } from 'react';
@@ -179,7 +180,7 @@ export default function FashionDrawer({
     const shaders = Object.values(modsByBucket).flat().filter(isShader);
 
     const groupedShaders = Object.groupBy(shaders, (h) => h);
-    const mostCommonShaders = _.maxBy(Object.values(groupedShaders), (shaders) => shaders.length);
+    const mostCommonShaders = maxBy(Object.values(groupedShaders), (shaders) => shaders.length);
     if (!mostCommonShaders) {
       return;
     }
@@ -223,7 +224,7 @@ export default function FashionDrawer({
       return (collectibleHash && defs.Collectible.get(collectibleHash)?.parentNodeHashes[0]) ?? -1;
     });
     delete groupedOrnaments[-1];
-    const mostCommonOrnamentSet = _.maxBy(
+    const mostCommonOrnamentSet = maxBy(
       Object.entries(groupedOrnaments),
       ([_presentationHash, ornaments]) => ornaments.length,
     );

@@ -2,7 +2,7 @@ import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { isEmpty, mapValues, uniqBy } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { maxBy } from 'es-toolkit';
 import { D1Item } from '../../inventory/item-types';
 import { D1Store, DimStore } from '../../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
@@ -40,7 +40,7 @@ function getBestItem(
 ): ItemWithBonus {
   // for specific armor (Helmet), look at stats (int/dis), return best one.
   return {
-    item: _.maxBy(armor, (o) => {
+    item: maxBy(armor, (o) => {
       if (nonExotic && o.isExotic) {
         return 0;
       }

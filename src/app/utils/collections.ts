@@ -168,3 +168,39 @@ export function invert<K extends string, V extends PropertyKey | undefined, VV =
     {} as Record<Exclude<V, undefined>, VV>,
   );
 }
+
+/**
+ * A version of "maxBy" that returns the max of the mapping function, not the
+ * original item from the array that *produced* the max value. This is
+ * equivalent to `Math.max(...items.map(getValue))` but more efficient.
+ */
+export function maxOf<T>(items: readonly T[], getValue: (element: T) => number): number {
+  let max = -Infinity;
+
+  for (const element of items) {
+    const value = getValue(element);
+    if (value > max) {
+      max = value;
+    }
+  }
+
+  return max;
+}
+
+/**
+ * A version of "minBy" that returns the min of the mapping function, not the
+ * original item from the array that *produced* the min value. This is
+ * equivalent to `Math.min(...items.map(getValue))` but more efficient.
+ */
+export function minOf<T>(items: readonly T[], getValue: (element: T) => number): number {
+  let min = Infinity;
+
+  for (const element of items) {
+    const value = getValue(element);
+    if (value < min) {
+      min = value;
+    }
+  }
+
+  return min;
+}

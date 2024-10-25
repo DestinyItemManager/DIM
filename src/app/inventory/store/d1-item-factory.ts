@@ -10,7 +10,7 @@ import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
-import { filterMap, uniqBy } from 'app/utils/collections';
+import { filterMap, maxOf, minOf, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
@@ -655,22 +655,22 @@ function buildTalentGrid(
   // This can be handy for visualization/debugging
   // var columns = Object.groupBy(gridNodes, 'column');
 
-  const maxLevelRequired = _.maxBy(gridNodes, (n) => n.activatedAtGridLevel)!.activatedAtGridLevel;
+  const maxLevelRequired = maxOf(gridNodes, (n) => n.activatedAtGridLevel);
   const totalXPRequired = xpToReachLevel(maxLevelRequired);
 
   const ascendNode = gridNodes.find((n) => n.hash === 1920788875);
 
   // Fix for stuff that has nothing in early columns
-  const minColumn = _.minBy(
+  const minColumn = minOf(
     gridNodes.filter((n) => !n.hidden),
     (n) => n.column,
-  )!.column;
+  );
   if (minColumn > 0) {
     for (const node of gridNodes) {
       node.column -= minColumn;
     }
   }
-  const maxColumn = _.maxBy(gridNodes, (n) => n.column)!.column;
+  const maxColumn = maxOf(gridNodes, (n) => n.column);
 
   return {
     nodes: gridNodes.sort(

@@ -4,7 +4,8 @@ import { CancelToken, withCancel } from 'app/utils/cancel';
 import { errorLog } from 'app/utils/log';
 import { reportException } from 'app/utils/sentry';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _, { noop } from 'lodash';
+import { maxBy } from 'es-toolkit';
+import { noop } from 'lodash';
 import { analyzeLoadout } from './analysis';
 import {
   LoadoutAnalysisContext,
@@ -318,7 +319,7 @@ export class LoadoutBackgroundAnalyzer {
       });
     });
 
-    const mostOutOfDateLoadout = _.maxBy(loadoutsAwaitingAnalysis, (l) => l.outOfDateNess);
+    const mostOutOfDateLoadout = maxBy(loadoutsAwaitingAnalysis, (l) => l.outOfDateNess);
     return mostOutOfDateLoadout?.outOfDateNess === 0 ? undefined : mostOutOfDateLoadout;
   }
 }

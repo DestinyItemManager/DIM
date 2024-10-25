@@ -8,7 +8,7 @@ import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { count } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import _, { stubFalse, stubTrue } from 'lodash';
+import { maxBy, stubFalse, stubTrue } from 'lodash';
 import { elementalChargeModHash, stacksOnStacksModHash } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { FilterInfo, filterItems } from './item-filter';
@@ -45,7 +45,7 @@ describe('loadout-builder item-filter', () => {
     const allItems = stores.flatMap((store) => store.items);
     const isValidItem = (store: DimStore, item: DimItem) =>
       itemCanBeEquippedBy(item, store) && isLoadoutBuilderItem(item);
-    store = _.maxBy(stores, (store) => count(allItems, (item) => isValidItem(store, item)))!;
+    store = maxBy(stores, (store) => count(allItems, (item) => isValidItem(store, item)))!;
     items = allItems.filter((item) => isValidItem(store, item));
     noMods = categorizeArmorMods([], items);
 

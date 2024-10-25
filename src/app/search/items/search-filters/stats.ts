@@ -15,7 +15,7 @@ import {
   weaponStatNames,
 } from 'app/search/search-filter-values';
 import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-generation';
-import { mapValues } from 'app/utils/collections';
+import { mapValues, maxOf } from 'app/utils/collections';
 import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { once } from 'es-toolkit';
@@ -348,6 +348,6 @@ function calculateMaxPowerPerBucket(allItems: DimItem[]) {
       allItems.filter((i) => i.classType !== DestinyClass.Classified),
       (i) => maxPowerKey(i),
     ),
-    (items) => _.maxBy(items, (i) => i.power)?.power ?? 0,
+    (items) => (items.length ? maxOf(items, (i) => i.power) : 0),
   );
 }

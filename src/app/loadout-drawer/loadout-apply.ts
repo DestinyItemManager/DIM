@@ -71,9 +71,8 @@ import {
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { once, partition, throttle } from 'es-toolkit';
+import { maxBy, once, partition, throttle } from 'es-toolkit';
 import { Draft, produce } from 'immer';
-import _ from 'lodash';
 import { savePreviousLoadout } from '../loadout/actions';
 import {
   Assignment,
@@ -739,7 +738,7 @@ function applyLoadoutItem(
         let totalAmount = amountAlreadyHave;
         // Keep moving from stacks until we get enough
         while (amountNeeded > 0) {
-          const source = _.maxBy(storesWithAmount, (s) => s.amount)!;
+          const source = maxBy(storesWithAmount, (s) => s.amount)!;
           const amountToMove = Math.min(source.amount, amountNeeded);
           const sourceItem = source.store.items.find((i) => i.hash === loadoutItem.hash);
 
