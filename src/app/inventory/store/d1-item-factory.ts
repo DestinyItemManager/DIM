@@ -31,7 +31,6 @@ import {
 import missingSources from 'data/d1/missing_sources.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp, memoize } from 'es-toolkit';
-import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/sentry';
@@ -280,7 +279,7 @@ function makeItem(
 
   const missingSource = missingSources[itemDef.hash] || [];
   if (missingSource.length) {
-    itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
+    itemDef.sourceHashes = [...new Set([...itemDef.sourceHashes, ...missingSource])];
   }
 
   const createdItem: D1Item = {

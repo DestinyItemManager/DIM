@@ -23,7 +23,6 @@ import { addDividers } from 'app/utils/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutView.m.scss';
@@ -221,7 +220,7 @@ export default function LoadoutView({
   );
 }
 
-export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedLoadoutItem[]>) {
+export function loadoutPower(store: DimStore, categories: Record<string, ResolvedLoadoutItem[]>) {
   const isEquipped = (li: ResolvedLoadoutItem) =>
     Boolean(!li.missing && li.item.power && li.loadoutItem.equip);
   const equippedWeapons = categories.Weapons?.filter(isEquipped) ?? [];
