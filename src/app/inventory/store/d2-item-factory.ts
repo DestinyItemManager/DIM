@@ -45,9 +45,8 @@ import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { keyBy } from 'es-toolkit';
+import { keyBy, memoize } from 'es-toolkit';
 import { Draft } from 'immer';
-import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { reportException } from '../../utils/sentry';
@@ -131,7 +130,7 @@ export function processItems(
 }
 
 export const getClassTypeNameLocalized = memoizeOne((defs: D2ManifestDefinitions) =>
-  _.memoize((type: DestinyClass): string => {
+  memoize((type: DestinyClass): string => {
     const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.displayProperties.name;

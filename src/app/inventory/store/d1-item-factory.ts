@@ -30,7 +30,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import missingSources from 'data/d1/missing_sources.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { clamp } from 'es-toolkit';
+import { clamp, memoize } from 'es-toolkit';
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
@@ -88,7 +88,7 @@ export function processItems(
   return result;
 }
 
-const getClassTypeNameLocalized = _.memoize(
+const getClassTypeNameLocalized = memoize(
   (type: DestinyClass, defs: D1ManifestDefinitions): string => {
     const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
@@ -102,7 +102,7 @@ const getClassTypeNameLocalized = _.memoize(
 /**
  * Convert a D1DamageType to the D2 definition, so we don't have to maintain both codepaths
  */
-export const toD2DamageType = _.memoize(
+export const toD2DamageType = memoize(
   (damageType: D1DamageTypeDefinition | undefined): DestinyDamageTypeDefinition | undefined =>
     damageType && {
       displayProperties: {

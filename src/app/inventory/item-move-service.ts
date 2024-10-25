@@ -14,8 +14,8 @@ import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { memoize } from 'es-toolkit';
 import { Immutable } from 'immer';
-import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import {
@@ -634,15 +634,17 @@ function chooseMoveAsideItem(
   const isInInGameLoadoutFor = isInInGameLoadoutForSelector(getState());
 
   // A cached version of the space-left function
-  const cachedSpaceLeft = _.memoize(
-    (store: DimStore, item: DimItem) => moveContext.spaceLeft(store, item),
-    (store, item) => {
-      // cache key
-      if (item.maxStackSize > 1) {
-        return store.id + item.hash;
-      } else {
-        return store.id + item.bucket.hash;
-      }
+  const cachedSpaceLeft = memoize(
+    ([store, item]: [store: DimStore, item: DimItem]) => moveContext.spaceLeft(store, item),
+    {
+      getCacheKey: ([store, item]) => {
+        // cache key
+        if (item.maxStackSize > 1) {
+          return store.id + item.hash;
+        } else {
+          return store.id + item.bucket.hash;
+        }
+      },
     },
   );
 
@@ -665,7 +667,7 @@ function chooseMoveAsideItem(
         item,
       );
       for (const candidate of sortedCandidates) {
-        const spaceLeft = cachedSpaceLeft(targetStore, candidate);
+        const spaceLeft = cachedSpaceLeft([targetStore, candidate]);
 
         if (target.isVault) {
           // If we're moving from the vault
@@ -682,7 +684,7 @@ function chooseMoveAsideItem(
           // we're not moving the original item *from* the vault, put
           // the candidate on another character in order to avoid
           // gumming up the vault.
-          const openVaultAmount = cachedSpaceLeft(vault, candidate);
+          const openVaultAmount = cachedSpaceLeft([vault, candidate]);
           const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
           const openVaultSlotsAfterMove = Math.max(
             0,
