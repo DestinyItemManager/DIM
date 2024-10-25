@@ -18,7 +18,7 @@ import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import { keyBy } from 'es-toolkit';
+import { keyBy, sample } from 'es-toolkit';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { useCallback } from 'react';
@@ -698,7 +698,7 @@ export function randomizeLoadoutSubclass(
   store: DimStore,
 ): LoadoutUpdateFunction {
   return (loadout) => {
-    const newSubclass = _.sample(
+    const newSubclass = sample(
       store.items.filter(
         (item) => item.bucket.hash === BucketHashes.Subclass && itemCanBeInLoadout(item),
       ),
@@ -819,7 +819,7 @@ export function randomizeLoadoutMods(
           getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods),
         );
         for (const socket of sockets) {
-          const chosenMod = _.sample(
+          const chosenMod = sample(
             socket.plugSet?.plugs.filter((plug) => {
               if (
                 plug.plugDef.hash === socket.emptyPlugItemHash ||
@@ -833,7 +833,7 @@ export function randomizeLoadoutMods(
                 (cost === undefined || cost <= energy) &&
                 (exclusionGroup === undefined || !exclusionGroups.includes(exclusionGroup))
               );
-            }),
+            }) ?? [],
           );
           if (chosenMod) {
             mods.push(mapToNonReducedModCostVariant(chosenMod.plugDef.hash));

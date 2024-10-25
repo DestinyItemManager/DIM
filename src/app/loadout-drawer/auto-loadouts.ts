@@ -13,7 +13,7 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { sample } from 'es-toolkit';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout } from '../loadout/loadout-types';
@@ -302,7 +302,7 @@ export function randomSubclassConfiguration(
   for (const socket of abilityAndSuperSockets) {
     // Stasis has no super plugSet
     if (socket.plugSet) {
-      socketOverrides[socket.socketIndex] = _.sample(socket.plugSet.plugs)!.plugDef.hash;
+      socketOverrides[socket.socketIndex] = sample(socket.plugSet.plugs).plugDef.hash;
     }
   }
 
@@ -314,9 +314,9 @@ export function randomSubclassConfiguration(
           break;
         }
         maxCount--;
-        const chosenHash = _.sample(
+        const chosenHash = sample(
           socket.plugSet!.plugs.filter((plug) => !blockedPlugs.includes(plug.plugDef.hash)),
-        )!.plugDef.hash;
+        ).plugDef.hash;
         if (chosenHash === undefined) {
           break;
         }
