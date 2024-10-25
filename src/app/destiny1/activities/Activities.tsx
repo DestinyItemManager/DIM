@@ -6,6 +6,7 @@ import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { compareBy, compareByIndex } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
+import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -259,6 +260,29 @@ export default function Activities({ account }: Props) {
     </div>
   );
 }
+
+const skullHashesByName: StringLookup<number> = {
+  Heroic: 0,
+  'Arc Burn': 1,
+  'Solar Burn': 2,
+  'Void Burn': 3,
+  Berserk: 4,
+  Brawler: 5,
+  Lightswitch: 6,
+  'Small Arms': 7,
+  Specialist: 8,
+  Juggler: 9,
+  Grounded: 10,
+  Bloodthirsty: 11,
+  Chaff: 12,
+  'Fresh Troops': 13,
+  Ironclad: 14,
+  'Match Game': 15,
+  Exposure: 16,
+  Airborne: 17,
+  Catapult: 18,
+  Epic: 20,
+};
 
 function i18nActivitySkulls(skulls: Skull[], defs: D1ManifestDefinitions): Skull[] {
   const activity = {
