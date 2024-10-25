@@ -25,7 +25,6 @@ import StatTooltip from 'app/store-stats/StatTooltip';
 import { useShiftHeld } from 'app/utils/hooks';
 import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
-import _ from 'lodash';
 import React, { Dispatch, useEffect, useRef } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMaxTier, ResolvedStatConstraint, StatRanges } from '../types';
@@ -317,7 +316,7 @@ function StatTierBar({
       ref={statBarRef}
       aria-label={t('LoadoutBuilder.TierSelect')}
     >
-      {_.times(11, (tierNum) => (
+      {Array.from({ length: 11 }, (_, tierNum) => (
         <div
           role="button"
           tabIndex={tierNum === statConstraint.minTier ? 0 : -1}

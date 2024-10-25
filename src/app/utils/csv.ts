@@ -45,9 +45,9 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
     if (maxCount === undefined) {
       columnSet.add(key);
     } else {
-      _.times(maxCount, (idx) => {
-        columnSet.add(`${key} ${idx}`);
-      });
+      for (let i = 0; i < maxCount; i++) {
+        columnSet.add(`${key} ${i}`);
+      }
     }
   }
 

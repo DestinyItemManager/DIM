@@ -1,6 +1,5 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { currenciesSelector } from 'app/inventory/selectors';
-import _ from 'lodash';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './AccountCurrencies.m.scss';
@@ -26,7 +25,7 @@ export default memo(function AccountCurrency() {
         </React.Fragment>
       ))}
       {/* add 0-2 blank slots to keep each currencyGroup rounded to a multiple of 3 (for css grid) */}
-      {_.times((3 - (currencies.length % 3)) % 3, (i) => (
+      {Array.from({ length: (3 - (currencies.length % 3)) % 3 }, (_, i) => (
         <React.Fragment key={i}>
           <div />
           <div />

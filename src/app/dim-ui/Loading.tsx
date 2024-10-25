@@ -1,5 +1,4 @@
 import { AnimatePresence, Orchestration, Tween, Variants, motion } from 'framer-motion';
-import _ from 'lodash';
 import styles from './Loading.m.scss';
 
 const containerAnimateVariants: Variants = {
@@ -22,7 +21,7 @@ export function Loading({ message }: { message?: string }) {
   return (
     <section className={styles.loading}>
       <div className={styles.container}>
-        {_.times(16, (n) => (
+        {Array.from({ length: 16 }, (_, n) => (
           <div key={n} className={styles.square} />
         ))}
       </div>

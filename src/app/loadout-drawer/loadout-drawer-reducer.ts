@@ -18,9 +18,8 @@ import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import { keyBy, sample } from 'es-toolkit';
+import { keyBy, sample, shuffle } from 'es-toolkit';
 import { Draft, produce } from 'immer';
-import _ from 'lodash';
 import { useCallback } from 'react';
 import {
   Loadout,
@@ -815,7 +814,7 @@ export function randomizeLoadoutMods(
       if (item.sockets) {
         let energy = item.energy?.energyCapacity ?? 0;
         const exclusionGroups: string[] = [];
-        const sockets = _.shuffle(
+        const sockets = shuffle(
           getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods),
         );
         for (const socket of sockets) {

@@ -30,7 +30,6 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import { shallowEqual } from 'fast-equals';
-import _ from 'lodash';
 import { memo, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -161,10 +160,13 @@ const StoreBucketInner = memo(function StoreBucketInner({
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
           !isVault &&
-          // lower bound of 0, in case this bucket becomes overfilled
-          _.times(Math.max(0, bucket.capacity - unequippedItems.length), (index) => (
-            <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
-          ))}
+          Array.from(
+            // lower bound of 0, in case this bucket becomes overfilled
+            { length: Math.max(0, bucket.capacity - unequippedItems.length) },
+            (_, index) => (
+              <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
+            ),
+          )}
       </StoreBucketDropTarget>
     </>
   );

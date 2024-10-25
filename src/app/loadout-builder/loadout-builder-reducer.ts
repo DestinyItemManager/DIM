@@ -32,8 +32,7 @@ import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import { keyBy } from 'es-toolkit';
-import _ from 'lodash';
+import { keyBy, shuffle } from 'es-toolkit';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
@@ -380,7 +379,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'statConstraintRandomize': {
         return updateStatConstraints(
           state,
-          _.shuffle(
+          shuffle(
             armorStats.map((s) => ({
               statHash: s,
               minTier: Math.floor(Math.random() * 10),
