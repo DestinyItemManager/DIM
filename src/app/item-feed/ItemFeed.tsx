@@ -33,7 +33,9 @@ const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | 
       {isPhonePortrait ? (
         itemIcon
       ) : (
-        <DraggableInventoryItem item={item}>{itemIcon}</DraggableInventoryItem>
+        <DraggableInventoryItem item={item} anyBucket={true}>
+          {itemIcon}
+        </DraggableInventoryItem>
       )}
       <div className={styles.info}>
         <div className={styles.title}>

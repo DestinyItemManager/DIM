@@ -1,5 +1,7 @@
 ## Next
 
+* Allow dragging Item Feed items to any slot, removing the need to scroll to a specific item slot to drag them to a character. They will automatically go to the correct slot on the given character (in the same way Postmaster items function).
+
 ## 8.43.0 <span class="changelog-date">(2024-10-20)</span>
 
 ## 8.42.0 <span class="changelog-date">(2024-10-13)</span>
