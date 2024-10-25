@@ -22,7 +22,7 @@ import { emptyArray } from 'app/utils/empty';
 import { localizedSorter } from 'app/utils/intl';
 import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
-import _ from 'lodash';
+import { intersection } from 'es-toolkit/compat';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './menu-hooks.m.scss';
 
@@ -156,7 +156,7 @@ export function useLoadoutFilterPills(
   const filteredLoadouts = useMemo(
     () =>
       selectedFilters.length > 0
-        ? _.intersection(
+        ? intersection(
             ...selectedFilters.map((f) => {
               switch (f.value.tag) {
                 case 'hashtag': {

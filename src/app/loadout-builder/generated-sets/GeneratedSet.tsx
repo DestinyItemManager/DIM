@@ -12,8 +12,7 @@ import { compareByIndex } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
-import { once } from 'es-toolkit';
-import _ from 'lodash';
+import { intersectionBy, once } from 'es-toolkit';
 import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import {
@@ -76,7 +75,11 @@ export default memo(function GeneratedSet({
   for (const loadout of loadouts) {
     // Compare all possible items that could make up this set (not just the first item in each bucket) against all the equipped items of the given loadout
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
-    const intersection = _.intersectionBy(allSetItems, equippedLoadoutItems, (item) => item.id);
+    const intersection = intersectionBy(
+      allSetItems,
+      equippedLoadoutItems as unknown as DimItem[], // intersectionBy doesn't actually need the types to match
+      (item) => item.id,
+    );
     if (intersection.length === set.armor.length) {
       overlappingLoadout = loadout;
       // Replace the list of items to show with the ones that were from the matching loadout
