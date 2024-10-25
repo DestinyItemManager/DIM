@@ -21,7 +21,7 @@ import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from './BucketPlaceholder';
@@ -157,7 +157,7 @@ function ItemBucket({
   items: ResolvedLoadoutItem[];
   modsForBucket: number[];
 }) {
-  const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
+  const [equipped, unequipped] = partition(items, (li) => li.loadoutItem.equip);
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
 

@@ -15,9 +15,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { once } from 'es-toolkit';
+import { once, partition } from 'es-toolkit';
 import { Draft } from 'immer';
-import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
 import { DimItem, DimPlug, DimPlugInvestmentStat, DimSocket, DimStat } from '../item-types';
 import { isPlugStatActive, mapAndFilterInvestmentStats } from './stats-conditional';
@@ -318,7 +317,7 @@ function applyPlugsToStats(
 
   // intrinsic plugs aren't "enhancements", they define the basic stats of armor
   // we do those first and include them in the stat's base value
-  const [intrinsicSockets, otherSockets] = _.partition(
+  const [intrinsicSockets, otherSockets] = partition(
     createdItem.sockets.allSockets,
     socketContainsIntrinsicPlug,
   );

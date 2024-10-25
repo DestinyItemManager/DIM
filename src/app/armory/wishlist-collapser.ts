@@ -6,7 +6,7 @@ import { WishListRoll } from 'app/wishlists/types';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 
 export const enhancedToPerk = invert(perkToEnhanced, Number);
 
@@ -45,7 +45,7 @@ export function consolidateRollsForOneWeapon(
   }
 
   const allRolls: Roll[] = rolls.map((roll) => {
-    const [primaryPerksList, secondaryPerksList] = _.partition(
+    const [primaryPerksList, secondaryPerksList] = partition(
       Array.from(roll.recommendedPerks),
       (h) => isMajorPerk(defs.InventoryItem.get(h)),
     );
@@ -177,11 +177,11 @@ export function consolidateRollsForOneWeapon(
 }
 
 function isMajorPerk(item?: DestinyInventoryItemDefinition) {
-  return (
+  return Boolean(
     item &&
-    (item.inventory!.tierType === TierType.Common ||
-      item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsFrame) ||
-      item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic))
+      (item.inventory!.tierType === TierType.Common ||
+        item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsFrame) ||
+        item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic)),
   );
 }
 
@@ -234,7 +234,7 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
         break;
       }
 
-      const [bundlesToCombine, bundlesToLeaveAlone] = _.partition(newClusteredRolls, (r) =>
+      const [bundlesToCombine, bundlesToLeaveAlone] = partition(newClusteredRolls, (r) =>
         rollIndices.every((i) => i === index || perkBundleToConsolidate[i].key === r[i].key),
       );
 

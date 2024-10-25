@@ -11,6 +11,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByCategoryHashes, socketContainsIntrinsicPlug } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { partition } from 'es-toolkit';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -86,7 +87,7 @@ export function InGameLoadoutDetails({
         </ConfirmButton>
       </div>
       <div className={styles.itemGroups}>
-        {_.partition(gameLoadoutCompatibleBuckets, (h) => buckets.byHash[h].sort !== 'Armor').map(
+        {partition(gameLoadoutCompatibleBuckets, (h) => buckets.byHash[h].sort !== 'Armor').map(
           (group) => (
             <div key={group[0]} className={styles.loadoutGrid}>
               {group.map((h) => {
@@ -135,8 +136,8 @@ function InGameLoadoutItemDetail({
     SocketCategoryHashes.Abilities_Abilities_Ikora,
   ]);
 
-  const [smallSockets, bigSockets] = _.partition(
-    validSockets,
+  const [smallSockets, bigSockets] = partition(
+    validSockets ?? [],
     (s) =>
       // Shaders and ornaments should be small
       cosmeticSockets.includes(s) ||

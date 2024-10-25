@@ -35,7 +35,7 @@ import {
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import {
   DimItem,
   DimPlug,
@@ -821,7 +821,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
       }
     }
   }
-  const [cant, can] = _.partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
+  const [cant, can] = partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
   const dimPlugSet: DimPlugSet = {
     plugs,
     hash: plugSetHash,

@@ -71,7 +71,7 @@ import {
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { once, throttle } from 'es-toolkit';
+import { once, partition, throttle } from 'es-toolkit';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from '../loadout/actions';
@@ -1236,7 +1236,7 @@ function applyLoadoutMods(
       infoLog(TAG, 'Applying mods', assignmentSequence, 'to', item.name);
 
       if (assignmentSequence.length) {
-        const [f, m] = _.partition(assignmentSequence, (a) => isFashionPlug(a.mod));
+        const [f, m] = partition(assignmentSequence, (a) => isFashionPlug(a.mod));
         modAssigns.push({ item, actions: m });
         fashionAssigns.push({ item, actions: f });
       }
