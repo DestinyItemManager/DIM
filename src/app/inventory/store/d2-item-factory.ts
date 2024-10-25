@@ -45,6 +45,7 @@ import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { keyBy } from 'es-toolkit';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
@@ -68,7 +69,7 @@ const TAG = 'd2-stores';
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
-    _.keyBy(Collectible, (c) => c.itemHash),
+    keyBy(Object.values(Collectible), (c) => c.itemHash),
 );
 
 /**

@@ -24,9 +24,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import { maxBy } from 'es-toolkit';
+import { keyBy, maxBy } from 'es-toolkit';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
@@ -63,7 +62,7 @@ export default function FashionDrawer({
 
   const classType = loadout.classType;
 
-  const armorItemsByBucketHash: HashLookup<ResolvedLoadoutItem> = _.keyBy(
+  const armorItemsByBucketHash: HashLookup<ResolvedLoadoutItem> = keyBy(
     armor,
     (li) => li.item.bucket.hash,
   );

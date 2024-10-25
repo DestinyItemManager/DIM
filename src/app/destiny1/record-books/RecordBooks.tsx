@@ -7,7 +7,7 @@ import { count, sumBy } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -109,7 +109,7 @@ export default function RecordBooks({ account }: Props) {
     };
 
     const records = Object.values(rawRecordBook.records).map((r) => processRecord(defs, r));
-    const recordByHash = _.keyBy(records, (r) => r.hash);
+    const recordByHash = keyBy(records, (r) => r.hash);
 
     let i = 0;
     recordBook.pages = recordBookDef.pages.map((page) => {

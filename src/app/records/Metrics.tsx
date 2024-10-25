@@ -1,7 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { TraitHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import Metric from './Metric';
 import styles from './Metrics.m.scss';
 import { DimMetric } from './presentation-nodes';
@@ -13,7 +13,7 @@ export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
     (metric) => metric.metricDef.traitHashes.find((h) => h !== TraitHashes.All)!,
   );
 
-  const traits = _.keyBy(
+  const traits = keyBy(
     Object.keys(groupedMetrics).map((th) => defs.Trait.get(Number(th))),
     (t) => t.hash,
   );
@@ -23,8 +23,8 @@ export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
       {Object.entries(groupedMetrics).map(([traitHash, metrics]) => (
         <div key={traitHash}>
           <div className={styles.title}>
-            <BungieImage src={traits[traitHash].displayProperties.icon} />
-            {traits[traitHash].displayProperties.name}
+            <BungieImage src={traits[Number(traitHash)].displayProperties.icon} />
+            {traits[Number(traitHash)].displayProperties.name}
           </div>
           {metrics.map((metric) => (
             <Metric key={metric.metricDef.hash} metric={metric} />

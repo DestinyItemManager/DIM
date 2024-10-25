@@ -53,9 +53,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import { maxBy } from 'es-toolkit';
+import { keyBy, maxBy } from 'es-toolkit';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import {
@@ -631,7 +630,7 @@ export function findItemForLoadout(
  * need it to be all items to make search-based loadout transfers work.
  */
 export const itemsByItemId = weakMemoize((allItems: DimItem[]) =>
-  _.keyBy(
+  keyBy(
     allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
     (i) => i.id,
   ),
@@ -642,7 +641,7 @@ export const itemsByItemId = weakMemoize((allItems: DimItem[]) =>
  * looking up items from loadouts.
  */
 const itemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
-  _.keyBy(
+  keyBy(
     allItems.filter((i) => i.instanced && i.craftedInfo?.craftedDate),
     (i) => i.craftedInfo!.craftedDate,
   ),

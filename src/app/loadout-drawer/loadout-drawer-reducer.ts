@@ -18,6 +18,7 @@ import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { keyBy } from 'es-toolkit';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { useCallback } from 'react';
@@ -404,9 +405,9 @@ export function fillLoadoutFromEquipped(
   category?: D2BucketCategory,
 ): LoadoutUpdateFunction {
   return (loadout) => {
-    const equippedItemsByBucket = _.keyBy(
+    const equippedItemsByBucket = keyBy(
       loadout.items.filter((li) => li.equip),
-      (li) => getBucketHashFromItemHash(defs, li.hash),
+      (li) => getBucketHashFromItemHash(defs, li.hash)!,
     );
 
     const newEquippedItems = store.items.filter(

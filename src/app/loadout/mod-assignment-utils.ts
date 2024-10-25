@@ -25,7 +25,7 @@ import {
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
 import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
@@ -312,7 +312,7 @@ export function fitMostMods({
   // An object of item id's to specialty socket metadata, this is used to ensure that
   // combat and activity mods can be slotted into an item.
   const itemSocketMetadata = mapValues(
-    _.keyBy(items, (item) => item.id),
+    keyBy(items, (item) => item.id),
     (item) => getSpecialtySocketMetadatas(item),
   );
 
@@ -365,7 +365,7 @@ export function fitMostMods({
   // working energy used, capacity and type and use this to validate whether a mod
   // can be used in an item.
   const itemEnergies = mapValues(
-    _.keyBy(items, (item) => item.id),
+    keyBy(items, (item) => item.id),
     (item) =>
       buildItemEnergy({
         item,

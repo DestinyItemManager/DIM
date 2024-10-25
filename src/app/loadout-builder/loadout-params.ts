@@ -3,7 +3,7 @@
 import { StatConstraint, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import { ResolvedStatConstraint } from './types';
 
 /**
@@ -13,7 +13,7 @@ import { ResolvedStatConstraint } from './types';
 export function resolveStatConstraints(
   statConstraints: StatConstraint[],
 ): ResolvedStatConstraint[] {
-  const statConstraintsByStatHash = _.keyBy(statConstraints, (c) => c.statHash);
+  const statConstraintsByStatHash = keyBy(statConstraints, (c) => c.statHash);
   const resolvedStatConstraints: ResolvedStatConstraint[] = armorStats.map((statHash) => {
     const c = statConstraintsByStatHash[statHash];
     return { statHash, minTier: c?.minTier ?? 0, maxTier: c ? (c.maxTier ?? 10) : 0, ignored: !c };

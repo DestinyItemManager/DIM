@@ -7,6 +7,7 @@ import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { compact, filterMap, isEmpty, sumBy } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
+import { keyBy } from 'es-toolkit';
 import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
@@ -151,7 +152,7 @@ export function loadVendors(): ThunkResult<{ [vendorHash: number]: Vendor }> {
           ),
         ),
       );
-      return _.keyBy(vendors, (v) => v.hash);
+      return keyBy(vendors, (v) => v.hash);
     })();
 
     loadingTracker.addPromise(reloadPromise);
@@ -400,7 +401,7 @@ async function processVendor(
     item.taggable = false;
     item.lockable = false;
   }
-  const itemsById = _.keyBy(items, (i) => i.id);
+  const itemsById = keyBy(items, (i) => i.id);
   const categories = filterMap(Object.values(vendor.saleItemCategories), (category) => {
     const categoryInfo = vendorDef.categories[category.categoryIndex];
     if (categoryDenyList.includes(categoryInfo.categoryHash)) {

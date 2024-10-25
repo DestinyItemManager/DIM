@@ -9,8 +9,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
-import { once } from 'es-toolkit';
-import _ from 'lodash';
+import { keyBy, once } from 'es-toolkit';
 import memoizeOne from 'memoize-one';
 
 // For some items, the most recent versions don't have a collectible. d2ai gives us the most
@@ -57,10 +56,10 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
           .flatMap((node) => node.children?.collectibles ?? [])
           .map((c) => defs.Collectible.get(c.collectibleHash));
         // Most of the time, collectibles will have the same name
-        const collectiblesByName = _.keyBy(collectibles, (c) => c.displayProperties.name);
+        const collectiblesByName = keyBy(collectibles, (c) => c.displayProperties.name);
         // Sometimes the collectible name and icon will be different, but reference an item
         // where the icon matches our icon (e.g. Y1 Trials / Prophecy: Bond Judgment vs. Judgement's Wrap)
-        const collectiblesByReverseItemIcon = _.keyBy(
+        const collectiblesByReverseItemIcon = keyBy(
           collectibles,
           (c) => defs.InventoryItem.get(c.itemHash)?.displayProperties.icon,
         );

@@ -26,9 +26,9 @@ import { errorLog, infoLog } from 'app/utils/log';
 import { reportException } from 'app/utils/sentry';
 import { clearWishLists } from 'app/wishlists/actions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { keyBy } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
 import { Draft, produce } from 'immer';
-import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';
 import * as loadoutActions from '../loadout/actions';
@@ -240,7 +240,7 @@ export const dimApi = (
           ...(profileResponse.settings as Settings),
         },
         itemHashTags: profileResponse.itemHashTags
-          ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
+          ? keyBy(profileResponse.itemHashTags, (t) => t.hash)
           : state.itemHashTags,
         profiles: account
           ? {
@@ -249,10 +249,10 @@ export const dimApi = (
               [profileKey]: {
                 profileLastLoaded: Date.now(),
                 loadouts: profileResponse.loadouts
-                  ? _.keyBy(profileResponse.loadouts, (l) => l.id)
+                  ? keyBy(profileResponse.loadouts, (l) => l.id)
                   : (existingProfile?.loadouts ?? {}),
                 tags: profileResponse.tags
-                  ? _.keyBy(profileResponse.tags, (t) => t.id)
+                  ? keyBy(profileResponse.tags, (t) => t.id)
                   : (existingProfile?.tags ?? {}),
                 triumphs: profileResponse.triumphs
                   ? profileResponse.triumphs.map((t) => parseInt(t.toString(), 10))

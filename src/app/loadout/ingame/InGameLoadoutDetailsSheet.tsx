@@ -11,8 +11,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByCategoryHashes, socketContainsIntrinsicPlug } from 'app/utils/socket-utils';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import { partition } from 'es-toolkit';
-import _ from 'lodash';
+import { keyBy, partition } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
@@ -38,7 +37,7 @@ export function InGameLoadoutDetails({
   const dispatch = useThunkDispatch();
   const buckets = useSelector(bucketsSelector)!;
   const resolvedItems = useItemsFromInGameLoadout(loadout);
-  const itemsByBucketHash = _.keyBy(resolvedItems, (i) => i.item.bucket.hash);
+  const itemsByBucketHash = keyBy(resolvedItems, (i) => i.item.bucket.hash);
   const allItems = useSelector(allItemsSelector);
   const handleSaveAsDIM = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
