@@ -16,8 +16,7 @@ import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
-import { once } from 'es-toolkit';
-import _ from 'lodash';
+import { mapKeys, once } from 'es-toolkit';
 
 /**
  * Font of X mods conditionally boost a single stat. This maps from
@@ -35,10 +34,7 @@ const fontModHashToStatHash = once(() => {
 
   return {
     ...baseFontModHashToStatHash,
-    ..._.mapKeys(
-      baseFontModHashToStatHash,
-      (_val, hash) => mapToOtherModCostVariant(parseInt(hash, 10))!,
-    ),
+    ...mapKeys(baseFontModHashToStatHash, (_val, hash) => mapToOtherModCostVariant(Number(hash))!),
   };
 });
 
