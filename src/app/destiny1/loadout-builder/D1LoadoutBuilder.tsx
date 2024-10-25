@@ -16,7 +16,6 @@ import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
-import _ from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
@@ -539,18 +538,20 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   }
 
   const i18nItemNames = Object.fromEntries(
-    _.zip(
-      d1ArmorTypes,
-      [
-        ItemCategoryHashes.Helmets,
-        ItemCategoryHashes.Arms,
-        ItemCategoryHashes.Chest,
-        ItemCategoryHashes.Legs,
-        ItemCategoryHashes.ClassItems,
-        38, // D1 Artifact
-        ItemCategoryHashes.Ghost,
-      ].map((key) => defs.ItemCategory.get(key).title),
-    ) as [ArmorTypes, string][],
+    d1ArmorTypes.map((type, i) => [
+      type,
+      defs.ItemCategory.get(
+        [
+          ItemCategoryHashes.Helmets,
+          ItemCategoryHashes.Arms,
+          ItemCategoryHashes.Chest,
+          ItemCategoryHashes.Legs,
+          ItemCategoryHashes.ClassItems,
+          38, // D1 Artifact
+          ItemCategoryHashes.Ghost,
+        ][i],
+      ).title,
+    ]),
   ) as { [key in ArmorTypes]: string };
 
   // Armor of each type on a particular character

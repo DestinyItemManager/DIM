@@ -11,7 +11,7 @@ import { errorMessage } from 'app/utils/errors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import _, { noop } from 'lodash';
+import { noop } from 'lodash';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { queueAction } from '../utils/action-queue';
@@ -275,7 +275,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
             remainder--;
             return result;
           });
-          const deltas = _.zip(amounts, targets).map(([amount, target]) => target! - amount!);
+          const deltas = amounts.map((amount, i) => targets[i] - amount);
 
           const vaultMoves: Move[] = [];
           const targetMoves: Move[] = [];
