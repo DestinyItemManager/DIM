@@ -351,8 +351,8 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           ArmorTypes,
           D1GridNode[],
         ][]) {
-          vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
-            perks[classType][type].map((i) => i.hash).includes(perk.hash),
+          vendorPerks[classType][type] = perkArr.filter(
+            (perk) => !perks[classType][type].map((i) => i.hash).includes(perk.hash),
           );
         }
       }

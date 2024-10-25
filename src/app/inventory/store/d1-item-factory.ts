@@ -662,7 +662,7 @@ function buildTalentGrid(
 
   // Fix for stuff that has nothing in early columns
   const minColumn = _.minBy(
-    _.reject(gridNodes, (n) => n.hidden),
+    gridNodes.filter((n) => !n.hidden),
     (n) => n.column,
   )!.column;
   if (minColumn > 0) {
