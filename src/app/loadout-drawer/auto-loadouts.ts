@@ -198,7 +198,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
   const bucket = isVault ? item.bucket.vaultBucket : item.bucket;
 
   if (!bucket) {
-    return isVault ? items : _.take(items, 9);
+    return isVault ? items : items.slice(0, 9);
   }
 
   const enum BucketLocation {
@@ -222,13 +222,15 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
   );
 
   // TODO: this doesn't take into account stacks that need to split
-  return _.take(
+  return (
     // move the ones that are already there to the front to minimize moves
-    [...alreadyEquipped, ...alreadyUnequipped, ...otherItems],
-    // If a matching item is already equipped we can take 10, otherwise we have
-    // to subtract one for the equipped item because we don't want to displace
-    // it
-    bucket.capacity - (item.equipment && !alreadyEquipped.length ? 1 : 0),
+    [...alreadyEquipped, ...alreadyUnequipped, ...otherItems].slice(
+      0,
+      // If a matching item is already equipped we can take 10, otherwise we have
+      // to subtract one for the equipped item because we don't want to displace
+      // it
+      bucket.capacity - (item.equipment && !alreadyEquipped.length ? 1 : 0),
+    )
   );
 }
 

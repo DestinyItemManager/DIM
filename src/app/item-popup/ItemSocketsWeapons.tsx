@@ -8,7 +8,6 @@ import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -50,9 +49,9 @@ export default function ItemSocketsWeapons({
     item.stats &&
     !item.itemCategoryHashes.includes(ItemCategoryHashes.Sword) &&
     !item.itemCategoryHashes.includes(ItemCategoryHashes.LinearFusionRifles) &&
-    _.take(item.stats, 2).filter(
-      (s) => !statsMs.includes(s.statHash) && s.statHash !== StatHashes.BlastRadius,
-    );
+    item.stats
+      .slice(0, 2)
+      .filter((s) => !statsMs.includes(s.statHash) && s.statHash !== StatHashes.BlastRadius);
 
   // Some stat labels are long. This lets us replace them with i18n
   const statLabels: LookupTable<StatHashes, string> = {

@@ -22,7 +22,6 @@ import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import trackedIcon from 'images/trackedIcon.svg';
-import _ from 'lodash';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ishtarIcon from '../../images/ishtar-collective.svg';
@@ -124,7 +123,7 @@ function Record({
   let scoreValue = <>{t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}</>;
   if (intervals.length > 1) {
     const currentScore = sumBy(
-      _.take(intervals, recordComponent.intervalsRedeemedCount),
+      intervals.slice(0, recordComponent.intervalsRedeemedCount),
       (i) => i.score,
     );
     const totalScore = sumBy(intervals, (i) => i.score);

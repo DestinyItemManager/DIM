@@ -68,7 +68,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
                 return value;
               }),
             );
-          itemsToMove.push(..._.take(candidates, numNeededToMove));
+          itemsToMove.push(...candidates.slice(0, numNeededToMove));
         }
       }
     }

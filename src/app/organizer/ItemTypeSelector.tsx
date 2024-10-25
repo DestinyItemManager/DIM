@@ -5,7 +5,6 @@ import { filteredItemsSelector } from 'app/search/items/item-search-filter';
 import { count } from 'app/utils/collections';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './ItemTypeSelector.m.scss';
 
@@ -347,7 +346,7 @@ export default function ItemTypeSelector({
   selection = selection.length ? selection : [selectionTree];
 
   const handleSelection = (depth: number, subCategory: ItemCategoryTreeNode) =>
-    onSelection([..._.take(selection, depth + 1), subCategory]);
+    onSelection([...selection.slice(0, depth + 1), subCategory]);
 
   return (
     <div className={styles.selector}>

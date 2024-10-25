@@ -21,7 +21,6 @@ import {
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -97,21 +96,19 @@ function availableQuestToItem(
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
   const questRewards = questDef.questRewards
-    ? _.take(
-        questDef.questRewards.items
-          // 75% of "rewards" are the invalid hash 0
-          .filter((r) => r.itemHash)
-          .map((r) => defs.InventoryItem.get(r.itemHash))
-          // Filter out rewards that are for other characters
-          .filter(
-            (i) =>
-              i &&
-              isClassCompatible(i.classType, store.classType) &&
-              // And quest steps, they're not interesting
-              !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep),
-          ),
-        1,
-      )
+    ? questDef.questRewards.items
+        // 75% of "rewards" are the invalid hash 0
+        .filter((r) => r.itemHash)
+        .map((r) => defs.InventoryItem.get(r.itemHash))
+        // Filter out rewards that are for other characters
+        .filter(
+          (i) =>
+            i &&
+            isClassCompatible(i.classType, store.classType) &&
+            // And quest steps, they're not interesting
+            !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep),
+        )
+        .slice(0, 1)
     : [];
 
   const objectives = availableQuest.status.stepObjectives;
