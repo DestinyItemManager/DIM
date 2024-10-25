@@ -1,5 +1,5 @@
-import { noop } from 'lodash';
 import { isNativeDragAndDropSupported, isiOSBrowser } from './utils/browsers';
+import { noop } from './utils/functions';
 
 // This can likely be removed now, but definitely after we minimally support iOS 15
 // https://github.com/timruffles/mobile-drag-drop/issues/77

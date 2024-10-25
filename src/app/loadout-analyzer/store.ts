@@ -1,11 +1,11 @@
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import { Loadout } from 'app/loadout/loadout-types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
+import { noop } from 'app/utils/functions';
 import { errorLog } from 'app/utils/log';
 import { reportException } from 'app/utils/sentry';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { maxBy } from 'es-toolkit';
-import { noop } from 'lodash';
 import { analyzeLoadout } from './analysis';
 import {
   LoadoutAnalysisContext,

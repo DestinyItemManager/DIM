@@ -305,6 +305,7 @@ export default tseslint.config(
                 'invert',
                 'sumBy',
                 'take',
+                'noop',
               ],
               message: 'Please use the version from app/util/collections instead.',
             },

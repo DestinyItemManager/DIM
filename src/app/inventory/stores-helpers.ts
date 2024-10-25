@@ -17,13 +17,14 @@ export const getCurrentStore = <Store extends DimStore>(stores: readonly Store[]
 /**
  * Get a store from a list by ID.
  */
-export const getStore = <Store extends DimStore>(stores: Store[], id: string) =>
+export const getStore = <Store extends DimStore>(stores: readonly Store[], id: string) =>
   stores.find((s) => s.id === id);
 
 /**
  * Get the Vault from a list of stores.
  */
-export const getVault = (stores: DimStore[]): DimStore | undefined => stores.find((s) => s.isVault);
+export const getVault = (stores: readonly DimStore[]): DimStore | undefined =>
+  stores.find((s) => s.isVault);
 
 /**
  * This is a memoized function that generates a map of items by their bucket

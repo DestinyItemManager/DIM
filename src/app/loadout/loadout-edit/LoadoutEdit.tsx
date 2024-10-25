@@ -55,10 +55,10 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { count } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
+import { stubTrue } from 'app/utils/functions';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
@@ -333,7 +333,7 @@ function LoadoutEditCategorySection({
       title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
       onClear={() => handleClearCategory(category)}
       onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
-      hasRandomizeQuery={searchFilter !== _.stubTrue}
+      hasRandomizeQuery={searchFilter !== stubTrue}
       onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
       fillFromEquippedDisabled={disableFillInForCategory(defs, items, category)}
       onSyncFromEquipped={() => handleSyncCategoryFromEquipped(category)}

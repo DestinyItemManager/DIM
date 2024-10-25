@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import { noop } from 'app/utils/functions';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import ItemPicker from './ItemPicker';

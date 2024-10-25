@@ -11,11 +11,11 @@ import { useDefinitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { stubTrue } from 'app/utils/functions';
 import { useEventBusListener } from 'app/utils/hooks';
 import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import React, { useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -248,7 +248,7 @@ export default function LoadoutDrawer({
           </button>
           <button type="button" className="dim-button" onClick={handleRandomizeLoadout}>
             <AppIcon icon={faRandom} />{' '}
-            {searchFilter === _.stubTrue
+            {searchFilter === stubTrue
               ? t('Loadouts.RandomizeButton')
               : t('Loadouts.RandomizeSearch')}
           </button>

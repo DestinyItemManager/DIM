@@ -11,9 +11,9 @@ import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { filterFactorySelector, validateQuerySelector } from 'app/search/items/item-search-filter';
+import { noop } from 'app/utils/functions';
 import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
-import { noop } from 'lodash';
 import {
   ReactNode,
   createContext,

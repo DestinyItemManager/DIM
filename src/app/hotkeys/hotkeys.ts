@@ -1,8 +1,8 @@
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { isMac } from 'app/utils/browsers';
 import { compareByIndex } from 'app/utils/comparators';
+import { noop } from 'app/utils/functions';
 import { StringLookup } from 'app/utils/util-types';
-import { noop } from 'lodash';
 
 /** Mapping from key name to fun symbols */
 const map: StringLookup<string> = {

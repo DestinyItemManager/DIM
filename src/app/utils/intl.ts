@@ -2,10 +2,10 @@
 // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
 
 import { DimLanguage, browserLangToDimLang } from 'app/i18n';
-import { stubTrue } from 'lodash';
 import memoizeOne from 'memoize-one';
 import { invert } from './collections';
 import { Comparator } from './comparators';
+import { stubTrue } from './functions';
 
 // Our locale names don't line up with the BCP 47 tags for Chinese
 const dimLangToBrowserLang = invert(browserLangToDimLang);
