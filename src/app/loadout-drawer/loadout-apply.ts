@@ -51,7 +51,7 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
-import { count, filterMap, isEmpty } from 'app/utils/collections';
+import { count, filterMap, isEmpty, mapValues } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
@@ -353,7 +353,7 @@ function doApplyLoadout(
             if (item) {
               state.socketOverrideStates[item.index] = {
                 item,
-                results: _.mapValues(loadoutItem.socketOverrides, (plugHash) => ({
+                results: mapValues(loadoutItem.socketOverrides, (plugHash) => ({
                   plugHash,
                   state: LoadoutSocketOverrideState.Pending,
                 })),

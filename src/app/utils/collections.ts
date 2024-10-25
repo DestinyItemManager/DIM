@@ -113,8 +113,34 @@ export function isEmpty(obj: Record<string, unknown> | Record<number, unknown> |
 type NotFalsey<T> = Exclude<T, false | null | 0 | 0n | '' | undefined>;
 
 /**
- * Removes falsey values (false, null, 0, 0n, '', undefined, NaN) from an array.
+ * Removes falsy values (false, null, 0, 0n, '', undefined, NaN) from an array.
+ * This is just as fast as es-toolkit's compact but it's less code.
  */
 export function compact<T>(arr: readonly T[]): NotFalsey<T>[] {
   return arr.filter((item) => item) as NotFalsey<T>[];
+}
+
+/**
+ * Return a new object with the same keys, but values that are the result of
+ * calling a mapping function on each value. If the mapping function returns
+ * undefined, the key is omitted from the new object. This is slightly faster
+ * than es-toolkit's mapValues plus it has the undefined-filtering behavior.
+ */
+export function mapValues<T extends object, K extends keyof T & string, V>(
+  object: T,
+  getNewValue: (value: Exclude<T[keyof T], undefined>, key: K) => V,
+): { [K in keyof T]: V } {
+  return Object.entries(object).reduce(
+    (acc, [key, value]) => {
+      if (value === undefined) {
+        return acc;
+      }
+      const newValue = getNewValue(value as Exclude<T[keyof T], undefined>, key as K);
+      if (newValue !== undefined) {
+        acc[key as K] = newValue;
+      }
+      return acc;
+    },
+    {} as { [K in keyof T]: V },
+  );
 }

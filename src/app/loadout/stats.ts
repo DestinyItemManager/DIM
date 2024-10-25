@@ -11,6 +11,7 @@ import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
+import { mapValues } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -62,9 +63,9 @@ function getFontMods(mods: PluggableInventoryItemDefinition[]) {
     }
   }
 
-  return _.mapValues(boosts, (boost) => ({
-    ...boost!,
-    value: boostForNumFontStacks[boost!.count] ?? boostForNumFontStacks.at(-1),
+  return mapValues(boosts, (boost) => ({
+    ...boost,
+    value: boostForNumFontStacks[boost.count] ?? boostForNumFontStacks.at(-1),
   }));
 }
 

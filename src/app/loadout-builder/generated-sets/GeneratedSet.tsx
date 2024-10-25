@@ -7,6 +7,7 @@ import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
+import { mapValues } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -136,7 +137,7 @@ export default memo(function GeneratedSet({
   // Distribute our automatically picked mods across the items so that item components
   // can highlight them
   const assignAutoMods = set.statMods.slice();
-  const autoModsPerItem = _.mapValues(itemModAssignments, (mods) => {
+  const autoModsPerItem = mapValues(itemModAssignments, (mods) => {
     const autoModHashes = [];
     for (const mod of mods) {
       const modIdx = assignAutoMods.findIndex((m) => m === mod.hash);

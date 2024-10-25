@@ -24,7 +24,7 @@ import {
   armorStats,
   deprecatedPlaceholderArmorModHash,
 } from 'app/search/d2-known-values';
-import { filterMap, isEmpty } from 'app/utils/collections';
+import { filterMap, isEmpty, mapValues } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import {
   isClassCompatible,
@@ -309,7 +309,7 @@ export function getLoadoutStats(
   }
 
   // Sum the items stats into the stats
-  const armorPiecesStats = _.mapValues(stats, () => 0);
+  const armorPiecesStats = mapValues(stats, () => 0);
   for (const item of armor) {
     const itemEnergy = armorEnergyRules && calculateAssumedItemEnergy(item, armorEnergyRules);
     const itemStats = Object.groupBy(item.stats ?? [], (stat) => stat.statHash);
@@ -361,7 +361,7 @@ export function optimalItemSet(
   bestItemFn: (item: DimItem) => number,
 ): Record<'equippable' | 'equipUnrestricted' | 'classUnrestricted', DimItem[]> {
   const anyClassItemsByBucket = Object.groupBy(applicableItems, (i) => i.bucket.hash);
-  const anyClassBestItemByBucket = _.mapValues(
+  const anyClassBestItemByBucket = mapValues(
     anyClassItemsByBucket,
     (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
   );
@@ -373,7 +373,7 @@ export function optimalItemSet(
     applicableItems.filter((i) => itemCanBeEquippedBy(i, store, true)),
     (i) => i.bucket.hash,
   );
-  const thisClassBestItemByBucket = _.mapValues(
+  const thisClassBestItemByBucket = mapValues(
     thisClassItemsByBucket,
     (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
   );

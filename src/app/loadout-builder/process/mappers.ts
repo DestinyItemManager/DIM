@@ -10,7 +10,7 @@ import {
   MAX_ARMOR_ENERGY_CAPACITY,
   armorStats,
 } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, mapValues } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
@@ -123,10 +123,8 @@ export function mapAutoMods(defs: AutoModDefs): AutoModData {
     hash: def.hash,
   });
   return {
-    artificeMods: _.mapValues(defs.artificeMods, defToArtificeMod),
-    generalMods: _.mapValues(defs.generalMods, (modsForStat) =>
-      _.mapValues(modsForStat, defToAutoMod),
-    ),
+    artificeMods: mapValues(defs.artificeMods, defToArtificeMod),
+    generalMods: mapValues(defs.generalMods, (modsForStat) => mapValues(modsForStat, defToAutoMod)),
   };
 }
 

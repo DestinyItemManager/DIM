@@ -6,12 +6,11 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ARMOR_NODE, DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, mapValues } from 'app/utils/collections';
 import { DestinyClass, DestinyCollectibleDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import auxOrnamentSets from 'data/d2/universal-ornament-aux-sets.json';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
-import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 import { createCollectibleFinder } from '../collectible-matching';
@@ -117,7 +116,7 @@ function identifyPlugSets(defs: D2ManifestDefinitions): { [classType: number]: n
       }
     }
   }
-  return _.mapValues(sets, (set) => D2Categories.Armor.map((bucketHash) => set[bucketHash]));
+  return mapValues(sets, (set) => D2Categories.Armor.map((bucketHash) => set[bucketHash]));
 }
 
 /**
@@ -228,7 +227,7 @@ export function instantiateOrnamentSets(
   data: OrnamentsData,
   itemCreationContext: ItemCreationContext,
 ): OrnamentsData<DimItem> {
-  return _.mapValues(data, (classData) => ({
+  return mapValues(data, (classData) => ({
     ...classData,
     sets: Object.fromEntries(
       filterMap(Object.entries(classData.sets), ([key, set]) => {
@@ -247,7 +246,7 @@ export function filterOrnamentSets(
   searchQuery: string,
   searchFilter: ItemFilter,
 ): OrnamentsData<DimItem> {
-  return _.mapValues(data, (classData) => ({
+  return mapValues(data, (classData) => ({
     ...classData,
     sets: Object.fromEntries(
       Object.entries(classData.sets).filter(

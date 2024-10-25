@@ -4,6 +4,7 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
+import { mapValues } from 'app/utils/collections';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -170,7 +171,7 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
   items = items.filter((i) => !i.location.inPostmaster && !i.notransfer);
   items = addUpStackables(items);
 
-  const itemsByType = _.mapValues(
+  const itemsByType = mapValues(
     Object.groupBy(items, (i) => i.bucket.hash),
     (items) => limitToBucketSize(items, store),
   );

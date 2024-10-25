@@ -8,7 +8,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, mapValues } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import {
@@ -18,7 +18,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { convertToLoadoutItem, itemsByItemId, newLoadout } from '../loadout-drawer/loadout-utils';
 import {
   Loadout as DimLoadout,
@@ -128,7 +127,7 @@ export const processInGameLoadouts = (
 ): { [characterId: string]: InGameLoadout[] } => {
   const characterLoadouts = profileResponse?.characterLoadouts?.data;
   if (characterLoadouts) {
-    return _.mapValues(characterLoadouts, (c, characterId) =>
+    return mapValues(characterLoadouts, (c, characterId) =>
       filterMap(c.loadouts, (l, i) =>
         convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs),
       ),

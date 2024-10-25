@@ -1,5 +1,5 @@
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
-import { isEmpty, uniqBy } from 'app/utils/collections';
+import { isEmpty, mapValues, uniqBy } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -98,7 +98,7 @@ export function calcArmorStats(
 }
 
 export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorTypes]: string } {
-  return _.mapValues(armor, (armorPiece) => armorPiece.bonusType);
+  return mapValues(armor, (armorPiece) => armorPiece.bonusType);
 }
 
 export function genSetHash(armorPieces: ItemWithBonus[]) {

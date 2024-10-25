@@ -17,6 +17,7 @@ import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
+import { mapValues } from './collections';
 import { compareBy } from './comparators';
 import { LookupTable } from './util-types';
 
@@ -40,7 +41,7 @@ const statNameAliases: LookupTable<StatHashes, string[]> = {
   [StatHashes.ReloadSpeed]: ['Reload'],
 };
 
-const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
+const enhancedPerkToRegularPerk = mapValues(_.invert(perkToEnhanced), Number);
 
 export function usePlugDescriptions(
   plug?: PluggableInventoryItemDefinition,

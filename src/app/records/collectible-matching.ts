@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ARMOR_NODE } from 'app/search/d2-known-values';
+import { mapValues } from 'app/utils/collections';
 import {
   DestinyClass,
   DestinyCollectibleDefinition,
@@ -15,7 +16,7 @@ import memoizeOne from 'memoize-one';
 // For some items, the most recent versions don't have a collectible. d2ai gives us the most
 // recent item hash for given collectibles, so the inverted map gives us the collectible
 // for some items.
-const extraItemsToCollectibles = _.mapValues(_.invert(extraItemCollectibles), (val) =>
+const extraItemsToCollectibles = mapValues(_.invert(extraItemCollectibles), (val) =>
   parseInt(val, 10),
 );
 

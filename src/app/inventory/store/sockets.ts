@@ -4,7 +4,7 @@ import {
   GhostActivitySocketTypeHashes,
   weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, mapValues } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -54,7 +54,7 @@ import { exoticClassItemPlugs } from './exotic-class-item';
 // This is called from within d2-item-factory.service.ts
 //
 
-const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), (s) => Number(s));
+const enhancedToPerk = mapValues(_.invert(perkToEnhanced), (s) => Number(s));
 
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
