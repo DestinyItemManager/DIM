@@ -12,7 +12,7 @@ import { D1Store, DimStore } from './store-types';
 /**
  * Get whichever character was last played.
  */
-export const getCurrentStore = <Store extends DimStore>(stores: Store[]) =>
+export const getCurrentStore = <Store extends DimStore>(stores: readonly Store[]) =>
   stores.find((s) => s.current);
 
 /**

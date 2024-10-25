@@ -10,10 +10,10 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
+import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { compact } from 'es-toolkit';
 import { createSelector } from 'reselect';
 import {
   D2Vendor,
