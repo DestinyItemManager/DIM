@@ -1,6 +1,5 @@
 import { sumBy } from 'app/utils/collections';
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
-import _ from 'lodash';
 import { ArmorSet, ArmorStatHashes, ArmorStats, DesiredStatRange } from '../types';
 import { statTier } from '../utils';
 
@@ -37,7 +36,7 @@ export function sortGeneratedSets(
  * every 10.
  */
 export function calculateTotalTier(stats: ArmorStats) {
-  return _.sum(Object.values(stats).map(statTier));
+  return sumBy(Object.values(stats), statTier);
 }
 
 export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {

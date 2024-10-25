@@ -1,6 +1,7 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
+import { compact } from 'app/utils/collections';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
+import { sum } from 'es-toolkit';
 import { DimStat } from '../item-types';
 import { getStatSortOrder } from './stats';
 
@@ -37,12 +38,12 @@ export function makeCustomStat(
   // as you make weighting more and more lopsided, the highest weighted stat
   // approaches 2x, and the lowers approach 0, SO: a custom total should top out around
   // the single stat max (42 base) times a 2x weighting multiplier. let's just call it 100
-  const nonZeroWeights = Object.values(statWeights).filter(Boolean) as number[];
+  const nonZeroWeights = compact(Object.values(statWeights));
   if (!nonZeroWeights.length) {
     // everything is zero.... . this is a malformed set of stat weights. skip it.
     return;
   }
-  const averageNonZeroStatWeight = _.sum(nonZeroWeights) / nonZeroWeights.length;
+  const averageNonZeroStatWeight = sum(nonZeroWeights) / nonZeroWeights.length;
 
   let weightedBaseTotal = 0;
   let weightedTotal = 0;
