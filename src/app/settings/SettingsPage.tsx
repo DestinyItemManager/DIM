@@ -20,7 +20,7 @@ import { compact } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
-import _ from 'lodash';
+import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -195,15 +195,15 @@ export default function SettingsPage() {
     community: t('Settings.CommunityDescriptionOnly'),
   });
 
-  const charColOptions = _.range(2, 6).map((num) => ({
+  const charColOptions = range(2, 6).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
-  const numberOfSpacesOptions = _.range(1, 10).map((count) => ({
+  const numberOfSpacesOptions = range(1, 10).map((count) => ({
     value: count,
     name: t('Settings.SpacesSize', { count }),
   }));
-  const vaultColOptions = _.range(5, 21).map((num) => ({
+  const vaultColOptions = range(5, 21).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
