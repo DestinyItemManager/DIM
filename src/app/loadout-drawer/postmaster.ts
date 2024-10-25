@@ -16,7 +16,7 @@ import { DimError } from 'app/utils/dim-error';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { throttle } from 'es-toolkit';
+import { countBy, throttle } from 'es-toolkit';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
@@ -44,7 +44,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
     const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap((bucket) =>
       findItemsByBucket(store, bucket.hash),
     );
-    const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
+    const postmasterItemCountsByType = countBy(postmasterItems, (i) => i.bucket.hash);
 
     const [cancelToken, cancel] = withCancel();
 
@@ -240,7 +240,7 @@ function moveItemsToVault(
   return async (dispatch, getState) => {
     const reservations: MoveReservations = {
       // reserve space for all move-asides
-      [store.id]: _.countBy(items, (i) => i.bucket.hash),
+      [store.id]: countBy(items, (i) => i.bucket.hash),
     };
     const moveSession = createMoveSession(cancelToken, items);
 
