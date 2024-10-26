@@ -1,3 +1,4 @@
+@use 'sass:list';
 @use '../variables.scss' as *;
 
 .loading {
@@ -53,11 +54,11 @@ $image: (
   transform: scale(0) rotate(0);
 }
 
-@for $index from 1 through length($image) {
-  $point: nth($image, $index);
+@for $index from 1 through list.length($image) {
+  $point: list.nth($image, $index);
   .square:nth-child(#{$index}) {
-    top: nth($point, 1) * $square-size;
-    left: nth($point, 2) * $square-size;
+    top: list.nth($point, 1) * $square-size;
+    left: list.nth($point, 2) * $square-size;
     animation: $logoDuration
       ease
       ($initialDelay + $sequenceDelay * ($index - 1))

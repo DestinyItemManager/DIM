@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../variables.scss' as *;
 
 .notification {
@@ -62,20 +63,20 @@
 .info,
 .progress {
   border-top-color: #2f96b4;
-  background-color: scale-color(#2f96b4, $lightness: -90%);
+  background-color: color.scale(#2f96b4, $lightness: -90%);
 }
 
 .error {
   border-top-color: $red;
-  background-color: scale-color($red, $lightness: -90%);
+  background-color: color.scale($red, $lightness: -90%);
 }
 
 .warning {
   border-top-color: #f89406;
-  background-color: scale-color(#f89406, $lightness: -90%);
+  background-color: color.scale(#f89406, $lightness: -90%);
 }
 
 .success {
   border-top-color: $green;
-  background-color: scale-color($green, $lightness: -90%);
+  background-color: color.scale($green, $lightness: -90%);
 }
