@@ -105,9 +105,8 @@ export function getFirstSocketByCategoryHash(sockets: DimSockets, categoryHash: 
 }
 
 function getSocketsByPlugCategoryIdentifier(sockets: DimSockets, plugCategoryIdentifier: string) {
-  return sockets.allSockets.find(
-    (socket) =>
-      socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier),
+  return sockets.allSockets.find((socket) =>
+    socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier),
   );
 }
 
@@ -213,8 +212,8 @@ export const eventArmorRerollSocketIdentifiers: string[] = ['events.solstice.'];
  * other armor but if it does, just add to this function.
  */
 export function isEventArmorRerollSocket(socket: DimSocket) {
-  return eventArmorRerollSocketIdentifiers.some(
-    (i) => socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(i),
+  return eventArmorRerollSocketIdentifiers.some((i) =>
+    socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(i),
   );
 }
 
