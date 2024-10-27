@@ -14,6 +14,7 @@
 @use 'themes/theme-throneworld';
 @use 'themes/theme-vexnet';
 @use 'themes/theme-europa';
+@use 'app/dim-ui/dim-button.scss';
 
 @font-face {
   font-family: 'Destiny Symbols';
@@ -313,6 +314,3 @@ code {
 .stat-icon {
   filter: drop-shadow(0 0 0 #fff);
 }
-
-/* stylelint-disable-next-line no-invalid-position-at-import-rule */
-@use 'app/dim-ui/dim-button.scss';
