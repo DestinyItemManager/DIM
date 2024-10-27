@@ -12,11 +12,6 @@ export interface EditLoadoutState {
 
 export const editLoadout$ = new EventBus<EditLoadoutState>();
 export const addItem$ = new EventBus<DimItem>();
-export const copyAndEditLoadout$ = new EventBus<{
-  loadout: Loadout;
-  showClass?: boolean;
-  storeId: string;
-}>();
 
 /**
  * Start editing a loadout.
@@ -55,6 +50,10 @@ export function copyAndEditLoadout(
   storeId: string,
   { showClass = true }: { showClass?: boolean } = {},
 ) {
-  const copiedLoadout = { ...loadout, name: `${loadout.name} - Copy` };
+  const copiedLoadout = {
+    ...loadout,
+    name: `${loadout.name} - Copy`,
+    id: globalThis.crypto.randomUUID(),
+  };
   editLoadout(copiedLoadout, storeId, { showClass, isNew: true });
 }
