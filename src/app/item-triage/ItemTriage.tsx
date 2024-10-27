@@ -148,9 +148,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
           const edit =
             isDimLoadout &&
             (() => {
-              editLoadout(loadout, item.owner, {
-                isNew: false,
-              });
+              editLoadout(loadout, item.owner);
               hideItemPopup();
             });
           return (

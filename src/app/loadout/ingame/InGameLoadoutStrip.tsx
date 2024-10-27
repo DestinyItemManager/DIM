@@ -86,7 +86,7 @@ function InGameLoadoutTile({
 
   const handleSaveAsDIM = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
-    editLoadout(dimLoadout, store.id, { isNew: true });
+    editLoadout(dimLoadout, store.id);
   };
   const handleShare = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);

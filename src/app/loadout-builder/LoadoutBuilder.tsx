@@ -105,7 +105,6 @@ export default memo(function LoadoutBuilder({
       loadout,
       resolvedStatConstraints,
       strictUpgradesStatConstraints,
-      isEditingExistingLoadout,
       pinnedItems,
       excludedItems,
       selectedStoreId,
@@ -461,7 +460,6 @@ export default memo(function LoadoutBuilder({
             loadouts={loadouts}
             armorEnergyRules={result.armorEnergyRules}
             autoStatMods={autoStatMods}
-            isEditingExistingLoadout={isEditingExistingLoadout}
             equippedHashes={equippedHashes}
           />
         ) : (

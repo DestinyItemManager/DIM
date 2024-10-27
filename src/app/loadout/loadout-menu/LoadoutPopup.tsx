@@ -116,8 +116,7 @@ export default function LoadoutPopup({
     }
   };
 
-  const makeNewLoadout = () =>
-    editLoadout(newLoadout('', [], dimStore.classType), dimStore.id, { isNew: true });
+  const makeNewLoadout = () => editLoadout(newLoadout('', [], dimStore.classType), dimStore.id);
 
   const applySavedLoadout = (loadout: Loadout, { filterToEquipped = false } = {}) => {
     if (filterToEquipped) {
@@ -330,7 +329,7 @@ export default function LoadoutPopup({
             <span
               className={styles.altButton}
               title={t('Loadouts.Edit')}
-              onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
+              onClick={() => editLoadout(loadout, dimStore.id)}
             >
               <AppIcon icon={editIcon} />
             </span>
@@ -412,7 +411,7 @@ function createRandomLoadout(store: DimStore): ThunkResult {
     const unlockedPlugs = unlockedPlugSetItemsSelector(store.id)(getState());
     let loadout = newLoadout(t('Loadouts.Random'), [], store.classType);
     loadout = randomizeFullLoadout(defs, store, allItems, searchFilter, unlockedPlugs)(loadout);
-    editLoadout(loadout, store.id, { isNew: true });
+    editLoadout(loadout, store.id);
   };
 }
 

@@ -101,7 +101,6 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           setInitialLoadout({
             loadout: draftLoadout,
             storeId: owner.id,
-            isNew: true,
             showClass: true,
             fromExternal: true,
           });
@@ -129,7 +128,6 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
         setInitialLoadout({
           loadout: parsedLoadout,
           storeId,
-          isNew: true,
           showClass: false,
           fromExternal: true,
         });
@@ -163,7 +161,6 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           <LoadoutDrawer
             initialLoadout={initialLoadout.loadout}
             storeId={initialLoadout.storeId}
-            isNew={initialLoadout.isNew}
             onClose={handleDrawerClose}
             fromExternal={initialLoadout.fromExternal}
           />
@@ -171,7 +168,6 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           <D1LoadoutDrawer
             initialLoadout={initialLoadout.loadout}
             storeId={initialLoadout.storeId}
-            isNew={initialLoadout.isNew}
             showClass={initialLoadout.showClass}
             onClose={handleDrawerClose}
           />

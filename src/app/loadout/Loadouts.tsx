@@ -156,7 +156,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const handleNewLoadout = () => {
     const loadout = newLoadout('', [], selectedStore.classType);
-    editLoadout(loadout, selectedStore.id, { isNew: true });
+    editLoadout(loadout, selectedStore.id);
   };
 
   // Insert season headers if we're sorting by edit time

@@ -36,7 +36,7 @@ export default memo(function LoadoutRow({
     const handleApply = () =>
       dispatch(applyLoadout(store, loadout, { allowUndo: true, onlyMatchingClass: true }));
 
-    const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
+    const handleEdit = () => editLoadout(loadout, store.id);
     const handleShare = () => onShare(loadout);
     const handleCopyAndEdit = () => copyAndEditLoadout(loadout, store.id);
 

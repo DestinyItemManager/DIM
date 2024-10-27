@@ -46,7 +46,6 @@ export default memo(function GeneratedSet({
   armorEnergyRules,
   equippedHashes,
   autoStatMods,
-  isEditingExistingLoadout,
 }: {
   originalLoadout: Loadout;
   set: ArmorSet;
@@ -61,7 +60,6 @@ export default memo(function GeneratedSet({
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
   autoStatMods: boolean;
-  isEditingExistingLoadout: boolean;
 }) {
   const defs = useD2Definitions()!;
 
@@ -183,7 +181,6 @@ export default memo(function GeneratedSet({
           items={displayedItems}
           lockedMods={lockedMods}
           store={selectedStore}
-          isEditingExistingLoadout={isEditingExistingLoadout}
           canCompareLoadouts={canCompareLoadouts}
           halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}

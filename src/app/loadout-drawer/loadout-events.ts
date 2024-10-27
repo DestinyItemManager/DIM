@@ -5,7 +5,6 @@ import { Loadout } from '../loadout/loadout-types';
 export interface EditLoadoutState {
   loadout: Loadout;
   showClass: boolean;
-  isNew: boolean;
   storeId: string;
   fromExternal: boolean;
 }
@@ -21,16 +20,14 @@ export function editLoadout(
   storeId: string,
   {
     showClass = true,
-    isNew = true,
     /** Is this from an external source (e.g. a loadout share)? */
     fromExternal = false,
-  }: { showClass?: boolean; isNew?: boolean; fromExternal?: boolean } = {},
+  }: { showClass?: boolean; fromExternal?: boolean } = {},
 ) {
   editLoadout$.next({
     storeId,
     loadout,
     showClass,
-    isNew,
     fromExternal,
   });
 }
@@ -53,7 +50,7 @@ export function copyAndEditLoadout(
   const copiedLoadout = {
     ...loadout,
     name: `${loadout.name} - Copy`,
-    id: globalThis.crypto.randomUUID(),
+    id: globalThis.crypto.randomUUID(), // Give it a new ID so it's a new loadout
   };
-  editLoadout(copiedLoadout, storeId, { showClass, isNew: true });
+  editLoadout(copiedLoadout, storeId, { showClass });
 }

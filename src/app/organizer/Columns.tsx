@@ -893,9 +893,7 @@ function LoadoutsCell({
           ) : (
             <a
               data-filter-value={loadout.id}
-              onClick={(e: React.MouseEvent) =>
-                !e.shiftKey && editLoadout(loadout, owner, { isNew: false })
-              }
+              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
             >
               {loadout.name}
             </a>
