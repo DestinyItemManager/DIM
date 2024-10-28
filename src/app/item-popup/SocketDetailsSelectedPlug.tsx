@@ -239,6 +239,14 @@ export default function SocketDetailsSelectedPlug({
   const hideRequirements =
     plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
+  const showPerks = [
+    PlugCategoryHashes.Season25PotionsLoot,
+    PlugCategoryHashes.Season25PotionsCombat,
+    PlugCategoryHashes.Season25PotionsPlaceholder,
+    PlugCategoryHashes.Season25PotionsReagents,
+    PlugCategoryHashes.Season25PotionsFormula,
+  ].includes(plug.plug.plugCategoryHash);
+
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
       <div className={styles.modIcon}>
@@ -265,6 +273,21 @@ export default function SocketDetailsSelectedPlug({
             )}
           </React.Fragment>
         ))}
+        {showPerks &&
+          plug.perks.map((perk) => {
+            const def = defs.SandboxPerk.get(perk.perkHash);
+            if (!def) {
+              return null;
+            }
+            return (
+              <div className={styles.perk} key={perk.perkHash}>
+                <BungieImage src={def.displayProperties.icon} alt="" />
+                <RichDestinyText
+                  text={def.displayProperties.name || def.displayProperties.description}
+                />
+              </div>
+            );
+          })}
       </div>
 
       {stats.length > 0 && (

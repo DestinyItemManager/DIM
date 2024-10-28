@@ -125,3 +125,16 @@
 .insertLabel {
   width: 100%;
 }
+
+.perk {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 2px 0 0 0;
+
+  img {
+    width: 17px;
+    height: 17px;
+    margin-right: 4px;
+  }
+}

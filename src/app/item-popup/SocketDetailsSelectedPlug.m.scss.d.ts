@@ -11,6 +11,7 @@ interface CssExports {
   'modIcon': string;
   'modRequirement': string;
   'modStats': string;
+  'perk': string;
   'selectedPlug': string;
   'source': string;
 }
