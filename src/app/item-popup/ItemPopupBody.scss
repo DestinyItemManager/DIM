@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../variables.scss' as *;
 
 /**
@@ -9,7 +10,7 @@
   box-sizing: border-box;
 
   &.warning {
-    background: scale-color($red, $lightness: -90%);
+    background: color.scale($red, $lightness: -90%);
     border-top: 4px solid $red;
     padding: 8px;
     white-space: normal;

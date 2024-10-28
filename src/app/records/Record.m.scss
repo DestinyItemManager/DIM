@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../variables.scss' as *;
 
 .recordsGrid {
@@ -63,8 +64,8 @@
   border-color: #bdfc7f;
   outline: 1px solid #bdfc7f;
   background: linear-gradient(
-    scale-color(#bdfc7f, $alpha: -100%) 0%,
-    scale-color(#bdfc7f, $alpha: -90%) 100%
+    color.scale(#bdfc7f, $alpha: -100%) 0%,
+    color.scale(#bdfc7f, $alpha: -90%) 100%
   );
 }
 
@@ -94,13 +95,13 @@
   background-image: linear-gradient(
       to left bottom,
       transparent 25%,
-      scale-color(#a1a2a2, $alpha: -80%) 1px,
+      color.scale(#a1a2a2, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     ),
     linear-gradient(
       to left top,
       transparent 25%,
-      scale-color(#a1a2a2, $alpha: -80%) 1px,
+      color.scale(#a1a2a2, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     );
   // To increase the number of chevrons in the background
@@ -124,13 +125,13 @@
   background-image: linear-gradient(
       to left bottom,
       transparent 25%,
-      scale-color($gilded-triumph-border-color, $alpha: -80%) 1px,
+      color.scale($gilded-triumph-border-color, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     ),
     linear-gradient(
       to left top,
       transparent 25%,
-      scale-color($gilded-triumph-border-color, $alpha: -80%) 1px,
+      color.scale($gilded-triumph-border-color, $alpha: -80%) 1px,
       transparent calc(25% + 1px)
     );
 }
@@ -152,8 +153,8 @@
 .redeemed.gildingTriumph .glow {
   display: block;
   background: linear-gradient(
-    scale-color($gilded-triumph-border-color, $alpha: -100%) 80%,
-    scale-color($gilded-triumph-border-color, $alpha: -90%) 100%
+    color.scale($gilded-triumph-border-color, $alpha: -100%) 80%,
+    color.scale($gilded-triumph-border-color, $alpha: -90%) 100%
   );
 }
 

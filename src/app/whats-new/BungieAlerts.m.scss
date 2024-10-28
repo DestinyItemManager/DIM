@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../variables.scss' as *;
 
 .bungie-alert {
@@ -17,17 +18,17 @@
 
 .error {
   composes: bungie-alert;
-  background: scale-color($red, $lightness: -90%);
+  background: color.scale($red, $lightness: -90%);
   border-top: 4px solid $red;
 }
 .info {
   composes: bungie-alert;
-  background: scale-color(#2f96b4, $lightness: -90%);
+  background: color.scale(#2f96b4, $lightness: -90%);
   border-top: 4px solid #2f96b4;
 }
 .warn {
   composes: bungie-alert;
-  background: scale-color(#f89406, $lightness: -90%);
+  background: color.scale(#f89406, $lightness: -90%);
   border-top: 4px solid #f89406;
 }
 

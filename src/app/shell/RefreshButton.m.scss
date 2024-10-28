@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../variables' as *;
 @use '../dim-ui/tooltip-mixins' as *;
 
@@ -35,7 +36,7 @@
 .errorTooltip {
   max-width: 800px;
 
-  @include tooltip-background-color(scale-color($red, $lightness: -90%));
+  @include tooltip-background-color(color.scale($red, $lightness: -90%));
   @include tooltip-border-color($red);
   @include tooltip-ribbon-color($red);
 
