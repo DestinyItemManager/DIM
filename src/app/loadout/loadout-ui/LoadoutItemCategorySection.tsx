@@ -107,7 +107,7 @@ export default function LoadoutItemCategorySection({
               key={bucket.hash}
               storeId={store.id}
               bucketHash={bucket.hash}
-              items={itemsByBucket.get(bucket.hash)!}
+              items={itemsByBucket.get(bucket.hash) ?? emptyArray()}
               modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
             />
           ))}

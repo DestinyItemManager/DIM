@@ -78,7 +78,7 @@ export default function LoadoutEditBucket({
             key={bucket.hash}
             bucket={bucket}
             classType={classType}
-            items={itemsByBucket[bucket.hash]}
+            items={itemsByBucket[bucket.hash] ?? emptyArray()}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
