@@ -1,5 +1,7 @@
 ## Next
 
+* If you click "Edit Copy" on a loadout, then click "Optimize Armor", then save the loadout from Loadout Optimizer, it will now save the copy, not the original loadout.
+
 ## 8.44.0 <span class="changelog-date">(2024-10-27)</span>
 
 * Allow dragging Item Feed items to any slot, removing the need to scroll to a specific item slot to drag them to a character. They will automatically go to the correct slot on the given character (in the same way Postmaster items function).
