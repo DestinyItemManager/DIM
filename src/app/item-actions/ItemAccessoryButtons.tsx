@@ -1,5 +1,8 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
+import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
+import { lazy, Suspense } from 'react';
+import { useSelector } from 'react-redux';
 import {
   CompareActionButton,
   ConsolidateActionButton,
@@ -9,6 +12,13 @@ import {
   LockActionButton,
   TagActionButton,
 } from './ActionButtons';
+
+const OpenOnStreamDeckButton = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "send-to-stream-deck-button" */ 'app/stream-deck/OpenOnStreamDeckButton/OpenOnStreamDeckButton'
+    ),
+);
 
 /**
  * "Accessory" buttons like tagging, locking, comparing, adding to loadout. Displayed separately on mobile, but together with the move actions on desktop.
@@ -24,6 +34,11 @@ export default function ItemAccessoryButtons({
   showLabel: boolean;
   actionsModel: ItemActionsModel;
 }) {
+  const streamDeckEnabled = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useSelector(streamDeckEnabledSelector)
+    : false;
+
   return (
     <>
       {actionsModel.taggable && (
@@ -42,6 +57,11 @@ export default function ItemAccessoryButtons({
       )}
       {actionsModel.infusable && (
         <InfuseActionButton item={item} label={showLabel} actionModel={actionsModel} />
+      )}
+      {streamDeckEnabled && (
+        <Suspense>
+          <OpenOnStreamDeckButton label={showLabel} item={item} />
+        </Suspense>
       )}
     </>
   );

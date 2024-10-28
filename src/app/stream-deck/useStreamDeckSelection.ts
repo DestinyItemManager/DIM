@@ -3,14 +3,14 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState, ThunkResult } from 'app/store/types';
+import store from 'app/store/store';
+import { RootState } from 'app/store/types';
 import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { useCallback } from 'react';
-import { useDrag } from 'react-dnd';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { streamDeckSelectionSelector } from './selectors';
+import { STREAM_DECK_DEEP_LINK } from './util/authorization';
 import { streamDeckClearId } from './util/packager';
 
 export type StreamDeckSelectionOptions = (
@@ -49,10 +49,8 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
         loadout: loadout.id,
         label: loadout.name,
         character: loadout.characterId,
-        inGameIcon: {
-          icon: loadout.icon,
-          background: loadout.colorIcon,
-        },
+        'inGameIcon.icon': loadout.icon,
+        'inGameIcon.background': loadout.colorIcon,
       };
     }
     case 'loadout': {
@@ -88,48 +86,31 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
   }
 };
 
-const setDataTransfer =
-  (e: React.DragEvent<HTMLDivElement>, data: StreamDeckSelectionOptions): ThunkResult =>
-  async (_, getState) => {
-    const state = getState();
-    e.dataTransfer.setData('text/plain', JSON.stringify(toSelection(data, state)));
-  };
-
 export type UseStreamDeckSelectionArgs = StreamDeckSelectionOptions & {
   equippable: boolean;
   isSubClass?: boolean;
 };
 
-interface UseStreamDeckSelectionReturn {
-  ref?: React.Ref<HTMLDivElement>;
-  onDragStart?: React.DragEventHandler<HTMLDivElement>;
-}
-
-const useSelection = ({
-  equippable,
-  ...props
-}: UseStreamDeckSelectionArgs): UseStreamDeckSelectionReturn => {
-  const dispatch = useThunkDispatch();
+const useSelection = ({ equippable, ...props }: UseStreamDeckSelectionArgs): string | undefined => {
   const type = props.type === 'item' ? 'item' : 'loadout';
   const selection = useSelector(streamDeckSelectionSelector);
-  const canDrag = (equippable || props.isSubClass) && selection === type;
-  const [_coll, dragRef] = useDrag(() => ({
-    type,
-  }));
+  const canSelect = (equippable || props.isSubClass) && selection === type;
 
-  const onDragStart = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => dispatch(setDataTransfer(e, props)),
-    [dispatch, props],
-  );
+  const href = useMemo(() => {
+    const state = store.getState();
+    const query = new URLSearchParams();
+    const params = toSelection(props, state);
+    for (const [key, value] of Object.entries(params)) {
+      if (value !== undefined) {
+        query.set(key, value as string);
+      }
+    }
+    return `${STREAM_DECK_DEEP_LINK}/selection?${query.toString()}`;
+  }, [props]);
 
-  if (canDrag) {
-    return {
-      ref: dragRef,
-      onDragStart: onDragStart,
-    };
+  if (canSelect) {
+    return href;
   }
-
-  return {};
 };
 
 export type UseStreamDeckSelectionFn = typeof useSelection;

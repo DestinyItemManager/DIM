@@ -15,13 +15,11 @@ import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import { filterMap, isEmpty } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { addDividers } from 'app/utils/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -120,22 +118,8 @@ export default function LoadoutView({
   );
   const power = loadoutPower(store, loadoutItemsByCategory);
 
-  const selectionProps = $featureFlags.elgatoStreamDeck
-    ? // eslint-disable-next-line
-      useStreamDeckSelection({
-        type: 'loadout',
-        loadout,
-        store,
-        equippable: !hideShowModPlacements,
-      })
-    : undefined;
-
   return (
-    <div
-      className={clsx(styles.loadout, selectionProps?.ref && styles.disableEvents)}
-      id={loadout.id}
-      {...selectionProps}
-    >
+    <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
         <h2>
           {$featureFlags.editInGameLoadoutIdentifiers && loadout.parameters?.inGameIdentifiers && (

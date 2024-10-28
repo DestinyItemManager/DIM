@@ -7,6 +7,7 @@ import { deleteLoadout } from 'app/loadout/actions';
 import { Loadout } from 'app/loadout/loadout-types';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import { ReactNode, memo, useMemo } from 'react';
 import LoadoutView from './LoadoutView';
 
@@ -29,6 +30,16 @@ export default memo(function LoadoutRow({
   onSnapshotInGameLoadout: () => void;
 }) {
   const dispatch = useThunkDispatch();
+
+  const streamDeckDeepLink = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useStreamDeckSelection({
+        type: 'loadout',
+        loadout,
+        store,
+        equippable,
+      })
+    : undefined;
 
   const actionButtons = useMemo(() => {
     const handleDeleteClick = () => dispatch(deleteLoadout(loadout.id));
@@ -71,6 +82,16 @@ export default memo(function LoadoutRow({
       </button>,
     );
 
+    if (streamDeckDeepLink) {
+      actionButtons.push(
+        <a href={streamDeckDeepLink} target="_blank">
+          <button key="open-on-stream-deck" type="button" className="dim-button">
+            {t('Loadouts.OpenOnStreamDeck')}
+          </button>
+        </a>,
+      );
+    }
+
     if (saved) {
       actionButtons.push(
         <ConfirmButton key="delete" danger onClick={handleDeleteClick}>
@@ -91,7 +112,16 @@ export default memo(function LoadoutRow({
     }
 
     return actionButtons;
-  }, [dispatch, equippable, loadout, onShare, onSnapshotInGameLoadout, saved, store]);
+  }, [
+    dispatch,
+    equippable,
+    loadout,
+    onShare,
+    onSnapshotInGameLoadout,
+    saved,
+    store,
+    streamDeckDeepLink,
+  ]);
 
   return (
     <LoadoutView
