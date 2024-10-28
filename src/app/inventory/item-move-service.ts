@@ -203,7 +203,7 @@ function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>
  */
 export function getSimilarItem(
   getState: () => RootState,
-  stores: DimStore[],
+  stores: readonly DimStore[],
   item: DimItem,
   {
     exclusions,
@@ -217,7 +217,7 @@ export function getSimilarItem(
   const target = getStore(stores, item.owner)!;
 
   // Try each store, preferring getting something from the same character, then vault, then any other character
-  const sortedStores = stores.sort(
+  const sortedStores = stores.toSorted(
     compareBy((store) => {
       if (target.id === store.id) {
         return 0;
