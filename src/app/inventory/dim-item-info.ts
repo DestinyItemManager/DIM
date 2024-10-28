@@ -2,9 +2,9 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { infoLog, warnLog } from 'app/utils/log';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { setItemNote, setItemTag, tagCleanup } from './actions';
 import { DimItem } from './item-types';
@@ -136,12 +136,12 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
 
     const infos = itemInfosSelector(getState());
 
-    if (_.isEmpty(infos)) {
+    if (isEmpty(infos)) {
       return;
     }
 
     const infosWithCraftedDate = Object.values(infos).filter((i) => i.craftedDate);
-    const infosByCraftedDate = _.keyBy(infosWithCraftedDate, (i) => i.craftedDate!);
+    const infosByCraftedDate = keyBy(infosWithCraftedDate, (i) => i.craftedDate!);
 
     let maxItemId = 0n;
 

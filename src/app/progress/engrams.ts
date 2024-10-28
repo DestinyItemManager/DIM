@@ -1,6 +1,6 @@
 import { powerLevelByKeyword } from 'app/search/power-levels';
 import { HashLookup } from 'app/utils/util-types';
-import _ from 'lodash';
+import { clamp } from 'es-toolkit';
 
 /**
  * Logic for determining how much power bonus an engram can provide.
@@ -90,14 +90,14 @@ export function getEngramPowerBonus(
     const powerfulCap = powerLevelByKeyword.powerfulcap;
     if (engramInfo.cap === PowerCap.Powerful) {
       // Powerful engrams can't go above the powerful cap
-      return [_.clamp(powerfulCap - maxPower, 0, engramInfo.bonus), itemHash];
+      return [clamp(powerfulCap - maxPower, 0, engramInfo.bonus), itemHash];
     } else if (engramInfo.cap === PowerCap.Pinnacle) {
       // Once you're at or above the powerful cap, pinnacles only give +2, up to the hard cap
       const pinnacleCap = Math.min(
         powerLevelByKeyword.pinnaclecap,
         Math.max(maxPower, powerfulCap) + 2,
       );
-      return [_.clamp(pinnacleCap - maxPower, 0, engramInfo.bonus), itemHash];
+      return [clamp(pinnacleCap - maxPower, 0, engramInfo.bonus), itemHash];
     }
   }
 

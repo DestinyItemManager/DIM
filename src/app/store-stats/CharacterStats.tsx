@@ -17,9 +17,9 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import { sumBy } from 'app/utils/collections';
 import clsx from 'clsx';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
@@ -160,7 +160,7 @@ function CharacterStats({
       {showTier && (
         <div className="stat tier">
           {t('LoadoutBuilder.TierNumber', {
-            tier: _.sumBy(statInfos, (s) => statTier(s.value)),
+            tier: sumBy(statInfos, (s) => statTier(s.value)),
           })}
         </div>
       )}

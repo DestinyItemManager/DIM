@@ -63,7 +63,7 @@ export default function SeasonalRank({
 
   if (
     // Only add the fake rewards once
-    !rewardItems.filter((item) => item.rewardedAtProgressionLevel === prestigeRewardLevel).length
+    !rewardItems.some((item) => item.rewardedAtProgressionLevel === prestigeRewardLevel)
   ) {
     rewardItems.push(fakeReward(prestigeRewardHash, prestigeRewardLevel));
   }

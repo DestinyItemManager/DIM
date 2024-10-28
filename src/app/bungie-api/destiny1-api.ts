@@ -1,5 +1,6 @@
 import { Vendor } from 'app/destiny1/vendors/vendor.service';
 import { t } from 'app/i18next-t';
+import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
@@ -7,7 +8,6 @@ import {
   PlatformErrorCodes,
   ServerResponse,
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import {
   D1GetAccountResponse,
@@ -185,13 +185,13 @@ export async function equipItems(
   items: DimItem[],
 ): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
-  items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
+  const itemIds = items.toSorted(compareBy((i) => i.isExotic)).map((i) => i.id);
 
   const response = await authenticatedHttpClient<ServerResponse<DestinyEquipItemResults>>(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItems/', {
       characterId: store.id,
       membershipType: account.originalPlatformType,
-      itemIds: items.map((i) => i.id),
+      itemIds,
     }),
   );
 

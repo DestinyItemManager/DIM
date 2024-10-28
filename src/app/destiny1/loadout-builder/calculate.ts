@@ -1,8 +1,8 @@
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import { sumBy } from 'app/utils/collections';
 import { infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import {
@@ -206,7 +206,7 @@ export async function getSetBucketsStep(
   }
 
   const tiers = Object.groupBy(tiersSet.keys(), (tierString: string) =>
-    _.sumBy(tierString.split('/'), (num) => parseInt(num, 10)),
+    sumBy(tierString.split('/'), (num) => parseInt(num, 10)),
   );
   for (const tier of Object.values(tiers)) {
     tier.sort().reverse();

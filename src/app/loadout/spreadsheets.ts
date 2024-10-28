@@ -21,8 +21,8 @@ import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
-import { filterMap } from 'app/utils/collections';
-import { compareBy } from 'app/utils/comparators';
+import { filterMap, mapValues } from 'app/utils/collections';
+import { compareByIndex } from 'app/utils/comparators';
 import { CsvRow, downloadCsv } from 'app/utils/csv';
 import {
   aspectSocketCategoryHashes,
@@ -31,7 +31,6 @@ import {
 } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { fullyResolveLoadout } from './ingame/selectors';
 import { getSubclassPlugs } from './loadout-item-utils';
 import { includesRuntimeStatMods } from './stats';
@@ -123,8 +122,9 @@ export function downloadLoadoutsCsv(): ThunkResult {
 
       const bucketOrder = Object.values(D2Categories).flat();
 
-      const sortItems = compareBy((item: ResolvedLoadoutItem) =>
-        bucketOrder.indexOf(item.item.bucket.hash),
+      const sortItems = compareByIndex(
+        bucketOrder,
+        (item: ResolvedLoadoutItem) => item.item.bucket.hash,
       );
 
       const equippedItems = resolvedLoadout.resolvedLoadoutItems
@@ -139,7 +139,7 @@ export function downloadLoadoutsCsv(): ThunkResult {
         .filter((i) => !i.loadoutItem.equip)
         .sort(sortItems);
 
-      const unequippedItemValues = _.mapValues(
+      const unequippedItemValues = mapValues(
         Object.groupBy(unequippedItems, (item) => `Unequipped ${item.item.bucket.name}`),
         (items) => items.map((item) => item.item.name),
       );

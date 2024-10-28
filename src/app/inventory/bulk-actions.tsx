@@ -5,7 +5,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { errorMessage } from 'app/utils/errors';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import { canSyncLockState } from './SyncTagLock';
 import { setItemHashTag, setItemTagsBulk } from './actions';
 import { TagCommand, TagValue, tagConfig } from './dim-item-info';
@@ -30,7 +30,7 @@ export function bulkTagItems(
       previousState.set(item, getTag(item));
     }
 
-    const [instanced, nonInstanced] = _.partition(itemsToBeTagged, (i) => i.instanced);
+    const [instanced, nonInstanced] = partition(itemsToBeTagged, (i) => i.instanced);
 
     if (instanced.length) {
       dispatch(

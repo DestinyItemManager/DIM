@@ -1,8 +1,8 @@
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { isEmpty } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/promises';
-import _ from 'lodash';
 import * as actions from '../actions';
 import { ClarityCharacterStats, ClarityStatsVersion } from './character-stats';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
@@ -25,7 +25,7 @@ const fetchClarity = async <T>(type: keyof typeof urls, version?: string) => {
     throw new Error(`failed to fetch ${type}`);
   }
   const json = (await data.json()) as T;
-  if (_.isEmpty(json)) {
+  if (!json || isEmpty(json)) {
     throw new Error(`empty response JSON for ${type}`);
   }
   return json;

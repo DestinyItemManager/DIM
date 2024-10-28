@@ -1,8 +1,8 @@
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { isMac } from 'app/utils/browsers';
-import { compareBy } from 'app/utils/comparators';
+import { compareByIndex } from 'app/utils/comparators';
+import { noop } from 'app/utils/functions';
 import { StringLookup } from 'app/utils/util-types';
-import { noop } from 'lodash';
 
 /** Mapping from key name to fun symbols */
 const map: StringLookup<string> = {
@@ -105,7 +105,7 @@ function normalizeCombo(combo: string) {
   return combo
     .split('+')
     .map((c) => (c === 'mod' ? (isMac() ? 'meta' : 'ctrl') : c))
-    .sort(compareBy((c) => modifiers.indexOf(c) + 1 || 999))
+    .sort(compareByIndex(modifiers, (c) => c))
     .join('+');
 }
 

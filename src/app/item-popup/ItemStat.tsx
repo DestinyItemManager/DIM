@@ -11,11 +11,13 @@ import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-kno
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
+import { sumBy } from 'app/utils/collections';
+import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { clamp } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
@@ -51,8 +53,10 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const isMasterworkedStat = masterworkValue !== 0;
   const masterworkDisplayValue = masterworkValue ?? armor2MasterworkValue;
 
-  const modEffects = item && _.sortBy(getModEffects(item, stat.statHash), ([n]) => -n);
-  const modEffectsTotal = modEffects ? _.sumBy(modEffects, ([n]) => n) : 0;
+  const modEffects =
+    item &&
+    getModEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
+  const modEffectsTotal = modEffects ? sumBy(modEffects, ([value]) => value) : 0;
 
   const baseBar = item?.bucket.inArmor
     ? // if it's armor, the base bar length should be
@@ -73,7 +77,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
     }
   } else if (modEffectsTotal < 0 && masterworkDisplayValue) {
-    segments.push([_.clamp(masterworkDisplayValue, 0, stat.value), styles.masterworkStatBar]);
+    segments.push([clamp(masterworkDisplayValue, 0, stat.value), styles.masterworkStatBar]);
   } else if (masterworkDisplayValue) {
     segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
   }
@@ -299,7 +303,7 @@ function getNonReusableModSockets(item: DimItem) {
  * Returns the total value the stat is modified by, or 0 if it is not being modified.
  */
 function getTotalModEffects(item: DimItem, statHash: number) {
-  return _.sumBy(getModEffects(item, statHash), ([s]) => s);
+  return sumBy(getModEffects(item, statHash), ([s]) => s);
 }
 /**
  * Looks through the item sockets to find any weapon/armor mods that modify this stat.
@@ -321,7 +325,7 @@ export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
  * passing the item parameter will make this more accurate
  */
 function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[]) {
-  return _.sumBy(getPlugEffects(sockets, armorStatHashes), ([s]) => s);
+  return sumBy(getPlugEffects(sockets, armorStatHashes), ([s]) => s);
 }
 
 /**
@@ -334,7 +338,7 @@ function getTotalPlugEffects(sockets: DimSocket[], armorStatHashes: number[]) {
  * [ the mod's name, its numeric effect upon selected stats ]
  */
 function getPlugEffects(sockets: DimSocket[], statHashes: number[]) {
-  const modEffects: [number, string][] = [];
+  const modEffects: [value: number, name: string][] = [];
 
   for (const socket of sockets) {
     if (!socket.plugged?.enabled || !socket.plugged.stats || socketContainsIntrinsicPlug(socket)) {

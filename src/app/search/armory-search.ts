@@ -6,7 +6,6 @@ import { emptyArray } from 'app/utils/empty';
 import { getItemYear } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
-import _ from 'lodash';
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
 import { plainString } from './text-utils';
 
@@ -83,12 +82,14 @@ export function getArmorySuggestions(
   }
 
   // Prefer suggestions that start with the query as opposed to those where it's in the middle
-  const sortedEntries = _.sortBy(armoryEntries, (entry) => !entry.plainName.startsWith(plainQuery));
+  const sortedEntries = armoryEntries.sort(
+    compareBy((entry) => !entry.plainName.startsWith(plainQuery)),
+  );
 
   // If there are more than 10 entries, the user's query is probably not descriptive enough to show many items,
   // But if they've typed enough characters, maybe show some?
   const limitedEntries =
-    (sortedEntries.length <= 10 ? sortedEntries : query.length >= 5 && _.take(sortedEntries, 3)) ||
+    (sortedEntries.length <= 10 ? sortedEntries : query.length >= 5 && sortedEntries.slice(0, 3)) ||
     emptyArray();
 
   return limitedEntries.map((armoryItem) => ({

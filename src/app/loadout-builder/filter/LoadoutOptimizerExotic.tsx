@@ -5,10 +5,10 @@ import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { sample } from 'es-toolkit';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
 import noExoticPreferenceIcon from 'images/noExoticPreference.svg';
-import _ from 'lodash';
 import { Dispatch, memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -50,7 +50,7 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
   const handleRandomize = () => {
     const exotics = findLockableExotics(allItems, vendorItems, classType, defs);
     if (exotics.length > 0) {
-      const randomExotic = _.sample(exotics)!;
+      const randomExotic = sample(exotics);
       lbDispatch({ type: 'lockExotic', lockedExoticHash: randomExotic.def.hash });
     }
   };

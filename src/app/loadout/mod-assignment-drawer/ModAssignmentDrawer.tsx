@@ -7,9 +7,9 @@ import { permissiveArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
+import { compact } from 'app/utils/collections';
 import Cost from 'app/vendors/Cost';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import ModPicker from '../ModPicker';
 import PlugDef from '../loadout-ui/PlugDef';
@@ -98,7 +98,7 @@ export default function ModAssignmentDrawer({
     [],
   );
 
-  const flatAssigned = _.compact(Object.values(itemModAssignments).flat());
+  const flatAssigned = compact(Object.values(itemModAssignments).flat());
 
   if (!defs) {
     return null;

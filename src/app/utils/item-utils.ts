@@ -29,7 +29,6 @@ import {
   ItemCategoryHashes,
   PlugCategoryHashes,
 } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { filterMap, objectifyArray } from './collections';
 
 // damage is a mess!
@@ -255,14 +254,13 @@ export function getItemYear(
     if (
       ttk ||
       item.infusable ||
-      _.intersection(d1YearSourceHashes.year2, item.sourceHashes).length
+      item.sourceHashes.some((hash) => d1YearSourceHashes.year2.includes(hash))
     ) {
       year = 2;
     }
-    const roi = item.sourceHashes.includes(d1YearSourceHashes.year3[0]);
     if (
       !ttk &&
-      (item.classified || roi || _.intersection(d1YearSourceHashes.year3, item.sourceHashes).length)
+      (item.classified || item.sourceHashes.some((hash) => d1YearSourceHashes.year3.includes(hash)))
     ) {
       year = 3;
     }

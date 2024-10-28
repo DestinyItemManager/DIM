@@ -1,5 +1,4 @@
 import { Observable } from 'app/utils/observable';
-import _ from 'lodash';
 
 const localStorageKey = 'dim-changelog-viewed-version';
 
@@ -46,7 +45,7 @@ class Versions {
 // Clean out Beta versions to ignore their build number.
 function cleanVersion(version: string | null) {
   if (version) {
-    return _.take(version.split('.'), 3).join('.');
+    return version.split('.').slice(0, 3).join('.');
   }
   return version;
 }

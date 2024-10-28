@@ -12,7 +12,7 @@ import { ThunkResult } from 'app/store/types';
 import { errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import { Dispatch } from 'redux';
 import { loadDimApiData } from './actions';
 import { profileLoadedFromIDB } from './basic-actions';
@@ -149,7 +149,7 @@ function importBackupIntoLocalState(data: ExportResponse, silent = false): Thunk
       profileLoadedFromIDB({
         settings: { ...initialSettingsState, ...settings } as Settings,
         profiles,
-        itemHashTags: _.keyBy(itemHashTags, (t) => t.hash),
+        itemHashTags: keyBy(itemHashTags, (t) => t.hash),
         searches,
         updateQueue: [],
       }),

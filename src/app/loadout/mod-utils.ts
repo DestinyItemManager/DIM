@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -29,10 +29,7 @@ export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, Bucke
  * 5. by mod name, so mods in the same category with the same energy cost are alphabetical
  */
 export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
-  compareBy((mod) => {
-    const knownIndex = knownModPlugCategoryHashes.indexOf(mod.plug.plugCategoryHash);
-    return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
-  }),
+  compareByIndex(knownModPlugCategoryHashes, (mod) => mod.plug.plugCategoryHash),
   compareBy((mod) => mod.itemTypeDisplayName),
   compareBy((mod) => mod.plug.energyCost?.energyCost),
   compareBy((mod) => mod.displayProperties.name),
@@ -45,17 +42,12 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
  * This assumes that each PluggableInventoryItemDefinition in each PluggableInventoryItemDefinition[]
  * has the same plugCategoryHash as it pulls it from the first PluggableInventoryItemDefinition.
  */
-export const sortModGroups = chainComparator(
-  compareBy((mods: PluggableInventoryItemDefinition[]) => {
-    // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
-    const knownIndex = mods.length
-      ? knownModPlugCategoryHashes.indexOf(mods[0].plug.plugCategoryHash)
-      : -1;
-    return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
-  }),
-  compareBy((mods: PluggableInventoryItemDefinition[]) =>
-    mods.length ? mods[0].itemTypeDisplayName : '',
+export const sortModGroups = chainComparator<PluggableInventoryItemDefinition[]>(
+  // We sort by known knownModPlugCategoryHashes so that it general, helmet, ..., classitem, raid, others.
+  compareByIndex(knownModPlugCategoryHashes, (mods) =>
+    mods.length ? mods[0].plug.plugCategoryHash : undefined,
   ),
+  compareBy((mods) => (mods.length ? mods[0].itemTypeDisplayName : '')),
 );
 
 /** Figures out if an item definition is an insertable armor 2.0 mod. */

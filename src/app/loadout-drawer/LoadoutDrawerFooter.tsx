@@ -5,9 +5,9 @@ import { t } from 'app/i18next-t';
 import { loadoutSavedSelector } from 'app/loadout/selectors';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
+import { isEmpty } from 'app/utils/collections';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { currySelector } from 'app/utils/selectors';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -67,7 +67,7 @@ export default function LoadoutDrawerFooter({
     !loadout.parameters?.mods?.length &&
     !loadout.parameters?.clearMods &&
     // Allow fashion only loadouts
-    _.isEmpty(loadout.parameters?.modsByBucket);
+    isEmpty(loadout.parameters?.modsByBucket);
   if (loadoutEmpty) {
     saveDisabledReasons.push(t('Loadouts.SaveDisabled.Empty'));
   }

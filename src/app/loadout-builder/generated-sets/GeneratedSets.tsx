@@ -5,7 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { filterMap } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { identity } from 'lodash';
+import { identity } from 'app/utils/functions';
 import { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { useAutoMods } from '../process/useProcess';

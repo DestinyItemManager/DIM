@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import { noop } from 'app/utils/functions';
 
 /**
  * A rate limiter queue applies when the path of a request matches its regex. It will implement the semantics of

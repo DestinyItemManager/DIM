@@ -4,9 +4,9 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
+import { sumBy } from 'app/utils/collections';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import _ from 'lodash';
 import {
   ArmorStatHashes,
   ArmorStats,
@@ -175,8 +175,8 @@ export function ReferenceTiers({
   resolvedStatConstraints: ResolvedStatConstraint[];
 }) {
   const defs = useD2Definitions()!;
-  const totalTier = _.sumBy(resolvedStatConstraints, (c) => c.minTier);
-  const enabledTier = _.sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : c.minTier));
+  const totalTier = sumBy(resolvedStatConstraints, (c) => c.minTier);
+  const enabledTier = sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : c.minTier));
 
   return (
     <div className={styles.container}>

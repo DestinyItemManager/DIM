@@ -10,6 +10,7 @@ import {
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
+import { count, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -24,7 +25,7 @@ import {
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
 import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
@@ -310,8 +311,8 @@ export function fitMostMods({
 
   // An object of item id's to specialty socket metadata, this is used to ensure that
   // combat and activity mods can be slotted into an item.
-  const itemSocketMetadata = _.mapValues(
-    _.keyBy(items, (item) => item.id),
+  const itemSocketMetadata = mapValues(
+    keyBy(items, (item) => item.id),
     (item) => getSpecialtySocketMetadatas(item),
   );
 
@@ -363,8 +364,8 @@ export function fitMostMods({
   // A object of item id's to energy information. This is so we can precalculate
   // working energy used, capacity and type and use this to validate whether a mod
   // can be used in an item.
-  const itemEnergies = _.mapValues(
-    _.keyBy(items, (item) => item.id),
+  const itemEnergies = mapValues(
+    keyBy(items, (item) => item.id),
     (item) =>
       buildItemEnergy({
         item,
@@ -490,7 +491,7 @@ export function fitMostMods({
         energyCapacity: itemEnergies[item.id].originalCapacity,
         energyUsed: requiresArtificeEnhancement
           ? MAX_ARMOR_ENERGY_CAPACITY
-          : _.sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
+          : sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
       };
     }
   }
@@ -514,7 +515,7 @@ export function fitMostMods({
  */
 function getArmorSocketsAndMods(
   sockets: DimSockets | null,
-  mods: PluggableInventoryItemDefinition[],
+  mods: readonly PluggableInventoryItemDefinition[],
 ) {
   const orderedSockets = getSocketsByCategoryHash(sockets, SocketCategoryHashes.ArmorMods)
     // If a socket is not plugged (even with an empty socket) we consider it disabled
@@ -535,9 +536,8 @@ function getArmorSocketsAndMods(
   // Naively inserting those mods finds the artifact mods in their position,
   // but the artifact-only socket can't slot the normal resist mod. Thus,
   // we must assign the regular resist mod first.
-  const orderedMods = _.sortBy(
-    mods,
-    (mod) => orderedSockets.filter((s) => plugFitsIntoSocket(s, mod.hash)).length,
+  const orderedMods = mods.toSorted(
+    compareBy((mod) => count(orderedSockets, (s) => plugFitsIntoSocket(s, mod.hash))),
   );
 
   return { orderedSockets, orderedMods };
@@ -907,7 +907,7 @@ function calculateUpgradeCost(
       (i) => i.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
     );
     const totalModCost =
-      itemEnergy.used + _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0);
+      itemEnergy.used + sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost ?? 0);
     const newItemCapacity = Math.max(totalModCost, itemEnergy.originalCapacity);
     const thisItemUpgradeCost = getUpgradeCost(
       upgradeCostModel,
@@ -932,7 +932,7 @@ function buildItemEnergy({
   armorEnergyRules: ArmorEnergyRules;
 }): ItemEnergy {
   return {
-    used: _.sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
+    used: sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
     isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
@@ -962,8 +962,8 @@ function isModEnergyValid(
   if (itemEnergy.originalCapacity < 1) {
     return false;
   }
-  const modToAssignCost = modToAssign.plug.energyCost?.energyCost || 0;
-  const assignedModsCost = _.sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost || 0);
+  const modToAssignCost = modToAssign.plug.energyCost?.energyCost ?? 0;
+  const assignedModsCost = sumBy(assignedMods, (mod) => mod?.plug.energyCost?.energyCost ?? 0);
 
   return itemEnergy.used + modToAssignCost + assignedModsCost <= itemEnergy.derivedCapacity;
 }

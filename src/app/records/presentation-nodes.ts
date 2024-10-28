@@ -2,11 +2,12 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
-import { count, filterMap } from 'app/utils/collections';
+import { compact, count, filterMap } from 'app/utils/collections';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 
 import { DimTitle } from 'app/inventory/store-types';
 import { getTitleInfo } from 'app/inventory/store/d2-store-factory';
+import { compareBy } from 'app/utils/comparators';
 import {
   DestinyCollectibleDefinition,
   DestinyCollectibleState,
@@ -27,7 +28,6 @@ import {
   DestinyRecordState,
   DestinyScope,
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
 
 export interface DimPresentationNodeLeaf {
@@ -145,7 +145,7 @@ export function toPresentationNodeTree(
       itemCreationContext,
       presentationNodeDef.children.collectibles,
     );
-    const visible = collectibles.filter((c) => !c.fake).length;
+    const visible = count(collectibles, (c) => !c.fake);
     const acquired = count(
       collectibles,
       (c) => !c.fake && !(c.state & DestinyCollectibleState.NotAcquired),
@@ -444,14 +444,14 @@ function toCollectibles(
   collectibleChildren: DestinyPresentationNodeCollectibleChildEntry[],
 ): DimCollectible[] {
   const { defs, profileResponse } = itemCreationContext;
-  return _.compact(
+  return compact(
     collectibleChildren.flatMap(({ collectibleHash }) => {
       const fakeItemHash = extraItemCollectibles[collectibleHash];
       const collectibleDef = defs.Collectible.get(collectibleHash);
       if (!collectibleDef) {
         return null;
       }
-      const itemHashes = _.compact([collectibleDef.itemHash, fakeItemHash]);
+      const itemHashes = compact([collectibleDef.itemHash, fakeItemHash]);
       return itemHashes.map((itemHash) => {
         const state = getCollectibleState(collectibleDef, profileResponse);
         if (
@@ -517,9 +517,8 @@ function toCraftables(
   itemCreationContext: ItemCreationContext,
   craftableChildren: DestinyPresentationNodeCraftableChildEntry[],
 ): DimCraftable[] {
-  return filterMap(
-    _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority),
-    (c) => toCraftable(itemCreationContext, c.craftableItemHash),
+  return filterMap(craftableChildren.toSorted(compareBy((c) => c.nodeDisplayPriority)), (c) =>
+    toCraftable(itemCreationContext, c.craftableItemHash),
   );
 }
 
@@ -598,13 +597,11 @@ export function getCollectibleState(
 ) {
   return collectibleDef.scope === DestinyScope.Character
     ? profileResponse.characterCollectibles?.data
-      ? _.minBy(
-          // Find the version of the collectible that's unlocked, if any
-          Object.values(profileResponse.characterCollectibles.data)
-            .map((c) => c.collectibles[collectibleDef.hash].state)
-            .filter((s) => s !== undefined),
-          (state) => state & DestinyCollectibleState.NotAcquired,
-        )
+      ? // Find the version of the collectible that's unlocked, if any
+        Object.values(profileResponse.characterCollectibles.data).find(
+          (c) =>
+            (c.collectibles[collectibleDef.hash].state ?? 0) & DestinyCollectibleState.NotAcquired,
+        )?.collectibles[collectibleDef.hash].state
       : undefined
     : profileResponse.profileCollectibles?.data?.collectibles[collectibleDef.hash]?.state;
 }

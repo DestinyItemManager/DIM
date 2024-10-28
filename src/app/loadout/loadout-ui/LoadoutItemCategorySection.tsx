@@ -16,10 +16,12 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
+import { isEmpty } from 'app/utils/collections';
+import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from './BucketPlaceholder';
@@ -63,15 +65,16 @@ export default function LoadoutItemCategorySection({
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
-      : _.sortBy(
-          Array.from(itemsByBucket.keys(), (bucketHash) => buckets.byHash[bucketHash]),
-          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash),
+      : Array.from(itemsByBucket.keys(), (bucketHash) => buckets.byHash[bucketHash]).sort(
+          compareBy((bucket) =>
+            buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash),
+          ),
         );
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
 
   const isArmor = category === 'Armor';
-  const hasFashion = isArmor && !_.isEmpty(modsByBucket);
+  const hasFashion = isArmor && !isEmpty(modsByBucket);
 
   const [optimizeLoadout, constraints]: [Loadout, ResolvedStatConstraint[] | undefined] =
     useMemo(() => {
@@ -154,7 +157,7 @@ function ItemBucket({
   items: ResolvedLoadoutItem[];
   modsForBucket: number[];
 }) {
-  const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
+  const [equipped, unequipped] = partition(items, (li) => li.loadoutItem.equip);
 
   const showFashion = LockableBucketHashes.includes(bucketHash);
 

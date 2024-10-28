@@ -18,7 +18,7 @@ import { AppIcon, addIcon } from 'app/shell/icons';
 import { filterMap } from 'app/utils/collections';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { D1ManifestDefinitions } from '../d1-definitions';
@@ -78,9 +78,8 @@ export default function LoadoutDrawerContents({
   const availableTypes = filterMap(loadoutTypes, (h) => buckets.byHash[h]);
   const itemsByBucket = Object.groupBy(items, (li) => li.item.bucket.hash);
 
-  const [typesWithItems, typesWithoutItems] = _.partition(
-    availableTypes,
-    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length,
+  const [typesWithItems, typesWithoutItems] = partition(availableTypes, (bucket) =>
+    Boolean(bucket.hash && itemsByBucket[bucket.hash]?.length),
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.hash));

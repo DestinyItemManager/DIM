@@ -3,8 +3,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VendorHashes, silverItemHash } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
-import { filterMap } from 'app/utils/collections';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import { compact, filterMap } from 'app/utils/collections';
+import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparators';
 import {
   DestinyCollectibleState,
   DestinyDestinationDefinition,
@@ -16,7 +16,6 @@ import {
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -45,33 +44,26 @@ export function toVendorGroups(
 
   const { defs } = context;
 
-  return _.sortBy(
-    Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => {
+  return Object.values(vendorsResponse.vendorGroups.data.groups)
+    .map((group) => {
       const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
       return {
         def: groupDef,
-        vendors: _.sortBy(
-          filterMap(group.vendorHashes, (vendorHash) => {
-            const vendor = toVendor(
-              // Override the item components from the profile with this vendor's item components
-              { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
-              vendorHash,
-              vendorsResponse.vendors.data?.[vendorHash],
-              characterId,
-              vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-              vendorsResponse,
-            );
-            return vendor?.items.length ? vendor : undefined;
-          }),
-          (v) => {
-            const index = vendorOrder.indexOf(v.def.hash);
-            return index >= 0 ? index : v.def.hash;
-          },
-        ),
+        vendors: filterMap(group.vendorHashes, (vendorHash) => {
+          const vendor = toVendor(
+            // Override the item components from the profile with this vendor's item components
+            { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
+            vendorHash,
+            vendorsResponse.vendors.data?.[vendorHash],
+            characterId,
+            vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+            vendorsResponse,
+          );
+          return vendor?.items.length ? vendor : undefined;
+        }).sort(compareByIndex(vendorOrder, (v) => v.def.hash)),
       };
-    }),
-    (g) => g.def.order,
-  );
+    })
+    .sort(compareBy((g) => g.def.order));
 }
 
 export function toVendor(
@@ -114,7 +106,7 @@ export function toVendor(
 
   const vendorCurrencyHashes = new Set<number>();
   gatherVendorCurrencies(defs, vendorDef, vendorsResponse, sales, vendorCurrencyHashes);
-  const currencies = _.compact(
+  const currencies = compact(
     Array.from(vendorCurrencyHashes, (h) => defs.InventoryItem.get(h)).filter(
       (i) =>
         !i?.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders) &&

@@ -2,9 +2,9 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/items/item-search-filter';
+import { count } from 'app/utils/collections';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './ItemTypeSelector.m.scss';
 
@@ -346,7 +346,7 @@ export default function ItemTypeSelector({
   selection = selection.length ? selection : [selectionTree];
 
   const handleSelection = (depth: number, subCategory: ItemCategoryTreeNode) =>
-    onSelection([..._.take(selection, depth + 1), subCategory]);
+    onSelection([...selection.slice(0, depth + 1), subCategory]);
 
   return (
     <div className={styles.selector}>
@@ -390,13 +390,12 @@ export default function ItemTypeSelector({
                       : itemCategory.title}{' '}
                     <span className={styles.buttonItemCount}>
                       (
-                      {
-                        filteredItems.filter(
-                          (i) =>
-                            i.comparable &&
-                            categoryHashList.every((h) => i.itemCategoryHashes.includes(h)),
-                        ).length
-                      }
+                      {count(
+                        filteredItems,
+                        (i) =>
+                          i.comparable &&
+                          categoryHashList.every((h) => i.itemCategoryHashes.includes(h)),
+                      )}
                       )
                     </span>
                   </label>

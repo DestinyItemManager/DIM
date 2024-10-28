@@ -4,10 +4,10 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
+import { compareBy, compareByIndex } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
@@ -172,13 +172,10 @@ export default function Activities({ account }: Props) {
       'elderchallenge',
     ];
 
-    const rawActivities = Object.values(stores[0].advisors.activities).filter(
-      (a) => a.activityTiers && allowList.includes(a.identifier),
-    );
-    const activities = _.sortBy(rawActivities, (a) => {
-      const ix = allowList.indexOf(a.identifier);
-      return ix === -1 ? 999 : ix;
-    }).map((a) => processActivities(defs, stores, a));
+    const activities = Object.values(stores[0].advisors.activities)
+      .filter((a) => a.activityTiers && allowList.includes(a.identifier))
+      .sort(compareByIndex(allowList, (a) => a.identifier))
+      .map((a) => processActivities(defs, stores, a));
 
     for (const a of activities) {
       for (const t of a.tiers) {
@@ -228,23 +225,23 @@ export default function Activities({ account }: Props) {
                 <div key={tier.name} className="activity-progress">
                   {activity.tiers.length > 1 && <div className="tier-title">{tier.name}</div>}
                   <div className="tier-characters">
-                    {_.sortBy(tier.characters, (c) =>
-                      characters.findIndex((s) => s.id === c.id),
-                    ).map((character) => (
-                      <div key={character.id} className="tier-row">
-                        {character.objectives.length === 0 &&
-                          character.steps.map((step, index) => (
-                            <span
-                              key={index}
-                              className={clsx('step-icon', { complete: step.complete })}
-                            />
+                    {tier.characters
+                      .toSorted(compareBy((c) => characters.findIndex((s) => s.id === c.id)))
+                      .map((character) => (
+                        <div key={character.id} className="tier-row">
+                          {character.objectives.length === 0 &&
+                            character.steps.map((step, index) => (
+                              <span
+                                key={index}
+                                className={clsx('step-icon', { complete: step.complete })}
+                              />
+                            ))}
+                          {character.objectives.map((objective) => (
+                            <Objective objective={objective} key={objective.objectiveHash} />
                           ))}
-                        {character.objectives.map((objective) => (
-                          <Objective objective={objective} key={objective.objectiveHash} />
-                        ))}
-                        {character.objectives.length > 0 && <div className="objectives-spacer" />}
-                      </div>
-                    ))}
+                          {character.objectives.length > 0 && <div className="objectives-spacer" />}
+                        </div>
+                      ))}
                   </div>
                 </div>
               ))}

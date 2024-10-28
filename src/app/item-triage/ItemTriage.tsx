@@ -19,12 +19,13 @@ import { loadoutsByItemSelector } from 'app/loadout/selectors';
 import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { loadoutToSearchString } from 'app/search/items/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon } from 'app/shell/icons';
+import { minOf } from 'app/utils/collections';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
-import _ from 'lodash';
+import { maxBy } from 'es-toolkit';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
@@ -195,7 +196,7 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
   // separate section IDs allows separate settings saves
   const sectionId = `${item.bucket.inArmor ? 'armor' : 'weapon'}-triage-itemcount`;
 
-  const fewestSimilar = _.minBy(itemFactors, (f) => f.count)!.count;
+  const fewestSimilar = minOf(itemFactors, (f) => f.count);
   return (
     <CollapsibleTitle
       title={t('Triage.SimilarItems')}
@@ -348,7 +349,7 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
 
     const notableStats = getNotableStats(item, customTotalStatsByClass, allItems);
     if (notableStats.notableStats.length > 0) {
-      const bestStat = _.maxBy(notableStats.notableStats, (s) => s.percent)!;
+      const bestStat = maxBy(notableStats.notableStats, (s) => s.percent)!;
       extra = (
         <span style={{ color: getValueColors(bestStat.quality)[1] }}>{bestStat.percent}%</span>
       );

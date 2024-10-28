@@ -1,5 +1,5 @@
+import { maxOf } from 'app/utils/collections';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { PressTip, Tooltip } from '../dim-ui/PressTip';
@@ -38,8 +38,8 @@ export default memo(function ItemTalentGrid({
   }
 
   const visibleNodes = talentGrid.nodes.filter((n) => !n.hidden);
-  const numColumns = _.maxBy(visibleNodes, (n) => n.column)!.column + 1 - hiddenColumns;
-  const numRows = _.maxBy(visibleNodes, (n) => n.row)!.row + 1;
+  const numColumns = maxOf(visibleNodes, (n) => n.column) + 1 - hiddenColumns;
+  const numRows = maxOf(visibleNodes, (n) => n.row) + 1;
 
   const height = (numRows * totalNodeSize - nodePadding) * scaleFactor;
   const width = (numColumns * totalNodeSize - nodePadding) * scaleFactor;

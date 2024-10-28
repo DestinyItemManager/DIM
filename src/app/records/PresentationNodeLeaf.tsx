@@ -1,6 +1,6 @@
+import { compareBy } from 'app/utils/comparators';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import { DestinyCollectibleState, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import { sortBy } from 'lodash';
 import Collectible from './Collectible';
 import CollectiblesGrid from './CollectiblesGrid';
 import Craftable from './Craftable';
@@ -74,51 +74,57 @@ export default function PresentationNodeLeaf({
 }
 
 function sortRecords(records: DimRecord[]): DimRecord[] {
-  return sortBy(records, (record) => {
-    //  Triumph is already completed so move it to back of list.
-    if (
-      record.recordComponent.state & DestinyRecordState.RecordRedeemed ||
-      record.recordComponent.state & DestinyRecordState.CanEquipTitle ||
-      !record.recordComponent.state
-    ) {
-      return 1;
-    }
+  return records.toSorted(
+    compareBy((record) => {
+      //  Triumph is already completed so move it to back of list.
+      if (
+        record.recordComponent.state & DestinyRecordState.RecordRedeemed ||
+        record.recordComponent.state & DestinyRecordState.CanEquipTitle ||
+        !record.recordComponent.state
+      ) {
+        return 1;
+      }
 
-    // check which key is used to track progress
-    let objectives;
-    if (record.recordComponent.intervalObjectives) {
-      objectives = record.recordComponent.intervalObjectives;
-    } else if (record.recordComponent.objectives) {
-      objectives = record.recordComponent.objectives;
-    } else {
-      // its a legacy triumph so it has no objectives and is not completed
-      return 0;
-    }
+      // check which key is used to track progress
+      let objectives;
+      if (record.recordComponent.intervalObjectives) {
+        objectives = record.recordComponent.intervalObjectives;
+      } else if (record.recordComponent.objectives) {
+        objectives = record.recordComponent.objectives;
+      } else {
+        // its a legacy triumph so it has no objectives and is not completed
+        return 0;
+      }
 
-    //  Sum up the progress
-    let totalProgress = 0;
-    for (const x of objectives) {
-      totalProgress += Math.min(1, x.progress! / x.completionValue);
-    }
-    return -(totalProgress / objectives.length);
-  });
+      //  Sum up the progress
+      let totalProgress = 0;
+      for (const x of objectives) {
+        totalProgress += Math.min(1, x.progress! / x.completionValue);
+      }
+      return -(totalProgress / objectives.length);
+    }),
+  );
 }
 
 function sortCollectibles(collectibles: DimCollectible[]): DimCollectible[] {
-  return sortBy(collectibles, (collectible) => {
-    if (collectible.state & DestinyCollectibleState.NotAcquired) {
-      return -1;
-    }
-    return 0;
-  });
+  return collectibles.toSorted(
+    compareBy((collectible) => {
+      if (collectible.state & DestinyCollectibleState.NotAcquired) {
+        return -1;
+      }
+      return 0;
+    }),
+  );
 }
 
 function sortMetrics(metrics: DimMetric[]): DimMetric[] {
-  return sortBy(metrics, (metric) => {
-    const objectives = metric.metricComponent.objectiveProgress;
-    if (objectives.complete) {
-      return 1;
-    }
-    return -(objectives.progress! / objectives.completionValue);
-  });
+  return metrics.toSorted(
+    compareBy((metric) => {
+      const objectives = metric.metricComponent.objectiveProgress;
+      if (objectives.complete) {
+        return 1;
+      }
+      return -(objectives.progress! / objectives.completionValue);
+    }),
+  );
 }

@@ -1,6 +1,6 @@
 import { gaEvent } from 'app/google';
-import _ from 'lodash';
 import Papa from 'papaparse';
+import { maxOf } from './collections';
 import { download } from './download';
 import { errorLog } from './log';
 
@@ -25,16 +25,14 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
       (key) =>
         [
           key,
-          _.max(
-            data.map((row) => {
-              const val = row[key];
-              if (_.isArray(val)) {
-                return val.length;
-              }
-              errorLog('csv export', `key ${key} is not an array in CSV export data`);
-              return 0;
-            }),
-          ),
+          maxOf(data, (row) => {
+            const val = row[key];
+            if (Array.isArray(val)) {
+              return val.length;
+            }
+            errorLog('csv export', `key ${key} is not an array in CSV export data`);
+            return 0;
+          }),
         ] as const,
     ),
   );
@@ -45,9 +43,9 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
     if (maxCount === undefined) {
       columnSet.add(key);
     } else {
-      _.times(maxCount, (idx) => {
-        columnSet.add(`${key} ${idx}`);
-      });
+      for (let i = 0; i < maxCount; i++) {
+        columnSet.add(`${key} ${i}`);
+      }
     }
   }
 
@@ -61,7 +59,7 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
         }
         if (maxCountsByKey[key] === undefined) {
           return [[key, value]] as const;
-        } else if (!_.isArray(value)) {
+        } else if (!Array.isArray(value)) {
           const entryKey = `${key} 0`;
           return [[entryKey, value]] as const;
         } else {

@@ -1,6 +1,6 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { queryValidSelector, searchFilterSelector } from 'app/search/items/item-search-filter';
-import _ from 'lodash';
+import { stubTrue } from 'app/utils/functions';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { wishListSelector } from '../wishlists/selectors';
@@ -38,7 +38,7 @@ export default function ConnectedInventoryItem({
   const currentFilter = useSelector(searchFilterSelector);
   const validQuery = useSelector(queryValidSelector);
   const autoLockTagged = useSelector(autoLockTaggedSelector);
-  const defaultFilterActive = currentFilter === _.stubTrue;
+  const defaultFilterActive = currentFilter === stubTrue;
 
   const isNew = useSelector(isNewSelector(item));
   const hasNotes = useSelector(hasNotesSelector(item));

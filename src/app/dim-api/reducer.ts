@@ -20,15 +20,15 @@ import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/items/item-filter-types';
 import { buildItemFiltersMap } from 'app/search/items/item-search-filter';
 import { parseAndValidateQuery } from 'app/search/search-filter';
-import { count, uniqBy } from 'app/utils/collections';
+import { count, isEmpty, uniqBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog } from 'app/utils/log';
 import { reportException } from 'app/utils/sentry';
 import { clearWishLists } from 'app/wishlists/actions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { keyBy } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
 import { Draft, produce } from 'immer';
-import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';
 import * as loadoutActions from '../loadout/actions';
@@ -240,7 +240,7 @@ export const dimApi = (
           ...(profileResponse.settings as Settings),
         },
         itemHashTags: profileResponse.itemHashTags
-          ? _.keyBy(profileResponse.itemHashTags, (t) => t.hash)
+          ? keyBy(profileResponse.itemHashTags, (t) => t.hash)
           : state.itemHashTags,
         profiles: account
           ? {
@@ -249,10 +249,10 @@ export const dimApi = (
               [profileKey]: {
                 profileLastLoaded: Date.now(),
                 loadouts: profileResponse.loadouts
-                  ? _.keyBy(profileResponse.loadouts, (l) => l.id)
+                  ? keyBy(profileResponse.loadouts, (l) => l.id)
                   : (existingProfile?.loadouts ?? {}),
                 tags: profileResponse.tags
-                  ? _.keyBy(profileResponse.tags, (t) => t.id)
+                  ? keyBy(profileResponse.tags, (t) => t.id)
                   : (existingProfile?.tags ?? {}),
                 triumphs: profileResponse.triumphs
                   ? profileResponse.triumphs.map((t) => parseInt(t.toString(), 10))
@@ -481,7 +481,7 @@ function migrateSettings(state: DimApiState) {
 
   // converts any old custom stats stored in the old settings key, to the new format
   const oldCustomStats = state.settings.customTotalStatsByClass;
-  if (!_.isEmpty(oldCustomStats)) {
+  if (!isEmpty(oldCustomStats)) {
     // this existing array should 100% be empty if the user's stats are in old format...
     // but not taking any chances. we'll preserve what's there.
     const customStats = [...state.settings.customStats];
@@ -686,7 +686,7 @@ function compactUpdate(
             delete before[typedKey];
           }
         }
-        if (_.isEmpty(payload)) {
+        if (isEmpty(payload)) {
           break;
         }
 

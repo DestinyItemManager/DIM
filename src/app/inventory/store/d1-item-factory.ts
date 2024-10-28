@@ -10,7 +10,8 @@ import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
-import { filterMap, uniqBy } from 'app/utils/collections';
+import { filterMap, maxOf, minOf, sumBy, uniqBy } from 'app/utils/collections';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
 import {
@@ -29,7 +30,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import missingSources from 'data/d1/missing_sources.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { clamp, memoize } from 'es-toolkit';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/sentry';
@@ -86,7 +87,7 @@ export function processItems(
   return result;
 }
 
-const getClassTypeNameLocalized = _.memoize(
+const getClassTypeNameLocalized = memoize(
   (type: DestinyClass, defs: D1ManifestDefinitions): string => {
     const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
@@ -100,7 +101,7 @@ const getClassTypeNameLocalized = _.memoize(
 /**
  * Convert a D1DamageType to the D2 definition, so we don't have to maintain both codepaths
  */
-export const toD2DamageType = _.memoize(
+export const toD2DamageType = memoize(
   (damageType: D1DamageTypeDefinition | undefined): DestinyDamageTypeDefinition | undefined =>
     damageType && {
       displayProperties: {
@@ -217,11 +218,11 @@ function makeItem(
     return null;
   }
 
-  const numStats = _.size(itemDef.stats);
+  const numStats = Object.keys(itemDef.stats).length;
 
   // fix itemDef for defense items with missing nodes
   if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
-    const defaultMinMax = _.find(itemDef.stats, (stat) =>
+    const defaultMinMax = Object.values(itemDef.stats).find((stat) =>
       [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength].includes(stat.statHash),
     );
 
@@ -278,7 +279,7 @@ function makeItem(
 
   const missingSource = missingSources[itemDef.hash] || [];
   if (missingSource.length) {
-    itemDef.sourceHashes = _.union(itemDef.sourceHashes, missingSource);
+    itemDef.sourceHashes = [...new Set([...itemDef.sourceHashes, ...missingSource])];
   }
 
   const createdItem: D1Item = {
@@ -460,7 +461,7 @@ function makeItem(
     createdItem.complete =
       (!createdItem.talentGrid || createdItem.complete) &&
       createdItem.objectives.every((o) => o.complete);
-    createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
+    createdItem.percentComplete = sumBy(createdItem.objectives, (objective) => {
       if (objective.completionValue) {
         return (
           Math.min(1, (objective.progress || 0) / objective.completionValue) / objectives.length
@@ -539,7 +540,7 @@ function buildTalentGrid(
 
   const possibleNodes = talentGridDef.nodes;
 
-  let gridNodes = item.nodes.map((node): D1GridNode | undefined => {
+  let gridNodes = filterMap(item.nodes, (node): D1GridNode | undefined => {
     const talentNodeGroup = possibleNodes[node.nodeHash];
     const talentNodeSelected = talentNodeGroup.steps[node.stepIndex];
 
@@ -565,16 +566,13 @@ function buildTalentGrid(
       // If only one can be activated, the cost only needs to be
       // paid once per row.
       (exclusiveInColumn &&
-        _.some(
-          talentNodeGroup.exlusiveWithNodes,
-          (nodeIndex: number) => item.nodes[nodeIndex].isActivated,
-        ));
+        talentNodeGroup.exlusiveWithNodes.some((nodeIndex) => item.nodes[nodeIndex].isActivated));
 
     // Calculate relative XP for just this node
     const startProgressionBarAtProgress = talentNodeSelected.startProgressionBarAtProgress;
     const activatedAtGridLevel = talentNodeSelected.activationRequirement.gridLevel;
     const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
-    const xp = _.clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
+    const xp = clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
 
     // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
     let dtrHash: string | null = null;
@@ -645,10 +643,10 @@ function buildTalentGrid(
       // talentNodeSelected: talentNodeSelected,
       // itemNode: node
     };
-  }) as D1GridNode[];
+  });
 
   // We need to unique-ify because Ornament nodes show up twice!
-  gridNodes = uniqBy(_.compact(gridNodes), (n) => n.hash);
+  gridNodes = uniqBy(gridNodes, (n) => n.hash);
 
   if (!gridNodes.length) {
     return null;
@@ -657,25 +655,30 @@ function buildTalentGrid(
   // This can be handy for visualization/debugging
   // var columns = Object.groupBy(gridNodes, 'column');
 
-  const maxLevelRequired = _.maxBy(gridNodes, (n) => n.activatedAtGridLevel)!.activatedAtGridLevel;
+  const maxLevelRequired = maxOf(gridNodes, (n) => n.activatedAtGridLevel);
   const totalXPRequired = xpToReachLevel(maxLevelRequired);
 
   const ascendNode = gridNodes.find((n) => n.hash === 1920788875);
 
   // Fix for stuff that has nothing in early columns
-  const minColumn = _.minBy(
-    _.reject(gridNodes, (n) => n.hidden),
+  const minColumn = minOf(
+    gridNodes.filter((n) => !n.hidden),
     (n) => n.column,
-  )!.column;
+  );
   if (minColumn > 0) {
     for (const node of gridNodes) {
       node.column -= minColumn;
     }
   }
-  const maxColumn = _.maxBy(gridNodes, (n) => n.column)!.column;
+  const maxColumn = maxOf(gridNodes, (n) => n.column);
 
   return {
-    nodes: _.sortBy(gridNodes, (node) => node.column + 0.1 * node.row),
+    nodes: gridNodes.sort(
+      chainComparator(
+        compareBy((node) => node.column),
+        compareBy((node) => node.row),
+      ),
+    ),
     xpComplete: totalXPRequired <= totalXP,
     totalXPRequired,
     totalXP: Math.min(totalXPRequired, totalXP),
@@ -684,7 +687,7 @@ function buildTalentGrid(
     infusable: gridNodes.some((n) => n.hash === 1270552711),
     complete:
       totalXPRequired <= totalXP &&
-      _.every(gridNodes, (n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),
+      gridNodes.every((n) => n.unlocked || (n.xpRequired === 0 && n.column === maxColumn)),
   };
 }
 
@@ -710,8 +713,9 @@ function buildStats(
     }
   }
 
-  return _.sortBy(
-    filterMap(Object.values(itemDef.stats), (stat: D1Stat | DestinyInventoryItemStatDefinition) => {
+  return filterMap(
+    Object.values(itemDef.stats),
+    (stat: D1Stat | DestinyInventoryItemStatDefinition) => {
       const def = statDefs.get(stat.statHash);
       if (!def) {
         return undefined;
@@ -723,7 +727,7 @@ function buildStats(
       const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
       let secondaryIndex = -1;
 
-      let sort = _.findIndex(item.stats, (s) => s.statHash === stat.statHash);
+      let sort = item.stats.findIndex((s) => s.statHash === stat.statHash);
       let itemStat;
       if (sort < 0) {
         secondaryIndex = secondarySort.indexOf(identifier);
@@ -790,7 +794,6 @@ function buildStats(
         additive: primaryStatDef?.statIdentifier === 'STAT_DEFENSE',
         isConditionallyActive: false,
       };
-    }),
-    (s) => s.sort,
-  );
+    },
+  ).sort(compareBy((s) => s.sort));
 }

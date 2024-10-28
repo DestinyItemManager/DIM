@@ -18,9 +18,9 @@ import {
   DestinyManifestComponentName,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { once } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
 import { Draft } from 'immer';
-import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
@@ -85,7 +85,7 @@ export async function checkForNewManifest() {
   return version && !Object.values(data.jsonWorldContentPaths).includes(version);
 }
 
-const getManifestAction = _.once(
+const getManifestAction = once(
   (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>
     dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList))),
 );

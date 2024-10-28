@@ -4,7 +4,7 @@ import {
   GhostActivitySocketTypeHashes,
   weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -35,7 +35,7 @@ import {
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import {
   DimItem,
   DimPlug,
@@ -54,7 +54,7 @@ import { exoticClassItemPlugs } from './exotic-class-item';
 // This is called from within d2-item-factory.service.ts
 //
 
-const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), (s) => Number(s));
+const enhancedToPerk = invert(perkToEnhanced, Number);
 
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
@@ -821,7 +821,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
       }
     }
   }
-  const [cant, can] = _.partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
+  const [cant, can] = partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
   const dimPlugSet: DimPlugSet = {
     plugs,
     hash: plugSetHash,

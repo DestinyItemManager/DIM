@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { InGameLoadout } from 'app/loadout/loadout-types';
+import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
@@ -33,7 +34,6 @@ import {
   transferItem,
   updateLoadoutIdentifiers,
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -241,12 +241,12 @@ export async function equipItems(
 ): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
-  items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
+  const itemIds = items.toSorted(compareBy((i) => i.isExotic)).map((i) => i.id);
 
   const response = await equipItemsApi(authenticatedHttpClient, {
     characterId: store.id,
     membershipType: account.originalPlatformType,
-    itemIds: items.map((i) => i.id),
+    itemIds,
   });
   return Object.fromEntries(
     response.Response.equipResults.map((r) => [r.itemInstanceId, r.equipStatus]),

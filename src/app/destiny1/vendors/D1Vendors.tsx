@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { currenciesSelector, storesSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
+import { compareBy } from 'app/utils/comparators';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -40,7 +40,7 @@ export default function D1Vendors({ account }: { account: DestinyAccount }) {
   }
 
   const totalCoins = countCurrencies(stores, vendors, currencies);
-  const sortedVendors = _.sortBy(Object.values(vendors), (v) => v.vendorOrder);
+  const sortedVendors = Object.values(vendors).sort(compareBy((v) => v.vendorOrder));
 
   return (
     <div className={styles.vendors}>

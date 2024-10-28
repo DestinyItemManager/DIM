@@ -31,6 +31,7 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/collections';
+import { stubTrue } from 'app/utils/functions';
 import { isArtifice } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
@@ -39,7 +40,6 @@ import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import seasonalMods from 'data/d2/seasonal-armor-mods.json';
-import { stubTrue } from 'lodash';
 import {
   LoadoutAnalysisContext,
   LoadoutAnalysisResult,

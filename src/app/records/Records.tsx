@@ -9,9 +9,8 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector } from 'app/shell/selectors';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -69,7 +68,7 @@ export default function Records({ account }: Props) {
 
   const seasonalChallengesHash = destiny2CoreSettings?.seasonalChallengesPresentationNodeHash || 0;
 
-  const profileHashes = _.compact([
+  const profileHashes = compact([
     seasonalChallengesHash,
     recordsRootHash,
     sealsRootHash,

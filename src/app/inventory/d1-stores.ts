@@ -20,7 +20,7 @@ import { reportException } from '../utils/sentry';
 import { error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
-import { d1BucketsSelector, storesSelector } from './selectors';
+import { d1BucketsSelector, storesLoadedSelector } from './selectors';
 import { D1Store } from './store-types';
 import { processItems } from './store/d1-item-factory';
 import { makeCharacter, makeVault } from './store/d1-store-factory';
@@ -82,7 +82,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 
         dispatch(handleAuthErrors(e));
 
-        if (storesSelector(getState()).length > 0) {
+        if (storesLoadedSelector(getState())) {
           // don't replace their inventory with the error, just notify
           showNotification(bungieErrorToaster(errorMessage(e)));
         } else {

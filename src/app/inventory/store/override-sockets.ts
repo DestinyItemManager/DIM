@@ -1,8 +1,8 @@
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { isEmpty } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../item-types';
 import { ItemCreationContext } from './d2-item-factory';
@@ -26,7 +26,7 @@ export function applySocketOverrides(
   item: DimItem,
   socketOverrides: SocketOverrides | undefined,
 ): DimItem {
-  if (!socketOverrides || _.isEmpty(socketOverrides) || !item.sockets) {
+  if (!socketOverrides || isEmpty(socketOverrides) || !item.sockets) {
     return item;
   }
 
@@ -168,7 +168,7 @@ export function useSocketOverridesForItems(
             so[item.id][socket.socketIndex] = plugHash;
           }
 
-          if (_.isEmpty(so[item.id])) {
+          if (isEmpty(so[item.id])) {
             delete so[item.id];
           }
         }),

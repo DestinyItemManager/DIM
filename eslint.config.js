@@ -5,7 +5,6 @@ import arrayFunc from 'eslint-plugin-array-func';
 import cssModules from 'eslint-plugin-css-modules';
 import github from 'eslint-plugin-github';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-import lodash from 'eslint-plugin-lodash';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import * as regexpPlugin from 'eslint-plugin-regexp';
@@ -97,31 +96,6 @@ export default tseslint.config(
     ...react.configs['recommended-type-checked'],
   },
   {
-    name: 'lodash',
-    plugins: {
-      lodash,
-    },
-    rules: {
-      'lodash/collection-method-value': 'error',
-      'lodash/collection-return': 'error',
-      'lodash/no-extra-args': 'error',
-      'lodash/chaining': ['error', 'never'],
-      'lodash/identity-shorthand': ['error', 'never'],
-      'lodash/matches-shorthand': ['error', 'never'],
-      'lodash/matches-prop-shorthand': ['error', 'never'],
-      'lodash/prop-shorthand': ['error', 'never'],
-      'lodash/prefer-compact': 'error',
-      'lodash/prefer-filter': 'error',
-      'lodash/prefer-find': 'error',
-      'lodash/prefer-flat-map': 'error',
-      'lodash/prefer-immutable-method': 'error',
-      'lodash/prefer-map': 'error',
-      'lodash/prefer-reject': 'error',
-      'lodash/prefer-times': 'error',
-      'lodash/preferred-alias': 'error',
-    },
-  },
-  {
     name: 'global ignores',
     ignores: [
       '*.m.scss.d.ts',
@@ -203,55 +177,6 @@ export default tseslint.config(
         'caches',
         'scheduler',
       ],
-      'no-restricted-properties': [
-        1,
-        {
-          object: '_',
-          property: 'forEach',
-          message: 'Please use a for in loop.',
-        },
-        {
-          object: '_',
-          property: 'filter',
-          message: 'Please use the native js filter.',
-        },
-        {
-          object: '_',
-          property: 'map',
-          message: 'Please use the native js map.',
-        },
-        {
-          object: '_',
-          property: 'uniq',
-          message: 'Please use Array.from(new Set(foo)) or [...new Set(foo)] instead.',
-        },
-        {
-          object: '_',
-          property: 'uniqBy',
-          message: 'Please use the uniqBy from app/utils/util instead',
-        },
-        {
-          object: '_',
-          property: 'forIn',
-          message: 'Please use Object.values or Object.entries instead',
-        },
-        {
-          object: '_',
-          property: 'noop',
-          message:
-            'Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint',
-        },
-        {
-          object: '_',
-          property: 'groupBy',
-          message: 'Use Object.groupBy or Map.groupBy instead.',
-        },
-        {
-          object: '_',
-          property: 'cloneDeep',
-          message: 'Use structuredClone instead.',
-        },
-      ],
       'no-restricted-imports': [
         'error',
         {
@@ -267,14 +192,65 @@ export default tseslint.config(
               importNames: ['t'],
               message: 'Please import t from app/i18next-t.',
             },
+            {
+              name: 'es-toolkit',
+              importNames: [
+                'compact',
+                'mapValues',
+                'isEmpty',
+                'sortBy',
+                'count',
+                'invert',
+                'sumBy',
+                'take',
+                'noop',
+              ],
+              message:
+                'Please use functions from app/util/collections or native equivalents instead.',
+            },
+            {
+              name: 'es-toolkit',
+              importNames: ['uniq'],
+              message: 'Please use Array.from(new Set(foo)) or [...new Set(foo)] instead.',
+            },
+            {
+              name: 'es-toolkit',
+              importNames: ['uniqBy'],
+              message: 'Please use the uniqBy from app/utils/util instead',
+            },
+            {
+              name: 'es-toolkit',
+              importNames: ['groupBy'],
+              message: 'Use Object.groupBy or Map.groupBy instead.',
+            },
+            {
+              name: 'es-toolkit',
+              importNames: ['cloneDeep'],
+              message: 'Use structuredClone instead.',
+            },
+            {
+              name: 'es-toolkit',
+              importNames: ['sortBy'],
+              message:
+                'Use the native .sort or .toSorted functions with compareBy and chainComparator.',
+            },
+            {
+              name: 'es-toolkit',
+              importNames: ['compact'],
+              message: 'Use the compact function from app/util/collections instead.',
+            },
+            {
+              name: 'es-toolkit',
+              importNames: ['isEmpty'],
+              message: 'Use the isEmpty function from app/util/collections instead.',
+            },
           ],
         },
       ],
       'no-restricted-syntax': [
         'error',
         {
-          selector:
-            "CallExpression[callee.property.name='compact'][callee.object.name='_'][arguments.0.callee.property.name='map']",
+          selector: "CallExpression[callee.name='compact'][arguments.0.callee.property.name='map']",
           message: 'Please use `filterMap` instead',
         },
         {
@@ -381,7 +357,6 @@ export default tseslint.config(
       '@typescript-eslint/prefer-for-of': 'error',
       '@typescript-eslint/prefer-optional-chain': 'error',
       '@typescript-eslint/prefer-as-const': 'error',
-      '@typescript-eslint/prefer-reduce-type-parameter': 'error',
       '@typescript-eslint/prefer-includes': 'error',
       '@typescript-eslint/prefer-string-starts-ends-with': 'error',
       '@typescript-eslint/prefer-ts-expect-error': 'error',

@@ -15,8 +15,8 @@ import { RootState, ThunkResult } from 'app/store/types';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
+import { debounce, once } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
-import _ from 'lodash';
 import { AnyAction, Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { getPlatforms } from '../accounts/platforms';
@@ -45,7 +45,7 @@ import { apiPermissionGrantedSelector, makeProfileKeyFromAccount } from './selec
 
 const TAG = 'dim sync';
 
-const installApiPermissionObserver = _.once(<D extends Dispatch>(dispatch: D) => {
+const installApiPermissionObserver = once(<D extends Dispatch>(dispatch: D) => {
   // Observe API permission and reflect it into local storage
   // We could also use a thunk action instead of an observer... either way
   dispatch(
@@ -66,13 +66,13 @@ const installApiPermissionObserver = _.once(<D extends Dispatch>(dispatch: D) =>
 /**
  * Watch the redux store and write out values to indexedDB, etc.
  */
-const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, AnyAction>) => {
+const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, AnyAction>) => {
   // Watch the state and write it out to IndexedDB
   dispatch(
     observe({
       id: 'profile-observer',
       getObserved: (state) => state.dimApi,
-      sideEffect: _.debounce(
+      sideEffect: debounce(
         ({ previous, current }: { previous: DimApiState | undefined; current: DimApiState }) => {
           if (
             // Avoid writing back what we just loaded from IDB
@@ -111,7 +111,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
     observe({
       id: 'queue-observer',
       getObserved: (state) => state.dimApi.updateQueue,
-      sideEffect: _.debounce(({ current }: { current: ProfileUpdateWithRollback[] }) => {
+      sideEffect: debounce(({ current }: { current: ProfileUpdateWithRollback[] }) => {
         if (current.length) {
           dispatch(flushUpdates());
         }

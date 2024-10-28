@@ -11,7 +11,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
 import { startWordRegexp } from 'app/search/text-utils';
 import { uniqBy } from 'app/utils/collections';
-import { compareBy } from 'app/utils/comparators';
+import { compareBy, compareByIndex } from 'app/utils/comparators';
 import {
   socketContainsIntrinsicPlug,
   socketContainsPlugWithCategory,
@@ -21,7 +21,6 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
 import noExoticPreferenceIcon from 'images/noExoticPreference.svg';
-import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC, LockableBucketHashes } from '../types';
@@ -38,13 +37,12 @@ export function findLockableExotics(
   defs: D2ManifestDefinitions,
 ) {
   // Find all the armor 2 exotics.
-  const exotics = [...allItems, ...vendorItems].filter(
-    (item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item),
+  const exotics = uniqBy(
+    [...allItems, ...vendorItems]
+      .filter((item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item))
+      .sort(compareByIndex(LockableBucketHashes, (item) => item.bucket.hash)),
+    (item) => item.hash,
   );
-  const orderedExotics = _.sortBy(exotics, (item) =>
-    LockableBucketHashes.indexOf(item.bucket.hash),
-  );
-  const uniqueExotics = uniqBy(orderedExotics, (item) => item.hash);
 
   // Add in armor 1 exotics that don't have an armor 2 version
   const exoticArmorWithoutEnergy = allItems.filter(
@@ -52,14 +50,14 @@ export function findLockableExotics(
   );
   for (const unusable of exoticArmorWithoutEnergy) {
     // Armor 1 & 2 items have different hashes but the same name.
-    if (!uniqueExotics.some((exotic) => unusable.name === exotic.name)) {
-      uniqueExotics.push(unusable);
+    if (!exotics.some((exotic) => unusable.name === exotic.name)) {
+      exotics.push(unusable);
     }
   }
 
   // Build up all the details we need to display the exotics properly
   const rtn: LockedExoticWithPlugs[] = [];
-  for (const item of uniqueExotics) {
+  for (const item of exotics) {
     const def = defs.InventoryItem.get(item.hash);
 
     if (def?.displayProperties.hasIcon) {
@@ -130,8 +128,8 @@ function filterAndGroupExotics(
     filteredExotics,
     (exotic) => exotic.def.inventory!.bucketTypeHash,
   );
-  const orderedAndGroupedExotics = _.sortBy([...groupedExotics.values()], (exotics) =>
-    filteredExotics.indexOf(exotics[0]),
+  const orderedAndGroupedExotics = [...groupedExotics.values()].sort(
+    compareByIndex(filteredExotics, (exotics) => exotics[0]),
   );
 
   // Sort each of the individual groups by name

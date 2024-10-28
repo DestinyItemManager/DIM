@@ -14,9 +14,9 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
+import { invert } from './collections';
 import { compareBy } from './comparators';
 import { LookupTable } from './util-types';
 
@@ -40,7 +40,7 @@ const statNameAliases: LookupTable<StatHashes, string[]> = {
   [StatHashes.ReloadSpeed]: ['Reload'],
 };
 
-const enhancedPerkToRegularPerk = _.mapValues(_.invert(perkToEnhanced), Number);
+const enhancedPerkToRegularPerk = invert(perkToEnhanced, Number);
 
 export function usePlugDescriptions(
   plug?: PluggableInventoryItemDefinition,

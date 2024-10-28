@@ -12,13 +12,13 @@ import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-typ
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
+import { isEmpty } from 'app/utils/collections';
 import { DimError } from 'app/utils/dim-error';
 import { errorMessage } from 'app/utils/errors';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import ItemIcon, { DefItemIcon } from './ItemIcon';
@@ -171,7 +171,7 @@ function ApplyLoadoutProgressBody({
         </div>
       )}
 
-      {!_.isEmpty(groupedItemErrors) && (
+      {!isEmpty(groupedItemErrors) && (
         <div className={styles.errorList}>
           {Object.values(groupedItemErrors).map((errorStates) => (
             <div key={errorStates[0].item.index}>
@@ -221,7 +221,7 @@ function ApplyLoadoutProgressBody({
         </div>
       )}
 
-      {!_.isEmpty(groupedModErrors) && (
+      {!isEmpty(groupedModErrors) && (
         <div className={styles.errorList}>
           {Object.values(groupedModErrors).map((errorStates) => (
             <div key={errorStates[0].modHash}>

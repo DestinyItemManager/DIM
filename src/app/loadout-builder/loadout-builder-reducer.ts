@@ -27,12 +27,12 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
-import { reorder } from 'app/utils/collections';
+import { count, reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { keyBy, shuffle } from 'es-toolkit';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
@@ -370,7 +370,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'statConstraintRandomize': {
         return updateStatConstraints(
           state,
-          _.shuffle(
+          shuffle(
             armorStats.map((s) => ({
               statHash: s,
               minTier: Math.floor(Math.random() * 10),
@@ -410,7 +410,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         const { items } = action;
         return {
           ...state,
-          pinnedItems: _.keyBy(items, (i) => i.bucket.hash),
+          pinnedItems: keyBy(items, (i) => i.bucket.hash),
           excludedItems: {},
         };
       }
@@ -471,11 +471,12 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'addGeneralMods': {
         const newMods = [...(state.loadout.parameters?.mods ?? [])];
         let currentGeneralModsCount =
-          newMods.filter(
+          count(
+            newMods,
             (mod) =>
               defs.InventoryItem.get(mod)?.plug?.plugCategoryHash ===
               armor2PlugCategoryHashesByName.general,
-          ).length ?? 0;
+          ) ?? 0;
 
         const failures: string[] = [];
 

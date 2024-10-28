@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { armorStats } from 'app/search/d2-known-values';
+import { mapValues } from 'app/utils/collections';
 import { emptySet } from 'app/utils/empty';
-import _ from 'lodash';
 import { getTestDefinitions } from 'testing/test-utils';
 import { precalculateStructures } from './process-worker/process-utils';
 import { ProcessMod } from './process-worker/types';
@@ -62,7 +62,7 @@ describe('process-utils auto mod structure', () => {
         true,
         armorStats,
       );
-      const waysOfHittingStat = _.mapValues(
+      const waysOfHittingStat = mapValues(
         sessionInfo.autoModOptions.statCaches[3].statMap,
         (y) => y?.length,
       );

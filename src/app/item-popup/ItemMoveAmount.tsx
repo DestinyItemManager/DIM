@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import _ from 'lodash';
+import { clamp } from 'es-toolkit';
 import React from 'react';
 import styles from './ItemMoveAmount.m.scss';
 
@@ -14,7 +14,7 @@ export default function ItemMoveAmount({
   onAmountChanged: (amount: number) => void;
 }) {
   const constrain = () => {
-    const constrained = _.clamp(amount, 1, maximum);
+    const constrained = clamp(amount, 1, maximum);
 
     if (constrained !== amount) {
       onAmountChanged(constrained);

@@ -47,3 +47,10 @@ export function chainComparator<T>(...compares: Comparator<T>[]): Comparator<T> 
     return 0;
   };
 }
+
+export function compareByIndex<T, V>(list: V[], fn: (arg: T) => V): Comparator<T> {
+  return compareBy((arg) => {
+    const ix = list.indexOf(fn(arg));
+    return ix === -1 ? Number.MAX_SAFE_INTEGER : ix;
+  });
+}

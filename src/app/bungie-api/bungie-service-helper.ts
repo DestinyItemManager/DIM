@@ -4,7 +4,7 @@ import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
-import _ from 'lodash';
+import { throttle } from 'es-toolkit';
 import { DimItem } from '../inventory/item-types';
 import { FatalTokenError, fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
@@ -18,7 +18,7 @@ import {
 import { rateLimitedFetch } from './rate-limiter';
 
 const TIMEOUT = 15000;
-const notifyTimeout = _.throttle(
+const notifyTimeout = throttle(
   (startTime: number, timeout: number) => {
     // Only notify if the timeout fired around the right time - this guards against someone pausing
     // the tab and coming back in an hour, for example
@@ -32,7 +32,7 @@ const notifyTimeout = _.throttle(
     }
   },
   5 * 60 * 1000, // 5 minutes
-  { leading: true, trailing: false },
+  { edges: ['leading'] },
 );
 
 const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>

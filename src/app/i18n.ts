@@ -14,11 +14,11 @@ import ptBR from 'locale/ptBR.json';
 import ru from 'locale/ru.json';
 import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
-import _ from 'lodash';
 import enSrc from '../../config/i18n.json';
 import { languageSelector } from './dim-api/selectors';
 import { humanBytes } from './storage/human-bytes';
 import { StoreObserver } from './store/observerMiddleware';
+import { invert } from './utils/collections';
 import { infoLog } from './utils/log';
 
 export const DIM_LANG_INFOS = {
@@ -47,9 +47,7 @@ export const browserLangToDimLang: Record<string, DimLanguage> = {
   'zh-Hant': 'zh-cht',
 };
 
-export const dimLangToBrowserLang = _.invert(browserLangToDimLang) as Partial<
-  Record<DimLanguage, string>
->;
+export const dimLangToBrowserLang = invert(browserLangToDimLang);
 
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)

@@ -1,6 +1,6 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { reorder } from 'app/utils/collections';
-import _ from 'lodash';
+import { clamp } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
@@ -17,7 +17,7 @@ export default function CharacterOrderEditor({
   const characters = useSelector(sortedStoresSelector);
 
   const moveItem = (oldIndex: number, newIndex: number) => {
-    newIndex = _.clamp(newIndex, 0, characters.length);
+    newIndex = clamp(newIndex, 0, characters.length);
     const order = reorder(
       characters.filter((c) => !c.isVault).map((c) => c.id),
       oldIndex,

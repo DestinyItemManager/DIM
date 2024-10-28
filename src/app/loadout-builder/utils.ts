@@ -1,10 +1,9 @@
 import { DimItem } from 'app/inventory/item-types';
-import _ from 'lodash';
 import { ProcessItem } from './process-worker/types';
 
 /** Gets the effective stat tier from a stat value, clamping between 0-10 */
 export function statTier(stat: number) {
-  return _.clamp(Math.floor(stat / 10), 0, 10);
+  return Math.min(Math.max(Math.floor(stat / 10), 0), 10);
 }
 
 /**

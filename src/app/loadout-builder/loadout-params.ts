@@ -2,7 +2,8 @@
 
 import { StatConstraint, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
-import _ from 'lodash';
+import { compareBy } from 'app/utils/comparators';
+import { keyBy } from 'es-toolkit';
 import { ResolvedStatConstraint } from './types';
 
 /**
@@ -12,19 +13,22 @@ import { ResolvedStatConstraint } from './types';
 export function resolveStatConstraints(
   statConstraints: StatConstraint[],
 ): ResolvedStatConstraint[] {
-  const statConstraintsByStatHash = _.keyBy(statConstraints, (c) => c.statHash);
+  const statConstraintsByStatHash = keyBy(statConstraints, (c) => c.statHash);
   const resolvedStatConstraints: ResolvedStatConstraint[] = armorStats.map((statHash) => {
     const c = statConstraintsByStatHash[statHash];
     return { statHash, minTier: c?.minTier ?? 0, maxTier: c ? (c.maxTier ?? 10) : 0, ignored: !c };
   });
 
-  return _.sortBy(resolvedStatConstraints, (h) => {
-    const index = statConstraints.findIndex((c) => c.statHash === h.statHash);
-    return index >= 0
-      ? index
-      : // Fall back to hardcoded defaults
-        100 + defaultLoadoutParameters.statConstraints!.findIndex((c) => c.statHash === h.statHash);
-  });
+  return resolvedStatConstraints.sort(
+    compareBy((h) => {
+      const index = statConstraints.findIndex((c) => c.statHash === h.statHash);
+      return index >= 0
+        ? index
+        : // Fall back to hardcoded defaults
+          100 +
+            defaultLoadoutParameters.statConstraints!.findIndex((c) => c.statHash === h.statHash);
+    }),
+  );
 }
 
 export function unresolveStatConstraints(

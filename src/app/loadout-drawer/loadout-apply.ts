@@ -51,7 +51,8 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
-import { count, filterMap } from 'app/utils/collections';
+import { count, filterMap, isEmpty, mapValues } from 'app/utils/collections';
+import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
 import { convertToError, errorMessage } from 'app/utils/errors';
@@ -70,8 +71,8 @@ import {
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { maxBy, once, partition, throttle } from 'es-toolkit';
 import { Draft, produce } from 'immer';
-import _ from 'lodash';
 import { savePreviousLoadout } from '../loadout/actions';
 import {
   Assignment,
@@ -105,7 +106,7 @@ const TAG = 'loadout';
 
 // TODO: move this whole file to "loadouts" folder
 
-const outOfSpaceWarning = _.throttle((store: DimStore) => {
+const outOfSpaceWarning = throttle((store: DimStore) => {
   showNotification({
     type: 'info',
     title: t('FarmingMode.OutOfRoomTitle'),
@@ -257,10 +258,14 @@ function doApplyLoadout(
       }
 
       // Sort loadout items by their bucket so we move items in the order that DIM displays them
-      const applicableLoadoutItems = _.sortBy(resolvedItems, ({ item }) => {
-        const sortIndex = bucketHashToIndex[item.bucket.hash as BucketHashes];
-        return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
-      }).map(({ loadoutItem }) => loadoutItem);
+      const applicableLoadoutItems = resolvedItems
+        .sort(
+          compareBy(({ item }) => {
+            const sortIndex = bucketHashToIndex[item.bucket.hash as BucketHashes];
+            return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
+          }),
+        )
+        .map(({ loadoutItem }) => loadoutItem);
 
       // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!
@@ -295,7 +300,7 @@ function doApplyLoadout(
       });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
-      const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
+      const unlockedPlugSetItems = once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
       const checkMod = (h: number) => {
         const mod = defs.InventoryItem.get(h);
         return (
@@ -347,7 +352,7 @@ function doApplyLoadout(
             if (item) {
               state.socketOverrideStates[item.index] = {
                 item,
-                results: _.mapValues(loadoutItem.socketOverrides, (plugHash) => ({
+                results: mapValues(loadoutItem.socketOverrides ?? {}, (plugHash) => ({
                   plugHash,
                   state: LoadoutSocketOverrideState.Pending,
                 })),
@@ -621,7 +626,7 @@ function doApplyLoadout(
 
       const clearMods = Boolean(loadout.parameters?.clearMods);
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
-      if (modsToApply.length || !_.isEmpty(modsByBucketToApply) || clearMods) {
+      if (modsToApply.length || !isEmpty(modsByBucketToApply) || clearMods) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
         infoLog(TAG, 'Mods to apply', modsToApply);
         await dispatch(
@@ -733,7 +738,7 @@ function applyLoadoutItem(
         let totalAmount = amountAlreadyHave;
         // Keep moving from stacks until we get enough
         while (amountNeeded > 0) {
-          const source = _.maxBy(storesWithAmount, (s) => s.amount)!;
+          const source = maxBy(storesWithAmount, (s) => s.amount)!;
           const amountToMove = Math.min(source.amount, amountNeeded);
           const sourceItem = source.store.items.find((i) => i.hash === loadoutItem.hash);
 
@@ -1230,7 +1235,7 @@ function applyLoadoutMods(
       infoLog(TAG, 'Applying mods', assignmentSequence, 'to', item.name);
 
       if (assignmentSequence.length) {
-        const [f, m] = _.partition(assignmentSequence, (a) => isFashionPlug(a.mod));
+        const [f, m] = partition(assignmentSequence, (a) => isFashionPlug(a.mod));
         modAssigns.push({ item, actions: m });
         fashionAssigns.push({ item, actions: f });
       }
@@ -1278,7 +1283,7 @@ function allModsAreAlreadyApplied(
     }
   }
 
-  if (!_.isEmpty(modsByBucket)) {
+  if (!isEmpty(modsByBucket)) {
     return false;
   }
 

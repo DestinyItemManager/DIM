@@ -5,8 +5,8 @@ import { setTag } from 'app/inventory/actions';
 import { tagSelector } from 'app/inventory/selectors';
 import { AppIcon, clearIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { compareBy } from 'app/utils/comparators';
 import clsx from 'clsx';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { TagInfo, TagValue, itemTagSelectorList } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
@@ -25,8 +25,8 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
 
   const onChange = (tag?: TagValue) => dispatch(setTag(item, tag));
 
-  const dropdownOptions: Option<TagValue>[] = _.sortBy(
-    itemTagSelectorList.map((t) =>
+  const dropdownOptions: Option<TagValue>[] = itemTagSelectorList
+    .map((t) =>
       tag && !t.type
         ? {
             label: tl('Tags.ClearTag'),
@@ -35,13 +35,13 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
             sortOrder: -1,
           }
         : t,
-    ),
-    (t) => t.sortOrder,
-  ).map((tagOption) => ({
-    key: tagOption.type || 'none',
-    content: <TagOption tagOption={tagOption} hideKeys={hideKeys} />,
-    value: tagOption.type,
-  }));
+    )
+    .sort(compareBy((t) => t.sortOrder))
+    .map((tagOption) => ({
+      key: tagOption.type || 'none',
+      content: <TagOption tagOption={tagOption} hideKeys={hideKeys} />,
+      value: tagOption.type,
+    }));
 
   return (
     <Select<TagValue>

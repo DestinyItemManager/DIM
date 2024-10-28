@@ -7,7 +7,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './Milestones.m.scss';
 import { PowerCaps } from './PowerCaps';
@@ -123,7 +122,7 @@ function milestonesForProfile(
       defs.Milestone.get(milestone.milestoneHash),
   );
 
-  return _.sortBy(filteredMilestones, (milestone) => milestone.order);
+  return filteredMilestones.sort(compareBy((milestone) => milestone.order));
 }
 
 /**
@@ -155,5 +154,5 @@ function milestonesForCharacter(
     );
   });
 
-  return _.sortBy(filteredMilestones, (milestone) => milestone.order);
+  return filteredMilestones.sort(compareBy((milestone) => milestone.order));
 }
