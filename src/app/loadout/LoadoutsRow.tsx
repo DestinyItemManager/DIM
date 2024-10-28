@@ -85,7 +85,7 @@ export default memo(function LoadoutRow({
     if (streamDeckDeepLink) {
       actionButtons.push(
         <a href={streamDeckDeepLink} target="_blank">
-          <button key="share" type="button" className="dim-button">
+          <button key="open-on-stream-deck" type="button" className="dim-button">
             {t('Loadouts.OpenOnStreamDeck')}
           </button>
         </a>,
