@@ -9,6 +9,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
 import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
+import { sumBy } from 'app/utils/collections';
 import { HashLookup } from 'app/utils/util-types';
 import {
   DestinyItemQuantity,
@@ -21,7 +22,6 @@ import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import trackedIcon from 'images/trackedIcon.svg';
-import _ from 'lodash';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ishtarIcon from '../../images/ishtar-collective.svg';
@@ -122,11 +122,11 @@ function Record({
 
   let scoreValue = <>{t('Progress.RecordValue', { value: recordDef.completionInfo.ScoreValue })}</>;
   if (intervals.length > 1) {
-    const currentScore = _.sumBy(
-      _.take(intervals, recordComponent.intervalsRedeemedCount),
+    const currentScore = sumBy(
+      intervals.slice(0, recordComponent.intervalsRedeemedCount),
       (i) => i.score,
     );
-    const totalScore = _.sumBy(intervals, (i) => i.score);
+    const totalScore = sumBy(intervals, (i) => i.score);
     scoreValue = (
       <>
         <span className={styles.currentScore}>{currentScore}</span> /{' '}

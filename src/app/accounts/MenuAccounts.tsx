@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -25,10 +25,11 @@ export default function MenuAccounts({
 
   const onLogOut = () => dispatch(logOut());
 
-  const sortedAccounts = _.sortBy(
-    accounts,
-    (a) => -a.destinyVersion,
-    (a) => -a.lastPlayed.getTime(),
+  const sortedAccounts = accounts.toSorted(
+    chainComparator(
+      reverseComparator(compareBy((a) => a.destinyVersion)), // 2 before 1
+      reverseComparator(compareBy((a) => a.lastPlayed.getTime())),
+    ),
   );
   const bungieName = sortedAccounts[0]?.displayName;
 

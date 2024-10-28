@@ -10,12 +10,12 @@ import { D1_StatHashes, D1BucketHashes } from 'app/search/d1-known-values';
 import { getColor } from 'app/shell/formatters';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { uniqBy } from 'app/utils/collections';
+import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
-import _ from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
@@ -69,7 +69,7 @@ interface State {
   loadingVendors: boolean;
 }
 
-const armorTypes = [
+export const d1ArmorTypes = [
   BucketHashes.Helmet,
   BucketHashes.Gauntlets,
   BucketHashes.ChestArmor,
@@ -350,8 +350,8 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           ArmorTypes,
           D1GridNode[],
         ][]) {
-          vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
-            perks[classType][type].map((i) => i.hash).includes(perk.hash),
+          vendorPerks[classType][type] = perkArr.filter(
+            (perk) => !perks[classType][type].map((i) => i.hash).includes(perk.hash),
           );
         }
       }
@@ -475,7 +475,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     const items = Map.groupBy(
       selectedCharacter!.items.filter(
         (item) =>
-          itemCanBeInLoadout(item) && item.equipped && armorTypes.includes(item.bucket.hash),
+          itemCanBeInLoadout(item) && item.equipped && d1ArmorTypes.includes(item.bucket.hash),
       ),
       (i) => i.bucket.hash as ArmorTypes,
     );
@@ -538,18 +538,20 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   }
 
   const i18nItemNames = Object.fromEntries(
-    _.zip(
-      armorTypes,
-      [
-        ItemCategoryHashes.Helmets,
-        ItemCategoryHashes.Arms,
-        ItemCategoryHashes.Chest,
-        ItemCategoryHashes.Legs,
-        ItemCategoryHashes.ClassItems,
-        38, // D1 Artifact
-        ItemCategoryHashes.Ghost,
-      ].map((key) => defs.ItemCategory.get(key).title),
-    ) as [ArmorTypes, string][],
+    d1ArmorTypes.map((type, i) => [
+      type,
+      defs.ItemCategory.get(
+        [
+          ItemCategoryHashes.Helmets,
+          ItemCategoryHashes.Arms,
+          ItemCategoryHashes.Chest,
+          ItemCategoryHashes.Legs,
+          ItemCategoryHashes.ClassItems,
+          38, // D1 Artifact
+          ItemCategoryHashes.Ghost,
+        ][i],
+      ).title,
+    ]),
   ) as { [key in ArmorTypes]: string };
 
   // Armor of each type on a particular character
@@ -584,7 +586,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
             {/* TODO: break into its own component */}
             <span>{t('Bucket.Armor')}</span>:{' '}
             <select name="type" value={type} onChange={onChange}>
-              {armorTypes.map((type) => (
+              {d1ArmorTypes.map((type) => (
                 <option key={type} value={type}>
                   {i18nItemNames[type]}
                 </option>
@@ -601,35 +603,35 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
               {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
             </label>
             <div className="loadout-builder-section">
-              {_.sortBy(
-                bucket[type].filter((i) => i.power >= 280),
-                (i) => (i.quality ? -i.quality.min : 0),
-              ).map((item) => (
-                <div key={item.index} className="item-container">
-                  <div className="item-stats">
-                    {item.stats?.map((stat) => (
-                      <div
-                        key={stat.statHash}
-                        style={getColor(
-                          item.normalStats![stat.statHash].qualityPercentage,
-                          'color',
-                        )}
-                      >
-                        {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
-                        {item.normalStats![stat.statHash].scaled > 0 && (
-                          <span>
-                            <small>{item.normalStats![stat.statHash].scaled}</small>/
-                            <small>{stat.split}</small>
-                          </span>
-                        )}
-                      </div>
-                    ))}
+              {bucket[type]
+                .filter((i) => i.power >= 280)
+                .sort(reverseComparator(compareBy((i) => i.quality?.min ?? 0)))
+                .map((item) => (
+                  <div key={item.index} className="item-container">
+                    <div className="item-stats">
+                      {item.stats?.map((stat) => (
+                        <div
+                          key={stat.statHash}
+                          style={getColor(
+                            item.normalStats![stat.statHash].qualityPercentage,
+                            'color',
+                          )}
+                        >
+                          {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
+                          {item.normalStats![stat.statHash].scaled > 0 && (
+                            <span>
+                              <small>{item.normalStats![stat.statHash].scaled}</small>/
+                              <small>{stat.split}</small>
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
+                    </div>
                   </div>
-                  <div>
-                    <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </CollapsibleTitle>

@@ -1,6 +1,6 @@
+import { stubTrue } from 'app/utils/functions';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
-import { stubTrue } from 'lodash';
 
 /**
  * Get all plugs from the specified plugset. This includes whether the plugs are unlocked or not.

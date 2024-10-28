@@ -16,9 +16,11 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
+import { compact } from 'app/utils/collections';
+import { compareByIndex } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
-import _ from 'lodash';
+import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
@@ -193,15 +195,15 @@ export default function SettingsPage() {
     community: t('Settings.CommunityDescriptionOnly'),
   });
 
-  const charColOptions = _.range(2, 6).map((num) => ({
+  const charColOptions = range(2, 6).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
-  const numberOfSpacesOptions = _.range(1, 10).map((count) => ({
+  const numberOfSpacesOptions = range(1, 10).map((count) => ({
     value: count,
     name: t('Settings.SpacesSize', { count }),
   }));
-  const vaultColOptions = _.range(5, 21).map((num) => ({
+  const vaultColOptions = range(5, 21).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
@@ -209,22 +211,18 @@ export default function SettingsPage() {
 
   const sortSettings = useSelector(itemSortSettingsSelector);
 
-  const itemSortCustom = _.sortBy(
-    Object.entries(itemSortProperties).map(
+  const itemSortCustom = Object.entries(itemSortProperties)
+    .map(
       ([id, displayName]): SortProperty => ({
         id,
         displayName,
         enabled: sortSettings.sortOrder.includes(id),
         reversed: sortSettings.sortReversals.includes(id),
       }),
-    ),
-    (o) => {
-      const index = sortSettings.sortOrder.indexOf(o.id);
-      return index >= 0 ? index : 999;
-    },
-  );
+    )
+    .sort(compareByIndex(sortSettings.sortOrder, (o) => o.id));
 
-  const menuItems = _.compact([
+  const menuItems = compact([
     { id: 'general', title: t('Settings.Language') },
     { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },

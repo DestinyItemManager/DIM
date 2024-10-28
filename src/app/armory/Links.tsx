@@ -3,6 +3,7 @@ import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { compact } from 'app/utils/collections';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -12,7 +13,6 @@ import logo from 'images/dimlogo.svg';
 import foundry from 'images/foundry.png';
 import ishtarLogo from 'images/ishtar-collective.svg';
 import lightgg from 'images/lightgg.png';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './Links.m.scss';
 
@@ -50,7 +50,7 @@ export default function Links({ item }: { item: DimItem }) {
 
   return (
     <ul className={styles.links}>
-      {_.compact(links).map(({ link, name, icon }) => (
+      {compact(links).map(({ link, name, icon }) => (
         <li key={name}>
           <ExternalLink href={link}>
             <img src={icon} height={16} width={16} />

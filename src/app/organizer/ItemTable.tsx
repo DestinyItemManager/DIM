@@ -40,7 +40,6 @@ import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/sel
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import React, { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
@@ -51,7 +50,7 @@ import ItemActions, { TagCommandInfo } from './ItemActions';
 import { compareSelectedItems } from 'app/compare/actions';
 
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
 import { createPortal } from 'react-dom';
 
@@ -222,7 +221,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   // This needs work for sure
   const filteredColumns = useMemo(
     () =>
-      _.compact(
+      compact(
         enabledColumns.flatMap((id) =>
           columns.filter(
             (column) =>

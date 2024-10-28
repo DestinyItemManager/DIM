@@ -5,6 +5,7 @@ import { DimItem, DimPursuitExpiration } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { DimRecord } from 'app/records/presentation-nodes';
 import { d2MissingIcon } from 'app/search/d2-known-values';
+import { sumBy } from 'app/utils/collections';
 import { isClassCompatible } from 'app/utils/item-utils';
 import {
   DestinyAmmunitionType,
@@ -20,7 +21,6 @@ import {
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 
 export function milestoneToItems(
   milestone: DestinyMilestone,
@@ -96,21 +96,19 @@ function availableQuestToItem(
 
   // Only look at the first reward, the rest are screwy (old engram versions, etc)
   const questRewards = questDef.questRewards
-    ? _.take(
-        questDef.questRewards.items
-          // 75% of "rewards" are the invalid hash 0
-          .filter((r) => r.itemHash)
-          .map((r) => defs.InventoryItem.get(r.itemHash))
-          // Filter out rewards that are for other characters
-          .filter(
-            (i) =>
-              i &&
-              isClassCompatible(i.classType, store.classType) &&
-              // And quest steps, they're not interesting
-              !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep),
-          ),
-        1,
-      )
+    ? questDef.questRewards.items
+        // 75% of "rewards" are the invalid hash 0
+        .filter((r) => r.itemHash)
+        .map((r) => defs.InventoryItem.get(r.itemHash))
+        // Filter out rewards that are for other characters
+        .filter(
+          (i) =>
+            i &&
+            isClassCompatible(i.classType, store.classType) &&
+            // And quest steps, they're not interesting
+            !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep),
+        )
+        .slice(0, 1)
     : [];
 
   const objectives = availableQuest.status.stepObjectives;
@@ -400,7 +398,7 @@ export function recordToPursuitItem(
 
 function calculatePercentComplete(objectives: DestinyObjectiveProgress[]) {
   const length = objectives.length;
-  return _.sumBy(objectives, (objective) => {
+  return sumBy(objectives, (objective) => {
     if (objective.completionValue) {
       return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
     } else {

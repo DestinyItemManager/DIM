@@ -11,11 +11,12 @@ import {
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
+import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { countBy, memoize, throttle } from 'es-toolkit';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
   MoveReservations,
@@ -42,7 +43,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
     const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap((bucket) =>
       findItemsByBucket(store, bucket.hash),
     );
-    const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
+    const postmasterItemCountsByType = countBy(postmasterItems, (i) => i.bucket.hash);
 
     const [cancelToken, cancel] = withCancel();
 
@@ -56,16 +57,17 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
         const numNeededToMove = Math.max(0, count + items.length - capacity);
         if (numNeededToMove > 0) {
           // We'll move the lowest-value item to the vault.
-          const candidates = _.sortBy(
-            items.filter((i) => !i.equipped && !i.notransfer),
-            (i) => {
-              let value = moveAsideWeighting[i.tier];
-              // And low-stat
-              value += i.power / 1000;
-              return value;
-            },
-          );
-          itemsToMove.push(..._.take(candidates, numNeededToMove));
+          const candidates = items
+            .filter((i) => !i.equipped && !i.notransfer)
+            .sort(
+              compareBy((i) => {
+                let value = moveAsideWeighting[i.tier];
+                // And low-stat
+                value += i.power / 1000;
+                return value;
+              }),
+            );
+          itemsToMove.push(...candidates.slice(0, numNeededToMove));
         }
       }
     }
@@ -141,7 +143,7 @@ export function totalPostmasterItems(store: DimStore) {
   return findItemsByBucket(store, BucketHashes.LostItems).length;
 }
 
-const showNoSpaceError = _.throttle(
+const showNoSpaceError = throttle(
   (e: Error) =>
     showNotification({
       type: 'error',
@@ -149,7 +151,7 @@ const showNoSpaceError = _.throttle(
       body: t('Loadouts.NoSpace', { error: e.message }),
     }),
   1000,
-  { leading: true, trailing: false },
+  { edges: ['leading'] },
 );
 
 // D2 only
@@ -159,7 +161,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
     const items = pullablePostmasterItems(store, stores);
 
     // Only show one popup per message
-    const errorNotification = _.memoize((message: string) => {
+    const errorNotification = memoize((message: string) => {
       showNotification({
         type: 'error',
         title: t('Loadouts.PullFromPostmasterPopupTitle'),
@@ -237,7 +239,7 @@ function moveItemsToVault(
   return async (dispatch, getState) => {
     const reservations: MoveReservations = {
       // reserve space for all move-asides
-      [store.id]: _.countBy(items, (i) => i.bucket.hash),
+      [store.id]: countBy(items, (i) => i.bucket.hash),
     };
     const moveSession = createMoveSession(cancelToken, items);
 

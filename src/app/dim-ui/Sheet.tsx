@@ -12,7 +12,6 @@ import {
   useDragControls,
   useReducedMotion,
 } from 'framer-motion';
-import _ from 'lodash';
 import React, {
   createContext,
   useCallback,
@@ -291,7 +290,7 @@ export default function Sheet({
       <div className={styles.container} onPointerDown={dragHandleDown}>
         {Boolean(header) && (
           <div className={clsx(styles.header, headerClassName)}>
-            {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
+            {typeof header === 'function' ? header({ onClose: triggerClose }) : header}
           </div>
         )}
 
@@ -300,12 +299,12 @@ export default function Sheet({
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContents}
         >
-          {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
+          {typeof children === 'function' ? children({ onClose: triggerClose }) : children}
         </div>
 
         {Boolean(footer) && (
           <div className={styles.footer}>
-            {_.isFunction(footer) ? footer({ onClose: triggerClose }) : footer}
+            {typeof footer === 'function' ? footer({ onClose: triggerClose }) : footer}
           </div>
         )}
       </div>

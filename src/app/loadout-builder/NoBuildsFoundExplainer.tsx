@@ -7,9 +7,8 @@ import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
-import { filterMap, uniqBy } from 'app/utils/collections';
+import { compact, filterMap, uniqBy } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { Dispatch } from 'react';
 import styles from './NoBuildsFoundExplainer.m.scss';
 import ExoticArmorChoice from './filter/ExoticArmorChoice';
@@ -318,7 +317,7 @@ export default function NoBuildsFoundExplainer({
       problems.push({
         id: 'upperBoundsExceeded',
         description: t('LoadoutBuilder.NoBuildsFoundExplainer.UpperBoundsFailed'),
-        suggestions: _.compact([
+        suggestions: compact([
           {
             id: 'hint',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeIncreaseUpperBounds'),
@@ -332,7 +331,7 @@ export default function NoBuildsFoundExplainer({
       problems.push({
         id: 'lowerBoundsExceeded',
         description: t('LoadoutBuilder.NoBuildsFoundExplainer.LowerBoundsFailed'),
-        suggestions: _.compact([
+        suggestions: compact([
           !params.autoStatMods &&
             $featureFlags.loAutoStatMods && {
               id: 'hint1',
@@ -436,7 +435,7 @@ export default function NoBuildsFoundExplainer({
       problems.push({
         id: 'modAssignmentFailed',
         description: t('LoadoutBuilder.NoBuildsFoundExplainer.ModAssignmentFailed'),
-        suggestions: uniqBy(_.compact(suggestions), ({ id }) => id),
+        suggestions: uniqBy(compact(suggestions), ({ id }) => id),
       });
     }
   }

@@ -15,9 +15,10 @@ import {
   weaponStatNames,
 } from 'app/search/search-filter-values';
 import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-generation';
+import { mapValues, maxOf, sumBy } from 'app/utils/collections';
 import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
+import { once } from 'es-toolkit';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
@@ -248,17 +249,17 @@ function createStatCombiner(
   return (item: DimItem) => {
     const statValuesByHash = getStatValuesByHash(item, byWhichValue);
     // Computed lazily
-    const sortStats = _.once(() =>
+    const sortStats = once(() =>
       (item.stats ?? [])
         .filter((s) => armorAnyStatHashes.includes(s.statHash))
         .map((s) => [s.statHash, s[byWhichValue]])
         .sort((a, b) => b[1] - a[1]),
     );
 
-    return _.sumBy(nestedAddends, (averageGroup) => {
-      const averaged = _.meanBy(averageGroup, (statFn) =>
-        statFn(statValuesByHash, sortStats, item),
-      );
+    return sumBy(nestedAddends, (averageGroup) => {
+      const averaged =
+        sumBy(averageGroup, (statFn) => statFn(statValuesByHash, sortStats, item)) /
+        averageGroup.length;
 
       return averaged;
     });
@@ -340,12 +341,12 @@ function maxPowerKey(item: DimItem) {
 }
 
 function calculateMaxPowerPerBucket(allItems: DimItem[]) {
-  return _.mapValues(
+  return mapValues(
     Object.groupBy(
       // disregard no-class armor
       allItems.filter((i) => i.classType !== DestinyClass.Classified),
       (i) => maxPowerKey(i),
     ),
-    (items) => _.maxBy(items, (i) => i.power)?.power ?? 0,
+    (items) => (items.length ? maxOf(items, (i) => i.power) : 0),
   );
 }

@@ -2,13 +2,13 @@
 // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
 
 import { DimLanguage, browserLangToDimLang } from 'app/i18n';
-import _, { stubTrue } from 'lodash';
 import memoizeOne from 'memoize-one';
+import { invert } from './collections';
 import { Comparator } from './comparators';
-import { LookupTable } from './util-types';
+import { stubTrue } from './functions';
 
 // Our locale names don't line up with the BCP 47 tags for Chinese
-const dimLangToBrowserLang: LookupTable<DimLanguage, string> = _.invert(browserLangToDimLang);
+const dimLangToBrowserLang = invert(browserLangToDimLang);
 
 /** Map DIM's locale values to a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646) */
 function mapLocale(language: DimLanguage): Intl.UnicodeBCP47LocaleIdentifier {

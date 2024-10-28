@@ -14,7 +14,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import { useMemo } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -63,7 +63,7 @@ export function useEquippedLoadoutArmorAndSubclass(
             modsByBucket,
           );
 
-          const loadoutItemsByBucket = _.keyBy(
+          const loadoutItemsByBucket = keyBy(
             loadoutItems.filter((i) => i.item.classType === classType),
             (i) => i.item.bucket.hash,
           );

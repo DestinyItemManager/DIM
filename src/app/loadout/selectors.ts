@@ -1,3 +1,4 @@
+import { currentProfileSelector } from 'app/dim-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import {
@@ -141,3 +142,10 @@ export const selectedLoadoutStoreSelector = createSelector(
     return stores.find((store) => store.id === selectedLoadoutStoreId) ?? defaultStore;
   },
 );
+
+/**
+ * Is this loadout ID saved to the user's profile? This doesn't mean it's been
+ * flushed to DIM Sync yet but just that it's been saved locally.
+ */
+export const loadoutSavedSelector = (loadoutId: string) => (state: RootState) =>
+  Boolean(currentProfileSelector(state)?.loadouts[loadoutId]);

@@ -13,11 +13,11 @@ import {
   ServerResponse,
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
+import { maxBy, once } from 'es-toolkit';
 import i18next from 'i18next';
 import fetchMock from 'jest-fetch-mock';
 import en from 'locale/en.json';
 import ja from 'locale/ja.json';
-import _ from 'lodash';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
@@ -100,7 +100,7 @@ async function getLocalManifest(cacheDir: string) {
       })),
     );
 
-    const filename = path.resolve(cacheDir, _.maxBy(mtimes, (f) => f.mtime)!.filename);
+    const filename = path.resolve(cacheDir, maxBy(mtimes, (f) => f.mtime)!.filename);
     return [
       JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents,
       filename,
@@ -108,7 +108,7 @@ async function getLocalManifest(cacheDir: string) {
   }
 }
 
-export const getTestDefinitions = _.once(async () => {
+export const getTestDefinitions = once(async () => {
   const [manifestJson] = await getTestManifestJson();
   return buildDefinitionsFromManifest(manifestJson);
 });
@@ -128,7 +128,7 @@ export const getTestProfile = () =>
 export const getTestVendors = () =>
   (vendors as unknown as ServerResponse<DestinyVendorsResponse>).Response;
 
-export const getTestStores = _.once(async () => {
+export const getTestStores = once(async () => {
   const manifest = await getTestDefinitions();
 
   const stores = buildStores({

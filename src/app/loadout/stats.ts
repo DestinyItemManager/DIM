@@ -11,17 +11,18 @@ import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
+import { mapValues } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { mapKeys, once } from 'es-toolkit';
 
 /**
  * Font of X mods conditionally boost a single stat. This maps from
  * mod hash to boosted stat hash.
  */
-const fontModHashToStatHash = _.once(() => {
+const fontModHashToStatHash = once(() => {
   const baseFontModHashToStatHash: HashLookup<ArmorStatHashes> = {
     4046357305: StatHashes.Mobility, // InventoryItem "Font of Agility"
     686455429: StatHashes.Resilience, // InventoryItem "Font of Endurance"
@@ -33,10 +34,7 @@ const fontModHashToStatHash = _.once(() => {
 
   return {
     ...baseFontModHashToStatHash,
-    ..._.mapKeys(
-      baseFontModHashToStatHash,
-      (_val, hash) => mapToOtherModCostVariant(parseInt(hash, 10))!,
-    ),
+    ...mapKeys(baseFontModHashToStatHash, (_val, hash) => mapToOtherModCostVariant(Number(hash))!),
   };
 });
 
@@ -61,9 +59,9 @@ function getFontMods(mods: PluggableInventoryItemDefinition[]) {
     }
   }
 
-  return _.mapValues(boosts, (boost) => ({
-    ...boost!,
-    value: boostForNumFontStacks[boost!.count] ?? boostForNumFontStacks.at(-1),
+  return mapValues(boosts, (boost) => ({
+    ...boost,
+    value: boostForNumFontStacks[boost.count] ?? boostForNumFontStacks.at(-1),
   }));
 }
 

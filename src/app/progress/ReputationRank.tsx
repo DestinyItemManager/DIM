@@ -1,9 +1,9 @@
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { sumBy } from 'app/utils/collections';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import _ from 'lodash';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';
 import styles from './ReputationRank.m.scss';
@@ -27,7 +27,7 @@ export function ReputationRank({
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
   const canReset = progressionDef.steps.length === progress.levelCap;
-  const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
+  const rankTotal = sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
   const streakCheckboxes =
     streak && Array<boolean>(5).fill(true).fill(false, streak.currentProgress);
@@ -90,7 +90,7 @@ function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
   const canReset = progressionDef.steps.length === progress.levelCap;
-  const rankTotal = _.sumBy(progressionDef.steps, (step) => step.progressTotal);
+  const rankTotal = sumBy(progressionDef.steps, (step) => step.progressTotal);
 
   const circumference = 2 * 22 * Math.PI;
   const circumference2 = 2 * 25 * Math.PI;

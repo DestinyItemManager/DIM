@@ -4,7 +4,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { isClassCompatible, itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { Loadout } from '../loadout/loadout-types';
 import {
@@ -526,10 +525,9 @@ describe('fillLoadoutFromUnequipped', () => {
 
   it('fills in unequipped items for a single category without overflow', () => {
     // Add some items from the vault
-    const vaultedItems = _.take(
-      items.filter((i) => i.bucket.hash === BucketHashes.EnergyWeapons && i.owner === 'vault'),
-      5,
-    );
+    const vaultedItems = items
+      .filter((i) => i.bucket.hash === BucketHashes.EnergyWeapons && i.owner === 'vault')
+      .slice(0, 5);
     let loadout = emptyLoadout;
     for (const item of vaultedItems) {
       loadout = addItem(defs, item)(loadout);

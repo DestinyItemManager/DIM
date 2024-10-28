@@ -11,8 +11,8 @@ import { AppIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
+import { compact } from 'app/utils/collections';
 import clsx from 'clsx';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
@@ -86,7 +86,7 @@ function InGameLoadoutTile({
 
   const handleSaveAsDIM = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
-    editLoadout(dimLoadout, store.id, { isNew: true });
+    editLoadout(dimLoadout, store.id);
   };
   const handleShare = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(gameLoadout, store.classType, allItems);
@@ -102,7 +102,7 @@ function InGameLoadoutTile({
       })
     : undefined;
 
-  const options: Option[] = _.compact([
+  const options: Option[] = compact([
     {
       key: 'details',
       content: t('InGameLoadout.LoadoutDetails'),

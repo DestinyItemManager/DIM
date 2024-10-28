@@ -2,11 +2,12 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { PressTip } from 'app/dim-ui/PressTip';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { loadoutSavedSelector } from 'app/loadout/selectors';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
+import { isEmpty } from 'app/utils/collections';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { currySelector } from 'app/utils/selectors';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -31,7 +32,6 @@ const clashingLoadoutSelector = currySelector(
 
 export default function LoadoutDrawerFooter({
   loadout,
-  isNew,
   onSaveLoadout,
   onDeleteLoadout,
   undo,
@@ -40,7 +40,6 @@ export default function LoadoutDrawerFooter({
   hasRedo,
 }: {
   loadout: Readonly<Loadout>;
-  isNew: boolean;
   undo?: () => void;
   redo?: () => void;
   hasUndo?: boolean;
@@ -48,6 +47,7 @@ export default function LoadoutDrawerFooter({
   onSaveLoadout: (e: React.FormEvent, saveAsNew: boolean) => void;
   onDeleteLoadout: () => void;
 }) {
+  const isSaved = useSelector(loadoutSavedSelector(loadout.id));
   const clashingLoadout = useSelector(clashingLoadoutSelector(loadout));
   // There's an existing loadout with the same name & class and it's not the loadout we are currently editing
   const clashesWithAnotherLoadout = clashingLoadout && clashingLoadout.id !== loadout.id;
@@ -67,7 +67,7 @@ export default function LoadoutDrawerFooter({
     !loadout.parameters?.mods?.length &&
     !loadout.parameters?.clearMods &&
     // Allow fashion only loadouts
-    _.isEmpty(loadout.parameters?.modsByBucket);
+    isEmpty(loadout.parameters?.modsByBucket);
   if (loadoutEmpty) {
     saveDisabledReasons.push(t('Loadouts.SaveDisabled.Empty'));
   }
@@ -75,7 +75,7 @@ export default function LoadoutDrawerFooter({
   const saveDisabled = saveDisabledReasons.length > 0;
 
   // Don't show "Save as New" if this is a new loadout or we haven't changed the name
-  const showSaveAsNew = !isNew;
+  const showSaveAsNew = isSaved;
 
   const saveAsNewDisabled =
     saveDisabled ||
@@ -84,7 +84,7 @@ export default function LoadoutDrawerFooter({
 
   return (
     <div className={styles.loadoutOptions}>
-      <form onSubmit={(e) => onSaveLoadout(e, isNew)}>
+      <form onSubmit={(e) => onSaveLoadout(e, !isSaved)}>
         <PressTip
           tooltip={
             saveDisabledReasons.length > 0
@@ -93,7 +93,7 @@ export default function LoadoutDrawerFooter({
           }
         >
           <button className="dim-button" type="submit" disabled={saveDisabled}>
-            {isNew ? t('Loadouts.Save') : t('Loadouts.Update')}
+            {isSaved ? t('Loadouts.Update') : t('Loadouts.Save')}
           </button>
         </PressTip>
         {showSaveAsNew && (
@@ -117,7 +117,7 @@ export default function LoadoutDrawerFooter({
             </button>
           </PressTip>
         )}
-        {!isNew && (
+        {isSaved && (
           <ConfirmButton key="delete" danger onClick={onDeleteLoadout}>
             <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
           </ConfirmButton>

@@ -1,7 +1,6 @@
-import { count } from 'app/utils/collections';
+import { count, sumBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 /**
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
@@ -12,19 +11,20 @@ import { D1Store, DimStore } from './store-types';
 /**
  * Get whichever character was last played.
  */
-export const getCurrentStore = <Store extends DimStore>(stores: Store[]) =>
+export const getCurrentStore = <Store extends DimStore>(stores: readonly Store[]) =>
   stores.find((s) => s.current);
 
 /**
  * Get a store from a list by ID.
  */
-export const getStore = <Store extends DimStore>(stores: Store[], id: string) =>
+export const getStore = <Store extends DimStore>(stores: readonly Store[], id: string) =>
   stores.find((s) => s.id === id);
 
 /**
  * Get the Vault from a list of stores.
  */
-export const getVault = (stores: DimStore[]): DimStore | undefined => stores.find((s) => s.isVault);
+export const getVault = (stores: readonly DimStore[]): DimStore | undefined =>
+  stores.find((s) => s.isVault);
 
 /**
  * This is a memoized function that generates a map of items by their bucket
@@ -58,7 +58,7 @@ export function getArtifactBonus(store: DimStore) {
  * excluding stuff in the postmaster.
  */
 export function amountOfItem(store: DimStore, item: { hash: number }) {
-  return _.sumBy(store.items, (i) =>
+  return sumBy(store.items, (i) =>
     i.hash === item.hash && !i.location?.inPostmaster ? i.amount : 0,
   );
 }

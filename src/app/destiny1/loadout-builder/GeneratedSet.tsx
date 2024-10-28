@@ -4,13 +4,14 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout/loadout-types';
 import D1CharacterStats from 'app/store-stats/D1CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
+import { filterMap } from 'app/utils/collections';
 import { useState } from 'react';
 import { D1Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
 import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
 import { convertToLoadoutItem, newLoadout } from '../../loadout-drawer/loadout-utils';
 import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
+import { d1ArmorTypes } from './D1LoadoutBuilder';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import './loadout-builder.scss';
 import { ArmorSet, ArmorTypes, SetType } from './types';
@@ -29,9 +30,7 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
   const toggle = () => setCollapsed((collapsed) => !collapsed);
 
   const makeLoadoutFromSet = (set: ArmorSet): Loadout => {
-    const items = Object.values(
-      _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact'),
-    ).map((si) => si.item);
+    const items = filterMap(d1ArmorTypes, (bucketHash) => set.armor[bucketHash]?.item);
 
     const loadout = newLoadout(
       '',

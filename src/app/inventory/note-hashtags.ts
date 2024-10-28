@@ -1,5 +1,4 @@
-import { filterMap, uniqBy } from 'app/utils/collections';
-import _ from 'lodash';
+import { compact, filterMap, uniqBy } from 'app/utils/collections';
 import { ItemInfos } from './dim-item-info';
 
 /**
@@ -39,7 +38,7 @@ export function appendedToNote(originalNote: string | undefined, append: string)
   const filteredAppendSegments = newSegmented.filter(
     (s) => typeof s === 'string' || !existingHashtags.has(s.hashtag),
   );
-  return _.compact([...originalSegmented, ' ', ...filteredAppendSegments])
+  return compact([...originalSegmented, ' ', ...filteredAppendSegments])
     .map((s) => (typeof s === 'string' ? s : s.hashtag))
     .join('')
     .replaceAll(/(\s)+/g, '$1')

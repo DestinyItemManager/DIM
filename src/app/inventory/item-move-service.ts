@@ -14,8 +14,8 @@ import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { memoize } from 'es-toolkit';
 import { Immutable } from 'immer';
-import _ from 'lodash';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import {
@@ -31,7 +31,12 @@ import {
   transfer as d2Transfer,
   equip as d2equip,
 } from '../bungie-api/destiny2-api';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import {
+  chainComparator,
+  compareBy,
+  compareByIndex,
+  reverseComparator,
+} from '../utils/comparators';
 import { itemLockStateChanged, itemMoved } from './actions';
 import {
   TagValue,
@@ -212,15 +217,17 @@ export function getSimilarItem(
   const target = getStore(stores, item.owner)!;
 
   // Try each store, preferring getting something from the same character, then vault, then any other character
-  const sortedStores = _.sortBy(stores, (store) => {
-    if (target.id === store.id) {
-      return 0;
-    } else if (store.isVault) {
-      return 1;
-    } else {
-      return 2;
-    }
-  });
+  const sortedStores = stores.sort(
+    compareBy((store) => {
+      if (target.id === store.id) {
+        return 0;
+      } else if (store.isVault) {
+        return 1;
+      } else {
+        return 2;
+      }
+    }),
+  );
 
   let result: DimItem | undefined;
   for (const store of sortedStores) {
@@ -627,15 +634,17 @@ function chooseMoveAsideItem(
   const isInInGameLoadoutFor = isInInGameLoadoutForSelector(getState());
 
   // A cached version of the space-left function
-  const cachedSpaceLeft = _.memoize(
-    (store: DimStore, item: DimItem) => moveContext.spaceLeft(store, item),
-    (store, item) => {
-      // cache key
-      if (item.maxStackSize > 1) {
-        return store.id + item.hash;
-      } else {
-        return store.id + item.bucket.hash;
-      }
+  const cachedSpaceLeft = memoize(
+    ([store, item]: [store: DimStore, item: DimItem]) => moveContext.spaceLeft(store, item),
+    {
+      getCacheKey: ([store, item]) => {
+        // cache key
+        if (item.maxStackSize > 1) {
+          return store.id + item.hash;
+        } else {
+          return store.id + item.bucket.hash;
+        }
+      },
     },
   );
 
@@ -645,10 +654,9 @@ function chooseMoveAsideItem(
   // The concept is that we prefer filling up the least-recently-played character before even
   // bothering with the others.
   let moveAsideCandidate = (() => {
-    const otherCharacters = _.sortBy(
-      otherStores.filter((s) => !s.isVault),
-      (s) => s.lastPlayed.getTime(),
-    );
+    const otherCharacters = otherStores
+      .filter((s) => !s.isVault)
+      .sort(compareBy((s) => s.lastPlayed.getTime()));
     for (const targetStore of otherCharacters) {
       const sortedCandidates = sortMoveAsideCandidatesForStore(
         moveAsideCandidates,
@@ -659,7 +667,7 @@ function chooseMoveAsideItem(
         item,
       );
       for (const candidate of sortedCandidates) {
-        const spaceLeft = cachedSpaceLeft(targetStore, candidate);
+        const spaceLeft = cachedSpaceLeft([targetStore, candidate]);
 
         if (target.isVault) {
           // If we're moving from the vault
@@ -676,7 +684,7 @@ function chooseMoveAsideItem(
           // we're not moving the original item *from* the vault, put
           // the candidate on another character in order to avoid
           // gumming up the vault.
-          const openVaultAmount = cachedSpaceLeft(vault, candidate);
+          const openVaultAmount = cachedSpaceLeft([vault, candidate]);
           const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
           const openVaultSlotsAfterMove = Math.max(
             0,
@@ -1158,12 +1166,12 @@ export function sortMoveAsideCandidatesForStore(
       // TRYING TO ESTIMATE USER INTENTION AND ITEM VALUE
 
       // Tagged items sort by orders defined in dim-item-info
-      compareBy((displaced) => {
-        const tag = getTag(displaced);
-        return -(fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
-          tag || 'none',
-        );
-      }),
+      reverseComparator(
+        compareByIndex(
+          fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority,
+          (displaced) => getTag(displaced) ?? 'none',
+        ),
+      ),
       // Prefer moving lower-tier into the vault and higher tier out
       compareBy((i) =>
         fromStore.isVault ? moveAsideWeighting[i.tier] : -moveAsideWeighting[i.tier],
@@ -1224,10 +1232,7 @@ function searchForSimilarItem(
       compareBy((i) => !i.equippingLabel),
       // try to match type (e.g. scout rifle). TODO: look into using ItemSubType instead
       compareBy((i) => i.typeName === item.typeName),
-      compareBy((i) => {
-        const tag = getTag(i);
-        return -equipReplacePriority.indexOf(tag || 'none');
-      }),
+      reverseComparator(compareByIndex(equipReplacePriority, (i) => getTag(i) ?? 'none')),
       // Prefer higher-tier items
       compareBy((i) => moveAsideWeighting[i.tier]),
       // Prefer higher-stat items

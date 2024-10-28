@@ -42,7 +42,7 @@ export default function LoadoutImportSheet({
         const loadout = await getDecodedLoadout(decodedUrl);
         if (!canceled) {
           setState('ok');
-          editLoadout(loadout, currentStoreId, { isNew: true, fromExternal: true });
+          editLoadout(loadout, currentStoreId, { fromExternal: true });
           onClose();
         }
       } catch (e) {

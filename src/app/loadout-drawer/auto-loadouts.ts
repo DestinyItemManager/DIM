@@ -4,6 +4,7 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
+import { mapValues, sumBy } from 'app/utils/collections';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -12,7 +13,7 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { sample } from 'es-toolkit';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout } from '../loadout/loadout-types';
@@ -170,7 +171,7 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
   items = items.filter((i) => !i.location.inPostmaster && !i.notransfer);
   items = addUpStackables(items);
 
-  const itemsByType = _.mapValues(
+  const itemsByType = mapValues(
     Object.groupBy(items, (i) => i.bucket.hash),
     (items) => limitToBucketSize(items, store),
   );
@@ -197,7 +198,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
   const bucket = isVault ? item.bucket.vaultBucket : item.bucket;
 
   if (!bucket) {
-    return isVault ? items : _.take(items, 9);
+    return isVault ? items : items.slice(0, 9);
   }
 
   const enum BucketLocation {
@@ -221,13 +222,15 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
   );
 
   // TODO: this doesn't take into account stacks that need to split
-  return _.take(
+  return (
     // move the ones that are already there to the front to minimize moves
-    [...alreadyEquipped, ...alreadyUnequipped, ...otherItems],
-    // If a matching item is already equipped we can take 10, otherwise we have
-    // to subtract one for the equipped item because we don't want to displace
-    // it
-    bucket.capacity - (item.equipment && !alreadyEquipped.length ? 1 : 0),
+    [...alreadyEquipped, ...alreadyUnequipped, ...otherItems].slice(
+      0,
+      // If a matching item is already equipped we can take 10, otherwise we have
+      // to subtract one for the equipped item because we don't want to displace
+      // it
+      bucket.capacity - (item.equipment && !alreadyEquipped.length ? 1 : 0),
+    )
   );
 }
 
@@ -236,7 +239,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
 function addUpStackables(items: DimItem[]) {
   return Object.values(Object.groupBy(items, (t) => t.hash)).flatMap((items) => {
     if (items[0].maxStackSize > 1) {
-      const item = { ...items[0], amount: _.sumBy(items, (i) => i.amount) };
+      const item = { ...items[0], amount: sumBy(items, (i) => i.amount) };
       return [item];
     } else {
       return items;
@@ -299,7 +302,7 @@ export function randomSubclassConfiguration(
   for (const socket of abilityAndSuperSockets) {
     // Stasis has no super plugSet
     if (socket.plugSet) {
-      socketOverrides[socket.socketIndex] = _.sample(socket.plugSet.plugs)!.plugDef.hash;
+      socketOverrides[socket.socketIndex] = sample(socket.plugSet.plugs).plugDef.hash;
     }
   }
 
@@ -311,9 +314,9 @@ export function randomSubclassConfiguration(
           break;
         }
         maxCount--;
-        const chosenHash = _.sample(
+        const chosenHash = sample(
           socket.plugSet!.plugs.filter((plug) => !blockedPlugs.includes(plug.plugDef.hash)),
-        )!.plugDef.hash;
+        ).plugDef.hash;
         if (chosenHash === undefined) {
           break;
         }

@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import { noop } from './functions';
 import { dedupePromise } from './promises';
 
 describe('dedupePromise', () => {

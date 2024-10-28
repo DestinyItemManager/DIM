@@ -1,10 +1,11 @@
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import { Loadout } from 'app/loadout/loadout-types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
+import { noop } from 'app/utils/functions';
 import { errorLog } from 'app/utils/log';
 import { reportException } from 'app/utils/sentry';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _, { noop } from 'lodash';
+import { maxBy } from 'es-toolkit';
 import { analyzeLoadout } from './analysis';
 import {
   LoadoutAnalysisContext,
@@ -318,7 +319,7 @@ export class LoadoutBackgroundAnalyzer {
       });
     });
 
-    const mostOutOfDateLoadout = _.maxBy(loadoutsAwaitingAnalysis, (l) => l.outOfDateNess);
+    const mostOutOfDateLoadout = maxBy(loadoutsAwaitingAnalysis, (l) => l.outOfDateNess);
     return mostOutOfDateLoadout?.outOfDateNess === 0 ? undefined : mostOutOfDateLoadout;
   }
 }

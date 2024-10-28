@@ -20,7 +20,7 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import { filterMap } from './collections';
+import { count, filterMap } from './collections';
 import { isKillTrackerSocket } from './item-utils';
 
 type WithRequiredProperty<T, K extends keyof T> = T & {
@@ -225,7 +225,7 @@ export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
 }
 
 export function countEnhancedPerks(sockets: DimSockets) {
-  return sockets.allSockets.filter((s) => s.plugged && isEnhancedPerk(s.plugged.plugDef)).length;
+  return count(sockets.allSockets, (s) => s.plugged && isEnhancedPerk(s.plugged.plugDef));
 }
 
 export const aspectSocketCategoryHashes: SocketCategoryHashes[] = [

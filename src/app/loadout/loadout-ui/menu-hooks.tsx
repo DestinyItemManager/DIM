@@ -16,12 +16,13 @@ import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { faCheckCircle, refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
+import { isEmpty } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { localizedSorter } from 'app/utils/intl';
 import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
-import _ from 'lodash';
+import { intersection } from 'es-toolkit/compat';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './menu-hooks.m.scss';
 
@@ -85,19 +86,20 @@ export function useLoadoutFilterPills(
     return loadoutsByHashtag;
   }, [savedLoadouts]);
 
-  const filterOptions: Option<FilterPillType>[] = _.sortBy(
-    Object.entries(loadoutsByHashtag).map(([hashtag, loadouts]) => ({
-      key: hashtag,
-      value: { tag: 'hashtag', hashtag },
-      content: (
-        <>
-          <ColorDestinySymbols text={hashtag} />
-          {` (${loadouts.length})`}
-        </>
-      ),
-    })),
-    (o) => o.key,
-  );
+  const filterOptions = Object.entries(loadoutsByHashtag)
+    .map(
+      ([hashtag, loadouts]): Option<FilterPillType> => ({
+        key: hashtag,
+        value: { tag: 'hashtag', hashtag },
+        content: (
+          <>
+            <ColorDestinySymbols text={hashtag} />
+            {` (${loadouts.length})`}
+          </>
+        ),
+      }),
+    )
+    .sort(compareBy((o) => o.key));
 
   const loadoutsByType = useMemo(() => {
     const loadoutsByType: Record<LoadoutSpecialization, Loadout[]> | undefined = defs && {
@@ -154,7 +156,7 @@ export function useLoadoutFilterPills(
   const filteredLoadouts = useMemo(
     () =>
       selectedFilters.length > 0
-        ? _.intersection(
+        ? intersection(
             ...selectedFilters.map((f) => {
               switch (f.value.tag) {
                 case 'hashtag': {
@@ -190,7 +192,7 @@ export function useLoadoutFilterPills(
         onOptionsSelected={setSelectedFilters}
         className={className}
         darkBackground={darkBackground}
-        extra={_.isEmpty(loadoutsByHashtag) ? extra : undefined}
+        extra={isEmpty(loadoutsByHashtag) ? extra : undefined}
       />
     ) : null;
 

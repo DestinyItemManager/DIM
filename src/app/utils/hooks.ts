@@ -1,5 +1,5 @@
 import useResizeObserver from '@react-hook/resize-observer';
-import _ from 'lodash';
+import { throttle } from 'es-toolkit';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Subscription, useSubscription } from 'use-subscription';
 import { EventBus, Observable } from './observable';
@@ -85,7 +85,7 @@ export function useThrottledSubscription<T>(observable: Observable<T>, delay: nu
         return observable.getCurrentValue();
       },
       subscribe(callback: () => void) {
-        const throttled = _.throttle(callback, delay);
+        const throttled = throttle(callback, delay);
         const unsubscribe = observable.subscribe(throttled);
         return () => {
           unsubscribe();

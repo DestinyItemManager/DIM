@@ -35,7 +35,7 @@ import {
   update,
 } from './actions';
 import { cleanInfos } from './dim-item-info';
-import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
+import { d2BucketsSelector, storesLoadedSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { buildStores, getCharacterStatsData } from './store/d2-store-factory';
@@ -397,7 +397,7 @@ function loadStoresData(
 
           dispatch(handleAuthErrors(e));
 
-          if (storesSelector(getState()).length > 0) {
+          if (storesLoadedSelector(getState())) {
             // don't replace their inventory with the error, just notify
             showNotification(bungieErrorToaster(errorMessage(e)));
           } else {

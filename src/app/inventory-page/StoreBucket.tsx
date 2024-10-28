@@ -24,12 +24,12 @@ import {
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { compareBy } from 'app/utils/comparators';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import { shallowEqual } from 'fast-equals';
-import _ from 'lodash';
 import { memo, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -160,10 +160,13 @@ const StoreBucketInner = memo(function StoreBucketInner({
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
           !isVault &&
-          // lower bound of 0, in case this bucket becomes overfilled
-          _.times(Math.max(0, bucket.capacity - unequippedItems.length), (index) => (
-            <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
-          ))}
+          Array.from(
+            // lower bound of 0, in case this bucket becomes overfilled
+            { length: Math.max(0, bucket.capacity - unequippedItems.length) },
+            (_, index) => (
+              <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
+            ),
+          )}
       </StoreBucketDropTarget>
     </>
   );
@@ -205,10 +208,12 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
 
   // The vault divides armor by class
   const itemsByClass = Map.groupBy(items, (item) => item.classType);
-  const classTypeOrder = _.sortBy([...itemsByClass.keys()], (classType) => {
-    const index = storeClassList.findIndex((s) => s === classType);
-    return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
-  });
+  const classTypeOrder = [...itemsByClass.keys()].sort(
+    compareBy((classType) => {
+      const index = storeClassList.findIndex((s) => s === classType);
+      return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
+    }),
+  );
 
   return (
     <StoreBucketDropTarget

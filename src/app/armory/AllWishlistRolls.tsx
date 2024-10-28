@@ -5,7 +5,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
 import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import styles from './AllWishlistRolls.m.scss';
 import { getCraftingTemplate } from './crafting-utils';
@@ -35,7 +35,7 @@ export default function AllWishlistRolls({
   realAvailablePlugHashes?: number[];
 }) {
   const wishlistRolls = useSelector(wishListRollsForItemHashSelector(item.hash));
-  const [goodRolls, badRolls] = _.partition(wishlistRolls, (r) => !r.isUndesirable);
+  const [goodRolls, badRolls] = partition(wishlistRolls, (r) => !r.isUndesirable);
 
   return (
     <>

@@ -4,8 +4,8 @@ import { hideItemPopup, showItemPopup, showItemPopup$ } from 'app/item-popup/ite
 import SearchBar from 'app/search/SearchBar';
 import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { uniqBy } from 'app/utils/collections';
+import { compareBy } from 'app/utils/comparators';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { mergeProps, useKeyboard, useLongPress, usePress } from 'react-aria';
 import { useSelector } from 'react-redux';
@@ -66,7 +66,7 @@ export default function ItemPicker({
   const items = useMemo(() => {
     let items = sortItems(filteredItems.filter(filters(query)));
     if (sortBy) {
-      items = _.sortBy(items, sortBy);
+      items = items.toSorted(compareBy(sortBy));
     }
     if (uniqueBy) {
       items = uniqBy(items, uniqueBy);

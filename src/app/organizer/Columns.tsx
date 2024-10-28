@@ -39,7 +39,7 @@ import {
   thumbsUpIcon,
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap, invert } from 'app/utils/collections';
 import { Comparator, compareBy } from 'app/utils/comparators';
 import {
   getInterestingSocketMetadatas,
@@ -73,7 +73,6 @@ import {
   StatHashes,
 } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
-import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
@@ -170,8 +169,9 @@ export function getColumns(
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
   type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
-  const statColumns: ColumnWithStat[] = _.sortBy(
-    filterMap(Object.entries(statHashes), ([statHashStr, statInfo]): ColumnWithStat | undefined => {
+  const statColumns: ColumnWithStat[] = filterMap(
+    Object.entries(statHashes),
+    ([statHashStr, statInfo]): ColumnWithStat | undefined => {
       const statHash = parseInt(statHashStr, 10) as StatHashes;
       if (customStatHashes.includes(statHash)) {
         // Exclude custom total, it has its own column
@@ -208,7 +208,7 @@ export function getColumns(
         },
         defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
         filter: (value) => {
-          const statName = _.invert(statHashByName)[statHash];
+          const statName = invert(statHashByName)[statHash];
           return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
         },
         csv: (_value, item) => {
@@ -218,9 +218,8 @@ export function getColumns(
           return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
         },
       };
-    }),
-    (s) => getStatSortOrder(s.statHash),
-  );
+    },
+  ).sort(compareBy((s) => getStatSortOrder(s.statHash)));
 
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
@@ -247,7 +246,7 @@ export function getColumns(
             }
             return <ItemStatValue stat={stat} item={item} baseStat />;
           },
-          filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
+          filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
           csv: (_value, item) => {
             // Re-find the stat instead of using the value passed in, because the
             // value passed in can be different if it's Recoil.
@@ -262,8 +261,8 @@ export function getColumns(
 
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
-      ? _.sortBy(
-          Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat => {
+      ? Object.entries(statHashes)
+          .map(([statHashStr, statInfo]): ColumnWithStat => {
             const statHash = parseInt(statHashStr, 10) as StatHashes;
             return {
               statHash,
@@ -297,9 +296,8 @@ export function getColumns(
                 ];
               },
             };
-          }),
-          (s) => getStatSortOrder(s.statHash),
-        )
+          })
+          .sort(compareBy((s) => getStatSortOrder(s.statHash)))
       : [];
 
   /**
@@ -315,7 +313,7 @@ export function getColumns(
 
   const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs);
 
-  const columns: ColumnDefinition[] = _.compact([
+  const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
       c({
         id: 'icon',
@@ -830,10 +828,7 @@ export function getColumns(
           inloadouts &&
           inloadouts.length > 0 && (
             <LoadoutsCell
-              loadouts={_.sortBy(
-                inloadouts.map((l) => l.loadout),
-                (l) => l.name,
-              )}
+              loadouts={inloadouts.map((l) => l.loadout).sort(compareBy((l) => l.name))}
               owner={item.owner}
             />
           )
@@ -893,9 +888,7 @@ function LoadoutsCell({
           ) : (
             <a
               data-filter-value={loadout.id}
-              onClick={(e: React.MouseEvent) =>
-                !e.shiftKey && editLoadout(loadout, owner, { isNew: false })
-              }
+              onClick={(e: React.MouseEvent) => !e.shiftKey && editLoadout(loadout, owner)}
             >
               {loadout.name}
             </a>

@@ -10,7 +10,7 @@ import {
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
-import { getDamageDefsByDamageType } from 'app/utils/definitions';
+import { sumBy } from 'app/utils/collections';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, warnLog } from 'app/utils/log';
 import { countEnhancedPerks } from 'app/utils/socket-utils';
@@ -44,8 +44,8 @@ import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { keyBy, memoize } from 'es-toolkit';
 import { Draft } from 'immer';
-import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { reportException } from '../../utils/sentry';
@@ -67,7 +67,7 @@ const TAG = 'd2-stores';
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
-    _.keyBy(Collectible, (c) => c.itemHash),
+    keyBy(Object.values(Collectible), (c) => c.itemHash),
 );
 
 /**
@@ -129,7 +129,7 @@ export function processItems(
 }
 
 export const getClassTypeNameLocalized = memoizeOne((defs: D2ManifestDefinitions) =>
-  _.memoize((type: DestinyClass): string => {
+  memoize((type: DestinyClass): string => {
     const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.displayProperties.name;
@@ -137,6 +137,10 @@ export const getClassTypeNameLocalized = memoizeOne((defs: D2ManifestDefinitions
       return t('Loadouts.Any');
     }
   }),
+);
+
+const getDamageDefsByDamageType = memoizeOne((defs: D2ManifestDefinitions) =>
+  keyBy(Object.values(defs.DamageType.getAll()), (d) => d.enumValue),
 );
 
 /** Make a "fake" item from other information - used for Collectibles, etc. */
@@ -635,7 +639,7 @@ export function makeItem(
     const length = createdItem.objectives.length;
     if (length > 0) {
       createdItem.complete = createdItem.objectives.every((o) => o.complete);
-      createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
+      createdItem.percentComplete = sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
           const checkTrialsPassage = isTrialsPassage(createdItem.hash);
           // Only the "Wins" objective should count towards completion

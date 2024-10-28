@@ -6,7 +6,7 @@ import { isReducedModCostVariant } from 'app/loadout/mod-utils';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
-import { uniqBy } from 'app/utils/collections';
+import { count, uniqBy } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -112,8 +112,8 @@ export function collectSocketsToStrip(
     const affectedItems = uniqBy(contents.items, (i) => i.item.id);
     const numApplicableItems = affectedItems.length;
 
-    const numWeapons = affectedItems.filter((i) => i.item.bucket.inWeapons).length;
-    const numArmor = affectedItems.filter((i) => i.item.bucket.inArmor).length;
+    const numWeapons = count(affectedItems, (i) => i.item.bucket.inWeapons);
+    const numArmor = count(affectedItems, (i) => i.item.bucket.inArmor);
     const numOthers = numApplicableItems - numWeapons - numArmor;
 
     const numApplicableSockets = contents.items.length;

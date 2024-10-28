@@ -3,8 +3,8 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
+import { sumBy } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { ArmorSet, LockableBucketHashes } from './types';
 import { statTier } from './utils';
 
@@ -22,7 +22,7 @@ export function updateLoadoutWithArmorSet(
   loadoutParameters = loadout.parameters,
 ): Loadout {
   const data = {
-    tier: _.sumBy(Object.values(set.stats), statTier),
+    tier: sumBy(Object.values(set.stats), statTier),
   };
 
   const existingItemsWithoutArmor = loadout.items.filter(

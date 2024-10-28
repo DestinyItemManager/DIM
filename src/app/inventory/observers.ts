@@ -2,8 +2,8 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { set } from 'app/storage/idb-keyval';
 import { StoreObserver } from 'app/store/observerMiddleware';
 import { errorLog } from 'app/utils/log';
+import { debounce } from 'es-toolkit';
 import { shallowEqual } from 'fast-equals';
-import _ from 'lodash';
 import { newItemsSelector } from './selectors';
 
 interface SaveInfosObservedState {
@@ -12,8 +12,7 @@ interface SaveInfosObservedState {
 }
 
 /**
- * Set up an observer on the store that'll save item infos to sync service (google drive).
- * We specifically watch the legacy state, not the new one.
+ * Set up an observer on the store that'll save item infos to IndexedDB.
  */
 export function createSaveItemInfosObserver(): StoreObserver<SaveInfosObservedState> {
   return {
@@ -26,7 +25,7 @@ export function createSaveItemInfosObserver(): StoreObserver<SaveInfosObservedSt
         newItems: newItemsSelector(rootState),
       };
     },
-    sideEffect: _.debounce(async ({ current }: { current: SaveInfosObservedState }) => {
+    sideEffect: debounce(async ({ current }: { current: SaveInfosObservedState }) => {
       if (current.key) {
         try {
           return await set(current.key, current.newItems);

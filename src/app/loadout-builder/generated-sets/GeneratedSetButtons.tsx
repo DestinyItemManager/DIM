@@ -4,9 +4,11 @@ import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutSavedSelector } from 'app/loadout/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Dispatch } from 'react';
+import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet } from '../types';
 import { updateLoadoutWithArmorSet } from '../updated-loadout';
@@ -20,7 +22,6 @@ export default function GeneratedSetButtons({
   store,
   set,
   items,
-  isEditingExistingLoadout,
   lockedMods,
   canCompareLoadouts,
   halfTierMods,
@@ -32,7 +33,6 @@ export default function GeneratedSetButtons({
   /** The list of items to use - these are chosen from the set's options and match what's displayed. */
   items: DimItem[];
   lockedMods: PluggableInventoryItemDefinition[];
-  isEditingExistingLoadout: boolean;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -40,12 +40,12 @@ export default function GeneratedSetButtons({
   const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
   const loadout = () => updateLoadoutWithArmorSet(defs, originalLoadout, set, items, lockedMods);
+  const isSaved = useSelector(loadoutSavedSelector(originalLoadout.id));
 
   // Opens the loadout menu for the generated set
   const openLoadout = () =>
     editLoadout(loadout(), store.id, {
       showClass: false,
-      isNew: !isEditingExistingLoadout || originalLoadout.id === 'equipped',
     });
 
   // Automatically equip items for this generated set to the active store
@@ -71,7 +71,7 @@ export default function GeneratedSetButtons({
   return (
     <div className={styles.buttons}>
       <button type="button" className="dim-button" onClick={openLoadout}>
-        {isEditingExistingLoadout ? t('Loadouts.UpdateLoadout') : t('Loadouts.SaveLoadout')}
+        {isSaved ? t('Loadouts.UpdateLoadout') : t('Loadouts.SaveLoadout')}
       </button>
       {canCompareLoadouts && (
         <button

@@ -1,11 +1,11 @@
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
+import { mapValues } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { ProcessItem, ProcessItemsByBucket, ProcessResult } from '../process-worker/types';
 import {
   ArmorEnergyRules,
@@ -120,7 +120,7 @@ export function runProcess({
       worker
         .process(
           processItems,
-          _.mapValues(modStatChanges, (stat) => stat.value),
+          mapValues(modStatChanges, (stat) => stat.value),
           lockedProcessMods,
           desiredStatRanges,
           anyExotic,

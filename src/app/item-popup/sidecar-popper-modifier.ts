@@ -1,6 +1,6 @@
 import { Modifier, ModifierArguments } from '@popperjs/core';
 import getLayoutRect from '@popperjs/core/lib/dom-utils/getLayoutRect';
-import _ from 'lodash';
+import { clamp } from 'es-toolkit';
 
 export interface Options {
   element: HTMLElement | string | null;
@@ -23,7 +23,7 @@ function positionMenu({ state }: ModifierArguments<Options>) {
   const arrowCenter = (arrowRect.y || 0) + 5; // arrow is 10px tall
 
   // Don't let the sidecar be positioned above or below the popup
-  const top = _.clamp(arrowCenter - sidecarHeight / 2, 0, popperHeight - sidecarHeight);
+  const top = clamp(arrowCenter - sidecarHeight / 2, 0, popperHeight - sidecarHeight);
 
   // Originally this used translateY, but that caused menus to not work on Safari.
   state.styles.sidecar = {

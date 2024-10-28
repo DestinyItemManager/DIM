@@ -15,7 +15,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { HashLookup } from 'app/utils/util-types';
 import {
@@ -24,8 +24,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { keyBy, maxBy } from 'es-toolkit';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
@@ -62,7 +62,7 @@ export default function FashionDrawer({
 
   const classType = loadout.classType;
 
-  const armorItemsByBucketHash: HashLookup<ResolvedLoadoutItem> = _.keyBy(
+  const armorItemsByBucketHash: HashLookup<ResolvedLoadoutItem> = keyBy(
     armor,
     (li) => li.item.bucket.hash,
   );
@@ -179,7 +179,7 @@ export default function FashionDrawer({
     const shaders = Object.values(modsByBucket).flat().filter(isShader);
 
     const groupedShaders = Object.groupBy(shaders, (h) => h);
-    const mostCommonShaders = _.maxBy(Object.values(groupedShaders), (shaders) => shaders.length);
+    const mostCommonShaders = maxBy(Object.values(groupedShaders), (shaders) => shaders.length);
     if (!mostCommonShaders) {
       return;
     }
@@ -223,7 +223,7 @@ export default function FashionDrawer({
       return (collectibleHash && defs.Collectible.get(collectibleHash)?.parentNodeHashes[0]) ?? -1;
     });
     delete groupedOrnaments[-1];
-    const mostCommonOrnamentSet = _.maxBy(
+    const mostCommonOrnamentSet = maxBy(
       Object.entries(groupedOrnaments),
       ([_presentationHash, ornaments]) => ornaments.length,
     );
@@ -333,7 +333,7 @@ export default function FashionDrawer({
           type="button"
           className="dim-button"
           onClick={() => setModsByBucket({})}
-          disabled={_.isEmpty(modsByBucket)}
+          disabled={isEmpty(modsByBucket)}
         >
           {t('FashionDrawer.Reset')}
         </button>
@@ -503,21 +503,15 @@ function FashionSocket({
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
 
-  const unlockedPlugsWithoutTheDefault = Array.from(unlockedPlugSetItems).filter(
-    (plugHash) => plugHash !== defaultPlug.hash,
+  const unlockedPlugsWithoutTheDefault = new Set(
+    Array.from(unlockedPlugSetItems).filter((plugHash) => plugHash !== defaultPlug.hash),
   );
 
   const canSlotOrnament =
-    (socket?.plugSet &&
-      _.intersection(
-        unlockedPlugsWithoutTheDefault,
-        socket.plugSet.plugs.map((plug) => plug.plugDef.hash),
-      ).length > 0) ||
-    (socket?.reusablePlugItems &&
-      _.intersection(
-        unlockedPlugsWithoutTheDefault,
-        socket.reusablePlugItems.filter((p) => p.enabled).map((p) => p.plugItemHash),
-      ).length > 0);
+    socket?.plugSet?.plugs.some((plug) => unlockedPlugsWithoutTheDefault.has(plug.plugDef.hash)) ||
+    socket?.reusablePlugItems?.some(
+      (plug) => plug.enabled && unlockedPlugsWithoutTheDefault.has(plug.plugItemHash),
+    );
 
   return (
     <ClosableContainer onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}>

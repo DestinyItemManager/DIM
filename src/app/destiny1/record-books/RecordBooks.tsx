@@ -3,10 +3,11 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
-import { count } from 'app/utils/collections';
+import { count, sumBy } from 'app/utils/collections';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -108,7 +109,7 @@ export default function RecordBooks({ account }: Props) {
     };
 
     const records = Object.values(rawRecordBook.records).map((r) => processRecord(defs, r));
-    const recordByHash = _.keyBy(records, (r) => r.hash);
+    const recordByHash = keyBy(records, (r) => r.hash);
 
     let i = 0;
     recordBook.pages = recordBookDef.pages.map((page) => {
@@ -139,7 +140,7 @@ export default function RecordBooks({ account }: Props) {
       rawRecordBook.progress = rawRecordBook.progression;
       rawRecordBook.percentComplete =
         rawRecordBook.progress.currentProgress /
-        _.sumBy(rawRecordBook.progress.steps, (s) => s.progressTotal);
+        sumBy(rawRecordBook.progress.steps, (s) => s.progressTotal);
     } else {
       recordBook.percentComplete = count(records, (r) => r.complete) / records.length;
     }
@@ -150,10 +151,14 @@ export default function RecordBooks({ account }: Props) {
   };
 
   const rawRecordBooks = stores[0].advisors.recordBooks;
-  const recordBooks = _.sortBy(
-    Object.values(rawRecordBooks ?? {}).map((rb) => processRecordBook(defs, rb)),
-    (rb) => [rb.complete, new Date(rb.startDate).getTime()],
-  );
+  const recordBooks = Object.values(rawRecordBooks ?? {})
+    .map((rb) => processRecordBook(defs, rb))
+    .sort(
+      chainComparator(
+        compareBy((rb) => rb.complete),
+        compareBy((rb) => new Date(rb.startDate).getTime()),
+      ),
+    );
 
   return (
     <div

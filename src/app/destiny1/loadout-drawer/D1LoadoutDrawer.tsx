@@ -36,7 +36,6 @@ import './loadout-drawer.scss';
 export default function D1LoadoutDrawer({
   initialLoadout,
   storeId,
-  isNew,
   showClass,
   onClose,
 }: {
@@ -47,7 +46,6 @@ export default function D1LoadoutDrawer({
    * mods are enabled, which subclass items to show, etc.
    */
   storeId: string;
-  isNew: boolean;
   showClass: boolean;
   onClose: () => void;
 }) {
@@ -117,7 +115,6 @@ export default function D1LoadoutDrawer({
   const footer = ({ onClose }: { onClose: () => void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
-      isNew={isNew}
       onSaveLoadout={(e, isNew) =>
         isNew ? saveAsNew(e, onClose) : onSaveLoadout(e, loadout, onClose)
       }

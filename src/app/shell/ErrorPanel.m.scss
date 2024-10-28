@@ -1,9 +1,10 @@
+@use 'sass:color';
 @use '../variables.scss' as *;
 
 .errorPanel {
   margin: 16px 0;
   padding: 0.85em;
-  background: scale-color($red, $lightness: -90%);
+  background: color.scale($red, $lightness: -90%);
   border-top: 4px solid $red;
 
   h2 {

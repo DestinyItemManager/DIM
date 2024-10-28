@@ -1,5 +1,4 @@
 import builder from 'content-security-policy-builder';
-import _ from 'lodash';
 import { FeatureFlags } from './feature-flags';
 
 const SELF = "'self'";
@@ -29,7 +28,7 @@ export default function csp(
       // Google Fonts
       'https://fonts.googleapis.com/',
     ],
-    connectSrc: _.compact([
+    connectSrc: [
       SELF,
       // Google Analytics
       'https://*.google-analytics.com',
@@ -51,7 +50,7 @@ export default function csp(
       featureFlags.elgatoStreamDeck && 'http://localhost:9120',
       // Game2Give
       featureFlags.issueBanner && 'https://bungiefoundation.donordrive.com',
-    ]),
+    ].filter((s) => s !== false),
     imgSrc: [
       SELF,
       // Webpack inlines some images

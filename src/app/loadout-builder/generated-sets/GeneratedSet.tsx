@@ -7,11 +7,12 @@ import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
-import { compareBy } from 'app/utils/comparators';
+import { mapValues } from 'app/utils/collections';
+import { compareByIndex } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { intersectionBy, once } from 'es-toolkit';
 import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import {
@@ -46,7 +47,6 @@ export default memo(function GeneratedSet({
   armorEnergyRules,
   equippedHashes,
   autoStatMods,
-  isEditingExistingLoadout,
 }: {
   originalLoadout: Loadout;
   set: ArmorSet;
@@ -61,7 +61,6 @@ export default memo(function GeneratedSet({
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
   autoStatMods: boolean;
-  isEditingExistingLoadout: boolean;
 }) {
   const defs = useD2Definitions()!;
 
@@ -74,7 +73,11 @@ export default memo(function GeneratedSet({
   for (const loadout of loadouts) {
     // Compare all possible items that could make up this set (not just the first item in each bucket) against all the equipped items of the given loadout
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
-    const intersection = _.intersectionBy(allSetItems, equippedLoadoutItems, (item) => item.id);
+    const intersection = intersectionBy(
+      allSetItems,
+      equippedLoadoutItems as unknown as DimItem[], // intersectionBy doesn't actually need the types to match
+      (item) => item.id,
+    );
     if (intersection.length === set.armor.length) {
       overlappingLoadout = loadout;
       // Replace the list of items to show with the ones that were from the matching loadout
@@ -115,10 +118,10 @@ export default memo(function GeneratedSet({
   }, [lockedMods, autoMods, defs, displayedItems, armorEnergyRules]);
 
   // Compute a presentable stat breakdown, lazily. This is a bit expensive, so we calculate it only
-  // when it's actually needed (in the tooltip), and memoize this via _.once (no need to memoize
+  // when it's actually needed (in the tooltip), and memoize this via once (no need to memoize
   // the memoized function since this component itself is memoized and the dependency array would
   // include most props).
-  const getStatsBreakdownOnce = _.once(() =>
+  const getStatsBreakdownOnce = once(() =>
     getStatsBreakdown(defs, selectedStore.classType, set, autoMods, modStatChanges),
   );
 
@@ -135,7 +138,7 @@ export default memo(function GeneratedSet({
   // Distribute our automatically picked mods across the items so that item components
   // can highlight them
   const assignAutoMods = set.statMods.slice();
-  const autoModsPerItem = _.mapValues(itemModAssignments, (mods) => {
+  const autoModsPerItem = mapValues(itemModAssignments, (mods) => {
     const autoModHashes = [];
     for (const mod of mods) {
       const modIdx = assignAutoMods.findIndex((m) => m === mod.hash);
@@ -183,7 +186,6 @@ export default memo(function GeneratedSet({
           items={displayedItems}
           lockedMods={lockedMods}
           store={selectedStore}
-          isEditingExistingLoadout={isEditingExistingLoadout}
           canCompareLoadouts={canCompareLoadouts}
           halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}
@@ -287,7 +289,7 @@ function getStatsBreakdown(
     }
   }
   for (const val of Object.values(totals)) {
-    val.breakdown!.sort(compareBy((val) => statSourceOrder.indexOf(val.source)));
+    val.breakdown!.sort(compareByIndex(statSourceOrder, (val) => val.source));
   }
   return totals;
 }

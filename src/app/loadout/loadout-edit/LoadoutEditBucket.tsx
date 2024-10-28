@@ -16,7 +16,7 @@ import { LookupTable } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import FashionDrawer from '../fashion/FashionDrawer';
@@ -78,7 +78,7 @@ export default function LoadoutEditBucket({
             key={bucket.hash}
             bucket={bucket}
             classType={classType}
-            items={itemsByBucket[bucket.hash]}
+            items={itemsByBucket[bucket.hash] ?? emptyArray()}
             onClickPlaceholder={onClickPlaceholder}
             onClickWarnItem={onClickWarnItem}
             onRemoveItem={onRemoveItem}
@@ -164,7 +164,7 @@ function ItemBucket({
   onToggleEquipped: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const bucketHash = bucket.hash;
-  const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
+  const [equipped, unequipped] = partition(items, (li) => li.loadoutItem.equip);
 
   const stores = useSelector(storesSelector);
   const acceptTarget = useMemo(

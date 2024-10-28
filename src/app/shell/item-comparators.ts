@@ -6,9 +6,14 @@ import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
-import { Comparator, chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import {
+  Comparator,
+  chainComparator,
+  compareBy,
+  compareByIndex,
+  reverseComparator,
+} from '../utils/comparators';
 
 const INSTANCEID_PADDING = 20;
 
@@ -311,20 +316,7 @@ export function sortItems(
   }
 
   if (specificSortOrder.length > 0 && !itemSortSettings.sortOrder.includes('rarity')) {
-    items = _.sortBy(items, (item) => {
-      const ix = specificSortOrder.indexOf(item.hash);
-      return ix === -1 ? 999 : ix;
-    });
-    return items;
-  }
-
-  // Re-sort mods
-  if (itemLocationId === BucketHashes.Modifications) {
-    const comparators = [ITEM_COMPARATORS.typeName, ITEM_COMPARATORS.name];
-    if (itemSortSettings.sortOrder.includes('rarity')) {
-      comparators.unshift(ITEM_COMPARATORS.rarity);
-    }
-    return items.toSorted(chainComparator(...comparators));
+    return items.toSorted(compareByIndex(specificSortOrder, (item) => item.hash));
   }
 
   // Re-sort consumables

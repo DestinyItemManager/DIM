@@ -11,8 +11,6 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import fs from 'fs';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import _ from 'lodash';
-import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
@@ -34,6 +32,9 @@ const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 import packageJson from '../package.json';
 import createWebAppManifest from './manifest-webapp';
+
+import cssnano from 'cssnano';
+import sortMediaQueries from 'postcss-sort-media-queries';
 
 import splash from '../icons/splash.json';
 
@@ -305,7 +306,7 @@ export default (env: Env) => {
         {
           test: /\.tsx?$/,
           exclude: [/testing/, /\.test\.ts$/],
-          use: _.compact([
+          use: [
             {
               loader: 'babel-loader',
               options: {
@@ -317,7 +318,7 @@ export default (env: Env) => {
               : {
                   loader: 'ts-loader',
                 },
-          ]),
+          ].filter((l) => l !== null),
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
@@ -365,7 +366,6 @@ export default (env: Env) => {
 
       alias: {
         'textarea-caret': path.resolve('./src/app/utils/textarea-caret'),
-        lodash: 'lodash-es',
       },
 
       fallback: {
@@ -394,10 +394,10 @@ export default (env: Env) => {
       log: false,
       plugins: [
         // Sort media queries so they can be merged by cssnano
-        require('postcss-sort-media-queries')({
+        sortMediaQueries({
           sort: 'desktop-first',
         }),
-        require('cssnano')({
+        cssnano({
           preset: [
             'default',
             {
@@ -511,13 +511,6 @@ export default (env: Env) => {
           JSON.stringify(value),
         ]),
       ),
-    }),
-
-    new LodashModuleReplacementPlugin({
-      collections: true,
-      memoizing: true,
-      shorthands: true,
-      flattening: true,
     }),
   ];
 

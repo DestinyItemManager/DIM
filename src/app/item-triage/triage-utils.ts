@@ -7,7 +7,7 @@ import { classFilter, itemTypeFilter } from 'app/search/items/search-filters/kno
 import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas, isArtifice, isClassCompatible } from 'app/utils/item-utils';
 import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
 
 /** returns [dimmed, bright] variations along a 1->100  red->yellow->green line */
@@ -157,10 +157,12 @@ export function getBetterWorseItems(
   }
 
   const betterFilter = filterFactory(betterFilterParts.join(' '));
-  const [betterItems, betterStatItems] = _.partition(rawBetterStatItems, betterFilter);
-  const [artificeBetterItems, artificeBetterStatItems] = _.partition(
+  const [betterItems, betterStatItems] = partition(rawBetterStatItems, (i) =>
+    Boolean(betterFilter(i)),
+  );
+  const [artificeBetterItems, artificeBetterStatItems] = partition(
     rawArtificeBetterStatItems,
-    betterFilter,
+    (i) => Boolean(betterFilter(i)),
   );
 
   const worseFilterParts: string[] = [];
@@ -176,10 +178,9 @@ export function getBetterWorseItems(
   }
 
   const worseFilter = filterFactory(worseFilterParts.join(' '));
-  const [worseItems, worseStatItems] = _.partition(rawWorseStatItems, worseFilter);
-  const [artificeWorseItems, artificeWorseStatItems] = _.partition(
-    rawArtificeWorseStatItems,
-    worseFilter,
+  const [worseItems, worseStatItems] = partition(rawWorseStatItems, (i) => Boolean(worseFilter(i)));
+  const [artificeWorseItems, artificeWorseStatItems] = partition(rawArtificeWorseStatItems, (i) =>
+    Boolean(worseFilter(i)),
   );
 
   return {

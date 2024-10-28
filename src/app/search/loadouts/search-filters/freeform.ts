@@ -7,17 +7,16 @@ import { findItemForLoadout, getLight, getModsFromLoadout } from 'app/loadout-dr
 import { Loadout } from 'app/loadout/loadout-types';
 import { powerLevelByKeyword } from 'app/search/power-levels';
 import { matchText, plainString } from 'app/search/text-utils';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedByStoreId } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { FilterDefinition } from '../../filter-types';
 import { quoteFilterString } from '../../query-parser';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filter-types';
 
 function deduplicate<T>(someArray: (T | undefined | null)[]) {
-  return _.compact(Array.from(new Set(someArray)));
+  return compact(Array.from(new Set(someArray)));
 }
 
 function subclassFromLoadout(

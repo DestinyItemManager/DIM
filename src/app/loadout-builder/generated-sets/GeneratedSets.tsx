@@ -5,7 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { filterMap } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { identity } from 'lodash';
+import { identity } from 'app/utils/functions';
 import { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { useAutoMods } from '../process/useProcess';
@@ -35,7 +35,6 @@ export default function GeneratedSets({
   armorEnergyRules,
   loadout,
   autoStatMods,
-  isEditingExistingLoadout,
 }: {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
@@ -49,7 +48,6 @@ export default function GeneratedSets({
   armorEnergyRules: ArmorEnergyRules;
   loadout: Loadout;
   autoStatMods: boolean;
-  isEditingExistingLoadout: boolean;
 }) {
   const params = loadout.parameters!;
   const halfTierMods = useHalfTierMods(
@@ -80,7 +78,6 @@ export default function GeneratedSets({
           originalLoadout={loadout}
           equippedHashes={equippedHashes}
           autoStatMods={autoStatMods}
-          isEditingExistingLoadout={isEditingExistingLoadout}
         />
       )}
     </WindowVirtualList>

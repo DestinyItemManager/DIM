@@ -1,6 +1,6 @@
 import { filterMap } from 'app/utils/collections';
+import { stubTrue } from 'app/utils/functions';
 import { errorLog } from 'app/utils/log';
-import { stubTrue } from 'lodash';
 import { FilterDefinition, ItemFilter, canonicalFilterFormats } from './filter-types';
 import { QueryAST, canonicalizeQuery, parseQuery } from './query-parser';
 import { FiltersMap, SearchConfig } from './search-config';

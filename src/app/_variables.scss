@@ -129,7 +129,8 @@ $tempContainerZindex: 1000;
 
 // Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
 @function dim-hex-to-rgb-values($hex) {
-  @return color.red($hex), color.green($hex), color.blue($hex);
+  @return color.channel($hex, 'red', $space: rgb), color.channel($hex, 'green', $space: rgb),
+    color.channel($hex, 'blue', $space: rgb);
 }
 
 // Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.

@@ -5,7 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
+import { compareBy } from 'app/utils/comparators';
 import styles from './TagButtons.m.scss';
 
 /**
@@ -13,10 +13,9 @@ import styles from './TagButtons.m.scss';
  */
 export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue | undefined }) {
   const dispatch = useThunkDispatch();
-  const tagOptions = _.sortBy(
-    Object.values(tagConfig).filter((t) => t.type !== 'archive'),
-    (t) => t.sortOrder,
-  );
+  const tagOptions = Object.values(tagConfig)
+    .filter((t) => t.type !== 'archive')
+    .sort(compareBy((t) => t.sortOrder));
 
   const handleSetTag = (tag: TagValue) => {
     dispatch(setTag(item, tag));

@@ -4,7 +4,7 @@ import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { partition } from 'es-toolkit';
 import React from 'react';
 import { AddButton } from './Buttons';
 import styles from './LoadoutDrawerBucket.m.scss';
@@ -23,7 +23,7 @@ export default function LoadoutDrawerBucket({
   equip: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
   remove: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
 }) {
-  const [equippedItems, unequippedItems] = _.partition(items, (li) => li.loadoutItem.equip);
+  const [equippedItems, unequippedItems] = partition(items, (li) => li.loadoutItem.equip);
 
   // Only allow one emblem
   const capacity = bucket.hash === BucketHashes.Emblems ? 1 : bucket.capacity;

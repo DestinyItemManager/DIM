@@ -9,8 +9,8 @@ import {
   faRandom,
   helpIcon,
 } from 'app/shell/icons';
+import { compact } from 'app/utils/collections';
 import clsx from 'clsx';
-import _ from 'lodash';
 import React from 'react';
 import styles from './LoadoutEditSection.m.scss';
 
@@ -43,7 +43,7 @@ export default function LoadoutEditSection({
   onFillFromInventory?: () => void;
   onClearLoadoutParameters?: () => void;
 }) {
-  const options: Option[] = _.compact([
+  const options: Option[] = compact([
     onFillFromEquipped
       ? {
           key: 'fillFromEquipped',

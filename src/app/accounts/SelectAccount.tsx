@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { AppIcon, signOutIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Account from './Account';
@@ -15,10 +15,11 @@ import { accountsSelector } from './selectors';
  */
 export default function SelectAccount({ path }: { path?: string }) {
   const accounts = useSelector(accountsSelector);
-  const sortedAccounts = _.sortBy(
-    accounts,
-    (a) => -a.destinyVersion,
-    (a) => -a.lastPlayed.getTime(),
+  const sortedAccounts = accounts.toSorted(
+    chainComparator(
+      reverseComparator(compareBy((a) => a.destinyVersion)), // 2 before 1
+      reverseComparator(compareBy((a) => a.lastPlayed.getTime())),
+    ),
   );
 
   const bungieName = sortedAccounts[0].displayName;

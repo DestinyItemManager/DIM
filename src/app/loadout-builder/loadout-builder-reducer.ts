@@ -27,12 +27,12 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
-import { reorder } from 'app/utils/collections';
+import { count, reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { keyBy, shuffle } from 'es-toolkit';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
@@ -72,12 +72,6 @@ interface LoadoutBuilderConfiguration {
    * stats.
    */
   loadout: Loadout;
-  /**
-   * Are we editing an existing loadout, or a new one? The loadout may never
-   * have been saved (e.g. coming from a loadout share) but this still
-   * distinguishes between "clean slate" and when we started with a loadout.
-   */
-  isEditingExistingLoadout: boolean;
 
   /**
    * If we are editing an existing loadout via the "better stats available"
@@ -152,8 +146,6 @@ const lbConfigInit = ({
   const storeMatchingClass = pickBackingStore(stores, storeId, classTypeFromPreloadedLoadout);
   const initialLoadoutParameters = preloadedLoadout?.parameters;
 
-  const isEditingExistingLoadout = Boolean(preloadedLoadout && preloadedLoadout.id !== 'equipped');
-
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff
   // doesn't end up in LO parameters.
@@ -224,7 +216,6 @@ const lbConfigInit = ({
 
   return {
     loadout,
-    isEditingExistingLoadout,
     resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
     strictUpgradesStatConstraints,
     pinnedItems,
@@ -379,7 +370,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'statConstraintRandomize': {
         return updateStatConstraints(
           state,
-          _.shuffle(
+          shuffle(
             armorStats.map((s) => ({
               statHash: s,
               minTier: Math.floor(Math.random() * 10),
@@ -419,7 +410,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         const { items } = action;
         return {
           ...state,
-          pinnedItems: _.keyBy(items, (i) => i.bucket.hash),
+          pinnedItems: keyBy(items, (i) => i.bucket.hash),
           excludedItems: {},
         };
       }
@@ -480,11 +471,12 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'addGeneralMods': {
         const newMods = [...(state.loadout.parameters?.mods ?? [])];
         let currentGeneralModsCount =
-          newMods.filter(
+          count(
+            newMods,
             (mod) =>
               defs.InventoryItem.get(mod)?.plug?.plugCategoryHash ===
               armor2PlugCategoryHashesByName.general,
-          ).length ?? 0;
+          ) ?? 0;
 
         const failures: string[] = [];
 

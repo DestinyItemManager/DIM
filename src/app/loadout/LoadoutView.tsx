@@ -15,13 +15,12 @@ import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { addDividers } from 'app/utils/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutView.m.scss';
@@ -165,7 +164,7 @@ export default function LoadoutView({
         <ColorDestinySymbols className={styles.loadoutNotes} text={loadout.notes} />
       )}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass || allMods.length > 0 || !_.isEmpty(modsByBucket)) && (
+        {(items.length > 0 || subclass || allMods.length > 0 || !isEmpty(modsByBucket)) && (
           <>
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection subclass={subclass} power={power} />
@@ -205,7 +204,7 @@ export default function LoadoutView({
   );
 }
 
-export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedLoadoutItem[]>) {
+export function loadoutPower(store: DimStore, categories: Record<string, ResolvedLoadoutItem[]>) {
   const isEquipped = (li: ResolvedLoadoutItem) =>
     Boolean(!li.missing && li.item.power && li.loadoutItem.equip);
   const equippedWeapons = categories.Weapons?.filter(isEquipped) ?? [];

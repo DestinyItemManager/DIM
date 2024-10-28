@@ -17,8 +17,8 @@ import { isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
+import { debounce } from 'es-toolkit';
 import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
-import _ from 'lodash';
 import React, {
   Suspense,
   forwardRef,
@@ -255,7 +255,7 @@ function SearchBar(
   const debouncedUpdateQuery = useCallback(
     instant
       ? onQueryChanged
-      : _.debounce((query: string) => {
+      : debounce((query: string) => {
           onQueryChanged(query);
         }, 500),
     [onQueryChanged],

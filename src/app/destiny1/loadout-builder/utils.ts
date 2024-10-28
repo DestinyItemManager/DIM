@@ -1,8 +1,8 @@
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
-import { uniqBy } from 'app/utils/collections';
+import { isEmpty, mapValues, uniqBy } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { maxBy } from 'es-toolkit';
 import { D1Item } from '../../inventory/item-types';
 import { D1Store, DimStore } from '../../inventory/store-types';
 import { Vendor } from '../vendors/vendor.service';
@@ -40,7 +40,7 @@ function getBestItem(
 ): ItemWithBonus {
   // for specific armor (Helmet), look at stats (int/dis), return best one.
   return {
-    item: _.maxBy(armor, (o) => {
+    item: maxBy(armor, (o) => {
       if (nonExotic && o.isExotic) {
         return 0;
       }
@@ -98,7 +98,7 @@ export function calcArmorStats(
 }
 
 export function getBonusConfig(armor: ArmorSet['armor']): { [armorType in ArmorTypes]: string } {
-  return _.mapValues(armor, (armorPiece) => armorPiece.bonusType);
+  return mapValues(armor, (armorPiece) => armorPiece.bonusType);
 }
 
 export function genSetHash(armorPieces: ItemWithBonus[]) {
@@ -147,7 +147,7 @@ export function getBestArmor(
 
       let hasPerks: (item: D1Item) => boolean = (_i) => true;
 
-      if (!_.isEmpty(lockedPerks[armortype])) {
+      if (!isEmpty(lockedPerks[armortype])) {
         const lockedPerkKeys = Object.keys(lockedPerks[armortype]).map((k) => parseInt(k, 10));
         const andPerkHashes = lockedPerkKeys
           .filter((perkHash) => lockedPerks[armortype][perkHash].lockType === 'and')

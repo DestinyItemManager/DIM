@@ -5,9 +5,9 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap, isEmpty, sumBy } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
-import _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
 import { D1Item } from '../../inventory/item-types';
@@ -144,14 +144,14 @@ export function loadVendors(): ThunkResult<{ [vendorHash: number]: Vendor }> {
       // Narrow down to only visible vendors (not packages and such)
       const vendorList = Object.values(defs.Vendor.getAll()).filter((v) => v.summary.visible);
 
-      const vendors = _.compact(
+      const vendors = compact(
         await Promise.all(
           vendorList.flatMap((vendorDef) =>
             fetchVendor(vendorDef, characters, account, defs, buckets),
           ),
         ),
       );
-      return _.keyBy(vendors, (v) => v.hash);
+      return keyBy(vendors, (v) => v.hash);
     })();
 
     loadingTracker.addPromise(reloadPromise);
@@ -173,9 +173,9 @@ async function fetchVendor(
   const vendorsForCharacters = await Promise.all(
     characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs, buckets)),
   );
-  const nonNullVendors = _.compact(vendorsForCharacters);
+  const nonNullVendors = compact(vendorsForCharacters);
   if (nonNullVendors.length) {
-    return mergeVendors(_.compact(nonNullVendors));
+    return mergeVendors(nonNullVendors);
   } else {
     return null;
   }
@@ -400,7 +400,7 @@ async function processVendor(
     item.taggable = false;
     item.lockable = false;
   }
-  const itemsById = _.keyBy(items, (i) => i.id);
+  const itemsById = keyBy(items, (i) => i.id);
   const categories = filterMap(Object.values(vendor.saleItemCategories), (category) => {
     const categoryInfo = vendorDef.categories[category.categoryIndex];
     if (categoryDenyList.includes(categoryInfo.categoryHash)) {
@@ -412,10 +412,13 @@ async function processVendor(
       return {
         index: saleItem.vendorItemIndex,
         costs: saleItem.costs
-          .map((cost) => ({
-            value: cost.value,
-            currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash'),
-          }))
+          .map((cost) => {
+            const { itemName, icon, itemHash } = defs.InventoryItem.get(cost.itemHash);
+            return {
+              value: cost.value,
+              currency: { itemName, icon, itemHash },
+            };
+          })
           .filter((c) => c.value > 0),
         item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
         // TODO: caveat, this won't update very often!
@@ -452,7 +455,7 @@ export function countCurrencies(
   vendors: { [vendorHash: number]: Vendor },
   currencies: AccountCurrency[],
 ) {
-  if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
+  if (!stores || !vendors || !stores.length || isEmpty(vendors)) {
     return {};
   }
 
@@ -472,7 +475,7 @@ export function countCurrencies(
           currencies.find((c) => c.itemHash === currencyHash)?.quantity || 0;
         break;
       default:
-        totalCoins[currencyHash] = _.sumBy(stores, (store) =>
+        totalCoins[currencyHash] = sumBy(stores, (store) =>
           amountOfItem(store, { hash: currencyHash }),
         );
         break;

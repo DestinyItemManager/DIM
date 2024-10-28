@@ -24,7 +24,8 @@ import {
   armorStats,
   deprecatedPlaceholderArmorModHash,
 } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/collections';
+import { filterMap, isEmpty, mapValues, sumBy } from 'app/utils/collections';
+import { compareByIndex } from 'app/utils/comparators';
 import {
   isClassCompatible,
   isItemLoadoutCompatible,
@@ -52,8 +53,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { keyBy, maxBy } from 'es-toolkit';
 import { produce } from 'immer';
-import _ from 'lodash';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import {
@@ -214,7 +215,7 @@ export function newLoadoutFromEquipped(
       modsByBucket[item.bucket.hash] = plugs;
     }
   }
-  if (!_.isEmpty(modsByBucket)) {
+  if (!isEmpty(modsByBucket)) {
     loadout.parameters = {
       ...loadout.parameters,
       modsByBucket,
@@ -247,7 +248,7 @@ export function inGameLoadoutItemsFromEquipped(store: DimStore): DestinyLoadoutI
 export function getLight(store: DimStore, items: DimItem[]): number {
   // https://www.reddit.com/r/DestinyTheGame/comments/6yg4tw/how_overall_power_level_is_calculated/
   if (store.destinyVersion === 2) {
-    const exactLight = _.sumBy(items, (i) => i.power) / items.length;
+    const exactLight = sumBy(items, (i) => i.power) / items.length;
     return Math.floor(exactLight * 1000) / 1000;
   } else {
     const itemWeight: LookupTable<BucketSortType, number> = {
@@ -308,7 +309,7 @@ export function getLoadoutStats(
   }
 
   // Sum the items stats into the stats
-  const armorPiecesStats = _.mapValues(stats, () => 0);
+  const armorPiecesStats = mapValues(stats, () => 0);
   for (const item of armor) {
     const itemEnergy = armorEnergyRules && calculateAssumedItemEnergy(item, armorEnergyRules);
     const itemStats = Object.groupBy(item.stats ?? [], (stat) => stat.statHash);
@@ -360,24 +361,24 @@ export function optimalItemSet(
   bestItemFn: (item: DimItem) => number,
 ): Record<'equippable' | 'equipUnrestricted' | 'classUnrestricted', DimItem[]> {
   const anyClassItemsByBucket = Object.groupBy(applicableItems, (i) => i.bucket.hash);
-  const anyClassBestItemByBucket = _.mapValues(
+  const anyClassBestItemByBucket = mapValues(
     anyClassItemsByBucket,
-    (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
+    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn)!,
   );
-  const classUnrestricted = _.sortBy(Object.values(anyClassBestItemByBucket), (i) =>
-    gearSlotOrder.indexOf(i.bucket.hash),
+  const classUnrestricted = Object.values(anyClassBestItemByBucket).sort(
+    compareByIndex(gearSlotOrder, (i) => i.bucket.hash),
   );
 
   const thisClassItemsByBucket = Object.groupBy(
     applicableItems.filter((i) => itemCanBeEquippedBy(i, store, true)),
     (i) => i.bucket.hash,
   );
-  const thisClassBestItemByBucket = _.mapValues(
+  const thisClassBestItemByBucket = mapValues(
     thisClassItemsByBucket,
-    (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
+    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn)!,
   );
-  const equipUnrestricted = _.sortBy(Object.values(thisClassBestItemByBucket), (i) =>
-    gearSlotOrder.indexOf(i.bucket.hash),
+  const equipUnrestricted = Object.values(thisClassBestItemByBucket).sort(
+    compareByIndex(gearSlotOrder, (i) => i.bucket.hash),
   );
 
   let equippableBestItemByBucket = { ...thisClassBestItemByBucket };
@@ -407,7 +408,7 @@ export function optimalItemSet(
           (i) => !i.equippingLabel,
         );
         if (nonExotics.length) {
-          option[otherItem.bucket.hash] = _.maxBy(nonExotics, bestItemFn)!;
+          option[otherItem.bucket.hash] = maxBy(nonExotics, bestItemFn)!;
         } else {
           // this option isn't usable because we couldn't swap this exotic for any non-exotic
           optionValid = false;
@@ -421,13 +422,13 @@ export function optimalItemSet(
 
     // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
     if (options.length > 0) {
-      const bestOption = _.maxBy(options, (opt) => _.sumBy(Object.values(opt), bestItemFn))!;
+      const bestOption = maxBy(options, (opt) => sumBy(Object.values(opt), bestItemFn))!;
       equippableBestItemByBucket = bestOption;
     }
   }
 
-  const equippable = _.sortBy(Object.values(equippableBestItemByBucket), (i) =>
-    gearSlotOrder.indexOf(i.bucket.hash),
+  const equippable = Object.values(equippableBestItemByBucket).sort(
+    compareByIndex(gearSlotOrder, (i) => i.bucket.hash),
   );
 
   return { equippable, equipUnrestricted, classUnrestricted };
@@ -629,7 +630,7 @@ export function findItemForLoadout(
  * need it to be all items to make search-based loadout transfers work.
  */
 export const itemsByItemId = weakMemoize((allItems: DimItem[]) =>
-  _.keyBy(
+  keyBy(
     allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
     (i) => i.id,
   ),
@@ -640,7 +641,7 @@ export const itemsByItemId = weakMemoize((allItems: DimItem[]) =>
  * looking up items from loadouts.
  */
 const itemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
-  _.keyBy(
+  keyBy(
     allItems.filter((i) => i.instanced && i.craftedInfo?.craftedDate),
     (i) => i.craftedInfo!.craftedDate,
   ),
@@ -891,9 +892,12 @@ function getSubclassFragmentCapacity(subclassItem: DimItem): number {
 function sumAspectCapacity(
   aspects: (DestinyInventoryItemDefinition | DimSocket | undefined)[] | undefined,
 ) {
-  return _.sumBy(aspects, (aspect) => {
+  if (!aspects?.length) {
+    return 0;
+  }
+  return sumBy(aspects, (aspect) => {
     const aspectDef = aspect && 'plugged' in aspect ? aspect.plugged?.plugDef : aspect;
-    return aspectDef?.plug?.energyCapacity?.capacityValue || 0;
+    return aspectDef?.plug?.energyCapacity?.capacityValue ?? 0;
   });
 }
 
