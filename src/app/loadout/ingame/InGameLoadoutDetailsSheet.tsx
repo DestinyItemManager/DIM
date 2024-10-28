@@ -41,7 +41,7 @@ export function InGameLoadoutDetails({
   const allItems = useSelector(allItemsSelector);
   const handleSaveAsDIM = () => {
     const dimLoadout = convertInGameLoadoutToDimLoadout(loadout, store.classType, allItems);
-    editLoadout(dimLoadout, store.id, { isNew: true });
+    editLoadout(dimLoadout, store.id);
   };
 
   const handleShare = () => {

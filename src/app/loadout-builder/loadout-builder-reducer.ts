@@ -72,12 +72,6 @@ interface LoadoutBuilderConfiguration {
    * stats.
    */
   loadout: Loadout;
-  /**
-   * Are we editing an existing loadout, or a new one? The loadout may never
-   * have been saved (e.g. coming from a loadout share) but this still
-   * distinguishes between "clean slate" and when we started with a loadout.
-   */
-  isEditingExistingLoadout: boolean;
 
   /**
    * If we are editing an existing loadout via the "better stats available"
@@ -152,8 +146,6 @@ const lbConfigInit = ({
   const storeMatchingClass = pickBackingStore(stores, storeId, classTypeFromPreloadedLoadout);
   const initialLoadoutParameters = preloadedLoadout?.parameters;
 
-  const isEditingExistingLoadout = Boolean(preloadedLoadout && preloadedLoadout.id !== 'equipped');
-
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff
   // doesn't end up in LO parameters.
@@ -224,7 +216,6 @@ const lbConfigInit = ({
 
   return {
     loadout,
-    isEditingExistingLoadout,
     resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
     strictUpgradesStatConstraints,
     pinnedItems,

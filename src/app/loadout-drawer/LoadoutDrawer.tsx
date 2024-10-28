@@ -57,7 +57,6 @@ import { filterLoadoutToAllowedItems } from './loadout-utils';
 export default function LoadoutDrawer({
   initialLoadout,
   storeId,
-  isNew,
   fromExternal,
   onClose,
 }: {
@@ -68,7 +67,6 @@ export default function LoadoutDrawer({
    * mods are enabled, which subclass items to show, etc.
    */
   storeId: string;
-  isNew: boolean;
   fromExternal: boolean;
   onClose: () => void;
 }) {
@@ -210,7 +208,6 @@ export default function LoadoutDrawer({
   const footer = ({ onClose }: { onClose: () => void }) => (
     <LoadoutDrawerFooter
       loadout={loadout}
-      isNew={isNew}
       onSaveLoadout={(e, saveAsNew) => handleSaveLoadout(e, onClose, saveAsNew)}
       onDeleteLoadout={() => handleDeleteLoadout(onClose)}
       undo={undo}
