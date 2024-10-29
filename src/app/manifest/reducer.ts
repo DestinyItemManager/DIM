@@ -1,3 +1,4 @@
+import { unadvertisedResettableVendors } from 'app/search/d2-known-values';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
@@ -42,6 +43,17 @@ export const manifest: Reducer<ManifestState, ManifestAction | AccountsAction> =
     }
 
     case getType(actions.coreSettingsLoaded): {
+      // This issue isn't wrong. https://github.com/Bungie-net/api/issues/1917
+      // Unless it's ever addressed, we can add-in 'missing' non-seasonal, resettable vendors.
+      // This mutates a settings array, but it's a single-purpose piece of data and refreshed by a new settings poll.
+      if (action.payload.currentRankProgressionHashes?.length) {
+        for (const h of unadvertisedResettableVendors) {
+          if (!action.payload.currentRankProgressionHashes.includes(h)) {
+            action.payload.currentRankProgressionHashes.push(h);
+          }
+        }
+      }
+
       return {
         ...state,
         destiny2CoreSettings: action.payload,
