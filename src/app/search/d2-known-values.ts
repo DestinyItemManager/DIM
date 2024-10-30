@@ -250,6 +250,13 @@ export const enum VendorHashes {
   XurLegendaryItems = 3751514131, // Vendor "Strange Gear Offers"
 }
 
+// See coreSettingsLoaded reducer action for details. And remove this if/when we no longer perform that hack.
+export const unadvertisedResettableVendors = [
+  198624022, // Progression "Clan Reputation"
+  784742260, // Progression "Engram Ensiders"
+  2411069437, // Progression "Xûr Rank"
+];
+
 /** used to snag the icon for display */
 export const WELL_RESTED_PERK = 2352765282; // SandboxPerk "Well-Rested"
 
