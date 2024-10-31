@@ -26,6 +26,12 @@ export default class ErrorBoundary extends Component<Props, State> {
     reportException(name, error, errorInfo);
   }
 
+  componentDidUpdate(prevProps: Readonly<Props>): void {
+    if (prevProps.name !== this.props.name) {
+      this.setState({ error: undefined });
+    }
+  }
+
   render() {
     const { error } = this.state;
     const { children } = this.props;
