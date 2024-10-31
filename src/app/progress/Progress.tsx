@@ -119,141 +119,129 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   ]);
 
   return (
-    <ErrorBoundary name="Progress">
-      <PageWithMenu>
-        <PageWithMenu.Menu>
-          {selectedStore && (
-            <CharacterSelect
-              stores={stores}
-              selectedStore={selectedStore}
-              onCharacterChanged={setSelectedStoreId}
-            />
+    <PageWithMenu>
+      <PageWithMenu.Menu>
+        {selectedStore && (
+          <CharacterSelect
+            stores={stores}
+            selectedStore={selectedStore}
+            onCharacterChanged={setSelectedStoreId}
+          />
+        )}
+        {!isPhonePortrait && (
+          <div className={styles.menuLinks}>
+            {menuItems.map((menuItem) => (
+              <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+                <span>{menuItem.title}</span>
+              </PageWithMenu.MenuButton>
+            ))}
+          </div>
+        )}
+      </PageWithMenu.Menu>
+
+      <PageWithMenu.Contents className={styles.progress}>
+        <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
+          <section id="ranks">
+            <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
+              <div className="progress-row">
+                <Ranks profileInfo={profileInfo} />
+              </div>
+            </CollapsibleTitle>
+          </section>
+
+          <section id="trackedTriumphs">
+            <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
+              <div className="progress-row">
+                <TrackedTriumphs searchQuery={searchQuery} />
+              </div>
+            </CollapsibleTitle>
+          </section>
+
+          {eventCard && (
+            <section id="event">
+              <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
+                <div className="progress-row">
+                  <Event card={eventCard} store={selectedStore} buckets={buckets} />
+                </div>
+              </CollapsibleTitle>
+            </section>
           )}
-          {!isPhonePortrait && (
-            <div className={styles.menuLinks}>
-              {menuItems.map((menuItem) => (
-                <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
-                  <span>{menuItem.title}</span>
-                </PageWithMenu.MenuButton>
-              ))}
-            </div>
-          )}
-        </PageWithMenu.Menu>
 
-        <PageWithMenu.Contents className={styles.progress}>
-          <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
-            <section id="ranks">
-              <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
-                <div className="progress-row">
-                  <ErrorBoundary name="CrucibleRanks">
-                    <Ranks profileInfo={profileInfo} />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
+          <section id="milestones">
+            <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
+              <div className="progress-row">
+                <Milestones buckets={buckets} profileInfo={profileInfo} store={selectedStore} />
+              </div>
+            </CollapsibleTitle>
+          </section>
 
-            <section id="trackedTriumphs">
-              <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
-                <div className="progress-row">
-                  <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-                    <TrackedTriumphs searchQuery={searchQuery} />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
-
-            {eventCard && (
-              <section id="event">
-                <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
-                  <div className="progress-row">
-                    <ErrorBoundary name={eventCard.displayProperties.name}>
-                      <Event card={eventCard} store={selectedStore} buckets={buckets} />
-                    </ErrorBoundary>
-                  </div>
-                </CollapsibleTitle>
-              </section>
-            )}
-
-            <section id="milestones">
-              <CollapsibleTitle title={t('Progress.Milestones')} sectionId="milestones">
-                <div className="progress-row">
-                  <ErrorBoundary name="Milestones">
-                    <Milestones buckets={buckets} profileInfo={profileInfo} store={selectedStore} />
-                  </ErrorBoundary>
-                </div>
-              </CollapsibleTitle>
-            </section>
-
-            {paleHeartPathfinderNode && (
-              <ErrorBoundary name={t('Progress.PaleHeartPathfinder')}>
-                <Pathfinder
-                  id="paleHeartPathfinder"
-                  name={t('Progress.PaleHeartPathfinder')}
-                  presentationNode={paleHeartPathfinderNode}
-                  store={selectedStore}
-                />
-              </ErrorBoundary>
-            )}
-
-            {gambitPathfinderNode && (
-              <ErrorBoundary name={t('Progress.GambitPathfinder')}>
-                <Pathfinder
-                  id="gambitPathfinder"
-                  name={t('Progress.GambitPathfinder')}
-                  presentationNode={gambitPathfinderNode}
-                  store={selectedStore}
-                />
-              </ErrorBoundary>
-            )}
-
-            {cruciblePathfinderNode && (
-              <ErrorBoundary name={t('Progress.CruciblePathfinder')}>
-                <Pathfinder
-                  id="cruciblePathfinder"
-                  name={t('Progress.CruciblePathfinder')}
-                  presentationNode={cruciblePathfinderNode}
-                  store={selectedStore}
-                />
-              </ErrorBoundary>
-            )}
-            {vanguardPathfinderNode && (
-              <ErrorBoundary name={t('Progress.VanguardPathfinder')}>
-                <Pathfinder
-                  id="vanguardPathfinder"
-                  name={t('Progress.VanguardPathfinder')}
-                  presentationNode={vanguardPathfinderNode}
-                  store={selectedStore}
-                />
-              </ErrorBoundary>
-            )}
-
-            {seasonalChallengesPresentationNode && (
-              <ErrorBoundary name="SeasonalChallenges">
-                <SeasonalChallenges
-                  seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
-                  store={selectedStore}
-                />
-              </ErrorBoundary>
-            )}
-
-            <ErrorBoundary name="Pursuits">
-              <Pursuits store={selectedStore} />
+          {paleHeartPathfinderNode && (
+            <ErrorBoundary name={t('Progress.PaleHeartPathfinder')}>
+              <Pathfinder
+                id="paleHeartPathfinder"
+                name={t('Progress.PaleHeartPathfinder')}
+                presentationNode={paleHeartPathfinderNode}
+                store={selectedStore}
+              />
             </ErrorBoundary>
+          )}
 
-            {raidNode && (
-              <section id="raids">
-                <CollapsibleTitle title={raidTitle} sectionId="raids">
-                  <div className="progress-row">
-                    <ErrorBoundary name="Raids">
-                      <Raids store={selectedStore} profileInfo={profileInfo} />
-                    </ErrorBoundary>
-                  </div>
-                </CollapsibleTitle>
-              </section>
-            )}
-          </motion.div>
-        </PageWithMenu.Contents>
-      </PageWithMenu>
-    </ErrorBoundary>
+          {gambitPathfinderNode && (
+            <ErrorBoundary name={t('Progress.GambitPathfinder')}>
+              <Pathfinder
+                id="gambitPathfinder"
+                name={t('Progress.GambitPathfinder')}
+                presentationNode={gambitPathfinderNode}
+                store={selectedStore}
+              />
+            </ErrorBoundary>
+          )}
+
+          {cruciblePathfinderNode && (
+            <ErrorBoundary name={t('Progress.CruciblePathfinder')}>
+              <Pathfinder
+                id="cruciblePathfinder"
+                name={t('Progress.CruciblePathfinder')}
+                presentationNode={cruciblePathfinderNode}
+                store={selectedStore}
+              />
+            </ErrorBoundary>
+          )}
+          {vanguardPathfinderNode && (
+            <ErrorBoundary name={t('Progress.VanguardPathfinder')}>
+              <Pathfinder
+                id="vanguardPathfinder"
+                name={t('Progress.VanguardPathfinder')}
+                presentationNode={vanguardPathfinderNode}
+                store={selectedStore}
+              />
+            </ErrorBoundary>
+          )}
+
+          {seasonalChallengesPresentationNode && (
+            <ErrorBoundary name="SeasonalChallenges">
+              <SeasonalChallenges
+                seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
+                store={selectedStore}
+              />
+            </ErrorBoundary>
+          )}
+
+          <ErrorBoundary name="Pursuits">
+            <Pursuits store={selectedStore} />
+          </ErrorBoundary>
+
+          {raidNode && (
+            <section id="raids">
+              <CollapsibleTitle title={raidTitle} sectionId="raids">
+                <div className="progress-row">
+                  <Raids store={selectedStore} profileInfo={profileInfo} />
+                </div>
+              </CollapsibleTitle>
+            </section>
+          )}
+        </motion.div>
+      </PageWithMenu.Contents>
+    </PageWithMenu>
   );
 }

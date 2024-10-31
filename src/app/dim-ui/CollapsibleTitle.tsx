@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon } from '../shell/icons';
 import styles from './CollapsibleTitle.m.scss';
+import ErrorBoundary from './ErrorBoundary';
 
 export const Title = forwardRef(function Title(
   {
@@ -114,7 +115,9 @@ export default function CollapsibleTitle({
         onClick={toggle}
       />
       <CollapsedSection collapsed={collapsed} headerId={headerId} contentId={contentId}>
-        {children}
+        <ErrorBoundary name={`collapse-${sectionId}`} key={contentId}>
+          {children}
+        </ErrorBoundary>
       </CollapsedSection>
     </>
   );

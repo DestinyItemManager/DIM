@@ -1,6 +1,7 @@
 import useResizeObserver from '@react-hook/resize-observer';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
+import ErrorBoundary from './ErrorBoundary';
 import styles from './PageWithMenu.m.scss';
 
 function PageWithMenu({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -50,7 +51,11 @@ PageWithMenu.Contents = function Contents({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={clsx(className, styles.contents)}>{children}</div>;
+  return (
+    <div className={clsx(className, styles.contents)}>
+      <ErrorBoundary name="pageWithMenu-contents">{children}</ErrorBoundary>
+    </div>
+  );
 };
 
 /** A header for a section of links (MenuButtons) within a Menu. */

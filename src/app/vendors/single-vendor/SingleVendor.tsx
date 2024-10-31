@@ -1,6 +1,5 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import Countdown from 'app/dim-ui/Countdown';
-import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -147,7 +146,7 @@ export default function SingleVendor({
   }
 
   return (
-    <ErrorBoundary name="SingleVendor">
+    <>
       <div className={styles.featuredHeader}>
         <h1>
           {displayName} <VendorLocation>{placeString}</VendorLocation>
@@ -169,6 +168,6 @@ export default function SingleVendor({
           characterId={characterId}
         />
       )}
-    </ErrorBoundary>
+    </>
   );
 }

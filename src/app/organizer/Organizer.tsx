@@ -1,5 +1,4 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -121,10 +120,8 @@ export default function Organizer({ account }: Props) {
 
   return (
     <div className={styles.organizer}>
-      <ErrorBoundary name="Organizer">
-        <ItemTypeSelector selection={selection} selectionTree={types} onSelection={onSelection} />
-        <ItemTable categories={selection} />
-      </ErrorBoundary>
+      <ItemTypeSelector selection={selection} selectionTree={types} onSelection={onSelection} />
+      <ItemTable categories={selection} />
     </div>
   );
 }
