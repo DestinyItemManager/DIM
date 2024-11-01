@@ -2,6 +2,9 @@
 
 * If you click "Edit Copy" on a loadout, then click "Optimize Armor", then save the loadout from Loadout Optimizer, it will now save the copy, not the original loadout.
 * Tonics in the Tonic Capsule now show what their rewards or what artifact perk they affect is.
+* Added Clan Reputation, Engram Ensiders, and Xûr Rank to the Progress page.
+* Slimmed down Bungie's Destiny database to fit within Firefox's storage limits.
+* Stream Deck selection now relies on buttons, not drag and drop.
 
 ## 8.44.0 <span class="changelog-date">(2024-10-27)</span>
 
