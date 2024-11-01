@@ -11,11 +11,14 @@ import { dedupePromise } from 'app/utils/promises';
 import { LookupTable } from 'app/utils/util-types';
 import {
   AllDestinyManifestComponents,
+  DestinyCollectibleDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemActionBlockDefinition,
   DestinyItemTalentGridBlockDefinition,
   DestinyItemTranslationBlockDefinition,
   DestinyManifestComponentName,
+  DestinyObjectiveDefinition,
+  DestinyRecordDefinition,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { once } from 'es-toolkit';
@@ -52,12 +55,18 @@ const tableTrimmers: LookupTable<DestinyManifestComponentName, (table: any) => a
       if (def.equippingBlock?.displayStrings?.length) {
         def.equippingBlock.displayStrings = emptyArray();
       }
-      if (def.preview?.derivedItemCategories?.length) {
-        def.preview.derivedItemCategories = emptyArray();
+      if (def.preview) {
+        if (def.preview.derivedItemCategories?.length) {
+          def.preview.derivedItemCategories = emptyArray();
+        }
+        def.preview.screenStyle = '';
       }
-      if (def.inventory?.bucketTypeHash !== BucketHashes.Subclass) {
-        // The only useful bit about talent grids is for subclass damage types
-        def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
+      if (def.inventory) {
+        if (def.inventory.bucketTypeHash !== BucketHashes.Subclass) {
+          // The only useful bit about talent grids is for subclass damage types
+          def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
+        }
+        def.inventory.tierTypeName = '';
       }
 
       if (def.sockets) {
@@ -68,8 +77,47 @@ const tableTrimmers: LookupTable<DestinyManifestComponentName, (table: any) => a
           }
         }
       }
+
+      // We never figured out anything to do with icon sequences on items
+      if (def.displayProperties.iconSequences) {
+        def.displayProperties.iconSequences = emptyArray();
+      }
+
+      // We don't use these
+      def.tooltipStyle = '';
+      def.itemTypeAndTierDisplayName = '';
     }
 
+    return table;
+  },
+  DestinyObjectiveDefinition: (table: { [hash: number]: DestinyObjectiveDefinition }) => {
+    for (const key in table) {
+      const def = table[key] as Draft<DestinyObjectiveDefinition>;
+
+      def.stats = emptyObject();
+      def.perks = emptyObject();
+      // Believe it or not we don't use these
+      def.displayProperties.description = '';
+      def.displayProperties.name = '';
+    }
+    return table;
+  },
+  DestinyCollectibleDefinition: (table: { [hash: number]: DestinyCollectibleDefinition }) => {
+    for (const key in table) {
+      const def = table[key] as Draft<DestinyCollectibleDefinition>;
+
+      def.acquisitionInfo = emptyObject();
+      def.stateInfo = emptyObject();
+    }
+    return table;
+  },
+  DestinyRecordDefinition: (table: { [hash: number]: DestinyRecordDefinition }) => {
+    for (const key in table) {
+      const def = table[key] as Draft<DestinyRecordDefinition>;
+
+      def.requirements = emptyObject();
+      def.expirationInfo = emptyObject();
+    }
     return table;
   },
 };
