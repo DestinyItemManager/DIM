@@ -22,6 +22,7 @@ import React, {
   useState,
 } from 'react';
 import { AppIcon, disabledIcon } from '../shell/icons';
+import ErrorBoundary from './ErrorBoundary';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
 import { useFixOverscrollBehavior } from './useFixOverscrollBehavior';
@@ -299,7 +300,9 @@ export default function Sheet({
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContents}
         >
-          {typeof children === 'function' ? children({ onClose: triggerClose }) : children}
+          <ErrorBoundary name="sheet-contents">
+            {typeof children === 'function' ? children({ onClose: triggerClose }) : children}
+          </ErrorBoundary>
         </div>
 
         {Boolean(footer) && (
