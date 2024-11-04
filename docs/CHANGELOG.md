@@ -5,6 +5,7 @@
 * Added Clan Reputation, Engram Ensiders, and Xûr Rank to the Progress page.
 * Slimmed down Bungie's Destiny database to fit within Firefox's storage limits.
 * Stream Deck selection now relies on buttons, not drag and drop.
+* Masks are now counted as helmets properly in Compare.
 
 ## 8.44.0 <span class="changelog-date">(2024-10-27)</span>
 
