@@ -1,6 +1,7 @@
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { unadvertisedResettableVendors } from 'app/search/d2-known-values';
 import { sumBy } from 'app/utils/collections';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -26,8 +27,13 @@ export function ReputationRank({
 
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
-  const canReset = progressionDef.steps.length === progress.levelCap;
+  const canReset =
+    typeof progress.currentResetCount === 'number' ||
+    unadvertisedResettableVendors.includes(progress.progressionHash);
+  const resetLabel = canReset ? tl('Progress.PercentPrestige') : tl('Progress.PercentMax');
+
   const rankTotal = sumBy(progressionDef.steps, (cur) => cur.progressTotal);
+  const rankPercent = Math.floor((progress.currentProgress / rankTotal) * 100);
 
   const streakCheckboxes =
     streak && Array<boolean>(5).fill(true).fill(false, streak.currentProgress);
@@ -53,8 +59,7 @@ export function ReputationRank({
           {progressionDef.rankIcon && (
             <BungieImage className={styles.rankIcon} src={progressionDef.rankIcon} />
           )}
-          {canReset && `${progress.currentProgress} `}({progress.progressToNextLevel} /{' '}
-          {progress.nextLevelAt})
+          {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
         </div>
         {streakCheckboxes && (
           <div className={clsx(styles.winStreak, 'objective-row')}>
@@ -63,19 +68,15 @@ export function ReputationRank({
             ))}
           </div>
         )}
-        {canReset && (
-          <>
-            <div className={styles.factionLevel}>
-              {t('Progress.PercentPrestige', {
-                pct: Math.round((progress.currentProgress / rankTotal) * 100),
-              })}
-            </div>
-            {Boolean(progress.currentResetCount) && (
-              <div className={styles.factionLevel}>
-                {t('Progress.Resets', { count: progress.currentResetCount })}
-              </div>
-            )}
-          </>
+        <div className={clsx(styles.factionLevel, rankPercent === 100 && styles.max)}>
+          {t(resetLabel, {
+            pct: rankPercent,
+          })}
+        </div>
+        {Boolean(progress.currentResetCount) && (
+          <div className={styles.factionLevel}>
+            {t('Progress.Resets', { count: progress.currentResetCount })}
+          </div>
         )}
       </div>
     </div>

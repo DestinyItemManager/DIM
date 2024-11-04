@@ -523,7 +523,7 @@ function SearchBar(
           <AnimatePresence>
             {children}
 
-            {liveQuery.length > 0 && (saveable || saved) && !isPhonePortrait && (
+            {liveQuery.length > 0 && valid && (saveable || saved) && !isPhonePortrait && (
               <motion.button
                 variants={searchButtonAnimateVariants}
                 exit="hidden"
