@@ -1,5 +1,7 @@
 ## Next
 
+## 8.45.0 <span class="changelog-date">(2024-11-03)</span>
+
 * If you click "Edit Copy" on a loadout, then click "Optimize Armor", then save the loadout from Loadout Optimizer, it will now save the copy, not the original loadout.
 * Tonics in the Tonic Capsule now show what their rewards or what artifact perk they affect is.
 * Added Clan Reputation, Engram Ensiders, and Xûr Rank to the Progress page.
