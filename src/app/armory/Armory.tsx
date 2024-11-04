@@ -137,7 +137,7 @@ export default function Armory({
                   season: season.seasonNumber,
                   year: getItemYear(item) ?? '?',
                 })}
-                ){Boolean(event) && <span> - {D2EventInfo[getEvent(item)!].name}</span>}
+                ){Boolean(event) && ` - ${D2EventInfo[getEvent(item)!].name}`}
               </div>
             )}
           </div>
