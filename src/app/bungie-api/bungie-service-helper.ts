@@ -51,10 +51,8 @@ const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
 export const authenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
     createHttpClient(
-      createFetchWithNonStoppingTimeout(
-        rateLimitedFetch(fetchWithBungieOAuth),
-        TIMEOUT,
-        notifyTimeout,
+      rateLimitedFetch(
+        createFetchWithNonStoppingTimeout(fetchWithBungieOAuth, TIMEOUT, notifyTimeout),
       ),
       API_KEY,
     ),

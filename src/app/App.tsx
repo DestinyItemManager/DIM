@@ -57,13 +57,64 @@ export default function App() {
         <ErrorBoundary name="DIM Code">
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
             <Routes>
-              <Route path="about" element={<About />} />
-              <Route path="privacy" element={<Privacy />} />
-              <Route path="whats-new" element={<WhatsNew />} />
-              <Route path="login" element={<Login />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="debug" element={<Debug />} />
-              {$DIM_FLAVOR === 'dev' && <Route path="developer" element={<Developer />} />}
+              <Route
+                path="about"
+                element={
+                  <ErrorBoundary name="about" key="about">
+                    <About />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="privacy"
+                element={
+                  <ErrorBoundary name="privacy" key="privacy">
+                    <Privacy />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="whats-new"
+                element={
+                  <ErrorBoundary name="whatsNew" key="whatsNew">
+                    <WhatsNew />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="login"
+                element={
+                  <ErrorBoundary name="login" key="login">
+                    <Login />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="settings"
+                element={
+                  <ErrorBoundary name="settings" key="settings">
+                    <SettingsPage />
+                  </ErrorBoundary>
+                }
+              />
+              <Route
+                path="debug"
+                element={
+                  <ErrorBoundary name="debug" key="debug">
+                    <Debug />
+                  </ErrorBoundary>
+                }
+              />
+              {$DIM_FLAVOR === 'dev' && (
+                <Route
+                  path="developer"
+                  element={
+                    <ErrorBoundary name="developer" key="developer">
+                      <Developer />
+                    </ErrorBoundary>
+                  }
+                />
+              )}
               {needsLogin ? (
                 <Route
                   path="*"
@@ -77,7 +128,14 @@ export default function App() {
                 />
               ) : (
                 <>
-                  <Route path="search-history" element={<SearchHistory />} />
+                  <Route
+                    path="search-history"
+                    element={
+                      <ErrorBoundary name="searchHistory" key="searchHistory">
+                        <SearchHistory />
+                      </ErrorBoundary>
+                    }
+                  />
                   <Route path="armory/*" element={<DefaultAccount />} />
                   <Route path=":membershipId/:destinyVersion/*" element={<Destiny />} />
                   <Route path="*" element={<DefaultAccount />} />

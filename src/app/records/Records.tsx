@@ -148,9 +148,7 @@ export default function Records({ account }: Props) {
       <PageWithMenu.Contents className={styles.page}>
         <section id="trackedTriumphs">
           <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
-            <ErrorBoundary name={t('Progress.TrackedTriumphs')}>
-              <TrackedTriumphs searchQuery={searchQuery} />
-            </ErrorBoundary>
+            <TrackedTriumphs searchQuery={searchQuery} />
           </CollapsibleTitle>
         </section>
         {nodeHashes
@@ -161,20 +159,18 @@ export default function Records({ account }: Props) {
                 title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}
                 sectionId={`p_${nodeDef.hash}`}
               >
-                <ErrorBoundary name={nodeDef.displayProperties.name}>
-                  <PresentationNodeRoot
-                    presentationNodeHash={nodeDef.hash}
-                    profileResponse={profileResponse}
-                    ownedItemHashes={ownedItemHashes.accountWideOwned}
-                    openedPresentationHash={presentationNodeHash}
-                    searchQuery={searchQuery}
-                    searchFilter={searchFilter}
-                    overrideName={overrideTitles[nodeDef.hash]}
-                    isTriumphs={nodeDef.hash === recordsRootHash}
-                    showPlugSets={nodeDef.hash === collectionsRootHash}
-                    completedRecordsHidden={completedRecordsHidden}
-                  />
-                </ErrorBoundary>
+                <PresentationNodeRoot
+                  presentationNodeHash={nodeDef.hash}
+                  profileResponse={profileResponse}
+                  ownedItemHashes={ownedItemHashes.accountWideOwned}
+                  openedPresentationHash={presentationNodeHash}
+                  searchQuery={searchQuery}
+                  searchFilter={searchFilter}
+                  overrideName={overrideTitles[nodeDef.hash]}
+                  isTriumphs={nodeDef.hash === recordsRootHash}
+                  showPlugSets={nodeDef.hash === collectionsRootHash}
+                  completedRecordsHidden={completedRecordsHidden}
+                />
               </CollapsibleTitle>
             </section>
           ))}

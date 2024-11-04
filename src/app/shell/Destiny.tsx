@@ -9,6 +9,7 @@ import {
 import ArmoryPage from 'app/armory/ArmoryPage';
 import CompareContainer from 'app/compare/CompareContainer';
 import { settingSelector } from 'app/dim-api/selectors';
+import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import Farming from 'app/farming/Farming';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
@@ -191,51 +192,125 @@ export default function Destiny() {
       <SingleVendorSheetContainer>
         <div className={styles.content}>
           <Routes>
-            <Route path="inventory" element={<Inventory account={account} />} />
+            <Route
+              path="inventory"
+              element={
+                <ErrorBoundary name="inventory" key="inventory">
+                  <Inventory account={account} />
+                </ErrorBoundary>
+              }
+            />
             {account.destinyVersion === 2 && (
-              <Route path="progress" element={<Progress account={account} />} />
+              <Route
+                path="progress"
+                element={
+                  <ErrorBoundary name="progress" key="progress">
+                    <Progress account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
             {account.destinyVersion === 2 && (
-              <Route path="records" element={<Records account={account} />} />
+              <Route
+                path="records"
+                element={
+                  <ErrorBoundary name="records" key="records">
+                    <Records account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
             <Route
               path="optimizer"
               element={
-                account.destinyVersion === 2 ? (
-                  <LoadoutBuilderContainer account={account} />
-                ) : (
-                  <D1LoadoutBuilder account={account} />
-                )
+                <ErrorBoundary name="optimizer" key="optimizer">
+                  {account.destinyVersion === 2 ? (
+                    <LoadoutBuilderContainer account={account} />
+                  ) : (
+                    <D1LoadoutBuilder account={account} />
+                  )}
+                </ErrorBoundary>
               }
             />
             {account.destinyVersion === 2 && (
-              <Route path="loadouts" element={<Loadouts account={account} />} />
+              <Route
+                path="loadouts"
+                element={
+                  <ErrorBoundary name="loadouts" key="loadouts">
+                    <Loadouts account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
-            <Route path="organizer" element={<Organizer account={account} />} />
+            <Route
+              path="organizer"
+              element={
+                <ErrorBoundary name="organizer" key="organizer">
+                  <Organizer account={account} />
+                </ErrorBoundary>
+              }
+            />
             {account.destinyVersion === 2 && (
-              <Route path="vendors/:vendorHash" element={<SingleVendorPage account={account} />} />
+              <Route
+                path="vendors/:vendorHash"
+                element={
+                  <ErrorBoundary name="singleVendor" key="singleVendor">
+                    <SingleVendorPage account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
             <Route
               path="vendors"
               element={
-                account.destinyVersion === 2 ? (
-                  <Vendors account={account} />
-                ) : (
-                  <D1Vendors account={account} />
-                )
+                <ErrorBoundary name="vendors" key="vendors">
+                  {account.destinyVersion === 2 ? (
+                    <Vendors account={account} />
+                  ) : (
+                    <D1Vendors account={account} />
+                  )}
+                </ErrorBoundary>
               }
             />
             {account.destinyVersion === 2 && (
-              <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
+              <Route
+                path="armory/:itemHash"
+                element={
+                  <ErrorBoundary name="armory" key="armory">
+                    <ArmoryPage account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
             {account.destinyVersion === 2 && (
-              <Route path="item-feed" element={<ItemFeedPage account={account} />} />
+              <Route
+                path="item-feed"
+                element={
+                  <ErrorBoundary name="itemFeed" key="itemFeed">
+                    <ItemFeedPage account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
             {account.destinyVersion === 1 && (
-              <Route path="record-books" element={<RecordBooks account={account} />} />
+              <Route
+                path="record-books"
+                element={
+                  <ErrorBoundary name="recordBooks" key="recordBooks">
+                    <RecordBooks account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
             {account.destinyVersion === 1 && (
-              <Route path="activities" element={<Activities account={account} />} />
+              <Route
+                path="activities"
+                element={
+                  <ErrorBoundary name="activities" key="activities">
+                    <Activities account={account} />
+                  </ErrorBoundary>
+                }
+              />
             )}
             <Route path="*" element={<Navigate to="inventory" />} />
           </Routes>
