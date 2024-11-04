@@ -28,6 +28,7 @@ import {
   DestinyRecordState,
   DestinyScope,
 } from 'bungie-api-ts/destiny2';
+import { minBy } from 'es-toolkit';
 import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
 
 export interface DimPresentationNodeLeaf {
@@ -597,11 +598,13 @@ export function getCollectibleState(
 ) {
   return collectibleDef.scope === DestinyScope.Character
     ? profileResponse.characterCollectibles?.data
-      ? // Find the version of the collectible that's unlocked, if any
-        Object.values(profileResponse.characterCollectibles.data).find(
-          (c) =>
-            (c.collectibles[collectibleDef.hash].state ?? 0) & DestinyCollectibleState.NotAcquired,
-        )?.collectibles[collectibleDef.hash].state
+      ? minBy(
+          // Find the version of the collectible that's unlocked, if any
+          Object.values(profileResponse.characterCollectibles.data)
+            .map((c) => c.collectibles[collectibleDef.hash].state)
+            .filter((s) => s !== undefined),
+          (state) => state & DestinyCollectibleState.NotAcquired,
+        )
       : undefined
     : profileResponse.profileCollectibles?.data?.collectibles[collectibleDef.hash]?.state;
 }
