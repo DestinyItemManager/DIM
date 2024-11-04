@@ -88,13 +88,16 @@ export function processItems(
 }
 
 const getClassTypeNameLocalized = memoize(
-  (type: DestinyClass, defs: D1ManifestDefinitions): string => {
+  ([type, defs]: [type: DestinyClass, defs: D1ManifestDefinitions]): string => {
     const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.className;
     } else {
       return t('Loadouts.Any');
     }
+  },
+  {
+    getCacheKey: ([type]) => `${type}`,
   },
 );
 
@@ -319,7 +322,7 @@ function makeItem(
     maxStackSize: itemDef.maxStackSize > 0 ? itemDef.maxStackSize : 1,
     // 0: titan, 1: hunter, 2: warlock, 3: any
     classType: itemDef.classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
+    classTypeNameLocalized: getClassTypeNameLocalized([itemDef.classType, defs]),
     element,
     ammoType: getAmmoType(normalBucket.hash),
     sourceHashes: itemDef.sourceHashes,
