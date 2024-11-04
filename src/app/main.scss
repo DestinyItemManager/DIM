@@ -156,7 +156,9 @@ label {
 // Use this to make images not tappable (Android Chrome will show a download menu)
 .no-pointer-events,
 .app-icon {
-  pointer-events: none;
+  @include phone-portrait {
+    pointer-events: none;
+  }
 }
 
 a {
