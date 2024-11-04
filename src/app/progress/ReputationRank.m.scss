@@ -50,6 +50,9 @@
 
 .factionLevel {
   color: var(--theme-text-secondary);
+  &.max {
+    color: var(--theme-accent-primary);
+  }
 }
 
 .rankIcon {

@@ -1109,6 +1109,7 @@
     "Milestones": "Milestones & Challenges",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentPrestige": "{{pct}}% to reset",
+    "PercentMax": "{{pct}}% to maximum",
     "PointsUsed": "1 point used",
     "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} Power Rewards",

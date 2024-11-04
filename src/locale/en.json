@@ -1102,6 +1102,7 @@
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",
+    "PercentMax": "{{pct}}% to maximum",
     "PercentPrestige": "{{pct}}% to reset",
     "PointsUsed": "1 point used",
     "PointsUsed_plural": "{{count}} points used",
