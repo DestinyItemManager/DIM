@@ -808,28 +808,25 @@ function getItemCategoryHashes(itemDef: DestinyInventoryItemDefinition): ItemCat
 
   if (
     itemCategoryHashes.includes(ItemCategoryHashes.Weapon) &&
-    !itemCategoryHashes.includes(ItemCategoryHashes.Dummies)
+    !itemCategoryHashes.includes(ItemCategoryHashes.Dummies) &&
+    itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) &&
+    !itemCategoryHashes.includes(ItemCategoryHashes.PowerWeapon)
   ) {
-    if (
-      itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) &&
-      !itemCategoryHashes.includes(ItemCategoryHashes.PowerWeapon)
-    ) {
-      // Special grenade launchers
-      itemCategoryHashes = [
-        // Special grenade launchers are not heavy grenade launchers
-        ...itemCategoryHashes.filter((ich) => ich !== ItemCategoryHashes.GrenadeLaunchers),
-        -ItemCategoryHashes.GrenadeLaunchers,
-      ];
-    }
+    // Special grenade launchers
+    itemCategoryHashes = [
+      // Special grenade launchers are not heavy grenade launchers
+      ...itemCategoryHashes.filter((ich) => ich !== ItemCategoryHashes.GrenadeLaunchers),
+      -ItemCategoryHashes.GrenadeLaunchers,
+    ];
+  }
 
-    if (itemDef.hash in extendedICH) {
-      const additionalICH = extendedICH[itemDef.hash]!;
-      itemCategoryHashes = [...itemCategoryHashes, additionalICH];
+  if (itemDef.hash in extendedICH) {
+    const additionalICH = extendedICH[itemDef.hash]!;
+    itemCategoryHashes = [...itemCategoryHashes, additionalICH];
 
-      // Masks are helmets too
-      if (additionalICH === ItemCategoryHashes.Mask) {
-        itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Helmets];
-      }
+    // Masks are helmets too
+    if (additionalICH === ItemCategoryHashes.Mask) {
+      itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Helmets];
     }
   }
 
