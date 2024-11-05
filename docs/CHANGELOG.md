@@ -1,5 +1,13 @@
 ## Next
 
+* Fixed an issue with Destiny 1 inventory not loading.
+* Fixed an issue with some hover text not appearing on PC.
+* Fixed an issue with some exotics not appearing in Collectibles.
+* Fixed an issue where invalid searches looked saved if they were close to a saved search.
+* Progress > Ranks
+  * Now highlights maxed ranks.
+  * Competitive Division no longer shows it can be reset.
+
 ## 8.45.0 <span class="changelog-date">(2024-11-03)</span>
 
 * If you click "Edit Copy" on a loadout, then click "Optimize Armor", then save the loadout from Loadout Optimizer, it will now save the copy, not the original loadout.
