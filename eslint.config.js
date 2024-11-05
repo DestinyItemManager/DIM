@@ -366,7 +366,10 @@ export default tseslint.config(
       '@typescript-eslint/unified-signatures': 'error',
       '@typescript-eslint/no-base-to-string': 'error',
       '@typescript-eslint/non-nullable-type-assertion-style': 'error',
-      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+      '@typescript-eslint/switch-exhaustiveness-check': [
+        'error',
+        { considerDefaultExhaustiveForUnions: true },
+      ],
       '@typescript-eslint/consistent-type-definitions': 'error',
       '@typescript-eslint/consistent-generic-constructors': 'error',
       '@typescript-eslint/no-duplicate-enum-values': 'error',
