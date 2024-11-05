@@ -1,5 +1,7 @@
 ## Next
 
+## 8.45.1 <span class="changelog-date">(2024-11-04)</span>
+
 * Fixed an issue with Destiny 1 inventory not loading.
 * Fixed an issue with some hover text not appearing on PC.
 * Fixed an issue with some exotics not appearing in Collectibles.
