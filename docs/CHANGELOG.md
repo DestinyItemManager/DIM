@@ -1,5 +1,7 @@
 ## Next
 
+## 8.46.0 <span class="changelog-date">(2024-11-10)</span>
+
 ## 8.45.1 <span class="changelog-date">(2024-11-04)</span>
 
 * Fixed an issue with Destiny 1 inventory not loading.
