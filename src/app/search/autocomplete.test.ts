@@ -31,6 +31,8 @@ describe('autocompleteTermSuggestions', () => {
     ['is:bow is:v|oid', 'is:bow is:void'],
     ['season:>outl', 'season:>outlaw'],
     ['not(', 'Expected failure'],
+    ['memento:', 'memento:any'],
+    ['foo memento:', 'foo memento:any'],
   ];
 
   const plainStringCases: [query: string, mockCandidate: string][] = [['jotu', 'jötunn']];
