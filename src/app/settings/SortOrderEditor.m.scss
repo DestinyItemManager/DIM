@@ -31,10 +31,10 @@
   flex: 1;
 }
 
-:global(.sort-forward) {
+.sortForward {
   color: var(--theme-accent-primary);
 }
-:global(.sort-reverse) {
+.sortReverse {
   color: var(--theme-accent-secondary);
 }
 
