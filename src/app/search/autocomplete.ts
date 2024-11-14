@@ -4,7 +4,7 @@ import { compact, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { canonicalFilterFormats } from './filter-types';
-import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
+import { lexer, makeCommentString, parseQuery, QueryLexerError } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
 import { plainString } from './text-utils';
 
@@ -281,7 +281,7 @@ function findLastFilter(queryUpToCaret: string): number[] | null {
     }
   } catch (e) {
     // If the lexer failed because of unmatched quotes, that's *definitely* something to autocomplete!
-    if (e instanceof QueryLexerOpenQuotesError) {
+    if (e instanceof QueryLexerError) {
       incompleteFilterIndices = [e.startIndex];
     }
   }
