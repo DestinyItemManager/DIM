@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { reorder } from 'app/utils/collections';
 import clsx from 'clsx';
 import { clamp } from 'es-toolkit';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import {
   AppIcon,
   dragHandleIcon,
@@ -23,13 +23,21 @@ export interface SortProperty {
   readonly reversed: boolean;
 }
 
-const SortEditorItemList = memo(({ order }: { order: SortProperty[] }) => (
-  <>
-    {order.map((item, index) => (
-      <SortEditorItem key={item.id} item={item} index={index} />
-    ))}
-  </>
-));
+type OnCommandHandler = (
+  e: React.MouseEvent,
+  index: number,
+  command: 'up' | 'down' | 'toggle' | 'direction-toggle',
+) => void;
+
+const SortEditorItemList = memo(
+  ({ order, onCommand }: { order: SortProperty[]; onCommand: OnCommandHandler }) => (
+    <>
+      {order.map((item, index) => (
+        <SortEditorItem key={item.id} item={item} index={index} onCommand={onCommand} />
+      ))}
+    </>
+  ),
+);
 
 /**
  * An editor for sort-orders, with drag and drop.
@@ -71,32 +79,25 @@ export default function SortOrderEditor({
     onSortOrderChanged(orderArr);
   };
 
-  const onClick = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const getIndex = () => parseInt(target.parentElement!.dataset.index!, 10);
-
-    switch (target.dataset.command) {
+  const onCommand: OnCommandHandler = (e, index, command) => {
+    switch (command) {
       case 'up': {
         e.preventDefault();
-        const index = getIndex();
         moveItem(index, index - 1);
         break;
       }
       case 'down': {
         e.preventDefault();
-        const index = getIndex();
         moveItem(index, index + 1);
         break;
       }
       case 'toggle': {
         e.preventDefault();
-        const index = getIndex();
         toggleItem(index, 'enabled');
         break;
       }
       case 'direction-toggle': {
         e.preventDefault();
-        const index = getIndex();
         toggleItem(index, 'reversed');
         break;
       }
@@ -109,13 +110,8 @@ export default function SortOrderEditor({
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
         {(provided) => (
-          <div
-            className={styles.editor}
-            ref={provided.innerRef}
-            onClick={onClick}
-            {...provided.droppableProps}
-          >
-            <SortEditorItemList order={order} />
+          <div className={styles.editor} ref={provided.innerRef} {...provided.droppableProps}>
+            <SortEditorItemList order={order} onCommand={onCommand} />
             {provided.placeholder}
           </div>
         )}
@@ -124,9 +120,15 @@ export default function SortOrderEditor({
   );
 }
 
-function SortEditorItem(props: { index: number; item: SortProperty }) {
-  const { index, item } = props;
-
+function SortEditorItem({
+  index,
+  item,
+  onCommand,
+}: {
+  index: number;
+  item: SortProperty;
+  onCommand: OnCommandHandler;
+}) {
   return (
     <Draggable draggableId={item.id} index={index}>
       {(provided, snapshot) => (
@@ -135,7 +137,6 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
             [styles.dragging]: snapshot.isDragging,
             disabled: !item.enabled,
           })}
-          data-index={index}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
@@ -146,30 +147,38 @@ function SortEditorItem(props: { index: number; item: SortProperty }) {
             type="button"
             role="checkbox"
             aria-checked={item.enabled}
-            className={clsx(styles.button, 'sort-toggle')}
-            data-command="toggle"
+            className={styles.button}
+            onClick={(e) => onCommand(e, index, 'toggle')}
           >
             <AppIcon icon={item.enabled ? faCheckSquare : faSquare} />
           </button>
           <span className={styles.name} {...provided.dragHandleProps}>
             {item.displayName}
           </span>
-          <button type="button" className={clsx(styles.button, 'sort-up')} data-command="up">
+          <button
+            type="button"
+            className={styles.button}
+            onClick={(e) => onCommand(e, index, 'up')}
+          >
             <AppIcon icon={moveUpIcon} />
           </button>
-          <button type="button" className={clsx(styles.button, 'sort-down')} data-command="up">
+          <button
+            type="button"
+            className={styles.button}
+            onClick={(e) => onCommand(e, index, 'down')}
+          >
             <AppIcon icon={moveDownIcon} />
           </button>
           <button
             type="button"
             title={t('Settings.ReverseSort')}
-            className={clsx(styles.button, 'direction-toggle')}
-            data-command="direction-toggle"
+            className={styles.button}
+            onClick={(e) => onCommand(e, index, 'direction-toggle')}
           >
             <AppIcon
               icon={item.reversed ? maximizeIcon : minimizeIcon}
               className={
-                item.enabled ? (item.reversed ? 'sort-reverse' : 'sort-forward') : undefined
+                item.enabled ? (item.reversed ? styles.sortReverse : styles.sortForward) : undefined
               }
             />
           </button>

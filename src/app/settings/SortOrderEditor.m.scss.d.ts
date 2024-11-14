@@ -7,6 +7,8 @@ interface CssExports {
   'grip': string;
   'item': string;
   'name': string;
+  'sortForward': string;
+  'sortReverse': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
