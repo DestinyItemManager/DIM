@@ -1,8 +1,8 @@
 import { ItemInfos } from './dim-item-info';
 import {
   appendedToNote,
-  collectNotesHashtags,
-  getHashtagsFromNote,
+  collectHashtagsFromInfos,
+  getHashtagsFromString,
   removedFromNote,
 } from './note-hashtags';
 
@@ -14,19 +14,22 @@ test.each([
   ['#foo,#bar', ['#foo', '#bar']],
   ['#foo-#bar', ['#foo-']], // Not great, could be better
   ['Emoji #🤯 tags', ['#🤯']],
-])('getHashtagsFromNote: %s', (notes, expectedTags) => {
-  const tags = new Set(getHashtagsFromNote(notes));
+])('getHashtagsFromString: %s', (notes, expectedTags) => {
+  const tags = new Set(getHashtagsFromString(notes));
   expect(tags).toEqual(new Set(expectedTags));
 });
 
-test('collectNotesHashtags should get a unique set of hashtags from multiple notes', () => {
+test('collectHashtagsFromInfos should get a unique set of hashtags from multiple notes', () => {
   const itemInfos: ItemInfos = {
-    1: { id: '1', notes: 'This has #three #hash #tags' },
-    2: { id: '1', notes: '#Three #🤯' },
+    1: { id: '1', notes: 'This has #three #Hash #tags' }, // A lowercase #three occurs first,
+    2: { id: '1', notes: '#Three #🤯' }, // but #Three should be preferred (two occurences)
+    3: { id: '1', notes: '#Three' },
+    4: { id: '1', notes: '#Hash' },
+    5: { id: '1', notes: '#hash' }, // A lowercase #hash occured most recently, but #Hash should be preferred (two occurences)
   };
 
-  expect(new Set(collectNotesHashtags(itemInfos))).toEqual(
-    new Set(['#three', '#hash', '#tags', '#🤯']),
+  expect(new Set(collectHashtagsFromInfos(itemInfos))).toEqual(
+    new Set(['#Three', '#Hash', '#tags', '#🤯']),
   );
 });
 

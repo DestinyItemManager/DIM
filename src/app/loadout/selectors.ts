@@ -1,6 +1,6 @@
 import { currentProfileSelector } from 'app/dim-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
-import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import { getHashtagsFromString } from 'app/inventory/note-hashtags';
 import {
   allItemsSelector,
   currentStoreSelector,
@@ -22,12 +22,7 @@ import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-
 import { loadoutsSelector } from './loadouts-selector';
 
 export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadouts) => [
-  ...new Set(
-    loadouts.flatMap((loadout) => [
-      ...getHashtagsFromNote(loadout.name),
-      ...getHashtagsFromNote(loadout.notes),
-    ]),
-  ),
+  ...new Set(loadouts.flatMap((loadout) => getHashtagsFromString(loadout.name, loadout.notes))),
 ]);
 
 export interface LoadoutsByItem {

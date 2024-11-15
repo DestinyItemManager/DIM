@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import { getHashtagsFromString } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemForLoadout, getLight, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
@@ -253,10 +253,7 @@ const freeformFilters: FilterDefinition<
             new Set([
               ...loadouts
                 .filter((loadout) => isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore))
-                .flatMap((loadout) => [
-                  ...getHashtagsFromNote(loadout.name),
-                  ...getHashtagsFromNote(loadout.notes),
-                ]),
+                .flatMap((loadout) => getHashtagsFromString(loadout.notes, loadout.notes)),
             ]),
           )
         : [],

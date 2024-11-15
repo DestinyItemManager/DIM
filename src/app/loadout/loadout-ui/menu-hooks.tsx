@@ -4,7 +4,7 @@ import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t, tl } from 'app/i18next-t';
-import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import { getHashtagsFromString } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
@@ -75,10 +75,7 @@ export function useLoadoutFilterPills(
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
     for (const loadout of savedLoadouts) {
-      const hashtags = [
-        ...getHashtagsFromNote(loadout.name),
-        ...getHashtagsFromNote(loadout.notes),
-      ];
+      const hashtags = getHashtagsFromString(loadout.name, loadout.notes);
       for (const hashtag of hashtags) {
         (loadoutsByHashtag[hashtag.replace('#', '').replace(/_/g, ' ')] ??= []).push(loadout);
       }
