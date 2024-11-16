@@ -82,7 +82,6 @@
 
   // Engrams. D1 uses this same bucket hash for "Missions"
   .destiny2 .bucket-375726501 & {
-    --engram-size: calc(var(--character-column-width) / 10);
     padding-bottom: 8px;
 
     .empty-engram {
@@ -94,7 +93,7 @@
 
     .sub-bucket {
       min-height: 0;
-      grid-template-columns: repeat(auto-fill, var(--engram-size));
+      grid-template-columns: repeat(10, 1fr);
       gap: 0;
       padding: 4px 0 0 0;
 
@@ -105,11 +104,8 @@
 
     .item-drag-container,
     .empty-engram {
-      --item-size: var(--engram-size);
-
-      @include phone-portrait {
-        --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
-      }
+      --item-size: 100%;
+      aspect-ratio: 1 / 1;
     }
   }
 
