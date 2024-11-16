@@ -35,7 +35,7 @@ export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
     .map((normalizedMeta) => {
       const countsByVariant = Object.entries(normalizedMeta!.variants);
       const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
-      return [mostPopularVariant, normalizedMeta!.count] as [string, number];
+      return [mostPopularVariant, normalizedMeta!.count] as const;
     })
     .sort(compareBy((t) => -t[1]))
     .map((t) => t[0]);
