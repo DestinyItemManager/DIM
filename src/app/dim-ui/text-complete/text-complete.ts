@@ -1,6 +1,6 @@
 import { StrategyProps, Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
-import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import { getHashtagsFromString } from 'app/inventory/note-hashtags';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -19,7 +19,9 @@ function createTagsCompleter(
       const termLower = term.toLowerCase();
       // need to build this list from the element ref, because relying
       // on liveNotes state would re-instantiate Textcomplete every keystroke
-      const existingTags = getHashtagsFromNote(textArea.current!.value).map((t) => t.toLowerCase());
+      const existingTags = getHashtagsFromString(textArea.current!.value).map((t) =>
+        t.toLowerCase(),
+      );
       const possibleTags: string[] = [];
       for (const t of tags) {
         const tagLower = t.toLowerCase();

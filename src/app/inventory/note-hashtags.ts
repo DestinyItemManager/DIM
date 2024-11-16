@@ -1,26 +1,50 @@
-import { compact, filterMap, uniqBy } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
+import { compareBy } from 'app/utils/comparators';
+import { maxBy } from 'es-toolkit';
 import { ItemInfos } from './dim-item-info';
 
 /**
- * collects all hashtags from item notes
+ * Collects all hashtags from all item notes.
+ *
+ * Orders by use count, de-dupes case-insensitive, and picks the most popular capitalization.
  */
-export function collectNotesHashtags(itemInfos: ItemInfos) {
-  const hashTags = new Set<string>();
+export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
+  // {
+  //   '#pve': {
+  //     variants: {
+  //       '#PVE': 4,
+  //       '#pve': 2
+  //     },              <- hashtagCollection
+  //     count: 6        <- structure
+  //   }
+  // }
+  const hashtagCollection: NodeJS.Dict<{ variants: NodeJS.Dict<number>; count: number }> = {};
+
   for (const info of Object.values(itemInfos)) {
-    const matches = getHashtagsFromNote(info.notes);
-    if (matches) {
-      for (const match of matches) {
-        hashTags.add(match);
-      }
+    const hashtags = getHashtagsFromString(info.notes);
+    for (const h of hashtags) {
+      const lower = h.toLowerCase();
+      hashtagCollection[lower] ??= { count: 0, variants: {} };
+      hashtagCollection[lower].count++;
+      hashtagCollection[lower].variants[h] ??= 0;
+      hashtagCollection[lower].variants[h]++;
     }
   }
-  return uniqBy(hashTags, (t) => t.toLowerCase());
+
+  return Object.values(hashtagCollection)
+    .map((normalizedMeta) => {
+      const countsByVariant = Object.entries(normalizedMeta!.variants);
+      const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
+      return [mostPopularVariant, normalizedMeta!.count] as const;
+    })
+    .sort(compareBy((t) => -t[1]))
+    .map((t) => t[0]);
 }
 
 const hashtagRegex = /(^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)/gu;
 
-export function getHashtagsFromNote(note?: string | null) {
-  return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[2]);
+export function getHashtagsFromString(...notes: (string | null | undefined)[]) {
+  return notes.flatMap((note) => Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[2]));
 }
 
 // TODO: am I really gonna need to write a parser again
@@ -59,7 +83,7 @@ export function removedFromNote(originalNote: string | undefined, removed: strin
   const originalSegmented = segmentHashtags(originalNote);
   // Treat it like a remove-hashtags operation and just remove all the named hashtags individually
   if (removed.match(allHashtagsRegex)) {
-    const removeHashTags = new Set(getHashtagsFromNote(removed));
+    const removeHashTags = new Set(getHashtagsFromString(removed));
 
     return originalSegmented
       .filter((s) => typeof s === 'string' || !removeHashTags.has(s.hashtag))

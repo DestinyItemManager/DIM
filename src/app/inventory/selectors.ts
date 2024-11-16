@@ -20,7 +20,7 @@ import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
 import { characterSortImportanceSelector, characterSortSelector } from '../settings/character-sort';
 import { ItemInfos, getNotes, getTag } from './dim-item-info';
 import { DimItem } from './item-types';
-import { collectNotesHashtags } from './note-hashtags';
+import { collectHashtagsFromInfos } from './note-hashtags';
 import { AccountCurrency } from './store-types';
 import { ItemCreationContext } from './store/d2-item-factory';
 import { getCurrentStore, getVault } from './stores-helpers';
@@ -413,4 +413,4 @@ export const hasNotesSelector = (item: DimItem) => (state: RootState) =>
 /**
  * all hashtags used in existing item notes, with (case-insensitive) dupes removed
  */
-export const allNotesHashtagsSelector = createSelector(itemInfosSelector, collectNotesHashtags);
+export const allNotesHashtagsSelector = createSelector(itemInfosSelector, collectHashtagsFromInfos);
