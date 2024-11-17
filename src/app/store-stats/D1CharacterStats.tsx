@@ -5,7 +5,8 @@ import type { DimStore } from 'app/inventory/store-types';
 import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import './CharacterStats.scss';
+import './CharacterStats.m.scss';
+import styles from './D1CharacterStats.m.scss';
 
 interface Props {
   stats: DimStore['stats'];
@@ -43,10 +44,10 @@ export default function D1CharacterStats({ stats }: Props) {
           <div className="stat">
             <BungieImage src={stat.icon} alt={stat.name} />
             {getD1CharacterStatTiers(stat).map((n, index) => (
-              <div key={index} className="bar">
+              <div key={index} className={styles.bar}>
                 <div
-                  className={clsx('progress', {
-                    complete: n / 60 === 1,
+                  className={clsx(styles.progress, {
+                    [styles.complete]: n / 60 === 1,
                   })}
                   style={{ width: percent(n / 60) }}
                 />

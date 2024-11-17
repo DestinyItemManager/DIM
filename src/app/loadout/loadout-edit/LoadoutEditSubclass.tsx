@@ -134,6 +134,7 @@ export default function LoadoutEditSubclass({
         ) : (
           <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
         ))}
+      {subclass && <div>Subclass Stats</div>}
     </div>
   );
 }

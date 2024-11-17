@@ -1,0 +1,16 @@
+.bar {
+  flex: 1;
+  height: 7px;
+  margin-left: 1px;
+  border-radius: 1px;
+  background-color: gray;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: white;
+  &.complete {
+    background-color: #fb9f28;
+  }
+}

@@ -12,7 +12,7 @@ import {
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import '../store-stats/CharacterStats.scss';
+import '../store-stats/CharacterStats.m.scss';
 import styles from './Highlights.m.scss';
 
 /**

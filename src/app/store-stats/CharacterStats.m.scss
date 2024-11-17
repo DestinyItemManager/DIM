@@ -1,0 +1,137 @@
+@use '../variables' as *;
+
+:global(.stat) {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 2px;
+  line-height: 16px;
+  white-space: nowrap;
+  &:last-child {
+    margin-right: 0;
+  }
+  img {
+    height: 14px;
+    width: 14px;
+    margin-right: 2px;
+    opacity: 1;
+  }
+}
+
+/* INT/DIS/STR bars */
+:global(.stat-bars) {
+  width: 100%;
+  max-width: 230px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 8px;
+  opacity: 1;
+  gap: 4px;
+
+  @include phone-portrait {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+  }
+
+  > div {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+  }
+
+  &:global(.destiny2) {
+    flex-direction: column;
+    gap: 0;
+    :global(.stat) {
+      flex: 0;
+      font-size: 11px;
+      color: var(--theme-header-characters-txt);
+      &.boostedValue {
+        color: $stat-modded;
+        font-weight: bold;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+      }
+      :global(.phone-portrait) & {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// D2 stats row. Used here and in the item feed.
+:global(.stat-row) {
+  display: flex;
+  flex-direction: row;
+  place-items: center left;
+
+  @include phone-portrait {
+    width: 100%;
+    justify-content: center;
+  }
+
+  &:nth-child(n + 2) {
+    justify-content: space-between;
+  }
+}
+
+.powerFormula {
+  margin-bottom: 3px;
+  img {
+    opacity: 0.6;
+    height: 17px;
+    width: 17px;
+  }
+  img[src^='data'] {
+    filter: invert(1);
+  }
+  > div:nth-child(2) {
+    display: flex;
+    flex-direction: row;
+    &::before,
+    &::after {
+      font-size: 13px;
+      color: var(--theme-header-characters-txt);
+      margin-left: 4px;
+      margin-right: 4px;
+      text-decoration: none !important;
+    }
+    &::before {
+      content: '=';
+    }
+    &::after {
+      content: '+';
+    }
+  }
+}
+
+.powerStat {
+  font-size: 125%;
+}
+
+.tier {
+  font-weight: bold;
+}
+
+.tooltipFootnote {
+  opacity: 0.6;
+  width: 80%;
+  margin: 10px 0 0 auto;
+  text-align: right;
+}
+
+.richTooltipWrapper {
+  margin: 8px 0 0 0;
+}
+
+.asterisk {
+  vertical-align: top;
+  margin-left: 2px;
+}
+
+.dropLevel {
+  display: flex;
+  justify-content: space-between;
+}

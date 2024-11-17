@@ -17,19 +17,19 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { sumBy } from 'app/utils/collections';
+import { filterMap, sumBy } from 'app/utils/collections';
 import clsx from 'clsx';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
-import './CharacterStats.scss';
+import styles from './CharacterStats.m.scss';
 import StatTooltip from './StatTooltip';
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {
   return (
-    <div className={clsx('stat-row', 'powerFormula')}>
+    <div className={clsx('stat-row', styles.powerFormula)}>
       {stats.map((stat) => (
         <PressTip
           key={stat.name}
@@ -40,7 +40,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
               {stat.richTooltipContent && (
                 <>
                   <hr />
-                  <div className="richTooltipWrapper">{stat.richTooltipContent()}</div>
+                  <div className={styles.richTooltipWrapper}>{stat.richTooltipContent()}</div>
                 </>
               )}
             </>
@@ -54,10 +54,10 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
           >
             <img src={stat.icon} alt={stat.name} />
             <div>
-              <span className="powerStat">
+              <span className={styles.powerStat}>
                 <FractionalPowerLevel power={stat.value} />
               </span>
-              {stat.problems?.hasClassified && <sup className="asterisk">*</sup>}
+              {stat.problems?.hasClassified && <sup className={styles.asterisk}>*</sup>}
             </div>
           </div>
         </PressTip>
@@ -107,13 +107,13 @@ export function PowerFormula({ storeId }: { storeId: string }) {
           powerFloor={Math.floor(powerLevel.maxGearPower)}
         />
         <hr />
-        <div className="dropLevel">
+        <div className={styles.dropLevel}>
           <span>{t('Stats.DropLevel')}*</span>
           <span>
             <FractionalPowerLevel power={powerLevel.dropPower} />
           </span>
         </div>
-        <div className="tooltipFootnote">* {t('General.ClickForDetails')}</div>
+        <div className={styles.tooltipFootnote}>* {t('General.ClickForDetails')}</div>
       </>
     ),
   };
@@ -140,25 +140,36 @@ export function PowerFormula({ storeId }: { storeId: string }) {
 }
 
 /**
- * Display each of the main stats (Resistance, Discipline, etc) for a character. The actual stat info is passed in.
- * This shows stats for both loadouts and characters - anything that has a character stats list.
+ * Display each of the main stats (Resistance, Discipline, etc) for a character.
+ * This is used for both loadouts and characters - anything that has a character
+ * stats list. This is only used for D2.
  */
 function CharacterStats({
   stats,
   showTier,
   equippedHashes,
 }: {
+  /**
+   * A list of stats to display. This should contain an entry for each stat in
+   * `armorStats`, but if one is missing it won't be shown - you can use this to
+   * show a subset of stats.
+   */
   stats: DimStore['stats'];
+  /** Whether to show the total tier of the set. */
   showTier?: boolean;
+  /**
+   * Item hashes for equipped exotics, used to show more accurate cooldown
+   * tooltips.
+   */
   equippedHashes: Set<number>;
 }) {
   // Select only the armor stats, in the correct order
-  const statInfos = armorStats.map((h) => stats[h]);
+  const statInfos = filterMap(armorStats, (h) => stats[h]);
 
   return (
     <div className="stat-row">
       {showTier && (
-        <div className="stat tier">
+        <div className={clsx(styles.tier, 'stat')}>
           {t('LoadoutBuilder.TierNumber', {
             tier: sumBy(statInfos, (s) => statTier(s.value)),
           })}
@@ -185,8 +196,10 @@ function CharacterStats({
   );
 }
 
+// TODO: just a plain "show stats" component
+
 /**
- * Show the stats for a DimStore.
+ * Show the stats for a DimStore. This is only used for D2 - D1 uses D1CharacterStats.
  */
 export function StoreCharacterStats({ store }: { store: DimStore }) {
   const equippedItems = store.items.filter((i) => i.equipped);
@@ -207,7 +220,7 @@ export function StoreCharacterStats({ store }: { store: DimStore }) {
 }
 
 /**
- * Show the stats for a DIM Loadout.
+ * Show the stats for a DIM Loadout. This is only used for D2.
  */
 // TODO: just take a FullyResolvedLoadout?
 export function LoadoutCharacterStats({
