@@ -469,14 +469,14 @@ AddEncoding br .br
     # for any request, search for pre-compressed versions (gzip or brotli) and serve that directly if it's supported
 
     # Serve pre-brotli stuff if we got it
-    RewriteCond %{HTTP:Accept-encoding} br
-    RewriteCond %{REQUEST_FILENAME}\.br -f
-    RewriteRule ^(.*)$ <%= publicPath %>$1.br [QSA,L]
+    # RewriteCond %{HTTP:Accept-encoding} br
+    # RewriteCond %{REQUEST_FILENAME}\.br -f
+    # RewriteRule ^(.*)$ <%= publicPath %>$1.br [QSA,L]
 
     # Serve pre-gzipped stuff if we got it
-    RewriteCond %{HTTP:Accept-encoding} gzip
-    RewriteCond %{REQUEST_FILENAME}\.gz -f
-    RewriteRule ^(.*)$ <%= publicPath %>$1.gz [QSA,L]
+    # RewriteCond %{HTTP:Accept-encoding} gzip
+    # RewriteCond %{REQUEST_FILENAME}\.gz -f
+    # RewriteRule ^(.*)$ <%= publicPath %>$1.gz [QSA,L]
 
     # Redirect unknown paths to index.html
     RewriteCond %{REQUEST_FILENAME} !-f
