@@ -1,5 +1,10 @@
 ## Next
 
+* #Tag suggestions now use your most popular existing capitalization.
+* Fixed character engram inventory wrapping on mobile.
+* Fixed autocomplete not doing its job after a colon.
+* Fixed checkboxes not clickable in the item sorting editor.
+
 ## 8.46.0 <span class="changelog-date">(2024-11-10)</span>
 
 ## 8.45.1 <span class="changelog-date">(2024-11-04)</span>
