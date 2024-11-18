@@ -1,5 +1,7 @@
 ## Next
 
+## 8.47.0 <span class="changelog-date">(2024-11-17)</span>
+
 * #Tag suggestions now use your most popular existing capitalization.
 * Fixed character engram inventory wrapping on mobile.
 * Fixed autocomplete not doing its job after a colon.
