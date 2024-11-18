@@ -56,10 +56,10 @@ const statLabels: LookupTable<StatHashes, I18nKey> = {
 
 type StatSegmentType = 'base' | 'parts' | 'mod' | 'masterwork';
 const statStyles: Record<StatSegmentType, [style: string, label: I18nKey]> = {
-  base: [styles.base, 'Base Stat'],
-  parts: [styles.parts, 'Parts'],
+  base: [styles.base, tl('Organizer.Columns.BaseStats')],
+  parts: [styles.parts, tl('Stats.WeaponPart')],
   mod: [styles.mod, tl('Loadouts.Mods')],
-  masterwork: [styles.masterwork, 'Masterwork'],
+  masterwork: [styles.masterwork, tl('Organizer.Columns.MasterworkStat')],
 };
 type StatSegments = [value: number, statSegmentType: StatSegmentType, modName?: string][];
 
@@ -250,7 +250,7 @@ function StatBarTooltip({ segments, stat }: { segments: StatSegments; stat: DimS
                 {index > 0 && val >= 0 && '+'}
                 {val}
               </span>
-              <span className={className}>{description ?? t(i18nLabel)}</span>
+              <span className={className}>{description || t(i18nLabel)}</span>
             </React.Fragment>
           );
         })}
