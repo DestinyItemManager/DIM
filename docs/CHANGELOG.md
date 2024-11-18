@@ -1,5 +1,7 @@
 ## Next
 
+## 8.47.1 <span class="changelog-date">(2024-11-18)</span>
+
 * Fix gigantic vault engrams in single-character mode.
 
 ## 8.47.0 <span class="changelog-date">(2024-11-17)</span>
