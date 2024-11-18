@@ -2,20 +2,25 @@
 // Please do not change this file!
 interface CssExports {
   'barContainer': string;
-  'barInner': string;
+  'base': string;
   'customTotal': string;
   'icon': string;
-  'masterworkStatBar': string;
+  'masterwork': string;
   'masterworked': string;
+  'mod': string;
   'modded': string;
-  'moddedStatBar': string;
+  'negative': string;
   'negativeModded': string;
   'nonDimmedStatIcons': string;
+  'parts': string;
   'quality': string;
   'qualitySummary': string;
   'smallStatToggle': string;
   'statBar': string;
+  'statBarSegment': string;
+  'statBarTooltip': string;
   'statName': string;
+  'tooltipTotalRow': string;
   'totalRow': string;
   'totalStatDetailed': string;
   'totalStatMasterwork': string;

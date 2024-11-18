@@ -52,7 +52,8 @@
     backdrop-filter: blur(6px);
   }
 }
-.barInner {
+
+.statBarSegment {
   display: block;
   height: 100%;
   float: left;
@@ -61,6 +62,77 @@
   background-color: white;
   color: black;
   transition: width 150ms ease-in-out;
+
+  &.negative {
+    background-color: #640000;
+  }
+
+  // An assumption: never more than 4 part effects in a single stat?
+  // 3 have been observed on weapons with a barrel + mag + grip.
+  &.parts {
+    opacity: 0.9;
+    & + &.parts {
+      opacity: 0.8;
+      & + &.parts {
+        opacity: 0.7;
+        & + &.parts {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+
+  &.mod {
+    background-color: $stat-modded;
+    & + &.mod {
+      opacity: 0.8;
+      & + &.mod {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  // Colors for the stat bars
+  &.masterwork {
+    background-color: $stat-masterworked;
+  }
+}
+
+.statBarTooltip {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 4px;
+
+  & > :nth-child(2n-1) {
+    text-align: right;
+  }
+
+  .mod {
+    color: $stat-modded;
+  }
+  .masterwork {
+    color: $stat-masterworked;
+  }
+  .negative {
+    color: $red;
+  }
+  .base {
+    opacity: 1;
+  }
+  .parts {
+    opacity: 0.8;
+  }
+
+  .tooltipTotalRow {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: span 2;
+    border-top: 1px solid #fff;
+    font-weight: bold;
+    span:nth-child(2) {
+      text-align: left;
+    }
+  }
 }
 
 .qualitySummary {
@@ -75,27 +147,8 @@
   margin-left: 4px;
 }
 
-// Colors for the stat bars
-.masterworkStatBar {
-  background-color: $stat-masterworked;
-}
-.moddedStatBar {
-  background-color: $stat-modded;
-  & + .moddedStatBar {
-    background-color: $stat-modded;
-    opacity: 0.8;
-    & + .moddedStatBar {
-      background-color: $stat-modded;
-      opacity: 0.6;
-    }
-  }
-}
-
 .masterworked {
   color: $stat-masterworked;
-  .statName {
-    font-weight: bold;
-  }
 }
 
 .modded {

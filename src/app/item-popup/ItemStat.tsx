@@ -18,6 +18,7 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp } from 'es-toolkit';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
@@ -30,11 +31,37 @@ const modItemCategoryHashes = new Set([
   ItemCategoryHashes.ArmorMods, // armor 2.0 mods
 ]);
 
+// used in displaying the component segments on item stats
+const weaponParts = new Set([
+  ItemCategoryHashes.WeaponModsBowstring,
+  ItemCategoryHashes.WeaponModsBatteries,
+  ItemCategoryHashes.WeaponModsSwordBlades,
+  ItemCategoryHashes.WeaponModsLaunchTubes,
+  ItemCategoryHashes.WeaponModsScopes,
+  ItemCategoryHashes.WeaponModsHafts,
+  ItemCategoryHashes.WeaponModsStocks,
+  ItemCategoryHashes.WeaponModsSwordGuards,
+  ItemCategoryHashes.WeaponModsBarrels,
+  ItemCategoryHashes.WeaponModsArrows,
+  ItemCategoryHashes.WeaponModsGrips,
+  ItemCategoryHashes.WeaponModsSights,
+  ItemCategoryHashes.WeaponModsMagazines,
+]);
+
 // Some stat labels are long. This lets us replace them with i18n
 const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
+
+type StatSegmentType = 'base' | 'parts' | 'mod' | 'masterwork';
+const statStyles: Record<StatSegmentType, [style: string, label: I18nKey]> = {
+  base: [styles.base, 'Base Stat'],
+  parts: [styles.parts, 'Parts'],
+  mod: [styles.mod, tl('Loadouts.Mods')],
+  masterwork: [styles.masterwork, 'Masterwork'],
+};
+type StatSegments = [value: number, statSegmentType: StatSegmentType, modName?: string][];
 
 /**
  * A single stat line.
@@ -43,6 +70,17 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const showQuality = useSelector(settingSelector('itemQuality'));
   const customStatsList = useSelector(customStatsSelector);
   const customStatHashes = customStatsList.map((c) => c.statHash);
+
+  const modEffects =
+    item &&
+    getModEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
+  const modEffectsTotal = modEffects ? sumBy(modEffects, ([value]) => value) : 0;
+
+  const partEffects =
+    item &&
+    getPartEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
+  const partEffectsTotal = partEffects ? sumBy(partEffects, ([value]) => value) : 0;
+
   const armor2MasterworkSockets =
     item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
   const armor2MasterworkValue =
@@ -50,36 +88,39 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const masterworkValue =
     item?.masterworkInfo?.stats?.find((s) => s.hash === stat.statHash)?.value ?? 0;
+  // This bool controls the stat name being gold
   const isMasterworkedStat = masterworkValue !== 0;
-  const masterworkDisplayValue = masterworkValue ?? armor2MasterworkValue;
-
-  const modEffects =
-    item &&
-    getModEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
-  const modEffectsTotal = modEffects ? sumBy(modEffects, ([value]) => value) : 0;
-
+  const masterworkDisplayValue = masterworkValue || armor2MasterworkValue;
+  let masterworkDisplayWidth = masterworkDisplayValue || 0;
+  // baseBar here is the leftmost segment of the stat bar.
+  // For armor, this is the "roll," the sum of its invisible stat plugs.
+  // For weapons, this is the default base stat in its item definition, before barrels/mags/etc.
   const baseBar = item?.bucket.inArmor
     ? // if it's armor, the base bar length should be
       // the shortest of base or resulting value, but not below 0
       Math.max(Math.min(stat.base, stat.value), 0)
     : // otherwise, for weapons, we just subtract masterwork and
       // consider the "base" to include selected perks but not mods
-      stat.value - masterworkValue - modEffectsTotal;
+      stat.value - masterworkValue - modEffectsTotal - partEffectsTotal;
 
-  const segments: [amount: number, classname?: string, modName?: string][] = [[baseBar]];
+  const segments: StatSegments = [[baseBar, 'base']];
 
-  if (modEffects && modEffectsTotal > 0) {
-    for (const [effectAmount, modName] of modEffects) {
-      segments.push([effectAmount, styles.moddedStatBar, modName]);
+  for (const [effectAmount, modName] of partEffects ?? []) {
+    segments.push([effectAmount, 'parts', modName]);
+  }
+
+  for (const [effectAmount, modName] of modEffects ?? []) {
+    segments.push([effectAmount, 'mod', modName]);
+  }
+
+  if (masterworkDisplayWidth) {
+    // Account for a masterwork being completely counteracted by a mod penalty.
+    // A MW segment cannot be longer than the bar's total.
+    // ie: a +6 base, a +2mw, and a -10 mod, results in 0. MW segment width is 0.
+    if (modEffectsTotal < 0) {
+      masterworkDisplayWidth = clamp(masterworkDisplayWidth, 0, stat.value);
     }
-
-    if (masterworkDisplayValue) {
-      segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
-    }
-  } else if (modEffectsTotal < 0 && masterworkDisplayValue) {
-    segments.push([clamp(masterworkDisplayValue, 0, stat.value), styles.masterworkStatBar]);
-  } else if (masterworkDisplayValue) {
-    segments.push([masterworkDisplayValue, styles.masterworkStatBar]);
+    segments.push([masterworkDisplayWidth, 'masterwork']);
   }
 
   // Get the values that contribute to the total stat value
@@ -93,7 +134,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: modSign > 0,
+    [styles.mod]: modSign > 0,
     [styles.negativeModded]: modSign < 0,
     [styles.totalRow]: Boolean(totalDetails),
     [styles.customTotal]: customStatHashes.includes(stat.statHash),
@@ -160,21 +201,65 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   );
 }
 
-function StatBar({ segments, stat }: { segments: [number, string?, string?][]; stat: DimStat }) {
+function StatBar({ segments, stat }: { segments: StatSegments; stat: DimStat }) {
   return (
-    <div className={styles.statBar} aria-label={stat.displayProperties.name} aria-hidden="true">
-      <div className={styles.barContainer}>
-        {segments.map(([val, className, description], index) => (
-          <PressTip
-            key={index}
-            minimal
-            tooltip={[description, val].filter(Boolean).join(': ') || undefined}
-            className={clsx(styles.barInner, className)}
-            style={{ width: percent(val / stat.maximumValue) }}
-          />
-        ))}
-      </div>
+    <div
+      className={styles.statBar}
+      aria-label={stat.displayProperties.name}
+      aria-hidden="true"
+      onClick={() =>
+        console.log(
+          segments,
+          sumBy(segments, ([val]) => val),
+          stat.maximumValue,
+        )
+      }
+    >
+      <PressTip
+        placement="top-start"
+        className={styles.barContainer}
+        tooltip={<StatBarTooltip segments={segments} stat={stat} />}
+      >
+        {segments
+          .toSorted(compareBy(([val]) => val < 0))
+          // .filter(([val]) => val)
+          .map(([val, statType], index) => (
+            <div
+              key={index}
+              className={clsx(styles.statBarSegment, statStyles[statType][0], {
+                [styles.negative]: val < 0,
+              })}
+              style={{ width: percent(Math.abs(val) / stat.maximumValue) }}
+            />
+          ))}
+      </PressTip>
     </div>
+  );
+}
+
+function StatBarTooltip({ segments, stat }: { segments: StatSegments; stat: DimStat }) {
+  return (
+    <>
+      <div className={styles.statBarTooltip}>
+        {segments.map(([val, statType, description], index) => {
+          const [typeClassName, i18nLabel] = statStyles[statType];
+          const className = clsx(typeClassName, { [styles.negative]: val < 0 });
+          return (
+            <React.Fragment key={index}>
+              <span className={className}>
+                {index > 0 && val >= 0 && '+'}
+                {val}
+              </span>
+              <span className={className}>{description ?? t(i18nLabel)}</span>
+            </React.Fragment>
+          );
+        })}
+        <span className={styles.tooltipTotalRow}>
+          <span>{stat.value}</span>
+          <span>{stat.displayProperties.name}</span>
+        </span>
+      </div>
+    </>
   );
 }
 
@@ -240,7 +325,7 @@ export function ItemStatValue({
 
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: Boolean(moddedStatValue && moddedStatValue > 0 && stat.value !== stat.base),
+    [styles.mod]: Boolean(moddedStatValue && moddedStatValue > 0 && stat.value !== stat.base),
     [styles.negativeModded]: Boolean(
       moddedStatValue && moddedStatValue < 0 && stat.value !== stat.base,
     ),
@@ -279,8 +364,8 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
 }
 
 /**
- * Gets all sockets that have a plug which doesn't get grouped in the Reusable socket category.
- * The reusable socket category is used in armor 1.0 for perks and stats.
+ * Gets sockets that are considered "mods", like "Mobility Mod" in armor,
+ * or "Adept Range" on weapons. These are marked blue on stat bars.
  */
 function getNonReusableModSockets(item: DimItem) {
   if (!item.sockets) {
@@ -290,11 +375,20 @@ function getNonReusableModSockets(item: DimItem) {
   return item.sockets.allSockets.filter(
     (s) =>
       s.plugged &&
-      !s.isPerk &&
+      !s.isPerk && // excludes armor 1.0 perks and stats?
       !socketContainsIntrinsicPlug(s) &&
       !s.plugged.plugDef.plug.plugCategoryIdentifier.includes('masterwork') &&
       (s.plugged.plugDef.itemCategoryHashes?.some((h) => modItemCategoryHashes.has(h)) ||
         statfulOrnaments.includes(s.plugged.plugDef.hash)),
+  );
+}
+/**
+ * Gets weapon parts, like barrels, mags, etc.
+ * Sockets that contribute to the item's stats, but aren't its base stats or mods.
+ */
+function getWeaponPartSockets(item: DimItem) {
+  return (item.sockets?.allSockets ?? []).filter((s) =>
+    s.plugged?.plugDef.itemCategoryHashes?.some((h) => weaponParts.has(h)),
   );
 }
 
@@ -307,10 +401,18 @@ function getTotalModEffects(item: DimItem, statHash: number) {
 }
 /**
  * Looks through the item sockets to find any weapon/armor mods that modify this stat.
- * Returns the total value the stat is modified by, or 0 if it is not being modified.
+ * Returns the value the stat is modified by, or 0 if it is not being modified.
  */
 function getModEffects(item: DimItem, statHash: number) {
   const modSockets = getNonReusableModSockets(item);
+  return getPlugEffects(modSockets, [statHash]);
+}
+/**
+ * Looks through the item sockets to find any weapon/armor mods that modify this stat.
+ * Returns the value the stat is modified by, or 0 if it is not being modified.
+ */
+function getPartEffects(item: DimItem, statHash: number) {
+  const modSockets = getWeaponPartSockets(item);
   return getPlugEffects(modSockets, [statHash]);
 }
 
