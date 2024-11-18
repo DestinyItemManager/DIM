@@ -24,11 +24,10 @@
   width: 100%;
   max-width: 230px;
   display: flex;
-  flex-direction: row;
   justify-content: space-around;
   margin-top: 8px;
   opacity: 1;
-  gap: 4px;
+  flex-direction: column;
 
   @include phone-portrait {
     margin-left: auto;
@@ -42,21 +41,17 @@
     flex-direction: row;
   }
 
-  &:global(.destiny2) {
-    flex-direction: column;
-    gap: 0;
-    :global(.stat) {
-      flex: 0;
-      font-size: 11px;
-      color: var(--theme-header-characters-txt);
-      &.boostedValue {
-        color: $stat-modded;
-        font-weight: bold;
-        text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
-      }
-      :global(.phone-portrait) & {
-        font-size: 12px;
-      }
+  :global(.stat) {
+    flex: 0;
+    font-size: 11px;
+    color: var(--theme-header-characters-txt);
+    &.boostedValue {
+      color: $stat-modded;
+      font-weight: bold;
+      text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+    }
+    :global(.phone-portrait) & {
+      font-size: 12px;
     }
   }
 }

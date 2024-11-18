@@ -127,9 +127,12 @@ export interface DimCharacterStat {
   /** The localized description of the stat. */
   description: string;
 
-  /** A localized description of this stat's effect. */
+  /**
+   * A localization key for `Cooldown.${stat.effect}` that gives the description
+   * of this stat's effect in D1.
+   */
   effect?: 'Grenade' | 'Melee' | 'Super';
-  /** Cooldown time for the associated ability. */
+  /** Cooldown time for the associated ability in D1. */
   cooldown?: string;
 
   /** How this stat exactly was calculated. */

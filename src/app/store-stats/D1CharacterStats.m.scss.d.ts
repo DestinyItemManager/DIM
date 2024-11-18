@@ -4,6 +4,8 @@ interface CssExports {
   'bar': string;
   'complete': string;
   'progress': string;
+  'stat': string;
+  'statBars': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

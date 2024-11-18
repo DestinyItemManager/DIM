@@ -8,9 +8,10 @@ import { useSelector } from 'react-redux';
 import ClarityCharacterStat from './ClarityCharacterStat';
 import styles from './StatTooltip.m.scss';
 
-interface Stat {
+export interface Stat {
   hash: number;
   name: string;
+  icon?: string;
   value: number;
   description: string;
   breakdown?: DimCharacterStatChange[];

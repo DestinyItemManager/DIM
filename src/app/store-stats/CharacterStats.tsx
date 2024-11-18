@@ -25,7 +25,7 @@ import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import styles from './CharacterStats.m.scss';
-import StatTooltip from './StatTooltip';
+import StatTooltip, { Stat } from './StatTooltip';
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {
   return (
@@ -144,7 +144,7 @@ export function PowerFormula({ storeId }: { storeId: string }) {
  * This is used for both loadouts and characters - anything that has a character
  * stats list. This is only used for D2.
  */
-function CharacterStats({
+export function CharacterStats({
   stats,
   showTier,
   equippedHashes,
@@ -154,7 +154,9 @@ function CharacterStats({
    * `armorStats`, but if one is missing it won't be shown - you can use this to
    * show a subset of stats.
    */
-  stats: DimStore['stats'];
+  stats: {
+    [hash: number]: Stat;
+  };
   /** Whether to show the total tier of the set. */
   showTier?: boolean;
   /**
@@ -187,7 +189,7 @@ function CharacterStats({
             aria-label={`${stat.name} ${stat.value}`}
             role="group"
           >
-            <BungieImage src={stat.icon} alt={stat.name} />
+            {stat.icon && <BungieImage src={stat.icon} alt={stat.name} />}
             <div>{stat.value}</div>
           </div>
         </PressTip>
