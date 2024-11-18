@@ -238,7 +238,7 @@
     "redux-thunk": "^3.1.0",
     "reselect": "^5.1.1",
     "typesafe-actions": "^5.1.0",
-    "ua-parser-js": "^1.0.39",
+    "ua-parser-js": "^2.0.0",
     "use-subscription": "^1.8.2",
     "workbox-cacheable-response": "^7.3.0",
     "workbox-core": "^7.3.0",
