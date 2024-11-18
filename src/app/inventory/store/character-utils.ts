@@ -2,6 +2,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D1Character, D1StatLabel } from 'app/destiny1/d1-manifest-types';
 import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimCharacterStat } from '../store-types';
 
@@ -72,7 +73,7 @@ export function getBonus(light: number, bucketHash: ArmorTypes): number {
 
 export const statsWithTiers = [StatHashes.Discipline, StatHashes.Intellect, StatHashes.Strength];
 export function getD1CharacterStatTiers(stat: DimCharacterStat) {
-  if (!statsWithTiers.includes(stat.hash)) {
+  if (!statsWithTiers.includes(stat.statHash)) {
     return [];
   }
   const tiers = new Array<number>(5);
@@ -106,49 +107,31 @@ export function getCharacterStatsData(
       continue;
     }
 
+    const statDef = defs.Stat.get(rawStat.statHash);
     const stat: DimCharacterStat = {
-      hash: rawStat.statHash,
+      statHash: rawStat.statHash,
       value: rawStat.value,
-      name: '',
-      description: '',
-      icon: '',
+      displayProperties: {
+        name: statDef.statName, // localized name
+        description: statDef.statDescription,
+        icon: statDef.icon,
+        hasIcon: Boolean(statDef.icon),
+      } as DestinyDisplayPropertiesDefinition,
     };
 
-    switch (statId) {
-      case 'STAT_INTELLECT':
-        stat.effect = 'Super';
-        stat.icon = defs.Stat.get(StatHashes.Intellect).icon;
-        break;
-      case 'STAT_DISCIPLINE':
-        stat.effect = 'Grenade';
-        stat.icon = defs.Stat.get(StatHashes.Discipline).icon;
-        break;
-      case 'STAT_STRENGTH':
-        stat.effect = 'Melee';
-        stat.icon = defs.Stat.get(StatHashes.Strength).icon;
-        break;
-      default:
-        break;
-    }
-
-    const statDef = defs.Stat.get(stat.hash);
-    if (statDef) {
-      stat.name = statDef.statName; // localized name
-      stat.description = statDef.statDescription;
-    }
-
-    if (statsWithTiers.includes(stat.hash)) {
+    if (statsWithTiers.includes(stat.statHash)) {
       const tier = Math.floor(Math.min(300, stat.value) / 60);
       if (data.peerView) {
         stat.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, statId, tier);
       }
     }
 
-    ret[stat.hash] = stat;
+    ret[stat.statHash] = stat;
   }
   return ret;
 }
 
+// TODO: move this into the display
 // following code is from https://github.com/DestinyTrialsReport
 function getAbilityCooldown(subclass: number, ability: string, tier: number) {
   switch (ability) {

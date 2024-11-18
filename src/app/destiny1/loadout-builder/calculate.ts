@@ -124,21 +124,21 @@ export async function getSetBucketsStep(
                     },
                     stats: {
                       [StatHashes.Intellect]: {
-                        hash: StatHashes.Intellect,
+                        statHash: StatHashes.Intellect,
                         value: 0,
                         name: 'Intellect',
                         description: '',
                         icon: intellectIcon,
                       },
                       [StatHashes.Discipline]: {
-                        hash: StatHashes.Discipline,
+                        statHash: StatHashes.Discipline,
                         value: 0,
                         name: 'Discipline',
                         description: '',
                         icon: disciplineIcon,
                       },
                       [StatHashes.Strength]: {
-                        hash: StatHashes.Strength,
+                        statHash: StatHashes.Strength,
                         value: 0,
                         name: 'Strength',
                         description: '',
