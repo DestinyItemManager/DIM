@@ -2478,6 +2478,7 @@ const missingSources: { [key: string]: number[] } = {
     2369496221, // Plate of Nohr
     2480074702, // Forbearance
     2513313400, // Insigne Shade Gloves
+    2527555418, // Spoils of Conquest
     2530113265, // Bulletsmith's Ire Plate
     2537874394, // Boots of Sekris
     2550116544, // Robes of the Great Hunt
