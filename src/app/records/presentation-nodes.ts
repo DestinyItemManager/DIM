@@ -27,7 +27,9 @@ import {
   DestinyRecordDefinition,
   DestinyRecordState,
   DestinyScope,
+  DestinyTraitDefinition,
 } from 'bungie-api-ts/destiny2';
+import { TraitHashes } from 'data/d2/generated-enums';
 import { minBy } from 'es-toolkit';
 import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
 
@@ -607,6 +609,14 @@ export function getCollectibleState(
         )
       : undefined
     : profileResponse.profileCollectibles?.data?.collectibles[collectibleDef.hash]?.state;
+}
+
+export function getMetricTimeScope(
+  defs: D2ManifestDefinitions,
+  metric: DestinyMetricDefinition,
+): DestinyTraitDefinition {
+  const traitHash = metric.traitHashes.find((h) => h !== TraitHashes.All);
+  return defs.Trait.get(traitHash ?? TraitHashes.All);
 }
 
 function getMetricComponent(
