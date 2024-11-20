@@ -1,30 +1,20 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { TraitHashes } from 'data/d2/generated-enums';
-import { keyBy } from 'es-toolkit';
 import Metric from './Metric';
 import styles from './Metrics.m.scss';
-import { DimMetric } from './presentation-nodes';
+import { DimMetric, getMetricTimeScope } from './presentation-nodes';
 
 export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
   const defs = useD2Definitions()!;
-  const groupedMetrics = Object.groupBy(
-    metrics,
-    (metric) => metric.metricDef.traitHashes.find((h) => h !== TraitHashes.All)!,
-  );
-
-  const traits = keyBy(
-    Object.keys(groupedMetrics).map((th) => defs.Trait.get(Number(th))),
-    (t) => t.hash,
-  );
+  const groupedMetrics = Map.groupBy(metrics, (m) => getMetricTimeScope(defs, m.metricDef));
 
   return (
     <div className={styles.metrics}>
-      {Object.entries(groupedMetrics).map(([traitHash, metrics]) => (
-        <div key={traitHash}>
+      {[...groupedMetrics.entries()].map(([trait, metrics]) => (
+        <div key={trait.hash}>
           <div className={styles.title}>
-            <BungieImage src={traits[Number(traitHash)].displayProperties.icon} />
-            {traits[Number(traitHash)].displayProperties.name}
+            <BungieImage src={trait.displayProperties.icon} />
+            {trait.displayProperties.name}
           </div>
           {metrics.map((metric) => (
             <Metric key={metric.metricDef.hash} metric={metric} />
