@@ -9,7 +9,7 @@ import {
 type AddUpdateInfo<U> = U extends ProfileUpdate
   ? U & {
       /** The state before this update - if it fails we can use this to roll back */
-      before?: U['payload'];
+      before: U['payload'] | undefined;
       /** The account (if any) this update refers to */
       platformMembershipId?: string;
       destinyVersion?: DestinyVersion;

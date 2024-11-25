@@ -941,10 +941,8 @@ function updateLoadout(state: DimApiState, loadout: DimLoadout, account: Destiny
       payload: newLoadout,
       platformMembershipId: account.membershipId,
       destinyVersion: account.destinyVersion,
+      before: loadouts[loadout.id],
     };
-    if (loadouts[loadout.id]) {
-      update.before = loadouts[loadout.id];
-    }
     applyUpdateLocally(draft, update);
     draft.updateQueue.push(update);
   });
@@ -1087,6 +1085,7 @@ function tagCleanup(state: DimApiState, itemIdsToRemove: string[], account: Dest
       // "before" isn't really valuable here
       platformMembershipId: account.membershipId,
       destinyVersion: account.destinyVersion,
+      before: undefined,
     };
     applyUpdateLocally(draft, updateAction);
     draft.updateQueue.push(updateAction);
@@ -1142,6 +1141,7 @@ function searchUsed(
       query,
       type,
     },
+    before: undefined,
     platformMembershipId: account.membershipId,
     destinyVersion: account.destinyVersion,
   };
@@ -1203,6 +1203,7 @@ function saveSearch(
         query,
         type,
       },
+      before: undefined,
       platformMembershipId: account.membershipId,
       destinyVersion: account.destinyVersion,
     };
@@ -1215,6 +1216,11 @@ function saveSearch(
     payload: {
       query,
       saved,
+      type,
+    },
+    before: {
+      query,
+      saved: !saved,
       type,
     },
     platformMembershipId: account.membershipId,
@@ -1235,6 +1241,12 @@ function deleteSearch(
     payload: {
       query,
       type,
+    },
+    before: {
+      query,
+      type,
+      // TODO: How to get this??
+      saved: false,
     },
     platformMembershipId: account.membershipId,
     destinyVersion: account.destinyVersion,
@@ -1422,9 +1434,17 @@ function applyUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWith
       const searches = draft.searches[destinyVersion!];
       const existingSearch = searches.find((s) => s.query === query);
 
-      // This should always exist
+      // This might not exist if reversing a delete_search
       if (existingSearch) {
         existingSearch.saved = saved;
+      } else {
+        searches.push({
+          query,
+          usageCount: 1,
+          saved,
+          lastUsage: Date.now(),
+          type: update.payload.type,
+        });
       }
       break;
     }
@@ -1432,21 +1452,41 @@ function applyUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWith
 }
 
 function reverseUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
-  switch (update.action) {
-    case 'delete_loadout': {
-      const { platformMembershipId, destinyVersion } = update;
-      const loadoutId = update.payload;
-      const profileKey = makeProfileKey(platformMembershipId!, destinyVersion!);
-      const loadouts = ensureProfile(draft, profileKey).loadouts;
-      loadouts[loadoutId] = update.before as Loadout;
-      break;
+  if (!update.before) {
+    return;
+  }
+  try {
+    switch (update.action) {
+      case 'delete_loadout': {
+        const { platformMembershipId, destinyVersion } = update;
+        const loadoutId = update.payload;
+        const profileKey = makeProfileKey(platformMembershipId!, destinyVersion!);
+        const loadouts = ensureProfile(draft, profileKey).loadouts;
+        loadouts[loadoutId] = update.before as Loadout;
+        break;
+      }
+      case 'delete_search': {
+        // delete_search reverses to save_search
+        applyUpdateLocally(draft, {
+          ...update,
+          action: 'save_search',
+          payload: update.before,
+          before: update.payload,
+        } as ProfileUpdateWithRollback);
+        break;
+      }
+      default:
+        applyUpdateLocally(draft, {
+          ...update,
+          payload: update.before,
+          before: update.payload,
+        } as ProfileUpdateWithRollback);
+        break;
     }
-    default:
-      applyUpdateLocally(draft, {
-        ...update,
-        payload: update.before,
-        before: update.payload,
-      } as ProfileUpdateWithRollback);
-      break;
+  } catch (e) {
+    // We don't want to endlessly retry the update if we fail to reverse. The
+    // next profile load will reset the info.
+    errorLog('reverseUpdateLocally', e, update);
+    reportException('reverseUpdateLocally', e, { update });
   }
 }
