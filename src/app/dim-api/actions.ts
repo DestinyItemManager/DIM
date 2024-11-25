@@ -2,6 +2,7 @@ import { DeleteAllResponse } from '@destinyitemmanager/dim-api-types';
 import { needsDeveloper } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
+import { FatalTokenError } from 'app/bungie-api/authenticated-fetch';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { t } from 'app/i18next-t';
@@ -246,6 +247,14 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
         // Quickly heal from being failure backoff
         getProfileBackoff = Math.floor(getProfileBackoff / 2);
       } catch (err) {
+        if (err instanceof FatalTokenError) {
+          // We're already sent to login, don't keep trying to use DIM Sync.
+          if ($DIM_FLAVOR === 'dev') {
+            dispatch(needsDeveloper());
+          }
+          return;
+        }
+
         // Only notify error once
         if (!getState().dimApi.profileLoadedError) {
           showProfileLoadErrorNotification(err);
@@ -257,18 +266,13 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         errorLog(TAG, 'Unable to get profile from DIM API', e);
 
-        if (e.name !== 'FatalTokenError') {
-          // Wait, with exponential backoff
-          getProfileBackoff++;
-          const waitTime = getBackoffWaitTime(getProfileBackoff);
-          infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting profile fetch');
+        // Wait, with exponential backoff
+        getProfileBackoff++;
+        const waitTime = getBackoffWaitTime(getProfileBackoff);
+        infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting profile fetch');
 
-          // Wait, then retry. We don't await this here so we don't stop the finally block from running
-          delay(waitTime).then(() => dispatch(loadDimApiData(forceLoad)));
-        } else if ($DIM_FLAVOR === 'dev') {
-          dispatch(needsDeveloper());
-        }
-        return;
+        // Wait, then retry. We don't await this here so we don't stop the finally block from running
+        delay(waitTime).then(() => dispatch(loadDimApiData(forceLoad)));
       } finally {
         // Release the app to load with whatever language was saved or the
         // default. Better to have the wrong language (that fixes itself on
