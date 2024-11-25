@@ -1,11 +1,27 @@
-import { SearchType } from '@destinyitemmanager/dim-api-types';
+import { ProfileUpdateResult, SearchType } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
-import { setItemHashTag, setItemTag } from 'app/inventory/actions';
+import { setItemHashNote, setItemHashTag, setItemNote, setItemTag } from 'app/inventory/actions';
+import { deleteLoadout, updateLoadout } from 'app/loadout/actions';
 import { setSettingAction } from 'app/settings/actions';
+import { identity } from 'app/utils/functions';
 import { BungieMembershipType, DestinyClass } from 'bungie-api-ts/destiny2';
-import { DeleteLoadoutUpdateWithRollback } from './api-types';
-import { finishedUpdates, prepareToFlushUpdates, saveSearch } from './basic-actions';
-import { DimApiState, initialState as apiInitialState, dimApi } from './reducer';
+import { produce, WritableDraft } from 'immer';
+import { ProfileUpdateWithRollback } from './api-types';
+import {
+  finishedUpdates,
+  prepareToFlushUpdates,
+  saveSearch,
+  searchDeleted,
+  searchUsed,
+} from './basic-actions';
+import {
+  initialState as apiInitialState,
+  dimApi,
+  DimApiAction,
+  DimApiState,
+  ensureProfile,
+} from './reducer';
+import { makeProfileKeyFromAccount } from './selectors';
 
 const currentAccount: DestinyAccount = {
   membershipId: '98765',
@@ -23,609 +39,664 @@ const initialState: DimApiState = {
   apiPermissionGranted: true,
 };
 
-describe('setSetting', () => {
-  it('changes settings', () => {
-    const state = initialState;
-
-    const updatedState = dimApi(state, setSettingAction('showNewItems', true));
-
-    expect(updatedState.settings.showNewItems).toBe(true);
-    expect(updatedState.updateQueue).toEqual([
-      {
-        action: 'setting',
-        payload: {
-          showNewItems: true,
-        },
-        before: {
-          showNewItems: false,
-        },
+describe('dim api reducer', () => {
+  const cases: {
+    name: string;
+    /**
+     * Actions to run to set the initial state before our test actions. These
+     * will be "flushed" already.
+     */
+    setup?: (state: WritableDraft<DimApiState>) => void;
+    /**
+     * A list of actions to run, followed by prepareToFlushUpdates. The tuple
+     * option allows specifying a different account than `currentAccount`.
+     */
+    actions: (DimApiAction | [DimApiAction, DestinyAccount])[];
+    /**
+     * A function for checking expectations on the state after the action.
+     */
+    checkState: (state: DimApiState) => void;
+    /**
+     * The expected queue after prepareToFlushUpdates. Only the action and
+     * payload need to be included.
+     */
+    expectedQueue: Pick<ProfileUpdateWithRollback, 'action' | 'payload'>[];
+    /**
+     * Set this to skip the reverse-update check.
+     */
+    noReverse?: boolean;
+  }[] = [
+    {
+      name: 'setSetting: changes settings',
+      actions: [setSettingAction('showNewItems', true)],
+      checkState: (state) => {
+        expect(state.settings.showNewItems).toBe(true);
       },
-    ]);
-  });
-});
-
-describe('setItemTag', () => {
-  it('sets tags if there were none before', () => {
-    const state = initialState;
-
-    const updatedState = dimApi(
-      state,
-      setItemTag({ itemId: '1234', tag: 'favorite' }),
-      currentAccount,
-    );
-
-    expect(updatedState.profiles[currentAccountKey].tags['1234'].tag).toBe('favorite');
-    expect(updatedState.updateQueue).toEqual([
-      {
-        action: 'tag',
-        payload: {
-          id: '1234',
-          tag: 'favorite',
-        },
-        platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion,
-      },
-    ]);
-  });
-
-  it('clears set tags', () => {
-    const state = initialState;
-
-    let updatedState = dimApi(
-      state,
-      setItemTag({ itemId: '1234', tag: 'favorite' }),
-      currentAccount,
-    );
-
-    updatedState = dimApi(
-      updatedState,
-      setItemTag({ itemId: '1234', tag: undefined }),
-      currentAccount,
-    );
-
-    expect(updatedState.profiles[currentAccountKey].tags['1234']).toBeUndefined();
-    expect(updatedState.updateQueue).toEqual([
-      {
-        action: 'tag',
-        payload: {
-          id: '1234',
-          tag: 'favorite',
-        },
-        platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion,
-      },
-      {
-        action: 'tag',
-        payload: {
-          id: '1234',
-          tag: null,
-        },
-        before: {
-          id: '1234',
-          tag: 'favorite',
-        },
-        platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion,
-      },
-    ]);
-  });
-});
-
-describe('setItemHashTag', () => {
-  it('sets tags if there were none before', () => {
-    const state = initialState;
-
-    const updatedState = dimApi(
-      state,
-      setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
-      currentAccount,
-    );
-
-    expect(updatedState.itemHashTags[1234].tag).toBe('favorite');
-    expect(updatedState.updateQueue).toEqual([
-      {
-        action: 'item_hash_tag',
-        payload: {
-          hash: 1234,
-          tag: 'favorite',
-        },
-        platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion,
-      },
-    ]);
-  });
-
-  it('clears set tags', () => {
-    const state = initialState;
-
-    let updatedState = dimApi(
-      state,
-      setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
-      currentAccount,
-    );
-
-    updatedState = dimApi(
-      updatedState,
-      setItemHashTag({ itemHash: 1234, tag: undefined }),
-      currentAccount,
-    );
-
-    expect(updatedState.itemHashTags[1234]).toBeUndefined();
-    expect(updatedState.updateQueue).toEqual([
-      {
-        action: 'item_hash_tag',
-        payload: {
-          hash: 1234,
-          tag: 'favorite',
-        },
-        platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion,
-      },
-      {
-        action: 'item_hash_tag',
-        payload: {
-          hash: 1234,
-          tag: null,
-        },
-        before: {
-          hash: 1234,
-          tag: 'favorite',
-        },
-        platformMembershipId: currentAccount.membershipId,
-        destinyVersion: currentAccount.destinyVersion,
-      },
-    ]);
-  });
-});
-
-describe('prepareToFlushUpdates', () => {
-  it('can coalesce settings', () => {
-    const state: DimApiState = {
-      ...initialState,
-      updateQueue: [
-        // Turn new items on
+      expectedQueue: [
         {
           action: 'setting',
           payload: {
-            showNewItems: true,
-          },
-          before: {
-            showNewItems: false,
-          },
-        },
-        // Modify another setting
-        {
-          action: 'setting',
-          payload: {
-            itemSize: 50,
-          },
-          before: {
-            itemSize: 48,
-          },
-        },
-        // Turn new items back off
-        {
-          action: 'setting',
-          payload: {
-            showNewItems: false,
-          },
-          before: {
             showNewItems: true,
           },
         },
       ],
-    };
-
-    const updatedState = dimApi(state, prepareToFlushUpdates());
-
-    expect(updatedState.updateInProgressWatermark).toBe(1);
-    // Expect that showNewItems change is eliminated, and there's only one update
-    const expected = [
-      {
-        action: 'setting',
-        payload: {
-          itemSize: 50,
-        },
-        before: {
-          itemSize: 48,
-        },
+    },
+    {
+      name: 'setItemTag: sets tags if there were none before',
+      actions: [setItemTag({ itemId: '1234', tag: 'favorite' })],
+      checkState: (state) => {
+        expect(state.profiles[currentAccountKey].tags['1234'].tag).toBe('favorite');
       },
-    ];
-    expect(updatedState.updateQueue).toEqual(expected);
-  });
-
-  it('can handle multiple profile updates', () => {
-    const state: DimApiState = {
-      ...initialState,
-      updateQueue: [
-        // Turn new items on
-        {
-          action: 'setting',
-          payload: {
-            showNewItems: true,
-          },
-          before: {
-            showNewItems: false,
-          },
-        },
-        // Save a tag for D2
+      expectedQueue: [
         {
           action: 'tag',
           payload: {
             id: '1234',
             tag: 'favorite',
           },
-          before: {
-            id: '1234',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        },
-        // Save a tag for D1, same profile
-        {
-          action: 'tag',
-          payload: {
-            id: '1231903',
-            tag: 'keep',
-          },
-          before: {
-            id: '1231903',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 1,
-        },
-        // Save a tag for D2, same profile
-        {
-          action: 'tag',
-          payload: {
-            id: '76543',
-            tag: 'junk',
-          },
-          before: {
-            id: '76543',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
         },
       ],
-    };
-
-    const updatedState = dimApi(state, prepareToFlushUpdates());
-
-    expect(updatedState.updateInProgressWatermark).toBe(3);
-    // Expect that the queue is rearranged to have the D2 account updates together
-    const expected = [
-      // Turn new items on
-      {
-        action: 'setting',
-        payload: {
-          showNewItems: true,
-        },
-        before: {
-          showNewItems: false,
-        },
-      },
-      // Save a tag for D2
-      {
-        action: 'tag',
-        payload: {
-          id: '1234',
-          tag: 'favorite',
-        },
-        before: {
-          id: '1234',
-        },
-        platformMembershipId: '3456',
-        destinyVersion: 2,
-      },
-      // Save a tag for D2
-      {
-        action: 'tag',
-        payload: {
-          id: '76543',
-          tag: 'junk',
-        },
-        before: {
-          id: '76543',
-        },
-        platformMembershipId: '3456',
-        destinyVersion: 2,
-      },
-      // Save a tag for D1
-      {
-        action: 'tag',
-        payload: {
-          id: '1231903',
-          tag: 'keep',
-        },
-        before: {
-          id: '1231903',
-        },
-        platformMembershipId: '3456',
-        destinyVersion: 1,
-      },
-    ];
-    expect(updatedState.updateQueue).toEqual(expected);
-  });
-
-  it('can handle multiple profile updates with settings last', () => {
-    const state: DimApiState = {
-      ...initialState,
-      updateQueue: [
-        // Save a tag for D2
-        {
-          action: 'tag',
-          payload: {
-            id: '1234',
-            tag: 'favorite',
-          },
-          before: {
-            id: '1234',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        },
-        // Save a tag for D2, same profile
-        {
-          action: 'tag',
-          payload: {
-            id: '76543',
-            tag: 'junk',
-          },
-          before: {
-            id: '76543',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        },
-        // Turn new items on
-        {
-          action: 'setting',
-          payload: {
-            showNewItems: true,
-          },
-          before: {
-            showNewItems: false,
-          },
-        },
+    },
+    {
+      name: 'setItemTag: clears set tags',
+      actions: [
+        setItemTag({ itemId: '1234', tag: 'favorite' }),
+        setItemTag({ itemId: '1234', tag: undefined }),
       ],
-    };
-
-    const updatedState = dimApi(state, prepareToFlushUpdates());
-
-    expect(updatedState.updateInProgressWatermark).toBe(3);
-    // Expect that the queue is rearranged to have the D2 account updates together
-    const expected = [
-      // Save a tag for D2
-      {
-        action: 'tag',
-        payload: {
-          id: '1234',
-          tag: 'favorite',
-        },
-        before: {
-          id: '1234',
-        },
-        platformMembershipId: '3456',
-        destinyVersion: 2,
+      checkState: (state) => {
+        expect(state.profiles[currentAccountKey].tags['1234']).toBeUndefined();
       },
-      // Save a tag for D2
-      {
-        action: 'tag',
-        payload: {
-          id: '76543',
-          tag: 'junk',
-        },
-        before: {
-          id: '76543',
-        },
-        platformMembershipId: '3456',
-        destinyVersion: 2,
-      },
-      // Turn new items on
-      {
-        action: 'setting',
-        payload: {
-          showNewItems: true,
-        },
-        before: {
-          showNewItems: false,
-        },
-      },
-    ];
-    expect(updatedState.updateQueue).toEqual(expected);
-  });
-
-  it('can handle loadouts', () => {
-    const state: DimApiState = {
-      ...initialState,
-      updateQueue: [
-        // Save a loadout for D2
-        {
-          action: 'loadout',
-          payload: {
-            id: '1234',
-            name: 'foo',
-            classType: DestinyClass.Warlock,
-            equipped: [],
-            unequipped: [],
-            clearSpace: false,
-          },
-          before: {
-            id: '1234',
-            name: 'before foo',
-            classType: DestinyClass.Unknown,
-            equipped: [],
-            unequipped: [],
-            clearSpace: false,
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        },
-        // Update the name
-        {
-          action: 'loadout',
-          payload: {
-            id: '1234',
-            name: 'foo',
-            classType: DestinyClass.Warlock,
-            equipped: [],
-            unequipped: [],
-            clearSpace: false,
-          },
-          before: {
-            id: '1234',
-            name: 'foobar',
-            classType: DestinyClass.Warlock,
-            equipped: [],
-            unequipped: [],
-            clearSpace: false,
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        },
-        // Delete it
-        {
-          action: 'delete_loadout',
-          payload: '1234',
-          before: {
-            id: '1234',
-            name: 'foo',
-            classType: DestinyClass.Warlock,
-            equipped: [],
-            unequipped: [],
-            clearSpace: false,
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        } as DeleteLoadoutUpdateWithRollback,
-      ],
-    };
-
-    const updatedState = dimApi(state, prepareToFlushUpdates());
-
-    expect(updatedState.updateInProgressWatermark).toBe(1);
-
-    // Down to a single delete, with the original loadout as the before
-    const expected = [
-      {
-        action: 'delete_loadout',
-        payload: '1234',
-        before: {
-          id: '1234',
-          name: 'before foo',
-          classType: DestinyClass.Unknown,
-          equipped: [],
-          unequipped: [],
-          clearSpace: false,
-        },
-        platformMembershipId: '3456',
-        destinyVersion: 2,
-      },
-    ];
-    expect(updatedState.updateQueue).toEqual(expected);
-  });
-
-  it('can handle tag stuff', () => {
-    const state: DimApiState = {
-      ...initialState,
-      updateQueue: [
-        {
-          action: 'tag',
-          payload: {
-            id: '1234',
-            tag: 'favorite',
-          },
-          before: {
-            id: '1234',
-            tag: 'junk',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        },
-        {
-          action: 'tag',
-          payload: {
-            id: '1234',
-            notes: 'woohoo',
-          },
-          before: {
-            id: '1234',
-            tag: 'favorite',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
-        },
+      expectedQueue: [
         {
           action: 'tag',
           payload: {
             id: '1234',
             tag: null,
           },
-          before: {
-            id: '1234',
-            tag: 'favorite',
-            notes: 'woohoo',
-          },
-          platformMembershipId: '3456',
-          destinyVersion: 2,
         },
       ],
-    };
-
-    const updatedState = dimApi(state, prepareToFlushUpdates());
-
-    expect(updatedState.updateInProgressWatermark).toBe(1);
-    const expected = [
-      {
-        action: 'tag',
-        payload: {
-          id: '1234',
-          tag: null,
-          notes: 'woohoo',
-        },
-        before: {
-          id: '1234',
-          tag: 'junk',
-        },
-        platformMembershipId: '3456',
-        destinyVersion: 2,
+    },
+    {
+      name: 'setItemHashTag: sets tags if there were none before',
+      actions: [setItemHashTag({ itemHash: 1234, tag: 'favorite' })],
+      checkState: (state) => {
+        expect(state.itemHashTags[1234].tag).toBe('favorite');
       },
-    ];
-    expect(updatedState.updateQueue).toEqual(expected);
-  });
-});
-
-describe('finishedUpdates', () => {
-  it('can mark success', () => {
-    const state: DimApiState = {
-      ...initialState,
-      updateQueue: [
+      expectedQueue: [
         {
-          action: 'setting',
+          action: 'item_hash_tag',
           payload: {
-            showNewItems: true,
-          },
-          before: {
-            showNewItems: false,
+            hash: 1234,
+            tag: 'favorite',
           },
         },
-        // Save a tag for D2
+      ],
+    },
+    {
+      name: 'setItemHashTag: clears set tags',
+      actions: [
+        setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
+        setItemHashTag({ itemHash: 1234, tag: undefined }),
+      ],
+      checkState: (state) => {
+        expect(state.itemHashTags[1234]?.tag).toBeUndefined();
+      },
+      expectedQueue: [
+        {
+          action: 'item_hash_tag',
+          payload: {
+            hash: 1234,
+            tag: null,
+          },
+        },
+      ],
+    },
+    {
+      name: 'setItemTag/setNote: can set both tag and note',
+      actions: [
+        setItemTag({ itemId: '1234', tag: 'favorite' }),
+        setItemNote({ itemId: '1234', note: 'foo' }),
+      ],
+      checkState: (state) => {
+        expect(state.profiles[currentAccountKey].tags['1234'].tag).toBe('favorite');
+        expect(state.profiles[currentAccountKey].tags['1234'].notes).toBe('foo');
+      },
+      expectedQueue: [
         {
           action: 'tag',
           payload: {
             id: '1234',
             tag: 'favorite',
+            notes: 'foo',
+          },
+        },
+      ],
+    },
+    {
+      name: 'setItemTag/setNote: can set both tag and note',
+      actions: [
+        setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
+        setItemHashNote({ itemHash: 1234, note: 'foo' }),
+      ],
+      checkState: (state) => {
+        expect(state.itemHashTags[1234].tag).toBe('favorite');
+        expect(state.itemHashTags[1234].notes).toBe('foo');
+      },
+      expectedQueue: [
+        {
+          action: 'item_hash_tag',
+          payload: {
+            hash: 1234,
+            tag: 'favorite',
+            notes: 'foo',
+          },
+        },
+      ],
+    },
+    {
+      name: 'searchUsed: can track valid queries',
+      actions: [searchUsed({ query: '(is:masterwork) (is:weapon)', type: SearchType.Item })],
+      checkState: (state) => {
+        const search = state.searches[2][0];
+        expect(search.query).toBe('is:masterwork is:weapon');
+        expect(search.usageCount).toBe(1);
+        expect(search.saved).toBe(false);
+      },
+      expectedQueue: [
+        {
+          action: 'search',
+          payload: {
+            query: 'is:masterwork is:weapon',
+            type: SearchType.Item,
+          },
+        },
+      ],
+      noReverse: true,
+    },
+    {
+      name: 'saveSearch: can save valid queries',
+      setup: (state) => {
+        state.searches[2] = [
+          {
+            usageCount: 1,
+            lastUsage: 919191,
+            saved: false,
+            query: 'is:masterwork is:weapon',
+            type: SearchType.Item,
+          },
+        ];
+      },
+      actions: [
+        saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true, type: SearchType.Item }),
+      ],
+      checkState: (state) => {
+        const search = state.searches[2][0];
+        expect(search.query).toBe('is:masterwork is:weapon');
+        expect(search.saved).toBe(true);
+      },
+      expectedQueue: [
+        {
+          action: 'save_search',
+          payload: {
+            query: 'is:masterwork is:weapon',
+            saved: true,
+            type: SearchType.Item,
+          },
+        },
+      ],
+    },
+    {
+      name: 'saveSearch: can unsave valid queries',
+      setup: (state) => {
+        state.searches[2] = [
+          {
+            usageCount: 1,
+            lastUsage: 919191,
+            saved: true,
+            query: 'is:masterwork is:weapon',
+            type: SearchType.Item,
+          },
+        ];
+      },
+      actions: [
+        saveSearch({ query: '(is:masterwork) (is:weapon)', saved: false, type: SearchType.Item }),
+      ],
+      checkState: (state) => {
+        const search = state.searches[2][0];
+        expect(search.query).toBe('is:masterwork is:weapon');
+        expect(search.saved).toBe(false);
+      },
+      expectedQueue: [
+        {
+          action: 'save_search',
+          payload: {
+            query: 'is:masterwork is:weapon',
+            saved: false,
+            type: SearchType.Item,
+          },
+        },
+      ],
+    },
+    {
+      name: 'saveSearch: does not save invalid queries',
+      actions: [saveSearch({ query: 'deepsight:incomplete', saved: true, type: SearchType.Item })],
+      checkState: (state) => {
+        expect(state.searches).toMatchObject({
+          [1]: [],
+          [2]: [],
+        });
+      },
+      expectedQueue: [],
+    },
+    {
+      name: 'saveSearch: can unsave previously saved invalid queries',
+      setup: (state) => {
+        state.searches[2] = [
+          {
+            usageCount: 1,
+            lastUsage: 919191,
+            saved: true,
+            // This is invalid, but it might have been saved before we changed the rules
+            query: 'deepsight:incomplete',
+            type: SearchType.Item,
+          },
+        ];
+      },
+      actions: [saveSearch({ query: 'deepsight:incomplete', saved: false, type: SearchType.Item })],
+      checkState: (state) => {
+        // FIXME maybe delete this outright? It'll be cleaned up the next time DIM loads the remote profile anyway...
+        const search = state.searches[2][0];
+        expect(search.query).toBe('deepsight:incomplete');
+        expect(search.saved).toBe(false);
+      },
+      expectedQueue: [
+        {
+          action: 'save_search',
+          payload: {
+            query: 'deepsight:incomplete',
+            saved: false,
+            type: SearchType.Item,
+          },
+        },
+      ],
+    },
+    {
+      name: 'deleteSearch: can delete previously saved invalid queries',
+      setup: (state) => {
+        state.searches[2] = [
+          {
+            usageCount: 1,
+            lastUsage: 1000,
+            saved: true,
+            // This is invalid, but it might have been saved before we changed the rules
+            query: 'deepsight:incomplete',
+            type: SearchType.Item,
+          },
+        ];
+      },
+      actions: [searchDeleted({ query: 'deepsight:incomplete', type: SearchType.Item })],
+      checkState: (state) => {
+        // FIXME maybe delete this outright? It'll be cleaned up the next time DIM loads the remote profile anyway...
+        expect(state.searches[2].length).toBe(0);
+      },
+      expectedQueue: [
+        {
+          action: 'delete_search',
+          payload: {
+            query: 'deepsight:incomplete',
+            type: SearchType.Item,
+          },
+        },
+      ],
+    },
+    {
+      name: 'updateLoadout: can save a loadout',
+      actions: [
+        updateLoadout({
+          id: '1234',
+          name: 'before foo',
+          classType: DestinyClass.Warlock,
+          items: [],
+          clearSpace: false,
+        }),
+      ],
+      checkState: (state) => {
+        expect(state.profiles[currentAccountKey].loadouts['1234'].name).toBe('before foo');
+      },
+      expectedQueue: [
+        {
+          action: 'loadout',
+          payload: {
+            id: '1234',
+            name: 'before foo',
+            classType: DestinyClass.Warlock,
+            equipped: [],
+            unequipped: [],
+            clearSpace: false,
+          },
+        },
+      ],
+    },
+    {
+      name: 'updateLoadout: can update a loadout',
+      setup: (state) => {
+        state.profiles[currentAccountKey].loadouts['1234'] = {
+          id: '1234',
+          name: 'before foo',
+          classType: DestinyClass.Warlock,
+          equipped: [],
+          unequipped: [],
+          clearSpace: false,
+        };
+        return state;
+      },
+      actions: [
+        updateLoadout({
+          id: '1234',
+          name: 'foo', // changed name
+          classType: DestinyClass.Warlock,
+          items: [],
+          clearSpace: false,
+        }),
+      ],
+      checkState: (state) => {
+        expect(state.profiles[currentAccountKey].loadouts['1234'].name).toBe('foo');
+      },
+      expectedQueue: [
+        {
+          action: 'loadout',
+          payload: {
+            id: '1234',
+            name: 'foo',
+            classType: DestinyClass.Warlock,
+            equipped: [],
+            unequipped: [],
+            clearSpace: false,
+          },
+        },
+      ],
+    },
+    {
+      name: 'updateLoadout: can delete a loadout',
+      setup: (state) => {
+        state.profiles[currentAccountKey].loadouts['1234'] = {
+          id: '1234',
+          name: 'before foo',
+          classType: DestinyClass.Warlock,
+          equipped: [],
+          unequipped: [],
+          clearSpace: false,
+        };
+        return state;
+      },
+      actions: [deleteLoadout('1234')],
+      checkState: (state) => {
+        expect(state.profiles[currentAccountKey].loadouts['1234']).toBeUndefined();
+      },
+      expectedQueue: [
+        {
+          action: 'delete_loadout',
+          payload: '1234',
+        },
+      ],
+    },
+  ];
+
+  for (const {
+    name,
+    actions,
+    checkState,
+    expectedQueue = [],
+    setup = identity,
+    noReverse = false,
+  } of cases) {
+    it(name, () => {
+      // Set up the state
+      const setupState = produce(initialState, (draft) => {
+        const profileKey = makeProfileKeyFromAccount(currentAccount);
+        ensureProfile(draft, profileKey);
+        setup(draft);
+        draft.updateQueue = [];
+        draft.updateInProgressWatermark = 0;
+        return draft;
+      });
+
+      // Apply all the input actions and call prepareToFlushUpdates
+      const updatedState = [...actions, prepareToFlushUpdates()].reduce((s, action) => {
+        if (Array.isArray(action)) {
+          return dimApi(s, action[0], action[1]);
+        }
+        return dimApi(s, action, currentAccount);
+      }, setupState);
+
+      // Run test-specific checks
+      checkState(updatedState);
+
+      expect(updatedState.updateQueue.length).toEqual(expectedQueue.length);
+      let i = 0;
+      for (const entry of updatedState.updateQueue) {
+        const { action, payload } = entry;
+        const { action: expectedAction, payload: expectedPayload } = expectedQueue[i];
+        expect(action).toBe(expectedAction);
+        if (typeof payload === 'string') {
+          expect(payload).toBe(expectedPayload);
+        } else {
+          expect(payload).toMatchObject(expectedPayload);
+        }
+        i++;
+      }
+
+      // Fail all the updates in the queue and make sure they reverse back to the initial state
+      const reversed = dimApi(
+        updatedState,
+        finishedUpdates(
+          new Array<ProfileUpdateResult>(updatedState.updateInProgressWatermark).fill({
+            status: 'Failed',
+          }),
+        ),
+      );
+      if (!noReverse) {
+        expect(reversed).toEqual(setupState);
+      }
+    });
+  }
+});
+
+describe('prepareToFlushUpdates', () => {
+  const cases: {
+    name: string;
+    /**
+     * Actions to run to set the initial state before our test actions. These
+     * will be "flushed" already.
+     */
+    setupActions?: DimApiAction[];
+    /**
+     * A list of actions to run, followed by prepareToFlushUpdates. The tuple
+     * option allows specifying a different account than `currentAccount`.
+     */
+    actions: (DimApiAction | [DimApiAction, DestinyAccount])[];
+    /**
+     * After prepareToFlushUpdates, the queue should look as if these actions
+     * had been run (e.g. reordered, or with multiple updates consolidated).
+     */
+    expectedActions?: (DimApiAction | [DimApiAction, DestinyAccount])[];
+    /**
+     * The expected queue after prepareToFlushUpdates. Use this if you can't
+     * express the queue state with expectedActions.
+     */
+    expectedQueue?: ProfileUpdateWithRollback[];
+    /**
+     * The expected inProgressWatermark value. If not set it defaults to
+     * expectedQueue.length.
+     */
+    expectedInProgressWatermark?: number;
+  }[] = [
+    {
+      name: 'can coalesce settings',
+      actions: [
+        // Turn new items on
+        setSettingAction('showNewItems', true),
+        // Modify another setting
+        setSettingAction('itemSize', 35),
+        // Turn new items back off
+        setSettingAction('showNewItems', false),
+      ],
+      expectedActions: [
+        // The showNewItems setting should cancel out
+        setSettingAction('itemSize', 35),
+      ],
+    },
+    {
+      name: 'can handle multiple profile updates',
+      actions: [
+        // Turn new items on
+        setSettingAction('showNewItems', true),
+        // Save a tag for D2
+        setItemTag({ itemId: '1234', tag: 'favorite' }),
+        // Save a tag for D1, same profile
+        [setItemTag({ itemId: '1231903', tag: 'keep' }), { ...currentAccount, destinyVersion: 1 }],
+        // Save a tag for D2, same profile
+        setItemTag({ itemId: '76543', tag: 'junk' }),
+      ],
+      expectedInProgressWatermark: 3, // Because the D1 tag is outside the queue
+      expectedActions: [
+        // Turn new items on
+        setSettingAction('showNewItems', true),
+        // Save a tag for D2
+        setItemTag({ itemId: '1234', tag: 'favorite' }),
+        // Save a tag for D2, same profile
+        setItemTag({ itemId: '76543', tag: 'junk' }),
+        // The D1 tag should be moved to the end
+        [setItemTag({ itemId: '1231903', tag: 'keep' }), { ...currentAccount, destinyVersion: 1 }],
+      ],
+    },
+    {
+      name: 'can handle multiple profile updates with settings last',
+      actions: [
+        // Save a tag for D2
+        setItemTag({ itemId: '1234', tag: 'favorite' }),
+        // Save a tag for D2, same profile
+        setItemTag({ itemId: '76543', tag: 'junk' }),
+        // Turn new items on
+        setSettingAction('showNewItems', true),
+      ],
+      // Exactly the same
+      expectedActions: [
+        setItemTag({ itemId: '1234', tag: 'favorite' }),
+        setItemTag({ itemId: '76543', tag: 'junk' }),
+        setSettingAction('showNewItems', true),
+      ],
+    },
+    {
+      name: 'can handle loadouts',
+      setupActions: [
+        updateLoadout({
+          id: '1234',
+          name: 'before foo',
+          classType: DestinyClass.Warlock,
+          items: [],
+          clearSpace: false,
+        }),
+      ],
+      actions: [
+        updateLoadout({
+          id: '1234',
+          name: 'foo',
+          classType: DestinyClass.Warlock,
+          items: [],
+          clearSpace: false,
+        }),
+        // Update the name
+        updateLoadout({
+          id: '1234',
+          name: 'foobar',
+          classType: DestinyClass.Warlock,
+          items: [],
+          clearSpace: false,
+        }),
+        deleteLoadout('1234'),
+      ],
+      expectedActions: [deleteLoadout('1234')],
+    },
+    {
+      name: 'can handle setting both tags and notes',
+      actions: [
+        setItemTag({ itemId: '1234', tag: 'favorite' }),
+        setItemNote({ itemId: '1234', note: 'woohoo' }),
+        setItemTag({ itemId: '1234', tag: undefined }),
+      ],
+      expectedQueue: [
+        // Tag and notes are coalesced into a single update
+        {
+          action: 'tag',
+          payload: {
+            id: '1234',
+            tag: null,
+            notes: 'woohoo',
+            craftedDate: undefined,
           },
           before: {
             id: '1234',
+            tag: null,
+            notes: null,
           },
-          platformMembershipId: '3456',
+          platformMembershipId: currentAccount.membershipId,
           destinyVersion: 2,
         },
       ],
-      updateInProgressWatermark: 2,
-    };
+    },
+  ];
+
+  for (const {
+    name,
+    actions,
+    expectedQueue = [],
+    expectedActions = [],
+    setupActions = [],
+    expectedInProgressWatermark = expectedQueue.length + expectedActions.length,
+  } of cases) {
+    it(name, () => {
+      // Apply the setup actions
+      const setupState = [
+        ...setupActions,
+        prepareToFlushUpdates(),
+        finishedUpdates(
+          new Array<ProfileUpdateResult>(setupActions.length).fill({ status: 'Success' }),
+        ),
+      ].reduce((s, action) => dimApi(s, action, currentAccount), initialState);
+      setupState.updateQueue = [];
+      setupState.updateInProgressWatermark = 0;
+
+      // Apply all the input actions, then prepareToFlushUpdates
+      const updatedState = [...actions, prepareToFlushUpdates()].reduce((s, action) => {
+        if (Array.isArray(action)) {
+          return dimApi(s, action[0], action[1]);
+        }
+        return dimApi(s, action, currentAccount);
+      }, setupState);
+      expect(updatedState.updateInProgressWatermark).toBe(expectedInProgressWatermark);
+
+      // Generate the expected queue
+      const resolvedExpectedQueue = expectedQueue.length
+        ? expectedQueue
+        : expectedActions.reduce((s, action) => {
+            if (Array.isArray(action)) {
+              return dimApi(s, action[0], action[1]);
+            }
+            return dimApi(s, action, currentAccount);
+          }, setupState).updateQueue;
+
+      expect(updatedState.updateQueue).toEqual(resolvedExpectedQueue);
+    });
+  }
+});
+
+describe('finishedUpdates', () => {
+  it('can mark success', () => {
+    let state = dimApi(initialState, setSettingAction('showNewItems', true));
+    state = dimApi(state, setItemTag({ itemId: '1234', tag: 'favorite' }), currentAccount);
+    state = dimApi(state, prepareToFlushUpdates());
+
     const updatedState = dimApi(
       state,
       finishedUpdates([{ status: 'Success' }, { status: 'Success' }]),
@@ -633,89 +704,5 @@ describe('finishedUpdates', () => {
 
     expect(updatedState.updateInProgressWatermark).toBe(0);
     expect(updatedState.updateQueue).toEqual([]);
-  });
-});
-
-describe('saveSearch', () => {
-  it('can save valid queries', () => {
-    const state: DimApiState = {
-      ...initialState,
-    };
-    const updatedState = dimApi(
-      state,
-      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true, type: SearchType.Item }),
-      currentAccount,
-    );
-
-    expect(updatedState.searches).toMatchObject({
-      [1]: [],
-      [2]: [{ query: 'is:masterwork is:weapon', saved: true, type: SearchType.Item }],
-    });
-  });
-
-  it('can unsave valid queries', () => {
-    const state: DimApiState = {
-      ...initialState,
-    };
-    let updatedState = dimApi(
-      state,
-      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true, type: SearchType.Item }),
-      currentAccount,
-    );
-
-    updatedState = dimApi(
-      updatedState,
-      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: false, type: SearchType.Item }),
-      currentAccount,
-    );
-
-    expect(updatedState.searches).toMatchObject({
-      [1]: [],
-      [2]: [{ query: 'is:masterwork is:weapon', saved: false, type: SearchType.Item }],
-    });
-  });
-
-  it('does not save invalid queries', () => {
-    const state: DimApiState = {
-      ...initialState,
-    };
-    const updatedState = dimApi(
-      state,
-      saveSearch({ query: 'deepsight:incomplete', saved: true, type: SearchType.Item }),
-      currentAccount,
-    );
-    expect(updatedState.searches).toMatchObject({
-      [1]: [],
-      [2]: [],
-    });
-  });
-
-  it('can unsave invalid queries', () => {
-    const state: DimApiState = {
-      ...initialState,
-      searches: {
-        [1]: [],
-        [2]: [
-          {
-            usageCount: 1,
-            lastUsage: 919191,
-            saved: true,
-            query: 'deepsight:incomplete',
-            type: SearchType.Item,
-          },
-        ],
-      },
-    };
-    const updatedState = dimApi(
-      state,
-      saveSearch({ query: 'deepsight:incomplete', saved: false, type: SearchType.Item }),
-      currentAccount,
-    );
-
-    // FIXME maybe delete this outright? It'll be cleaned up the next time DIM loads the remote profile anyway...
-    expect(updatedState.searches).toMatchObject({
-      [1]: [],
-      [2]: [{ usageCount: 1, saved: false, query: 'deepsight:incomplete' }],
-    });
   });
 });
