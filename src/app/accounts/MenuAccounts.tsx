@@ -4,7 +4,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import Account from './Account';
 import styles from './MenuAccounts.m.scss';

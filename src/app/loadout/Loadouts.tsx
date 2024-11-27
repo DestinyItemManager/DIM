@@ -33,7 +33,7 @@ import { usePageTitle } from 'app/utils/hooks';
 import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import { updateLoadoutStore } from './actions';

@@ -1,6 +1,6 @@
 import { gaPageView } from 'app/google';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 /**
  * Record page views to Google Analytics.
