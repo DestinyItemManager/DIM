@@ -136,8 +136,12 @@ export default function App() {
                       </ErrorBoundary>
                     }
                   />
-                  <Route path="armory/*" element={<DefaultAccount />} />
-                  <Route path=":membershipId/:destinyVersion/*" element={<Destiny />} />
+                  <Route path="armory">
+                    <Route path="*" element={<DefaultAccount />} />
+                  </Route>
+                  <Route path=":membershipId/:destinyVersion">
+                    <Route path="*" element={<Destiny />} />
+                  </Route>
                   <Route path="*" element={<DefaultAccount />} />
                 </>
               )}

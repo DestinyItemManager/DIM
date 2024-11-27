@@ -37,7 +37,10 @@ function Root() {
           ],
   };
   return (
-    <Router future={{ v7_startTransition: true }} basename={$PUBLIC_PATH}>
+    <Router
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      basename={$PUBLIC_PATH}
+    >
       <Provider store={store}>
         <LocationSwitcher />
         <DndProvider options={options}>
