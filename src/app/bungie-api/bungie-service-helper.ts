@@ -84,7 +84,7 @@ function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 /**
  * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
  */
-function handleErrors(error: unknown): never {
+export function handleErrors(error: unknown): never {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw (
       navigator.onLine
@@ -99,6 +99,8 @@ function handleErrors(error: unknown): never {
   }
 
   if (error instanceof TypeError) {
+    // fetch throws this when the user is offline (and a number of other more static cases)
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch#exceptions
     throw (
       navigator.onLine
         ? new DimError('BungieService.NotConnectedOrBlocked')
@@ -111,15 +113,6 @@ function handleErrors(error: unknown): never {
   }
 
   if (error instanceof HttpStatusError) {
-    // "I don't think they exist" --Westley, The Princess Bride (1987)
-    if (error.status === -1) {
-      throw (
-        navigator.onLine
-          ? new DimError('BungieService.NotConnectedOrBlocked')
-          : new DimError('BungieService.NotConnected')
-      ).withError(error);
-    }
-
     // Token expired and other auth maladies
     if (error.status === 401 || error.status === 403) {
       throw new DimError('BungieService.NotLoggedIn').withError(error);

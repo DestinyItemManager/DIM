@@ -9,11 +9,11 @@ import { convertToError } from './errors';
  * The message is typically a localized error message.
  */
 export class DimError extends Error {
-  // A non-localized string to help identify/categorize errors for DIM developers. Usually the localization key of the message.
+  /** A non-localized string to help identify/categorize errors for DIM developers. Usually the localization key of the message. */
   code?: string;
-  // The error that caused this error, if there is one. Naming it 'cause' makes it automatically chain in Sentry.
+  /** The error that caused this error, if there is one. Naming it 'cause' makes it automatically chain in Sentry. */
   cause?: Error;
-  // Whether to show social links in the error report dialog
+  /** Whether to show social links in the error report dialog. */
   showSocials = true;
 
   /** Pass in just a message key to set the message to the localized version of that key, or override with the second parameter. */

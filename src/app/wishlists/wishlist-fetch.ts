@@ -1,3 +1,4 @@
+import { toHttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
@@ -73,15 +74,13 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     let wishListTexts: string[];
     try {
       wishListTexts = await Promise.all(
-        wishlistUrlsToFetch.map((url) =>
-          fetch(url).then((res) => {
-            if (res.status < 200 || res.status >= 300) {
-              throw new Error(`failed fetch -- ${res.status} ${res.statusText}`);
-            }
-
-            return res.text();
-          }),
-        ),
+        wishlistUrlsToFetch.map(async (url) => {
+          const res = await fetch(url);
+          if (res.status < 200 || res.status >= 300) {
+            throw await toHttpStatusError(res);
+          }
+          return res.text();
+        }),
       );
 
       // if this is a new wishlist, set the setting now that we know it's fetchable
