@@ -202,36 +202,32 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
 }
 
 function StatBar({ segments, stat }: { segments: StatSegments; stat: DimStat }) {
+  // Make sure the red bar section never exceeds the blank space,
+  // which would increase the total stat bar width.
+  let leftoverSpace = Math.max(stat.maximumValue - stat.value, 0);
   return (
-    <div
-      className={styles.statBar}
-      aria-label={stat.displayProperties.name}
-      aria-hidden="true"
-      onClick={() =>
-        console.log(
-          segments,
-          sumBy(segments, ([val]) => val),
-          stat.maximumValue,
-        )
-      }
-    >
+    <div className={styles.statBar} aria-label={stat.displayProperties.name} aria-hidden="true">
       <PressTip
         placement="top-start"
         className={styles.barContainer}
         tooltip={<StatBarTooltip segments={segments} stat={stat} />}
       >
-        {segments
-          .toSorted(compareBy(([val]) => val < 0))
-          // .filter(([val]) => val)
-          .map(([val, statType], index) => (
+        {segments.toSorted(compareBy(([val]) => val < 0)).map(([val, statType], index) => {
+          let segmentLength = Math.abs(val) / stat.maximumValue;
+          if (val < 0) {
+            segmentLength = Math.min(segmentLength, leftoverSpace);
+            leftoverSpace -= segmentLength;
+          }
+          return (
             <div
               key={index}
               className={clsx(styles.statBarSegment, statStyles[statType][0], {
-                [styles.negative]: val < 0,
+                [styles.negative]: val < 0 && statType !== 'masterwork',
               })}
-              style={{ width: percent(Math.abs(val) / stat.maximumValue) }}
+              style={{ width: percent(segmentLength) }}
             />
-          ))}
+          );
+        })}
       </PressTip>
     </div>
   );

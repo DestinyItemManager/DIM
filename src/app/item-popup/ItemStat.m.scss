@@ -64,7 +64,7 @@
   transition: width 150ms ease-in-out;
 
   &.negative {
-    background-color: #640000;
+    background-color: #7a2727;
   }
 
   // An assumption: never more than 4 part effects in a single stat?
@@ -125,6 +125,8 @@
 
   .tooltipTotalRow {
     display: grid;
+    margin-top: 2px;
+    padding-top: 1px;
     grid-template-columns: subgrid;
     grid-column: span 2;
     border-top: 1px solid #fff;
@@ -149,13 +151,6 @@
 
 .masterworked {
   color: $stat-masterworked;
-}
-
-.modded {
-  color: $stat-modded;
-  .statName {
-    font-weight: bold;
-  }
 }
 
 .negativeModded {
