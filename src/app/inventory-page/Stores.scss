@@ -85,6 +85,10 @@
     --engram-size: calc(var(--character-column-width) / 10);
     padding-bottom: 8px;
 
+    @include phone-portrait {
+      --engram-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
+    }
+
     .empty-engram {
       border: $item-border-width solid transparent;
       box-sizing: border-box;
@@ -106,10 +110,6 @@
     .item-drag-container,
     .empty-engram {
       --item-size: var(--engram-size);
-
-      @include phone-portrait {
-        --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
-      }
     }
   }
 

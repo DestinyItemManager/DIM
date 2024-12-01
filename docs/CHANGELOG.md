@@ -1,5 +1,18 @@
 ## Next
 
+## 8.48.0 <span class="changelog-date">(2024-11-24)</span>
+
+## 8.47.1 <span class="changelog-date">(2024-11-18)</span>
+
+* Fix gigantic vault engrams in single-character mode.
+
+## 8.47.0 <span class="changelog-date">(2024-11-17)</span>
+
+* #Tag suggestions now use your most popular existing capitalization.
+* Fixed character engram inventory wrapping on mobile.
+* Fixed autocomplete not doing its job after a colon.
+* Fixed checkboxes not clickable in the item sorting editor.
+
 ## 8.46.0 <span class="changelog-date">(2024-11-10)</span>
 
 ## 8.45.1 <span class="changelog-date">(2024-11-04)</span>

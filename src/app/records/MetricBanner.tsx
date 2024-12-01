@@ -2,10 +2,10 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { METRICS_ACCOUNT_NODE } from 'app/search/d2-known-values';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { TraitHashes } from 'data/d2/generated-enums';
 import masterworkOverlay from 'images/masterwork-metric.png';
 import BungieImage from '../dim-ui/BungieImage';
 import styles from './MetricBanner.m.scss';
+import { getMetricTimeScope } from './presentation-nodes';
 
 interface Props {
   metricHash: number;
@@ -21,9 +21,7 @@ export default function MetricBanner({ metricHash, objectiveProgress, className 
   }
   const metricIcon = metricDef.displayProperties.icon;
 
-  const metricScope = metricDef.traitHashes
-    .filter((h) => h !== TraitHashes.All)
-    .map((h) => defs.Trait.get(h))[0];
+  const metricScope = getMetricTimeScope(defs, metricDef);
 
   const parentNodeHash = metricDef.parentNodeHashes.length
     ? metricDef.parentNodeHashes[0]
