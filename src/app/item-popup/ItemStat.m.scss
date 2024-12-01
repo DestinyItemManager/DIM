@@ -65,18 +65,19 @@
 
   &.negative {
     background-color: #7a2727;
+    order: 1; // Push negative segments to the right side of the bar
   }
 
   // An assumption: never more than 4 part effects in a single stat?
   // 3 have been observed on weapons with a barrel + mag + grip.
   &.parts {
-    opacity: 0.9;
+    opacity: 0.88;
     & + &.parts {
-      opacity: 0.8;
+      opacity: 0.76;
       & + &.parts {
-        opacity: 0.7;
+        opacity: 0.64;
         & + &.parts {
-          opacity: 0.6;
+          opacity: 0.52;
         }
       }
     }
@@ -115,6 +116,7 @@
   }
   .negative {
     color: $red;
+    order: 1; // Push negative rows to the end of the addition list
   }
   .base {
     opacity: 1;
@@ -123,17 +125,21 @@
     opacity: 0.8;
   }
 
-  .tooltipTotalRow {
+  .tooltipNetStat {
+    order: 2; // Keep this after the negative rows
     display: grid;
-    margin-top: 2px;
-    padding-top: 1px;
     grid-template-columns: subgrid;
     grid-column: span 2;
-    border-top: 1px solid #fff;
-    font-weight: bold;
     span:nth-child(2) {
       text-align: left;
     }
+  }
+  .tooltipTotalRow {
+    // Addition-bar styling
+    margin-top: 2px;
+    padding-top: 1px;
+    border-top: 1px solid #fff;
+    font-weight: bold;
   }
 }
 

@@ -8,7 +8,6 @@ interface CssExports {
   'masterwork': string;
   'masterworked': string;
   'mod': string;
-  'modded': string;
   'negative': string;
   'negativeModded': string;
   'nonDimmedStatIcons': string;
@@ -20,6 +19,7 @@ interface CssExports {
   'statBarSegment': string;
   'statBarTooltip': string;
   'statName': string;
+  'tooltipNetStat': string;
   'tooltipTotalRow': string;
   'totalRow': string;
   'totalStatDetailed': string;
