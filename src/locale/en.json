@@ -1286,7 +1286,8 @@
     "TimeToFullHP": "Time to Full HP",
     "Total": "Total",
     "TotalHP": "Total HP",
-    "WalkingSpeed": "Walking"
+    "WalkingSpeed": "Walking",
+    "WeaponPart": "Weapon Part"
   },
   "Storage": {
     "ApiPermissionPrompt": {

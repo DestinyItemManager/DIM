@@ -52,7 +52,8 @@
     backdrop-filter: blur(6px);
   }
 }
-.barInner {
+
+.statBarSegment {
   display: block;
   height: 100%;
   float: left;
@@ -61,6 +62,85 @@
   background-color: white;
   color: black;
   transition: width 150ms ease-in-out;
+
+  &.negative {
+    background-color: #7a2727;
+    order: 1; // Push negative segments to the right side of the bar
+  }
+
+  // An assumption: never more than 4 part effects in a single stat?
+  // 3 have been observed on weapons with a barrel + mag + grip.
+  &.parts {
+    opacity: 0.88;
+    & + &.parts {
+      opacity: 0.76;
+      & + &.parts {
+        opacity: 0.64;
+        & + &.parts {
+          opacity: 0.52;
+        }
+      }
+    }
+  }
+
+  &.mod {
+    background-color: $stat-modded;
+    & + &.mod {
+      opacity: 0.8;
+      & + &.mod {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  // Colors for the stat bars
+  &.masterwork {
+    background-color: $stat-masterworked;
+  }
+}
+
+.statBarTooltip {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 4px;
+
+  & > :nth-child(2n-1) {
+    text-align: right;
+  }
+
+  .mod {
+    color: $stat-modded;
+  }
+  .masterwork {
+    color: $stat-masterworked;
+  }
+  .negative {
+    color: $red;
+    order: 1; // Push negative rows to the end of the addition list
+  }
+  .base {
+    opacity: 1;
+  }
+  .parts {
+    opacity: 0.8;
+  }
+
+  .tooltipNetStat {
+    order: 2; // Keep this after the negative rows
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: span 2;
+    span:nth-child(2) {
+      text-align: left;
+    }
+  }
+  .tooltipTotalRow {
+    // Addition-bar styling
+    margin-top: 2px;
+    padding-top: 1px;
+    border-top: 1px solid #fff;
+    font-weight: bold;
+  }
 }
 
 .qualitySummary {
@@ -75,34 +155,8 @@
   margin-left: 4px;
 }
 
-// Colors for the stat bars
-.masterworkStatBar {
-  background-color: $stat-masterworked;
-}
-.moddedStatBar {
-  background-color: $stat-modded;
-  & + .moddedStatBar {
-    background-color: $stat-modded;
-    opacity: 0.8;
-    & + .moddedStatBar {
-      background-color: $stat-modded;
-      opacity: 0.6;
-    }
-  }
-}
-
 .masterworked {
   color: $stat-masterworked;
-  .statName {
-    font-weight: bold;
-  }
-}
-
-.modded {
-  color: $stat-modded;
-  .statName {
-    font-weight: bold;
-  }
 }
 
 .negativeModded {
