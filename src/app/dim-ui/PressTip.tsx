@@ -125,7 +125,7 @@ function Control({
             })}
             ref={tooltipContents}
           >
-            {Boolean(customization.header) && (
+            {Boolean(customization.header || customization.subheader) && (
               <div className={styles.header}>
                 <h2>{customization.header}</h2>
                 {Boolean(customization.subheader) && <h3>{customization.subheader}</h3>}

@@ -1298,7 +1298,8 @@
     "TotalHP": "Total HP",
     "ShieldHP": "Shield HP",
     "DamageResistance": "PvE Damage Resist",
-    "FlinchResistance": "Flinch Resist"
+    "FlinchResistance": "Flinch Resist",
+    "WeaponPart": "Weapon Part"
   },
   "Storage": {
     "ApiPermissionPrompt": {
