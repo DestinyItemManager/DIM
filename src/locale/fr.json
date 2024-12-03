@@ -40,7 +40,8 @@
     "YourItems": "Vos objets"
   },
   "Browsercheck": {
-    "Steam": "Il semble que cette page est chargé dans le navigateur Steam. À cause de ses fonctionnalités et ressources limitées, il pourrait échouer à lancer DIM de manière inattendue ou intermittente. Nous ne pouvons pas fournir de support pour cela.",
+    "Samsung": "Samsung Internet peut rendre les sites trop sombre quand le mode sombre est activé. Activez Paramètres > Labs > Utiliser le mode sombre du site web ou utilisez un autre navigateur.",
+    "Steam": "Le navigateur de l'overlay Steam est très vieux et certaines des fonctionnalitées de DIM peuvent ne pas fonctionner. Nous ne pouvons pas fournir de support pour ce navigateur.",
     "Unsupported": "L'équipe DIM ne prend pas en charge ce navigateur. Certaines ou toutes les fonctionnalités de DIM peuvent ne pas fonctionner."
   },
   "Bucket": {
@@ -75,9 +76,7 @@
     "DevVersion": "Est-ce une version de développement de DIM ? Vous devez enregistrer votre extension chrome avec Bungie.net.",
     "Difficulties": "Bungie.net connaît actuellement des difficultés.",
     "ErrorTitle": "Erreur Bungie.net",
-    "ItemUniquenessExplanation": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
-    "ItemUniquenessExplanation_female": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
-    "ItemUniquenessExplanation_male": "Vous avez essayé de déplacer '{{name}}' {{type}} sur votre {{character}} mais cette destination a déjà cet objet et n'en autorise qu'un.",
+    "ItemUniquenessExplanation": "Un personnage ne peut avoir qu'un seul \"{{name}}\" sur lui.",
     "Maintenance": "Les serveurs Bungie.net sont indisponibles pour cause de maintenance.",
     "MissingInventory": "Bungie.net n'a pas renvoyé votre inventaire, vos paramètres de vie privée peuvent l'en empêcher. Essayez de vous déconnecter puis de vous reconnecter.",
     "NetworkError": "Erreur Réseau - {{status}} {{statusText}}",
@@ -101,11 +100,12 @@
     "ButtonHelp": "Comparer des objets",
     "CompareBaseStats": "Afficher les statistiques de base",
     "Error": {
+      "Invalid": "Il n'y a aucun objet valide à comparer.",
       "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
     },
     "InitialItem": "C'est l'objet depuis lequel l'outil de comparaison a été lancé",
-    "IsVendorItem": "Cet objet ne vous appartient pas. Il est dans l'inventaire d'un vendeur et peut être en vente.",
-    "SoldBy": "Vendu par: {{vendorName}}"
+    "IsVendorItem": "Cet objet n'est pas dans votre inventaire, mais {{vendorName}} le vend.",
+    "NoModArmor": "Avant les mods"
   },
   "Cooldown": {
     "Grenade": "Délai de la Grenade: {{cooldown}}",
@@ -201,7 +201,7 @@
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
     "ArmorIntrinsic": "Affiche les armures qui ont un attribut intrinsèque, comme Armure d'Artifice par exemple.",
     "Ascended": "Affiche les objets qui ont eu une ascension.",
-    "Breaker": "Filtrer par type d'anti-champion ou par type de champion.",
+    "Breaker": "Filtrer par type d'anti-champion ou par type de champion. breaker:intrinsic affiche les objets qui ont un anti-champion intrinsèque.",
     "BulkClear": "Suppression de l'étiquette de 1 objet.",
     "BulkClear_plural": "Suppression des étiquettes de {{count}} objets.",
     "BulkRevert": "Rajout de l'étiquette sur 1 objet.",
@@ -217,16 +217,21 @@
     "CraftedDupe": "Affiche les armes en double quand au moins un des doublons est façonné.",
     "Curated": "Affiche les objets qui ont des attributs prédéterminés.",
     "CurrentClass": "Affiche les objets qui peuvent être équipés sur le personnage actuellement connecté.",
-    "CustomStatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type, en ne prenant en compte que les statistiques dans le total de statistiques personnalisé de cette classe.",
+    "CustomStatLower": "Affiche les armures dont les statistiques sont strictement inférieures à celles d'une autre armure du même type, en ne prenant en compte que les statistiques présentes dans un des total de statistiques personnalisé de la classe.",
     "DamageType": "Affiche les objets selon leur type de dégât.",
     "Deepsight": "Montre les armes avec une résonance de souvenance, dont le modèle peut être extrait, ou qui peuvent avoir une résonance de souvenance activée à l'aide d'un harmonisateur de souvenance.",
+    "Deprecated": "Ce filtre n'est plus pris en charge.",
     "Description": "Description",
     "DescriptionFilter": "Montre les objets dont la description correspond partiellement au filtre de recherche. Recherchez des phrases en utilisant des guillemets.",
+    "DisabledModSlot": "Affiche les objets ayant un mod désactivé.",
     "Dupe": "Affiche les doublons, y compris les rééditions",
     "DupeCount": "Objets qui ont le nombre spécifié de doublons.",
     "DupeLower": "Doublons, rééditions incluses, qui ne sont pas le doublon avec la puissance la plus élevé. Un seul doublon est choisis comme étant celui avec la puissance la plus élevé, les autres sont considérés comme plus bas.",
+    "DupePerks": "Affiche les objets dont les attributs sont soit les mêmes qu'un, ou un sous-ensemble d'un, autre objet du même type.",
     "Energy": "Affiche les objets qui ont de l'énergie (Armure 2.0).",
     "Engrams": "Affiche les engrammes.",
+    "Enhanceable": "Affiche les armes pouvant être améliorées.",
+    "Enhanced": "Affiche les armes en fonction de leur niveau d'amélioration.",
     "EnhancedPerk": "Montre les armes qui ont le nombre spécifié d'attributs améliorés.",
     "Equipment": "Objets qui peuvent être équipés.",
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
@@ -244,12 +249,11 @@
     "HoldsMod": "Affiche les armures compatible avec un type de Mod Saisonnier spécifique.",
     "InDimLoadout": "is:indimloadout affiche les objets présents dans un équipement DIM.",
     "InInGameLoadout": "is:ingameloadout affiche les objets qui sont inclus dans l'un de vos équipement en jeu.",
-    "InLoadout": "is:inloadout affiche les objets inclus dans un équipement. Rechercher avec inloadout: affiche les objets inclus dans les équipements au titre correspondant. Lorsque utilisé avec un hashtag, inloadout: affiche les objets dont les équipements possèdent l'hashtag dans leur titre ou leurs notes.",
+    "InLoadout": "is:inloadout affiche les objets inclus dans un équipement. Rechercher avec inloadout: affiche les objets inclus dans les équipements au titre correspondant. Lorsque utilisé avec un hashtag, inloadout: affiche les objets dont les équipements ont le hashtag dans leur titre ou notes. Lorsque utilisé avec un chiffre, cela affiche les objets qui sont dans ce nombre d'équipements.",
     "Infusable": "Affiche les objets qui peuvent être infusés.",
     "InfusionFodder": "Affiche les objets qui pourraient être infusés dans une version plus faible du même objet en utilisant uniquement des lumens.",
     "IsAdept": "Affiche les armes compatible avec les mods Expert.",
     "IsCrafted": "Affiche les armes qui ont été façonnées.",
-    "IsSunset": "Affiche les objets qui ont atteint leur puissance maximale et ne peuvent plus être infusés.",
     "ItemHash": "Affiche les objets avec le hash d'objet spécifié. Pour les utilisateurs avancés.",
     "ItemId": "Affiche les objets avec l'ID d'objet d'inventaire spécifié. Pour les utilisateurs avancés.",
     "Leveling": {
@@ -287,8 +291,8 @@
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerKeywords": "Utilisez les mots-clés pinnaclecap ou softcap à la place de nombres pour utiliser les limites de puissance de la saison actuelle.",
     "PowerLevel": "Affiche les objets en fonction de leur niveau de puissance. $t(Filter.PowerKeywords)",
-    "PowerLimit": "Affiche les objets en fonction du niveau de puissance maximum auquel ils peuvent être infusés. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Affiche les poursuites qui produisent une récompense puissante.",
+    "PrismaticDamageType": "Affiche les objets selon qu'ils fassent des dégâts de lumière ou de tenèbres. Les dégâts de lumières sont cryo-éléctrique, solaire et abyssal. Les dégâts de ténèbres sont stase et filobscur.",
     "Quality": "Affiche les objets selon leur pourcentage de statistiques total. '{{percentage}}' est un alias pour '{{quality}}'.",
     "RandomRoll": "Affiche les objets qui s'obtiennent avec des compétences aléatoires.",
     "RarityTier": "Affiche les objets selon leur rareté.",
@@ -298,7 +302,7 @@
     "RetiredPerk": "Affiche les armes avec des attributs qui ne sont plus obtenable.",
     "SearchPrompt": "Rechercher les commandes de filtre disponibles",
     "Season": "Affiche les objets en fonction de la saison de Destiny 2 pendant lequel ils sont apparu.",
-    "Shiny": "Shows BRAVE weapons with a limited-edition ornament.",
+    "Shiny": "Affiche les armes BRAVOURE avec un ornement en édition limitée.",
     "StackFull": "Affiche les objets qui sont dans une pile pleine (Prismes d’amélioration, pièces étranges, matériaux des armuriers etc)",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
@@ -327,6 +331,7 @@
     "WeaponType": "Affiche les armes selon leur type d'arme.",
     "Wishlist": "Affiche les objets présents dans votre liste de souhaits.",
     "WishlistDupe": "Affiche les doublons quand au moins un des doublons est dans votre liste de souhaits.",
+    "WishlistEnabled": "Affiche les objets pouvant avoir des jets de liste de souhaits.",
     "WishlistNotes": "Affiche les éléments de la liste de souhait dont les notes correspondent à la recherche.",
     "WishlistUnknown": "Affiche les objets sans aucune recommandation dans les listes de souhaits chargées.",
     "Year": "Affiche les objets selon l'année à laquelle ils sont apparus."
@@ -338,11 +343,19 @@
     "UserGuideLink": "Mode d'emploi"
   },
   "Glyphs": {
+    "Axe": "Hache",
+    "DarkAbility": "Capacité des ténèbres",
     "Gilded": "Doré",
+    "Harmonic": "Harmonique",
+    "HiveSword": "Épée de la ruche",
+    "LightAbility": "Capacité de lumière",
+    "LightLevel": "Niveau de lumière",
     "Misadventure": "Mésaventure",
     "Missing": "Manquant",
     "OpenSymbolsPicker": "Ouvrir le sélecteur de symboles",
+    "Prismatic": "Prismatique",
     "Quickfall": "Chute rapide",
+    "RespawnRestricted": "Réapparition restreinte",
     "ScorchCannon": "Canon brûleur",
     "SearchSymbols": "Rechercher des symboles...",
     "Smoke": "Fumigène"
@@ -379,6 +392,7 @@
     "ReloadApp": "Recharger l'application",
     "ReportBug": "Signaler un bug",
     "SaveSearch": "Enregistrer la recherche",
+    "SearchActions": "Ouvrir les actions de recherche",
     "SearchResults": "Afficher les Objets",
     "Shop": "Boutique",
     "TagAs": "Étiqueter comme '{{tag}}'",
@@ -388,7 +402,7 @@
   "Help": {
     "CannotMove": "Impossible de déplacer cet objet de ce personnage.",
     "NoStorage": "DIM ne peut pas stocker de données",
-    "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être causé par la navigation privée ou en mode incognito, ou un espace disque faible. Vous ne pourrez pas vous connecter à ou utiliser DIM."
+    "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être causé par la navigation privée ou en mode incognito, un espace disque faible, ou un bug du navigateur. Essayez de redémarrer votre ordinateur ! Vous ne pourrez pas vous connecter à ou utiliser DIM tant que vous n'aurez pas corrigé cela."
   },
   "Hotkey": {
     "Armory": "Afficher l'armurerie pour un objet",
@@ -427,6 +441,7 @@
     "PrepareEquip": "Préparer pour équipement",
     "Replace": "Remplacer l'équipement {{index}}",
     "Save": "Modifier l'équipement",
+    "SaveIdentifiers": "Mettre à jour les identifiants",
     "SnapshotFailed": "Échec de la sauvegarde de l'équipement actuel"
   },
   "Infusion": {
@@ -441,6 +456,10 @@
   },
   "Inventory": {
     "ClickToExpand": "(Cliquez pour agrandir)"
+  },
+  "Item": {
+    "ThumbsDown": "Pouce baissé",
+    "ThumbsUp": "Pousse levé"
   },
   "ItemFeed": {
     "ClearFeed": "Vider la liste",
@@ -624,9 +643,12 @@
     "All": "Tous",
     "AnyExotic": "N'importe quel exotique",
     "AnyExoticDescription": "Le build doit contenir un exotique, mais n'importe quel exotique fera l'affaire.",
+    "Artifice": "Artifice",
     "AssumeMasterwork": "Considérer pièce maîtresse",
     "AssumeMasterworkOptions": {
       "All": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotiques : $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "ArtificeExotic": "Améliorée pour avoir un mod d'artifice.",
       "Current": "Stats actuelles, considère un niveau d'énergie d'au moins {{minLoItemEnergy}}.",
       "Legendary": "Légendaire : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotique : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Masterworked": "+2 dans toutes les stats, considère un niveau d'énergie de 10.",
@@ -642,6 +664,7 @@
     "DisabledDueToMaintenance": "L'optimiseur d'équipement est actuellement désactivé en raison d'une maintenance sur l'API Bungie.",
     "EquipItems": "Équiper",
     "ExcludeItem": "Exclure un objet",
+    "ExcludeVendors": "Recherchez \"-is:vendor\" pour exclure les objets de marchand de l'optimiseur d'équipement.",
     "ExcludedItems": "Objets exclus",
     "ExistingLoadout": "Équipement existant",
     "Exotic": "Armure exotique",
@@ -653,6 +676,7 @@
     "LockItem": "Inclure objet",
     "MissingClass": "Build pour: {{className}}",
     "MissingClassDescription": "Le build que vous essayez de voir est fait pour une classe que vous n'avez pas.",
+    "MwExotic": "Exotique",
     "NoBuildsFoundExplainer": {
       "ActiveSearchQuery": "Une recherche active restreint les éléments que DIM peut inclure dans les builds",
       "AllowAutoStatMods": "Autoriser DIM à inclure automatiquement des mods de stat supplémentaires",
@@ -694,8 +718,20 @@
     "UnableToAddAllModsBody": "Il n'y avait pas assez d'emplacements de mod disponibles pour placer {{mods}}.",
     "UnlockItem": "Désépingler Objet"
   },
+  "LoadoutFilter": {
+    "Contains": "Affiche les équipements ayant un objet ou un mod correspondant au texte du filtre. Recherchez des objets ayant des espaces dans leur nom en utilisant des guillemets.",
+    "FashionOnly": "Affiche les équipements qui ne contiennent que du style (revêtements et ornements).",
+    "LoadoutLight": "Affiche les équipements en fonction de leur niveau de lumière calculé. Utilisez les mot-clés \"pinnaclecap\" ou \"softcap\" pour référer aux limites de puissance de la saison actuelle.",
+    "ModsOnly": "Affiche les équipements qui ne contiennent que des mods d'armure.",
+    "Name": "Affiche les équipements dont le nom correspond totalement (exactname:) ou partiellement (name:) au filtre de recherche. Recherchez des phrases en utilisant des guillemets.",
+    "Notes": "Rechercher des équipements par leur notes.",
+    "PartialMatch": "Affiche les équipements dont le nom ou les notes ont une correspondance avec le texte du filtre. Rechercher des phrases en utilisant des guillemets.",
+    "Season": "Affiche les équipements selon la dernière saison de Destiny 2 où ils ont été modifiés pour la dernière fois.",
+    "Subclass": "Affiche les équipements dont le nom de doctrine ou le type de dégâts correspond au texte du filtre."
+  },
   "Loadouts": {
     "Abilities": "Capacités",
+    "Actions": "Actions pour {{title}}",
     "AddEquippedItems": "Ajouter les objets équipés",
     "AddNotes": "Ajouter des notes",
     "AddUnequippedItems": "Ajouter les objets non équipés",
@@ -714,8 +750,11 @@
     "CancelEditing": "Annuler l'édition",
     "CannotCustomizeSubclass": "Cette doctrine ne peut pas être configurée",
     "ChooseItem": "Ajouter {{name}}",
+    "ClassType": "Équipement pour n'importe quelle classe",
     "ClassTypeMismatch": "Un objet pour {{className}} ne peut pas être ajouté à cet équipement",
     "ClassTypeMissing": "Vous n'avez aucun {{className}} pour lequel créer un équipement",
+    "ClassType_female": "Équipement {{className}}",
+    "ClassType_male": "Équipement {{className}}",
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
     "ClearLoadoutParameters": "Retirer les paramètres de l'optimiseur d'équipement",
     "ClearSection": "Tout retirer",
@@ -724,6 +763,7 @@
     "ClearSpaceWeapons": "Déplacer les autres armes ailleurs",
     "ClearUnsetMods": "Retirer les autres mods",
     "ClearingSpace": "Déplacement des autres objets",
+    "CopyAndEdit": "Copier et éditer",
     "Create": "Créer un équipement",
     "CurrentlyEquipped": "Actuellement équipé",
     "Deequip": "Dé-équipement des objets des autres personnages",
@@ -737,7 +777,7 @@
     "EquippableDifferent2": "La puissance maximale n'est pas limité par la règle de \"Un seul exotique\" lors du calcul de la puissance de vos récompenses puissantes et de prestige.",
     "Failed": "L'équipement n'a pas pu être appliqué complétement",
     "Fashion": "Choisir le style",
-    "FashionOnly": "Fashion-only",
+    "FashionOnly": "Seulement du style",
     "FillFromEquipped": "Remplir en utilisant équipés",
     "FillFromInventory": "Remplir en utilisant non-équipés",
     "FilteredItems": "Objets filtrés",
@@ -752,8 +792,9 @@
       "PasteHere": "Collez un lien d'équipement pour ouvrir l'équipement."
     },
     "ImportLoadout": "Importer équipement",
+    "InGameActions": "Actions pour équipement en jeu",
     "InGameLoadouts": "Équipements en jeu",
-    "IncludeRuntimeStatBenefits": "Inclure les stats des mods Puit",
+    "IncludeRuntimeStatBenefits": "Inclus les stats des mods Puits",
     "IncludeRuntimeStatBenefitsDesc": "Les mods d'armure \"Puit de...\" fournissent un bonus fixe de stats de personnage lorsque vous avez des charges d'armure.\n\nAvec ce paramètre, DIM considère ces mods actifs et ajoute leurs bénéfices aux stats de cet équipement dans les calculs et les optimisations.",
     "ItemErrorSummary": "1 erreur d'objet :",
     "ItemErrorSummary_plural": "{{count}} erreurs d'objet :",
@@ -794,7 +835,7 @@
       "UpgradeCostsDesc": "Certaines armures ont besoin d'une amélioration d'énergie pour pouvoir accepter les mods demandés. Au total, ces améliorations coûtent :"
     },
     "Mods": "Mods",
-    "ModsOnly": "Mods-only",
+    "ModsOnly": "Seulement des mods",
     "MoveItems": "Déplacement des objets",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
     "NoneMatch": "Aucun de vos équipements ne correspond aux filtres.",
@@ -805,8 +846,15 @@
     "OnWrongCharacterWarning": "Les armures les plus puissantes de ce personnage sont sur un autre personnage. Pour qu'ils comptent dans le calcul de puissance des récompenses normales, de puissance, et de prestige, les armures doivent être sur ce personnage ou dans le coffre.",
     "OnlyItems": "Seuls les objets équipables, matériaux et consommables peuvent être ajoutés à un équipement.",
     "OpenInOptimizer": "Optimiser l'armure",
+    "OpenOnStreamDeck": "Ouvrir sur Stream Deck",
     "PickArmor": "Choisir une armure",
     "PickMods": "Ajouter des mods d'armure",
+    "Prismatic": {
+      "Aspect": "Aspect prismatique",
+      "Grenade": "Grenade prismatique",
+      "Melee": "Mêlée prismatique",
+      "Super": "Compétence de super"
+    },
     "PullFromPostmaster": "Collecter le commis des postes",
     "PullFromPostmasterError": "Impossible de récupérer du commis des postes: {{error}}.",
     "PullFromPostmasterGeneralError": "Impossible de récupérer tous les objets du commis des postes.",
@@ -874,9 +922,7 @@
   "Manifest": {
     "Download": "Téléchargement de la dernière base de données d'informations Destiny depuis Bungie...",
     "Error": "Erreur lors du chargement de la base de données d'information Destiny:\n{{error}}\nRechargez pour réessayer.",
-    "Load": "Chargement de la base de données d'informations de Destiny...",
-    "Outdated": "Base de données d'informations Destiny obsolète",
-    "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionnalités de DIM peuvent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système."
+    "Load": "Chargement de la base de données d'informations de Destiny..."
   },
   "Milestone": {
     "Daily": "Défi Journalier",
@@ -911,6 +957,7 @@
     "CommunityData": "Informations de la communauté",
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
+    "EnhancementTier": "Palier {{tier}}",
     "Equip": "Équiper sur :",
     "EquipWithName": "Équiper sur {{character}}",
     "FavoriteUnFavorite": {
@@ -921,6 +968,7 @@
     },
     "Infuse": "Infuser",
     "InfuseTitle": "Ouvrir l'outil d'infusion",
+    "LoadingSockets": "Les détails des attributs et des stats n'ont pas encore été chargés pour cet objets.",
     "LockUnlock": {
       "AutoLock": "L'état du verrouillage est synchronisé avec les étiquettes de cet objet",
       "Lock": "Bloquer {{itemType}}",
@@ -930,6 +978,7 @@
     },
     "MissingSockets": "Les détails des attributs et mods sont indisponibles pendant que Bungie mettent à jour leurs services. Généralement cela prend quelques heures.",
     "Notes": "Notes:",
+    "OpenOnStreamDeck": "Ouvrir sur Stream Deck",
     "OverviewTab": "Vue d'ensemble",
     "Owned": "Cet élément est dans votre inventaire.",
     "OwnedMod": "Ce mod est dans votre inventaire de modifications.",
@@ -983,8 +1032,12 @@
       "Damage": "Dégâts",
       "Energy": "Énergie",
       "Event": "Evènement",
+      "Foundry": "Fabricant",
+      "Harmonizable": "Harmonisable",
       "Icon": "Icône",
+      "Intrinsics": "Intrinsèque",
       "KillTracker": "Compte-frags",
+      "Level": "Niveau",
       "Loadouts": "Équipements",
       "Location": "Emplacement",
       "Locked": "Verrouillé",
@@ -994,13 +1047,16 @@
       "Name": "Nom",
       "New": "Nouveau",
       "Notes": "Notes",
+      "OriginTraits": "Attribut d'origine",
+      "OtherPerks": "Autres attributs",
       "PercentComplete": "% Complet",
       "Perks": "Attributs",
-      "PerksMods": "Attributs, mods et revêtements",
+      "PerksMods": "Attributs & Mods",
       "Power": "Puissance",
       "Quality": "Qualité %",
       "Recency": "Récence",
       "Season": "Saison",
+      "Shaders": "Cosmétiques",
       "Source": "Origine",
       "StatQuality": "Qualité de la Stat",
       "StatQualityStat": "{{stat}}%",
@@ -1014,7 +1070,7 @@
     },
     "EnabledColumns": "Colonnes activées",
     "Lock": "Vérouiller",
-    "NoItems": "Aucun objet sélectionné",
+    "NoItems": "Aucun objet ne correspond aux filtres. Si vous avez une recherche, essayez de la supprimer.",
     "NoMobile": "Tournez votre téléphone sur le côté pour utiliser l'Organisateur.",
     "Note": "Changer les notes",
     "OpenIn": "Afficher dans l'organisateur",
@@ -1038,11 +1094,15 @@
   },
   "Progress": {
     "Bounties": "Contrats",
+    "CruciblePathfinder": "Cheminement de l'Épreuve",
     "CrucibleRank": "Rangs",
+    "GambitPathfinder": "Cheminement du Gambit",
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
     "NoEventChallenges": "Vous avez terminé tous les défis d'événement",
     "NoTrackedTriumph": "Vous n'avez aucun triomphe suivi. Suivez en autant que vous voulez sur DIM.",
+    "PaleHeartPathfinder": "Cheminement du cœur pâle",
+    "PercentMax": "{{pct}}% du maximum",
     "PercentPrestige": "{{pct}}% du rang maximum",
     "PointsUsed": "1 point utilisé",
     "PointsUsed_plural": "{{count}} points utilisés",
@@ -1059,7 +1119,8 @@
     "Resets_plural": "{{count}} réinitialisations",
     "SecretTriumph": "Triomphe Secret",
     "StatTrackers": "Compteur de Statistiques",
-    "TrackedTriumphs": "Triomphes Suivis"
+    "TrackedTriumphs": "Triomphes Suivis",
+    "VanguardPathfinder": "Cheminement de l'Avant-garde"
   },
   "RecordBooks": {
     "HideCompleted": "Cacher les exploits complétés",
@@ -1073,7 +1134,9 @@
     "Date": "Dernier Utilisé",
     "DeleteAll": "Supprimer toutes les recherches sans étoile",
     "Description": "Ce sont toutes vos recherches passées et enregistrées. Vous pouvez les supprimer ici.",
+    "Item": "Recherche d'objets",
     "Link": "Afficher et modifier l'historique de recherche",
+    "Loadout": "Recherche d'équipements",
     "Query": "Recherche",
     "Title": "Historique de recherche",
     "UsageCount": "# Utilisé"
@@ -1108,6 +1171,8 @@
     "DontForgetDupes": "N'oubliez pas que vous pouvez rechercher is:dupe pour trouver rapidement les doublons, et vous pouvez utiliser l'outil de comparaison ou l'organisateur pour évaluer les objets en relation.",
     "EnableAdvancedStats": "Afficher les évaluation de stats sur les armures (D1)",
     "ExpandSingleCharacter": "Afficher tous les personnages",
+    "ExportLoadoutSS": "Tableur des équipements",
+    "ExportLoadoutSSHelp": "Télécharger une liste CSV de vos équipements DIM qui pourra être facilement visualisée dans l'application tableur de votre choix.",
     "ExportProfile": "Exporter la réponse de profil d'API",
     "ExportSS": "Tableur de l'inventaire",
     "ExportSSHelp": "Télécharger une liste CSV de vos objets qui peut être facilement visualisée dans l'app de votre choix.",
@@ -1125,7 +1190,6 @@
     "PerkDisplay": "Affichage des attributs dans la fenêtre contextuelle des objets",
     "PerkGrid": "Grille",
     "PerkList": "Liste",
-    "ReloadDIM": "Recharger DIM pour finaliser le changement de langue",
     "ResetToDefault": "Réinitialiser",
     "ReverseSort": "Activer/désactiver le tri normal/inversé",
     "SetSort": "Trier les objets par :",
@@ -1145,7 +1209,6 @@
     "SortByRating": "Qualité de l'Armure (D1)",
     "SortByRecent": "Acquis récemment (D2)",
     "SortBySeason": "Saison (D2)",
-    "SortBySunset": "Limite de puissance (D2)",
     "SortByTag": "Étiquette ({{taglist}})",
     "SortByType": "Type",
     "SortByWeaponElement": "Type de dégâts",
@@ -1154,8 +1217,9 @@
     "SpacesSize": "{{count}} espace",
     "SpacesSize_plural": "{{count}} espaces",
     "Theme": "Thème",
+    "VaultArmorGroupingStyle": "Séparez les armures sur différentes lignes en fonction de la classe",
     "VaultGroupingNone": "Aucun",
-    "VaultWeaponGroupingStyle": "Séparer les groups sur plusieurs lignes"
+    "VaultWeaponGroupingStyle": "Séparer les groupes d'armes sur différentes lignes"
   },
   "Sockets": {
     "ApplyPerks": "Appliquer les attributs",
@@ -1192,11 +1256,16 @@
     "CustomDesc": "Total personnalisé des statistiques de base sélectionnés, ignore les mods et les pièces maîtresses. Allez dans les paramètres pour configurer les statistiques inclues.",
     "DamageResistance": "Résistance aux dégats en JcE",
     "Discipline": "Discipline",
+    "DropLevel": "Puissance du compte",
+    "DropLevelExplanation1": "La puissance du compte est le niveau de base utilisé lors du calcul des récompenses puissantes et de prestige.",
+    "DropLevelExplanation2": "La puissance du compte utilise l'objet de plus haut niveau dans chaque emplacement, peu importe la classe ou la règle \"un seul exotique\".",
+    "EquippableGear": "Équipement équipable",
     "FlinchResistance": "Résistance aux tremblements",
     "HP": "PV",
     "Intellect": "Intelligence",
     "MaxGearPower": "Puissance maximale des équipements pouvant être équipés",
     "MaxGearPowerAll": "Puissance maximale de tous les équipements",
+    "MaxGearPowerOneExoticRule": "Puissance maximale de l'équipement équipable (seulement une pièce d'armure exotique équipée)",
     "MaxTotalPower": "Puissance totale maximale",
     "MetersPerSecond": "m/s",
     "Milliseconds": "ms",
@@ -1208,17 +1277,17 @@
     "PowerModifier": "Puissance accordée par la progression d'experience saisonnière",
     "Prestige": "Niveau de lumière: {{level}}\n{{exp}}xp jusqu'à avoir 5 particule de lumière.",
     "Quality": "Qualité des stats",
-    "ShieldHP": "Shield HP",
+    "ShieldHP": "PV du Bouclier",
     "StrafingSpeed": "Déplacement latéral",
     "Strength": "Force",
-    "Sunset": "Puissance maximale",
     "Tier": "Palier {{tier}}",
     "TierProgress": "P{{tier}} {{statName}} ({{progress}}/60 pour P{{nextTier}})\n",
     "TierProgress_Max": "P{{tier}} {{statName}} ({{progress}}/300)\n",
     "TimeToFullHP": "Temps avant PV entiers",
     "Total": "Total",
     "TotalHP": "PV Totaux",
-    "WalkingSpeed": "Marche"
+    "WalkingSpeed": "Marche",
+    "WeaponPart": "Pièce d'arme"
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -1266,6 +1335,9 @@
     "ProfileErrorTitle": "Erreur de téléchargement de la synchronisation DIM",
     "UpdateErrorBody": "Nous avons rencontré un problème lors de l'enregistrement de vos données dans la synchronisation DIM. Nous continuerons à réessayer pendant que DIM est ouvert.",
     "UpdateErrorTitle": "Erreur de sauvegarde synchronisation DIM",
+    "UpdateInvalid": "Échec de l'enregistrement des données vers DIM Sync",
+    "UpdateInvalidBody": "Les données envoyées à DIM Sync n'étaient pas valides et ne seront pas enregistrées.",
+    "UpdateInvalidBodyLoadout": "L'équipement «{{name}}» est invalide et ne sera pas sauvegardé. Si vous l'avez importé depuis un autre site, faites-leur savoir qu'ils exportent des équipements non valides.",
     "UpdateQueueLength": "{{count}} nouveau changement sera sauvegardé lorsque nous pourrons nous reconnecter.",
     "UpdateQueueLength_plural": "{{count}} nouveaux changements seront sauvegardés lorsque nous pourrons nous reconnecter.",
     "Usage": "DIM utilise {{usage, humanBytes}} sur {{quota, humanBytes}} disponible pour lui sur cet appareil. Cela inclus la base de données d'objets de Destiny téléchargée depuis Bungie.net."
