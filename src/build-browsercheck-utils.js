@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import fs from 'node:fs';
 
-import de from './locale/de.json' assert { type: 'json' };
-import en from './locale/en.json' assert { type: 'json' };
-import es from './locale/es.json' assert { type: 'json' };
-import esMX from './locale/esMX.json' assert { type: 'json' };
-import fr from './locale/fr.json' assert { type: 'json' };
-import it from './locale/it.json' assert { type: 'json' };
-import ja from './locale/ja.json' assert { type: 'json' };
-import ko from './locale/ko.json' assert { type: 'json' };
-import pl from './locale/pl.json' assert { type: 'json' };
-import ptBR from './locale/ptBR.json' assert { type: 'json' };
-import ru from './locale/ru.json' assert { type: 'json' };
-import zhCHS from './locale/zhCHS.json' assert { type: 'json' };
-import zhCHT from './locale/zhCHT.json' assert { type: 'json' };
+import de from './locale/de.json' with { type: 'json' };
+import en from './locale/en.json' with { type: 'json' };
+import es from './locale/es.json' with { type: 'json' };
+import esMX from './locale/esMX.json' with { type: 'json' };
+import fr from './locale/fr.json' with { type: 'json' };
+import it from './locale/it.json' with { type: 'json' };
+import ja from './locale/ja.json' with { type: 'json' };
+import ko from './locale/ko.json' with { type: 'json' };
+import pl from './locale/pl.json' with { type: 'json' };
+import ptBR from './locale/ptBR.json' with { type: 'json' };
+import ru from './locale/ru.json' with { type: 'json' };
+import zhCHS from './locale/zhCHS.json' with { type: 'json' };
+import zhCHT from './locale/zhCHT.json' with { type: 'json' };
 
 /**
  * @param {string} key
