@@ -40,7 +40,8 @@
     "YourItems": "Seus itens"
   },
   "Browsercheck": {
-    "Steam": "Parece que esta página foi aberta no navegador do Steam. Devido à limitações, a execução do DIM pode falhar de forma inesperada ou intermitente. Nós não podemos oferecer suporte a ele.",
+    "Samsung": "O Samsung Internet pode fazer com que alguns sites pareçam muito escuros quando o modo escuro está ativado. Ative Configurações > Labs > Usar tema escuro do site da web ou mude para outro navegador.",
+    "Steam": "O navegador do Painel Steam é muito antigo e alguns recursos do DIM podem não funcionar. Não podemos oferecer suporte para isso.",
     "Unsupported": "A equipe do DIM não oferece suporte a este navegador. Alguns recursos do DIM podem não funcionar."
   },
   "Bucket": {
@@ -75,9 +76,7 @@
     "DevVersion": "Você está executando uma versão de desenvolvimento do DIM? Você deve registrar sua extensão do Chrome no Bungie.net.",
     "Difficulties": "Bungie.net está enfrentando dificuldades no momento.",
     "ErrorTitle": "Erro na Bungie.net",
-    "ItemUniquenessExplanation": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
-    "ItemUniquenessExplanation_female": "Você tentou mover o {{type}} '{{name}}' para sua {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
-    "ItemUniquenessExplanation_male": "Você tentou mover o {{type}} '{{name}}' para seu {{character}} mas o local de destino já possui esse item e apenas um é permitido.",
+    "ItemUniquenessExplanation": "Um personagem só pode ter um '{{name}}' equipado.",
     "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
     "MissingInventory": "Não foi possível receber seu inventário da Bungie.net, possivelmente devido às suas configurações de privacidade. Tente desconectar sua conta e autenticar-se novamente.",
     "NetworkError": "Erro de rede - {{status}} {{statusText}}",
@@ -101,11 +100,12 @@
     "ButtonHelp": "Comparar itens",
     "CompareBaseStats": "Exibir atributos base",
     "Error": {
+      "Invalid": "Não existem itens válidos para comparação.",
       "Unmatched": "Este item não corresponde ao tipo dos itens que estão sendo comparados."
     },
     "InitialItem": "A ferramenta de Comparação foi ativada a partir deste item",
-    "IsVendorItem": "Você não possui este item. Ele está no inventário de um vendedor e pode estar à venda.",
-    "SoldBy": "Vendido por: {{vendorName}}"
+    "IsVendorItem": "Esse item não está em seu inventário, mas {{vendorName}} o vende.",
+    "NoModArmor": "Pré mods"
   },
   "Cooldown": {
     "Grenade": "Tempo de carga da granada: {{cooldown}}",
@@ -201,7 +201,7 @@
     "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
     "ArmorIntrinsic": "Exibe armaduras lendárias que possuem um perk intrínseco, como Armadura de Artífice.",
     "Ascended": "Exibe itens que possuem nódulos ascendentes e que foram ascendidos.",
-    "Breaker": "Filtra pelo tipo de quebra-guarda ou tipo de campeão correspondente.",
+    "Breaker": "Filtrar por tipo de quebra ou tipo de campeão correspondente. breaker:instrinsic mostra itens com habilidade intrínseca de quebra.",
     "BulkClear": "Etiqueta removida de 1 item.",
     "BulkClear_plural": "Etiquetas removidas de {{count}} itens.",
     "BulkRevert": "Etiqueta revertida em 1 item.",
@@ -217,16 +217,21 @@
     "CraftedDupe": "Exibe os itens duplicados onde pelo menos uma das duplicatas tenha sido criada.",
     "Curated": "Exibe itens que possuem valores curados.",
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
-    "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
+    "CustomStatLower": "Mostra armaduras cujas estatísticas são estritamente menores que outra do mesmo tipo de armadura, levando em conta apenas estatísticas que estão em qualquer lista personalizada de estatísticas dessa classe.",
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
     "Deepsight": "Exibe armas com Ressonância de Visão Penetrante, que podem ter seus padrões extraídos, ou que podem ter Ressonância de Visão Penetrante habilitada utilizando um Harmonizador de Visão Penetrante.",
+    "Deprecated": "Este filtro não é mais suportado.",
     "Description": "Descrição",
     "DescriptionFilter": "Exibe itens cuja descrição coincide parcialmente com o texto do filtro. Procure por frases inteiras usando aspas.",
+    "DisabledModSlot": "Mostra itens com um mod desabilitado.",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
     "DupeCount": "Itens que tenham o número especificado de duplicatas.",
     "DupeLower": "Itens duplicados, incluindo similares, que não possuem o maior poder duplicado. Apenas uma das duplicatas é escolhida como a maior. Todos os demais são considerados menores.",
+    "DupePerks": "Mostra itens cujos perks são ou uma duplicata ou um subconjunto de outro item do mesmo tipo.",
     "Energy": "Exibe itens que possuem capacidade de energia (Armaduras 2.0).",
     "Engrams": "Mostrar engramas.",
+    "Enhanceable": "Mostra armas que podem ser melhoradas.",
+    "Enhanced": "Mostra armas baseado em seu nível de aprimoramento.",
     "EnhancedPerk": "Exibe armas que possuem um número específico de perks melhorados.",
     "Equipment": "Itens que podem ser equipados.",
     "Equipped": "Itens que no momento estão equipados em outra personagem.",
@@ -244,12 +249,11 @@
     "HoldsMod": "Exibe armaduras compatíveis com um tipo específico de Mod de Temporada.",
     "InDimLoadout": "is:indimloadout mostra itens que estão incluídos em qualquer set do DIM.",
     "InInGameLoadout": "is:iningameloadout mostra itens que estão incluídos em qualquer set no jogo.",
-    "InLoadout": "is:inloadout mostra os itens que estão incluídos em qualquer set. Buscando com inloadout: mostra os itens que estão inclusos nos sets com títulos correspondentes. Quando usado com uma hashtag, inloadout: mostrará itens cujos sets possuem a hashtag no título ou nas anotações.",
+    "InLoadout": "is:inloadout mostra os itens que estão incluídos em qualquer set. Buscando com inloadout: mostra os itens que estão inclusos nos sets com títulos correspondentes. Quando usado com uma hashtag, inloadout: mostrará itens cujos sets possuem a hashtag no título ou nas anotações. Quando usado com um intervalo, mostrará itens que estão naqueles tantos sets.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "InfusionFodder": "Exibe itens que podem ser infundidos em versões de menor poder do mesmo item usando apenas lúmen.",
     "IsAdept": "Mostra armas compatíveis com os mods Adeptos.",
     "IsCrafted": "Mostra armas que foram criadas.",
-    "IsSunset": "Exibe itens que tiveram o poder limitado e que não podem mais ser infundidos ao poder máximo.",
     "ItemHash": "Exibe itens com determinado hash de inventário de item. Para usuários avançados.",
     "ItemId": "Exibe o item com determinado ID de inventário de item. Para usuários avançados.",
     "Leveling": {
@@ -287,8 +291,8 @@
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
     "PowerKeywords": "Use o filtro \"pinnaclecap\" ou \"softcap\", ao invés de um número, para referir-se ao limite de poder da temporada atual.",
     "PowerLevel": "Exibe itens baseados em seu nível de poder. $t(Filter.PowerKeywords)",
-    "PowerLimit": "Exibe itens baseados no nível de poder máximo que eles podem ser infundidos. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Exibe empreitadas que recompensam equipamentos poderosos.",
+    "PrismaticDamageType": "Mostra itens baseados em se eles são um tipo de dano de luz ou treva. Tipos de luz são arco, solar e vácuo. Tipos de treva são estase e filamento.",
     "Quality": "Mostra itens baseado na porcentagem total da qualidade de seus atributos. '{{percentage}}' é um apelido pra '{{quality}}'.",
     "RandomRoll": "Mostra itens que caem com valores aleatórios.",
     "RarityTier": "Mostra itens baseado no nível de raridade deles.",
@@ -327,6 +331,7 @@
     "WeaponType": "Exibir armas baseado no seu tipo de arma.",
     "Wishlist": "Exibe os itens que correspondem à sua lista de desejos.",
     "WishlistDupe": "Exibe os itens duplicados onde pelo menos uma das duplicatas faça parte da sua lista de desejos.",
+    "WishlistEnabled": "Exibe os itens que são elegíveis para ter os valores na lista de desejos.",
     "WishlistNotes": "Exibe itens listados e desejados onde as notas combinam com a pesquisa.",
     "WishlistUnknown": "Exibe itens sem nenhuma recomendação de valor na lista de desejos atual.",
     "Year": "Exibir itens a partir de qual ano foi inserido em Destiny."
@@ -338,11 +343,19 @@
     "UserGuideLink": "Guia do usuário"
   },
   "Glyphs": {
+    "Axe": "Machado",
+    "DarkAbility": "Habilidade da Treva",
     "Gilded": "Dourado",
+    "Harmonic": "Harmônico",
+    "HiveSword": "Espada da Colmeia",
+    "LightAbility": "Habilidade da Luz",
+    "LightLevel": "Nível de Luz",
     "Misadventure": "Acidente",
     "Missing": "Ausente",
     "OpenSymbolsPicker": "Abrir Seletor de Símbolos",
+    "Prismatic": "Prismático",
     "Quickfall": "Queda rápida",
+    "RespawnRestricted": "Reaparecimento Restrito",
     "ScorchCannon": "Canhão Causticante",
     "SearchSymbols": "Buscar Símbolos...",
     "Smoke": "Fumaça"
@@ -379,6 +392,7 @@
     "ReloadApp": "Recarregar o App",
     "ReportBug": "Relatar Falhas",
     "SaveSearch": "Salvar pesquisa",
+    "SearchActions": "Abrir Ações de Pesquisa",
     "SearchResults": "Mostrar Itens",
     "Shop": "Loja",
     "TagAs": "Marcar como '{{tag}}'",
@@ -388,7 +402,7 @@
   "Help": {
     "CannotMove": "Não é possível remover o item deste personagem.",
     "NoStorage": "DIM não pode salvar os dados",
-    "NoStorageMessage": "DIM não está conseguindo salvar dados em seu navegador. Isso normalmente ocorre durante a navegação privada ou em modo anônimo, ou ainda quando há pouco espaço disponível em disco. Sendo assim, não será possível se conectar ou usar o DIM."
+    "NoStorageMessage": "DIM não pode armazenar dados no seu navegador. Isto pode ser causado pela navegação em modo privado ou anônimo, ou quando você tem pouco espaço em disco, ou um erro no navegador. Tente reiniciar seu computador! Você não será capaz de fazer login ou usar o DIM até corrigir isso."
   },
   "Hotkey": {
     "Armory": "Mostrar Arsenal para um item",
@@ -427,6 +441,7 @@
     "PrepareEquip": "Preparar para Equipar",
     "Replace": "Substituir Set {{index}}",
     "Save": "Atualizar Set",
+    "SaveIdentifiers": "Atualizar Identificadores",
     "SnapshotFailed": "Falha ao capturar o Set equipado"
   },
   "Infusion": {
@@ -441,6 +456,10 @@
   },
   "Inventory": {
     "ClickToExpand": "(clique para expandir)"
+  },
+  "Item": {
+    "ThumbsDown": "Polegar para Baixo",
+    "ThumbsUp": "Polegar para Cima"
   },
   "ItemFeed": {
     "ClearFeed": "Limpar lista",
@@ -624,9 +643,12 @@
     "All": "Todos",
     "AnyExotic": "Qualquer exótico",
     "AnyExoticDescription": "O set deverá conter um exótico, mas qualquer exótico servirá.",
+    "Artifice": "Artífice",
     "AssumeMasterwork": "Assumir Obra-prima",
     "AssumeMasterworkOptions": {
       "All": "Todas as armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Todas as armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExótica: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "ArtificeExotic": "Melhorada para aceitar mods Artífice de atributos.",
       "Current": "Atributos atuais, nível de energia assumido de pelo menos {{minLoItemEnergy}}.",
       "Legendary": "Lendárias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Masterworked": "+2 em cada atributo, assumido nível 10 de energia.",
@@ -642,6 +664,7 @@
     "DisabledDueToMaintenance": "O Otimizador de Set está indisponível temporariamente devido à manutenção da API da Bungie.",
     "EquipItems": "Equipar",
     "ExcludeItem": "Ignorar item",
+    "ExcludeVendors": "Pesquise \"-is:vendor\" para excluir itens do fornecedor do Otimizador de Sets.",
     "ExcludedItems": "Itens Excluídos",
     "ExistingLoadout": "Set Existente",
     "Exotic": "Armadura Exótica",
@@ -653,6 +676,7 @@
     "LockItem": "Fixar item",
     "MissingClass": "Configuração é para: {{className}}",
     "MissingClassDescription": "A configuração que você está tentando ver é para uma classe de personagem que você não possui.",
+    "MwExotic": "Exôtico",
     "NoBuildsFoundExplainer": {
       "ActiveSearchQuery": "A pesquisa atual está restringindo os itens que o DIM pode incluir nas builds",
       "AllowAutoStatMods": "Permitir que o DIM automaticamente inclua mods de atributos adicionais",
@@ -694,8 +718,20 @@
     "UnableToAddAllModsBody": "Não havia espaços de mods suficientes para caber {{mods}}.",
     "UnlockItem": "Desfixar item"
   },
+  "LoadoutFilter": {
+    "Contains": "Exibe sets que possuem um item ou um mod correspondente ao texto do filtro. Pesquise itens com espaços em seu nome usando aspas.",
+    "FashionOnly": "Mostra sets que contém apenas estilos (tonalizadores ou ornamentos).",
+    "LoadoutLight": "Mostra os sets baseados em seu nível de luz calculado. Use a palavra-chave pinnaclecap ou softcap em vez de um número para se referir aos limites de poder da temporada atual.",
+    "ModsOnly": "Mostra sets que contém apenas mods de armadura.",
+    "Name": "Mostra sets cujos nomes correspondam (exactname:) ou correspondam parcialmente (name:) ao texto do filtro. Procure por frases inteiras utilizando aspas.",
+    "Notes": "Procurar por sets pelo campo de notas.",
+    "PartialMatch": "Exibe sets cujo nome ou notas coincidem parcialmente com o texto do filtro. Procure por frases inteiras usando aspas.",
+    "Season": "Mostra sets por qual temporada do Destiny 2 eles foram modificados pela última vez.",
+    "Subclass": "Exibe sets cujo nome da subclasse ou tipo de dano corresponda parcialmente o texto do filtro."
+  },
   "Loadouts": {
     "Abilities": "Habilidades",
+    "Actions": "Ações para {{title}}",
     "AddEquippedItems": "Adicionar Equipado",
     "AddNotes": "Adicionar Anotações",
     "AddUnequippedItems": "Adicionar Não Equipados",
@@ -714,8 +750,11 @@
     "CancelEditing": "Cancelar Edição",
     "CannotCustomizeSubclass": "Esta subclasse não pode ser configurada",
     "ChooseItem": "Adicionar {{name}}",
+    "ClassType": "Set de qualquer classe",
     "ClassTypeMismatch": "Um item de {{className}} não pode ser adicionado neste set",
     "ClassTypeMissing": "Você não possui um {{className}} para criar um set para ele",
+    "ClassType_female": "Set de {{className}}",
+    "ClassType_male": "Set de {{className}}",
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
     "ClearLoadoutParameters": "Remover configurações do Otimizador de Set",
     "ClearSection": "Remover todas",
@@ -724,6 +763,7 @@
     "ClearSpaceWeapons": "Move outras armas para fora",
     "ClearUnsetMods": "Remover outros mods",
     "ClearingSpace": "Movendo outros itens para fora",
+    "CopyAndEdit": "Editar Cópia",
     "Create": "Criar set",
     "CurrentlyEquipped": "Atualmente Equipado",
     "Deequip": "Desequipando itens de outros personagens",
@@ -752,6 +792,7 @@
       "PasteHere": "Cole o link do set para abri-lo."
     },
     "ImportLoadout": "Importar Set",
+    "InGameActions": "Ações de Sets no Jogo",
     "InGameLoadouts": "Sets no Jogo",
     "IncludeRuntimeStatBenefits": "Incluir atributos de mods de Fonte",
     "IncludeRuntimeStatBenefitsDesc": "\"Fonte de ...\" mods de armadura fornecem um bônus base para atributos do personagem enquanto você tem Cargas de Armadura.\n\nCom essa configuração, o DIM considera esses mods ativos e adiciona seus benefícios aos atributos desse Set em cálculos e otimizações.",
@@ -805,8 +846,15 @@
     "OnWrongCharacterWarning": "A armadura mais poderosa deste personagem está em outro personagem. Para garantir um maior Poder nos drops e recompensas pináculo, a armadura deve estar neste personagem ou no Cofre.",
     "OnlyItems": "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
     "OpenInOptimizer": "Otimizar armadura",
+    "OpenOnStreamDeck": "Abrir no Stream Deck",
     "PickArmor": "Pegar Armadura",
     "PickMods": "Adicionar mods de armadura",
+    "Prismatic": {
+      "Aspect": "Aspecto Prismático",
+      "Grenade": "Granada Prismática",
+      "Melee": "Corpo-a-corpo Prismático",
+      "Super": "Super Habilidade"
+    },
     "PullFromPostmaster": "Coletar do Chefe do Correio",
     "PullFromPostmasterError": "Não foi possível resgatar do Chefe do Correio: {{error}}.",
     "PullFromPostmasterGeneralError": "Não foi possível puxar todos os itens do Chefe do Correio.",
@@ -874,9 +922,7 @@
   "Manifest": {
     "Download": "Baixando últimas informações da Bungie referentes à base de dados de Destiny...",
     "Error": "Erro durante o carregamento da base de dados de Destiny:\n{{error}}\nRecarrege para tentar novamente.",
-    "Load": "Carregando informações da base de dados de Destiny...",
-    "Outdated": "Informações da base de dados de Destiny desatualizadas",
-    "OutdatedExplanation": "A Bungie atualizou seu banco de dados de informações de Destiny. Reinicie o DIM para obter as novas informações. Esteja ciente que algumas coisas no DIM podem não funcionar por algumas horas após a Bungie atualizar o Destiny, já que as novas informações ainda estão sendo implementadas em seus servidores."
+    "Load": "Carregando informações da base de dados de Destiny..."
   },
   "Milestone": {
     "Daily": "Desafio Diário",
@@ -911,6 +957,7 @@
     "CommunityData": "Conhecimento da Comunidade",
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuir igualmente",
+    "EnhancementTier": "Nível {{tier}}",
     "Equip": "Equipar em:",
     "EquipWithName": "Equipar em {{character}}",
     "FavoriteUnFavorite": {
@@ -921,6 +968,7 @@
     },
     "Infuse": "Infundir",
     "InfuseTitle": "Abrir o buscador de itens para infusão",
+    "LoadingSockets": "Perk e detalhes de atributo ainda não foram carregados para este item.",
     "LockUnlock": {
       "AutoLock": "Estado do bloqueio está sincronizado com a etiqueta deste item",
       "Lock": "Travar {{itemType}}",
@@ -930,6 +978,7 @@
     },
     "MissingSockets": "Detalhes de perks e mods estão indisponíveis enquanto a Bungie está atualizando os seus servidores. Eles retornarão quando tiverem terminado de atualizar, geralmente em algumas horas.",
     "Notes": "Anotações:",
+    "OpenOnStreamDeck": "Abrir no Stream Deck",
     "OverviewTab": "Visão geral",
     "Owned": "Este item está em seu inventário.",
     "OwnedMod": "Este mod está na parte de modificações do seu inventário.",
@@ -983,8 +1032,12 @@
       "Damage": "Dano",
       "Energy": "Energia",
       "Event": "Evento",
+      "Foundry": "Fundição",
+      "Harmonizable": "Harmonizável",
       "Icon": "Ícone",
+      "Intrinsics": "Intrínseco",
       "KillTracker": "Contador de baixas",
+      "Level": "Nível",
       "Loadouts": "Sets",
       "Location": "Armazenado em",
       "Locked": "Travado",
@@ -994,13 +1047,16 @@
       "Name": "Nome",
       "New": "Novo",
       "Notes": "Anotações",
+      "OriginTraits": "Característica de Origem",
+      "OtherPerks": "Outros Perks",
       "PercentComplete": "% Completo",
       "Perks": "Perks",
-      "PerksMods": "Perks, Mods e Tonalizadores",
+      "PerksMods": "Perks & Mods",
       "Power": "Poder",
       "Quality": "Qualidade %",
       "Recency": "Recência",
       "Season": "Temporada",
+      "Shaders": "Cosméticos",
       "Source": "Fonte",
       "StatQuality": "Qualidade dos Atributos",
       "StatQualityStat": "{{stat}}%",
@@ -1014,7 +1070,7 @@
     },
     "EnabledColumns": "Colunas Habilitadas",
     "Lock": "Travar",
-    "NoItems": "Nenhum item selecionado",
+    "NoItems": "Nenhum item corresponde aos filtros. Se você tiver uma pesquisa, tente limpá-la.",
     "NoMobile": "Vire seu celular de lado para usar o Organizador.",
     "Note": "Definir Anotações",
     "OpenIn": "Mostrar no Organizador",
@@ -1038,11 +1094,15 @@
   },
   "Progress": {
     "Bounties": "Contratos",
+    "CruciblePathfinder": "Desbravamento do Crisol",
     "CrucibleRank": "Ranque",
+    "GambitPathfinder": "Desbravamento da Artimanha",
     "Items": "Itens de Jornada",
     "Milestones": "Marcos e Desafios",
     "NoEventChallenges": "Você concluiu todos os desafios do evento",
     "NoTrackedTriumph": "Você não está rastreando triunfos. Rastreie quantos quiser no DIM.",
+    "PaleHeartPathfinder": "Desbravamento do Coração Pálido",
+    "PercentMax": "{{pct}}% do máximo",
     "PercentPrestige": "{{pct}}% para resetar",
     "PointsUsed": "1 ponto usado",
     "PointsUsed_plural": "{{count}} pontos usados",
@@ -1059,7 +1119,8 @@
     "Resets_plural": "{{count}} resets",
     "SecretTriumph": "Triunfo Secreto",
     "StatTrackers": "Estatísticas",
-    "TrackedTriumphs": "Triunfos Rastreados"
+    "TrackedTriumphs": "Triunfos Rastreados",
+    "VanguardPathfinder": "Desbravamento da Vanguarda"
   },
   "RecordBooks": {
     "HideCompleted": "Esconder os recordes completados",
@@ -1073,7 +1134,9 @@
     "Date": "Último uso",
     "DeleteAll": "Descartar todas as pesquisas não-favoritadas",
     "Description": "Aqui está todo seu passado e pesquisas salvas. Você pode deletá-las se precisar.",
+    "Item": "Pesquisas de Itens",
     "Link": "Visualizar e editar o histórico de pesquisa",
+    "Loadout": "Pesquisas de Sets",
     "Query": "Termo pesquisado",
     "Title": "Histórico de Pesquisa",
     "UsageCount": "Nº de Usos"
@@ -1108,6 +1171,8 @@
     "DontForgetDupes": "Não se esqueça que você pode buscar por is:dupe ou is:dupelower para localizar rapidamente itens duplicados, e você pode usar a ferramenta de comparação ou o organizador para avaliar itens relacionados.",
     "EnableAdvancedStats": "Mostrar a avaliação de estatísticas de qualidade em armaduras (D1)",
     "ExpandSingleCharacter": "Exibir todos os personagens",
+    "ExportLoadoutSS": "Planilhas de Sets",
+    "ExportLoadoutSSHelp": "Baixe uma lista CSV de seus Sets DIM que pode ser facilmente vista no aplicativo de planilhas de sua escolha.",
     "ExportProfile": "Exportar a resposta da API com os dados do perfil",
     "ExportSS": "Planilhas do inventário",
     "ExportSSHelp": "Baixe a planilha CSV de todos os seus itens para que você possa visualizar no software de sua preferência.",
@@ -1125,7 +1190,6 @@
     "PerkDisplay": "Exibição dos perks no popup do item",
     "PerkGrid": "Grade",
     "PerkList": "Lista",
-    "ReloadDIM": "Recarregar o DIM para concluir a mudança de idioma",
     "ResetToDefault": "Resetar",
     "ReverseSort": "Alterar ordem para frente/trás",
     "SetSort": "Ordenar itens por:",
@@ -1145,7 +1209,6 @@
     "SortByRating": "Qualidade da Armadura (D1)",
     "SortByRecent": "Obtido recentemente (D2)",
     "SortBySeason": "Temporada (D2)",
-    "SortBySunset": "Poder Foi Limitado (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
     "SortByType": "Tipo",
     "SortByWeaponElement": "Tipo de Dano",
@@ -1154,8 +1217,9 @@
     "SpacesSize": "{{count}} espaço",
     "SpacesSize_plural": "{{count}} espaços",
     "Theme": "Tema",
+    "VaultArmorGroupingStyle": "Separe as armaduras em linhas diferentes por classe",
     "VaultGroupingNone": "Nenhuma",
-    "VaultWeaponGroupingStyle": "Separar grupos em linhas diferentes"
+    "VaultWeaponGroupingStyle": "Separe grupos de armas em linhas diferentes"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar perks",
@@ -1192,11 +1256,16 @@
     "CustomDesc": "Total personalizado de atributos base selecionados, ignorando mods e obras-primas. Acesse as Configurações para modificar quais atributos serão incluídos.",
     "DamageResistance": "Resistência à Dano no PvE",
     "Discipline": "Disciplina",
+    "DropLevel": "Poder da Conta",
+    "DropLevelExplanation1": "O Poder da Conta é o nível base atual ao calcular o nível de aumento de recompensas Poderosas e Pináculo.",
+    "DropLevelExplanation2": "O Poder da conta usa o item de nível mais alto em cada slot, independentemente da Classe requerida ou da regra \"Um Exótico\".",
+    "EquippableGear": "Equipamento Equipável",
     "FlinchResistance": "Resistência à Oscilação causada por disparos",
     "HP": "Vida",
     "Intellect": "Intelecto",
     "MaxGearPower": "Poder máximo de itens equipáveis",
     "MaxGearPowerAll": "Poder máximo de todos os equipamentos",
+    "MaxGearPowerOneExoticRule": "Poder Máximo do equipamento equipável\n(somente uma peça de armadura Exótica equipada)",
     "MaxTotalPower": "Poder máximo total",
     "MetersPerSecond": "m/s",
     "Milliseconds": "ms",
@@ -1211,14 +1280,14 @@
     "ShieldHP": "Vida do Escudo",
     "StrafingSpeed": "Movimentação Lateral",
     "Strength": "Força",
-    "Sunset": "Poder Limitado",
     "Tier": "Nível {{tier}}",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
     "TimeToFullHP": "Tempo para Completar Vida",
     "Total": "Total",
     "TotalHP": "Vida Total",
-    "WalkingSpeed": "Caminhando"
+    "WalkingSpeed": "Caminhando",
+    "WeaponPart": "Parte da Arma"
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -1266,6 +1335,9 @@
     "ProfileErrorTitle": "Erro ao carregar a Sincronização DIM",
     "UpdateErrorBody": "Ocorreu um problema ao salvar os seus dados na Sincronização DIM. Tentaremos novamente enquanto o DIM estiver aberto.",
     "UpdateErrorTitle": "Erro ao salvar a Sincronização DIM",
+    "UpdateInvalid": "Falha ao salvar os dados para o DIM Sync",
+    "UpdateInvalidBody": "Os dados enviados para o DIM Sync são inválidos e não serão salvos.",
+    "UpdateInvalidBodyLoadout": "O set \"{{name}}\" é inválido e não será salvo. Se você o importou de outro site, por favor, deixe-os saber que eles estão exportando sets inválidos.",
     "UpdateQueueLength": "{{count}} alterações serão salvas assim que for possível reconectar.",
     "UpdateQueueLength_plural": "{{count}} alteração será salva assim que for possível reconectar.",
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."

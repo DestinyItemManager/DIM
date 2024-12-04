@@ -40,7 +40,8 @@
     "YourItems": "你的物品"
   },
   "Browsercheck": {
-    "Steam": "這個頁面似乎是在Steam的瀏覽器裏打開的。 因為Steam瀏覽器的功能和資源限制，DIM可能會出現問題。 我們無法為此提供支援。",
+    "Samsung": "Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.",
+    "Steam": "Steam覆蓋層的瀏覽器已經非常老了，可能無法使用一些DIM的功能，我們無法提供相關支援。",
     "Unsupported": "DIM團隊不支持使用此瀏覽器。 DIM可能部分或完全不可用。"
   },
   "Bucket": {
@@ -75,9 +76,7 @@
     "DevVersion": "您是否正在運行DIM的開發版本？您必須先將您的Chrome擴展與Bungie.net關聯。",
     "Difficulties": "Bungie.net目前存在問題。",
     "ErrorTitle": "Bungie.net 出現一個錯誤",
-    "ItemUniquenessExplanation": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
-    "ItemUniquenessExplanation_female": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
-    "ItemUniquenessExplanation_male": "您試圖移動{{type}} “{{name}}” 到您的{{character}} 上，但是目標角色已經擁有一個該物品。",
+    "ItemUniquenessExplanation": "A character can only have one of '{{name}}' on it.",
     "Maintenance": "Bungie.net伺服器停機維護中.",
     "MissingInventory": "Bungie.net 沒有返回你的物品欄，可能是因為你的隱私設置阻止了它。請嘗試重新登錄。",
     "NetworkError": "網路錯誤 - {{status}}{{statusText}}",
@@ -101,11 +100,12 @@
     "ButtonHelp": "對比物品",
     "CompareBaseStats": "顯示基礎屬性",
     "Error": {
+      "Invalid": "沒有可以比較的物品。",
       "Unmatched": "此物品和要比較的物品類別不同。"
     },
     "InitialItem": "比較工具從這個物品啟動",
-    "IsVendorItem": "你不擁有此物品。 它在一比特商人的庫存裏，可能可以購買。",
-    "SoldBy": "售於：{{vendorName}}"
+    "IsVendorItem": "這個物品不在你的物品欄裏，但是在 {{vendorName}} 処出售。",
+    "NoModArmor": "Pre-mods"
   },
   "Cooldown": {
     "Grenade": "手雷冷卻：{{cooldown}}",
@@ -201,7 +201,7 @@
     "ArmorCategory": "按照類別顯示防具.",
     "ArmorIntrinsic": "顯示帶有固有特性的傳説防具，例如詭計護甲。",
     "Ascended": "顯示可提升光等且已提升的物品。",
-    "Breaker": "按照對抗類型或對應的勇士類型篩選。",
+    "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
     "BulkClear": "移除物品標籤",
     "BulkClear_plural": "移除 {{count}} 物品標籤",
     "BulkRevert": "恢復物品標籤",
@@ -217,16 +217,21 @@
     "CraftedDupe": "顯示包括至少一件鍛造武器在内的重複武器。",
     "Curated": "顯示擁有指定特性的物品。",
     "CurrentClass": "顯示當前登錄的守護者可裝備的物品。",
-    "CustomStatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲，但只考慮對應職業的自定義屬性總和里的屬性。",
+    "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats that are in any of that class' custom stat total list.",
     "DamageType": "按照傷害類型顯示.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
+    "Deprecated": "This filter is no longer supported.",
     "Description": "描述",
     "DescriptionFilter": "Shows items whose description has a partial match to the filter text. Search for entire phrases using quotes.",
+    "DisabledModSlot": "Shows items with a disabled mod.",
     "Dupe": "顯示重複的物品，包含不同賽季版本",
     "DupeCount": "擁有指定重複數量的物品。",
     "DupeLower": "非最高光等的重複和再版物品。重複物品中只有一件會被視為最高光等，其餘均視為較低光等。",
+    "DupePerks": "Shows items whose perks are either a duplicate of, or a subset of, another item of the same type.",
     "Energy": "顯示擁有能量容量的物品（護甲2.0）。",
     "Engrams": "顯示記憶水晶.",
+    "Enhanceable": "Shows weapons that can be enhanced.",
+    "Enhanced": "Shows weapons based on their enhancement tier.",
     "EnhancedPerk": "顯示具有指定數量强化特點的武器。",
     "Equipment": "可以裝備的物品.",
     "Equipped": "目前已裝備的物品.",
@@ -244,12 +249,11 @@
     "HoldsMod": "顯示與某種賽季模組相兼容的護甲。",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout 顯示任何游戲内配裝包含的物品。",
-    "InLoadout": "is:inloadout 用於篩選在任何配裝中的物品。使用inloadout: 篩選在配裝中且具有匹配名稱的物品。當使用 #標簽 時，inloadout: 會篩選在具有對應標籤或備忘錄的配裝中的物品。",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes. When used with a range, it shows items that are in that many loadouts.",
     "Infusable": "顯示可以灌注的物品.",
     "InfusionFodder": "顯示可用於灌注同類物品且只消耗微光的物品。",
     "IsAdept": "顯示可安裝專家模組的武器。",
     "IsCrafted": "顯示製作獲取的武器。",
-    "IsSunset": "顯示已退環境且不能再被灌注到光等上限的物品。",
     "ItemHash": "顯示具有給定物品 hash 的物品。此為高級用戶選項。",
     "ItemId": "顯示具有給定物品 ID 的物品。此為高級用戶選項。",
     "Leveling": {
@@ -287,8 +291,8 @@
     "Postmaster": "目前在郵政官處的物品.",
     "PowerKeywords": "使用 pinnaclecap 或 softcap 關鍵字而不是數字來表達當前賽季的光等限制。",
     "PowerLevel": "按能量等級顯示物品。$t(Filter.PowerKeywords)",
-    "PowerLimit": "按可被灌注達到的最高能量等級顯示物品。$t(Filter.PowerKeywords)",
     "PowerfulReward": "顯示提供強力獎勵的追獵目標。",
+    "PrismaticDamageType": "Shows items based on if they are a light or darkness damage type. Light types are arc, solar, and void. Darkness types are stasis and strand.",
     "Quality": "根據其統計品質百分比來顯示物品'{{percentage}}'別名'{{quality}}'.",
     "RandomRoll": "顯示可以隨機特性掉落的物品",
     "RarityTier": "按照稀有度顯示.",
@@ -327,6 +331,7 @@
     "WeaponType": "按照武器類型顯示.",
     "Wishlist": "顯示你願望單中的物品",
     "WishlistDupe": "顯示有至少一個複製品在你願望單中的物品堆疊",
+    "WishlistEnabled": "Shows items that are eligible to have wish list rolls.",
     "WishlistNotes": "顯示與搜索相匹配的願望清單物品",
     "WishlistUnknown": "在加載的願望清單中顯示沒有特性推薦的項目。",
     "Year": "按照物品推出年份顯示."
@@ -338,11 +343,19 @@
     "UserGuideLink": "使用說明"
   },
   "Glyphs": {
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
     "Gilded": "镀金",
+    "Harmonic": "Harmonic",
+    "HiveSword": "Hive Sword",
+    "LightAbility": "Light Ability",
+    "LightLevel": "Light Level",
     "Misadventure": "意外致死",
     "Missing": "缺失",
     "OpenSymbolsPicker": "打開符號選單",
+    "Prismatic": "Prismatic",
     "Quickfall": "急坠",
+    "RespawnRestricted": "Respawn Restricted",
     "ScorchCannon": "灼燒加農炮",
     "SearchSymbols": "搜索符號...",
     "Smoke": "烟霧"
@@ -379,6 +392,7 @@
     "ReloadApp": "重新載入應用",
     "ReportBug": "報告錯誤",
     "SaveSearch": "保存搜索",
+    "SearchActions": "Open Search Actions",
     "SearchResults": "顯示物品",
     "Shop": "商店",
     "TagAs": "標記為{{tag}}",
@@ -388,7 +402,7 @@
   "Help": {
     "CannotMove": "無法從該角色中移出物品.",
     "NoStorage": "DIM無法存儲資料",
-    "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。"
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space, or a browser bug. Try restarting your computer! You won't be able to log in to or use DIM until you fix this."
   },
   "Hotkey": {
     "Armory": "顯示物品詳情",
@@ -427,6 +441,7 @@
     "PrepareEquip": "準備配裝",
     "Replace": "替換配裝 {{index}}",
     "Save": "更新配裝",
+    "SaveIdentifiers": "Update Identifiers",
     "SnapshotFailed": "為已裝備的配裝創建快照時失敗"
   },
   "Infusion": {
@@ -441,6 +456,10 @@
   },
   "Inventory": {
     "ClickToExpand": "(點擊展開)"
+  },
+  "Item": {
+    "ThumbsDown": "Thumbs Down",
+    "ThumbsUp": "Thumbs Up"
   },
   "ItemFeed": {
     "ClearFeed": "清空物品流",
@@ -624,9 +643,12 @@
     "All": "全部",
     "AnyExotic": "任何異域獎勵",
     "AnyExoticDescription": "組合里必須有任意異域裝備。",
+    "Artifice": "Artifice",
     "AssumeMasterwork": "假定大師傑作",
     "AssumeMasterworkOptions": {
       "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Masterworked": "+2 in each stat, assumed energy level 10.",
@@ -642,6 +664,7 @@
     "DisabledDueToMaintenance": "由於 Bungie API 維護，配裝優化器目前不可用。",
     "EquipItems": "裝備",
     "ExcludeItem": "排除項目",
+    "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExcludedItems": "Excluded Items",
     "ExistingLoadout": "已有配裝",
     "Exotic": "Exotic Armor",
@@ -653,6 +676,7 @@
     "LockItem": "固定物品",
     "MissingClass": "配裝適用於：{{className}}",
     "MissingClassDescription": "你正試圖查看的配裝適用於一個你未擁有的角色職業。",
+    "MwExotic": "Exotic",
     "NoBuildsFoundExplainer": {
       "ActiveSearchQuery": "搜索條件導致 DIM 無法將部分物品包含在配裝中",
       "AllowAutoStatMods": "允許 DIM 自動添加額外的屬性模組",
@@ -694,8 +718,20 @@
     "UnableToAddAllModsBody": "模組插槽不足，無法裝下 {{mods}}。",
     "UnlockItem": "取消固定物品"
   },
+  "LoadoutFilter": {
+    "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",
+    "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
+    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
+    "ModsOnly": "Shows loadouts that only contain armor mods.",
+    "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
+    "Notes": "Search for loadouts by their notes field.",
+    "PartialMatch": "Shows loadouts where their name or notes has a partial match to the filter text. Search for entire phrases using quotes.",
+    "Season": "Shows loadouts by which season of Destiny 2 they were last modified in.",
+    "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text."
+  },
   "Loadouts": {
     "Abilities": "技能",
+    "Actions": "Actions for {{title}}",
     "AddEquippedItems": "添加已裝備",
     "AddNotes": "添加備註",
     "AddUnequippedItems": "添加未裝備的",
@@ -714,8 +750,11 @@
     "CancelEditing": "取消編輯",
     "CannotCustomizeSubclass": "無法配置此子職業",
     "ChooseItem": "添加 {{name}}",
+    "ClassType": "Any class loadout",
     "ClassTypeMismatch": "無法將 {{className}} 項添加到此配裝中",
     "ClassTypeMissing": "您沒有 {{className}} 來為其創建配裝",
+    "ClassType_female": "{{className}} loadout",
+    "ClassType_male": "{{className}} loadout",
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
     "ClearLoadoutParameters": "刪除配裝優化器設置",
     "ClearSection": "移除所有",
@@ -724,6 +763,7 @@
     "ClearSpaceWeapons": "移除其他武器",
     "ClearUnsetMods": "移除其它模組",
     "ClearingSpace": "正在移走其他物品",
+    "CopyAndEdit": "Edit Copy",
     "Create": "創建配裝",
     "CurrentlyEquipped": "當前裝備",
     "Deequip": "從其他角色取回物品",
@@ -752,6 +792,7 @@
       "PasteHere": "粘貼一個配裝連結以打開配裝。"
     },
     "ImportLoadout": "導入配裝",
+    "InGameActions": "In-Game Loadout Actions",
     "InGameLoadouts": "游戲内配裝",
     "IncludeRuntimeStatBenefits": "Include Font mod stats",
     "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
@@ -805,8 +846,15 @@
     "OnWrongCharacterWarning": "當前角色的光等最高的防具在其他角色的物品欄中，要使强大裝備和巔峰裝備掉落時的光等達到最高，這些防具必須存儲在當前角色的物品欄或是保險庫中。",
     "OnlyItems": "只有可裝備物品,材料和消耗品才可以載入.",
     "OpenInOptimizer": "防具優化",
+    "OpenOnStreamDeck": "Open on Stream Deck",
     "PickArmor": "選擇防具",
     "PickMods": "添加防具模組",
+    "Prismatic": {
+      "Aspect": "Prismatic Aspect",
+      "Grenade": "Prismatic Grenade",
+      "Melee": "Prismatic Melee",
+      "Super": "Super Ability"
+    },
     "PullFromPostmaster": "從郵政官處取回物品",
     "PullFromPostmasterError": "無法從郵政官處取回物品:{{error}}.",
     "PullFromPostmasterGeneralError": "無法從郵政官拉取所有物品。",
@@ -874,9 +922,7 @@
   "Manifest": {
     "Download": "正在從 Bungie 下載最新的命運信息數據庫...",
     "Error": "加載命運信息數據庫時出錯：\n{{error}}\n請刷新重試。",
-    "Load": "正在加載命運信息數據庫...",
-    "Outdated": "過時的命運信息數據庫",
-    "OutdatedExplanation": "Bungie更新了他們的Destiny資訊資料庫。重新載入DIM以獲取最新資訊。請注意，在Bungie更新Destiny之後的幾個小時內，在DIM中有些操作可能無法實現，因為新資料通過它們的系統傳播。"
+    "Load": "正在加載命運信息數據庫..."
   },
   "Milestone": {
     "Daily": "每日挑戰",
@@ -911,6 +957,7 @@
     "CommunityData": "社区描述",
     "Consolidate": "合併",
     "DistributeEvenly": "均勻分配",
+    "EnhancementTier": "Tier {{tier}}",
     "Equip": "裝備到：",
     "EquipWithName": "裝備到 {{character}}",
     "FavoriteUnFavorite": {
@@ -921,6 +968,7 @@
     },
     "Infuse": "灌注",
     "InfuseTitle": "打開灌注材料查找器",
+    "LoadingSockets": "Perk and stat details have not loaded yet for this item.",
     "LockUnlock": {
       "AutoLock": "該物品的鎖定狀態已與其標籤同步",
       "Lock": "鎖定{{itemType}}",
@@ -930,6 +978,7 @@
     },
     "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
     "Notes": "備註：",
+    "OpenOnStreamDeck": "Open on Stream Deck",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
     "OwnedMod": "該模組在您的模組庫存中。",
@@ -983,8 +1032,12 @@
       "Damage": "傷害",
       "Energy": "能量",
       "Event": "事件",
+      "Foundry": "Foundry",
+      "Harmonizable": "Harmonizable",
       "Icon": "圖示",
+      "Intrinsics": "Intrinsic",
       "KillTracker": "擊殺記錄器",
+      "Level": "Level",
       "Loadouts": "配裝",
       "Location": "位置",
       "Locked": "已鎖定",
@@ -994,13 +1047,16 @@
       "Name": "名稱",
       "New": "新",
       "Notes": "備註",
+      "OriginTraits": "Origin Trait",
+      "OtherPerks": "Other Perks",
       "PercentComplete": "% 已完成",
       "Perks": "特性",
-      "PerksMods": "特性、模組與着色器",
+      "PerksMods": "Perks & Mods",
       "Power": "光等",
       "Quality": "品質 %：",
       "Recency": "新舊",
       "Season": "賽季",
+      "Shaders": "Cosmetics",
       "Source": "來源",
       "StatQuality": "屬性質量",
       "StatQualityStat": "{{stat}}%",
@@ -1014,7 +1070,7 @@
     },
     "EnabledColumns": "已啟用的列",
     "Lock": "鎖定",
-    "NoItems": "未選擇任何項目",
+    "NoItems": "No items match the filters. If you have a search query, try clearing it.",
     "NoMobile": "將手機橫放來使用管理器。",
     "Note": "添加備注",
     "OpenIn": "在管理器中顯示",
@@ -1038,11 +1094,15 @@
   },
   "Progress": {
     "Bounties": "賞金單",
+    "CruciblePathfinder": "Crucible Pathfinder",
     "CrucibleRank": "排名",
+    "GambitPathfinder": "Gambit Pathfinder",
     "Items": "任務物品",
     "Milestones": "里程碑和挑戰",
     "NoEventChallenges": "你已經完成了所有活動挑戰",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
+    "PaleHeartPathfinder": "Pale Heart Pathfinder",
+    "PercentMax": "{{pct}}% to maximum",
     "PercentPrestige": "重置百分比{{pct}}%",
     "PointsUsed": "1 point used",
     "PointsUsed_plural": "{{count}} points used",
@@ -1059,7 +1119,8 @@
     "Resets_plural": "{{count}} 次重置",
     "SecretTriumph": "秘密勝利",
     "StatTrackers": "數據追蹤器",
-    "TrackedTriumphs": "跟蹤的成就"
+    "TrackedTriumphs": "跟蹤的成就",
+    "VanguardPathfinder": "Vanguard Pathfinder"
   },
   "RecordBooks": {
     "HideCompleted": "隱藏完成事件",
@@ -1073,7 +1134,9 @@
     "Date": "最近使用",
     "DeleteAll": "删除所有未加星標的搜索",
     "Description": "這些是你過去和保存的搜索。你可以在這裡刪除它們。",
+    "Item": "Item Searches",
     "Link": "查看和編輯搜索歷史",
+    "Loadout": "Loadout Searches",
     "Query": "搜索​​​​",
     "Title": "搜索歷史",
     "UsageCount": "使用次數"
@@ -1108,6 +1171,8 @@
     "DontForgetDupes": "别忘了，你可以搜索 is:dupe 来快速找到重复的物品，也可以用对比工具或管理器来比较相关物品。",
     "EnableAdvancedStats": "在裝備上顯示品質指數(D1)",
     "ExpandSingleCharacter": "顯示所有角色",
+    "ExportLoadoutSS": "Loadout spreadsheets",
+    "ExportLoadoutSSHelp": "Download a CSV list of your DIM Loadouts that can be easily viewed in the spreadsheet app of your choice.",
     "ExportProfile": "匯出API返回的帳戶資料",
     "ExportSS": "背包表格",
     "ExportSSHelp": "下載您物品的 CSV 列表, 可以在您選擇的試算表應用程式中輕鬆查看。",
@@ -1125,7 +1190,6 @@
     "PerkDisplay": "物品彈窗裏的特性顯示",
     "PerkGrid": "網格",
     "PerkList": "清單",
-    "ReloadDIM": "刷新頁面 [F5] 以完成語言切換",
     "ResetToDefault": "重置",
     "ReverseSort": "切換正向/反向排序",
     "SetSort": "物品排序方式:",
@@ -1145,7 +1209,6 @@
     "SortByRating": "護甲質量（D1）",
     "SortByRecent": "最近獲得（D2）",
     "SortBySeason": "賽季（D2）",
-    "SortBySunset": "已退環境（D2）",
     "SortByTag": "標籤{{taglist}}",
     "SortByType": "類型",
     "SortByWeaponElement": "傷害類型",
@@ -1154,8 +1217,9 @@
     "SpacesSize": "{{count}} 個空位",
     "SpacesSize_plural": "{{count}} 個空位",
     "Theme": "主題",
+    "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultGroupingNone": "None",
-    "VaultWeaponGroupingStyle": "Separate groups on different lines"
+    "VaultWeaponGroupingStyle": "Separate weapon groups on different lines"
   },
   "Sockets": {
     "ApplyPerks": "應用特性",
@@ -1192,11 +1256,16 @@
     "CustomDesc": "所選基礎屬性的自定義總和，未計入模組或大師傑作。可在設置里配置自定義總和所包含的屬性。",
     "DamageResistance": "PvE 傷害減免",
     "Discipline": "訓練",
+    "DropLevel": "Account Power",
+    "DropLevelExplanation1": "Account Power is the base current level when calculating the increased level of Powerful and Pinnacle rewards.",
+    "DropLevelExplanation2": "Account Power uses the highest level item in each slot, regardless of required Class or the \"One Exotic\" rule.",
+    "EquippableGear": "Equippable Gear",
     "FlinchResistance": "倒縮抗性",
     "HP": "生命值",
     "Intellect": "智力",
     "MaxGearPower": "當前裝備最大光等",
     "MaxGearPowerAll": "所有裝備最高光等",
+    "MaxGearPowerOneExoticRule": "Maximum Power of equippable gear\n(only one Exotic armor piece equipped)",
     "MaxTotalPower": "最大光等",
     "MetersPerSecond": "米/秒",
     "Milliseconds": "毫秒",
@@ -1211,14 +1280,14 @@
     "ShieldHP": "Shield HP",
     "StrafingSpeed": "掃射",
     "Strength": "力量",
-    "Sunset": "退環境",
     "Tier": "{{tier}} 階",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 於 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "TimeToFullHP": "完全回復所需時間",
     "Total": "總計",
     "TotalHP": "總生命值",
-    "WalkingSpeed": "步行"
+    "WalkingSpeed": "步行",
+    "WeaponPart": "Weapon Part"
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -1266,6 +1335,9 @@
     "ProfileErrorTitle": "DIM 同步下載出錯",
     "UpdateErrorBody": "將數據保存到 DIM 同步時出錯。我們會在 DIM 開啓時自動重試。",
     "UpdateErrorTitle": "DIM 同步保存錯誤",
+    "UpdateInvalid": "Failed to save data to DIM Sync",
+    "UpdateInvalidBody": "Data sent to DIM Sync was invalid and will not be saved.",
+    "UpdateInvalidBodyLoadout": "The loadout \"{{name}}\" is invalid and will not be saved. If you imported it from another site, please let them know that they are exporting invalid loadouts.",
     "UpdateQueueLength": "我們將在能重新連接時保存 {{count}} 個新更改。",
     "UpdateQueueLength_plural": "我們將在能重新連接時保存 {{count}} 個新更改。",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"

@@ -34,40 +34,39 @@ export const unsupported = {
 
 export const steamBrowser = {
   en: 'The Steam overlay browser is very old and some or all DIM features may not work. We cannot provide support for it.',
-  de: 'Es sieht so aus, als ob diese Seite im Steam-Browser geladen ist. Aufgrund seiner begrenzten Funktionen und Ressourcen, kann DIM eventuell unerwartet oder zeitweilig nicht laufen. Wir können dafür keinen Support bieten.',
-  es: 'Parece ser que esta página está cargada en el navegador de Steam. Debido a sus limitadas caracarísticas y recursos, podría fallar inesperadamente o intermitentemente al ejecutar DIM. No podemos proveer soporte para ello.',
+  de: 'Der Steam-Overlay-Browser ist sehr alt und einige oder alle DIM-Funktionen funktionieren möglicherweise nicht. Wir können dies nicht unterstützen.',
+  es: 'El navegador de Steam es muy antiguo y podría hacer que algunas o todas las características de DIM no funcionen. No podemos proveer de soporte para ello.',
   'es-mx':
-    'Parece ser que esta página está cargada en el navegador de Steam. Debido a sus limitadas características y recursos podría fallar inesperadamente o intermitentemente al ejecutar DIM. No podemos proveer soporte para ello.',
-  fr: 'Il semble que cette page est chargé dans le navigateur Steam. À cause de ses fonctionnalités et ressources limitées, il pourrait échouer à lancer DIM de manière inattendue ou intermittente. Nous ne pouvons pas fournir de support pour cela.',
-  it: 'Sembra che questa pagina sia caricata tramite il browser di Steam. A causa delle sue risorse e caratteristiche limitate, potrebbe non riuscire ad eseguire DIM correttamente. Non possiamo fornire supporto a riguardo.',
-  ja: 'Steam ブラウザでこのページを開いていると検出しました。このブラウザは機能が限られていて予期しない不具合が突然起きる可能性があります。それらの不具合に対してサポート外となります。',
-  ko: '이 페이지가 Steam 브라우저에서 로드된 것 같습니다. 한정된 기능과 자원으로 인해, 예기치 않게 혹은 간헐적으로 DIM을 실행에 실패할 수 있습니다. 이에 대한 지원은 제공되지 않습니다.',
-  pl: 'Wygląda na to, że ta strona jest załadowana w przeglądarce Steam. Ze względu na ograniczone funkcje i zasoby, DIM może nie działać. Nie możemy zapewnić wsparcia dla tej przeglądarki.',
+    'El navegador de Steam es muy antiguo y podría hacer que algunas o todas las características de DIM no funcionen. No podemos proveer de soporte para ello.',
+  fr: "Le navigateur de l'overlay Steam est très vieux et certaines des fonctionnalitées de DIM peuvent ne pas fonctionner. Nous ne pouvons pas fournir de support pour ce navigateur.",
+  it: "Il browser dell'overlay di Steam è molto vecchio e alcune o tutte le funzionalità di DIM potrebbero non funzionare. Non possiamo fornire supporto.",
+  ja: 'Steam オーバーレイ ブラウザは非常に古いため、DIMの一部の機能もしくは全て動作しない可能性があることからサポート対象外とします。',
+  ko: '스팀 오버레이의 브라우저는 매우 오래되어 DIM의 일부 혹은 모든 기능이 동작하지 않을 수 있습니다. 이에 대한 지원은 제공되지 않습니다.',
+  pl: 'Przeglądarka nakładki Steam jest bardzo stara i część funkcji lub wszystkie funkcje DIM mogą nie działać. Nie możemy zapewnić wsparcia w tym zakresie.',
   'pt-br':
-    'Parece que esta página foi aberta no navegador do Steam. Devido à limitações, a execução do DIM pode falhar de forma inesperada ou intermitente. Nós não podemos oferecer suporte a ele.',
-  ru: 'Похоже, эта страница загружена в браузере Steam. Из-за его ограниченных возможностей и ресурсов, он может неожиданно или периодически не запускать DIM. Мы не можем предоставить помощь с этим.',
+    'O navegador do Painel Steam é muito antigo e alguns recursos do DIM podem não funcionar. Não podemos oferecer suporte para isso.',
+  ru: 'Браузер оверлея Steam очень старый, и некоторые или все функции DIM могут не работать. Мы не можем предоставить для него поддержку.',
   'zh-chs':
-    '这个页面似乎是在 Steam 的浏览器里打开的。因为 Steam 浏览器的功能和资源限制，DIM 可能会出现问题。我们无法为此提供支持。',
-  'zh-cht':
-    '這個頁面似乎是在Steam的瀏覽器裏打開的。 因為Steam瀏覽器的功能和資源限制，DIM可能會出現問題。 我們無法為此提供支援。',
+    'Steam 游戏内叠加浏览器版本较老，DIM 的部分或全部功能可能无法正常工作，且我们无法为其提供支持。',
+  'zh-cht': 'Steam覆蓋層的瀏覽器已經非常老了，可能無法使用一些DIM的功能，我們無法提供相關支援。',
 };
 
 export const samsungInternet = {
   en: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  de: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  es: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  de: 'Samsung Internet kann Websites zu dunkel erscheinen lassen, wenn der dunkle Modus eingeschaltet ist. Einstellungen > Labs > Webseite dunkles Theme verwenden oder zu einem anderen Browser wechseln.',
+  es: 'El Internet de Samsung puede hacer que los sitios parezcan demasiado oscuros cuando el modo oscuro está activo. Activa Opciones > Laboratorios > Usar tema oscuro o cambia a otro navegador.',
   'es-mx':
-    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  fr: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  it: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  ja: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  ko: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  pl: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+    'El Internet de Samsung puede hacer que los sitios parezcan demasiado oscuros cuando el modo oscuro está activo. Activa Opciones > Laboratorios > Usar tema oscuro o cambia a otro navegador.',
+  fr: 'Samsung Internet peut rendre les sites trop sombre quand le mode sombre est activé. Activez Paramètres > Labs > Utiliser le mode sombre du site web ou utilisez un autre navigateur.',
+  it: 'Samsung Internet può rendere i siti troppo scuri quando la modalità scura è attiva. Abilita in Impostazioni > Labs > Utilizza tema scuro oppure passa a un altro browser.',
+  ja: 'Samsungブラウザでは、ダーク モードがオンになっているとサイトが暗くなりすぎることがあります。ブラウザから 設定 > ラボ > Webサイトのダークテーマを使用 を有効にするか、別のブラウザに切り替えてください。',
+  ko: '삼성 인터넷은 다크 모드가 활성화된 경우 사이트를 너무 어둡게 만들 수 있습니다. 설정 > 실험실 > 웹사이트의 다크 테마를 사용하거나 다른 브라우저를 사용하세요.',
+  pl: 'Aplikacja Samsung Internet może spowodować, że strony będą wyglądały zbyt ciemno, gdy włączony jest tryb ciemny. Wejdź w i włącz Ustawienia > Labs > Użyj ciemnego motywu witr. WWW lub przełącz się na inną przeglądarkę.',
   'pt-br':
-    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  ru: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+    'O Samsung Internet pode fazer com que alguns sites pareçam muito escuros quando o modo escuro está ativado. Ative Configurações > Labs > Usar tema escuro do site da web ou mude para outro navegador.',
+  ru: 'В Samsung Internet сайты могут выглядеть слишком тёмными, когда включен тёмный режим. Включите "Настройки" > "Labs" > "Использовать темную тему сайта" или переключитесь на другой браузер.',
   'zh-chs':
-    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+    '启用深色模式时，三星浏览器可能会导致网页显示过于黑暗。在设置 > 通用 > 使用网页深色主题或使用其他浏览器来解决此问题。',
   'zh-cht':
     'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
 };
