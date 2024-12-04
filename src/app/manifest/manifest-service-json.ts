@@ -2,7 +2,7 @@ import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
-import { del, get, set } from 'app/storage/idb-keyval';
+import { del, get, keys, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { convertToError, errorMessage } from 'app/utils/errors';
@@ -133,16 +133,23 @@ export async function checkForNewManifest() {
   return version && !Object.values(data.jsonWorldContentPaths).includes(version);
 }
 
+type TrimTableName<T extends string> = T extends `Destiny${infer U}Definition` ? U : never;
+type TableShortName = TrimTableName<DestinyManifestComponentName>;
+
 const getManifestAction = once(
-  (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>
+  (tableAllowList: TableShortName[]): ThunkResult<AllDestinyManifestComponents> =>
     dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList))),
 );
 
-export function getManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
+export function getManifest(
+  tableAllowList: TableShortName[],
+): ThunkResult<AllDestinyManifestComponents> {
   return getManifestAction(tableAllowList);
 }
 
-function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
+function doGetManifest(
+  tableAllowList: TableShortName[],
+): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
     const stopTimer = timer(TAG, 'Load manifest');
@@ -186,7 +193,7 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifest
   };
 }
 
-function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
+function loadManifest(tableAllowList: TableShortName[]): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch, getState) => {
     let components: {
       [key: string]: string;
@@ -214,7 +221,8 @@ function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestC
 
     try {
       return await loadManifestFromCache(version, tableAllowList);
-    } catch {
+    } catch (e) {
+      infoLog(TAG, 'Unable to use cached manifest, loading fresh manifest from Bungie.net', e);
       return dispatch(loadManifestRemote(version, components, tableAllowList));
     }
   };
@@ -228,7 +236,7 @@ function loadManifestRemote(
   components: {
     [key: string]: string;
   },
-  tableAllowList: string[],
+  tableAllowList: TableShortName[],
 ): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
@@ -248,7 +256,7 @@ export async function downloadManifestComponents(
   components: {
     [key: string]: string;
   },
-  tableAllowList: string[],
+  tableAllowList: TableShortName[],
 ) {
   // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
   // try canonical component URL which should likely be already cached,
@@ -300,12 +308,20 @@ export async function downloadManifestComponents(
 }
 
 async function saveManifestToIndexedDB(
-  typedArray: object,
+  manifest: AllDestinyManifestComponents,
   version: string,
-  tableAllowList: string[],
+  tableAllowList: TableShortName[],
 ) {
   try {
-    await set(idbKey, typedArray);
+    await Promise.all([
+      ...tableAllowList.map(async (t) => {
+        const records = manifest[`Destiny${t}Definition`];
+        if (records) {
+          await set(`${idbKey}-${t}`, records);
+        }
+      }),
+      del(idbKey), // the old storage location before per-table
+    ]);
     infoLog(TAG, `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
     localStorage.setItem(`${localStorageKey}-whitelist`, JSON.stringify(tableAllowList));
@@ -319,9 +335,15 @@ async function saveManifestToIndexedDB(
   }
 }
 
-function deleteManifestFile() {
+async function deleteManifestFile() {
   localStorage.removeItem(localStorageKey);
-  return del(idbKey);
+  await Promise.all(
+    (await keys()).map(async (key) => {
+      if (typeof key === 'string' && key.startsWith(idbKey)) {
+        await del(key);
+      }
+    }),
+  );
 }
 
 /**
@@ -330,7 +352,7 @@ function deleteManifestFile() {
  */
 async function loadManifestFromCache(
   version: string,
-  tableAllowList: string[],
+  tableAllowList: TableShortName[],
 ): Promise<AllDestinyManifestComponents> {
   if (alwaysLoadRemote) {
     throw new Error('Testing - always load remote');
@@ -341,11 +363,17 @@ async function loadManifestFromCache(
     localStorage.getItem(`${localStorageKey}-whitelist`) || '[]',
   ) as string[];
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
-    const manifest = await get<AllDestinyManifestComponents>(idbKey);
-    if (!manifest) {
-      await deleteManifestFile();
-      throw new Error('Empty cached manifest file');
-    }
+    const manifest = {} as AllDestinyManifestComponents;
+    await Promise.all(
+      tableAllowList.map(async (t) => {
+        const records = await get<Record<number, any>>(`${idbKey}-${t}`);
+        const tableName = `Destiny${t}Definition` as DestinyManifestComponentName;
+        if (!records) {
+          throw new Error(`No cached contents for table ${tableName}`);
+        }
+        manifest[tableName] = records;
+      }),
+    );
     return manifest;
   } else {
     // Delete the existing manifest first, to make space
