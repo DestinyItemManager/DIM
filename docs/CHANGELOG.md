@@ -1,8 +1,17 @@
 ## Next
 
+* Stat bars in the Item Popup now show more detailed information about contributing factors. Stat bar tooltips are easier to hover/hold-tap, and list weapon parts and stat contributions.
+* Some backlogged translations have been added to the app.
+* Destiny 2's item/game definitions are now more spread out in browser storage, to prevent Firefox from hitting a storage limit.
+
 ## 8.49.0 <span class="changelog-date">(2024-12-01)</span>
 
+* Corrected a misleading error banner and improved handling when DIM needs a fresh Bungie.net login.
+* Fixed some issues with search saving and DIM Syncing.
+
 ## 8.48.0 <span class="changelog-date">(2024-11-24)</span>
+
+* Fixed a crash happening with a Guardian Games stat tracker.
 
 ## 8.47.1 <span class="changelog-date">(2024-11-18)</span>
 
