@@ -214,25 +214,29 @@ function StatBar({ segments, stat }: { segments: StatSegments; stat: DimStat }) 
         className={styles.barContainer}
         tooltip={<StatBarTooltip segments={segments} stat={stat} />}
       >
-        {segments.map(([val, statType], index) => {
-          let segmentLength = Math.abs(val) / stat.maximumValue;
-          if (val < 0) {
-            segmentLength = Math.min(segmentLength, remainingEmpty);
-            remainingEmpty -= segmentLength;
-          } else {
-            segmentLength = Math.min(segmentLength, remainingFilled);
-            remainingFilled -= segmentLength;
-          }
-          return (
-            <div
-              key={index}
-              className={clsx(styles.statBarSegment, statStyles[statType][0], {
-                [styles.negative]: val < 0 && statType !== 'masterwork',
-              })}
-              style={{ width: percent(segmentLength) }}
-            />
-          );
-        })}
+        {segments
+          // Process base stats last, letting them be the most likely to hit cap and lose display length
+          .toSorted(([, statType]) => (statType === 'base' ? 1 : 0))
+          .map(([val, statType], index) => {
+            let segmentLength = Math.abs(val);
+            if (val < 0) {
+              segmentLength = Math.min(segmentLength, remainingEmpty);
+              remainingEmpty -= segmentLength;
+            } else {
+              segmentLength = Math.min(segmentLength, remainingFilled);
+              remainingFilled -= segmentLength;
+            }
+            return (
+              <div
+                key={index}
+                className={clsx(
+                  styles.statBarSegment,
+                  val < 0 && statType !== 'masterwork' ? styles.negative : statStyles[statType][0],
+                )}
+                style={{ width: percent(segmentLength / stat.maximumValue) }}
+              />
+            );
+          })}
       </PressTip>
     </div>
   );

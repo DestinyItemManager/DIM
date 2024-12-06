@@ -54,6 +54,7 @@
 }
 
 .statBarSegment {
+  order: 1;
   display: block;
   height: 100%;
   float: left;
@@ -65,12 +66,13 @@
 
   &.negative {
     background-color: #7a2727;
-    order: 1; // Push negative segments to the right side of the bar
+    order: 5; // Push negative segments to the right side of the bar
   }
 
   // An assumption: never more than 4 part effects in a single stat?
   // 3 have been observed on weapons with a barrel + mag + grip.
   &.parts {
+    order: 2;
     opacity: 0.88;
     & + &.parts {
       opacity: 0.76;
@@ -84,6 +86,7 @@
   }
 
   &.mod {
+    order: 3;
     background-color: $stat-modded;
     & + &.mod {
       opacity: 0.8;
@@ -95,6 +98,7 @@
 
   // Colors for the stat bars
   &.masterwork {
+    order: 4;
     background-color: $stat-masterworked;
   }
 }
