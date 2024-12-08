@@ -995,7 +995,9 @@ function D1PerksCell({ item }: { item: D1Item }) {
                       <BungieImage src={p.icon} />
                     </div>{' '}
                     {p.name}
-                    {(!p.unlocked || p.xp < p.xpRequired) && <> ({percent(p.xp / p.xpRequired)})</>}
+                    {p.xpRequired > 0 && (!p.unlocked || p.xp < p.xpRequired) && (
+                      <> ({percent(p.xp / p.xpRequired)})</>
+                    )}
                   </div>
                 </PressTip>
               ),

@@ -196,6 +196,12 @@ $content-cells: 5;
     display: flex;
     flex-direction: column;
   }
+
+  .destiny1 & {
+    > *:nth-last-child(n + 2) {
+      margin-bottom: 4px;
+    }
+  }
 }
 
 .modPerks {

@@ -4,6 +4,7 @@ interface CssExports {
   'archetype': string;
   'base2715839340': string;
   'customstat': string;
+  'destiny1': string;
   'dmg': string;
   'energy': string;
   'enhancedArrow': string;
