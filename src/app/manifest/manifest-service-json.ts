@@ -1,11 +1,13 @@
+import { handleErrors } from 'app/bungie-api/bungie-service-helper';
 import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, keys, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { emptyArray, emptyObject } from 'app/utils/empty';
-import { convertToError, errorMessage } from 'app/utils/errors';
+import { convertToError } from 'app/utils/errors';
 import { errorLog, infoLog, timer } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/promises';
 import { LookupTable } from 'app/utils/util-types';
@@ -159,33 +161,20 @@ function doGetManifest(
         throw new Error('Manifest corrupted, please reload');
       }
       return manifest;
-    } catch (e) {
-      let message = errorMessage(e);
-
-      if (e instanceof TypeError || (e instanceof HttpStatusError && e.status === -1)) {
-        message = navigator.onLine
-          ? t('BungieService.NotConnectedOrBlocked')
-          : t('BungieService.NotConnected');
-      } else if (e instanceof HttpStatusError) {
-        if (e.status === 503 || e.status === 522 /* cloudflare */) {
-          message = t('BungieService.Difficulties');
-        } else if (e.status < 200 || e.status >= 400) {
-          message = t('BungieService.NetworkError', {
-            status: e.status,
-            statusText: e.message,
-          });
-        }
+    } catch (err) {
+      let e = convertToError(err);
+      if (e instanceof DimError && e.cause) {
+        e = e.cause;
+      }
+      if (e.cause instanceof TypeError || e.cause instanceof HttpStatusError) {
       } else {
         // Something may be wrong with the manifest
-        await deleteManifestFile();
+        deleteManifestFile();
       }
 
-      const statusText = t('Manifest.Error', { error: message });
       errorLog(TAG, 'Manifest loading error', e);
       reportException('manifest load', e);
-      const error = new Error(statusText);
-      error.name = 'ManifestError';
-      throw error;
+      throw new DimError('Manifest.Error', t('Manifest.Error', { error: e.message })).withError(e);
     } finally {
       dispatch(loadingEnd(t('Manifest.Load')));
       stopTimer();
@@ -294,7 +283,7 @@ export async function downloadManifestComponents(
         }
       }
       if (!body) {
-        throw error ?? new Error(`Table ${table}`);
+        handleErrors(error); // throws
       }
 
       // I couldn't figure out how to make these types work...
