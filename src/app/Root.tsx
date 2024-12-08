@@ -9,7 +9,7 @@ import {
 } from 'react-dnd-multi-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router';
 import App from './App';
 import store from './store/store';
 import { isNativeDragAndDropSupported } from './utils/browsers';
@@ -37,7 +37,7 @@ function Root() {
           ],
   };
   return (
-    <Router future={{ v7_startTransition: true }} basename={$PUBLIC_PATH}>
+    <Router basename={$PUBLIC_PATH}>
       <Provider store={store}>
         <LocationSwitcher />
         <DndProvider options={options}>

@@ -5,7 +5,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { AppIcon, faCalculator } from 'app/shell/icons';
 import { count } from 'app/utils/collections';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 /**
  * Link to open a loadout in the Optimizer.

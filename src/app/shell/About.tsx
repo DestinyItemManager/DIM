@@ -7,7 +7,7 @@ import { usePageTitle } from 'app/utils/hooks';
 import { systemInfo } from 'app/utils/system-info';
 import logo from 'images/dimlogo.svg';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
 import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon, mastodonIcon } from './icons';

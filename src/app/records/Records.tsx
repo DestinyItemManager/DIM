@@ -12,7 +12,7 @@ import { querySelector } from 'app/shell/selectors';
 import { compact, filterMap } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
 import { useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import {

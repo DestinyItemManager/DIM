@@ -4,7 +4,7 @@ import { AppIcon, signOutIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Account from './Account';
 import styles from './SelectAccount.m.scss';
 import { logOut } from './platforms';
