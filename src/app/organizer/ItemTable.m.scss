@@ -181,20 +181,17 @@ $content-cells: 5;
 
 .perks,
 .traits,
-.barrels,
 .intrinsics,
 .originTrait,
 .shaders {
   padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
 }
-.perks {
+.perks,
+.traits {
   columns: 2;
   height: 100%;
   box-sizing: border-box;
   column-gap: 8px;
-  > *:nth-last-child(n + 2) {
-    margin-bottom: 4px;
-  }
   &.header {
     display: flex;
     flex-direction: column;

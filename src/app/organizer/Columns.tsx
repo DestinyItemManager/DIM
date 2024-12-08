@@ -1027,10 +1027,7 @@ function perkString(sockets: DimSocket[]): string | undefined {
     .join(',');
 }
 
-function getSockets(
-  item: DimItem,
-  type?: 'all' | 'traits' | 'barrel' | 'shaders' | 'origin',
-): DimSocket[] {
+function getSockets(item: DimItem, type?: 'all' | 'traits' | 'shaders' | 'origin'): DimSocket[] {
   if (!item.sockets) {
     return [];
   }
