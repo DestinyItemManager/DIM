@@ -277,7 +277,7 @@ function DraggableItem({
             >
               <ConnectedInventoryItem
                 item={resolvedLoadoutItem.item}
-                innerRef={ref}
+                ref={ref}
                 onClick={resolvedLoadoutItem.missing ? onClickWarnItem : onClick}
                 onDoubleClick={onToggleEquipped}
               />

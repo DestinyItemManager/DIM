@@ -28,7 +28,7 @@ export default function InventoryItem({
   onClick,
   onShiftClick,
   onDoubleClick,
-  innerRef,
+  ref,
 }: {
   item: DimItem;
   /** Show this item as new? */
@@ -44,7 +44,7 @@ export default function InventoryItem({
   wishlistRoll?: InventoryWishListRoll;
   /** Hide the selected Super ability on subclasses? */
   hideSelectedSuper?: boolean;
-  innerRef?: React.Ref<HTMLDivElement>;
+  ref?: React.Ref<HTMLDivElement>;
   /** TODO: item locked needs to be passed in */
   onClick?: (e: React.MouseEvent) => void;
   onShiftClick?: (e: React.MouseEvent) => void;
@@ -128,7 +128,7 @@ export default function InventoryItem({
       onDoubleClick={onDoubleClick}
       title={`${item.name}\n${subtitle}${savedNotes}`}
       className={itemStyles}
-      ref={innerRef}
+      ref={ref}
     >
       <ItemIconPlaceholder item={item} hasBadge={hasBadge}>
         {contents}

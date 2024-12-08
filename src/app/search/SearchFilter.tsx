@@ -2,7 +2,7 @@ import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { forwardRef, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
@@ -13,14 +13,13 @@ import SearchBar, { SearchFilterRef } from './SearchBar';
 /**
  * The main search filter that's in the header.
  */
-export default forwardRef(function SearchFilter(
-  {
-    onClear,
-  }: {
-    onClear?: () => void;
-  },
-  ref: React.Ref<SearchFilterRef>,
-) {
+export default function SearchFilter({
+  onClear,
+  ref,
+}: {
+  onClear?: () => void;
+  ref: React.Ref<SearchFilterRef>;
+}) {
   const searchQuery = useSelector(querySelector);
   const searchQueryVersion = useSelector(searchQueryVersionSelector);
   const isPhonePortrait = useIsPhonePortrait();
@@ -79,4 +78,4 @@ export default forwardRef(function SearchFilter(
       {!onLoadouts && extras}
     </SearchBar>
   );
-});
+}

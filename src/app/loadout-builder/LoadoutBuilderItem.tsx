@@ -21,7 +21,7 @@ export default function LoadoutBuilderItem({
             item={item}
             onClick={onClick}
             onShiftClick={onShiftClick}
-            innerRef={ref}
+            ref={ref}
           />
         )}
       </ItemPopupTrigger>

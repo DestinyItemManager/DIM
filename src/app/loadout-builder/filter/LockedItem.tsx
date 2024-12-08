@@ -25,7 +25,7 @@ export default function LockedItem({
             <ConnectedInventoryItem
               item={lockedItem}
               onClick={onClick}
-              innerRef={ref}
+              ref={ref}
               // don't show the selected Super ability on subclasses because we aren't applying socket overrides
               // to locked subclasses based on what is selected using 'Customize subclass'
               hideSelectedSuper

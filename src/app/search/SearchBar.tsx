@@ -21,7 +21,6 @@ import { debounce } from 'es-toolkit';
 import { AnimatePresence, LayoutGroup, Variants, motion } from 'motion/react';
 import React, {
   Suspense,
-  forwardRef,
   lazy,
   memo,
   useCallback,
@@ -195,43 +194,42 @@ const resultItemHeight = 32;
  *
  * TODO: Should this be the main search bar only, or should it also work for item picker, etc?
  */
-function SearchBar(
-  {
-    searchQueryVersion,
-    searchQuery,
-    mainSearchBar,
-    placeholder,
-    children,
-    onQueryChanged,
-    instant,
-    onClear,
-    className,
-    menu,
-    searchType = SearchType.Item,
-  }: {
-    /** Placeholder text when nothing has been typed */
-    placeholder: string;
-    /** Is this the main search bar in the header? It behaves somewhat differently. */
-    mainSearchBar?: boolean;
-    /** A fake property that can be used to force the "live" query to be replaced with the one from props */
-    searchQueryVersion?: number;
-    /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
-    searchQuery?: string;
-    /** Children are used as optional extra action buttons only when there is a query. */
-    children?: React.ReactNode;
-    /** An optional menu of actions that can be executed on the search. Always shown. */
-    menu?: React.ReactNode;
-    /** Whether this search bar applies to loadouts rather than items. */
-    searchType?: SearchType;
-    instant?: boolean;
-    className?: string;
-    /** Fired whenever the query changes (already debounced) */
-    onQueryChanged: (query: string) => void;
-    /** Fired whenever the query has been cleared */
-    onClear?: () => void;
-  },
-  ref: React.Ref<SearchFilterRef>,
-) {
+function SearchBar({
+  searchQueryVersion,
+  searchQuery,
+  mainSearchBar,
+  placeholder,
+  children,
+  onQueryChanged,
+  instant,
+  onClear,
+  className,
+  menu,
+  searchType = SearchType.Item,
+  ref,
+}: {
+  /** Placeholder text when nothing has been typed */
+  placeholder: string;
+  /** Is this the main search bar in the header? It behaves somewhat differently. */
+  mainSearchBar?: boolean;
+  /** A fake property that can be used to force the "live" query to be replaced with the one from props */
+  searchQueryVersion?: number;
+  /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
+  searchQuery?: string;
+  /** Children are used as optional extra action buttons only when there is a query. */
+  children?: React.ReactNode;
+  /** An optional menu of actions that can be executed on the search. Always shown. */
+  menu?: React.ReactNode;
+  /** Whether this search bar applies to loadouts rather than items. */
+  searchType?: SearchType;
+  instant?: boolean;
+  className?: string;
+  /** Fired whenever the query changes (already debounced) */
+  onQueryChanged: (query: string) => void;
+  /** Fired whenever the query has been cleared */
+  onClear?: () => void;
+  ref?: React.Ref<SearchFilterRef>;
+}) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const recentSearches = useSelector(recentSearchesSelector(searchType));
@@ -607,4 +605,4 @@ function SearchBar(
   );
 }
 
-export default memo(forwardRef(SearchBar));
+export default memo(SearchBar);

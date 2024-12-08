@@ -98,7 +98,7 @@ export default function LoadoutEditSubclass({
             <ItemPopupTrigger item={subclass.item}>
               {(ref, onClick) => (
                 <ConnectedInventoryItem
-                  innerRef={ref}
+                  ref={ref}
                   // Disable the popup when plugs are available as we are showing
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}

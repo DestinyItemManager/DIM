@@ -110,7 +110,7 @@ export function VendorItemDisplay({
           <ConnectedInventoryItem
             item={item}
             allowFilter={allowFilter ?? true}
-            innerRef={ref}
+            ref={ref}
             onClick={onClick}
           />
         )}

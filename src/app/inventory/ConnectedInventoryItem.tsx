@@ -22,12 +22,12 @@ export default function ConnectedInventoryItem({
   hideSelectedSuper,
   dimArchived,
   allowFilter,
-  innerRef,
+  ref,
 }: {
   item: DimItem;
   allowFilter?: boolean;
   hideSelectedSuper?: boolean;
-  innerRef?: React.Ref<HTMLDivElement>;
+  ref?: React.Ref<HTMLDivElement>;
   onClick?: (e: React.MouseEvent) => void;
   onShiftClick?: (e: React.MouseEvent) => void;
   onDoubleClick?: (e: React.MouseEvent) => void;
@@ -62,12 +62,12 @@ export default function ConnectedInventoryItem({
         onDoubleClick={onDoubleClick}
         searchHidden={searchHidden}
         hideSelectedSuper={hideSelectedSuper}
-        innerRef={innerRef}
+        ref={ref}
         autoLockTagged={autoLockTagged}
       />
     ),
     [
-      innerRef,
+      ref,
       isNew,
       item,
       notes,

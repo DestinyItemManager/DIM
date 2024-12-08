@@ -2,7 +2,7 @@ import { Placement } from '@popperjs/core';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import React, {
-  MutableRefObject,
+  RefObject,
   createContext,
   useCallback,
   useContext,
@@ -19,7 +19,7 @@ import { usePopper } from './usePopper';
  * but other elements (like Sheet) can use this to override the attachment point
  * for PressTips below them in the tree.
  */
-export const PressTipRoot = createContext<MutableRefObject<HTMLElement | null>>({
+export const PressTipRoot = createContext<RefObject<HTMLElement | null>>({
   current: null,
 });
 
