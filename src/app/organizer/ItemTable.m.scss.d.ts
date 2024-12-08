@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'archetype': string;
-  'barrels': string;
   'base2715839340': string;
   'customstat': string;
   'dmg': string;
