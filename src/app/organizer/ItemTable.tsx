@@ -442,11 +442,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   return (
     <>
       <div
-        className={clsx(
-          styles.table,
-          shiftHeld && styles.shiftHeld,
-          destinyVersion === 1 && styles.destiny1,
-        )}
+        className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
         style={{ gridTemplateColumns: gridSpec }}
         role="table"
         ref={tableRef}
