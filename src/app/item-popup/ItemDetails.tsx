@@ -81,7 +81,6 @@ export default function ItemDetails({
         item.secondaryIcon && (
           <BungieImage
             src={item.secondaryIcon}
-            width="100%"
             className={clsx(styles.fullImage, {
               [styles.milestoneImage]: item.bucket.hash === BucketHashes.Quests,
             })}

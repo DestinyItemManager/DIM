@@ -29,6 +29,7 @@
 }
 
 .fullImage {
+  max-width: 100%;
   aspect-ratio: auto 16/9;
 
   &.milestoneImage {

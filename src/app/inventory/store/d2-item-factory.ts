@@ -43,7 +43,7 @@ import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import { keyBy, memoize } from 'es-toolkit';
 import { Draft } from 'immer';
 import memoizeOne from 'memoize-one';
@@ -536,8 +536,12 @@ export function makeItem(
   createdItem.taggable = Boolean(
     createdItem.lockable ||
       createdItem.classified ||
+      // Shaders can be tagged from collections
       itemDef.itemSubType === DestinyItemSubType.Shader ||
-      createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod),
+      // Mods can be tagged from collections...
+      (createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+        // ... but not catalysts
+        !itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)),
   );
   createdItem.comparable = Boolean(
     createdItem.equipment &&
