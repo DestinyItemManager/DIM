@@ -1,20 +1,22 @@
+import { notesSelector } from 'app/inventory/selectors';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
+import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
+import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
 import ItemIconPlaceholder from './ItemIconPlaceholder';
 import NewItemIndicator from './NewItemIndicator';
+import { getSubclassIconInfo } from './subclass';
 import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
-import { TagValue } from './dim-item-info';
-import { DimItem } from './item-types';
-import { getSubclassIconInfo } from './subclass';
 
 interface Props {
   item: DimItem;
@@ -64,6 +66,8 @@ export default function InventoryItem({
     };
   }
 
+  const noteText = useSelector(notesSelector(item));
+  const savedNotes = hasNotes ? `Notes: ${noteText}` : '';
   const isSubclass = item?.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;
   const subclassIconInfo = isSubclass && !hideSelectedSuper ? getSubclassIconInfo(item) : null;
   const hasBadge = shouldShowBadge(item);
@@ -126,7 +130,7 @@ export default function InventoryItem({
       id={item.index}
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
-      title={`${item.name}\n${subtitle}`}
+      title={`${item.name}\n${subtitle}\n${savedNotes}`}
       className={itemStyles}
       ref={innerRef}
     >
