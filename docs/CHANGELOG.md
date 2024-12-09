@@ -1,5 +1,7 @@
 ## Next
 
+## 8.50.0 <span class="changelog-date">(2024-12-08)</span>
+
 * Stat bars in the Item Popup now show more detailed information about contributing factors. Stat bar tooltips are easier to hover/hold-tap, and list weapon parts and stat contributions.
 * Some backlogged translations have been added to the app.
 * Destiny 2's item/game definitions are now more spread out in browser storage, to prevent Firefox from hitting a storage limit.
