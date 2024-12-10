@@ -219,7 +219,7 @@ const D2Sources: {
       2988465950, // Source: Planetary faction chests.
       3099553329, // Source: Complete the campaign as a Titan.
       3126774631, // Requires 1,000 Hunter Kills
-      3174947771, // Requires Guardian Rank 6: Powerful Rewards
+      3174947771, // Requires Guardian Rank 6: Vendor Challenges
       3431853656, // Achieved a Grimoire score of over 5000 in Destiny.
       3532642391, // Source: Forsaken Campaign
       3704442923, // Source: Curse of Osiris Campaign
