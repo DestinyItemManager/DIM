@@ -6,24 +6,37 @@ import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
+import { TagValue } from './dim-item-info';
 import styles from './InventoryItem.m.scss';
+import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
 import ItemIconPlaceholder from './ItemIconPlaceholder';
 import NewItemIndicator from './NewItemIndicator';
+import { getSubclassIconInfo } from './subclass';
 import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
-import { TagValue } from './dim-item-info';
-import { DimItem } from './item-types';
-import { getSubclassIconInfo } from './subclass';
 
-interface Props {
+export default function InventoryItem({
+  item,
+  isNew,
+  tag,
+  notes,
+  searchHidden,
+  autoLockTagged,
+  wishlistRoll,
+  hideSelectedSuper,
+  onClick,
+  onShiftClick,
+  onDoubleClick,
+  innerRef,
+}: {
   item: DimItem;
   /** Show this item as new? */
   isNew?: boolean;
   /** User defined tag */
   tag?: TagValue;
-  /** Does this item have notes? Used to show the icon. */
-  hasNotes?: boolean;
+  /** Notes for the item. Used to show the icon and put notes in tooltips. */
+  notes?: string;
   /** Has this been hidden by a search? */
   searchHidden?: boolean;
   /** Is the setting to automatically lock tagged items on? */
@@ -36,22 +49,7 @@ interface Props {
   onClick?: (e: React.MouseEvent) => void;
   onShiftClick?: (e: React.MouseEvent) => void;
   onDoubleClick?: (e: React.MouseEvent) => void;
-}
-
-export default function InventoryItem({
-  item,
-  isNew,
-  tag,
-  hasNotes,
-  searchHidden,
-  autoLockTagged,
-  wishlistRoll,
-  hideSelectedSuper,
-  onClick,
-  onShiftClick,
-  onDoubleClick,
-  innerRef,
-}: Props) {
+}) {
   let enhancedOnClick = onClick;
 
   if (onShiftClick) {
@@ -64,6 +62,8 @@ export default function InventoryItem({
     };
   }
 
+  const hasNotes = Boolean(notes);
+  const savedNotes = hasNotes ? `\nNotes: ${notes}` : '';
   const isSubclass = item?.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;
   const subclassIconInfo = isSubclass && !hideSelectedSuper ? getSubclassIconInfo(item) : null;
   const hasBadge = shouldShowBadge(item);
@@ -126,7 +126,7 @@ export default function InventoryItem({
       id={item.index}
       onClick={enhancedOnClick}
       onDoubleClick={onDoubleClick}
-      title={`${item.name}\n${subtitle}`}
+      title={`${item.name}\n${subtitle}${savedNotes}`}
       className={itemStyles}
       ref={innerRef}
     >

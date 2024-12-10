@@ -407,9 +407,6 @@ export const tagSelector = (item: DimItem) => (state: RootState) => getTagSelect
 /** Get a specific item's notes */
 export const notesSelector = (item: DimItem) => (state: RootState) => getNotesSelector(state)(item);
 
-export const hasNotesSelector = (item: DimItem) => (state: RootState) =>
-  Boolean(getNotesSelector(state)(item));
-
 /**
  * all hashtags used in existing item notes, with (case-insensitive) dupes removed
  */

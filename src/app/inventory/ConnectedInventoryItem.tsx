@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { wishListSelector } from '../wishlists/selectors';
 import InventoryItem from './InventoryItem';
 import { DimItem } from './item-types';
-import { hasNotesSelector, isNewSelector, tagSelector } from './selectors';
+import { isNewSelector, notesSelector, tagSelector } from './selectors';
 
 const autoLockTaggedSelector = settingSelector('autoLockTagged');
 
@@ -41,7 +41,7 @@ export default function ConnectedInventoryItem({
   const defaultFilterActive = currentFilter === stubTrue;
 
   const isNew = useSelector(isNewSelector(item));
-  const hasNotes = useSelector(hasNotesSelector(item));
+  const notes = useSelector(notesSelector(item));
   const wishlistRoll = useSelector(wishListSelector(item));
   const searchHidden =
     // dim this item if there's no search filter and it's archived
@@ -55,7 +55,7 @@ export default function ConnectedInventoryItem({
         item={item}
         isNew={isNew}
         tag={tag}
-        hasNotes={hasNotes}
+        notes={notes}
         wishlistRoll={wishlistRoll}
         onClick={onClick}
         onShiftClick={onShiftClick}
@@ -70,7 +70,7 @@ export default function ConnectedInventoryItem({
       innerRef,
       isNew,
       item,
-      hasNotes,
+      notes,
       onClick,
       onDoubleClick,
       onShiftClick,
