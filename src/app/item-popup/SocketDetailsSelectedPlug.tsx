@@ -33,7 +33,7 @@ import {
   StatHashes,
   TraitHashes,
 } from 'data/d2/generated-enums';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';

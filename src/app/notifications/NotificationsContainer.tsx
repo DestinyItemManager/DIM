@@ -1,5 +1,5 @@
 import { useEventBusListener } from 'app/utils/hooks';
-import { AnimatePresence, Spring, Variants } from 'framer-motion';
+import { AnimatePresence, Spring, Variants } from 'motion/react';
 import { useCallback, useState } from 'react';
 import Notification from './Notification';
 import styles from './NotificationsContainer.m.scss';

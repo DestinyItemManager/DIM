@@ -3,7 +3,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import { clamp } from 'es-toolkit';
-import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
+import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import CharacterTileButton from '../character-tile/CharacterTileButton';
 import { DimStore } from '../inventory/store-types';

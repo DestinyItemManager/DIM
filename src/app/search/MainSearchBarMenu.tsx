@@ -1,7 +1,7 @@
 import useBulkNote from 'app/dim-ui/useBulkNote';
 import ItemActionsDropdown from 'app/item-actions/ItemActionsDropdown';
 import { querySelector } from 'app/shell/selectors';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { searchButtonAnimateVariants } from './SearchBar';

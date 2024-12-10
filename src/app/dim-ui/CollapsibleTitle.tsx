@@ -1,7 +1,7 @@
 import { collapsedSelector } from 'app/dim-api/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
+import { AnimatePresence, Spring, Variants, motion } from 'motion/react';
 import React, { forwardRef, useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';

@@ -1,4 +1,4 @@
-import { AnimatePresence, Orchestration, Tween, Variants, motion } from 'framer-motion';
+import { AnimatePresence, Orchestration, Tween, Variants, motion } from 'motion/react';
 import styles from './Loading.m.scss';
 
 const containerAnimateVariants: Variants = {

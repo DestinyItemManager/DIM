@@ -13,7 +13,7 @@ import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
+import { AnimatePresence, Tween, Variants, motion } from 'motion/react';
 import { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
 

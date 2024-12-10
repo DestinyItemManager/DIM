@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { CanceledError } from 'app/utils/cancel';
 import { convertToError } from 'app/utils/errors';
 import clsx from 'clsx';
-import { motion, MotionProps, Transition } from 'framer-motion';
+import { motion, MotionProps, Transition } from 'motion/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Notification.m.scss';
 import NotificationButton from './NotificationButton';
