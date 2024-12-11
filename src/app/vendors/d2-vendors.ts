@@ -85,7 +85,13 @@ export function toVendor(
     return undefined;
   }
 
-  const vendorItems = getVendorItems(context, vendorDef, characterId, sales);
+  const vendorItems = getVendorItems(
+    context,
+    vendorDef,
+    characterId,
+    sales,
+    vendor?.nextRefreshDate,
+  );
   vendorItems.sort(
     chainComparator(
       compareBy(
@@ -178,18 +184,19 @@ function getVendorItems(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
+  nextRefreshDate?: string,
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);
     return components.map((component) =>
-      vendorItemForSaleItem(context, vendorDef, component, characterId),
+      vendorItemForSaleItem(context, vendorDef, component, characterId, nextRefreshDate),
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
     return [];
   } else {
     return vendorDef.itemList.map((i, index) =>
-      vendorItemForDefinitionItem(context, i, characterId, index),
+      vendorItemForDefinitionItem(context, i, characterId, index, nextRefreshDate),
     );
   }
 }

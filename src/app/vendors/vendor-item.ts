@@ -76,6 +76,7 @@ function makeVendorItem(
   characterId: string,
   // the index in the vendor's items array
   vendorItemIndex: number,
+  nextRefreshDate?: string,
 ): VendorItem {
   const { defs, profileResponse } = context;
 
@@ -118,7 +119,7 @@ function makeVendorItem(
 
     // override the DimItem.id for vendor items, so they are each unique enough to identify
     // (otherwise they'd get their vendor index as an id, which is only unique per-vendor)
-    vendorItem.item.id = `${vendorHash}-${vendorItem.vendorItemIndex}`;
+    vendorItem.item.id = `${vendorHash}-${vendorItem.vendorItemIndex}-${nextRefreshDate ?? '0'}`;
     vendorItem.item.index = vendorItem.item.id;
     vendorItem.item.instanced = false;
     // These would normally be false already, but certain rules like "finishers
@@ -156,6 +157,7 @@ export function vendorItemForSaleItem(
   saleItem: DestinyVendorSaleItemComponent,
   /** all DIM vendor calls are character-specific. any sale item should have an associated character. */
   characterId: string,
+  nextRefreshDate?: string,
 ): VendorItem {
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
@@ -172,6 +174,7 @@ export function vendorItemForSaleItem(
     saleItem,
     characterId,
     saleItem.vendorItemIndex,
+    nextRefreshDate,
   );
 }
 
@@ -185,6 +188,7 @@ export function vendorItemForDefinitionItem(
   characterId: string,
   // the index in the vendor's items array
   vendorItemIndex: number,
+  nextRefreshDate?: string,
 ): VendorItem {
   const item = makeVendorItem(
     context,
@@ -195,12 +199,7 @@ export function vendorItemForDefinitionItem(
     undefined,
     characterId,
     vendorItemIndex,
+    nextRefreshDate,
   );
-  // items from vendors must have a unique ID, which causes makeItem
-  // to think there's gotta be socket info, but there's not for vendors
-  // set up statically through defs
-  if (item.item) {
-    item.item.missingSockets = false;
-  }
   return item;
 }
