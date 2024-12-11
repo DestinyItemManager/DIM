@@ -165,6 +165,7 @@ function buildInstancedSockets(
       itemDef.inventory?.bucketTypeHash === BucketHashes.Subclass
         ? categories.sort(compareBy((c) => c.category?.index))
         : categories, // Sockets organized by category
+    fromDefinitions: false,
   };
 }
 
@@ -215,6 +216,7 @@ function buildDefinedSockets(
       itemDef.inventory?.bucketTypeHash === BucketHashes.Subclass
         ? categories.sort(compareBy((c) => c.category?.index))
         : categories, // Sockets organized by category
+    fromDefinitions: true,
   };
 }
 

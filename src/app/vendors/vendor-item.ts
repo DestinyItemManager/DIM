@@ -196,11 +196,5 @@ export function vendorItemForDefinitionItem(
     characterId,
     vendorItemIndex,
   );
-  // items from vendors must have a unique ID, which causes makeItem
-  // to think there's gotta be socket info, but there's not for vendors
-  // set up statically through defs
-  if (item.item) {
-    item.item.missingSockets = false;
-  }
   return item;
 }

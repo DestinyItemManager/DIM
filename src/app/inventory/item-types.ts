@@ -567,6 +567,8 @@ export interface DimSockets {
   allSockets: DimSocket[];
   /** Sockets grouped by category. */
   categories: DimSocketCategory[];
+  /** Were these built from definitions, or from live data? */
+  fromDefinitions: boolean;
 }
 
 /**
