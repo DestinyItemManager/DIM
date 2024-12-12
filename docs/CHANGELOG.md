@@ -1,9 +1,10 @@
 ## Next
 
-## 8.51.0 <span class="changelog-date">(2024-12-12)</span>
-
 * Added wishlist refresh button. Forcefully reloads each URL'd wishlist
 ** Dev note: GIT Hub can take upwards of 10min to actually reflect your changes. Refreshing won't speed up GIT Hub.
+* Notes now appear in the tooltips on item tiles.
+* Fixed vendor items showing wishlist thumbs up icons when they didn't match a wishlist roll.
+* Fixed a bug that could cause DIM to infinitely redirect to invalid pages.
 
 ## 8.50.0 <span class="changelog-date">(2024-12-08)</span>
 
