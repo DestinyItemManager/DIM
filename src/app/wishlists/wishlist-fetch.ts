@@ -116,7 +116,6 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       infoLog(TAG, 'Refreshed wishlist, but it matched the one we already have');
       dispatch(touchWishLists());
     }
-    await dispatch(transformAndStoreWishList(wishListAndInfo));
   };
 }
 
