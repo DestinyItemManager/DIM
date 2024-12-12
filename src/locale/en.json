@@ -1493,6 +1493,7 @@
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
     "NumRolls": "{{num, number}} rolls",
+    "Refresh": "Refresh Wishlist",
     "SourceAlreadyAdded": "Wish List already added",
     "UpdateExternalSource": "Add Wish List",
     "Voltron": "voltron (default)",

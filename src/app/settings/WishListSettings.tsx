@@ -3,7 +3,7 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { I18nKey, t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { AppIcon, banIcon, deleteIcon, plusIcon } from 'app/shell/icons';
+import { AppIcon, banIcon, deleteIcon, plusIcon, refreshIcon } from 'app/shell/icons';
 import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorMessage } from 'app/utils/errors';
@@ -74,6 +74,10 @@ export default function WishListSettings() {
     dispatch(clearWishLists());
   };
 
+  const reloadWishListsEvent = () => {
+    console.log('event fired');
+  };
+
   const changeUrl = (url: string, enabled: boolean) => {
     const toAddOrRemove = validateWishListURLs(url);
     const newUrls = enabled
@@ -115,6 +119,9 @@ export default function WishListSettings() {
             </label>
             <button type="button" className="dim-button" onClick={clearWishListEvent}>
               <AppIcon icon={banIcon} /> {t('WishListRoll.Clear')}
+            </button>
+            <button type="button" className="dim-button" onClick={reloadWishListsEvent}>
+              <AppIcon icon={refreshIcon} /> {t('WishListRoll.Refresh')}
             </button>
           </div>
           {wishListLastUpdated && (
