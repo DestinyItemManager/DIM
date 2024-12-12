@@ -29,7 +29,7 @@ function hoursAgo(dateToCheck?: Date): number {
  * this performs both the initial fetch (after setting a new wishlist) (when arg0 exists)
  * and subsequent fetches (checking for updates) (arg-less)
  */
-export function fetchWishList(newWishlistSource?: string): ThunkResult {
+export function fetchWishList(newWishlistSource?: string, manualRefresh?: boolean): ThunkResult {
   return async (dispatch, getState) => {
     await dispatch(loadWishListAndInfoFromIndexedDB());
     await settingsReady;
@@ -107,9 +107,11 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 
     // Only update if the length changed. The wish list may actually be different - we don't do a deep check -
     // but this is good enough to avoid re-doing the work over and over.
+    // If the user manually refreshed, do the work anyway
     if (
       loadedWishListRolls?.length !== wishListAndInfo.wishListRolls.length ||
-      wishListURLsChanged
+      wishListURLsChanged ||
+      manualRefresh
     ) {
       await dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {

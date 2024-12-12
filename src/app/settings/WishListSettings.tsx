@@ -36,9 +36,12 @@ export default function WishListSettings() {
     ? settingsWishListSource.split('|').map((url) => url.trim())
     : [];
 
-  const reloadWishList = async (reloadWishListSource: string | undefined) => {
+  const reloadWishList = async (
+    reloadWishListSource: string | undefined,
+    manualRefresh?: boolean | false,
+  ) => {
     try {
-      await dispatch(fetchWishList(reloadWishListSource));
+      await dispatch(fetchWishList(reloadWishListSource, manualRefresh));
     } catch (e) {
       showNotification({
         type: 'error',
@@ -74,16 +77,19 @@ export default function WishListSettings() {
     dispatch(clearWishLists());
   };
 
-  const reloadWishListsEvent = () => {
-    console.log('event fired');
-  };
-
-  const changeUrl = (url: string, enabled: boolean) => {
+  const changeUrl = (url: string, enabled: boolean, manualRefresh?: boolean | false) => {
     const toAddOrRemove = validateWishListURLs(url);
     const newUrls = enabled
       ? [...activeWishlistUrls, ...toAddOrRemove.filter((url) => !activeWishlistUrls.includes(url))]
       : [...activeWishlistUrls.filter((url) => !toAddOrRemove.includes(url))];
-    reloadWishList(newUrls.join('|'));
+    reloadWishList(newUrls.join('|'), manualRefresh);
+  };
+
+  const reloadAllWishListsEvent = () => {
+    // for each active URL, fire a reload
+    for (const activeWishlistUrl of activeWishlistUrls) {
+      changeUrl(activeWishlistUrl, true, true);
+    }
   };
 
   const addUrlDisabled = (url: string) => {
@@ -120,7 +126,7 @@ export default function WishListSettings() {
             <button type="button" className="dim-button" onClick={clearWishListEvent}>
               <AppIcon icon={banIcon} /> {t('WishListRoll.Clear')}
             </button>
-            <button type="button" className="dim-button" onClick={reloadWishListsEvent}>
+            <button type="button" className="dim-button" onClick={reloadAllWishListsEvent}>
               <AppIcon icon={refreshIcon} /> {t('WishListRoll.Refresh')}
             </button>
           </div>
