@@ -312,7 +312,7 @@ export default function Destiny() {
                 }
               />
             )}
-            <Route path="*" element={<Navigate to="inventory" />} />
+            <Route path="*" element={<Navigate to="../inventory" />} />
           </Routes>
         </div>
         <LoadoutDrawerContainer account={account} />
