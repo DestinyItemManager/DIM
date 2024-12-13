@@ -85,7 +85,7 @@ export default function WishListSettings() {
     reloadWishList(newUrls.join('|'), manualRefresh);
   };
 
-  const reloadAllWishListsEvent = () => {
+  const handleReloadWishlists = () => {
     // for each active URL, fire a reload
     for (const activeWishlistUrl of activeWishlistUrls) {
       changeUrl(activeWishlistUrl, true, true);
