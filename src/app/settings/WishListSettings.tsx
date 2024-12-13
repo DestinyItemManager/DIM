@@ -87,7 +87,11 @@ export default function WishListSettings() {
 
   const handleReloadWishlists = () => {
     reloadWishList(activeWishlistUrls.join('|'), true);
-    // TODO: send notification that reload is complete, notifying them that GitHub could be the reason they may not see updates.
+    showNotification({
+      type: 'warning',
+      title: t('Settings.WishlistRefreshNotificationTitle'),
+      body: t('Settings.WishlistRefreshNotificationBody'),
+    });
   };
 
   const addUrlDisabled = (url: string) => {

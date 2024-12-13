@@ -1219,7 +1219,9 @@
     "Theme": "Theme",
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultGroupingNone": "None",
-    "VaultWeaponGroupingStyle": "Separate weapon groups on different lines"
+    "VaultWeaponGroupingStyle": "Separate weapon groups on different lines",
+    "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
+    "WishlistRefreshNotificationTitle": "Wishlists Reloaded"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
