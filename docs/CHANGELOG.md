@@ -1,7 +1,6 @@
 ## Next
 
-* Added wishlist refresh button. Forcefully reloads each URL'd wishlist
-** Dev note: GIT Hub can take upwards of 10min to actually reflect your changes. Refreshing won't speed up GIT Hub.
+* Added a wishlist refresh button in Settings to help with wishlist development. Note that GitHub can take upwards of 10min to actually reflect your changes. Refreshing won't speed up GitHub.
 * Notes now appear in the tooltips on item tiles.
 * Fixed vendor items showing wishlist thumbs up icons when they didn't match a wishlist roll.
 * Fixed a bug that could cause DIM to infinitely redirect to invalid pages.
