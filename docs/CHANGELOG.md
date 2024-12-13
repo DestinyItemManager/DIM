@@ -1,5 +1,7 @@
 ## Next
 
+## 8.50.1 <span class="changelog-date">(2024-12-12)</span>
+
 * Notes now appear in the tooltips on item tiles.
 * Fixed vendor items showing wishlist thumbs up icons when they didn't match a wishlist roll.
 * Fixed a bug that could cause DIM to infinitely redirect to invalid pages.
