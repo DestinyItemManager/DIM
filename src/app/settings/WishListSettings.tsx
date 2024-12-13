@@ -87,9 +87,7 @@ export default function WishListSettings() {
 
   const handleReloadWishlists = () => {
     // for each active URL, fire a reload
-    for (const activeWishlistUrl of activeWishlistUrls) {
-      changeUrl(activeWishlistUrl, true, true);
-    }
+    reloadWishList(activeWishlistUrls.join('|'), true);
   };
 
   const addUrlDisabled = (url: string) => {
