@@ -77,17 +77,17 @@ export default function WishListSettings() {
     dispatch(clearWishLists());
   };
 
-  const changeUrl = (url: string, enabled: boolean, manualRefresh?: boolean | false) => {
+  const changeUrl = (url: string, enabled: boolean) => {
     const toAddOrRemove = validateWishListURLs(url);
     const newUrls = enabled
       ? [...activeWishlistUrls, ...toAddOrRemove.filter((url) => !activeWishlistUrls.includes(url))]
       : [...activeWishlistUrls.filter((url) => !toAddOrRemove.includes(url))];
-    reloadWishList(newUrls.join('|'), manualRefresh);
+    reloadWishList(newUrls.join('|'));
   };
 
   const handleReloadWishlists = () => {
-    // for each active URL, fire a reload
     reloadWishList(activeWishlistUrls.join('|'), true);
+    // TODO: send notification that reload is complete, notifying them that GitHub could be the reason they may not see updates.
   };
 
   const addUrlDisabled = (url: string) => {
@@ -124,7 +124,7 @@ export default function WishListSettings() {
             <button type="button" className="dim-button" onClick={clearWishListEvent}>
               <AppIcon icon={banIcon} /> {t('WishListRoll.Clear')}
             </button>
-            <button type="button" className="dim-button" onClick={reloadAllWishListsEvent}>
+            <button type="button" className="dim-button" onClick={handleReloadWishlists}>
               <AppIcon icon={refreshIcon} /> {t('WishListRoll.Refresh')}
             </button>
           </div>
