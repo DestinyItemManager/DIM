@@ -1219,7 +1219,9 @@
     "Theme": "Theme",
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultGroupingNone": "None",
-    "VaultWeaponGroupingStyle": "Separate weapon groups on different lines"
+    "VaultWeaponGroupingStyle": "Separate weapon groups on different lines",
+    "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
+    "WishlistRefreshNotificationTitle": "Wishlists Reloaded"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
@@ -1493,6 +1495,7 @@
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
     "NumRolls": "{{num, number}} rolls",
+    "Refresh": "Refresh Wishlist",
     "SourceAlreadyAdded": "Wish List already added",
     "UpdateExternalSource": "Add Wish List",
     "Voltron": "voltron (default)",

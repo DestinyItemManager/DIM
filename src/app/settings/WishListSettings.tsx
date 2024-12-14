@@ -3,7 +3,7 @@ import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { I18nKey, t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { AppIcon, banIcon, deleteIcon, plusIcon } from 'app/shell/icons';
+import { AppIcon, banIcon, deleteIcon, plusIcon, refreshIcon } from 'app/shell/icons';
 import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorMessage } from 'app/utils/errors';
@@ -36,9 +36,12 @@ export default function WishListSettings() {
     ? settingsWishListSource.split('|').map((url) => url.trim())
     : [];
 
-  const reloadWishList = async (reloadWishListSource: string | undefined) => {
+  const reloadWishList = async (
+    reloadWishListSource: string | undefined,
+    manualRefresh?: boolean | false,
+  ) => {
     try {
-      await dispatch(fetchWishList(reloadWishListSource));
+      await dispatch(fetchWishList(reloadWishListSource, manualRefresh));
     } catch (e) {
       showNotification({
         type: 'error',
@@ -82,6 +85,15 @@ export default function WishListSettings() {
     reloadWishList(newUrls.join('|'));
   };
 
+  const handleReloadWishlists = () => {
+    reloadWishList(activeWishlistUrls.join('|'), true);
+    showNotification({
+      type: 'warning',
+      title: t('Settings.WishlistRefreshNotificationTitle'),
+      body: t('Settings.WishlistRefreshNotificationBody'),
+    });
+  };
+
   const addUrlDisabled = (url: string) => {
     const urls = validateWishListURLs(url);
     if (!urls.length) {
@@ -115,6 +127,9 @@ export default function WishListSettings() {
             </label>
             <button type="button" className="dim-button" onClick={clearWishListEvent}>
               <AppIcon icon={banIcon} /> {t('WishListRoll.Clear')}
+            </button>
+            <button type="button" className="dim-button" onClick={handleReloadWishlists}>
+              <AppIcon icon={refreshIcon} /> {t('WishListRoll.Refresh')}
             </button>
           </div>
           {wishListLastUpdated && (

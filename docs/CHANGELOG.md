@@ -1,5 +1,7 @@
 ## Next
 
+* Added a wishlist refresh button in Settings to help with wishlist development. Note that GitHub can take upwards of 10min to actually reflect your changes. Refreshing won't speed up GitHub.
+ 
 ## 8.50.1 <span class="changelog-date">(2024-12-12)</span>
 
 * Notes now appear in the tooltips on item tiles.
