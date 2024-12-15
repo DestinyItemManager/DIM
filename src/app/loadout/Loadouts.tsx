@@ -237,7 +237,9 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           ref={virtualListRef}
           numElements={loadoutRows.length}
           itemContainerClassName={styles.loadoutRow}
-          estimatedSize={270}
+          estimatedSize={(index) =>
+            'id' in loadoutRows[index] ? (isPhonePortrait ? 1450 : 300) : 51
+          }
           getItemKey={(index) => {
             const loadoutOrSeason = loadoutRows[index];
             return 'id' in loadoutOrSeason ? loadoutOrSeason.id : loadoutOrSeason.startDate!;

@@ -5,7 +5,7 @@ import styles from './VirtualList.m.scss';
 
 interface VirtualListProps {
   numElements: number;
-  estimatedSize: number;
+  estimatedSize: number | ((index: number) => number);
   className?: string;
   itemContainerClassName?: string;
   /**
@@ -46,7 +46,7 @@ export const VirtualList = forwardRef(function VirtualList(
   const virtualizer = useVirtualizer({
     count: numElements,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => estimatedSize,
+    estimateSize: typeof estimatedSize === 'function' ? estimatedSize : () => estimatedSize,
     getItemKey,
     overscan,
   });
@@ -124,7 +124,7 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
 
   const virtualizer = useWindowVirtualizer({
     count: numElements,
-    estimateSize: () => estimatedSize,
+    estimateSize: typeof estimatedSize === 'function' ? estimatedSize : () => estimatedSize,
     scrollMargin: parentOffsetRef.current,
     scrollPaddingStart: headerHeightRef.current,
     getItemKey,
