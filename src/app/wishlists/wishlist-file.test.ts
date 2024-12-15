@@ -15,5 +15,5 @@ const cases: [wishlist: string, result: WishListRoll][] = [
 ];
 
 test.each(cases)('parse wishlist line: %s', (wishlist, result) => {
-  expect(toWishList([undefined, wishlist]).wishListRolls[0]).toStrictEqual(result);
+  expect(toWishList([[undefined, wishlist]]).wishListRolls[0]).toStrictEqual(result);
 });

@@ -6,6 +6,7 @@ import { setSettingAction } from 'app/settings/actions';
 import { settingsReady } from 'app/settings/settings';
 import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
 import { once } from 'es-toolkit';
 import { loadWishLists, touchWishLists } from './actions';
@@ -26,7 +27,7 @@ function hoursAgo(dateToCheck?: Date): number {
 }
 
 /**
- * this performs both the initial fetch (after setting a new wishlist) (when arg0 exists)
+ * this performs both the initial fetch (after setting a new wishlist) (when newWishlistSource exists)
  * and subsequent fetches (checking for updates) (arg-less)
  */
 export function fetchWishList(newWishlistSource?: string, manualRefresh?: boolean): ThunkResult {
@@ -48,9 +49,6 @@ export function fetchWishList(newWishlistSource?: string, manualRefresh?: boolea
       return;
     }
 
-    // Pipe | seperated URLs
-    const wishlistUrlsToFetch = validateWishListURLs(wishlistToFetch);
-
     const {
       lastFetched: wishListLastUpdated,
       wishListAndInfo: { source: loadedWishListSource, wishListRolls: loadedWishListRolls },
@@ -71,38 +69,48 @@ export function fetchWishList(newWishlistSource?: string, manualRefresh?: boolea
       return;
     }
 
-    let wishListTexts: string[];
-    try {
-      wishListTexts = await Promise.all(
-        wishlistUrlsToFetch.map(async (url) => {
-          const res = await fetch(url);
-          if (res.status < 200 || res.status >= 300) {
-            throw await toHttpStatusError(res);
-          }
-          return res.text();
-        }),
-      );
+    // Pipe | separated URLs
+    const wishlistUrlsToFetch = validateWishListURLs(wishlistToFetch);
+    const wishListResults = await Promise.allSettled(
+      wishlistUrlsToFetch.map(async (url) => {
+        const res = await fetch(url);
+        if (res.status < 200 || res.status >= 300) {
+          throw await toHttpStatusError(res);
+        }
+        return res.text();
+      }),
+    );
 
-      // if this is a new wishlist, set the setting now that we know it's fetchable
-      if (newWishlistSource) {
-        dispatch(setSettingAction('wishListSource', newWishlistSource));
+    const wishLists: [url: string, text: string][] = [];
+    let hasSuccess = false;
+    for (let i = 0; i < wishlistUrlsToFetch.length; i++) {
+      const url = wishlistUrlsToFetch[i];
+      const result = wishListResults[i];
+      if (result.status === 'rejected') {
+        showNotification({
+          type: 'warning',
+          title: t('WishListRoll.Header'),
+          body: t('WishListRoll.ImportError', { url, error: errorMessage(result.reason) }),
+        });
+        errorLog(TAG, 'Unable to load wish list', url, result.reason);
+        return;
+      } else if (result.status === 'fulfilled') {
+        hasSuccess = true;
+        wishLists.push([url, result.value]);
       }
-    } catch (e) {
-      showNotification({
-        type: 'warning',
-        title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportFailed'),
-      });
-      errorLog(TAG, 'Unable to load wish list', e);
+    }
+
+    if (!hasSuccess) {
+      // Give up if we couldn't fetch any of the lists
       return;
     }
 
-    const wishLists: [string, string][] = wishlistUrlsToFetch.map((url, idx) => [
-      url,
-      wishListTexts[idx],
-    ]);
+    // if this is a new wishlist, set the setting now that we know at least one list is fetchable
+    if (newWishlistSource && hasSuccess) {
+      dispatch(setSettingAction('wishListSource', newWishlistSource));
+    }
 
-    const wishListAndInfo = toWishList(...wishLists);
+    const wishListAndInfo = toWishList(wishLists);
     wishListAndInfo.source = wishlistToFetch;
 
     // Only update if the length changed. The wish list may actually be different - we don't do a deep check -

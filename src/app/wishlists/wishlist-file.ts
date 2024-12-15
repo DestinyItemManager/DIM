@@ -24,9 +24,7 @@ const notesLabel = '//notes:';
  * one or more wish list text files, deduplicating within
  * and between lists.
  */
-export function toWishList(
-  ...files: [url: string | undefined, contents: string][]
-): WishListAndInfo {
+export function toWishList(files: [url: string | undefined, contents: string][]): WishListAndInfo {
   const stopTimer = timer(TAG, 'Parse wish list');
   try {
     const wishList: WishListAndInfo = {
@@ -42,9 +40,8 @@ export function toWishList(
         title: undefined,
         description: undefined,
         numRolls: 0,
+        dupeRolls: 0,
       };
-      let dupes = 0;
-
       let blockNotes: string | undefined = undefined;
 
       const lines = fileText.split('\n');
@@ -74,14 +71,13 @@ export function toWishList(
               wishList.wishListRolls.push(roll);
               info.numRolls++;
             } else {
-              dupes++;
+              info.dupeRolls++;
             }
           }
         }
       }
-
-      if (dupes > 0) {
-        warnLog(TAG, 'Discarded', dupes, 'duplicate rolls from wish list', url);
+      if (info.dupeRolls > 0) {
+        warnLog(TAG, 'Discarded', info.dupeRolls, 'duplicate rolls from wish list', url);
       }
       wishList.infos.push(info);
     }
