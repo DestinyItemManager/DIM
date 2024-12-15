@@ -1,5 +1,6 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { I18nKey, t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
@@ -32,6 +33,8 @@ export default function WishListSettings() {
     dispatch(fetchWishList());
   }, [dispatch]);
 
+  // TODO: add a "local" source that can coexist with other sources?
+
   const activeWishlistUrls = settingsWishListSource
     ? settingsWishListSource.split('|').map((url) => url.trim())
     : [];
@@ -46,7 +49,10 @@ export default function WishListSettings() {
       showNotification({
         type: 'error',
         title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportError', { error: errorMessage(e) }),
+        body: t('WishListRoll.ImportError', {
+          url: reloadWishListSource ?? '',
+          error: errorMessage(e),
+        }),
       });
     }
   };
@@ -55,7 +61,7 @@ export default function WishListSettings() {
     const reader = new FileReader();
     reader.onload = async () => {
       if (reader.result && typeof reader.result === 'string') {
-        const wishListAndInfo = toWishList([undefined, reader.result]);
+        const wishListAndInfo = toWishList([[undefined, reader.result]]);
         if (wishListAndInfo.wishListRolls.length) {
           dispatch(clearWishLists());
         }
@@ -150,10 +156,12 @@ export default function WishListSettings() {
           return (
             <BuiltinWishlist
               key={url}
+              url={url}
               name={builtinEntry.name}
               title={loadedData?.title}
               description={loadedData?.description}
               rollsCount={loadedData?.numRolls}
+              dupeRollsCount={loadedData?.dupeRolls}
               checked={true}
               onChange={(checked) => changeUrl(url, checked)}
             />
@@ -166,6 +174,7 @@ export default function WishListSettings() {
               title={loadedData?.title}
               description={loadedData?.description}
               rollsCount={loadedData?.numRolls}
+              dupeRollsCount={loadedData?.dupeRolls}
               onRemove={() => changeUrl(url, false)}
             />
           );
@@ -175,11 +184,13 @@ export default function WishListSettings() {
       {disabledBuiltinLists.map((list) => (
         <BuiltinWishlist
           key={list.url}
+          url={list.url}
           name={list.name}
           title={undefined}
           description={undefined}
           checked={false}
           rollsCount={undefined}
+          dupeRollsCount={undefined}
           onChange={(checked) => changeUrl(list.url, checked)}
         />
       ))}
@@ -198,23 +209,32 @@ export default function WishListSettings() {
 
 function BuiltinWishlist({
   name,
+  url,
   title,
   description,
   rollsCount,
+  dupeRollsCount,
   checked,
   onChange,
 }: {
   name: I18nKey;
+  url: string;
   title: string | undefined;
   description: string | undefined;
   rollsCount: number | undefined;
+  dupeRollsCount: number | undefined;
   checked: boolean;
   onChange: (checked: boolean) => void;
 }) {
   return (
     <div className={settingClass}>
       <Checkbox label={t(name)} name={name as keyof Settings} value={checked} onChange={onChange} />
-      {rollsCount !== undefined && t('WishListRoll.NumRolls', { num: rollsCount })}
+      <ExternalLink href={url}>
+        {rollsCount !== undefined && t('WishListRoll.NumRolls', { num: rollsCount })}
+        {dupeRollsCount !== undefined &&
+          dupeRollsCount > 0 &&
+          t('WishListRoll.DupeRolls', { num: dupeRollsCount })}
+      </ExternalLink>
       {(title || description) && (
         <div className={fineprintClass}>
           <b>{title}</b>
@@ -231,12 +251,14 @@ function UrlWishlist({
   title,
   description,
   rollsCount,
+  dupeRollsCount,
   onRemove,
 }: {
   url: string;
   title: string | undefined;
   description: string | undefined;
   rollsCount: number | undefined;
+  dupeRollsCount: number | undefined;
   onRemove: () => void;
 }) {
   return (
@@ -246,7 +268,12 @@ function UrlWishlist({
         <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
       </ConfirmButton>
       {!title && <div className={fineprintClass}>{url}</div>}
-      {rollsCount !== undefined && t('WishListRoll.NumRolls', { num: rollsCount })}
+      <ExternalLink href={url}>
+        {rollsCount !== undefined && t('WishListRoll.NumRolls', { num: rollsCount })}
+        {dupeRollsCount !== undefined &&
+          dupeRollsCount > 0 &&
+          t('WishListRoll.DupeRolls', { num: dupeRollsCount })}
+      </ExternalLink>
       {description && <div className={fineprintClass}>{description}</div>}
     </div>
   );

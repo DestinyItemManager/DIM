@@ -52,6 +52,8 @@ export interface WishListInfo {
   url: string | undefined;
   title?: string;
   description?: string;
-  /** The number of rolls from this wish list that actually made it in. */
+  /** The number of rolls from this wish list that actually made it in (e.g. were valid and unique). */
   numRolls: number;
+  /** The number of rolls in this list that were duplicates of other lists. */
+  dupeRolls: number;
 }
