@@ -195,8 +195,10 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
           `${cleanupIds.size - eligibleCleanupIds.length} infos have IDs newer than the newest ID in inventory`,
         );
       }
-      infoLog('cleanInfos', `Purging tag/notes from ${eligibleCleanupIds.length} deleted items`);
-      dispatch(tagCleanup(eligibleCleanupIds));
+      if (eligibleCleanupIds.length > 0) {
+        infoLog('cleanInfos', `Purging tag/notes from ${eligibleCleanupIds.length} deleted items`);
+        dispatch(tagCleanup(eligibleCleanupIds));
+      }
     }
   };
 }
