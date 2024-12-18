@@ -133,11 +133,11 @@ export function CollapseIcon({ collapsed }: { collapsed: boolean }) {
   );
 }
 
-export const collapsibleTitleAnimateVariants: Variants = {
+const collapsibleTitleAnimateVariants: Variants = {
   open: { height: 'auto' },
   collapsed: { height: 0 },
 };
-export const collapsibleTitleAnimateTransition: Spring = {
+const collapsibleTitleAnimateTransition: Spring = {
   type: 'spring',
   duration: 0.5,
   bounce: 0,

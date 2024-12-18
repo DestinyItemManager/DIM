@@ -88,7 +88,7 @@ const prismaticDamageLookupTable: { [key in DamageType]: string | undefined } = 
   [DamageType.Strand]: 'dark',
 };
 
-export const prismaticDamageFilter = {
+const prismaticDamageFilter = {
   keywords: ['light', 'dark'],
   description: tl('Filter.PrismaticDamageType'),
   filter:
@@ -202,7 +202,7 @@ export const itemTypeFilter = {
 } satisfies ItemFilterDefinition;
 
 // D1 has different item types, otherwise this is the same as itemTypeFilter.
-export const d1itemTypeFilter = {
+const d1itemTypeFilter = {
   keywords: Object.values(D1Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
     .flat()
     .map((v) => {

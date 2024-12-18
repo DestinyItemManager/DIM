@@ -20,7 +20,6 @@ import {
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
   DestinyLoadoutColorDefinition,
-  DestinyLoadoutConstantsDefinition,
   DestinyLoadoutIconDefinition,
   DestinyLoadoutNameDefinition,
   DestinyMaterialRequirementSetDefinition,
@@ -89,7 +88,6 @@ export const allTables: ManifestTablesShort[] = [
   'Race',
   'Faction',
   'ActivityMode',
-  'LoadoutConstants',
 ];
 
 export interface DefinitionTable<T> {
@@ -140,7 +138,6 @@ export interface D2ManifestDefinitions {
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
   Collectible: DefinitionTable<DestinyCollectibleDefinition>;
   EventCard: DefinitionTable<DestinyEventCardDefinition>;
-  LoadoutConstants: DefinitionTable<DestinyLoadoutConstantsDefinition>;
   LoadoutName: DefinitionTable<DestinyLoadoutNameDefinition>;
   LoadoutColor: DefinitionTable<DestinyLoadoutColorDefinition>;
   LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;

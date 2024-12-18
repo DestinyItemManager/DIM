@@ -443,8 +443,8 @@ devDependencies:
     specifier: ^4.4.0
     version: 4.4.0(stylelint@16.12.0)
   stylelint-config-standard-scss:
-    specifier: ^13.1.0
-    version: 13.1.0(postcss@8.4.49)(stylelint@16.12.0)
+    specifier: ^14.0.0
+    version: 14.0.0(postcss@8.4.49)(stylelint@16.12.0)
   stylelint-order:
     specifier: ^6.0.4
     version: 6.0.4(stylelint@16.12.0)
@@ -464,8 +464,8 @@ devDependencies:
     specifier: ^9.5.1
     version: 9.5.1(typescript@5.7.2)(webpack@5.97.1)
   ts-unused-exports:
-    specifier: ^10.1.0
-    version: 10.1.0(typescript@5.7.2)
+    specifier: ^11.0.1
+    version: 11.0.1(typescript@5.7.2)
   tsconfig-paths-webpack-plugin:
     specifier: ^4.2.0
     version: 4.2.0
@@ -13135,12 +13135,12 @@ packages:
       stylelint: 16.12.0(typescript@5.7.2)
     dev: true
 
-  /stylelint-config-standard-scss@13.1.0(postcss@8.4.49)(stylelint@16.12.0):
-    resolution: {integrity: sha512-Eo5w7/XvwGHWkeGLtdm2FZLOMYoZl1omP2/jgFCXyl2x5yNz7/8vv4Tj6slHvMSSUNTaGoam/GAZ0ZhukvalfA==}
+  /stylelint-config-standard-scss@14.0.0(postcss@8.4.49)(stylelint@16.12.0):
+    resolution: {integrity: sha512-6Pa26D9mHyi4LauJ83ls3ELqCglU6VfCXchovbEqQUiEkezvKdv6VgsIoMy58i00c854wVmOw0k8W5FTpuaVqg==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
       postcss: ^8.3.3
-      stylelint: ^16.3.1 || ^16.0.2
+      stylelint: ^16.11.0 || ^16.0.2
     peerDependenciesMeta:
       postcss:
         optional: true
@@ -13592,8 +13592,8 @@ packages:
     resolution: {integrity: sha512-SL8u60X5+LoEy9tmQHWCdPc2hhb2pKI6I1tU5Jue3v8+iRqZdcT3mWPwKKJy1fMfky6uha82c8ByHAE8PMhKHw==}
     dev: true
 
-  /ts-unused-exports@10.1.0(typescript@5.7.2):
-    resolution: {integrity: sha512-QA11Dpwkm5Apfe9s/UkFzHEpbiBxKy0VQ72YRAoqq9VgNbxvvIOcS5Kgm1MCitOec9YU6nf51DEWnmL6jkP2Yg==}
+  /ts-unused-exports@11.0.1(typescript@5.7.2):
+    resolution: {integrity: sha512-b1uIe0B8YfNZjeb+bx62LrB6qaO4CHT8SqMVBkwbwLj7Nh0xQ4J8uV0dS9E6AABId0U4LQ+3yB/HXZBMslGn2A==}
     hasBin: true
     peerDependencies:
       typescript: '>=3.8.3'

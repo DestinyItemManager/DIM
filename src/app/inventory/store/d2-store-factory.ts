@@ -135,7 +135,7 @@ const genderTypeToEnglish = {
   [DestinyGender.Unknown]: '',
 } as const;
 
-export function makeCharacter(
+function makeCharacter(
   defs: D2ManifestDefinitions,
   character: DestinyCharacterComponent,
   mostRecentLastPlayed: Date,
@@ -183,7 +183,7 @@ export function makeCharacter(
   };
 }
 
-export function makeVault(): DimStore {
+function makeVault(): DimStore {
   const vaultName = t('Bucket.Vault');
   return {
     destinyVersion: 2,

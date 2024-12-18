@@ -47,7 +47,7 @@ export const browserLangToDimLang: Record<string, DimLanguage> = {
   'zh-Hant': 'zh-cht',
 };
 
-export const dimLangToBrowserLang = invert(browserLangToDimLang);
+const dimLangToBrowserLang = invert(browserLangToDimLang);
 
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)

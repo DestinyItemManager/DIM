@@ -51,7 +51,6 @@ import {
   DestinyLoadoutItemComponent,
   DestinySeasonDefinition,
 } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy, maxBy } from 'es-toolkit';
 import { produce } from 'immer';
@@ -837,17 +836,6 @@ const oldToNewMod: HashLookup<number> = {
   3699676109: 2639422088, // InventoryItem "Minor Strength Mod"
   3253038666: 4287799666, // InventoryItem "Strength Mod"
 };
-
-export function hasDeprecatedMods(loadout: Loadout, defs: D2ManifestDefinitions): boolean {
-  return Boolean(
-    loadout.parameters?.mods?.some((modHash) => {
-      const migratedModHash = oldToNewMod[modHash] ?? modHash;
-      return (
-        deprecatedMods.includes(migratedModHash) || !defs.InventoryItem.getOptional(migratedModHash)
-      );
-    }),
-  );
-}
 
 /**
  * Convert a list of plug item hashes into ResolvedLoadoutMods, which may not be

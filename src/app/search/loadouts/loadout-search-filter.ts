@@ -23,7 +23,7 @@ import freeformFilters from './search-filters/freeform';
 import overloadedRangeFilters from './search-filters/range-overload';
 import simpleFilters from './search-filters/simple';
 
-export const allLoadoutFilters = [...simpleFilters, ...freeformFilters, ...overloadedRangeFilters];
+const allLoadoutFilters = [...simpleFilters, ...freeformFilters, ...overloadedRangeFilters];
 
 //
 // Selectors
@@ -117,7 +117,7 @@ export const buildLoadoutsFiltersMap = memoizeOne((destinyVersion: DestinyVersio
   buildFiltersMap(destinyVersion, allLoadoutFilters),
 );
 
-export function buildLoadoutsSearchConfig(
+function buildLoadoutsSearchConfig(
   destinyVersion: DestinyVersion,
   language: DimLanguage,
   suggestionsContext: LoadoutSuggestionsContext,

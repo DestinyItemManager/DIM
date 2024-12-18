@@ -12,8 +12,8 @@ export const craftedSocketCategoryHash = 3583996951;
 export const mementoSocketCategoryHash = 3201856887;
 
 /** the socket containing the enhancement tier plugs */
-export const enhancementSocketHash = 4251072212;
-export const plugHashToEnhancementTier: HashLookup<number> = {
+const enhancementSocketHash = 4251072212;
+const plugHashToEnhancementTier: HashLookup<number> = {
   2728416798: 1,
   2728416797: 2,
   2728416796: 3,
@@ -47,7 +47,7 @@ export function getCraftedSocket(item: DimItem): DimSocket | undefined {
   }
 }
 
-export function getEnhancementTier(item: DimItem): number {
+function getEnhancementTier(item: DimItem): number {
   if (item.bucket.inWeapons && item.sockets) {
     const plugHash = item.sockets.allSockets.find(
       (s) => s.socketDefinition.socketTypeHash === enhancementSocketHash,

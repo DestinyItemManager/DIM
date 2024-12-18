@@ -1472,7 +1472,7 @@ function applyUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWith
   }
 }
 
-export function reverseUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
+function reverseUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
   try {
     switch (update.action) {
       case 'delete_loadout': {
