@@ -243,6 +243,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       try {
         const profileResponse = await getDimApiProfile(currentAccount);
         dispatch(profileLoaded({ profileResponse, account: currentAccount }));
+        infoLog(TAG, 'Loaded profile from DIM API', profileResponse);
 
         // Quickly heal from being failure backoff
         getProfileBackoff = Math.floor(getProfileBackoff / 2);
