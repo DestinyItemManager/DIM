@@ -11,7 +11,7 @@ import {
   useAnimation,
   useDragControls,
   useReducedMotion,
-} from 'framer-motion';
+} from 'motion/react';
 import React, {
   createContext,
   useCallback,

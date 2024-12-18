@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
+import { AnimatePresence, Spring, Variants, motion } from 'motion/react';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { stopFarming } from './actions';

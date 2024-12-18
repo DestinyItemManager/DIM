@@ -1,4 +1,4 @@
-import { animate, motion, Tween, useMotionValue, useTransform } from 'framer-motion';
+import { animate, motion, Tween, useMotionValue, useTransform } from 'motion/react';
 import { useEffect } from 'react';
 
 const spring: Tween = {

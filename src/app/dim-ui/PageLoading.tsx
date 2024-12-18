@@ -1,6 +1,6 @@
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { Orchestration, Tween, Variants, motion } from 'framer-motion';
+import { Orchestration, Tween, Variants, motion } from 'motion/react';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Loading } from './Loading';

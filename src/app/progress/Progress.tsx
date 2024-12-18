@@ -14,7 +14,7 @@ import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { compact } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
-import { PanInfo, motion } from 'framer-motion';
+import { PanInfo, motion } from 'motion/react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';

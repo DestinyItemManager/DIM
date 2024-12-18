@@ -18,7 +18,7 @@ import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
 import { debounce } from 'es-toolkit';
-import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, Variants, motion } from 'motion/react';
 import React, {
   Suspense,
   forwardRef,

@@ -11,7 +11,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
-import { PanInfo, motion } from 'framer-motion';
+import { PanInfo, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
