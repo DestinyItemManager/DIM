@@ -244,9 +244,6 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.3.5
     version: 18.3.5(@types/react@18.3.12)
-  '@types/react-test-renderer':
-    specifier: ^18.3.1
-    version: 18.3.1
   '@types/ua-parser-js':
     specifier: ^0.7.39
     version: 0.7.39
@@ -427,9 +424,6 @@ devDependencies:
   react-refresh:
     specifier: ^0.16.0
     version: 0.16.0
-  react-test-renderer:
-    specifier: ^18.3.1
-    version: 18.3.1(react@18.3.1)
   sass:
     specifier: ^1.83.0
     version: 1.83.0
@@ -4687,12 +4681,6 @@ packages:
     resolution: {integrity: sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q==}
     peerDependencies:
       '@types/react': 18.3.12
-    dependencies:
-      '@types/react': 18.3.12
-    dev: true
-
-  /@types/react-test-renderer@18.3.1:
-    resolution: {integrity: sha512-vAhnk0tG2eGa37lkU9+s5SoroCsRI08xnsWFiAXOuPH2jqzMbcXvKExXViPi1P5fIklDeCvXqyrdmipFaSkZrA==}
     dependencies:
       '@types/react': 18.3.12
     dev: true
@@ -11995,27 +11983,6 @@ packages:
       set-cookie-parser: 2.7.1
       turbo-stream: 2.4.0
     dev: false
-
-  /react-shallow-renderer@16.15.0(react@18.3.1):
-    resolution: {integrity: sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==}
-    peerDependencies:
-      react: ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      object-assign: 4.1.1
-      react: 18.3.1
-      react-is: 18.3.1
-    dev: true
-
-  /react-test-renderer@18.3.1(react@18.3.1):
-    resolution: {integrity: sha512-KkAgygexHUkQqtvvx/otwxtuFu5cVjfzTCtjXLH9boS19/Nbtg84zS7wIQn39G8IlrhThBpQsMKkq5ZHZIYFXA==}
-    peerDependencies:
-      react: ^18.3.1
-    dependencies:
-      react: 18.3.1
-      react-is: 18.3.1
-      react-shallow-renderer: 16.15.0(react@18.3.1)
-      scheduler: 0.23.2
-    dev: true
 
   /react-textarea-autosize@8.5.6(@types/react@18.3.12)(react@18.3.1):
     resolution: {integrity: sha512-aT3ioKXMa8f6zHYGebhbdMD2L00tKeRX1zuVuDx9YQK/JLLRSaSxq3ugECEmUB9z2kvk6bFSIoRHLkkUv0RJiw==}
