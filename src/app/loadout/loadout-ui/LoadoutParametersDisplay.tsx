@@ -76,7 +76,7 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
   );
 }
 
-export function StatConstraintRange({
+function StatConstraintRange({
   statConstraint,
   className,
 }: {

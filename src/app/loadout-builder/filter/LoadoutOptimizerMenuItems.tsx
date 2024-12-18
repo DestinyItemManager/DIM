@@ -128,5 +128,3 @@ export const LoadoutOptimizerExcludedItems = memo(function LoadoutOptimizerExclu
     </LoadoutEditSection>
   );
 });
-
-export const loMenuSection = styles.area;

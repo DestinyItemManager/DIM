@@ -24,8 +24,3 @@ export function useD2Definitions() {
 export function useDefinitions() {
   return useSelector(manifestSelector);
 }
-
-export const loadoutConstantsSelector = (state: RootState) =>
-  d2ManifestSelector(state)?.LoadoutConstants.get(
-    destiny2CoreSettingsSelector(state)?.loadoutConstantsHash ?? 1,
-  );
