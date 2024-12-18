@@ -28,9 +28,6 @@ const WhatsNew = lazy(() => import(/* webpackChunkName: "whatsNew" */ './whats-n
 const SettingsPage = lazy(
   () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage'),
 );
-const SearchHistory = lazy(
-  () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory'),
-);
 const Debug = lazy(() => import(/* webpackChunkName: "debug" */ './debug/Debug'));
 
 export default function App() {
@@ -128,14 +125,6 @@ export default function App() {
                 />
               ) : (
                 <>
-                  <Route
-                    path="search-history"
-                    element={
-                      <ErrorBoundary name="searchHistory" key="searchHistory">
-                        <SearchHistory />
-                      </ErrorBoundary>
-                    }
-                  />
                   <Route path="armory/*" element={<DefaultAccount />} />
                   <Route path=":membershipId/:destinyVersion/*" element={<Destiny />} />
                   <Route path="*" element={<DefaultAccount />} />

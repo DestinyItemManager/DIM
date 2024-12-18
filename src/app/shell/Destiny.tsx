@@ -74,6 +74,10 @@ const Activities = lazy(
 const Records = lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
 const Loadouts = lazy(() => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts'));
 
+const SearchHistory = lazy(
+  () => import(/* webpackChunkName: "searchHistory" */ '../search/SearchHistory'),
+);
+
 /**
  * Base view for pages that show Destiny content.
  */
@@ -312,6 +316,15 @@ export default function Destiny() {
                 }
               />
             )}
+
+            <Route
+              path="search-history"
+              element={
+                <ErrorBoundary name="searchHistory" key="searchHistory">
+                  <SearchHistory />
+                </ErrorBoundary>
+              }
+            />
             <Route path="*" element={<Navigate to="../inventory" />} />
           </Routes>
         </div>
