@@ -28,7 +28,6 @@ import SearchFilter from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import AppInstallBanner from './AppInstallBanner';
 import styles from './Header.m.scss';
-import HeaderWarningBanner from './HeaderWarningBanner';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
 import RefreshButton from './RefreshButton';
@@ -287,7 +286,6 @@ export default function Header() {
   useSetCSSVarToHeight(headerRef, '--header-height');
 
   const headerLinksRef = useRef<HTMLDivElement>(null);
-  const clarityDetected = useClarityDetector(headerLinksRef);
 
   const streamDeckEnabled = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -403,11 +401,6 @@ export default function Header() {
         {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
         <PostmasterWarningBanner />
         {$featureFlags.warnNoSync && <DimApiWarningBanner />}
-        {clarityDetected && (
-          <HeaderWarningBanner>
-            <span>{t('Header.Clarity')}</span>
-          </HeaderWarningBanner>
-        )}
         {promptIosPwa && (
           <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
             <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
@@ -416,30 +409,4 @@ export default function Header() {
       </header>
     </PressTipRoot.Provider>
   );
-}
-
-/**
- * The Clarity extension is discontinued and causes memory/CPU issues in DIM.
- * This detects the extension by watching for the menu item it inserts, and
- * returns whether Clarity is installed.
- */
-function useClarityDetector(ref: React.RefObject<HTMLElement>) {
-  const [clarityDetected, setClarityDetected] = useState(false);
-  useEffect(() => {
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (
-          mutation.type === 'childList' &&
-          Array.from(mutation.addedNodes ?? []).some(
-            (n) => n instanceof HTMLElement && n.classList.contains('Clarity_menu_button'),
-          )
-        ) {
-          setClarityDetected(true);
-        }
-      }
-    });
-    observer.observe(ref.current!, { subtree: true, childList: true });
-    return () => observer.disconnect();
-  }, [ref]);
-  return clarityDetected;
 }
