@@ -133,6 +133,13 @@
     opacity: 0.9;
     color: #555;
   }
+
+  // We must remove pointer events from the icon or else the wacky event
+  // delegation in useButtonSensor won't work because the event target will be
+  // the icon, not the button.
+  > :global(.app-icon) {
+    pointer-events: none;
+  }
 }
 
 .dragging {
