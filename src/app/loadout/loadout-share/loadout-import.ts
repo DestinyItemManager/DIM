@@ -98,6 +98,14 @@ function preprocessReceivedLoadout(loadout: Loadout): Loadout {
     id: item.id === '0' ? generateMissingLoadoutItemId() : item.id,
     hash: Number(item.hash),
   }));
+  for (const constraint of loadout.parameters?.statConstraints ?? []) {
+    if (constraint.minTier) {
+      constraint.minTier = Math.min(10, Math.floor(constraint.minTier));
+    }
+    if (constraint.maxTier) {
+      constraint.maxTier = Math.min(10, Math.ceil(constraint.maxTier));
+    }
+  }
 
   return loadout;
 }
