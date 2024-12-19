@@ -15,12 +15,10 @@ import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import { t } from './i18next-t';
 import Login from './login/Login';
 import NotificationsContainer from './notifications/NotificationsContainer';
-import About from './shell/About';
 import DefaultAccount from './shell/DefaultAccount';
 import Destiny from './shell/Destiny';
 import GATracker from './shell/GATracker';
 import Header from './shell/Header';
-import Privacy from './shell/Privacy';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
 
@@ -29,6 +27,8 @@ const SettingsPage = lazy(
   () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage'),
 );
 const Debug = lazy(() => import(/* webpackChunkName: "debug" */ './debug/Debug'));
+const Privacy = lazy(() => import(/* webpackChunkName: "privacy" */ './shell/Privacy'));
+const About = lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
 
 export default function App() {
   const language = useSelector(settingSelector('language'));
