@@ -1,4 +1,5 @@
-import { addCompareItem, endCompareSession } from 'app/compare/actions';
+import { addCompareItem } from 'app/compare/actions';
+import { compareSessionSelector } from 'app/compare/selectors';
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
@@ -30,11 +31,12 @@ interface ActionButtonProps {
 
 export function CompareActionButton({ item, label, fromCompare = false }: ActionButtonProps) {
   const dispatch = useDispatch();
+  const session = useSelector(compareSessionSelector);
 
   const openCompare = () => {
     hideItemPopup();
-    if (fromCompare) {
-      dispatch(endCompareSession());
+    if (fromCompare && session) {
+      session.initialItemId = item.id;
     }
     dispatch(addCompareItem(item));
   };
