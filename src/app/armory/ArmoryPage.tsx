@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { usePageTitle } from 'app/utils/hooks';
 import { useLocation, useParams } from 'react-router';
-import Armory from './Armory';
+import Armory from './LazyArmory';
 
 export default function ArmoryPage({ account }: { account: DestinyAccount }) {
   usePageTitle(t('Armory.Armory'));

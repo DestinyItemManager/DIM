@@ -2,13 +2,14 @@ import { createItemContextSelector, sortedStoresSelector } from 'app/inventory/s
 import { DimStore } from 'app/inventory/store-types';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
 import { DimItem } from '../inventory/item-types';
-import ItemPopup from './ItemPopup';
 import { hideItemPopup, showItemPopup$ } from './item-popup';
+
+const ItemPopup = lazy(() => import(/* webpackChunkName: "item-popup" */ './ItemPopup'));
 
 interface Props {
   boundarySelector?: string;
@@ -44,14 +45,16 @@ export default function ItemPopupContainer({ boundarySelector }: Props) {
   }
 
   return (
-    <ItemPopup
-      key={item.index}
-      item={item}
-      boundarySelector={boundarySelector}
-      element={currentItem.element}
-      extraInfo={currentItem.extraInfo}
-      onClose={onClose}
-    />
+    <Suspense fallback={null}>
+      <ItemPopup
+        key={item.index}
+        item={item}
+        boundarySelector={boundarySelector}
+        element={currentItem.element}
+        extraInfo={currentItem.extraInfo}
+        onClose={onClose}
+      />
+    </Suspense>
   );
 }
 
