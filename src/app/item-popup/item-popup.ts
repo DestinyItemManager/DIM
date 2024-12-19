@@ -24,6 +24,7 @@ export interface ItemPopupExtraInfo {
   canCraftThis?: boolean;
   // if you completely leveled up the item, it can be crafted with any of its perks. impressive.
   canCraftAllPlugs?: boolean;
+  fromCompare?: boolean;
 }
 
 export function showItemPopup(
