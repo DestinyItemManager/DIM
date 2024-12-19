@@ -173,7 +173,9 @@ export default (env: Env) => {
           return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
+        minSize: 64_000,
       },
+      removeAvailableModules: true,
       minimizer: [
         new TerserPlugin({
           parallel: true,
