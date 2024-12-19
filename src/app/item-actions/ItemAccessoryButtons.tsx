@@ -21,11 +21,13 @@ export default function ItemAccessoryButtons({
   mobile,
   actionsModel,
   showLabel = true,
+  fromCompare = false,
 }: {
   item: DimItem;
   mobile: boolean;
   showLabel: boolean;
   actionsModel: ItemActionsModel;
+  fromCompare?: boolean;
 }) {
   const streamDeckEnabled = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -38,7 +40,9 @@ export default function ItemAccessoryButtons({
         <TagActionButton item={item} label={mobile || showLabel} hideKeys={mobile} />
       )}
       {actionsModel.lockable && <LockActionButton item={item} label={showLabel} />}
-      {actionsModel.comparable && <CompareActionButton item={item} label={showLabel} />}
+      {actionsModel.comparable && (
+        <CompareActionButton item={item} label={showLabel} fromCompare={fromCompare} />
+      )}
       {actionsModel.canConsolidate && (
         <ConsolidateActionButton item={item} label={showLabel} actionModel={actionsModel} />
       )}

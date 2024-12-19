@@ -1,5 +1,3 @@
-import { addCompareItem } from 'app/compare/actions';
-import { compareOpenSelector } from 'app/compare/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
 import React, { JSX, useCallback, useEffect, useRef } from 'react';
@@ -19,12 +17,9 @@ export default function ItemPopupTrigger({
   item,
   extraData,
   children,
-  noCompare,
 }: {
   item: DimItem;
   extraData?: ItemPopupExtraInfo;
-  /** Don't allow adding to compare */
-  noCompare?: boolean;
   children: (
     ref: React.Ref<HTMLDivElement>,
     onClick: (e: React.MouseEvent) => void,
@@ -36,9 +31,9 @@ export default function ItemPopupTrigger({
   const clicked = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      dispatch(itemPopupTriggerClicked(item, ref, extraData, noCompare));
+      dispatch(itemPopupTriggerClicked(item, ref, extraData));
     },
-    [dispatch, extraData, item, noCompare],
+    [dispatch, extraData, item],
   );
 
   // Close the popup if this component is unmounted
@@ -58,14 +53,11 @@ function itemPopupTriggerClicked(
   item: DimItem,
   ref: React.RefObject<HTMLDivElement | null>,
   extraData?: ItemPopupExtraInfo,
-  noCompare?: boolean,
 ): ThunkResult {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     dispatch(clearNewItem(item.id));
 
-    if (!noCompare && compareOpenSelector(getState())) {
-      dispatch(addCompareItem(item));
-    } else if (ref.current) {
+    if (ref.current) {
       showItemPopup(item, ref.current, extraData);
     }
   };

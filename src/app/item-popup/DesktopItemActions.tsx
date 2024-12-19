@@ -22,9 +22,11 @@ export const menuClassName = styles.interaction;
 export default function DesktopItemActions({
   item,
   actionsModel,
+  fromCompare = false,
 }: {
   item: DimItem;
   actionsModel: ItemActionsModel;
+  fromCompare?: boolean;
 }) {
   const stores = useSelector(sortedStoresSelector);
   const dispatch = useThunkDispatch();
@@ -80,6 +82,7 @@ export default function DesktopItemActions({
         mobile={false}
         showLabel={!sidecarCollapsed}
         actionsModel={actionsModel}
+        fromCompare={fromCompare}
       />
 
       {!sidecarCollapsed && (
