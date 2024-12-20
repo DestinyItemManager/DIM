@@ -173,7 +173,7 @@ export default (env: Env) => {
           return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
-        minSize: 20_000,
+        minSize: 10_000,
       },
       removeAvailableModules: true,
       minimizer: [
