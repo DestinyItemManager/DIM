@@ -3,9 +3,9 @@ import Sheet from 'app/dim-ui/Sheet';
 import { DimItem } from 'app/inventory/item-types';
 import { filterMap } from 'app/utils/collections';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
-import { useMemo } from 'react';
-import Armory from './Armory';
+import { Suspense, useMemo } from 'react';
 import styles from './ArmorySheet.m.scss';
+import Armory from './LazyArmory';
 
 export default function ArmorySheet({
   item,
@@ -36,17 +36,19 @@ export default function ArmorySheet({
   const betterItemHash = item?.vendor && focusingItemOutputs[item.hash];
 
   return (
-    <Sheet onClose={onClose} sheetClassName={styles.sheet}>
-      <ClickOutsideRoot>
-        <Armory
-          itemHash={itemHash ?? betterItemHash ?? item.hash}
-          // Only use the sockets if we didn't change what item we're even looking at.
-          realItemSockets={betterItemHash === undefined ? realItemSockets : undefined}
-          realAvailablePlugHashes={
-            betterItemHash === undefined ? realAvailablePlugHashes : undefined
-          }
-        />
-      </ClickOutsideRoot>
-    </Sheet>
+    <Suspense fallback={null}>
+      <Sheet onClose={onClose} sheetClassName={styles.sheet}>
+        <ClickOutsideRoot>
+          <Armory
+            itemHash={itemHash ?? betterItemHash ?? item.hash}
+            // Only use the sockets if we didn't change what item we're even looking at.
+            realItemSockets={betterItemHash === undefined ? realItemSockets : undefined}
+            realAvailablePlugHashes={
+              betterItemHash === undefined ? realAvailablePlugHashes : undefined
+            }
+          />
+        </ClickOutsideRoot>
+      </Sheet>
+    </Suspense>
   );
 }
