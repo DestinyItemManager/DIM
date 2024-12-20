@@ -65,21 +65,23 @@ module.exports = function (api) {
       'es.array.push',
       'es.array.unshift',
       // Remove this if we start using proposed set methods like .intersection
-      /esnext\.set/,
+      /^es(next)?\.set/,
       // Remove this if we start using iterator-helpers (which would be nice!)
-      /esnext\.iterator/,
+      /^es(next)?\.iterator/,
       // Not sure what exactly this is, but we have our own error-cause stuff
       'es.error.cause',
       // Only used when customizing JSON parsing w/ a "reviver"
       'esnext.json.parse',
       // Edge-case bugfixes for URLSearchParams.prototype.has, delete, and size
-      /web\.url-search-params/,
+      /^web\.url-search-params/,
       // Unneeded mis-detected DOMException extension
       'web.dom-exception.stack',
       // Not needed in worker context
       'web.self',
       // Mis-detected by usage of Array.prototype.at
       'es.string.at-alternative',
+      // We're not doing weird stuff with structured clone
+      'web.structured-clone',
     ],
   };
 
