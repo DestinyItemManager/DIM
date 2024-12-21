@@ -12,7 +12,7 @@ export const craftedSocketCategoryHash = 3583996951;
 export const mementoSocketCategoryHash = 3201856887;
 
 /** the socket containing the enhancement tier plugs */
-const enhancementSocketHash = 4251072212;
+export const enhancementSocketHash = 4251072212;
 const plugHashToEnhancementTier: HashLookup<number> = {
   2728416798: 1,
   2728416797: 2,
