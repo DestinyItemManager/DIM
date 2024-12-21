@@ -430,6 +430,9 @@ devDependencies:
   sass-loader:
     specifier: ^16.0.4
     version: 16.0.4(sass@1.83.0)(webpack@5.97.1)
+  sonda:
+    specifier: ^0.6.2
+    version: 0.6.2
   source-map-loader:
     specifier: ^5.0.0
     version: 5.0.0(webpack@5.97.1)
@@ -12756,6 +12759,14 @@ packages:
       faye-websocket: 0.11.4
       uuid: 8.3.2
       websocket-driver: 0.7.4
+    dev: true
+
+  /sonda@0.6.2:
+    resolution: {integrity: sha512-YD+3qKnB6Tov0aHH/pbWFXeppu51Aqg3Ih5t3zambwLhO5kIwb70m7qNcItK1ocfvCdFtb0uPuWczI7c0E3grA==}
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@jridgewell/sourcemap-codec': 1.5.0
+      open: 10.1.0
     dev: true
 
   /sort-css-media-queries@2.2.0:
