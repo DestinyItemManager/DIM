@@ -192,7 +192,7 @@
     "UseEquipped": "装備済みのファッションを利用する"
   },
   "FileUpload": {
-    "Instructions": "クリックするか、ファイルをドラッグします。"
+    "Instructions": "ボタンクリックか、ここにファイルをドラッグ&ドロップしてください。"
   },
   "Filter": {
     "Adept": "新・",
@@ -365,7 +365,6 @@
     "AutoRefresh": "プレイ中ならば DIM は自動的に再読み込みされます。",
     "BulkTag": "選択したアイテムにタグを付けています",
     "BungieNetAlert": "Bungie Alert",
-    "Clarity": "Clarity拡張機能は開発者によるサポートは終了しています。CPU使用率異常利用など、DIM使用時に障害を引き起こす可能性があります。アンインストールしてください。",
     "Clear": "フィルターをクリア",
     "CompareMatching": "アイテムを比較",
     "DeleteSearch": "検索の削除",
@@ -1219,7 +1218,9 @@
     "Theme": "テーマ",
     "VaultArmorGroupingStyle": "アーマーをクラスごとに水平線で区切る",
     "VaultGroupingNone": "無し",
-    "VaultWeaponGroupingStyle": "武器を種別ごとに水平線で区切る"
+    "VaultWeaponGroupingStyle": "武器を種別ごとに水平線で区切る",
+    "WishlistRefreshNotificationBody": "アップデートしても変更されていない場合は、GitHubなどの元のリポジトリに変更内容がきちんと入っているかチェックしてください。",
+    "WishlistRefreshNotificationTitle": "ウィッシュリストを更新しました"
   },
   "Sockets": {
     "ApplyPerks": "パークを適用",
@@ -1345,7 +1346,7 @@
   "StreamDeck": {
     "Authorize": "アプリケーションに接続",
     "Enable": "Stream Deck プラグイン",
-    "FinePrint": "DIM Stream Deck プラグインとの接続を有効にします。 このプラグインは、DIM開発チームとは別のチームによるプロジェクトでサポート外です。",
+    "FinePrint": "DIM Stream Deck プラグインとの接続を有効にします。 このプラグインは、DIM開発チームとは別のチームによるプロジェクトです。",
     "Install": "プラグインをインストールする",
     "MissingAuthorization": "DIM に接続するには、Stream Deck アプリケーションを認証する必要があります。設定を開き、\"アプリケーションに接続\"をクリックします。",
     "Tooltip": {
@@ -1481,20 +1482,22 @@
     "Clear": "ウィッシュリストをクリア",
     "CopiedLine": "ウィッシュリストのロールをクリップボードにコピーしました",
     "CopyLine": "選択中のパークをウィッシュリストのロールとしてコピー",
+    "DupeRolls": " (+{{num, number}} 個の重複を無視しました)",
     "ExternalSource": "別のウィッシュリストに追加しました",
-    "ExternalSourcePlaceholder": "追加したいウィッシュリストのURLをここにペーストします。",
+    "ExternalSourcePlaceholder": "追加するウィッシュリストのURLをここにペーストしてください。",
     "Header": "ウィッシュリスト",
     "Import": "ウィッシュリストにあるロールをロードする",
-    "ImportError": "欲しい物リストのロード中にエラーが発生しました: {{error}}",
-    "ImportFailed": "ウィッシュリストの情報はありません。",
+    "ImportError": "「{{url}}」からウィッシュリストを読み込む際にエラーが発生しました： {{error}}",
+    "ImportFailed": "ウィッシュリスト内に有効なロールはありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "InvalidExternalSource": "外部ウィッシュリストソースの有効なURLを入力してください。 URLは次から始まる必要があります:",
     "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "最終更新: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} 個のロールが現在のウイッシュリストに入っています",
     "NumRolls": "{{num, number}} 個のロール",
+    "Refresh": "ウィッシュリストを更新",
     "SourceAlreadyAdded": "このウィッシュリストは既に追加されています。",
-    "UpdateExternalSource": "ウィッシュリストに追加しました",
+    "UpdateExternalSource": "ウィッシュリストに追加",
     "Voltron": "voltron (標準)",
     "WishListNotes": "ウィッシュリストのメモ:",
     "WorstRatedTip": "ごみリストにある非推奨パークと完全一致しています。",
