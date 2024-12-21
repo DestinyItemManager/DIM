@@ -166,7 +166,7 @@ export default (env: Env) => {
     optimization: {
       // We always want the chunk name, otherwise it's just numbers
       // chunkIds: 'named',
-      // Extract the runtime into a separate chunk
+      // Extract the runtime into a separate chunk.
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
