@@ -1,4 +1,5 @@
 import { tl } from 'app/i18next-t';
+import { enhancementSocketHash } from 'app/inventory/store/crafted';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -348,10 +349,9 @@ const socketFilters: ItemFilterDefinition[] = [
       }
       const level = item.craftedInfo.level;
       if (item.crafted === 'enhanced') {
-        return (
-          (level >= 11 && item.craftedInfo.enhancementTier < 2) ||
-          (level >= 17 && item.craftedInfo.enhancementTier < 3)
-        );
+        return item.sockets?.allSockets
+          .find((s) => s.socketDefinition.socketTypeHash === enhancementSocketHash)
+          ?.reusablePlugItems?.some((p) => p.canInsert);
       }
       if (item.crafted === 'crafted') {
         return item.sockets?.allSockets.some((s) => {
