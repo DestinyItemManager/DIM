@@ -1,6 +1,6 @@
 @use '../variables.scss' as *;
 
-#item-farming {
+.farming {
   position: fixed;
   backface-visibility: hidden;
   bottom: 0;
@@ -51,23 +51,5 @@
 
   p {
     margin: 0.25em 0;
-  }
-
-  &.farming-enter {
-    transform: translateY(250px) translateX(-50%);
-  }
-
-  &.farming-enter.farming-enter-active {
-    transform: translateY(0) translateX(-50%);
-    transition: transform 200ms $easeOutCubic;
-  }
-
-  &.farming-exit {
-    transform: translateY(0) translateX(-50%);
-  }
-
-  &.farming-exit.farming-exit-active {
-    transform: translateY(250px) translateX(-50%);
-    transition: transform 200ms $easeInCubic;
   }
 }
