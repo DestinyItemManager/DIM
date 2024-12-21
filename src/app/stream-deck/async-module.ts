@@ -1,8 +1,7 @@
 // async module
 import { currentStoreSelector } from 'app/inventory/selectors';
 import { observe, unobserve } from 'app/store/observerMiddleware';
-import store from 'app/store/store';
-import { ThunkResult } from 'app/store/types';
+import { RootState, ThunkResult } from 'app/store/types';
 import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
@@ -26,8 +25,7 @@ export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
 }
 
 // collect and send data to the stream deck
-function refreshStreamDeck() {
-  const state = store.getState();
+function refreshStreamDeck(state: RootState) {
   if (websocket.readyState === WebSocket.OPEN) {
     const store = currentStoreSelector(state);
     store &&
@@ -76,7 +74,7 @@ function registerObservers(): ThunkResult {
         id: STREAM_DECK_INVENTORY_OBSERVER_ID,
         runInitially: true,
         getObserved: (rootState) => rootState.inventory,
-        sideEffect: refreshStreamDeck,
+        sideEffect: ({ rootState }) => refreshStreamDeck(rootState),
       }),
     );
   };
