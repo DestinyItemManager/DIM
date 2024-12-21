@@ -10,7 +10,7 @@ import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { AppIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
+import { useStreamDeckSelection } from 'app/stream-deck/useStreamDeckSelection';
 import { compact } from 'app/utils/collections';
 import clsx from 'clsx';
 import React from 'react';
@@ -96,9 +96,11 @@ function InGameLoadoutTile({
   const streamDeckDeepLink = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
       useStreamDeckSelection({
-        type: 'in-game-loadout',
+        options: {
+          type: 'in-game-loadout' as const,
+          loadout: gameLoadout,
+        },
         equippable: true,
-        loadout: gameLoadout,
       })
     : undefined;
 

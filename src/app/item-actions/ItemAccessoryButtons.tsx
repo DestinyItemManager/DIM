@@ -2,7 +2,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import OpenOnStreamDeckButton from 'app/stream-deck/OpenOnStreamDeckButton/OpenOnStreamDeckButton';
 import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
-import { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import {
   CompareActionButton,
@@ -52,11 +51,7 @@ export default function ItemAccessoryButtons({
       {actionsModel.infusable && (
         <InfuseActionButton item={item} label={showLabel} actionModel={actionsModel} />
       )}
-      {streamDeckEnabled && (
-        <Suspense>
-          <OpenOnStreamDeckButton label={showLabel} item={item} />
-        </Suspense>
-      )}
+      {streamDeckEnabled && <OpenOnStreamDeckButton label={showLabel} item={item} />}
     </>
   );
 }

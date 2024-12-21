@@ -53,11 +53,6 @@ export interface MaxPowerAction {
 export interface PullItemAction {
   action: 'pullItem';
   itemId: string;
-  /**
-   * @deprecated to be removed in future plugin update
-   * @see type
-   */
-  equip: boolean;
   type: 'equip' | 'pull' | 'vault';
 }
 
