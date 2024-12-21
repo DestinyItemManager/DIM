@@ -13,6 +13,8 @@ export function makeFeatureFlags(env: {
   pr: boolean;
 }) {
   return {
+    // Whether to install a service worker
+    serviceWorker: !env.dev && !env.pr,
     // Print debug info to console about item moves
     debugMoves: !env.release,
     // Debug Service Worker
