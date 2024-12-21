@@ -12,14 +12,10 @@ const lazyLoaded: LazyStreamDeck = {};
 // lazy load the stream deck module when needed
 export const lazyLoadStreamDeck = async () => {
   const core = await import(/* webpackChunkName: "streamdeck" */ './async-module');
-  const useStreamDeckSelection = await import(
-    /* webpackChunkName: "streamdeck-selection" */ './useStreamDeckSelection'
-  );
   // load only once
   if (!lazyLoaded.start) {
     Object.assign(lazyLoaded, {
       ...core.default,
-      ...useStreamDeckSelection.default,
     });
   }
 };

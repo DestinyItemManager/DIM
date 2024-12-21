@@ -34,9 +34,7 @@ export default memo(function LoadoutRow({
   const streamDeckDeepLink = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
       useStreamDeckSelection({
-        type: 'loadout',
-        loadout,
-        store,
+        options: { type: 'loadout' as const, loadout, store },
         equippable,
       })
     : undefined;

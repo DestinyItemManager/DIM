@@ -96,9 +96,11 @@ function InGameLoadoutTile({
   const streamDeckDeepLink = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
       useStreamDeckSelection({
-        type: 'in-game-loadout',
+        options: {
+          type: 'in-game-loadout' as const,
+          loadout: gameLoadout,
+        },
         equippable: true,
-        loadout: gameLoadout,
       })
     : undefined;
 
