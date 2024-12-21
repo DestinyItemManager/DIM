@@ -41,7 +41,6 @@ const makeRoomTypes = [
   BucketHashes.LegArmor,
   BucketHashes.ClassArmor,
   D1BucketHashes.Artifact,
-  BucketHashes.Ghost,
   BucketHashes.Consumables,
   BucketHashes.Materials,
 ];

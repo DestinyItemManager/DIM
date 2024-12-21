@@ -4,6 +4,7 @@
   * For crafted weapons, this looks at the level thresholds of the enhanced versions of the weapon's current perks
   * For enhanced weapons, this looks at whether the next tier of enhancement is selectable on the weapon
 * Updated `enhancedperk` search to allow `is:enhancedperk` to find any weapons with already-enhanced perk columns
+* Farming mode will no longer make room for Ghosts.
 
 ## 8.52.0 <span class="changelog-date">(2024-12-22)</span>
 
