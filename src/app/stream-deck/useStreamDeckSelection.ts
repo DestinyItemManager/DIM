@@ -3,11 +3,9 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import store from 'app/store/store';
 import { RootState } from 'app/store/types';
 import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { streamDeckSelectionSelector } from './selectors';
 import { STREAM_DECK_DEEP_LINK } from './util/authorization';
@@ -40,7 +38,7 @@ function findSubClassIcon(items: LoadoutItem[], state: RootState) {
   }
 }
 
-const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
+const toSelection = (data: StreamDeckSelectionOptions) => (state: RootState) => {
   switch (data.type) {
     case 'in-game-loadout': {
       const { loadout } = data;
@@ -86,33 +84,33 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
   }
 };
 
-export type UseStreamDeckSelectionArgs = StreamDeckSelectionOptions & {
-  equippable: boolean;
-  isSubClass?: boolean;
-};
-
-const useSelection = ({ equippable, ...props }: UseStreamDeckSelectionArgs): string | undefined => {
-  const type = props.type === 'item' ? 'item' : 'loadout';
-  const selection = useSelector(streamDeckSelectionSelector);
-  const canSelect = (equippable || props.isSubClass) && selection === type;
-
-  const href = useMemo(() => {
-    const state = store.getState();
+const toSelectionHref =
+  (canSelect: boolean, data: StreamDeckSelectionOptions) => (state: RootState) => {
+    if (!canSelect) {
+      return;
+    }
+    const params = toSelection(data)(state);
     const query = new URLSearchParams();
-    const params = toSelection(props, state);
     for (const [key, value] of Object.entries(params)) {
       if (value !== undefined) {
         query.set(key, value as string);
       }
     }
     return `${STREAM_DECK_DEEP_LINK}/selection?${query.toString()}`;
-  }, [props]);
+  };
 
-  if (canSelect) {
-    return href;
-  }
+export type UseStreamDeckSelectionArgs = StreamDeckSelectionOptions & {
+  equippable: boolean;
+  isSubClass?: boolean;
 };
-
 export type UseStreamDeckSelectionFn = typeof useSelection;
+
+function useSelection({ equippable, ...props }: UseStreamDeckSelectionArgs): string | undefined {
+  const type = props.type === 'item' ? 'item' : 'loadout';
+  const selection = useSelector(streamDeckSelectionSelector);
+  const canSelect = Boolean((equippable || props.isSubClass) && selection === type);
+  // TODO: This selector is unstable because `props` is always a new object every time the hook is invoked
+  return useSelector(toSelectionHref(canSelect, props));
+}
 
 export default { useSelection };
