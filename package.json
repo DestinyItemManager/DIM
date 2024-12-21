@@ -64,14 +64,14 @@
   },
   "homepage": "https://destinyitemmanager.com",
   "browserslist": [
-    "Chrome >= 109",
-    "Edge >= 109",
+    "Chrome >= 126",
+    "Edge >= 126",
     "last 2 ChromeAndroid versions",
     "last 2 FirefoxAndroid versions",
     "last 2 Firefox versions",
     "Firefox ESR",
     "last 2 Safari versions",
-    "iOS >= 16",
+    "iOS >= 16.4",
     "last 2 Opera versions"
   ],
   "resolutions": {
