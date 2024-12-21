@@ -7,7 +7,7 @@ import { deleteLoadout } from 'app/loadout/actions';
 import { Loadout } from 'app/loadout/loadout-types';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { useStreamDeckSelection } from 'app/stream-deck/useStreamDeckSelection';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import { ReactNode, memo, useMemo } from 'react';
 import LoadoutView from './LoadoutView';
 

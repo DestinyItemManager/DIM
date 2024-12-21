@@ -10,7 +10,7 @@ import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { AppIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { useStreamDeckSelection } from 'app/stream-deck/useStreamDeckSelection';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import { compact } from 'app/utils/collections';
 import clsx from 'clsx';
 import React from 'react';

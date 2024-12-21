@@ -104,12 +104,13 @@ export interface UseStreamDeckSelectionArgs {
   equippable: boolean;
 }
 
-export function useStreamDeckSelection({
-  equippable,
-  options,
-}: UseStreamDeckSelectionArgs): string | undefined {
+function useSelection({ equippable, options }: UseStreamDeckSelectionArgs): string | undefined {
   const type = options.type === 'item' ? 'item' : 'loadout';
   const selection = useSelector(streamDeckSelectionSelector);
   const canSelect = Boolean((equippable || options.isSubClass) && selection === type);
   return useSelector(toSelectionHref(canSelect, options));
 }
+
+export default useSelection;
+
+export type UseStreamDeckSelection = typeof useSelection;

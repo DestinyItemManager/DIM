@@ -1,8 +1,10 @@
 import { ThunkResult } from 'app/store/types';
+import { UseStreamDeckSelection } from './useStreamDeckSelection';
 
 export interface LazyStreamDeck {
   start?: () => ThunkResult;
   stop?: () => ThunkResult;
+  useSelection?: UseStreamDeckSelection;
 }
 
 const lazyLoaded: LazyStreamDeck = {};
@@ -23,3 +25,6 @@ export const lazyLoadStreamDeck = async () => {
 export const startStreamDeckConnection = () => lazyLoaded.start!();
 
 export const stopStreamDeckConnection = () => lazyLoaded.stop!();
+
+export const useStreamDeckSelection: UseStreamDeckSelection = (...args) =>
+  lazyLoaded.useSelection?.(...args);

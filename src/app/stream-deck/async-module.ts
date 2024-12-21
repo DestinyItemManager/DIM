@@ -6,6 +6,7 @@ import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/act
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
 import packager from 'app/stream-deck/util/packager';
+import useSelection from './useStreamDeckSelection';
 
 const STREAM_DECK_FARMING_OBSERVER_ID = 'stream-deck-farming-observer';
 
@@ -151,4 +152,5 @@ function start(): ThunkResult {
 export default {
   start,
   stop,
+  useSelection,
 };
