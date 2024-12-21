@@ -307,6 +307,7 @@
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
+    "ReadyToEnhance": "Shows weapons that have reached level thresholds for perk enhancement.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
     "Shiny": "Shows BRAVE weapons with a limited-edition ornament.",

@@ -28,6 +28,7 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 export const modslotFilter = {
@@ -335,6 +336,35 @@ const socketFilters: ItemFilterDefinition[] = [
       }
       // shouldn't ever get here but need the default case
       return (_item) => false;
+    },
+  },
+  {
+    keywords: 'readytoenhance',
+    description: tl('Filter.ReadyToEnhance'),
+    destinyVersion: 2,
+    filter: () => (item) => {
+      if (!item.crafted || !item.craftedInfo) {
+        return false;
+      }
+      const level = item.craftedInfo.level;
+      if (item.crafted === 'enhanced') {
+        return (
+          (level >= 11 && item.craftedInfo.enhancementTier < 2) ||
+          (level >= 17 && item.craftedInfo.enhancementTier < 3)
+        );
+      }
+      if (item.crafted === 'crafted') {
+        return item.sockets?.allSockets.some((s) => {
+          const enhancedPerk = perkToEnhanced[s.plugged?.plugDef.hash || 0] || 0;
+          return (
+            enhancedPerk &&
+            s.plugSet?.plugHashesThatCanRoll.includes(enhancedPerk) &&
+            s.plugSet?.craftingData &&
+            (s.plugSet?.craftingData?.[enhancedPerk]?.requiredLevel || 0) <= level
+          );
+        });
+      }
+      return false;
     },
   },
   {
