@@ -107,17 +107,6 @@
     }
   }
 
-  .pull-item-button {
-    box-sizing: border-box;
-    width: calc(var(--item-size) / 2);
-    height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    text-decoration: none;
-  }
-
   .loadout-add {
     white-space: nowrap;
   }
@@ -126,11 +115,14 @@
     flex: 1;
     display: flex;
     flex-flow: row wrap;
-  }
-  .sub-bucket.equipped {
-    flex: 0;
-    .loadout-item {
-      margin: 0;
+
+    &.equipped {
+      margin-right: var(--item-margin);
+      flex: 0;
+
+      .loadout-item {
+        margin: 0;
+      }
     }
   }
 }

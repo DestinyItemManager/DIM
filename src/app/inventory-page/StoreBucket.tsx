@@ -33,6 +33,7 @@ import { shallowEqual } from 'fast-equals';
 import { memo, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import styles from './StoreBucket.m.scss';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import StoreInventoryItem from './StoreInventoryItem';
@@ -116,7 +117,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
           {bucket.hasTransferDestination && (
             <a
               onClick={pickEquipItem}
-              className="pull-item-button"
+              className={styles.pullItemButton}
               title={t('MovePopup.PullItem', {
                 bucket: bucket.name,
                 store: storeName,
@@ -135,8 +136,8 @@ const StoreBucketInner = memo(function StoreBucketInner({
         storeClassType={storeClassType}
         // class representing a *character* bucket area that's not equippable
         className={clsx({
-          'not-equippable': !isVault && !isEquippable,
-          inlineGroups: weaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
+          [styles.notEquippable]: !isVault && !isEquippable,
+          [styles.inlineGroups]: weaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
         })}
       >
         {unequippedItems.map((groupOrItem) =>
@@ -144,12 +145,12 @@ const StoreBucketInner = memo(function StoreBucketInner({
             <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
           ) : (
             <div
-              className="vault-group"
+              className={styles.vaultGroup}
               key={vaultGroupingValueWithType(groupOrItem.groupingValue)}
             >
               <WeaponGroupingIcon
                 icon={groupOrItem.icon}
-                className="weapon-grouping-icon-wrapper"
+                className={styles.weaponGroupingIconWrapper}
               />
               {groupOrItem.items.map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
@@ -228,7 +229,7 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
     >
       {classTypeOrder.map((classType) => (
         <div className="vault-group" key={classType}>
-          <ClassIcon classType={classType} className="armor-class-icon" />
+          <ClassIcon classType={classType} className={styles.armorClassIcon} />
           {sortItems(itemsByClass.get(classType)!).map((item) => (
             <StoreInventoryItem key={item.index} item={item} />
           ))}
