@@ -4,10 +4,10 @@ import React, { Suspense, createContext, lazy, useCallback, useState } from 'rea
 import { useSelector } from 'react-redux';
 import { SingleVendorState, hideVendorSheet$ } from './single-vendor-sheet';
 
-const SingleVendorSheet = lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components'))
-    .SingleVendorSheet,
-}));
+const SingleVendorSheet = lazy(
+  async () =>
+    import(/* webpackChunkName: "vendors" */ 'app/vendors/single-vendor/SingleVendorSheet'),
+);
 
 export const SingleVendorSheetContext = createContext<React.Dispatch<
   React.SetStateAction<SingleVendorState>

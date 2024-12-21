@@ -14,9 +14,10 @@ import {
   useSocketOverrides,
 } from 'app/inventory/store/override-sockets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
+import { AmmoIcon } from 'app/item-popup/AmmoIcon';
 import BreakerType from 'app/item-popup/BreakerType';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
-import { AmmoIcon, ItemTypeName } from 'app/item-popup/ItemPopupHeader';
+import {} from 'app/item-popup/ItemPopupHeader';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import ItemStats from 'app/item-popup/ItemStats';
 import MetricCategories from 'app/item-popup/MetricCategories';
@@ -27,7 +28,7 @@ import { Reward } from 'app/progress/Reward';
 import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { getItemYear } from 'app/utils/item-utils';
+import { getItemYear, itemTypeName } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -118,7 +119,7 @@ export default function Armory({
             <ElementIcon element={item.element} className={styles.element} />
             <BreakerType item={item} />
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
-            <ItemTypeName item={item} />
+            <div>{itemTypeName(item)}</div>
             {item.pursuit?.questLine && (
               <div>
                 {t('MovePopup.Subtitle.QuestProgress', {

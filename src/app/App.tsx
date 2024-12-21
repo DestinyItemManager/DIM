@@ -22,13 +22,21 @@ import Header from './shell/Header';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
 
-const WhatsNew = lazy(() => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew'));
+const WhatsNew = lazy(
+  () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './whats-new/WhatsNew'),
+);
 const SettingsPage = lazy(
   () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage'),
 );
-const Debug = lazy(() => import(/* webpackChunkName: "debug" */ './debug/Debug'));
-const Privacy = lazy(() => import(/* webpackChunkName: "privacy" */ './shell/Privacy'));
-const About = lazy(() => import(/* webpackChunkName: "about" */ './shell/About'));
+const Debug = lazy(
+  () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './debug/Debug'),
+);
+const Privacy = lazy(
+  () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './shell/Privacy'),
+);
+const About = lazy(
+  () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './shell/About'),
+);
 
 export default function App() {
   const language = useSelector(settingSelector('language'));

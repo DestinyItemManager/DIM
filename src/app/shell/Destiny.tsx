@@ -54,13 +54,11 @@ const D1LoadoutBuilder = lazy(
       /* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder'
     ),
 );
-const Vendors = lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
-}));
-const SingleVendorPage = lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components'))
-    .SingleVendorPage,
-}));
+const Vendors = lazy(async () => import(/* webpackChunkName: "vendors" */ 'app/vendors/Vendors'));
+const SingleVendorPage = lazy(
+  async () =>
+    import(/* webpackChunkName: "vendors" */ 'app/vendors/single-vendor/SingleVendorPage'),
+);
 const D1Vendors = lazy(
   () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors'),
 );
