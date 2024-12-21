@@ -1,4 +1,5 @@
 import { tl } from 'app/i18next-t';
+import { enhancementSocketHash } from 'app/inventory/store/crafted';
 import {
   DEFAULT_GLOW,
   DEFAULT_ORNAMENTS,
@@ -28,6 +29,7 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 export const modslotFilter = {
@@ -335,6 +337,34 @@ const socketFilters: ItemFilterDefinition[] = [
       }
       // shouldn't ever get here but need the default case
       return (_item) => false;
+    },
+  },
+  {
+    keywords: 'readytoenhance',
+    description: tl('Filter.ReadyToEnhance'),
+    destinyVersion: 2,
+    filter: () => (item) => {
+      if (!item.crafted || !item.craftedInfo) {
+        return false;
+      }
+      const level = item.craftedInfo.level;
+      if (item.crafted === 'enhanced') {
+        return item.sockets?.allSockets
+          .find((s) => s.socketDefinition.socketTypeHash === enhancementSocketHash)
+          ?.reusablePlugItems?.some((p) => p.canInsert);
+      }
+      if (item.crafted === 'crafted') {
+        return item.sockets?.allSockets.some((s) => {
+          const enhancedPerk = perkToEnhanced[s.plugged?.plugDef.hash || 0] || 0;
+          return (
+            enhancedPerk &&
+            s.plugSet?.plugHashesThatCanRoll.includes(enhancedPerk) &&
+            s.plugSet?.craftingData &&
+            (s.plugSet?.craftingData?.[enhancedPerk]?.requiredLevel || 0) <= level
+          );
+        });
+      }
+      return false;
     },
   },
   {

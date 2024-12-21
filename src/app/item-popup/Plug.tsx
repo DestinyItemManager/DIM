@@ -129,7 +129,7 @@ export function PerkCircleWithTooltip({
       item={item}
       plug={plug}
       wishlistRoll={wishlistRoll}
-      craftingData={socketInfo.craftingData?.[plug.plugDef.hash]}
+      craftingData={socketInfo.plugSet?.craftingData?.[plug.plugDef.hash]}
     />
   );
 
