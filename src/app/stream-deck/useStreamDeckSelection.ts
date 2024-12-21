@@ -113,4 +113,4 @@ function useSelection({ equippable, options }: UseStreamDeckSelectionArgs): stri
 
 export default useSelection;
 
-export type UseStreamDeckSelection = typeof useSelection;
+export type UseStreamDeckSelectionFn = typeof useSelection;
