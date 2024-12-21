@@ -186,7 +186,7 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
     const allItems = allItemsSelector(state);
     const [item] = allItems.filter((it) => it.index.startsWith(msg.itemId));
     const targetStore = msg.type === 'vault' ? vaultSelector(state) : store;
-    const shouldEquip = msg.type === 'equip' || msg.equip;
+    const shouldEquip = msg.type === 'equip';
     if (targetStore) {
       await dispatch(moveItemTo(item, targetStore, shouldEquip, item.amount));
     }
@@ -235,6 +235,7 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage, token: string): 
       });
       throw new Error(!msg.token ? 'missing-token' : 'invalid-token');
     }
+
     if (store) {
       // handle stream deck actions
       const handler = handlers[msg.action] as (args: HandlerArgs<StreamDeckMessage>) => ThunkResult;

@@ -3,14 +3,22 @@ import { DimItem } from 'app/inventory/item-types';
 import ActionButton from 'app/item-actions/ActionButton';
 import { BucketHashes } from 'data/d2/generated-enums';
 import streamDeckIcon from 'images/streamDeck.svg';
+import { useMemo } from 'react';
 import { useStreamDeckSelection } from '../stream-deck';
 import styles from './OpenOnStreamDeckButton.m.scss';
 
 export default function OpenOnStreamDeckButton({ item, label }: { item: DimItem; label: boolean }) {
+  const options = useMemo(
+    () => ({
+      type: 'item' as const,
+      item,
+      isSubClass: item.bucket.hash === BucketHashes.Subclass,
+    }),
+    [item],
+  );
+
   const deepLink = useStreamDeckSelection({
-    type: 'item',
-    item,
-    isSubClass: item.bucket.hash === BucketHashes.Subclass,
+    options,
     equippable: !item.notransfer,
   });
 

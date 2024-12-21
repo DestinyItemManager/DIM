@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { AppIcon, banIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import streamDeckIcon from 'images/streamDeck.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { streamDeckSelector } from '../selectors';
 import { streamDeckAuthorizationInit } from '../util/authorization';
@@ -70,6 +70,11 @@ export default function StreamDeckButton() {
       setVersion(undefined);
     }
   };
+
+  useEffect(() => {
+    updateVersion();
+  }, []);
+
   const error = !checkStreamDeckVersion(version);
   const needSetup = auth === undefined;
   const dispatch = useThunkDispatch();

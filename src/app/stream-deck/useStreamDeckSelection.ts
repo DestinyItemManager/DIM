@@ -99,18 +99,18 @@ const toSelectionHref =
     return `${STREAM_DECK_DEEP_LINK}/selection?${query.toString()}`;
   };
 
-export type UseStreamDeckSelectionArgs = StreamDeckSelectionOptions & {
+export interface UseStreamDeckSelectionArgs {
+  options: StreamDeckSelectionOptions;
   equippable: boolean;
-  isSubClass?: boolean;
-};
-export type UseStreamDeckSelectionFn = typeof useSelection;
-
-function useSelection({ equippable, ...props }: UseStreamDeckSelectionArgs): string | undefined {
-  const type = props.type === 'item' ? 'item' : 'loadout';
-  const selection = useSelector(streamDeckSelectionSelector);
-  const canSelect = Boolean((equippable || props.isSubClass) && selection === type);
-  // TODO: This selector is unstable because `props` is always a new object every time the hook is invoked
-  return useSelector(toSelectionHref(canSelect, props));
 }
 
-export default { useSelection };
+function useSelection({ equippable, options }: UseStreamDeckSelectionArgs): string | undefined {
+  const type = options.type === 'item' ? 'item' : 'loadout';
+  const selection = useSelector(streamDeckSelectionSelector);
+  const canSelect = Boolean((equippable || options.isSubClass) && selection === type);
+  return useSelector(toSelectionHref(canSelect, options));
+}
+
+export default useSelection;
+
+export type UseStreamDeckSelectionFn = typeof useSelection;
