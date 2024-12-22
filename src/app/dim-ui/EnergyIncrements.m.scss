@@ -8,50 +8,75 @@
 @use '../variables.scss' as *;
 
 .energyMeterIncrements {
-  display: flex;
+  --cell-height: 2px;
+  --cell-margin: 0.5px;
+  --cell-border: 1px;
+  composes: flexRow from './common.m.scss';
   align-items: center;
 
-  border-color: white;
+  &.medium {
+    --cell-height: 6px;
+    --cell-margin: 1px;
+    --cell-border: 3px;
+  }
 
-  .unavailable,
-  .used,
-  .unused {
+  // The actual cells
+  > div {
     display: block;
     flex-grow: 1;
-    border-style: solid;
-  }
-  .unavailable {
-    height: 0;
-    border-color: #888;
-  }
-  .used {
-    background: white;
-  }
-  &.small {
-    .unavailable,
-    .used,
-    .unused {
-      border-width: 1px;
-      margin: 0 0.5px;
+    padding: 0 var(--cell-margin);
+
+    &[role='button'] {
+      // Expand buttons a bit to make them easier to hover and click
+      padding-top: 3px;
+      padding-bottom: 3px;
+      margin-top: -3px;
+      margin-bottom: -3px;
+
+      // Apply the "used" style to all cells up to and including the hovered
+      // cell - this is a pure-CSS hover preview (we used to use React to do
+      // this)!
+      &:is(:has(~ *:hover), :hover)::before {
+        border-color: white;
+        height: var(--cell-height);
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      // And apply the "unavailable" style to all cells after the hovered cell
+      &:hover ~ *::before {
+        border-color: #888;
+        height: 0;
+      }
     }
 
-    .used,
-    .unused {
-      height: 2px;
+    // Remove leading/trailing padding for the first/last cell
+    &:first-child {
+      padding-left: 0;
     }
-  }
-
-  &.medium {
-    .unavailable,
-    .used,
-    .unused {
-      border-width: 3px;
-      margin: 0 1px;
+    &:last-child {
+      padding-right: 0;
     }
 
-    .used,
-    .unused {
-      height: 6px;
+    // The actual boxes you see are these generated elements - this is so we can
+    // eliminate the gap between items and then put them back with *padding*
+    // (instead of margin). Padding still triggers hover, so this prevents the
+    // hover effect from disappearing when you move the mouse between cells.
+    &::before {
+      content: '';
+      display: block;
+      border: var(--cell-border) solid white;
+      height: var(--cell-height);
+    }
+
+    &.used::before {
+      background: white;
+    }
+
+    &.unavailable::before {
+      border-color: #888;
+      height: 0;
+      margin-top: 3px;
+      margin-bottom: 3px;
     }
   }
 }

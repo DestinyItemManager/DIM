@@ -1,4 +1,3 @@
-import 'app/dim-ui/EnergyMeterIncrements.scss';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { EnergySwap } from 'app/loadout-builder/generated-sets/GeneratedSetItem';
@@ -35,37 +34,28 @@ function EnergyIncrements({
 export function EnergyMeterIncrements({
   energyCapacity,
   energyUsed,
-  handleHoverStart,
-  handleHoverEnd,
+  minCapacity,
   previewUpgrade,
   variant,
 }: {
   energyCapacity: number;
   energyUsed: number;
-  handleHoverStart?: (i: number) => void;
-  handleHoverEnd?: () => void;
+  minCapacity?: number;
   previewUpgrade?: (i: number) => void;
   variant: 'medium' | 'small';
 }) {
   // layer in possible total slots, then earned slots, then currently used slots
-  const meterIncrements = Array<string>(MAX_ARMOR_ENERGY_CAPACITY)
+  const meterIncrements = Array<string | undefined>(MAX_ARMOR_ENERGY_CAPACITY)
     .fill(styles.unavailable)
-    .fill(styles.unused, 0, energyCapacity)
+    .fill(undefined, 0, energyCapacity)
     .fill(styles.used, 0, energyUsed);
   return (
-    <div
-      className={clsx(
-        styles.energyMeterIncrements,
-        variant === 'medium' ? styles.medium : styles.small,
-      )}
-    >
+    <div className={clsx(styles.energyMeterIncrements, { [styles.medium]: variant === 'medium' })}>
       {meterIncrements.map((incrementStyle, i) => (
         <div
           key={i}
           className={incrementStyle}
-          role={handleHoverStart && i + 1 > energyCapacity ? 'button' : undefined}
-          onPointerEnter={handleHoverStart ? () => handleHoverStart(i + 1) : undefined}
-          onPointerLeave={handleHoverEnd}
+          role={minCapacity !== undefined && i + 1 > minCapacity ? 'button' : undefined}
           onClick={previewUpgrade ? () => previewUpgrade(i + 1) : undefined}
         />
       ))}

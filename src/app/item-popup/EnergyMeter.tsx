@@ -25,7 +25,6 @@ const upgradeAnimateTransition: Tween = { duration: 0.3 };
 export default function EnergyMeter({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
   const energyCapacity = item.energy?.energyCapacity || 0;
-  const [hoverEnergyCapacity, setHoverEnergyCapacity] = useState(0);
   const [previewCapacity, setPreviewCapacity] = useState<number>(energyCapacity);
   const dispatch = useThunkDispatch();
 
@@ -34,8 +33,6 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
   }
 
   const minCapacity = item.energy.energyCapacity;
-  const handleHoverStart = (i: number) => setHoverEnergyCapacity(i);
-  const handleHoverEnd = () => setHoverEnergyCapacity(0);
   const previewUpgrade = (i: number) => setPreviewCapacity(Math.max(minCapacity, i));
   const resetPreview = () => setPreviewCapacity(energyCapacity);
 
@@ -74,11 +71,10 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
           <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
         </div>
         <EnergyMeterIncrements
-          energyCapacity={Math.max(minCapacity, hoverEnergyCapacity || previewCapacity || 0)}
+          energyCapacity={Math.max(minCapacity, previewCapacity || 0)}
           energyUsed={item.energy.energyUsed}
+          minCapacity={minCapacity}
           variant="medium"
-          handleHoverStart={handleHoverStart}
-          handleHoverEnd={handleHoverEnd}
           previewUpgrade={previewUpgrade}
         />
         <AnimatePresence>
