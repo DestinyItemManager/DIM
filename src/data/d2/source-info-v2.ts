@@ -366,6 +366,7 @@ const D2Sources: {
       1282207663, // Source: Dungeon "Duality"
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: "Pit of Heresy" Dungeon
+      2463956052, // Source: Vesper's Host
       3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     itemHashes: [
@@ -1383,6 +1384,12 @@ const D2Sources: {
       2065138144, // Source: "Vault of Glass" Raid
     ],
     aliases: ['vog'],
+  },
+  vespershost: {
+    sourceHashes: [
+      2463956052, // Source: Vesper's Host
+    ],
+    aliases: ['vesper'],
   },
   vexoffensive: {
     itemHashes: [

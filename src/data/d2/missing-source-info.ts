@@ -3106,6 +3106,40 @@ const missingSources: { [key: string]: number[] } = {
     4177448932, // Focusing Wraps
     4248997900, // Incisor
   ],
+  vesper: [
+    239405325, // Spacewalk Strides
+    480133716, // Spacewalk Robes
+    498496285, // Spacewalk Cover
+    898451378, // Spacewalk Cowl
+    1265540521, // Spacewalk Bond
+    1364804507, // Spacewalk Grasps
+    2147583688, // Spacewalk Cloak
+    2155757770, // Spacewalk Mark
+    2867324653, // Spacewalk Gauntlets
+    3067211509, // Spacewalk Vest
+    3113666223, // Spacewalk Greaves
+    3255995532, // Spacewalk Gloves
+    3820841619, // Spacewalk Plate
+    3901727798, // Spacewalk Boots
+    4036496212, // Spacewalk Helm
+  ],
+  vespershost: [
+    239405325, // Spacewalk Strides
+    480133716, // Spacewalk Robes
+    498496285, // Spacewalk Cover
+    898451378, // Spacewalk Cowl
+    1265540521, // Spacewalk Bond
+    1364804507, // Spacewalk Grasps
+    2147583688, // Spacewalk Cloak
+    2155757770, // Spacewalk Mark
+    2867324653, // Spacewalk Gauntlets
+    3067211509, // Spacewalk Vest
+    3113666223, // Spacewalk Greaves
+    3255995532, // Spacewalk Gloves
+    3820841619, // Spacewalk Plate
+    3901727798, // Spacewalk Boots
+    4036496212, // Spacewalk Helm
+  ],
   votd: [
     2480074702, // Forbearance
   ],
