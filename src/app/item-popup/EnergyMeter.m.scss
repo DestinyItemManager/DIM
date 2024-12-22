@@ -4,10 +4,6 @@
   margin: 10px;
 }
 
-.clickable {
-  cursor: pointer;
-}
-
 .upgradePreview {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;

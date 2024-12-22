@@ -1,4 +1,4 @@
-import 'app/dim-ui/EnergyMeterIncrements.scss';
+import { EnergyMeterIncrements } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
 import { insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem } from 'app/inventory/item-types';
@@ -11,7 +11,6 @@ import { compareBy } from 'app/utils/comparators';
 import { errorMessage } from 'app/utils/errors';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import Cost from 'app/vendors/Cost';
-import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, Tween, Variants, motion } from 'motion/react';
 import { useState } from 'react';
@@ -35,13 +34,6 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
   }
 
   const minCapacity = item.energy.energyCapacity;
-
-  // layer in possible total slots, then earned slots, then currently used slots
-  const meterIncrements = Array<string>(10)
-    .fill('unavailable')
-    .fill('unused', 0, Math.max(minCapacity, hoverEnergyCapacity || previewCapacity || 0))
-    .fill('used', 0, item.energy.energyUsed);
-
   const handleHoverStart = (i: number) => setHoverEnergyCapacity(i);
   const handleHoverEnd = () => setHoverEnergyCapacity(0);
   const previewUpgrade = (i: number) => setPreviewCapacity(Math.max(minCapacity, i));
@@ -81,19 +73,14 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
         <div className="item-socket-category-name">
           <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
         </div>
-        <div className={clsx('energyMeterIncrements', 'medium')}>
-          {meterIncrements.map((incrementStyle, i) => (
-            <div
-              key={i}
-              className={clsx(incrementStyle, {
-                [styles.clickable]: i + 1 > energyCapacity,
-              })}
-              onPointerEnter={() => handleHoverStart(i + 1)}
-              onPointerLeave={handleHoverEnd}
-              onClick={() => previewUpgrade(i + 1)}
-            />
-          ))}
-        </div>
+        <EnergyMeterIncrements
+          energyCapacity={Math.max(minCapacity, hoverEnergyCapacity || previewCapacity || 0)}
+          energyUsed={item.energy.energyUsed}
+          variant="medium"
+          handleHoverStart={handleHoverStart}
+          handleHoverEnd={handleHoverEnd}
+          previewUpgrade={previewUpgrade}
+        />
         <AnimatePresence>
           {previewCapacity > minCapacity && (
             <motion.div
