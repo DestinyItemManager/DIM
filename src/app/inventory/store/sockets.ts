@@ -288,17 +288,6 @@ function buildDefinedSocket(
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
 
-  let craftingData: DimSocket['craftingData'];
-  function addCraftingReqs(plugEntry: DestinyItemSocketEntryPlugItemRandomizedDefinition) {
-    if (
-      plugEntry.craftingRequirements &&
-      (plugEntry.craftingRequirements.materialRequirementHashes.length ||
-        plugEntry.craftingRequirements.unlockRequirements.length)
-    ) {
-      (craftingData ??= {})[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
-    }
-  }
-
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
   // we will only populate plugOptions with the currently inserted plug.
@@ -315,7 +304,6 @@ function buildDefinedSocket(
 
           if (built && !isUncraftableEnhancedPerk(built, reusablePlug.craftingRequirements)) {
             reusablePlugs.push(built);
-            addCraftingReqs(reusablePlug);
           }
         }
       }
@@ -357,7 +345,6 @@ function buildDefinedSocket(
             !isUncraftableEnhancedPerk(built, randomPlug.craftingRequirements)
           ) {
             reusablePlugs.push(built);
-            addCraftingReqs(randomPlug);
           }
         }
       }
@@ -455,7 +442,6 @@ function buildDefinedSocket(
     isReusable,
     isMod,
     socketDefinition: socketDef,
-    craftingData,
   };
 }
 
@@ -814,6 +800,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
 
   const plugs: DimPlug[] = [];
   const defPlugSet = defs.PlugSet.get(plugSetHash);
+  let craftingData: DimPlugSet['craftingData'];
   for (const plugEntry of defPlugSet.reusablePlugItems) {
     // Deprecated mods should not actually be in any PlugSets, but here we are
     // https://github.com/Bungie-net/api/issues/1801
@@ -822,6 +809,13 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
       if (plug) {
         plugs.push(plug);
       }
+    }
+    if (
+      plugEntry.craftingRequirements &&
+      (plugEntry.craftingRequirements.materialRequirementHashes.length ||
+        plugEntry.craftingRequirements.unlockRequirements.length)
+    ) {
+      (craftingData ??= {})[plugEntry.plugItemHash] = plugEntry.craftingRequirements;
     }
   }
   const [cant, can] = partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
@@ -833,6 +827,7 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     )?.plugItemHash,
     plugHashesThatCannotRoll: cant.map((p) => p.plugDef.hash),
     plugHashesThatCanRoll: can.map((p) => p.plugDef.hash),
+    craftingData: craftingData,
   };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 

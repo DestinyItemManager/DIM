@@ -10,6 +10,7 @@ import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import StreamDeckButton from 'app/stream-deck/StreamDeckButton/StreamDeckButton';
 import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { compact } from 'app/utils/collections';
@@ -18,7 +19,7 @@ import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
 import { AnimatePresence, Spring, Variants, motion } from 'motion/react';
-import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';
@@ -52,13 +53,6 @@ const menuAnimateVariants: Variants = {
   collapsed: { x: -250 },
 };
 const menuAnimateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
-
-const StreamDeckButton = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "stream-deck-button" */ 'app/stream-deck/StreamDeckButton/StreamDeckButton'
-    ),
-);
 
 // TODO: finally time to hack apart the header styles!
 
@@ -373,11 +367,7 @@ export default function Header() {
                 <SearchFilter onClear={hideSearch} ref={searchFilter} />
               </span>
             )}
-            {streamDeckEnabled && (
-              <Suspense>
-                <StreamDeckButton />
-              </Suspense>
-            )}
+            {streamDeckEnabled && <StreamDeckButton />}
             <RefreshButton className={styles.menuItem} />
             {!isPhonePortrait && (
               <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>

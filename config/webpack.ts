@@ -15,6 +15,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
 import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
+import { SondaWebpackPlugin } from 'sonda';
 import TerserPlugin from 'terser-webpack-plugin';
 import 'webpack-dev-server';
 import WebpackNotifierPlugin from 'webpack-notifier';
@@ -166,7 +167,7 @@ export default (env: Env) => {
     optimization: {
       // We always want the chunk name, otherwise it's just numbers
       // chunkIds: 'named',
-      // Extract the runtime into a separate chunk
+      // Extract the runtime into a separate chunk.
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
@@ -559,6 +560,16 @@ export default (env: Env) => {
             /screenshots\//,
           ],
         },
+      }),
+
+      new SondaWebpackPlugin({
+        format: 'html',
+        filename: 'sonda-report.html',
+        open: false,
+        detailed: true,
+        sources: true,
+        gzip: false,
+        brotli: true,
       }),
 
       new CopyWebpackPlugin({

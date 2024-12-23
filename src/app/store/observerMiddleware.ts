@@ -22,10 +22,10 @@ export interface StoreObserver<T> {
    */
   getObserved: (rootState: RootState) => T;
   /**
-   * Runs the side effect providing both the previous and current version of the derrived state.
+   * Runs the side effect providing both the previous and current version of the derived state.
    * When the `runInitially` flag is true, previous will be undefined on first run.
    */
-  sideEffect: (states: { previous: T | undefined; current: T }) => void;
+  sideEffect: (states: { previous: T | undefined; current: T; rootState: RootState }) => void;
 }
 
 /**
@@ -70,6 +70,7 @@ export function observerMiddleware<D extends Dispatch>(
         storeObserver.sideEffect({
           previous: undefined,
           current: storeObserver.getObserved(api.getState()),
+          rootState: api.getState(),
         });
       }
 
@@ -97,7 +98,7 @@ export function observerMiddleware<D extends Dispatch>(
       const current = observer.getObserved(currentRootState);
       const equals = observer.equals || Object.is;
       if (!equals(previous, current)) {
-        observer.sideEffect({ previous, current });
+        observer.sideEffect({ previous, current, rootState: currentRootState });
       }
     }
 

@@ -2,41 +2,23 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { AppIcon, banIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { EventBus } from 'app/utils/observable';
 import streamDeckIcon from 'images/streamDeck.svg';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { streamDeckSelector } from '../selectors';
 import { streamDeckAuthorizationInit } from '../util/authorization';
 import { STREAM_DECK_MINIMUM_VERSION, checkStreamDeckVersion } from '../util/version';
 import styles from './StreamDeckButton.m.scss';
 
-const version$ = new EventBus<undefined>();
-
-const usePluginVersion = () => {
-  const [version, setVersion] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    version$.subscribe(() =>
-      fetch('http://localhost:9120/version', {
-        mode: 'cors',
-      })
-        .then((response) => response.text())
-        .then((text) => setVersion(text))
-        .catch(() => setVersion(undefined)),
-    );
-    version$.next(undefined);
-  }, []);
-  return version;
-};
-
-interface StreamDeckTooltipProps {
+function StreamDeckTooltip({
+  version,
+  error,
+  needSetup,
+}: {
   version?: string;
   error?: boolean;
   needSetup?: boolean;
-}
-
-function StreamDeckTooltip({ version, error, needSetup }: StreamDeckTooltipProps) {
+}) {
   return (
     <div>
       <div className={styles.tooltipTitle}>{t('StreamDeck.Tooltip.Title')}</div>
@@ -73,10 +55,27 @@ function StreamDeckTooltip({ version, error, needSetup }: StreamDeckTooltipProps
   );
 }
 
-function StreamDeckButton() {
+export default function StreamDeckButton() {
   const { connected, auth } = useSelector(streamDeckSelector);
-  const version = usePluginVersion();
-  const error = useMemo(() => !checkStreamDeckVersion(version), [version]);
+  const [version, setVersion] = useState<string | undefined>(undefined);
+
+  const updateVersion = async () => {
+    try {
+      const resp = await fetch('http://localhost:9120/version', {
+        mode: 'cors',
+      });
+      const text = await resp.text();
+      setVersion(text);
+    } catch {
+      setVersion(undefined);
+    }
+  };
+
+  useEffect(() => {
+    updateVersion();
+  }, []);
+
+  const error = !checkStreamDeckVersion(version);
   const needSetup = auth === undefined;
   const dispatch = useThunkDispatch();
 
@@ -84,7 +83,7 @@ function StreamDeckButton() {
     <PressTip tooltip={<StreamDeckTooltip version={version} error={error} needSetup={needSetup} />}>
       <button
         onClick={() => {
-          version$.next(undefined);
+          updateVersion();
           needSetup && dispatch(streamDeckAuthorizationInit());
         }}
         type="button"
@@ -103,5 +102,3 @@ function StreamDeckButton() {
     </PressTip>
   );
 }
-
-export default StreamDeckButton;

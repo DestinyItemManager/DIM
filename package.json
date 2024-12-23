@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "8.51.0",
+  "version": "8.52.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -64,14 +64,14 @@
   },
   "homepage": "https://destinyitemmanager.com",
   "browserslist": [
-    "Chrome >= 109",
-    "Edge >= 109",
+    "Chrome >= 126",
+    "Edge >= 126",
     "last 2 ChromeAndroid versions",
     "last 2 FirefoxAndroid versions",
     "last 2 Firefox versions",
     "Firefox ESR",
     "last 2 Safari versions",
-    "iOS >= 16",
+    "iOS >= 16.4",
     "last 2 Opera versions"
   ],
   "resolutions": {
@@ -167,6 +167,7 @@
     "react-refresh": "^0.16.0",
     "sass": "^1.83.0",
     "sass-loader": "^16.0.4",
+    "sonda": "^0.6.2",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "stylelint": "^16.12.0",

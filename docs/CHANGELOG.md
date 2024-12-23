@@ -1,5 +1,12 @@
 ## Next
 
+* Added `is:enhancementready` search that finds weapons which have reached level thresholds to enhance perks
+  * For crafted weapons, this looks at the level thresholds of the enhanced versions of the weapon's current perks
+  * For enhanced weapons, this looks at whether the next tier of enhancement is selectable on the weapon
+* Updated `enhancedperk` search to allow `is:enhancedperk` to find any weapons with already-enhanced perk columns
+
+## 8.52.0 <span class="changelog-date">(2024-12-22)</span>
+
 ## 8.51.0 <span class="changelog-date">(2024-12-15)</span>
 
 * Added a wishlist refresh button in Settings to help with wishlist development. Note that GitHub can take upwards of 10min to actually reflect your changes. Refreshing won't speed up GitHub.

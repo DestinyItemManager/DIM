@@ -20,3 +20,4 @@ webpack-stats.json
 junit.xml
 eslint.results.json
 .pnpm-store
+/sonda-report.html
