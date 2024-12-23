@@ -467,6 +467,28 @@ export interface DimPlugSet {
   /** A precomputed list of plug hashes that can not roll on current versions of the item. */
   readonly plugHashesThatCannotRoll: number[];
   readonly plugHashesThatCanRoll: number[];
+
+  // "Why not just determine craftingData at the plug level?" you ask.
+  // Well, we cache/de-dupe plugs on a per-hash basis, so the
+  // DimPlug for Demolitionist should always be a reference the same object.
+
+  // Additional metadata about Demolitionist, that's only applicable when
+  // it's inside this plugSet, should live with the plugSet.
+
+  // yes, the de-dupe thing is not strictly true, due to cannotCurrentlyRoll property...
+  // but that's its own mess that needs cleanup. cannotCurrentlyRoll could definitely be
+  // determined at runtime. there are *very* few places it's needed.
+  // a good TO-DO for later.
+
+  /**
+   * If populated, this plugSet seems to belong to a crafted weapon.
+   *
+   * For rendering purposes, the child plugs in the owning socket's plugOptions
+   * ought to share a little more about their material/level requirements.
+   *
+   * This property holds that metadata, keyed by plugHash.
+   */
+  craftingData?: { [plugHash: number]: DestinyPlugItemCraftingRequirements | undefined };
 }
 
 export interface DimSocket {
@@ -497,28 +519,6 @@ export interface DimSocket {
    * based on the plugs available to the profile/character.
    */
   plugSet?: DimPlugSet;
-
-  // "Why not just determine craftingData at the plug level?" you ask.
-  // Well, we cache/de-dupe plugs on a per-hash basis, so the
-  // DimPlug for Demolitionist should always be a reference the same object.
-
-  // Additional metadata about Demolitionist, that's only applicable when
-  // it's inside this socket, should live with the socket.
-
-  // yes, the de-dupe thing is not strictly true, due to cannotCurrentlyRoll property...
-  // but that's its own mess that needs cleanup. cannotCurrentlyRoll could definitely be
-  // determined at runtime. there are *very* few places it's needed.
-  // a good TO-DO for later.
-
-  /**
-   * If populated, this socket seems to belong to a crafted weapon.
-   *
-   * For rendering purposes, the child plugs in this socket's plugOptions
-   * ought to share a little more about their material/level requirements.
-   *
-   * This property holds that metadata, keyed by plugHash.
-   */
-  craftingData?: { [plugHash: number]: DestinyPlugItemCraftingRequirements | undefined };
 
   /**
    * The plug item hash used to reset this plug to an empty default plug.
