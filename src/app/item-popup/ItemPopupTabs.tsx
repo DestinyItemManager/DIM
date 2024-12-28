@@ -5,7 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { ItemTriage, TriageTabToggle, doShowTriage } from 'app/item-triage/ItemTriage';
 import { useSetting } from 'app/settings/hooks';
 import clsx from 'clsx';
-import { useCallback, useId, useRef } from 'react';
+import { JSX, useCallback, useId, useRef } from 'react';
 import ItemDetails from './ItemDetails';
 import styles from './ItemPopupTabs.m.scss';
 import { ItemPopupExtraInfo } from './item-popup';

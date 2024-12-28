@@ -2,7 +2,7 @@ import { addCompareItem } from 'app/compare/actions';
 import { compareOpenSelector } from 'app/compare/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { JSX, useCallback, useEffect, useRef } from 'react';
 import {
   ItemPopupExtraInfo,
   hideItemPopup,

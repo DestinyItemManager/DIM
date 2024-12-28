@@ -3,7 +3,7 @@
  */
 
 import ItemPopup from 'app/item-popup/ItemPopup';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { JSX, useCallback, useRef, useState } from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 
