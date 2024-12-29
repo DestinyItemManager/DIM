@@ -17,7 +17,6 @@ import { getEvent, getSeason } from 'app/inventory/store/season';
 import { AmmoIcon } from 'app/item-popup/AmmoIcon';
 import BreakerType from 'app/item-popup/BreakerType';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
-import {} from 'app/item-popup/ItemPopupHeader';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import ItemStats from 'app/item-popup/ItemStats';
 import MetricCategories from 'app/item-popup/MetricCategories';

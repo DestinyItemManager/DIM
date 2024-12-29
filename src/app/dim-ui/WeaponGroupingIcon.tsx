@@ -1,6 +1,5 @@
 import TagIcon from 'app/inventory/TagIcon';
 import { AmmoIcon } from 'app/item-popup/AmmoIcon';
-import {} from 'app/item-popup/ItemPopupHeader';
 import { VaultGroupIcon } from 'app/shell/item-comparators';
 import ElementIcon from './ElementIcon';
 import { getWeaponTypeSvgIconFromCategoryHashes } from './svgs/itemCategory';
