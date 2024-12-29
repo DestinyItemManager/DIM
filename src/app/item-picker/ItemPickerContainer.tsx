@@ -52,9 +52,9 @@ export default function ItemPickerContainer({ children }: { children: React.Reac
   }, [location.pathname, onClose]);
 
   return (
-    <ItemPickerContext.Provider value={setOptions}>
+    <ItemPickerContext value={setOptions}>
       {children}
       {options && <ItemPicker key={generation} {...options} onSheetClosed={onClose} />}
-    </ItemPickerContext.Provider>
+    </ItemPickerContext>
   );
 }

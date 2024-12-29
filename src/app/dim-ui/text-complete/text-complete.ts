@@ -10,7 +10,7 @@ import { tempContainer } from 'app/utils/temp-container';
 import styles from './text-complete.m.scss';
 
 function createTagsCompleter(
-  textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
+  textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement | null>,
   tags: string[],
 ): StrategyProps {
   return {
@@ -76,9 +76,9 @@ function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
  * When using an input, set an appropriate line-height so that textcomplete doesn't fall back to a slow path...
  */
 export function useAutocomplete(
-  textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
+  textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement | null>,
   tags: string[],
-  parent?: React.RefObject<HTMLElement>,
+  parent?: React.RefObject<HTMLElement | null>,
 ) {
   const symbols = useSelector(symbolsSelector);
   useEffect(() => {

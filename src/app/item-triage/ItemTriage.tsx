@@ -26,7 +26,7 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
 import { maxBy } from 'es-toolkit';
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class

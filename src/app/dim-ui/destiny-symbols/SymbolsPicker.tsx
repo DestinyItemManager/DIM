@@ -32,7 +32,7 @@ export function WithSymbolsPicker<T extends HTMLTextAreaElement | HTMLInputEleme
   className,
   children,
 }: {
-  input: React.RefObject<T>;
+  input: React.RefObject<T | null>;
   setValue: (val: string) => void;
   // NB no matter the type here TS/JSX cannot enforce that only a T is used here...
   children: React.ReactElement<HTMLProps<T>>;
@@ -108,7 +108,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
   input,
   setValue,
 }: {
-  input?: React.RefObject<T>;
+  input?: React.RefObject<T | null>;
   setValue: (val: string) => void;
 }) {
   const controlRef = useRef<HTMLButtonElement>(null);

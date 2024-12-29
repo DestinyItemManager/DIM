@@ -486,11 +486,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
               title={t('Organizer.SelectAll')}
               type="checkbox"
               checked={selectedItems.length === rows.length}
-              ref={(el) =>
+              ref={(el) => {
                 el &&
-                (el.indeterminate =
-                  selectedItems.length !== rows.length && selectedItems.length > 0)
-              }
+                  (el.indeterminate =
+                    selectedItems.length !== rows.length && selectedItems.length > 0);
+              }}
               onChange={selectAllItems}
             />
           </div>

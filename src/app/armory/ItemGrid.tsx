@@ -3,7 +3,7 @@
  */
 
 import ItemPopup from 'app/item-popup/ItemPopup';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { JSX, useCallback, useRef, useState } from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 
@@ -26,9 +26,7 @@ export default function ItemGrid({
     <div className="sub-bucket">
       {items.map((i) => (
         <BasicItemTrigger item={i} key={i.index} onShowPopup={setPopup}>
-          {(ref, showPopup) => (
-            <ConnectedInventoryItem innerRef={ref} onClick={showPopup} item={i} />
-          )}
+          {(ref, showPopup) => <ConnectedInventoryItem ref={ref} onClick={showPopup} item={i} />}
         </BasicItemTrigger>
       ))}
       {popup && (

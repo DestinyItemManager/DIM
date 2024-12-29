@@ -13,7 +13,7 @@ import { RootState } from 'app/store/types';
 import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import { compact } from 'app/utils/collections';
 import clsx from 'clsx';
-import React from 'react';
+import React, { JSX } from 'react';
 import { useSelector } from 'react-redux';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import styles from './InGameLoadoutStrip.m.scss';

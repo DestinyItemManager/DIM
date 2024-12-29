@@ -287,7 +287,7 @@ export default function Header() {
     : false;
 
   return (
-    <PressTipRoot.Provider value={headerRef}>
+    <PressTipRoot value={headerRef}>
       <header className={styles.container} ref={headerRef}>
         <div className={styles.header}>
           <button
@@ -397,6 +397,6 @@ export default function Header() {
           </Sheet>
         )}
       </header>
-    </PressTipRoot.Provider>
+    </PressTipRoot>
   );
 }

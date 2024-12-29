@@ -321,13 +321,13 @@ export default function Sheet({
 
   return (
     <Portal>
-      <SheetDisabledContext.Provider value={setParentDisabled}>
-        <PressTipRoot.Provider value={sheet}>
+      <SheetDisabledContext value={setParentDisabled}>
+        <PressTipRoot value={sheet}>
           <ItemPickerContainer>
             <SingleVendorSheetContainer>{sheetBody}</SingleVendorSheetContainer>
           </ItemPickerContainer>
-        </PressTipRoot.Provider>
-      </SheetDisabledContext.Provider>
+        </PressTipRoot>
+      </SheetDisabledContext>
     </Portal>
   );
 }

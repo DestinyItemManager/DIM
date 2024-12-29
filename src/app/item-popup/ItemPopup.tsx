@@ -138,7 +138,7 @@ export default function ItemPopup({
         aria-modal="false"
       >
         <ClickOutside onClickOutside={onClose}>
-          <PressTipRoot.Provider value={popupRef}>
+          <PressTipRoot value={popupRef}>
             <ItemTagHotkeys item={item} />
             <div className={styles.desktopPopup}>
               <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
@@ -151,7 +151,7 @@ export default function ItemPopup({
                 </div>
               )}
             </div>
-          </PressTipRoot.Provider>
+          </PressTipRoot>
         </ClickOutside>
         <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
       </div>

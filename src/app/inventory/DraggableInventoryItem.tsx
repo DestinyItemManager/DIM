@@ -52,7 +52,9 @@ export default function DraggableInventoryItem({ children, item, anyBucket = fal
 
   return (
     <div
-      ref={dragRef}
+      ref={(el) => {
+        dragRef(el);
+      }}
       className={clsx('item-drag-container', {
         [styles.engram]: item.isEngram,
         [styles.cantDrag]: !canDrag,

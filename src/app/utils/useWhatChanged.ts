@@ -9,7 +9,7 @@ import { infoLog } from './log';
  * useWhatChanged('MyComponent', {prop1, prop2, state1, state2});
  */
 export function useWhatChanged<T extends Record<string, unknown>>(name: string, params: T) {
-  const previousState = useRef<T>();
+  const previousState = useRef<T>(undefined);
 
   if (!previousState.current) {
     infoLog('useWhatChanged', `${name} first render`);

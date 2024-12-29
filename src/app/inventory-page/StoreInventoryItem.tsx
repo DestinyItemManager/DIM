@@ -27,7 +27,7 @@ export default memo(function StoreInventoryItem({ item }: Props) {
           <ConnectedInventoryItem
             item={item}
             allowFilter={true}
-            innerRef={ref}
+            ref={ref}
             // intercept inventory item click and send it to the stream deck if needed
             onClick={onClick}
             onDoubleClick={doubleClicked}
