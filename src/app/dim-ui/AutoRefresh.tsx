@@ -108,7 +108,7 @@ function useScheduledAutoRefresh() {
   const autoRefresh = useSelector(autoRefreshEnabledSelector);
 
   // A timer for auto refreshing on a schedule, if that's enabled.
-  const refreshAccountDataInterval = useRef<number>();
+  const refreshAccountDataInterval = useRef<number>(0);
 
   const clearTimer = () => window.clearTimeout(refreshAccountDataInterval.current);
 

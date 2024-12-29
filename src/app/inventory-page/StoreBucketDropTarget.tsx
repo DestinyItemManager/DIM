@@ -59,7 +59,9 @@ export default function StoreBucketDropTarget({
   // TODO: I don't like that we're managing the classes for sub-bucket here
   return (
     <div
-      ref={dropRef}
+      ref={(el) => {
+        dropRef(el);
+      }}
       className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
         [styles.over]: canDrop && isOver,
         [styles.canDrop]: canDrop,

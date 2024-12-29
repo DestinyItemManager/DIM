@@ -26,7 +26,7 @@ export function SheetHorizontalScrollContainer({
     scrollPosition: number;
     pointerDownPosition: number;
     scrolling: boolean;
-  }>();
+  }>(undefined);
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     // Don't do any of this if the view isn't scrollable in the first place
     if (ref.current!.scrollWidth <= ref.current!.clientWidth) {

@@ -95,7 +95,7 @@ function LoadoutMenuContents({
 }: {
   store: DimStore;
   onClose: () => void;
-  menuTrigger: React.RefObject<HTMLButtonElement>;
+  menuTrigger: React.RefObject<HTMLButtonElement | null>;
 }) {
   const menuRef = useRef<HTMLDivElement>(null);
 

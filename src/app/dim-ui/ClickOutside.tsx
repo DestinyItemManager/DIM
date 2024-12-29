@@ -21,7 +21,7 @@ export default function ClickOutside({
 }: React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
   /** An optional second ref that will be excluded from being considered "outside". This is good for preventing the triggering button from double-counting clicks. */
-  extraRef?: React.RefObject<HTMLElement>;
+  extraRef?: React.RefObject<HTMLElement | null>;
   onClickOutside: (event: React.MouseEvent | MouseEvent) => void;
   ref?: React.Ref<HTMLDivElement>;
 }) {

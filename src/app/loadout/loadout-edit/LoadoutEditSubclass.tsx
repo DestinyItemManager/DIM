@@ -66,7 +66,9 @@ export default function LoadoutEditSubclass({
 
   return (
     <div
-      ref={equippedRef}
+      ref={(el) => {
+        equippedRef(el);
+      }}
       className={clsx(styles.subclassContainer, {
         [styles.isOver]: isOverEquipped,
         [styles.canDrop]: canDropEquipped,

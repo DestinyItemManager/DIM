@@ -56,7 +56,7 @@ export default function ItemPopupTrigger({
 
 function itemPopupTriggerClicked(
   item: DimItem,
-  ref: React.RefObject<HTMLDivElement>,
+  ref: React.RefObject<HTMLDivElement | null>,
   extraData?: ItemPopupExtraInfo,
   noCompare?: boolean,
 ): ThunkResult {

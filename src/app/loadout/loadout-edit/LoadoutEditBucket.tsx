@@ -210,7 +210,9 @@ function ItemBucket({
   return (
     <div className={styles.itemBucket}>
       <div
-        ref={equippedRef}
+        ref={(el) => {
+          equippedRef(el);
+        }}
         className={clsx({
           [styles.canDrop]: canDropEquipped,
           [styles.isOver]: isOverEquipped,
@@ -232,14 +234,21 @@ function ItemBucket({
         )}
       </div>
       <div
-        ref={unequippedRef}
+        ref={(el) => {
+          unequippedRef(el);
+        }}
         className={clsx({
           [styles.canDrop]: canDropUnequipped,
           [styles.isOver]: isOverUnequipped,
         })}
       >
         {unequipped.length > 0 ? (
-          <div ref={unequippedRef} className={clsx(styles.items, styles.unequipped)}>
+          <div
+            ref={(el) => {
+              unequippedRef(el);
+            }}
+            className={clsx(styles.items, styles.unequipped)}
+          >
             {unequipped.map(renderItem)}
             {addUnequipped}
           </div>

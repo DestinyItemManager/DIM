@@ -263,7 +263,7 @@ function SearchBar({
 
   const { valid, saveable } = validateQuery(liveQuery);
 
-  const lastBlurQuery = useRef<string>();
+  const lastBlurQuery = useRef<string>(undefined);
   const onBlur = () => {
     if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur

@@ -47,7 +47,7 @@ interface Props {
 type ControlProps = Props &
   React.HTMLAttributes<HTMLDivElement> & {
     open: boolean;
-    triggerRef: React.RefObject<HTMLDivElement>;
+    triggerRef: React.RefObject<HTMLDivElement | null>;
   };
 
 interface TooltipCustomization {
@@ -132,9 +132,9 @@ function Control({
               </div>
             )}
             <div className={styles.content}>
-              <TooltipContext.Provider value={customizeTooltip}>
+              <TooltipContext value={customizeTooltip}>
                 {typeof tooltip === 'function' ? tooltip() : tooltip}
-              </TooltipContext.Provider>
+              </TooltipContext>
             </div>
             <div className={styles.arrow} />
           </div>,
@@ -263,7 +263,7 @@ export function PressTip(props: Props) {
   // The triggering element
   const ref = useRef<HTMLDivElement>(null);
   // Allow us to distinguish between press and hover gestures
-  const startEvent = useRef<'pointerdown' | 'pointerenter'>();
+  const startEvent = useRef<'pointerdown' | 'pointerenter'>(undefined);
   // Absolute timestamp within which we will suppress clicks
   const suppressClickUntil = useRef<number>(0);
   const [open, setOpen] = useState<boolean>(false);
