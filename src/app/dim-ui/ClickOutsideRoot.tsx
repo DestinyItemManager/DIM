@@ -24,10 +24,10 @@ export default function ClickOutsideRoot({
   };
 
   return (
-    <ClickOutsideContext.Provider value={clickOutsideSubject}>
+    <ClickOutsideContext value={clickOutsideSubject}>
       <div className={className} onClick={onClick}>
         {children}
       </div>
-    </ClickOutsideContext.Provider>
+    </ClickOutsideContext>
   );
 }

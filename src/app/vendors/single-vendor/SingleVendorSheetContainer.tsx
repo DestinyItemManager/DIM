@@ -30,7 +30,7 @@ export default function SingleVendorSheetContainer({ children }: { children: Rea
 
   return (
     <>
-      <SingleVendorSheetContext.Provider value={setCurrentVendorHash}>
+      <SingleVendorSheetContext value={setCurrentVendorHash}>
         {children}
         <Suspense fallback={null}>
           {account &&
@@ -44,7 +44,7 @@ export default function SingleVendorSheetContainer({ children }: { children: Rea
               />
             )}
         </Suspense>
-      </SingleVendorSheetContext.Provider>
+      </SingleVendorSheetContext>
     </>
   );
 }
