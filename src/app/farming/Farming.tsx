@@ -2,12 +2,11 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
 import { AnimatePresence, Spring, Variants, motion } from 'motion/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { stopFarming } from './actions';
-import './farming.scss';
+import styles from './Farming.m.scss';
 import { farmingStoreSelector } from './selectors';
 
 const animateVariants: Variants = {
@@ -31,8 +30,7 @@ export default function Farming() {
     <AnimatePresence>
       {store && (
         <motion.div
-          id="item-farming"
-          className={clsx({ 'd2-farming': store.destinyVersion === 2 })}
+          className={styles.farming}
           initial="hidden"
           animate="shown"
           exit="hidden"
