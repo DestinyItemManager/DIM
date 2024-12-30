@@ -1,5 +1,6 @@
 import { factionItemAligns } from 'app/destiny1/d1-factions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import {
   D1Item,
   DimItem,
@@ -10,6 +11,7 @@ import {
 } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
+import { D1BucketHashes } from 'app/search/d1-known-values';
 import {
   ARTIFICE_PERK_HASH,
   armor2PlugCategoryHashes,
@@ -363,4 +365,31 @@ export function getSeasonalBreakerTypeHash(item: DimItem): number | undefined {
       }
     }
   }
+}
+
+/** The full item type name shown as a subtitle in the item popup. e.g. "Hunter Gauntlets" */
+export function itemTypeName(item: DimItem) {
+  const classType =
+    (item.classType !== DestinyClass.Unknown &&
+      // These already include the class name
+      item.bucket.hash !== BucketHashes.ClassArmor &&
+      item.bucket.hash !== D1BucketHashes.Artifact &&
+      item.bucket.hash !== BucketHashes.Subclass &&
+      !item.classified &&
+      item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
+    '';
+
+  const title =
+    item.typeName && classType
+      ? t('MovePopup.Subtitle.Type', {
+          classType,
+          typeName: item.typeName,
+        })
+      : item.typeName || classType;
+
+  if (!title) {
+    return null;
+  }
+
+  return title;
 }

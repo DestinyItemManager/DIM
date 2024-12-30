@@ -9,7 +9,7 @@ import { useSubscription } from 'use-subscription';
 import { DimItem } from '../inventory/item-types';
 import { hideItemPopup, showItemPopup$ } from './item-popup';
 
-const ItemPopup = lazy(() => import(/* webpackChunkName: "item-popup" */ './ItemPopup'));
+const ItemPopup = lazy(() => import(/* webpackChunkName: "item-popup-armory" */ './ItemPopup'));
 
 interface Props {
   boundarySelector?: string;

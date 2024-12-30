@@ -3,17 +3,14 @@ import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
+import { itemTypeName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
-import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import heavy from 'destiny-icons/general/ammo-heavy.svg';
-import primary from 'destiny-icons/general/ammo-primary.svg';
-import special from 'destiny-icons/general/ammo-special.svg';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
+import { AmmoIcon } from './AmmoIcon';
 import BreakerType from './BreakerType';
 import styles from './ItemPopupHeader.m.scss';
 
@@ -62,7 +59,7 @@ export default function ItemPopupHeader({
       )}
       <div className={styles.subtitle}>
         <div className={styles.type}>
-          <ItemTypeName item={item} className={styles.itemType} />
+          <div className={styles.itemType}>{itemTypeName(item)}</div>
           {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
           <BreakerType item={item} />
         </div>
@@ -91,51 +88,4 @@ export default function ItemPopupHeader({
       )}
     </button>
   );
-}
-
-const ammoIcons: LookupTable<DestinyAmmunitionType, string> = {
-  [DestinyAmmunitionType.Primary]: primary,
-  [DestinyAmmunitionType.Special]: special,
-  [DestinyAmmunitionType.Heavy]: heavy,
-};
-
-export function AmmoIcon({ type, className }: { type: DestinyAmmunitionType; className?: string }) {
-  return (
-    <img
-      className={clsx(
-        styles.ammoIcon,
-        {
-          [styles.primary]: type === DestinyAmmunitionType.Primary,
-        },
-        className,
-      )}
-      src={ammoIcons[type]}
-    />
-  );
-}
-
-export function ItemTypeName({ item, className }: { item: DimItem; className?: string }) {
-  const classType =
-    (item.classType !== DestinyClass.Unknown &&
-      // These already include the class name
-      item.bucket.hash !== BucketHashes.ClassArmor &&
-      item.bucket.hash !== D1BucketHashes.Artifact &&
-      item.bucket.hash !== BucketHashes.Subclass &&
-      !item.classified &&
-      item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
-    '';
-
-  const title =
-    item.typeName && classType
-      ? t('MovePopup.Subtitle.Type', {
-          classType,
-          typeName: item.typeName,
-        })
-      : item.typeName || classType;
-
-  if (!title) {
-    return null;
-  }
-
-  return <div className={className}>{title}</div>;
 }
