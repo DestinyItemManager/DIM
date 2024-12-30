@@ -4,14 +4,9 @@
   margin: 10px;
 }
 
-.clickable {
-  cursor: pointer;
-}
-
 .upgradePreview {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  padding: 4px 0;
   overflow: hidden;
   box-sizing: border-box;
 
@@ -26,6 +21,7 @@
   composes: resetButton from '../dim-ui/common.m.scss';
   color: var(--theme-text);
   font-size: 16px;
+  margin: 4px 0 0 0;
 }
 
 .cost {

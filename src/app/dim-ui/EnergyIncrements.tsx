@@ -1,9 +1,9 @@
-import 'app/dim-ui/EnergyMeterIncrements.scss';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { EnergySwap } from 'app/loadout-builder/generated-sets/GeneratedSetItem';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import clsx from 'clsx';
+import styles from './EnergyIncrements.m.scss';
 import { PressTip } from './PressTip';
 
 // TODO special display for T10 -> T10 + exotic artifice?
@@ -22,15 +22,42 @@ function EnergyIncrements({
       };
     }) {
   const { energyCapacity, energyUsed } = item?.energy ?? energy!;
-  // layer in possible total slots, then earned slots, then currently used slots
-  const meterIncrements = Array<string>(MAX_ARMOR_ENERGY_CAPACITY)
-    .fill('unavailable')
-    .fill('unused', 0, energyCapacity)
-    .fill('used', 0, energyUsed);
   return (
-    <div className={clsx('energyMeterIncrements', 'small')}>
+    <EnergyMeterIncrements
+      energyCapacity={energyCapacity}
+      energyUsed={energyUsed}
+      variant="small"
+    />
+  );
+}
+
+export function EnergyMeterIncrements({
+  energyCapacity,
+  energyUsed,
+  minCapacity,
+  previewUpgrade,
+  variant,
+}: {
+  energyCapacity: number;
+  energyUsed: number;
+  minCapacity?: number;
+  previewUpgrade?: (i: number) => void;
+  variant: 'medium' | 'small';
+}) {
+  // layer in possible total slots, then earned slots, then currently used slots
+  const meterIncrements = Array<string | undefined>(MAX_ARMOR_ENERGY_CAPACITY)
+    .fill(styles.unavailable)
+    .fill(undefined, 0, energyCapacity)
+    .fill(styles.used, 0, energyUsed);
+  return (
+    <div className={clsx(styles.energyMeterIncrements, { [styles.medium]: variant === 'medium' })}>
       {meterIncrements.map((incrementStyle, i) => (
-        <div key={i} className={incrementStyle} />
+        <div
+          key={i}
+          className={incrementStyle}
+          role={minCapacity !== undefined && i + 1 > minCapacity ? 'button' : undefined}
+          onClick={previewUpgrade ? () => previewUpgrade(i + 1) : undefined}
+        />
       ))}
     </div>
   );
