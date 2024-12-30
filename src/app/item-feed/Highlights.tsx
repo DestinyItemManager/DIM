@@ -2,8 +2,8 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimStat } from 'app/inventory/item-types';
-import { ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
+import { itemTypeName } from 'app/utils/item-utils';
 import {
   getExtraIntrinsicPerkSockets,
   getWeaponArchetype,
@@ -32,7 +32,7 @@ export default function Highlights({ item }: { item: DimItem }) {
     return (
       <>
         <span className={styles.type}>
-          {archetype} <ItemTypeName item={item} />
+          {archetype} <div>{itemTypeName(item)}</div>
         </span>
         <div className={styles.perks}>
           {perkSockets.map((s) => (

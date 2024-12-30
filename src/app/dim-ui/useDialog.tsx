@@ -2,15 +2,8 @@ import styles from './useDialog.m.scss';
 
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
+import { useCallback, useImperativeHandle, useRef, useState } from 'react';
 import ClickOutsideRoot from './ClickOutsideRoot';
-
-// Redecalare forwardRef
-declare module 'react' {
-  function forwardRef<T, P = object>(
-    render: (props: P, ref: Ref<T>) => ReactElement | null,
-  ): (props: P & RefAttributes<T>) => ReactElement | null;
-}
 
 export class DialogError extends Error {
   constructor(reason: string) {
@@ -26,14 +19,13 @@ export interface DialogRef<Args, Result> {
 /**
  * A generic dialog component that uses the system native dialog component.
  */
-const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
-  {
-    children,
-  }: {
-    children: (args: Args, close: (result: Result) => void) => React.ReactNode;
-  },
-  ref: React.ForwardedRef<DialogRef<Args, Result>>,
-) {
+function Dialog<Args = [], Result = void>({
+  children,
+  ref,
+}: {
+  children: (args: Args, close: (result: Result) => void) => React.ReactNode;
+  ref?: React.Ref<DialogRef<Args, Result>>;
+}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [dialogState, setDialogState] = useState<{
     args: Args;
@@ -96,7 +88,7 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
       </dialog>
     </Portal>
   );
-});
+}
 
 /**
  * A generic dialog component that uses the system native dialog component.

@@ -32,7 +32,9 @@ export default function LoadoutBucketDropTarget({ onItemLocked, children, classN
   );
   return (
     <div
-      ref={dropRef}
+      ref={(el) => {
+        dropRef(el);
+      }}
       className={clsx(className, {
         [styles.over]: canDrop && isOver,
         [styles.canDrop]: canDrop,

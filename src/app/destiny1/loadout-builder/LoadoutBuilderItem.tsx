@@ -42,7 +42,7 @@ export default function LoadoutBuilderItem({ item, shiftClickCallback }: Props) 
           {(ref, onClick) => (
             <ConnectedInventoryItem
               item={item}
-              innerRef={ref}
+              ref={ref}
               onClick={onClick}
               onShiftClick={onShiftClick}
             />

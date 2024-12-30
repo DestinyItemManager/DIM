@@ -16,7 +16,7 @@ import useResizeObserver from '@react-hook/resize-observer';
  * https://github.com/w3c/csswg-drafts/issues/3349#issuecomment-492721871 and
  * https://bugs.chromium.org/p/chromium/issues/detail?id=813094
  */
-export function useFixOverscrollBehavior(ref: React.RefObject<HTMLElement>) {
+export function useFixOverscrollBehavior(ref: React.RefObject<HTMLElement | null>) {
   useResizeObserver(ref, (entry) => {
     const elem = entry.target as HTMLElement;
     if (elem.scrollHeight > elem.clientHeight) {

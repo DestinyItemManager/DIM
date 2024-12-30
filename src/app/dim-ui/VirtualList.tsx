@@ -1,6 +1,6 @@
 import { Virtualizer, useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 import clsx from 'clsx';
-import { forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import styles from './VirtualList.m.scss';
 
 interface VirtualListProps {
@@ -17,6 +17,7 @@ interface VirtualListProps {
   overscan?: number;
   children: (index: number) => React.ReactNode;
   getItemKey: (index: number) => string | number; // React.Key, but they added bigint while @tanstack/react-virtual used their own Key type
+  ref?: React.Ref<VirtualListRef>;
 }
 
 export interface VirtualListRef {
@@ -28,18 +29,16 @@ export interface VirtualListRef {
  *
  * @see WindowVirtualList for a window-linked virtual scroller.
  */
-export const VirtualList = forwardRef(function VirtualList(
-  {
-    numElements,
-    estimatedSize,
-    className,
-    itemContainerClassName,
-    overscan,
-    children,
-    getItemKey,
-  }: VirtualListProps,
-  ref: React.ForwardedRef<VirtualListRef>,
-) {
+export function VirtualList({
+  numElements,
+  estimatedSize,
+  className,
+  itemContainerClassName,
+  overscan,
+  children,
+  getItemKey,
+  ref,
+}: VirtualListProps) {
   // Dynamic-height element-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -89,25 +88,23 @@ export const VirtualList = forwardRef(function VirtualList(
       </div>
     </div>
   );
-});
+}
 
 /**
  * A virtual scrolling list linked to window scroll. e.g. Optimizer sets or Loadouts.
  *
  * @see VirtualList for an element-linked virtual scroller
  */
-export const WindowVirtualList = forwardRef(function WindowVirtualList(
-  {
-    numElements,
-    estimatedSize,
-    className,
-    itemContainerClassName,
-    children,
-    overscan,
-    getItemKey,
-  }: VirtualListProps,
-  ref: React.ForwardedRef<VirtualListRef>,
-) {
+export function WindowVirtualList({
+  numElements,
+  estimatedSize,
+  className,
+  itemContainerClassName,
+  children,
+  overscan,
+  getItemKey,
+  ref,
+}: VirtualListProps) {
   // Dynamic-height window-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
   const parentOffsetRef = useRef(0);
@@ -170,4 +167,4 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
       </div>
     </div>
   );
-});
+}

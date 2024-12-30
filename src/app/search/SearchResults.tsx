@@ -45,7 +45,7 @@ export default memo(function SearchResults({
             <DraggableInventoryItem key={item.index} item={item}>
               <ItemPopupTrigger item={item} key={item.index}>
                 {(ref, onClick) => (
-                  <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                  <ConnectedInventoryItem item={item} ref={ref} onClick={onClick} />
                 )}
               </ItemPopupTrigger>
             </DraggableInventoryItem>

@@ -25,7 +25,9 @@ export default function ExcludeItemsDropTarget({ className, children, onExcluded
   );
   return (
     <div
-      ref={dropRef}
+      ref={(el) => {
+        dropRef(el);
+      }}
       className={clsx(className, {
         'on-drag-hover': canDrop && isOver,
         'on-drag-enter': canDrop,

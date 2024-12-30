@@ -90,11 +90,7 @@ export function MakeLoadoutAnalysisAvailable({ children }: { children: ReactNode
       });
     };
   }, []);
-  return (
-    <LoadoutAnalyzerReactContext.Provider value={analyzer}>
-      {children}
-    </LoadoutAnalyzerReactContext.Provider>
-  );
+  return <LoadoutAnalyzerReactContext value={analyzer}>{children}</LoadoutAnalyzerReactContext>;
 }
 
 /**

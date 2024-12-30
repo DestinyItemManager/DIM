@@ -10,7 +10,7 @@ export default function NotificationButton({
   children,
   onClick,
 }: {
-  children: React.ReactChild | React.ReactChild[];
+  children: React.ReactNode;
   onClick: (e: React.MouseEvent) => void;
 }) {
   return (

@@ -183,7 +183,7 @@ function ItemBucket({
                         [styles.missingItem]: missing,
                       })}
                     >
-                      <ConnectedInventoryItem item={item} innerRef={ref} onClick={onClick} />
+                      <ConnectedInventoryItem item={item} ref={ref} onClick={onClick} />
                     </div>
                   )}
                 </ItemPopupTrigger>

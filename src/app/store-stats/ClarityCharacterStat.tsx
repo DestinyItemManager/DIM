@@ -8,6 +8,7 @@ import { timerDurationFromMsWithDecimal } from 'app/utils/time';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
+import { JSX } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ClarityCharacterStat.m.scss';
 

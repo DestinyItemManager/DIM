@@ -199,7 +199,7 @@ function NotesEditor({
 
   return (
     <form name="notes" ref={form} className={styles.form}>
-      <PressTipRoot.Provider value={form}>
+      <PressTipRoot value={form}>
         <WithSymbolsPicker input={textArea} setValue={(val) => onNotesChanged(val)}>
           <TextareaAutosize
             ref={textArea}
@@ -211,7 +211,7 @@ function NotesEditor({
             onChange={handleChange}
           />
         </WithSymbolsPicker>
-      </PressTipRoot.Provider>
+      </PressTipRoot>
     </form>
   );
 }

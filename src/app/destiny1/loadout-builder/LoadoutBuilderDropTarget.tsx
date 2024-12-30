@@ -25,7 +25,9 @@ export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLo
   );
   return (
     <div
-      ref={dropRef}
+      ref={(el) => {
+        dropRef(el);
+      }}
       className={clsx({
         'on-drag-hover': canDrop && isOver,
         'on-drag-enter': canDrop,

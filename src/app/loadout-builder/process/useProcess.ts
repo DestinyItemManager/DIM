@@ -72,7 +72,7 @@ export function useProcess({
   });
   const getUserItemTag = useSelector(getTagSelector);
 
-  const cleanupRef = useRef<(() => void) | null>();
+  const cleanupRef = useRef<() => void>(null);
 
   // Cleanup worker on unmount
   useEffect(

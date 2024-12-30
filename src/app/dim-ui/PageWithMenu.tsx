@@ -9,7 +9,7 @@ function PageWithMenu({ children, className }: { children: React.ReactNode; clas
 }
 
 /** Detect the presence of scrollbars that take up space. This may only work in this particular case! */
-function useHasScrollbars(ref: React.RefObject<HTMLDivElement>) {
+function useHasScrollbars(ref: React.RefObject<HTMLDivElement | null>) {
   const [hasScrollbars, setHasScrollbars] = useState(false);
 
   useResizeObserver(ref, () => {

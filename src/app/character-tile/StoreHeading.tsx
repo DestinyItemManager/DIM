@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import LoadoutPopup from 'app/loadout/loadout-menu/LoadoutPopup';
 import { Portal } from 'app/utils/temp-container';
-import React, { forwardRef, useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
 import { AppIcon, kebabIcon } from '../shell/icons';
@@ -13,16 +13,15 @@ import CharacterTileButton from './CharacterTileButton';
 import styles from './StoreHeading.m.scss';
 
 // Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar
-const CharacterHeader = forwardRef(function CharacterHeader(
-  {
-    store,
-    onClick,
-  }: {
-    store: DimStore;
-    onClick: () => void;
-  },
-  ref: React.Ref<HTMLButtonElement>,
-) {
+function CharacterHeader({
+  store,
+  onClick,
+  ref,
+}: {
+  store: DimStore;
+  onClick: () => void;
+  ref?: React.Ref<HTMLButtonElement>;
+}) {
   return (
     <CharacterTileButton
       ref={ref}
@@ -36,7 +35,7 @@ const CharacterHeader = forwardRef(function CharacterHeader(
       {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
     </CharacterTileButton>
   );
-});
+}
 
 /**
  * This is the character dropdown used at the top of the inventory page.
@@ -96,7 +95,7 @@ function LoadoutMenuContents({
 }: {
   store: DimStore;
   onClose: () => void;
-  menuTrigger: React.RefObject<HTMLButtonElement>;
+  menuTrigger: React.RefObject<HTMLButtonElement | null>;
 }) {
   const menuRef = useRef<HTMLDivElement>(null);
 

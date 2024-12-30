@@ -15,14 +15,19 @@ import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { showPursuitAsExpired } from './Pursuit';
 import styles from './PursuitItem.m.scss';
 
-function PursuitItem(
-  { item, isNew }: { item: DimItem; isNew: boolean },
-  ref: React.Ref<HTMLDivElement>,
-) {
+export default function PursuitItem({
+  item,
+  isNew,
+  ref,
+}: {
+  item: DimItem;
+  isNew: boolean;
+  ref: React.Ref<HTMLDivElement>;
+}) {
   const defs = useD2Definitions()!;
   const expired = showPursuitAsExpired(item);
 
@@ -76,8 +81,6 @@ function PursuitItem(
     </div>
   );
 }
-
-export default forwardRef(PursuitItem);
 
 export function ProgressBar({
   percentComplete,

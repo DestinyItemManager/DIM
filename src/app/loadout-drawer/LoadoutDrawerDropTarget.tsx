@@ -57,7 +57,9 @@ export default function LoadoutDrawerDropTarget({
       className={clsx(className, {
         [styles.over]: isOver,
       })}
-      ref={dropRef}
+      ref={(el) => {
+        dropRef(el);
+      }}
     >
       {children}
     </div>

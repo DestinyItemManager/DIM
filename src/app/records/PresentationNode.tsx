@@ -4,6 +4,7 @@ import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DimTitle } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
+import { emptyArray } from 'app/utils/empty';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { FontGlyphs } from 'data/font/d2-font-glyphs';
@@ -158,7 +159,7 @@ export default function PresentationNode({
  */
 function useScrollNodeIntoView(path: number[], presentationNodeHash: number) {
   const headerRef = useRef<HTMLDivElement>(null);
-  const lastPath = useRef<number[]>();
+  const lastPath = useRef<number[]>(emptyArray());
 
   useEffect(() => {
     if (

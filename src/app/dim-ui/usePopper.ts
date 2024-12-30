@@ -110,9 +110,9 @@ export function usePopper(
     padding,
   }: {
     /** A ref to the rendered contents of a popper-positioned item */
-    contents: React.RefObject<HTMLElement>;
+    contents: React.RefObject<HTMLElement | null>;
     /** An ref to the item that triggered the popper, which anchors it */
-    reference: React.RefObject<HTMLElement>;
+    reference: React.RefObject<HTMLElement | null>;
     /** A class used to identify the arrow */
     arrowClassName?: string;
     /** A class used to identify the sidecar menu */
@@ -129,7 +129,7 @@ export function usePopper(
   },
   deps: React.DependencyList = [],
 ) {
-  const popper = useRef<Instance | undefined>();
+  const popper = useRef<Instance>(undefined);
 
   const destroy = () => {
     if (popper.current) {

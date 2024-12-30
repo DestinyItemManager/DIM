@@ -39,7 +39,10 @@ export function useShiftHeld() {
  * Sets a CSS variable to the height of the passed in ref. We could probably use resize observers but
  * just doing it on re-render seems to work. Don't overuse this.
  */
-export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, propertyName: string) {
+export function useSetCSSVarToHeight(
+  ref: React.RefObject<HTMLElement | null>,
+  propertyName: string,
+) {
   const updateVar = useCallback(
     (height: number) => {
       document.querySelector('html')!.style.setProperty(propertyName, `${height}px`);
@@ -104,7 +107,7 @@ export function useThrottledSubscription<T>(observable: Observable<T>, delay: nu
  * relative to the bottom of the viewport.
  */
 export function useHeightFromViewportBottom(
-  elementRef: React.RefObject<HTMLElement>,
+  elementRef: React.RefObject<HTMLElement | null>,
   setHeightFromViewportBottom: (value: number) => void,
   itemHeight: number | undefined,
   withPadding: boolean,
@@ -148,7 +151,7 @@ export function usePageTitle(title: string, active?: boolean) {
 }
 
 // On first render, focus the first focusable element.
-export function useFocusFirstFocusableElement(ref: React.RefObject<HTMLElement>) {
+export function useFocusFirstFocusableElement(ref: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     if (ref.current) {
       const firstFocusable = ref.current.querySelector(
