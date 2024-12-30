@@ -78,7 +78,7 @@
     "@types/react": "$@types/react",
     "react-redux": "$react-redux",
     "redux": "$redux",
-    "react-is": "^18.1.0"
+    "react-is": "^18.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

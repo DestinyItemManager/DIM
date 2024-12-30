@@ -8,7 +8,7 @@ overrides:
   '@types/react': 19.0.2
   react-redux: ^9.2.0
   redux: ^5.0.1
-  react-is: ^18.1.0
+  react-is: ^18.3.1
 
 dependencies:
   '@babel/runtime':
@@ -6892,7 +6892,7 @@ packages:
       compute-scroll-into-view: 3.1.0
       prop-types: 15.8.1
       react: 19.0.0
-      react-is: 18.2.0
+      react-is: 18.3.1
       tslib: 2.8.1
     dev: false
 
@@ -11973,10 +11973,6 @@ packages:
       file-selector: 2.1.2
       prop-types: 15.8.1
       react: 19.0.0
-    dev: false
-
-  /react-is@18.2.0:
-    resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
   /react-is@18.3.1:
