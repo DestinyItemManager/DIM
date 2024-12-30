@@ -7,6 +7,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
+import '../inventory-page/StoreBucket.scss';
 import styles from './StoreBucketDropTarget.m.scss';
 
 interface Props {

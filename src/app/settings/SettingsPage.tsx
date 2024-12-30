@@ -24,6 +24,7 @@ import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import '../inventory-page/StoreBucket.scss';
 import InventoryItem from '../inventory/InventoryItem';
 import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';

@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
+import '../inventory-page/StoreBucket.scss';
 import { DimItem } from '../inventory/item-types';
 import { itemSorterSelector } from '../settings/item-sort';
 import styles from './SearchResults.m.scss';

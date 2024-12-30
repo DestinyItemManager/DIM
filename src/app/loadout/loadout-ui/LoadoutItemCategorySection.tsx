@@ -24,6 +24,7 @@ import clsx from 'clsx';
 import { partition } from 'es-toolkit';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import '../../inventory-page/StoreBucket.scss';
 import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
 import styles from './LoadoutItemCategorySection.m.scss';

@@ -10,6 +10,7 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } f
 import { mergeProps, useKeyboard, useLongPress, usePress } from 'react-aria';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
+import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';

@@ -24,6 +24,7 @@ import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import '../inventory-page/StoreBucket.scss';
 import styles from './SocketDetails.m.scss';
 import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 
