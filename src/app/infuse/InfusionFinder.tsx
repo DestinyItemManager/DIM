@@ -15,6 +15,7 @@ import { useCallback, useDeferredValue, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
+import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector, currentStoreSelector, getTagSelector } from '../inventory/selectors';

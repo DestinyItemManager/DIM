@@ -11,11 +11,12 @@ import { compact } from 'app/utils/collections';
 import Cost from 'app/vendors/Cost';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { useCallback, useMemo, useState } from 'react';
-import ModPicker from '../ModPicker';
+import '../../inventory-page/StoreBucket.scss';
 import PlugDef from '../loadout-ui/PlugDef';
 import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
+import ModPicker from '../ModPicker';
 import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmorAndSubclass, useLoadoutMods } from './selectors';
 

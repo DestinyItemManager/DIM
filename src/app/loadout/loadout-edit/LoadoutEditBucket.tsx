@@ -19,6 +19,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { partition } from 'es-toolkit';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import '../../inventory-page/StoreBucket.scss';
 import FashionDrawer from '../fashion/FashionDrawer';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import { FashionMods } from '../loadout-ui/FashionMods';

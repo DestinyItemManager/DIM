@@ -4,6 +4,7 @@
 
 import ItemPopup from 'app/item-popup/ItemPopup';
 import React, { JSX, useCallback, useRef, useState } from 'react';
+import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 
