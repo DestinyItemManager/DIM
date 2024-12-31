@@ -20,10 +20,6 @@ interface Props {
   grouped: boolean;
 }
 
-const onClick = () => {
-  document.body.classList.remove('drag-perf-show');
-};
-
 export default function StoreBucketDropTarget({
   storeId,
   children,
@@ -68,7 +64,6 @@ export default function StoreBucketDropTarget({
         [styles.canDrop]: canDrop,
         [styles.grouped]: grouped,
       })}
-      onClick={onClick}
       aria-label={bucket.name}
     >
       {children}
