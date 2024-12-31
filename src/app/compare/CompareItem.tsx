@@ -80,7 +80,7 @@ export default memo(function CompareItem({
           <span title={isInitialItem ? t('Compare.InitialItem') : undefined}>{item.name}</span>{' '}
           {isFindable && <AppIcon icon={searchIcon} />}
         </div>
-        <ItemPopupTrigger item={item} noCompare={true}>
+        <ItemPopupTrigger item={item} extraData={{ fromCompare: true }}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
               <PressTip minimal tooltip={itemNotes}>
