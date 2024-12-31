@@ -1,22 +1,223 @@
-$fa-font-path: 'data/webfonts';
+/* stylelint-disable font-family-no-missing-generic-family-keyword */
+/* stylelint-disable scss/function-no-unknown */
+/* stylelint-disable scss/at-function-pattern */
+
+@use 'sass:math';
+@use 'sass:string';
+@use './font-awesome.scss';
+
+// We manually copy specific files from the main "fontawesome" module to slim
+// things down. We used to import them directly from the node module, but Sass
+// decided to deprecate the import feature we were using. So we're doing it
+// manually now.
+
+// It was:
+
+// // We import specific files from the main "fontawesome" module to slim things down
+// @import '@fortawesome/fontawesome-free/scss/variables';
+// @import '@fortawesome/fontawesome-free/scss/mixins';
+// @import '@fortawesome/fontawesome-free/scss/core';
+// // @import '@fortawesome/fontawesome-free/scss/larger';
+// // @import '@fortawesome/fontawesome-free/scss/fixed-width';
+// // @import '@fortawesome/fontawesome-free/scss/list';
+// // @import '@fortawesome/fontawesome-free/scss/bordered-pulled';
+// @import '@fortawesome/fontawesome-free/scss/animated';
+// // @import '@fortawesome/fontawesome-free/scss/rotated-flipped';
+// // @import '@fortawesome/fontawesome-free/scss/stacked';
+// @import '@fortawesome/fontawesome-free/scss/icons';
+// // @import '@fortawesome/fontawesome-free/scss/screen-reader';
+
+// // And this imports the actual fonts
+// @import '@fortawesome/fontawesome-free/scss/solid';
+// @import '@fortawesome/fontawesome-free/scss/regular';
+// @import '@fortawesome/fontawesome-free/scss/brands';
 
 /* Importing FontAwesome SCSS from node modules */
+// Variables
+// --------------------------
 
-// We import specific files from the main "fontawesome" module to slim things down
-@import '@fortawesome/fontawesome-free/scss/variables';
-@import '@fortawesome/fontawesome-free/scss/mixins';
-@import '@fortawesome/fontawesome-free/scss/core';
-// @import '@fortawesome/fontawesome-free/scss/larger';
-// @import '@fortawesome/fontawesome-free/scss/fixed-width';
-// @import '@fortawesome/fontawesome-free/scss/list';
-// @import '@fortawesome/fontawesome-free/scss/bordered-pulled';
-@import '@fortawesome/fontawesome-free/scss/animated';
-// @import '@fortawesome/fontawesome-free/scss/rotated-flipped';
-// @import '@fortawesome/fontawesome-free/scss/stacked';
-@import '@fortawesome/fontawesome-free/scss/icons';
-// @import '@fortawesome/fontawesome-free/scss/screen-reader';
+$fa-font-path: 'data/webfonts' !default; // We customized this.
+$fa-font-size-base: 16px !default;
+$fa-font-display: block !default;
+$fa-css-prefix: fa !default;
+$fa-version: '5.15.4' !default;
+$fa-border-color: #eee !default;
+$fa-inverse: #fff !default;
+$fa-li-width: 2em !default;
+$fa-fw-width: math.div(20em, 16);
+$fa-primary-opacity: 1 !default;
+$fa-secondary-opacity: 0.4 !default;
 
-// And this imports the actual fonts
-@import '@fortawesome/fontawesome-free/scss/solid';
-@import '@fortawesome/fontawesome-free/scss/regular';
-@import '@fortawesome/fontawesome-free/scss/brands';
+/*!
+ * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: $fa-font-display;
+  src: url('#{$fa-font-path}/fa-solid-900.eot');
+  src:
+    // url('#{$fa-font-path}/fa-solid-900.eot?#iefix') format('embedded-opentype'),
+    url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2');
+  // url('#{$fa-font-path}/fa-solid-900.woff') format('woff'),
+  // url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype'),
+  // url('#{$fa-font-path}/fa-solid-900.svg#fontawesome') format('svg');
+}
+
+.fa,
+.fas {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+}
+
+/*!
+ * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: $fa-font-display;
+  src: url('#{$fa-font-path}/fa-regular-400.eot');
+  src:
+    // url('#{$fa-font-path}/fa-regular-400.eot?#iefix') format('embedded-opentype'),
+    url('#{$fa-font-path}/fa-regular-400.woff2') format('woff2');
+  // url('#{$fa-font-path}/fa-regular-400.woff') format('woff'),
+  // url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype'),
+  // url('#{$fa-font-path}/fa-regular-400.svg#fontawesome') format('svg');
+}
+
+.far {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 400;
+}
+
+/*!
+ * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+
+@font-face {
+  font-family: 'Font Awesome 5 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: $fa-font-display;
+  src: url('#{$fa-font-path}/fa-brands-400.eot');
+  src:
+    // url('#{$fa-font-path}/fa-brands-400.eot?#iefix') format('embedded-opentype'),
+    url('#{$fa-font-path}/fa-brands-400.woff2') format('woff2');
+  // url('#{$fa-font-path}/fa-brands-400.woff') format('woff'),
+  // url('#{$fa-font-path}/fa-brands-400.ttf') format('truetype'),
+  // url('#{$fa-font-path}/fa-brands-400.svg#fontawesome') format('svg');
+}
+
+.fab {
+  font-family: 'Font Awesome 5 Brands';
+  font-weight: 400;
+}
+
+// Convenience function used to set content property
+@function fa-content($fa-var) {
+  @return string.unquote('"#{ $fa-var }"');
+}
+
+// Mixins
+// --------------------------
+
+@mixin fa-icon {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  line-height: 1;
+}
+
+@mixin fa-icon-rotate($degrees, $rotation) {
+  transform: rotate($degrees);
+}
+
+@mixin fa-icon-flip($horiz, $vert, $rotation) {
+  transform: scale($horiz, $vert);
+}
+
+// Only display content to screen readers. A la Bootstrap 4.
+//
+// See: http://a11yproject.com/posts/how-to-hide-content/
+
+@mixin sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+// Use in conjunction with .sr-only to only display content when it's focused.
+//
+// Useful for "Skip to main content" links; see http://www.w3.org/TR/2013/NOTE-WCAG20-TECHS-20130905/G1
+//
+// Credit: HTML5 Boilerplate
+
+@mixin sr-only-focusable {
+  &:active,
+  &:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+  }
+}
+
+// Base Class Definition
+// -------------------------
+
+.#{$fa-css-prefix},
+.fas,
+.far,
+.fal,
+.fad,
+.fab {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+%fa-icon {
+  @include fa-icon;
+}
+
+// Animated Icons
+// --------------------------
+
+.#{$fa-css-prefix}-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+.#{$fa-css-prefix}-pulse {
+  animation: fa-spin 1s infinite steps(8);
+}
+
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

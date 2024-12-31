@@ -1,0 +1,287 @@
+/* stylelint-disable */
+@use 'sass:string';
+@use './font-awesome-icon-variables.scss' as *;
+
+// Convenience function used to set content property
+@function fa-content($fa-var) {
+  @return string.unquote('"#{ $fa-var }"');
+}
+.fa-plus-circle:before {
+  content: fa-content($fa-var-plus-circle);
+}
+.fa-archive:before {
+  content: fa-content($fa-var-archive);
+}
+.fa-ban:before {
+  content: fa-content($fa-var-ban);
+}
+.fa-bolt:before {
+  content: fa-content($fa-var-bolt);
+}
+.fa-eraser:before {
+  content: fa-content($fa-var-eraser);
+}
+.fa-times:before {
+  content: fa-content($fa-var-times);
+}
+.fa-caret-down:before {
+  content: fa-content($fa-var-caret-down);
+}
+.fa-balance-scale-left:before {
+  content: fa-content($fa-var-balance-scale-left);
+}
+.fa-copy:before {
+  content: fa-content($fa-var-copy);
+}
+.fa-trash-alt:before {
+  content: fa-content($fa-var-trash-alt);
+}
+.fa-times-circle:before {
+  content: fa-content($fa-var-times-circle);
+}
+.fa-file-export:before {
+  content: fa-content($fa-var-file-export);
+}
+.fa-grip-vertical:before {
+  content: fa-content($fa-var-grip-vertical);
+}
+.fa-pencil-alt:before {
+  content: fa-content($fa-var-pencil-alt);
+}
+.fa-check-circle:before {
+  content: fa-content($fa-var-check-circle);
+}
+.fa-equals:before {
+  content: fa-content($fa-var-equals);
+}
+.fa-chevron-down:before {
+  content: fa-content($fa-var-chevron-down);
+}
+.fa-caret-right:before {
+  content: fa-content($fa-var-caret-right);
+}
+.fa-chevron-up:before {
+  content: fa-content($fa-var-chevron-up);
+}
+.fa-angle-left:before {
+  content: fa-content($fa-var-angle-left);
+}
+.fa-angle-right:before {
+  content: fa-content($fa-var-angle-right);
+}
+.fa-arrow-circle-down:before {
+  content: fa-content($fa-var-arrow-circle-down);
+}
+.fa-arrow-circle-up:before {
+  content: fa-content($fa-var-arrow-circle-up);
+}
+.fa-calculator:before {
+  content: fa-content($fa-var-calculator);
+}
+.fa-caret-down:before {
+  content: fa-content($fa-var-caret-down);
+}
+.fa-caret-up:before {
+  content: fa-content($fa-var-caret-up);
+}
+.fa-check:before {
+  content: fa-content($fa-var-check);
+}
+.fa-check-circle:before {
+  content: fa-content($fa-var-check-circle);
+}
+.fa-check-square:before {
+  content: fa-content($fa-var-check-square);
+}
+.fa-clock:before {
+  content: fa-content($fa-var-clock);
+}
+.fa-discord:before {
+  content: fa-content($fa-var-discord);
+}
+.fa-equals:before {
+  content: fa-content($fa-var-equals);
+}
+.fa-exclamation-circle:before {
+  content: fa-content($fa-var-exclamation-circle);
+}
+.fa-exclamation-triangle:before {
+  content: fa-content($fa-var-exclamation-triangle);
+}
+.fa-external-link-alt:before {
+  content: fa-content($fa-var-external-link-alt);
+}
+.fa-github:before {
+  content: fa-content($fa-var-github);
+}
+.fa-th:before {
+  content: fa-content($fa-var-th);
+}
+.fa-list:before {
+  content: fa-content($fa-var-list);
+}
+.fa-minus-square:before {
+  content: fa-content($fa-var-minus-square);
+}
+.fa-playstation:before {
+  content: fa-content($fa-var-playstation);
+}
+.fa-plus-square:before {
+  content: fa-content($fa-var-plus-square);
+}
+.fa-random:before {
+  content: fa-content($fa-var-random);
+}
+.fa-square:before {
+  content: fa-content($fa-var-square);
+}
+.fa-steam:before {
+  content: fa-content($fa-var-steam);
+}
+.fa-times-circle:before {
+  content: fa-content($fa-var-times-circle);
+}
+.fa-tshirt:before {
+  content: fa-content($fa-var-tshirt);
+}
+.fa-window-close:before {
+  content: fa-content($fa-var-window-close);
+}
+.fa-xbox:before {
+  content: fa-content($fa-var-xbox);
+}
+.fa-globe:before {
+  content: fa-content($fa-var-globe);
+}
+.fa-greater-than-equal:before {
+  content: fa-content($fa-var-greater-than-equal);
+}
+.fa-heart:before {
+  content: fa-content($fa-var-heart);
+}
+.fa-question-circle:before {
+  content: fa-content($fa-var-question-circle);
+}
+.fa-info-circle:before {
+  content: fa-content($fa-var-info-circle);
+}
+.fa-ellipsis-v:before {
+  content: fa-content($fa-var-ellipsis-v);
+}
+.fa-less-than-equal:before {
+  content: fa-content($fa-var-less-than-equal);
+}
+.fa-level-up-alt:before {
+  content: fa-content($fa-var-level-up-alt);
+}
+.fa-lock:before {
+  content: fa-content($fa-var-lock);
+}
+.fa-mastodon:before {
+  content: fa-content($fa-var-mastodon);
+}
+.fa-angle-double-left:before {
+  content: fa-content($fa-var-angle-double-left);
+}
+.fa-bars:before {
+  content: fa-content($fa-var-bars);
+}
+.fa-angle-double-right:before {
+  content: fa-content($fa-var-angle-double-right);
+}
+.fa-minus:before {
+  content: fa-content($fa-var-minus);
+}
+.fa-arrow-down:before {
+  content: fa-content($fa-var-arrow-down);
+}
+.fa-arrow-right:before {
+  content: fa-content($fa-var-arrow-right);
+}
+.fa-arrow-up:before {
+  content: fa-content($fa-var-arrow-up);
+}
+.fa-thumbtack:before {
+  content: fa-content($fa-var-thumbtack);
+}
+.fa-plus:before {
+  content: fa-content($fa-var-plus);
+}
+.fa-redo:before {
+  content: fa-content($fa-var-redo);
+}
+.fa-sync:before {
+  content: fa-content($fa-var-sync);
+}
+.fa-arrow-right:before {
+  content: fa-content($fa-var-arrow-right);
+}
+.fa-save:before {
+  content: fa-content($fa-var-save);
+}
+.fa-search:before {
+  content: fa-content($fa-var-search);
+}
+.fa-envelope:before {
+  content: fa-content($fa-var-envelope);
+}
+.fa-cog:before {
+  content: fa-content($fa-var-cog);
+}
+.fa-share:before {
+  content: fa-content($fa-var-share);
+}
+.fa-shopping-cart:before {
+  content: fa-content($fa-var-shopping-cart);
+}
+.fa-sign-out-alt:before {
+  content: fa-content($fa-var-sign-out-alt);
+}
+.fa-slash:before {
+  content: fa-content($fa-var-slash);
+}
+.fa-table:before {
+  content: fa-content($fa-var-table);
+}
+.fa-layer-group:before {
+  content: fa-content($fa-var-layer-group);
+}
+.fa-star:before {
+  content: fa-content($fa-var-star);
+}
+.fa-star:before {
+  content: fa-content($fa-var-star);
+}
+.fa-sticky-note:before {
+  content: fa-content($fa-var-sticky-note);
+}
+.fa-tag:before {
+  content: fa-content($fa-var-tag);
+}
+.fa-thumbs-down:before {
+  content: fa-content($fa-var-thumbs-down);
+}
+.fa-thumbs-up:before {
+  content: fa-content($fa-var-thumbs-up);
+}
+.fa-bookmark:before {
+  content: fa-content($fa-var-bookmark);
+}
+.fa-bookmark:before {
+  content: fa-content($fa-var-bookmark);
+}
+.fa-undo:before {
+  content: fa-content($fa-var-undo);
+}
+.fa-unlock:before {
+  content: fa-content($fa-var-unlock);
+}
+.fa-check-circle:before {
+  content: fa-content($fa-var-check-circle);
+}
+.fa-arrow-circle-up:before {
+  content: fa-content($fa-var-arrow-circle-up);
+}
+.fa-file-import:before {
+  content: fa-content($fa-var-file-import);
+}
