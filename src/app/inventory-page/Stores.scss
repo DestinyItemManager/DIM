@@ -1,64 +1,69 @@
 @use '../variables.scss' as *;
 
-.store-row {
-  width: 100%;
-  display: grid;
-  grid-template-columns:
-    repeat(
-      var(--num-characters),
-      calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
-    )
-    /* Vault takes the rest*/
-    1fr;
-  box-sizing: border-box;
-  padding-right: calc(var(--sidebar-size) * var(--expanded-sidebars));
+@layer base {
+  .store-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns:
+      repeat(
+        var(--num-characters),
+        calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
+      )
+      /* Vault takes the rest*/
+      1fr;
+    box-sizing: border-box;
+    padding-right: calc(var(--sidebar-size) * var(--expanded-sidebars));
 
-  @include phone-portrait {
-    // Full-width, single column
-    display: block;
-    padding-right: 0;
-  }
-}
-
-.equipped-item {
-  border: $equipped-item-border solid #ddd;
-  height: fit-content;
-  padding: $equipped-item-padding;
-}
-
-.store-cell {
-  display: flex;
-  flex-direction: row;
-  padding: 0 var(--inventory-column-padding);
-  box-sizing: border-box;
-
-  .store-header & {
-    padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
-    flex-direction: column;
-    &:focus {
-      outline: none;
+    @include phone-portrait {
+      // Full-width, single column
+      display: block;
+      padding-right: 0;
     }
   }
-}
 
-.store-header {
-  position: sticky;
-  backface-visibility: hidden;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-  grid-template-columns:
-    repeat(var(--num-characters), calc(6px + var(--character-column-width) + var(--column-padding)))
-    min-content min-content 1fr !important;
-  background: var(--theme-header-characters-bg);
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: 100% 100vh;
+  .equipped-item {
+    border: $equipped-item-border solid #ddd;
+    height: fit-content;
+    padding: $equipped-item-padding;
+  }
 
-  @include below-header;
+  .store-cell {
+    display: flex;
+    flex-direction: row;
+    padding: 0 var(--inventory-column-padding);
+    box-sizing: border-box;
 
-  @include phone-portrait {
-    padding-left: 0;
-    overflow: hidden;
+    .store-header & {
+      padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
+      flex-direction: column;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .store-header {
+    position: sticky;
+    backface-visibility: hidden;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    grid-template-columns:
+      repeat(
+        var(--num-characters),
+        calc(6px + var(--character-column-width) + var(--column-padding))
+      )
+      min-content min-content 1fr !important;
+    background: var(--theme-header-characters-bg);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 100% 100vh;
+
+    @include below-header;
+
+    @include phone-portrait {
+      padding-left: 0;
+      overflow: hidden;
+    }
   }
 }

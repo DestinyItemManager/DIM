@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'button': string;
+  'disabled': string;
   'dragging': string;
   'editor': string;
   'grip': string;

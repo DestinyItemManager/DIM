@@ -1,6 +1,8 @@
-// An individual socket. Global class because it's currently directly overridden
-// in places like Compare.
-.item-socket {
-  display: flex;
-  flex-direction: column;
+@layer base {
+  // An individual socket. Global class because it's currently directly overridden
+  // in places like Compare.
+  .item-socket {
+    display: flex;
+    flex-direction: column;
+  }
 }
