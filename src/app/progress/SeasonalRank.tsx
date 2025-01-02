@@ -112,7 +112,7 @@ export default function SeasonalRank({
 
   return (
     <div
-      className={clsx(styles.seasonalRank, 'milestone-quest', {
+      className={clsx('milestone-quest', {
         [styles.hasPremiumRewards]: hasPremiumRewards,
       })}
     >

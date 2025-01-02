@@ -169,7 +169,6 @@
   display: none;
   right: calc(50px + var(--item-size) / 3.1);
   top: -9px;
-  cursor: pointer;
   width: fit-content;
   height: fit-content;
   padding: 8px;
@@ -210,8 +209,8 @@
   background: var(--theme-icon-tile);
 }
 
-.clickable {
-  cursor: pointer;
+.item {
+  composes: resetButton from '../dim-ui/common.m.scss';
 }
 
 .info {

@@ -5,7 +5,6 @@
 
   width: var(--item-size);
   height: var(--item-size) !important;
-  cursor: default;
   img {
     border: $item-border-width solid #666;
     box-sizing: border-box;
@@ -18,14 +17,10 @@
   }
 }
 
-.seasonalRank {
-  cursor: default;
-
-  &.hasPremiumRewards {
-    :global(.milestone-icon) {
-      max-width: calc(var(--item-size) * 2.1);
-      width: min-content;
-    }
+.hasPremiumRewards {
+  :global(.milestone-icon) {
+    max-width: calc(var(--item-size) * 2.1);
+    width: min-content;
   }
 }
 

@@ -258,7 +258,7 @@ export const unadvertisedResettableVendors = [
 ];
 
 /** used to snag the icon for display */
-export const WELL_RESTED_PERK = 2352765282; // SandboxPerk "Well-Rested"
+export const WELL_RESTED_PERK = 1519921522; // SandboxPerk "Well-Rested"
 
 /**
  * Maps TierType to tierTypeName in English and vice versa.

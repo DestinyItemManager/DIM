@@ -7,7 +7,6 @@ interface CssExports {
   'progress': string;
   'progressBar': string;
   'seasonEnd': string;
-  'seasonalRank': string;
   'seasonalRewardWrapper': string;
   'seasonalRewards': string;
 }

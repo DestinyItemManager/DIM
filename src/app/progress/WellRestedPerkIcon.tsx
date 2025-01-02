@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { WELL_RESTED_PERK } from 'app/search/d2-known-values';
 import {
@@ -46,7 +47,7 @@ export default function WellRestedPerkIcon({
       </div>
       <div className="milestone-info">
         <span className="milestone-name">{perkDisplay.name}</span>
-        <div className="milestone-description">{perkDisplay.description}</div>
+        <RichDestinyText className="milestone-description" text={perkDisplay.description} />
       </div>
     </div>
   );
