@@ -61,9 +61,9 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   const toggleSingleCharacter = () => setSetting('singleCharacter', !singleCharacter);
 
   return (
-    <div className={clsx(styles.inventoryContainer, `destiny${currentStore.destinyVersion}`)}>
+    <div className={clsx(styles.inventoryContainer)}>
       <div
-        className={clsx('inventory-content', {
+        className={clsx(styles.content, {
           [styles.singleCharacter]: singleCharacter,
         })}
         role="main"

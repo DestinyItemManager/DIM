@@ -1,0 +1,7 @@
+@use '../variables.scss' as *;
+
+.content {
+  width: 100%;
+  // Give room for the category selector strip (height 53px)
+  padding-bottom: calc(#{53px + 10px} + env(safe-area-inset-bottom));
+}

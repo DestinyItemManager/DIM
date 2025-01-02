@@ -106,6 +106,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
           <ElementIcon
             element={item.element}
             className={clsx({ [styles.fixContrast]: fixContrast })}
+            d1Badge={item.destinyVersion === 1}
           />
         )
       )}
