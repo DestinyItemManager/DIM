@@ -87,7 +87,7 @@ export function StoreBuckets({
   return (
     <div
       className={clsx('store-row', {
-        'account-wide': bucket.accountWide,
+        [styles.singleCharacterAccountWideRow]: bucket.accountWide && singleCharacter,
       })}
     >
       {labels && (

@@ -38,14 +38,6 @@
     display: block;
     padding-right: 0;
   }
-
-  // Split evenly between character and vault
-  .singleCharacter &.account-wide {
-    grid-template-columns: 1fr 1fr;
-    .singleCharacter & {
-      grid-column: auto;
-    }
-  }
 }
 
 .equipped-item {

@@ -5,6 +5,7 @@ interface CssExports {
   'bucketLabel': string;
   'hasButton': string;
   'postmasterFull': string;
+  'singleCharacterAccountWideRow': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -1,11 +1,10 @@
 @use '../variables.scss' as *;
 
+// Align non-equipped bucket items with the grid of equipped items above them.
 :global(.sub-bucket).notEquippable {
-  padding-left: 6px;
-
-  @include phone-portrait {
-    padding-left: 4px;
-  }
+  // This should be 6px to be the same as the gap between characters, but 4px
+  // lets us fit an extra column of tiles in.
+  padding-left: 4px;
 }
 
 .armorClassIcon {
