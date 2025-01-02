@@ -7,6 +7,7 @@ interface CssExports {
   'inlineGroups': string;
   'notEquippable': string;
   'pullItemButton': string;
+  'subClass': string;
   'vaultGroup': string;
   'weaponGroupingIconWrapper': string;
 }

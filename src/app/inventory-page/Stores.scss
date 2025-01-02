@@ -67,48 +67,11 @@
     }
   }
 
-  // Postmaster - items above, collect button below
-  .bucket-215593132 & {
-    flex-direction: column;
-  }
-
   .store-header & {
     padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
     flex-direction: column;
     &:focus {
       outline: none;
-    }
-  }
-
-  // Subclasses
-  .destiny2 .bucket-3284755031 & {
-    // hide normal "equipped" effects
-    .equipped-item {
-      border: $item-border-width solid transparent;
-      padding-top: 0;
-    }
-
-    .item-drag-container {
-      @include interactive($hover: true) {
-        // don't display the default outline when hovering over a draggable subclass item
-        outline: none;
-
-        // allow the pseudo-element to render outside the bounds of the item
-        contain: layout style;
-
-        // render a diamond-shaped pseudo-element to act as the border
-        &::before {
-          content: '';
-          position: absolute;
-          width: var(--item-size);
-          height: var(--item-size);
-          transform: rotate(45deg) scale(0.7);
-          outline-width: 2px;
-          box-sizing: border-box;
-
-          @include draggable-hover-border;
-        }
-      }
     }
   }
 }

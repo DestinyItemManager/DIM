@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'bucketLabel': string;
+  'hasButton': string;
   'postmasterFull': string;
 }
 export const cssExports: CssExports;

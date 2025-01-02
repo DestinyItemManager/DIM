@@ -100,6 +100,8 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const isEquippable = Boolean(equippedItem || bucket.equippable);
   // Engrams. D1 uses this same bucket hash for "Missions"
   const isEngrams = destinyVersion === 2 && bucket.hash === BucketHashes.Engrams;
+  // Only D2 has special subclass display
+  const isSubclass = destinyVersion === 2 && bucket.hash === BucketHashes.Subclass;
 
   return (
     <>
@@ -110,6 +112,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
           bucket={bucket}
           storeId={storeId}
           storeClassType={storeClassType}
+          className={clsx({ [styles.subClass]: isSubclass })}
         >
           {equippedItem && (
             <div className="equipped-item">
@@ -141,6 +144,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
           [styles.notEquippable]: !isVault && !isEquippable && !isEngrams,
           [styles.inlineGroups]: weaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
           [styles.engrams]: isEngrams,
+          [styles.subClass]: isSubclass,
         })}
       >
         {unequippedItems.map((groupOrItem) =>

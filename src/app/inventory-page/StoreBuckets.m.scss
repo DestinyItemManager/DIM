@@ -16,3 +16,10 @@
 .postmasterFull {
   background-color: rgba(151, 4, 1, 0.25) !important;
 }
+
+// If there's a "pull from postmaster" button, we need to stack the bucket
+// vertically with the button, not side-by-side like we do when we have equipped
+// and unequipped sub-buckets.
+.hasButton {
+  flex-direction: column;
+}
