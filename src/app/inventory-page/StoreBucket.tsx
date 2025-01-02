@@ -235,11 +235,11 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
       storeId={storeId}
       storeClassType={storeClassType}
       className={clsx({
-        inlineGroups: armorGroupingStyle === VaultWeaponGroupingStyle.Inline,
+        [styles.inlineGroups]: armorGroupingStyle === VaultWeaponGroupingStyle.Inline,
       })}
     >
       {classTypeOrder.map((classType) => (
-        <div className="vault-group" key={classType}>
+        <div className={styles.vaultGroup} key={classType}>
           <ClassIcon classType={classType} className={styles.armorClassIcon} />
           {sortItems(itemsByClass.get(classType)!).map((item) => (
             <StoreInventoryItem key={item.index} item={item} />

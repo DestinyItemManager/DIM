@@ -23,3 +23,8 @@
 .hasButton {
   flex-direction: column;
 }
+
+// A modifier on .store-cell for things like consumables that span all characters in D2
+.accountWideCell {
+  grid-column: 1 / span var(--num-characters);
+}

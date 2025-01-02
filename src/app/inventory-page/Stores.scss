@@ -60,13 +60,6 @@
   padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
 
-  &.account-wide {
-    grid-column: 1 / span var(--num-characters);
-    .singleCharacter & {
-      grid-column: auto;
-    }
-  }
-
   .store-header & {
     padding: 16px var(--inventory-column-padding) 6px var(--inventory-column-padding);
     flex-direction: column;

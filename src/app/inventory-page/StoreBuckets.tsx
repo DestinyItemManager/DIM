@@ -45,7 +45,7 @@ export function StoreBuckets({
     content = (
       <>
         {(allStoresView || stores[0] !== vault) && (
-          <div className="store-cell account-wide">
+          <div className={clsx('store-cell', styles.accountWideCell)}>
             <StoreBucket bucket={bucket} store={currentStore} singleCharacter={false} />
           </div>
         )}
