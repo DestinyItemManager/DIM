@@ -64,7 +64,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
     <div className={clsx(styles.inventoryContainer, `destiny${currentStore.destinyVersion}`)}>
       <div
         className={clsx('inventory-content', {
-          singleCharacter,
+          [styles.singleCharacter]: singleCharacter,
         })}
         role="main"
         aria-label={t('Header.Inventory')}

@@ -3,6 +3,7 @@
 interface CssExports {
   'buttons': string;
   'inventoryContainer': string;
+  'singleCharacter': string;
   'singleCharacterButton': string;
 }
 export const cssExports: CssExports;

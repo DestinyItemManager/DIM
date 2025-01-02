@@ -7,6 +7,10 @@
   align-items: center;
 }
 
+.singleCharacter {
+  --num-characters: 1;
+}
+
 .singleCharacterButton {
   composes: resetButton from '../dim-ui/common.m.scss';
 
