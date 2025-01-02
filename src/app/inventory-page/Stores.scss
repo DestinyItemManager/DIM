@@ -42,7 +42,7 @@
 }
 
 .store-header {
-  position: fixed;
+  position: sticky;
   backface-visibility: hidden;
   left: 0;
   width: 100%;
@@ -57,17 +57,7 @@
 
   @include below-header;
 
-  @supports (position: sticky) {
-    position: sticky;
-  }
-
-  &:focus {
-    outline: none;
-  }
-  &.sticky {
-    box-shadow: 0 1px 4px 0 black;
-  }
-  .phone-portrait & {
+  @include phone-portrait {
     padding-left: 0;
     overflow: hidden;
   }
