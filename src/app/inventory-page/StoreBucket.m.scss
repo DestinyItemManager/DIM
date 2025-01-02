@@ -58,3 +58,23 @@
     opacity: 1;
   }
 }
+
+// Resize all the items in the engram bucket to be engram-sized
+// This is also .sub-bucket
+.engrams {
+  --item-size: var(--engram-size);
+  gap: 0;
+  padding: 4px 0 8px 0;
+
+  @include phone-portrait {
+    padding: 4px 0;
+  }
+}
+
+// Placeholder hexagons for empty engram slots. A stripped-down version of .item
+.emptyEngram {
+  border: $item-border-width solid transparent;
+  box-sizing: border-box;
+  height: var(--item-size);
+  width: var(--item-size);
+}

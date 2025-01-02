@@ -61,6 +61,9 @@
   --expanded-sidebars: 0;
   --sidebar-size: 260px;
 
+  // How big to render each engram in the row of engrams in the Postmaster (on the Inventory screen).
+  --engram-size: calc(var(--character-column-width) / 10);
+
   // prevents content shift with persistent scroll-y bar
   overflow-y: scroll;
 }
@@ -87,6 +90,7 @@
     ) !important;
     --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
     --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
+    --engram-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
     // sets scroll bar back to auto as the content shift an issue at this size.
     overflow-y: auto;
   }

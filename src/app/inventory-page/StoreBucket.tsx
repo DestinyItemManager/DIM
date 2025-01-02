@@ -98,6 +98,8 @@ const StoreBucketInner = memo(function StoreBucketInner({
 
   // represents whether there's *supposed* to be an equipped item here, aka armor/weapon/artifact, etc
   const isEquippable = Boolean(equippedItem || bucket.equippable);
+  // Engrams. D1 uses this same bucket hash for "Missions"
+  const isEngrams = destinyVersion === 2 && bucket.hash === BucketHashes.Engrams;
 
   return (
     <>
@@ -136,8 +138,9 @@ const StoreBucketInner = memo(function StoreBucketInner({
         storeClassType={storeClassType}
         // class representing a *character* bucket area that's not equippable
         className={clsx({
-          [styles.notEquippable]: !isVault && !isEquippable,
+          [styles.notEquippable]: !isVault && !isEquippable && !isEngrams,
           [styles.inlineGroups]: weaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
+          [styles.engrams]: isEngrams,
         })}
       >
         {unequippedItems.map((groupOrItem) =>
@@ -158,14 +161,18 @@ const StoreBucketInner = memo(function StoreBucketInner({
             </div>
           ),
         )}
-        {destinyVersion === 2 &&
-          bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
+        {isEngrams &&
           !isVault &&
           Array.from(
             // lower bound of 0, in case this bucket becomes overfilled
             { length: Math.max(0, bucket.capacity - unequippedItems.length) },
             (_, index) => (
-              <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
+              <img
+                src={emptyEngram}
+                className={styles.emptyEngram}
+                aria-hidden="true"
+                key={index}
+              />
             ),
           )}
       </StoreBucketDropTarget>

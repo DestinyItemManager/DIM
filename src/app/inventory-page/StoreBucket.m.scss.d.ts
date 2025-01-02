@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'armorClassIcon': string;
+  'emptyEngram': string;
+  'engrams': string;
   'inlineGroups': string;
   'notEquippable': string;
   'pullItemButton': string;

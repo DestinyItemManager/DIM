@@ -80,39 +80,6 @@
     }
   }
 
-  // Engrams. D1 uses this same bucket hash for "Missions"
-  .destiny2 .bucket-375726501 & {
-    --engram-size: calc(var(--character-column-width) / 10);
-    padding-bottom: 8px;
-
-    @include phone-portrait {
-      --engram-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
-    }
-
-    .empty-engram {
-      border: $item-border-width solid transparent;
-      box-sizing: border-box;
-      height: var(--item-size);
-      width: var(--item-size);
-    }
-
-    .sub-bucket {
-      min-height: 0;
-      grid-template-columns: repeat(auto-fill, var(--engram-size));
-      gap: 0;
-      padding: 4px 0 0 0;
-
-      @include phone-portrait {
-        padding: 4px 0;
-      }
-    }
-
-    .item-drag-container,
-    .empty-engram {
-      --item-size: var(--engram-size);
-    }
-  }
-
   // Subclasses
   .destiny2 .bucket-3284755031 & {
     // hide normal "equipped" effects
