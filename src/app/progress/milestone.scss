@@ -66,11 +66,6 @@
       }
     }
 
-    .milestone-location {
-      font-size: 10px;
-      margin: 0 0 2px 0;
-    }
-
     .milestone-description {
       color: var(--theme-text-secondary);
       white-space: pre-wrap;
@@ -88,35 +83,6 @@
       // HACK
       .item-details {
         margin: 2px 0 0 4px;
-      }
-
-      // ALSOHACK
-      .raid-tier:nth-child(n + 2) {
-        margin-top: 14px;
-      }
-    }
-
-    .quest-modifiers {
-      margin-top: 4px;
-      display: flex;
-      flex-flow: row wrap;
-      gap: 8px;
-    }
-  }
-
-  .quest-objectives {
-    margin: 8px 0 0 0;
-    .objective-progress {
-      background-color: rgba(0, 0, 0, 0.3);
-    }
-    .objective-boolean {
-      .objective-progress {
-        background-color: transparent;
-      }
-    }
-    .objective-complete {
-      .objective-progress {
-        background-color: #111;
       }
     }
   }

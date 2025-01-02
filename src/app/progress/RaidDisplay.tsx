@@ -7,20 +7,20 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyMilestoneChallengeActivity,
 } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { ActivityModifier } from './ActivityModifier';
 import CompletionCheckbox from './CompletionCheckbox';
-
-interface Props {
-  displayProperties: DestinyDisplayPropertiesDefinition;
-  children?: React.ReactNode;
-}
+import styles from './RaidDisplay.m.scss';
 
 /**
  * Outer wrapper of a Raid type (example: EoW) with icon
  */
-export function RaidDisplay(props: Props) {
+export function RaidDisplay(props: {
+  displayProperties: DestinyDisplayPropertiesDefinition;
+  children?: React.ReactNode;
+}) {
   const { displayProperties, children } = props;
 
   return (
@@ -30,7 +30,7 @@ export function RaidDisplay(props: Props) {
           <BungieImage className="milestone-img" src={displayProperties.icon} />
         )}
       </div>
-      <div className="milestone-info">{children}</div>
+      <div className={clsx('milestone-info', styles.raidTiers)}>{children}</div>
     </div>
   );
 }
@@ -63,25 +63,21 @@ export function RaidActivity({
   const activityName = displayName || activityDef.displayProperties.name;
 
   return (
-    <div className="raid-tier">
+    <div className={styles.raidActivity}>
       {!hideName && <span className="milestone-name">{activityName}</span>}
-      <div className="quest-modifiers">
-        {activity.modifierHashes?.map(
-          (modifierHash) =>
-            modifierHash !== ARMSMASTER_ACTIVITY_MODIFIER && (
-              <ActivityModifier key={modifierHash} modifierHash={modifierHash} small />
-            ),
-        )}
-      </div>
+      {activity.modifierHashes?.map(
+        (modifierHash) =>
+          modifierHash !== ARMSMASTER_ACTIVITY_MODIFIER && (
+            <ActivityModifier key={modifierHash} modifierHash={modifierHash} small />
+          ),
+      )}
       {activity.phases && activity.phases.length > 0 && (
-        <div className="quest-objectives">
-          <div className="objective-row objective-boolean">
-            {activity.phases?.map((phase) => (
-              <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
-            ))}
-            <div className="objective-progress">
-              <div className="objective-description">{encountersString}</div>
-            </div>
+        <div className={clsx(styles.questObjectives, 'objective-row objective-boolean')}>
+          {activity.phases?.map((phase) => (
+            <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
+          ))}
+          <div className="objective-progress">
+            <div className="objective-description">{encountersString}</div>
           </div>
         </div>
       )}

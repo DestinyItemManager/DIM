@@ -1,51 +1,53 @@
-.flexWrap {
-  display: flex;
-  flex-flow: row wrap;
-}
-
-.flexRow {
-  display: flex;
-  flex-direction: row;
-}
-
-.flexColumn {
-  display: flex;
-  flex-direction: column;
-}
-
-.resetButton {
-  text-align: center;
-  color: inherit;
-  appearance: none;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  font-size: inherit;
-  font-family: inherit;
-  user-select: none;
-  &:disabled {
-    cursor: default;
-  }
-}
-
-// Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars.
-.visibleScrollbars {
-  &::-webkit-scrollbar-track {
-    background: #555;
+@layer common {
+  .flexWrap {
+    display: flex;
+    flex-flow: row wrap;
   }
 
-  &::-webkit-scrollbar-thumb {
-    background: #e4e4e4;
-    border-radius: 3px;
+  .flexRow {
+    display: flex;
+    flex-direction: row;
   }
 
-  &::-webkit-scrollbar {
-    width: 10px;
+  .flexColumn {
+    display: flex;
+    flex-direction: column;
+  }
 
-    &:horizontal {
-      height: 10px;
+  .resetButton {
+    text-align: center;
+    color: inherit;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    user-select: none;
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  // Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars.
+  .visibleScrollbars {
+    &::-webkit-scrollbar-track {
+      background: #555;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e4e4e4;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar {
+      width: 10px;
+
+      &:horizontal {
+        height: 10px;
+      }
     }
   }
 }

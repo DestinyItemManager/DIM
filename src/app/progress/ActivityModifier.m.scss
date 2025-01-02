@@ -6,18 +6,13 @@
   margin-bottom: 2px;
 
   img {
-    width: 16px;
-    height: 16px;
-    margin: 1px 6px 0 2px;
+    width: 18px;
+    height: 18px;
+    margin: 0 6px 0 2px;
   }
 
   &.small {
     opacity: 0.5;
     margin-bottom: 0;
-
-    img {
-      width: 12px;
-      height: 12px;
-    }
   }
 }
