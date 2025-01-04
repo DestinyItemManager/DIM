@@ -6,30 +6,22 @@ import BungieAlerts from 'app/whats-new/BungieAlerts';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { AppIcon, helpIcon, mastodonIcon, refreshIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
-import {
-  bungieHelpAccount,
-  bungieHelpLink,
-  dimHelpMastodonLink,
-  dimMastodonAccount,
-  troubleshootingLink,
-} from './links';
+import { bungieHelpAccount, bungieHelpLink, troubleshootingLink } from './links';
 
 function Socials() {
   return (
     <div className={styles.socials}>
-      {['https://mastodon.social/users/bungiehelp', 'https://mstdn.games/users/ThisIsDIM'].map(
-        (account) => (
-          <div key={account} className={styles.timeline}>
-            <iframe
-              allowFullScreen
-              sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox"
-              src={`https://www.mastofeed.com/apiv2/feed?userurl=${encodeURIComponent(
-                account,
-              )}&theme=dark&size=100&header=false&replies=false&boosts=true`}
-            />
-          </div>
-        ),
-      )}
+      {['https://mastodon.social/users/bungiehelp'].map((account) => (
+        <div key={account} className={styles.timeline}>
+          <iframe
+            allowFullScreen
+            sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox"
+            src={`https://www.mastofeed.com/apiv2/feed?userurl=${encodeURIComponent(
+              account,
+            )}&theme=dark&size=100&header=false&replies=false&boosts=true`}
+          />
+        </div>
+      ))}
     </div>
   );
 }
@@ -102,9 +94,6 @@ export default function ErrorPanel({
               <AppIcon icon={mastodonIcon} /> {bungieHelpAccount}
             </ExternalLink>
           )}
-          <ExternalLink href={dimHelpMastodonLink} className="dim-button">
-            <AppIcon icon={mastodonIcon} /> {dimMastodonAccount}
-          </ExternalLink>
           <ExternalLink href={troubleshootingLink} className="dim-button">
             <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
           </ExternalLink>

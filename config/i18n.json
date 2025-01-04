@@ -1470,7 +1470,6 @@
       },
       "Translation": "Join the Translation Team!",
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
-      "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "DIM User Guide",
       "WikiHelp": "Learn how to use DIM's features."
