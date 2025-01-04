@@ -62,12 +62,18 @@ export default function ErrorPanel({
     }
   }
 
-  const name = underlyingError?.name || error?.name;
-  const message = error?.message || fallbackMessage;
+  let name = underlyingError?.name || error?.name;
+  let message = error?.message || fallbackMessage;
 
   const ourFault = !(
     underlyingError instanceof BungieError || underlyingError instanceof HttpStatusError
   );
+
+  if (message?.includes('toSorted')) {
+    title = t('ErrorPanel.BrowserTooOldTitle');
+    name = 'BrowserTooOld';
+    message = t('ErrorPanel.BrowserTooOld');
+  }
 
   const content = (
     <>

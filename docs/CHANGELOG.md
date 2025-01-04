@@ -8,6 +8,8 @@
 
 ## 8.52.0 <span class="changelog-date">(2024-12-22)</span>
 
+* Minimum browser version for DIM has been raised to Chrome 126+ (or equivalent Chromium-based browsers) and iOS 16.4+. DIM may not load at all on older browsers. Firefox and Desktop Safari are still only supported on their most recent two versions. Note that Firefox 115 ESR is not supported, but may work if you're stuck on Windows 7.
+
 ## 8.51.0 <span class="changelog-date">(2024-12-15)</span>
 
 * Added a wishlist refresh button in Settings to help with wishlist development. Note that GitHub can take upwards of 10min to actually reflect your changes. Refreshing won't speed up GitHub.

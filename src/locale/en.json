@@ -141,6 +141,8 @@
     "Title": "Something went wrong"
   },
   "ErrorPanel": {
+    "BrowserTooOld": "Your browser is too old to use DIM. Please update your browser to the latest version.",
+    "BrowserTooOldTitle": "Incompatible browser",
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps.",
     "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",

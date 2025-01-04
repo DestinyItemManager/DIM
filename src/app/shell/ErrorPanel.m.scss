@@ -2,7 +2,8 @@
 @use '../variables.scss' as *;
 
 .errorPanel {
-  margin: 16px 0;
+  margin: 16px auto;
+  max-width: 900px;
   padding: 0.85em;
   background: color.scale($red, $lightness: -90%);
   border-top: 4px solid $red;
