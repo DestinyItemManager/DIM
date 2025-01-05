@@ -5,7 +5,6 @@ import { DimStore } from 'app/inventory/store-types';
 import StoreStats from 'app/store-stats/StoreStats';
 import { wrap } from 'app/utils/collections';
 import { useEventBusListener } from 'app/utils/hooks';
-import clsx from 'clsx';
 import { PanInfo, motion } from 'motion/react';
 import { useCallback, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -110,11 +109,7 @@ export default function PhoneStores({
   };
 
   return (
-    <div
-      className={clsx(styles.content, 'phone-portrait')}
-      role="main"
-      aria-label={t('Header.Inventory')}
-    >
+    <div className={styles.content} role="main" aria-label={t('Header.Inventory')}>
       <HeaderShadowDiv className="store-row store-header">
         <PhoneStoresHeader
           selectedStore={selectedStore}

@@ -12,6 +12,16 @@
     opacity: 1;
     gap: 4px;
 
+    @include phone-portrait {
+      margin-left: auto;
+      margin-right: auto;
+      align-items: center;
+      .stat-row {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
     > div {
       flex: 1;
       display: flex;
@@ -49,16 +59,6 @@
         width: 14px;
         margin-right: 2px;
         opacity: 1;
-      }
-    }
-
-    .phone-portrait & {
-      margin-left: auto;
-      margin-right: auto;
-      align-items: center;
-      .stat-row {
-        width: 100%;
-        justify-content: center;
       }
     }
 
@@ -110,13 +110,14 @@
         flex: 0;
         font-size: 11px;
         color: var(--theme-header-characters-txt);
+
+        @include phone-portrait {
+          font-size: 12px;
+        }
         &.boostedValue {
           color: $stat-modded;
           font-weight: bold;
           text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
-        }
-        .phone-portrait & {
-          font-size: 12px;
         }
       }
     }
