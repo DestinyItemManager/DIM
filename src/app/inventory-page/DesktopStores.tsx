@@ -61,7 +61,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   const toggleSingleCharacter = () => setSetting('singleCharacter', !singleCharacter);
 
   return (
-    <div className={clsx(styles.inventoryContainer)}>
+    <div className={styles.inventoryContainer}>
       <div
         className={clsx(styles.content, {
           [styles.singleCharacter]: singleCharacter,
