@@ -10,8 +10,8 @@ import { useEffect } from 'react';
 import { Link } from 'react-router';
 import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
-import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon, mastodonIcon } from './icons';
-import { dimHelpMastodonLink, dimMastodonAccount, discordLink, userGuideLink } from './links';
+import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon } from './icons';
+import { discordLink, userGuideLink } from './links';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =
@@ -149,16 +149,6 @@ export default function About() {
             </ExternalLink>
           </h2>
           {t('Views.About.DiscordHelp')}
-        </div>
-        <div>
-          <h2>
-            <ExternalLink href={dimHelpMastodonLink}>
-              <AppIcon icon={mastodonIcon} />
-              Mastodon
-            </ExternalLink>
-          </h2>
-          {t('Views.About.TwitterHelp')} <br />
-          <ExternalLink href={dimHelpMastodonLink}>{dimMastodonAccount}</ExternalLink>
         </div>
         <div>
           <h2>
