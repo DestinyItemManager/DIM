@@ -61,7 +61,7 @@ export default function ErrorPanel({
     underlyingError instanceof BungieError || underlyingError instanceof HttpStatusError
   );
 
-  if (message?.includes('toSorted')) {
+  if (message?.includes('toSorted') || message?.includes('toReversed')) {
     title = t('ErrorPanel.BrowserTooOldTitle');
     name = 'BrowserTooOld';
     message = t('ErrorPanel.BrowserTooOld');
