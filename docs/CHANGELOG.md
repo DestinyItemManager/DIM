@@ -1,5 +1,7 @@
 ## Next
 
+## 8.53.0 <span class="changelog-date">(2025-01-05)</span>
+
 * Added `is:enhancementready` search that finds weapons which have reached level thresholds to enhance perks
   * For crafted weapons, this looks at the level thresholds of the enhanced versions of the weapon's current perks
   * For enhanced weapons, this looks at whether the next tier of enhancement is selectable on the weapon
