@@ -16,3 +16,21 @@
 .postmasterFull {
   background-color: rgba(151, 4, 1, 0.25) !important;
 }
+
+// If there's a "pull from postmaster" button, we need to stack the bucket
+// vertically with the button, not side-by-side like we do when we have equipped
+// and unequipped sub-buckets.
+.hasButton {
+  flex-direction: column;
+}
+
+// A modifier on .store-cell for things like consumables that span all characters in D2
+.accountWideCell {
+  grid-column: 1 / span var(--num-characters);
+}
+
+// For account-wide buckets like consumables, in single-character view, split
+// the horizontal space evenly between vault and character.
+.singleCharacterAccountWideRow {
+  grid-template-columns: 1fr 1fr;
+}

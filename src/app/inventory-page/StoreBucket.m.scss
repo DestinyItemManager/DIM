@@ -1,0 +1,110 @@
+@use '../variables.scss' as *;
+
+// Align non-equipped bucket items with the grid of equipped items above them.
+:global(.sub-bucket).notEquippable {
+  // This should be 6px to be the same as the gap between characters, but 4px
+  // lets us fit an extra column of tiles in.
+  padding-left: 4px;
+}
+
+.armorClassIcon {
+  box-sizing: border-box !important;
+  width: var(--item-size);
+  height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+  font-size: calc(var(--item-size) * 0.71);
+  padding: 8px;
+  color: #999;
+}
+
+.weaponGroupingIconWrapper {
+  box-sizing: border-box !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--item-size);
+  height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+  font-size: calc(var(--item-size) * 0.4);
+  color: #999;
+}
+
+.vaultGroup {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: var(--item-margin);
+  width: 100%;
+  padding-bottom: var(--item-margin);
+  border-bottom: 1px solid rgba(150, 150, 150, 0.5);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  .inlineGroups & {
+    display: contents;
+  }
+}
+
+.pullItemButton {
+  font-size: calc((var(--item-size) / 3));
+  margin: calc((var(--item-size) / 8) - 4px) auto calc((var(--item-size) / 8) - 4px) auto;
+  padding: 4px;
+  opacity: 0.3;
+  transition: opacity 0.3s ease-in-out;
+
+  @include interactive($hover: true) {
+    opacity: 1;
+  }
+}
+
+// Resize all the items in the engram bucket to be engram-sized
+// This is also .sub-bucket
+.engrams {
+  --item-size: var(--engram-size);
+  gap: 0;
+  padding: 4px 0 8px 0;
+
+  @include phone-portrait {
+    padding: 4px 0;
+  }
+}
+
+// Placeholder hexagons for empty engram slots. A stripped-down version of .item
+.emptyEngram {
+  border: $item-border-width solid transparent;
+  box-sizing: border-box;
+  height: var(--item-size);
+  width: var(--item-size);
+}
+
+.subClass {
+  // hide normal "equipped" effects
+  :global(.equipped-item) {
+    border-color: transparent;
+    padding-top: 0;
+  }
+
+  :global(.item-drag-container) {
+    @include interactive($hover: true) {
+      // don't display the default outline when hovering over a draggable subclass item
+      outline: none;
+
+      // allow the pseudo-element to render outside the bounds of the item
+      contain: layout style;
+
+      // render a diamond-shaped pseudo-element to act as the border
+      &::before {
+        content: '';
+        position: absolute;
+        width: var(--item-size);
+        height: var(--item-size);
+        transform: rotate(45deg) scale(0.7);
+        outline-width: 2px;
+        box-sizing: border-box;
+
+        @include draggable-hover-border;
+      }
+    }
+  }
+}

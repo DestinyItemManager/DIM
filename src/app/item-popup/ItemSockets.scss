@@ -1,14 +1,16 @@
 @use '../variables.scss' as *;
 
-// Horizontal list of sockets
-.item-sockets {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-}
+@layer base {
+  // Horizontal list of sockets
+  .item-sockets {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+  }
 
-// Uppercased title for socket categories
-.item-socket-category-name {
-  text-transform: uppercase;
-  margin-bottom: 2px;
+  // Uppercased title for socket categories
+  .item-socket-category-name {
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
 }

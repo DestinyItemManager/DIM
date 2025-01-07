@@ -33,6 +33,7 @@ import { shallowEqual } from 'fast-equals';
 import { memo, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import styles from './StoreBucket.m.scss';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import StoreInventoryItem from './StoreInventoryItem';
@@ -97,6 +98,10 @@ const StoreBucketInner = memo(function StoreBucketInner({
 
   // represents whether there's *supposed* to be an equipped item here, aka armor/weapon/artifact, etc
   const isEquippable = Boolean(equippedItem || bucket.equippable);
+  // Engrams. D1 uses this same bucket hash for "Missions"
+  const isEngrams = destinyVersion === 2 && bucket.hash === BucketHashes.Engrams;
+  // Only D2 has special subclass display
+  const isSubclass = destinyVersion === 2 && bucket.hash === BucketHashes.Subclass;
 
   return (
     <>
@@ -107,6 +112,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
           bucket={bucket}
           storeId={storeId}
           storeClassType={storeClassType}
+          className={clsx({ [styles.subClass]: isSubclass })}
         >
           {equippedItem && (
             <div className="equipped-item">
@@ -116,7 +122,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
           {bucket.hasTransferDestination && (
             <a
               onClick={pickEquipItem}
-              className="pull-item-button"
+              className={styles.pullItemButton}
               title={t('MovePopup.PullItem', {
                 bucket: bucket.name,
                 store: storeName,
@@ -135,8 +141,10 @@ const StoreBucketInner = memo(function StoreBucketInner({
         storeClassType={storeClassType}
         // class representing a *character* bucket area that's not equippable
         className={clsx({
-          'not-equippable': !isVault && !isEquippable,
-          inlineGroups: weaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
+          [styles.notEquippable]: !isVault && !isEquippable && !isEngrams,
+          [styles.inlineGroups]: weaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
+          [styles.engrams]: isEngrams,
+          [styles.subClass]: isSubclass,
         })}
       >
         {unequippedItems.map((groupOrItem) =>
@@ -144,12 +152,12 @@ const StoreBucketInner = memo(function StoreBucketInner({
             <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
           ) : (
             <div
-              className="vault-group"
+              className={styles.vaultGroup}
               key={vaultGroupingValueWithType(groupOrItem.groupingValue)}
             >
               <WeaponGroupingIcon
                 icon={groupOrItem.icon}
-                className="weapon-grouping-icon-wrapper"
+                className={styles.weaponGroupingIconWrapper}
               />
               {groupOrItem.items.map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
@@ -157,14 +165,18 @@ const StoreBucketInner = memo(function StoreBucketInner({
             </div>
           ),
         )}
-        {destinyVersion === 2 &&
-          bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
+        {isEngrams &&
           !isVault &&
           Array.from(
             // lower bound of 0, in case this bucket becomes overfilled
             { length: Math.max(0, bucket.capacity - unequippedItems.length) },
             (_, index) => (
-              <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
+              <img
+                src={emptyEngram}
+                className={styles.emptyEngram}
+                aria-hidden="true"
+                key={index}
+              />
             ),
           )}
       </StoreBucketDropTarget>
@@ -223,12 +235,12 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
       storeId={storeId}
       storeClassType={storeClassType}
       className={clsx({
-        inlineGroups: armorGroupingStyle === VaultWeaponGroupingStyle.Inline,
+        [styles.inlineGroups]: armorGroupingStyle === VaultWeaponGroupingStyle.Inline,
       })}
     >
       {classTypeOrder.map((classType) => (
-        <div className="vault-group" key={classType}>
-          <ClassIcon classType={classType} className="armor-class-icon" />
+        <div className={styles.vaultGroup} key={classType}>
+          <ClassIcon classType={classType} className={styles.armorClassIcon} />
           {sortItems(itemsByClass.get(classType)!).map((item) => (
             <StoreInventoryItem key={item.index} item={item} />
           ))}

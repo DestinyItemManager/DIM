@@ -180,7 +180,7 @@ function Record({
       {catalystTarget && recordIcon ? (
         <ItemPopupTrigger item={catalystTarget}>
           {(ref, onClick) => (
-            <div className={styles.clickable} ref={ref} onClick={onClick}>
+            <div className={styles.item} role="button" ref={ref} onClick={onClick}>
               <BungieImage className={styles.icon} src={recordIcon} />
             </div>
           )}

@@ -5,53 +5,55 @@
  * Move Popup - Details
  */
 
-.item-details {
-  margin: 10px;
-  box-sizing: border-box;
+@layer base {
+  .item-details {
+    margin: 10px;
+    box-sizing: border-box;
 
-  &.warning {
-    background: color.scale($red, $lightness: -90%);
-    border-top: 4px solid $red;
-    padding: 8px;
-    white-space: normal;
-    max-width: fit-content;
-    a {
-      color: var(--theme-text);
-      font-size: 12px;
+    &.warning {
+      background: color.scale($red, $lightness: -90%);
+      border-top: 4px solid $red;
+      padding: 8px;
+      white-space: normal;
+      max-width: fit-content;
+      a {
+        color: var(--theme-text);
+        font-size: 12px;
+      }
     }
   }
-}
 
-.masterwork-progress {
-  margin: 4px 0;
-  padding: 4px 10px 4px;
-  background: var(--theme-item-popup-panel-bg);
+  .masterwork-progress {
+    margin: 4px 0;
+    padding: 4px 10px 4px;
+    background: var(--theme-item-popup-panel-bg);
 
-  span {
-    color: var(--theme-accent-primary);
-    font-weight: bold;
+    span {
+      color: var(--theme-accent-primary);
+      font-weight: bold;
+    }
+
+    img {
+      width: 16px;
+      height: 16px;
+      margin-bottom: -4px;
+    }
   }
 
-  img {
-    width: 16px;
-    height: 16px;
-    margin-bottom: -4px;
-  }
-}
+  .crafted-progress {
+    padding: 4px 10px 4px;
+    background: var(--theme-item-popup-panel-bg);
+    gap: 4px;
 
-.crafted-progress {
-  padding: 4px 10px 4px;
-  background: var(--theme-item-popup-panel-bg);
-  gap: 4px;
+    display: flex;
+    align-items: center;
 
-  display: flex;
-  align-items: center;
+    .objective-progress {
+      background: var(--theme-item-popup-progress-bar-bg);
+    }
 
-  .objective-progress {
-    background: var(--theme-item-popup-progress-bar-bg);
-  }
-
-  .objective-progress-bar {
-    background-color: $deepsight-border-color;
+    .objective-progress-bar {
+      background-color: $deepsight-border-color;
+    }
   }
 }

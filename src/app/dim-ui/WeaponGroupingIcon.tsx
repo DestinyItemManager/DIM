@@ -3,6 +3,7 @@ import { AmmoIcon } from 'app/item-popup/AmmoIcon';
 import { VaultGroupIcon } from 'app/shell/item-comparators';
 import ElementIcon from './ElementIcon';
 import { getWeaponTypeSvgIconFromCategoryHashes } from './svgs/itemCategory';
+import styles from './WeaponGroupingIcon.m.scss';
 
 export default function WeaponGroupingIcon({
   icon,
@@ -17,7 +18,7 @@ export default function WeaponGroupingIcon({
       return (
         typeIcon && (
           <div className={className}>
-            <img src={typeIcon.svg} className="weapon-type-icon" />
+            <img src={typeIcon.svg} className={styles.weaponTypeIcon} />
           </div>
         )
       );
@@ -26,7 +27,7 @@ export default function WeaponGroupingIcon({
     case 'ammoType': {
       return (
         <div className={className}>
-          <AmmoIcon type={icon.ammoType} className="ammo-icon" />
+          <AmmoIcon type={icon.ammoType} className={styles.ammoIcon} />
         </div>
       );
     }
@@ -44,7 +45,7 @@ export default function WeaponGroupingIcon({
     case 'elementWeapon': {
       return (
         <div className={className}>
-          <ElementIcon className="element-icon" element={icon.element} />
+          <ElementIcon className={styles.elementIcon} element={icon.element} />
         </div>
       );
     }

@@ -7,7 +7,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import '../inventory-page/StoreBucket.scss';
+import './StoreBucket.scss';
 import styles from './StoreBucketDropTarget.m.scss';
 
 interface Props {
@@ -59,7 +59,7 @@ export default function StoreBucketDropTarget({
       ref={(el) => {
         dropRef(el);
       }}
-      className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
+      className={clsx('sub-bucket', className, equip ? styles.equipped : styles.unequipped, {
         [styles.over]: canDrop && isOver,
         [styles.canDrop]: canDrop,
         [styles.grouped]: grouped,

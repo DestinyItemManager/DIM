@@ -1,0 +1,14 @@
+.raidActivity {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 4px;
+}
+
+// ALSOHACK
+.raidTiers {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 14px;
+}
+
+.questObjectives {
+  margin-top: 4px;
+}

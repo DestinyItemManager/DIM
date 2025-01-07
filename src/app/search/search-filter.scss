@@ -1,59 +1,61 @@
 @use '../variables.scss' as *;
 
-.search-filter {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: var(--theme-sheet-search-bg);
-  padding-left: 5px;
-  padding-right: 5px;
-  height: $search-bar-height;
-  border-radius: $theme-corner-radius-search;
-  min-width: 350px;
-  box-sizing: border-box;
+@layer base {
+  .search-filter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--theme-sheet-search-bg);
+    padding-left: 5px;
+    padding-right: 5px;
+    height: $search-bar-height;
+    border-radius: $theme-corner-radius-search;
+    min-width: 350px;
+    box-sizing: border-box;
 
-  @include phone-portrait {
-    width: auto;
-    height: 34px;
+    @include phone-portrait {
+      width: auto;
+      height: 34px;
+    }
+
+    @include interactive($hover: true, $focusWithin: true) {
+      outline: none;
+      box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+    }
+
+    ::placeholder {
+      color: #999;
+    }
+
+    > input[type='text'] {
+      all: initial;
+      outline: none;
+      flex: 1;
+      width: 0;
+      padding: 7px 0;
+      font-size: inherit;
+      font-family: inherit;
+      color: inherit;
+      caret-color: var(--theme-accent-primary);
+    }
   }
 
-  @include interactive($hover: true, $focusWithin: true) {
-    outline: none;
-    box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
-  }
-
-  ::placeholder {
+  .search-bar-icon {
     color: #999;
+    margin: 0 6px 0 4px;
+    font-size: 12px !important;
   }
 
-  > input[type='text'] {
-    all: initial;
-    outline: none;
-    flex: 1;
-    width: 0;
-    padding: 7px 0;
-    font-size: inherit;
-    font-family: inherit;
-    color: inherit;
-    caret-color: var(--theme-accent-primary);
-  }
-}
+  .mobile-search-link {
+    display: block;
+    width: 100%;
+    margin: 0 !important;
+    box-sizing: border-box;
+    padding: 0 4px;
+    background: var(--theme-mobile-background);
 
-.search-bar-icon {
-  color: #999;
-  margin: 0 6px 0 4px;
-  font-size: 12px !important;
-}
-
-.mobile-search-link {
-  display: block;
-  width: 100%;
-  margin: 0 !important;
-  box-sizing: border-box;
-  padding: 0 4px;
-  background: var(--theme-mobile-background);
-
-  @include phone-portrait {
-    padding-bottom: 4px;
+    @include phone-portrait {
+      padding-bottom: 4px;
+    }
   }
 }

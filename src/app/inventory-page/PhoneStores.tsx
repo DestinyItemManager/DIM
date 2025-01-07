@@ -11,22 +11,25 @@ import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-bucket
 import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers';
 import CategoryStrip from './CategoryStrip';
 import HeaderShadowDiv from './HeaderShadowDiv';
+import styles from './PhoneStores.m.scss';
 import PhoneStoresHeader from './PhoneStoresHeader';
 import { StoreBuckets } from './StoreBuckets';
 import './Stores.scss';
-
-interface Props {
-  stores: DimStore[];
-  buckets: InventoryBuckets;
-  singleCharacter: boolean;
-}
 
 /**
  * Display inventory and character headers for all characters and the vault.
  *
  * This is the phone (portrait) view only.
  */
-export default function PhoneStores({ stores, buckets, singleCharacter }: Props) {
+export default function PhoneStores({
+  stores,
+  buckets,
+  singleCharacter,
+}: {
+  stores: DimStore[];
+  buckets: InventoryBuckets;
+  singleCharacter: boolean;
+}) {
   const vault = getVault(stores);
   const currentStore = getCurrentStore(stores);
 
@@ -106,11 +109,7 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
   };
 
   return (
-    <div
-      className={`inventory-content phone-portrait destiny${selectedStore.destinyVersion}`}
-      role="main"
-      aria-label={t('Header.Inventory')}
-    >
+    <div className={styles.content} role="main" aria-label={t('Header.Inventory')}>
       <HeaderShadowDiv className="store-row store-header">
         <PhoneStoresHeader
           selectedStore={selectedStore}

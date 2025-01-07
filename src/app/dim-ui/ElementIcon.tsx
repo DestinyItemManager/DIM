@@ -7,9 +7,11 @@ import styles from './ElementIcon.m.scss';
 export default function ElementIcon({
   element,
   className,
+  d1Badge,
 }: {
   element: DestinyDamageTypeDefinition | null;
   className?: string;
+  d1Badge?: boolean;
 }) {
   if (!element) {
     return null;
@@ -23,7 +25,7 @@ export default function ElementIcon({
     <div
       style={bungieBackgroundStyle(icon)}
       title={element.displayProperties.name}
-      className={clsx(className, styles.element)}
+      className={clsx(className, styles.element, { [styles.d1Badge]: d1Badge })}
     />
   );
 }

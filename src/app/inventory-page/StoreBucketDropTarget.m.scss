@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 :global(.sub-bucket) {
   &.canDrop {
     background-color: rgba(255, 255, 255, 0.2);
@@ -8,5 +10,15 @@
   &.grouped {
     display: flex;
     flex-wrap: wrap;
+  }
+  &.equipped {
+    display: flex;
+    flex-direction: column;
+    width: calc(var(--item-size) + #{$equipped-item-total-outset});
+    margin-right: var(--item-margin);
+  }
+  &.unequipped {
+    flex: 1;
+    width: 100%;
   }
 }

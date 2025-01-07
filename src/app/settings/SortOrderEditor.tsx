@@ -135,7 +135,7 @@ function SortEditorItem({
         <div
           className={clsx(styles.item, {
             [styles.dragging]: snapshot.isDragging,
-            disabled: !item.enabled,
+            [styles.disabled]: !item.enabled,
           })}
           ref={provided.innerRef}
           {...provided.draggableProps}

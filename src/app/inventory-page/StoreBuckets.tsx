@@ -45,7 +45,7 @@ export function StoreBuckets({
     content = (
       <>
         {(allStoresView || stores[0] !== vault) && (
-          <div className="store-cell account-wide">
+          <div className={clsx('store-cell', styles.accountWideCell)}>
             <StoreBucket bucket={bucket} store={currentStore} singleCharacter={false} />
           </div>
         )}
@@ -57,32 +57,37 @@ export function StoreBuckets({
       </>
     );
   } else {
-    content = stores.map((store) => (
-      <div
-        key={store.id}
-        className={clsx('store-cell', {
-          [styles.postmasterFull]:
-            bucket.sort === 'Postmaster' &&
-            store.destinyVersion === 2 &&
-            postmasterAlmostFull(store),
-        })}
-      >
-        {(!store.isVault || bucket.vaultBucket || bucket.inPostmaster) && (
-          <StoreBucket bucket={bucket} store={store} singleCharacter={singleCharacter} />
-        )}
-        {bucket.hash === BucketHashes.LostItems &&
-          store.destinyVersion === 2 &&
-          findItemsByBucket(store, bucket.hash).length > 0 && <PullFromPostmaster store={store} />}
-      </div>
-    ));
+    content = stores.map((store) => {
+      const hasPullFromPostmaster =
+        bucket.hash === BucketHashes.LostItems && store.destinyVersion === 2;
+      return (
+        <div
+          key={store.id}
+          className={clsx('store-cell', {
+            [styles.hasButton]: hasPullFromPostmaster,
+            [styles.postmasterFull]:
+              bucket.sort === 'Postmaster' &&
+              store.destinyVersion === 2 &&
+              postmasterAlmostFull(store),
+          })}
+        >
+          {(!store.isVault || bucket.vaultBucket || bucket.inPostmaster) && (
+            <StoreBucket bucket={bucket} store={store} singleCharacter={singleCharacter} />
+          )}
+          {hasPullFromPostmaster && findItemsByBucket(store, bucket.hash).length > 0 && (
+            <PullFromPostmaster store={store} />
+          )}
+        </div>
+      );
+    });
   }
 
   const postMasterSpaceUsed = postmasterSpaceUsed(stores[0]);
   const checkPostmaster = bucket.hash === BucketHashes.LostItems;
   return (
     <div
-      className={clsx('store-row', `bucket-${bucket.hash}`, {
-        'account-wide': bucket.accountWide,
+      className={clsx('store-row', {
+        [styles.singleCharacterAccountWideRow]: bucket.accountWide && singleCharacter,
       })}
     >
       {labels && (

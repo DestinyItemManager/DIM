@@ -6,14 +6,10 @@ import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import { DimItem } from '../inventory/item-types';
 import { moveItemToCurrentStore } from '../inventory/move-item';
 
-interface Props {
-  item: DimItem;
-}
-
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
-export default memo(function StoreInventoryItem({ item }: Props) {
+export default memo(function StoreInventoryItem({ item }: { item: DimItem }) {
   const dispatch = useThunkDispatch();
   const doubleClicked = useCallback(
     (e: React.MouseEvent) => dispatch(moveItemToCurrentStore(item, e)),

@@ -1,143 +1,107 @@
 @use '../variables.scss' as *;
 
-// copied from resetButton in common.m.scss:
-button.milestone-quest {
-  color: inherit;
-  text-align: left;
-  appearance: none;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  font-size: inherit;
-  font-family: inherit;
-}
-
-.milestone-quest {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  align-self: start;
-  transition: opacity 0.2s;
-  overflow: hidden;
-  user-select: text;
-
-  .complete {
-    color: #a1a2a2;
+@layer base {
+  // copied from resetButton in common.m.scss:
+  button.milestone-quest {
+    color: inherit;
+    text-align: left;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
   }
 
-  &.search-hidden {
-    opacity: 0.2;
-  }
-
-  .milestone-icon {
-    margin-right: 8px;
+  .milestone-quest {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: var(--item-size);
-    .milestone-img {
-      width: var(--item-size);
-      height: var(--item-size);
-    }
-    span {
-      font-size: 10px;
-      text-align: center;
+    flex-direction: row;
+    align-items: flex-start;
+    align-self: start;
+    transition: opacity 0.2s;
+    overflow: hidden;
+    user-select: text;
+
+    .complete {
+      color: #a1a2a2;
     }
 
-    .item {
-      margin: 0;
-      height: auto;
+    &.search-hidden {
+      opacity: 0.2;
     }
-  }
 
-  .milestone-name {
-    font-size: 14px;
-  }
+    .milestone-icon {
+      margin-right: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: var(--item-size);
+      .milestone-img {
+        width: var(--item-size);
+        height: var(--item-size);
+      }
+      span {
+        font-size: 10px;
+        text-align: center;
+      }
 
-  // Apply hover style only on clickable milestone buttons
-  &[type='button'] {
-    @include interactive($hover: true) {
-      .milestone-name {
-        color: var(--theme-accent-primary);
+      .item {
+        margin: 0;
+        height: auto;
+      }
+    }
+
+    .milestone-name {
+      font-size: 14px;
+    }
+
+    // Apply hover style only on clickable milestone buttons
+    &[type='button'] {
+      @include interactive($hover: true) {
+        .milestone-name {
+          color: var(--theme-accent-primary);
+        }
+      }
+    }
+
+    .milestone-description {
+      color: var(--theme-text-secondary);
+      white-space: pre-wrap;
+      line-height: 1.3;
+      max-height: 3.9em;
+      overflow: hidden;
+    }
+
+    .milestone-info {
+      flex: 1;
+      width: 0;
+      display: flex;
+      flex-direction: column;
+
+      // HACK
+      .item-details {
+        margin: 2px 0 0 4px;
       }
     }
   }
 
-  .milestone-location {
-    font-size: 10px;
-    margin: 0 0 2px 0;
-  }
-
-  .milestone-description {
-    color: var(--theme-text-secondary);
-    white-space: pre-wrap;
-    line-height: 1.3;
-    max-height: 3.9em;
-    overflow: hidden;
-  }
-
-  .milestone-info {
-    flex: 1;
-    width: 0;
-    display: flex;
-    flex-direction: column;
-
-    // HACK
-    .item-details {
-      margin: 2px 0 0 4px;
+  .quest-expiration {
+    .app-icon {
+      margin-right: 4px;
     }
 
-    // ALSOHACK
-    .raid-tier:nth-child(n + 2) {
-      margin-top: 14px;
+    &.expires-soon {
+      color: #c74141;
+    }
+
+    .milestone-info & {
+      color: #999;
+      font-weight: bold;
+      font-size: 11px;
+      float: right;
+      margin-top: 2px;
     }
   }
-
-  .quest-modifiers {
-    margin-top: 4px;
-    display: flex;
-    flex-flow: row wrap;
-    gap: 8px;
-  }
-}
-
-.quest-objectives {
-  margin: 8px 0 0 0;
-  .objective-progress {
-    background-color: rgba(0, 0, 0, 0.3);
-  }
-  .objective-boolean {
-    .objective-progress {
-      background-color: transparent;
-    }
-  }
-  .objective-complete {
-    .objective-progress {
-      background-color: #111;
-    }
-  }
-}
-
-.quest-expiration {
-  .app-icon {
-    margin-right: 4px;
-  }
-
-  &.expires-soon {
-    color: #c74141;
-  }
-
-  .milestone-info & {
-    color: #999;
-    font-weight: bold;
-    font-size: 11px;
-    float: right;
-    margin-top: 2px;
-  }
-}
-
-.well-rested {
-  cursor: default;
 }

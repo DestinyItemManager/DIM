@@ -1,5 +1,5 @@
 .add {
-  composes: pull-item-button from global;
+  composes: pullItemButton from '../../inventory-page/StoreBucket.m.scss';
   align-items: center;
   box-sizing: border-box;
   display: flex;
