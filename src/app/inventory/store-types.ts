@@ -122,9 +122,7 @@ export interface DimCharacterStat {
   /** The current value of the stat. */
   value: number;
 
-  /** A localized description of this stat's effect. */
-  effect?: 'Grenade' | 'Melee' | 'Super';
-  /** Cooldown time for the associated ability. */
+  /** D1 Cooldown time for the associated ability. */
   cooldown?: string;
 
   /** How this stat exactly was calculated. */

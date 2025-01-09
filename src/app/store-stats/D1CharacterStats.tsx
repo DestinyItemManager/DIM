@@ -5,13 +5,10 @@ import type { DimStore } from 'app/inventory/store-types';
 import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import './CharacterStats.scss';
 
-interface Props {
-  stats: DimStore['stats'];
-}
-
-export default function D1CharacterStats({ stats }: Props) {
+export default function D1CharacterStats({ stats }: { stats: DimStore['stats'] }) {
   const statList = statsWithTiers.map((h) => stats[h]);
   const tooltips = statList.map((stat) => {
     if (stat) {
@@ -25,14 +22,18 @@ export default function D1CharacterStats({ stats }: Props) {
         statName: stat.displayProperties.name,
       });
 
-      let cooldown = stat.cooldown || '';
+      const cooldown = stat.cooldown || '';
       if (cooldown) {
-        cooldown = t(`Cooldown.${stat.effect!}`, {
-          cooldown,
-          metadata: { keys: 'cooldowns' },
-        });
+        switch (stat.hash) {
+          case StatHashes.Intellect:
+            return next + t('Cooldown.Super', { cooldown });
+          case StatHashes.Discipline:
+            return next + t('Cooldown.Grenade', { cooldown });
+          case StatHashes.Strength:
+            return next + t('Cooldown.Melee', { cooldown });
+        }
       }
-      return next + cooldown;
+      return next;
     }
   });
 
