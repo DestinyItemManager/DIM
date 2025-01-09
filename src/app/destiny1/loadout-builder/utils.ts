@@ -1,7 +1,7 @@
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { isEmpty, mapValues, uniqBy } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import { D1Item } from '../../inventory/item-types';
 import { D1Store, DimStore } from '../../inventory/store-types';
@@ -25,9 +25,9 @@ function getBonusType(armorpiece: D1ItemWithNormalStats): string {
     return '';
   }
   return (
-    (armorpiece.normalStats[144602215].bonus > 0 ? 'int ' : '') +
-    (armorpiece.normalStats[1735777505].bonus > 0 ? 'dis ' : '') +
-    (armorpiece.normalStats[4244567218].bonus > 0 ? 'str' : '')
+    (armorpiece.normalStats[StatHashes.Intellect].bonus > 0 ? 'int ' : '') +
+    (armorpiece.normalStats[StatHashes.Discipline].bonus > 0 ? 'dis ' : '') +
+    (armorpiece.normalStats[StatHashes.Strength].bonus > 0 ? 'str' : '')
   );
 }
 
@@ -66,9 +66,9 @@ export function calcArmorStats(
   scaleTypeArg: 'base' | 'scaled',
 ) {
   for (const armor of pieces) {
-    const int = armor.item.normalStats![144602215];
-    const dis = armor.item.normalStats![1735777505];
-    const str = armor.item.normalStats![4244567218];
+    const int = armor.item.normalStats![StatHashes.Intellect];
+    const dis = armor.item.normalStats![StatHashes.Discipline];
+    const str = armor.item.normalStats![StatHashes.Strength];
 
     const scaleType = armor.item.tier === 'Rare' ? 'base' : scaleTypeArg;
 
@@ -76,22 +76,22 @@ export function calcArmorStats(
     // that do not scale correctly as the scaling is currently implemented.
     // See https://github.com/DestinyItemManager/DIM/issues/5191 for details
     if ([2820418554, 2122538507, 2300914892].includes(armor.item.hash)) {
-      stats[144602215].value += int.base;
+      stats[StatHashes.Intellect].value += int.base;
     } else {
-      stats[144602215].value += int[scaleType];
-      stats[1735777505].value += dis[scaleType];
-      stats[4244567218].value += str[scaleType];
+      stats[StatHashes.Intellect].value += int[scaleType];
+      stats[StatHashes.Discipline].value += dis[scaleType];
+      stats[StatHashes.Strength].value += str[scaleType];
     }
 
     switch (armor.bonusType) {
       case 'int':
-        stats[144602215].value += int.bonus;
+        stats[StatHashes.Intellect].value += int.bonus;
         break;
       case 'dis':
-        stats[1735777505].value += dis.bonus;
+        stats[StatHashes.Discipline].value += dis.bonus;
         break;
       case 'str':
-        stats[4244567218].value += str.bonus;
+        stats[StatHashes.Strength].value += str.bonus;
         break;
     }
   }
@@ -120,12 +120,12 @@ export function getBestArmor(
   fullMode = false,
 ) {
   const statHashes = [
-    { stats: [144602215, 1735777505], type: 'intdis' },
-    { stats: [144602215, 4244567218], type: 'intstr' },
-    { stats: [1735777505, 4244567218], type: 'disstr' },
-    { stats: [144602215], type: 'int' },
-    { stats: [1735777505], type: 'dis' },
-    { stats: [4244567218], type: 'str' },
+    { stats: [StatHashes.Intellect, StatHashes.Discipline], type: 'intdis' },
+    { stats: [StatHashes.Intellect, StatHashes.Strength], type: 'intstr' },
+    { stats: [StatHashes.Discipline, StatHashes.Strength], type: 'disstr' },
+    { stats: [StatHashes.Intellect], type: 'int' },
+    { stats: [StatHashes.Discipline], type: 'dis' },
+    { stats: [StatHashes.Strength], type: 'str' },
   ];
   const armor: Partial<Record<ArmorTypes, ItemWithBonus[]>> = {};
   let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];

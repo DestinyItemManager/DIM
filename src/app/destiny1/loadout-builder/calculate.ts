@@ -123,22 +123,22 @@ export async function getSetBucketsStep(
                       [BucketHashes.Ghost]: ghost,
                     },
                     stats: {
-                      144602215: {
-                        hash: 144602215,
+                      [StatHashes.Intellect]: {
+                        hash: StatHashes.Intellect,
                         value: 0,
                         name: 'Intellect',
                         description: '',
                         icon: intellectIcon,
                       },
-                      1735777505: {
-                        hash: 1735777505,
+                      [StatHashes.Discipline]: {
+                        hash: StatHashes.Discipline,
                         value: 0,
                         name: 'Discipline',
                         description: '',
                         icon: disciplineIcon,
                       },
-                      4244567218: {
-                        hash: 4244567218,
+                      [StatHashes.Strength]: {
+                        hash: StatHashes.Strength,
                         value: 0,
                         name: 'Strength',
                         description: '',
@@ -152,9 +152,9 @@ export async function getSetBucketsStep(
                   const pieces = Object.values(set.armor);
                   set.setHash = genSetHash(pieces);
                   calcArmorStats(pieces, set.stats, scaleType);
-                  const tiersString = `${tierValue(set.stats[144602215].value)}/${tierValue(
-                    set.stats[1735777505].value,
-                  )}/${tierValue(set.stats[4244567218].value)}`;
+                  const tiersString = `${tierValue(set.stats[StatHashes.Intellect].value)}/${tierValue(
+                    set.stats[StatHashes.Discipline].value,
+                  )}/${tierValue(set.stats[StatHashes.Strength].value)}`;
 
                   tiersSet.add(tiersString);
 
