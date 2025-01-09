@@ -123,7 +123,7 @@ export function getCharacterStatsData(
     if (statsWithTiers.includes(stat.hash)) {
       const tier = Math.floor(Math.min(300, stat.value) / 60);
       if (data.peerView) {
-        stat.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, statId, tier);
+        stat.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stat.hash, tier);
       }
     }
 
@@ -133,9 +133,9 @@ export function getCharacterStatsData(
 }
 
 // following code is from https://github.com/DestinyTrialsReport
-function getAbilityCooldown(subclass: number, ability: string, tier: number) {
-  switch (ability) {
-    case 'STAT_INTELLECT':
+function getAbilityCooldown(subclass: number, statHash: StatHashes, tier: number) {
+  switch (statHash) {
+    case StatHashes.Intellect:
       switch (subclass) {
         case 2007186000: // Defender
         case 4143670656: // Nightstalker
@@ -145,9 +145,9 @@ function getAbilityCooldown(subclass: number, ability: string, tier: number) {
         default:
           return cooldownsSuperB[tier];
       }
-    case 'STAT_DISCIPLINE':
+    case StatHashes.Discipline:
       return cooldownsGrenade[tier];
-    case 'STAT_STRENGTH':
+    case StatHashes.Strength:
       switch (subclass) {
         case 4143670656: // Nightstalker
         case 1716862031: // Gunslinger
