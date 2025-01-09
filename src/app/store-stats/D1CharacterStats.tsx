@@ -22,7 +22,7 @@ export default function D1CharacterStats({ stats }: Props) {
         progress: tier === 5 ? stat.value : stat.value % 60,
         tier,
         nextTier: tier + 1,
-        statName: stat.name,
+        statName: stat.displayProperties.name,
       });
 
       let cooldown = stat.cooldown || '';
@@ -41,7 +41,7 @@ export default function D1CharacterStats({ stats }: Props) {
       {statList.map((stat, index) => (
         <PressTip key={stat.hash} tooltip={tooltips[index]}>
           <div className="stat">
-            <BungieImage src={stat.icon} alt={stat.name} />
+            <BungieImage src={stat.displayProperties.icon} alt={stat.displayProperties.name} />
             {getD1CharacterStatTiers(stat).map((n, index) => (
               <div key={index} className="bar">
                 <div

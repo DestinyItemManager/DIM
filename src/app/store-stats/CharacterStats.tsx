@@ -173,10 +173,10 @@ function CharacterStats({
             className={clsx('stat', {
               boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
             })}
-            aria-label={`${stat.name} ${stat.value}`}
+            aria-label={`${stat.displayProperties.name} ${stat.value}`}
             role="group"
           >
-            <BungieImage src={stat.icon} alt={stat.name} />
+            <BungieImage src={stat.displayProperties.icon} alt={stat.displayProperties.name} />
             <div>{stat.value}</div>
           </div>
         </PressTip>

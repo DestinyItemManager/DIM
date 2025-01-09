@@ -230,10 +230,8 @@ export function getCharacterStatsData(
     const value = stats[statHash] || 0;
     const stat: DimCharacterStat = {
       hash: statHash,
-      name: def.displayProperties.name,
-      description: def.displayProperties.description,
+      displayProperties: def.displayProperties,
       value,
-      icon: def.displayProperties.icon,
     };
     ret[statHash] = stat;
   }

@@ -106,36 +106,19 @@ export function getCharacterStatsData(
       continue;
     }
 
+    const statDef = defs.Stat.get(rawStat.statHash);
     const stat: DimCharacterStat = {
       hash: rawStat.statHash,
       value: rawStat.value,
-      name: '',
-      description: '',
-      icon: '',
+      displayProperties: {
+        name: statDef.statName, // localized name
+        description: statDef.statDescription,
+        icon: statDef.icon,
+        hasIcon: Boolean(statDef.icon),
+        highResIcon: '',
+        iconSequences: [],
+      },
     };
-
-    switch (statId) {
-      case 'STAT_INTELLECT':
-        stat.effect = 'Super';
-        stat.icon = defs.Stat.get(StatHashes.Intellect).icon;
-        break;
-      case 'STAT_DISCIPLINE':
-        stat.effect = 'Grenade';
-        stat.icon = defs.Stat.get(StatHashes.Discipline).icon;
-        break;
-      case 'STAT_STRENGTH':
-        stat.effect = 'Melee';
-        stat.icon = defs.Stat.get(StatHashes.Strength).icon;
-        break;
-      default:
-        break;
-    }
-
-    const statDef = defs.Stat.get(stat.hash);
-    if (statDef) {
-      stat.name = statDef.statName; // localized name
-      stat.description = statDef.statDescription;
-    }
 
     if (statsWithTiers.includes(stat.hash)) {
       const tier = Math.floor(Math.min(300, stat.value) / 60);
