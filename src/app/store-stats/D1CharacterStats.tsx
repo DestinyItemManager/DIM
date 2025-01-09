@@ -1,40 +1,49 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import type { DimStore } from 'app/inventory/store-types';
-import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
+import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import './CharacterStats.scss';
 
-export default function D1CharacterStats({ stats }: { stats: DimStore['stats'] }) {
-  const statList = statsWithTiers.map((h) => stats[h]);
-  const tooltips = statList.map((stat) => {
-    if (stat) {
-      const tier = Math.floor(Math.min(300, stat.value) / 60);
-      const next = t('Stats.TierProgress', {
-        context: tier === 5 ? 'Max' : '',
-        metadata: { context: ['max'] },
-        progress: tier === 5 ? stat.value : stat.value % 60,
-        tier,
-        nextTier: tier + 1,
-        statName: stat.displayProperties.name,
-      });
+export function D1StoreCharacterStats({ store }: { store: DimStore }) {
+  const subclass = findItemsByBucket(store, BucketHashes.Subclass).find((i) => i.equipped);
+  return <D1CharacterStats stats={store.stats} subclassHash={subclass?.hash} />;
+}
 
-      const cooldown = stat.cooldown || '';
-      if (cooldown) {
-        switch (stat.hash) {
-          case StatHashes.Intellect:
-            return next + t('Cooldown.Super', { cooldown });
-          case StatHashes.Discipline:
-            return next + t('Cooldown.Grenade', { cooldown });
-          case StatHashes.Strength:
-            return next + t('Cooldown.Melee', { cooldown });
-        }
+export function D1CharacterStats({
+  stats,
+  subclassHash,
+}: {
+  stats: DimStore['stats'];
+  subclassHash?: number;
+}) {
+  const statList = Object.values(stats);
+  const tooltips = statList.map((stat) => {
+    const tier = Math.floor(Math.min(300, stat.value) / 60);
+    const next = t('Stats.TierProgress', {
+      context: tier === 5 ? 'Max' : '',
+      metadata: { context: ['max'] },
+      progress: tier === 5 ? stat.value : stat.value % 60,
+      tier,
+      nextTier: tier + 1,
+      statName: stat.displayProperties.name,
+    });
+
+    const cooldown = subclassHash ? getAbilityCooldown(subclassHash, stat.hash, tier) : undefined;
+    if (cooldown) {
+      switch (stat.hash) {
+        case StatHashes.Intellect:
+          return next + t('Cooldown.Super', { cooldown });
+        case StatHashes.Discipline:
+          return next + t('Cooldown.Grenade', { cooldown });
+        case StatHashes.Strength:
+          return next + t('Cooldown.Melee', { cooldown });
       }
-      return next;
     }
+    return next;
   });
 
   return (
@@ -58,4 +67,47 @@ export default function D1CharacterStats({ stats }: { stats: DimStore['stats'] }
       ))}
     </div>
   );
+}
+
+function getD1CharacterStatTiers(stat: DimCharacterStat) {
+  const tiers = new Array<number>(5);
+  let remaining = stat.value;
+  for (let t = 0; t < 5; t++) {
+    remaining -= tiers[t] = remaining > 60 ? 60 : remaining;
+  }
+  return tiers;
+}
+
+// Cooldowns
+const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
+const cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
+const cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
+const cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
+
+// following code is from https://github.com/DestinyTrialsReport
+function getAbilityCooldown(subclass: number, statHash: StatHashes, tier: number) {
+  switch (statHash) {
+    case StatHashes.Intellect:
+      switch (subclass) {
+        case 2007186000: // Defender
+        case 4143670656: // Nightstalker
+        case 2455559914: // Striker
+        case 3658182170: // Sunsinger
+          return cooldownsSuperA[tier];
+        default:
+          return cooldownsSuperB[tier];
+      }
+    case StatHashes.Discipline:
+      return cooldownsGrenade[tier];
+    case StatHashes.Strength:
+      switch (subclass) {
+        case 4143670656: // Nightstalker
+        case 1716862031: // Gunslinger
+          return cooldownsMelee[tier];
+        default:
+          return cooldownsGrenade[tier];
+      }
+    default:
+      return '';
+  }
 }

@@ -1,10 +1,12 @@
 import { t } from 'app/i18next-t';
+import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout/loadout-types';
-import D1CharacterStats from 'app/store-stats/D1CharacterStats';
+import { D1CharacterStats } from 'app/store-stats/D1CharacterStats';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { filterMap } from 'app/utils/collections';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { useState } from 'react';
 import { D1Item } from '../../inventory/item-types';
 import { DimStore } from '../../inventory/store-types';
@@ -26,6 +28,7 @@ interface Props {
 export default function GeneratedSet({ setType, store, activesets, excludeItem }: Props) {
   const [collapsed, setCollapsed] = useState(true);
   const dispatch = useThunkDispatch();
+  const subclass = findItemsByBucket(store, BucketHashes.Subclass).find((i) => i.equipped);
 
   const toggle = () => setCollapsed((collapsed) => !collapsed);
 
@@ -64,7 +67,7 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
           </>
         )}{' '}
         <div className="dim-stats">
-          <D1CharacterStats stats={setType.tiers[activesets].stats} />
+          <D1CharacterStats stats={setType.tiers[activesets].stats} subclassHash={subclass?.hash} />
         </div>
       </div>
       <div className="loadout-builder-section">

@@ -122,9 +122,6 @@ export interface DimCharacterStat {
   /** The current value of the stat. */
   value: number;
 
-  /** D1 Cooldown time for the associated ability. */
-  cooldown?: string;
-
   /** How this stat exactly was calculated. */
   breakdown?: DimCharacterStatChange[];
 }

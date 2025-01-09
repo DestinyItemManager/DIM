@@ -1,15 +1,9 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D1Character, D1StatLabel } from 'app/destiny1/d1-manifest-types';
+import { D1Character } from 'app/destiny1/d1-manifest-types';
 import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { DimCharacterStat } from '../store-types';
-
-// Cooldowns
-const cooldownsSuperA = ['5:00', '4:46', '4:31', '4:15', '3:58', '3:40'];
-const cooldownsSuperB = ['5:30', '5:14', '4:57', '4:39', '4:20', '4:00'];
-const cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
-const cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
 // thanks to /u/iihavetoes for the bonuses at each level
 // thanks to /u/tehdaw for the spreadsheet with bonuses
@@ -70,28 +64,6 @@ export function getBonus(light: number, bucketHash: ArmorTypes): number {
   }
 }
 
-export const statsWithTiers = [StatHashes.Discipline, StatHashes.Intellect, StatHashes.Strength];
-export function getD1CharacterStatTiers(stat: DimCharacterStat) {
-  if (!statsWithTiers.includes(stat.hash)) {
-    return [];
-  }
-  const tiers = new Array<number>(5);
-  let remaining = stat.value;
-  for (let t = 0; t < 5; t++) {
-    remaining -= tiers[t] = remaining > 60 ? 60 : remaining;
-  }
-  return tiers;
-}
-
-const stats: D1StatLabel[] = [
-  'STAT_INTELLECT',
-  'STAT_DISCIPLINE',
-  'STAT_STRENGTH',
-  'STAT_ARMOR',
-  'STAT_RECOVERY',
-  'STAT_AGILITY',
-];
-
 /**
  * Compute character-level stats (int, dis, str).
  */
@@ -100,7 +72,7 @@ export function getCharacterStatsData(
   data: D1Character['characterBase'],
 ) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
-  for (const statId of stats) {
+  for (const statId of ['STAT_DISCIPLINE', 'STAT_INTELLECT', 'STAT_STRENGTH'] as const) {
     const rawStat = data.stats[statId];
     if (!rawStat) {
       continue;
@@ -120,42 +92,7 @@ export function getCharacterStatsData(
       },
     };
 
-    if (statsWithTiers.includes(stat.hash)) {
-      const tier = Math.floor(Math.min(300, stat.value) / 60);
-      if (data.peerView) {
-        stat.cooldown = getAbilityCooldown(data.peerView.equipment[0].itemHash, stat.hash, tier);
-      }
-    }
-
     ret[stat.hash] = stat;
   }
   return ret;
-}
-
-// following code is from https://github.com/DestinyTrialsReport
-function getAbilityCooldown(subclass: number, statHash: StatHashes, tier: number) {
-  switch (statHash) {
-    case StatHashes.Intellect:
-      switch (subclass) {
-        case 2007186000: // Defender
-        case 4143670656: // Nightstalker
-        case 2455559914: // Striker
-        case 3658182170: // Sunsinger
-          return cooldownsSuperA[tier];
-        default:
-          return cooldownsSuperB[tier];
-      }
-    case StatHashes.Discipline:
-      return cooldownsGrenade[tier];
-    case StatHashes.Strength:
-      switch (subclass) {
-        case 4143670656: // Nightstalker
-        case 1716862031: // Gunslinger
-          return cooldownsMelee[tier];
-        default:
-          return cooldownsGrenade[tier];
-      }
-    default:
-      return '-:--';
-  }
 }
