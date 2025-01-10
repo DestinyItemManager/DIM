@@ -1,10 +1,13 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D1Character } from 'app/destiny1/d1-manifest-types';
+import { D1Character, D1StatDefinition } from 'app/destiny1/d1-manifest-types';
 import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { DimCharacterStat } from '../store-types';
 
+/**
+ * D1 specific armor bonus calculation.
+ */
 // thanks to /u/iihavetoes for the bonuses at each level
 // thanks to /u/tehdaw for the spreadsheet with bonuses
 // https://docs.google.com/spreadsheets/d/1YyFDoHtaiOOeFoqc5Wc_WC2_qyQhBlZckQx5Jd4bJXI/edit?pref=2&pli=1#gid=0
@@ -65,7 +68,7 @@ export function getBonus(light: number, bucketHash: ArmorTypes): number {
 }
 
 /**
- * Compute character-level stats (int, dis, str).
+ * Compute D1 character-level stats (int, dis, str).
  */
 export function getCharacterStatsData(
   defs: D1ManifestDefinitions,
@@ -77,22 +80,26 @@ export function getCharacterStatsData(
     if (!rawStat) {
       continue;
     }
-
     const statDef = defs.Stat.get(rawStat.statHash);
-    const stat: DimCharacterStat = {
-      hash: rawStat.statHash,
-      value: rawStat.value,
-      displayProperties: {
-        name: statDef.statName, // localized name
-        description: statDef.statDescription,
-        icon: statDef.icon,
-        hasIcon: Boolean(statDef.icon),
-        highResIcon: '',
-        iconSequences: [],
-      },
-    };
-
-    ret[stat.hash] = stat;
+    ret[statDef.hash] = characterStatFromStatDef(statDef, rawStat.value);
   }
   return ret;
+}
+
+export function characterStatFromStatDef(
+  statDef: D1StatDefinition,
+  value: number,
+): DimCharacterStat {
+  return {
+    hash: statDef.statHash,
+    displayProperties: {
+      name: statDef.statName,
+      description: statDef.statDescription,
+      icon: statDef.icon,
+      hasIcon: Boolean(statDef.icon),
+      highResIcon: '',
+      iconSequences: [],
+    },
+    value,
+  };
 }

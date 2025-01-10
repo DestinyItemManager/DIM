@@ -1,8 +1,8 @@
+import { characterStatFromStatDef } from 'app/inventory/store/character-utils';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { sumBy } from 'app/utils/collections';
 import { infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { D1Item } from '../../inventory/item-types';
 import { D1ManifestDefinitions } from '../d1-definitions';
@@ -94,33 +94,9 @@ export async function getSetBucketsStep(
   }
 
   let processedCount = 0;
-  const intellect = defs.Stat.get(StatHashes.Intellect);
-  const intellectDisplayProperties: DestinyDisplayPropertiesDefinition = {
-    name: intellect.statName,
-    description: intellect.statDescription,
-    icon: intellect.icon,
-    hasIcon: Boolean(intellect.icon),
-    iconSequences: [],
-    highResIcon: '',
-  };
-  const strength = defs.Stat.get(StatHashes.Strength);
-  const strengthDisplayProperties: DestinyDisplayPropertiesDefinition = {
-    name: strength.statName,
-    description: strength.statDescription,
-    icon: strength.icon,
-    hasIcon: Boolean(strength.icon),
-    iconSequences: [],
-    highResIcon: '',
-  };
-  const discipline = defs.Stat.get(StatHashes.Discipline);
-  const disciplineDisplayProperties: DestinyDisplayPropertiesDefinition = {
-    name: discipline.statName,
-    description: discipline.statDescription,
-    icon: discipline.icon,
-    hasIcon: Boolean(discipline.icon),
-    iconSequences: [],
-    highResIcon: '',
-  };
+  const intellect = characterStatFromStatDef(defs.Stat.get(StatHashes.Intellect), 0);
+  const strength = characterStatFromStatDef(defs.Stat.get(StatHashes.Strength), 0);
+  const discipline = characterStatFromStatDef(defs.Stat.get(StatHashes.Discipline), 0);
 
   for (const helm of helms) {
     for (const gauntlet of gauntlets) {
@@ -148,21 +124,9 @@ export async function getSetBucketsStep(
                       [BucketHashes.Ghost]: ghost,
                     },
                     stats: {
-                      [StatHashes.Intellect]: {
-                        hash: StatHashes.Intellect,
-                        value: 0,
-                        displayProperties: intellectDisplayProperties,
-                      },
-                      [StatHashes.Discipline]: {
-                        hash: StatHashes.Discipline,
-                        value: 0,
-                        displayProperties: disciplineDisplayProperties,
-                      },
-                      [StatHashes.Strength]: {
-                        hash: StatHashes.Strength,
-                        value: 0,
-                        displayProperties: strengthDisplayProperties,
-                      },
+                      [StatHashes.Intellect]: { ...intellect },
+                      [StatHashes.Discipline]: { ...discipline },
+                      [StatHashes.Strength]: { ...strength },
                     },
                     setHash: '',
                     includesVendorItems: false,
