@@ -141,6 +141,8 @@
     "Title": "發生了一些錯誤"
   },
   "ErrorPanel": {
+    "BrowserTooOld": "Your browser is too old to use DIM. Please update your browser to the latest version.",
+    "BrowserTooOldTitle": "Incompatible browser",
     "Description": "嘗試使用命運2同伴App來載入你的物品欄以測試Bungie.net是否出現問題。",
     "ReadTheGuide": "閲讀我們的用戶指南（連接在菜單）以瞭解故障排除步驟。",
     "SystemDown": "這一問題影響所有的命運應用程序，DIM團隊也無法修復或繞過。",
@@ -1456,7 +1458,6 @@
       },
       "Translation": "加入翻譯小組！",
       "TranslationText": "我們使用{{link}} 工具來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́)✧！",
-      "TwitterHelp": "請務必關注我們，以便瞭解我們的最新動向和即時狀態更新資訊。",
       "Version": "當前版本Ver{{version}}({{flavor}})，編譯於：{{date}}",
       "Wiki": "DIM 用戶指南",
       "WikiHelp": "瞭解 DIM 功能"

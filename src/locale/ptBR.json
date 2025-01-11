@@ -141,6 +141,8 @@
     "Title": "Algo deu errado"
   },
   "ErrorPanel": {
+    "BrowserTooOld": "Seu navegador é muito antigo para usar o DIM. Atualize seu navegador para a versão mais recente.",
+    "BrowserTooOldTitle": "Navegador incompatível",
     "Description": "Tente carregar seu inventário no app Destiny 2 Companion para saber se a Bungie.net está fora do ar.",
     "ReadTheGuide": "Leia nosso Guia do Usuário (link do menu) para etapas de solução de problemas.",
     "SystemDown": "Este problema afeta todos os apps de Destiny. Sendo assim, nem mesmo o DIM será capaz de resolver.",
@@ -1456,7 +1458,6 @@
       },
       "Translation": "Junte-se à equipe de tradução!",
       "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time.",
-      "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
       "Version": "Versão {{version}} ({{flavor}}), construído em {{date}}",
       "Wiki": "Guia do Usuário DIM",
       "WikiHelp": "Aprenda como utilizar os recursos do DIM."

@@ -141,6 +141,8 @@
     "Title": "Coś poszło nie tak"
   },
   "ErrorPanel": {
+    "BrowserTooOld": "Your browser is too old to use DIM. Please update your browser to the latest version.",
+    "BrowserTooOldTitle": "Incompatible browser",
     "Description": "Spróbuj załadować swój ekwipunek w aplikacji Destiny 2 Companion, aby sprawdzić, czy Bungie.net jest wyłączony.",
     "ReadTheGuide": "Przeczytaj nasz podręcznik użytkownika (link w menu), aby uzyskać informacje na temat rozwiązywania problemów.",
     "SystemDown": "Ma to wpływ na wszystkie aplikacje Destiny, a zespół DIM nie może tego naprawić ani obejść.",
@@ -1456,7 +1458,6 @@
       },
       "Translation": "Dołącz do Drużyny Tłumaczy!",
       "TranslationText": "Używamy {{link}} w celu ułatwienia tłumaczenia. Jeśli chcesz poprawić jedno z tłumaczeń DIM, dołącz do zespołu.",
-      "TwitterHelp": "Śledź nas, aby być na bieżąco z aktualizacjami i informacjami o stanie aplikacji real-time.",
       "Version": "Wersja {{version}} ({{flavor}}), zbudowana {{date}}",
       "Wiki": "Podręcznik użytkownika DIM",
       "WikiHelp": "Dowiedz się, jak korzystać z funkcji DIM."

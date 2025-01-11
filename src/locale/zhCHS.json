@@ -141,6 +141,8 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
+    "BrowserTooOld": "Your browser is too old to use DIM. Please update your browser to the latest version.",
+    "BrowserTooOldTitle": "Incompatible browser",
     "Description": "请尝试在命运同伴 App 中加载你的物品栏，以检测是否 Bungie.net 出现了问题。",
     "ReadTheGuide": "阅读我们的用户指南（链接位于菜单中）以了解故障排除步骤。",
     "SystemDown": "这一问题影响所有命运应用程序，DIM团队也无法修复或绕过。",
@@ -1456,7 +1458,6 @@
       },
       "Translation": "加入翻译小组！",
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",
-      "TwitterHelp": "请务必关注我们，以便了解我们的最新动向和即时状态更新资讯。",
       "Version": "当前版本Ver{{version}}({{flavor}})，编译于：{{date}}",
       "Wiki": "DIM 用户指南",
       "WikiHelp": "了解 DIM 各项功能的使用方法。"
