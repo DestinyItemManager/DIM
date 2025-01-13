@@ -1,3 +1,4 @@
+import { characterStatFromStatDef } from 'app/inventory/store/character-utils';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { sumBy } from 'app/utils/collections';
 import { infoLog } from 'app/utils/log';
@@ -93,9 +94,9 @@ export async function getSetBucketsStep(
   }
 
   let processedCount = 0;
-  const intellectIcon = defs.Stat.get(StatHashes.Intellect).icon;
-  const strengthIcon = defs.Stat.get(StatHashes.Strength).icon;
-  const disciplineIcon = defs.Stat.get(StatHashes.Discipline).icon;
+  const intellect = characterStatFromStatDef(defs.Stat.get(StatHashes.Intellect), 0);
+  const strength = characterStatFromStatDef(defs.Stat.get(StatHashes.Strength), 0);
+  const discipline = characterStatFromStatDef(defs.Stat.get(StatHashes.Discipline), 0);
 
   for (const helm of helms) {
     for (const gauntlet of gauntlets) {
@@ -123,27 +124,9 @@ export async function getSetBucketsStep(
                       [BucketHashes.Ghost]: ghost,
                     },
                     stats: {
-                      [StatHashes.Intellect]: {
-                        hash: StatHashes.Intellect,
-                        value: 0,
-                        name: 'Intellect',
-                        description: '',
-                        icon: intellectIcon,
-                      },
-                      [StatHashes.Discipline]: {
-                        hash: StatHashes.Discipline,
-                        value: 0,
-                        name: 'Discipline',
-                        description: '',
-                        icon: disciplineIcon,
-                      },
-                      [StatHashes.Strength]: {
-                        hash: StatHashes.Strength,
-                        value: 0,
-                        name: 'Strength',
-                        description: '',
-                        icon: strengthIcon,
-                      },
+                      [StatHashes.Intellect]: { ...intellect },
+                      [StatHashes.Discipline]: { ...discipline },
+                      [StatHashes.Strength]: { ...strength },
                     },
                     setHash: '',
                     includesVendorItems: false,

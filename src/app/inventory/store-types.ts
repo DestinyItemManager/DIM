@@ -117,20 +117,10 @@ export interface DimCharacterStatChange {
 export interface DimCharacterStat {
   /** The DestinyStatDefinition hash for the stat. */
   hash: number;
-  /** The localized name of the stat. */
-  name: string;
-  /** An icon associated with the stat. */
-  icon: string;
+  displayProperties: DestinyDisplayPropertiesDefinition;
+
   /** The current value of the stat. */
   value: number;
-
-  /** The localized description of the stat. */
-  description: string;
-
-  /** A localized description of this stat's effect. */
-  effect?: 'Grenade' | 'Melee' | 'Super';
-  /** Cooldown time for the associated ability. */
-  cooldown?: string;
 
   /** How this stat exactly was calculated. */
   breakdown?: DimCharacterStatChange[];

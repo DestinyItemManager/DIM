@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { PowerFormula, StoreCharacterStats } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
-import D1CharacterStats from './D1CharacterStats';
+import { D1StoreCharacterStats } from './D1CharacterStats';
 import styles from './StoreStats.m.scss';
 import VaultCapacity from './VaultCapacity';
 
@@ -25,7 +25,7 @@ export default function StoreStats({
           {!isPhonePortrait && <VaultCapacity />}
         </div>
       ) : store.destinyVersion === 1 ? (
-        <D1CharacterStats stats={store.stats} />
+        <D1StoreCharacterStats store={store} />
       ) : (
         <div className="stat-bars destiny2">
           <PowerFormula storeId={store.id} />

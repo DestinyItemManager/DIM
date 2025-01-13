@@ -337,8 +337,7 @@ function StatTierBar({
                 stat={{
                   hash: statHash,
                   value: tierNum * 10,
-                  name: statDef.displayProperties.name,
-                  description: statDef.displayProperties.description,
+                  displayProperties: statDef.displayProperties,
                 }}
                 equippedHashes={equippedHashes}
               />

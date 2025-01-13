@@ -55,7 +55,6 @@ module.exports = {
     // prettier-ignore
     const keys = {
       buckets: { list: ['General', 'Inventory', 'Postmaster', 'Progress', 'Unknown'] },
-      cooldowns: { list: ['Grenade', 'Melee', 'Super'] },
       difficulty: { list: ['Normal', 'Hard'] },
       progress: { list: ['Bounties', 'Items', 'Quests'] },
       sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] }
