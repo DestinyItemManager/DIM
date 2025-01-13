@@ -1,5 +1,7 @@
 ## Next
 
+## 8.54.0 <span class="changelog-date">(2025-01-12)</span>
+
 ## 8.53.0 <span class="changelog-date">(2025-01-05)</span>
 
 * Added `is:enhancementready` search that finds weapons which have reached level thresholds to enhance perks
