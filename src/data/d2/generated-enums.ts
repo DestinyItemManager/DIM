@@ -836,6 +836,7 @@ export const enum PlugCategoryHashes {
   V800WarlockNewClass0Skins = 1166112530,
   V800WarlockNewHead0Skins = 755248998,
   V810NewGrenadeLauncher0Skins = 216123502,
+  V810NewShotgun0Skins = 2093338915,
   V810PursuitAutoRifle0Skins = 4116933935,
   V810RepackageSniperRifle0Skins = 1428267180,
   WarlockArcAspects = 2111409167,
