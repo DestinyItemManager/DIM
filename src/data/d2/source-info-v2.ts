@@ -1089,6 +1089,7 @@ const D2Sources: {
       792439255, // Source: Tonic Laboratory in the Last City
       1605890568, // Source: Episode Revenant Seasonal Activities
       2463956052, // Source: Vesper's Host
+      3906217258, // Source: Revenant Fortress
     ],
   },
   'ritual-weapon': {
