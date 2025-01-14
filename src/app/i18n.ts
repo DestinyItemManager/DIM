@@ -85,8 +85,7 @@ export function initi18n(): Promise<unknown> {
     // See https://github.com/i18next/i18next
     i18next.use(HttpApi).init<HttpBackendOptions>(
       {
-        initImmediate: true,
-        compatibilityJSON: 'v3',
+        initAsync: true,
         debug: false,
         lng: lang,
         fallbackLng: 'en',

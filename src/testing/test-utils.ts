@@ -149,8 +149,7 @@ export function setupi18n() {
   i18next.init({
     lng: 'en',
     debug: true,
-    initImmediate: true,
-    compatibilityJSON: 'v3',
+    initAsync: true,
     lowerCaseLng: true,
     interpolation: {
       escapeValue: false,

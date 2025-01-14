@@ -6,6 +6,7 @@ module.exports = {
   input: ['src/app/**/*.{js,jsx,ts,tsx,cjs,mjs,cts,mts}', 'src/browsercheck.js'],
   output: './',
   options: {
+    compatibilityJSON: 'v4',
     debug: false,
     removeUnusedKeys: true,
     sort: true,
