@@ -1,6 +1,5 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
-import { DIM_LANG_INFOS } from 'app/i18n';
 import { buildStores } from 'app/inventory/store/d2-store-factory';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
@@ -175,15 +174,4 @@ export function setupi18n() {
       },
     },
   });
-
-  for (const [otherLang, { pluralOverride }] of Object.entries(DIM_LANG_INFOS)) {
-    if (pluralOverride) {
-      // eslint-disable-next-line
-      i18next.services.pluralResolver.addRule(
-        otherLang,
-        // eslint-disable-next-line
-        i18next.services.pluralResolver.getRule('en'),
-      );
-    }
-  }
 }
