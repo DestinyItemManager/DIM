@@ -7,7 +7,7 @@ import { ArtifactXP } from 'app/inventory/ArtifactXP';
 import { ItemPowerSet } from 'app/inventory/ItemPowerSet';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { profileResponseSelector } from 'app/inventory/selectors';
-import type { DimStore } from 'app/inventory/store-types';
+import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
 import { statTier } from 'app/loadout-builder/utils';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
@@ -25,7 +25,7 @@ import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import styles from './CharacterStats.m.scss';
-import StatTooltip, { Stat } from './StatTooltip';
+import StatTooltip from './StatTooltip';
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {
   return (
@@ -155,7 +155,7 @@ export function CharacterStats({
    * show a subset of stats.
    */
   stats: {
-    [hash: number]: Stat;
+    [hash: number]: DimCharacterStat;
   };
   /** Whether to show the total tier of the set. */
   showTier?: boolean;
@@ -186,10 +186,10 @@ export function CharacterStats({
             className={clsx('stat', {
               boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
             })}
-            aria-label={`${stat.name} ${stat.value}`}
+            aria-label={`${stat.displayProperties.name} ${stat.value}`}
             role="group"
           >
-            {stat.icon && <BungieImage src={stat.icon} alt={stat.name} />}
+            <BungieImage src={stat.displayProperties.icon} alt={stat.displayProperties.name} />
             <div>{stat.value}</div>
           </div>
         </PressTip>

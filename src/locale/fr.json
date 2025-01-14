@@ -141,6 +141,8 @@
     "Title": "Une erreur s'est produite"
   },
   "ErrorPanel": {
+    "BrowserTooOld": "Votre navigateur est trop ancien pour utiliser DIM. Veuillez mettre à jour votre navigateur vers la dernière version.",
+    "BrowserTooOldTitle": "Navigateur incompatible",
     "Description": "Essayez de charger votre inventaire dans l'application Compagnon de Destiny 2 pour voir si Bungie.net est hors-ligne.",
     "ReadTheGuide": "Lisez notre manuel d'utilisation (lien dans le menu) pour les étapes de dépannage.",
     "SystemDown": "Ceci affecte toutes les applications Destiny et l'équipe DIM ne peut pas le réparer ou le contourner.",
@@ -232,7 +234,7 @@
     "Engrams": "Affiche les engrammes.",
     "Enhanceable": "Affiche les armes pouvant être améliorées.",
     "Enhanced": "Affiche les armes en fonction de leur niveau d'amélioration.",
-    "EnhancedPerk": "Shows weapons that have the specified number of enhanced perk columns.",
+    "EnhancedPerk": "Montre les armes qui ont le nombre spécifié d'attributs améliorés.",
     "EnhancementReady": "Shows weapons that have reached level thresholds for perk enhancement.",
     "Equipment": "Objets qui peuvent être équipés.",
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
@@ -1456,7 +1458,6 @@
       },
       "Translation": "Rejoignez l'équipe de traduction!",
       "TranslationText": "Nous utilisons {{link}} pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe.",
-      "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
       "Wiki": "Mode d'emploi DIM",
       "WikiHelp": "Apprendre à utiliser les fonctionnalités de DIM."
@@ -1483,7 +1484,7 @@
     "Clear": "Effacer la liste de souhaits",
     "CopiedLine": "Élément de liste de souhaits copié dans le presse-papier",
     "CopyLine": "Copier les attributs sélectionnés en tant qu'élément de liste de souhaits",
-    "DupeRolls": " (+{{num, number}} ignored dupes)",
+    "DupeRolls": " (+{{num, number}} doublons ignorés)",
     "ExternalSource": "Ajouter une autre liste de souhaits",
     "ExternalSourcePlaceholder": "Coller l'URL de la liste de souhaits ici",
     "Header": "Liste de souhaits",

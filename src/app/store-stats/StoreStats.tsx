@@ -2,7 +2,7 @@ import type { DimStore } from 'app/inventory/store-types';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { PowerFormula, StoreCharacterStats } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
-import D1CharacterStats from './D1CharacterStats';
+import { D1StoreCharacterStats } from './D1CharacterStats';
 import styles from './StoreStats.m.scss';
 import VaultCapacity from './VaultCapacity';
 
@@ -15,7 +15,7 @@ export default function StoreStats({ store }: { store: DimStore }) {
       {!isPhonePortrait && <VaultCapacity />}
     </div>
   ) : store.destinyVersion === 1 ? (
-    <D1CharacterStats stats={store.stats} />
+    <D1StoreCharacterStats store={store} />
   ) : (
     <div className="stat-bars">
       <PowerFormula storeId={store.id} />

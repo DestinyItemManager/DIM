@@ -116,7 +116,7 @@ export interface DimCharacterStatChange {
 /** A character-level stat. */
 export interface DimCharacterStat {
   /** The DestinyStatDefinition hash for the stat. */
-  statHash: number;
+  hash: number;
   displayProperties: DestinyDisplayPropertiesDefinition;
 
   /** The current value of the stat. */

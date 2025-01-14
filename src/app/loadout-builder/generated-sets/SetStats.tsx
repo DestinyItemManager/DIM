@@ -63,9 +63,8 @@ export function SetStats({
               <StatTooltip
                 stat={{
                   hash: statHash,
-                  name: statDef.displayProperties.name,
+                  displayProperties: statDef.displayProperties,
                   value,
-                  description: statDef.displayProperties.description,
                   breakdown: getStatsBreakdown()[statHash].breakdown,
                 }}
                 equippedHashes={equippedHashes}

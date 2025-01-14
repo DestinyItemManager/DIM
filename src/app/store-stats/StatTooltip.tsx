@@ -1,21 +1,12 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { DimCharacterStatChange } from 'app/inventory/store-types';
+import { DimCharacterStat } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import ClarityCharacterStat from './ClarityCharacterStat';
 import styles from './StatTooltip.m.scss';
-
-export interface Stat {
-  hash: number;
-  name: string;
-  icon?: string;
-  value: number;
-  description: string;
-  breakdown?: DimCharacterStatChange[];
-}
 
 /**
  * A rich tooltip for character-level stats like Mobility, Intellect, etc.
@@ -24,7 +15,7 @@ export default function StatTooltip({
   stat,
   equippedHashes,
 }: {
-  stat: Stat;
+  stat: DimCharacterStat;
   /**
    * Hashes of equipped/selected items and subclass plugs for this character or loadout. Can be limited to
    * exotic armor + subclass plugs - make sure to include default-selected subclass plugs.
@@ -37,13 +28,13 @@ export default function StatTooltip({
 
   return (
     <div>
-      <Tooltip.Header text={stat.name} />
+      <Tooltip.Header text={stat.displayProperties.name} />
       <div className={styles.values}>
         <div className={styles.label}>{t('Stats.Tier', { tier })}</div>
         <div>{`${stat.value}/100`}</div>
       </div>
       <hr />
-      <div>{stat.description}</div>
+      <div>{stat.displayProperties.description}</div>
       {stat.breakdown?.some((contribution) => contribution.source !== 'armorStats') && (
         <>
           <hr />

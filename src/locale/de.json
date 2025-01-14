@@ -141,6 +141,8 @@
     "Title": "Ein Fehler ist aufgetreten"
   },
   "ErrorPanel": {
+    "BrowserTooOld": "Your browser is too old to use DIM. Please update your browser to the latest version.",
+    "BrowserTooOldTitle": "Incompatible browser",
     "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "ReadTheGuide": "Lies unser Benutzerhandbuch (im Menü verlinkt) für Schritte zur Fehlerbehebung.",
     "SystemDown": "Dies betrifft alle Destiny-Apps, und das DIM-Team kann es nicht reparieren oder umgehen.",
@@ -1456,7 +1458,6 @@
       },
       "Translation": "Tritt dem Übersetzer-Team bei!",
       "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM-Übersetzung in einer Sprache verbessern möchtest, tritt dem Team bei.",
-      "TwitterHelp": "Folge uns, um immer auf dem Laufenden zu bleiben und aktuelle Informationen zum Anwendungsstatus zu erhalten.",
       "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}",
       "Wiki": "DIM-Benutzerhandbuch",
       "WikiHelp": "Erfahre, wie du die DIM-Funktionen verwendest."

@@ -300,11 +300,8 @@ export function getLoadoutStats(
 
   // Construct map of stat hash to DimCharacterStat
   const stats: { [hash: number | string]: DimCharacterStat } = {};
-  for (const {
-    hash,
-    displayProperties: { description, icon, name },
-  } of statDefs) {
-    stats[hash] = { hash, description, icon: icon, name, value: 0, breakdown: [] };
+  for (const { hash, displayProperties } of statDefs) {
+    stats[hash] = { hash, displayProperties, value: 0, breakdown: [] };
   }
 
   // Sum the items stats into the stats
