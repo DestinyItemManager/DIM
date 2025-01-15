@@ -12,6 +12,8 @@ interface Props {
   children?: React.ReactNode;
 }
 
+let dragTimeout: number | null = null;
+
 export default function DraggableInventoryItem({ children, item, anyBucket = false }: Props) {
   const canDrag =
     (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
@@ -28,10 +30,19 @@ export default function DraggableInventoryItem({ children, item, anyBucket = fal
             : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
+
+        dragTimeout = requestAnimationFrame(() => {
+          dragTimeout = null;
+          document.body.classList.add('drag-perf-show');
+        });
         isDragging$.next(true);
         return item;
       },
       end: () => {
+        if (dragTimeout !== null) {
+          cancelAnimationFrame(dragTimeout);
+        }
+        document.body.classList.remove('drag-perf-show');
         isDragging$.next(false);
       },
       canDrag,
