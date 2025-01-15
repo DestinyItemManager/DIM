@@ -84,11 +84,11 @@ dependencies:
     specifier: ^5.2.2
     version: 5.2.2
   i18next:
-    specifier: ^23.16.8
-    version: 23.16.8
+    specifier: ^24.2.1
+    version: 24.2.1(typescript@5.7.3)
   i18next-http-backend:
-    specifier: ^2.7.1
-    version: 2.7.1
+    specifier: ^3.0.1
+    version: 3.0.1
   immer:
     specifier: ^10.1.1
     version: 10.1.1
@@ -363,7 +363,7 @@ devDependencies:
     version: 9.1.7
   i18next-scanner:
     specifier: ^4.6.0
-    version: 4.6.0
+    version: 4.6.0(typescript@5.7.3)
   identity-obj-proxy:
     specifier: ^3.0.0
     version: 3.0.0
@@ -8910,15 +8910,15 @@ packages:
     engines: {node: '>=10.18'}
     dev: true
 
-  /i18next-http-backend@2.7.1:
-    resolution: {integrity: sha512-vPksHIckysGgykCD8JwCr2YsJEml9Cyw+Yu2wtb4fQ7xIn9RH/hkUDh5UkwnIzb0kSL4SJ30Ab/sCInhQxbCgg==}
+  /i18next-http-backend@3.0.1:
+    resolution: {integrity: sha512-XT2lYSkbAtDE55c6m7CtKxxrsfuRQO3rUfHzj8ZyRtY9CkIX3aRGwXGTkUhpGWce+J8n7sfu3J0f2wTzo7Lw0A==}
     dependencies:
       cross-fetch: 4.0.0
     transitivePeerDependencies:
       - encoding
     dev: false
 
-  /i18next-scanner@4.6.0:
+  /i18next-scanner@4.6.0(typescript@5.7.3):
     resolution: {integrity: sha512-I/xKcwKfii3L3is3bUvfaIU0QA/wYhpZnjppfrzyb61QQddxkcpspASEtmfnxSYvE6yIaAxDlIxg0EHV7mxssg==}
     engines: {node: '>=12'}
     hasBin: true
@@ -8935,19 +8935,27 @@ packages:
       eol: 0.9.1
       esprima-next: 5.8.4
       gulp-sort: 2.0.0
-      i18next: 23.16.8
+      i18next: 24.2.1(typescript@5.7.3)
       lodash: 4.17.21
       parse5: 6.0.1
       sortobject: 4.17.0
       through2: 4.0.2
       vinyl: 3.0.0
       vinyl-fs: 4.0.0
+    transitivePeerDependencies:
+      - typescript
     dev: true
 
-  /i18next@23.16.8:
-    resolution: {integrity: sha512-06r/TitrM88Mg5FdUXAKL96dJMzgqLE5dv3ryBAra4KCwD9mJ4ndOTS95ZuymIGoE+2hzfdaMak2X11/es7ZWg==}
+  /i18next@24.2.1(typescript@5.7.3):
+    resolution: {integrity: sha512-Q2wC1TjWcSikn1VAJg13UGIjc+okpFxQTxjVAymOnSA3RpttBQNMPf2ovcgoFVsV4QNxTfNZMAxorXZXsk4fBA==}
+    peerDependencies:
+      typescript: ^5
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dependencies:
       '@babel/runtime': 7.26.0
+      typescript: 5.7.3
 
   /iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -13826,7 +13834,6 @@ packages:
     resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /ua-parser-js@1.0.39:
     resolution: {integrity: sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw==}
