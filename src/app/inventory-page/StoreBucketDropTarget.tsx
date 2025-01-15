@@ -1,3 +1,4 @@
+import { hideDragFixOverlay } from 'app/inventory/DragPerformanceFix';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { dropItem } from 'app/inventory/move-item';
@@ -64,6 +65,7 @@ export default function StoreBucketDropTarget({
         [styles.canDrop]: canDrop,
         [styles.grouped]: grouped,
       })}
+      onClick={hideDragFixOverlay}
       aria-label={bucket.name}
     >
       {children}

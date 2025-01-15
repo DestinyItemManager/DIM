@@ -2,6 +2,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import { hideDragFixOverlay, showDragFixOverlay } from './DragPerformanceFix';
 import styles from './DraggableInventoryItem.m.scss';
 import { isDragging$ } from './drag-events';
 import { DimItem } from './item-types';
@@ -11,6 +12,8 @@ interface Props {
   anyBucket?: boolean;
   children?: React.ReactNode;
 }
+
+let dragTimeout: number | null = null;
 
 export default function DraggableInventoryItem({ children, item, anyBucket = false }: Props) {
   const canDrag =
@@ -28,10 +31,18 @@ export default function DraggableInventoryItem({ children, item, anyBucket = fal
             : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
+        dragTimeout = requestAnimationFrame(() => {
+          dragTimeout = null;
+          showDragFixOverlay();
+        });
         isDragging$.next(true);
         return item;
       },
       end: () => {
+        if (dragTimeout !== null) {
+          cancelAnimationFrame(dragTimeout);
+        }
+        hideDragFixOverlay();
         isDragging$.next(false);
       },
       canDrag,
