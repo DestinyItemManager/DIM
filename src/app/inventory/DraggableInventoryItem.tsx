@@ -2,6 +2,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import { hideDragFixOverlay, showDragFixOverlay } from './DragPerformanceFix';
 import styles from './DraggableInventoryItem.m.scss';
 import { isDragging$ } from './drag-events';
 import { DimItem } from './item-types';
@@ -30,10 +31,9 @@ export default function DraggableInventoryItem({ children, item, anyBucket = fal
             : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
-
         dragTimeout = requestAnimationFrame(() => {
           dragTimeout = null;
-          document.body.classList.add('drag-perf-show');
+          showDragFixOverlay();
         });
         isDragging$.next(true);
         return item;
@@ -42,7 +42,7 @@ export default function DraggableInventoryItem({ children, item, anyBucket = fal
         if (dragTimeout !== null) {
           cancelAnimationFrame(dragTimeout);
         }
-        document.body.classList.remove('drag-perf-show');
+        hideDragFixOverlay();
         isDragging$.next(false);
       },
       canDrag,

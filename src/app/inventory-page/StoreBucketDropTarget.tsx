@@ -1,3 +1,4 @@
+import { hideDragFixOverlay } from 'app/inventory/DragPerformanceFix';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { dropItem } from 'app/inventory/move-item';
@@ -19,10 +20,6 @@ interface Props {
   className?: string;
   grouped: boolean;
 }
-
-const onClick = () => {
-  document.body.classList.remove('drag-perf-show');
-};
 
 export default function StoreBucketDropTarget({
   storeId,
@@ -68,7 +65,7 @@ export default function StoreBucketDropTarget({
         [styles.canDrop]: canDrop,
         [styles.grouped]: grouped,
       })}
-      onClick={onClick}
+      onClick={hideDragFixOverlay}
       aria-label={bucket.name}
     >
       {children}

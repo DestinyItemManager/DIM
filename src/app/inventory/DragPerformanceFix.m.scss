@@ -1,0 +1,44 @@
+// A div that overlays the whole inventory to block hit-testing during drag.
+// Note the z-index which should be above all other elements. Except for the
+// sub-bucket overlays.
+.dragPerfFix {
+  // to test, set a nonzero opacity and a background color
+  opacity: 0;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  z-index: 8;
+
+  display: none;
+
+  .dragPerfShow & {
+    display: block;
+  }
+}
+
+// Each sub-bucket (inventory drag target) gets its own overlay as well, with a
+// z-index one higher than the global overlay. This allows them to still receive
+// drag events.
+:global(.sub-bucket) {
+  &::before {
+    content: '';
+
+    // to test, set a nonzero opacity and a background color
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+
+    z-index: 9;
+
+    display: none;
+
+    .dragPerfShow & {
+      display: block;
+    }
+  }
+}
