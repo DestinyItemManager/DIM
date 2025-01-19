@@ -4,7 +4,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import Account from './Account';
 import styles from './MenuAccounts.m.scss';
@@ -22,8 +22,12 @@ export default function MenuAccounts({
   const dispatch = useThunkDispatch();
   const currentAccount = useSelector(currentAccountSelector);
   const accounts = useSelector(accountsSelector);
+  const navigate = useNavigate();
 
-  const onLogOut = () => dispatch(logOut());
+  const onLogOut = async () => {
+    await dispatch(logOut());
+    await navigate('/login');
+  };
 
   const sortedAccounts = accounts.toSorted(
     chainComparator(

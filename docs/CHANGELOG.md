@@ -1,5 +1,9 @@
 ## Next
 
+* Restored a workaround for laggy dragging in Chrome on Windows when using some high-DPI and/or Logitech mice.
+* DIM now recognizes exotic weapons that grant intrinsic breaker abilities through a perk.
+* Logging out now properly "forgets" the page you were on, so when you log in again it doesn't try to go back to that page.
+
 ## 8.54.0 <span class="changelog-date">(2025-01-12)</span>
 
 ## 8.53.0 <span class="changelog-date">(2025-01-05)</span>
