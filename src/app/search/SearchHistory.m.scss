@@ -17,6 +17,10 @@
     padding: 16px 8px;
   }
 
+  td {
+    user-select: text;
+  }
+
   tr:nth-child(2n) {
     td {
       background-color: rgba(0, 0, 0, 0.2);
