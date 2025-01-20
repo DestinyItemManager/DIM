@@ -326,8 +326,8 @@ devDependencies:
     specifier: ^7.37.4
     version: 7.37.4(eslint@9.17.0)
   eslint-plugin-react-hooks:
-    specifier: ^5.1.0
-    version: 5.1.0(eslint@9.17.0)
+    specifier: '=5.0.0'
+    version: 5.0.0(eslint@9.17.0)
   eslint-plugin-react-redux:
     specifier: ^4.2.0
     version: 4.2.0(eslint-plugin-react@7.37.4)(eslint@9.17.0)
@@ -7598,8 +7598,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-react-hooks@5.1.0(eslint@9.17.0):
-    resolution: {integrity: sha512-mpJRtPgHN2tNAvZ35AMfqeB3Xqeo273QxrHJsbBEPWODRM4r0yB6jfoROqKEYrOn27UtRPpcpHc2UqyBSuUNTw==}
+  /eslint-plugin-react-hooks@5.0.0(eslint@9.17.0):
+    resolution: {integrity: sha512-hIOwI+5hYGpJEc4uPRmz2ulCjAGD/N13Lukkh8cLV0i2IRk/bdZDYjgLVHj+U9Z704kLIdIO6iueGvxNur0sgw==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0

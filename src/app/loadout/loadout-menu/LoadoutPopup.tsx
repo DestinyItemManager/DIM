@@ -376,12 +376,12 @@ function RandomLoadoutButton({
 
   const applyRandomLoadout = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     const options = await getRandomizeOptions({
       d2: isD2,
       query,
     });
     if (!options) {
-      e.preventDefault();
       onClick?.(e);
       return;
     }
