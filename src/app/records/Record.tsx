@@ -72,10 +72,10 @@ function Record({
 
   const recordShouldGlow = (recordDef.forTitleGilding && acquired) || trackedInDim;
 
-  const name = obscured ? t('Progress.SecretTriumph') : recordDef.displayProperties.name;
+  const name = obscured ? recordDef.stateInfo.obscuredName : recordDef.displayProperties.name;
 
   const description = obscured
-    ? recordDef.stateInfo.obscuredString
+    ? recordDef.stateInfo.obscuredDescription
     : recordDef.displayProperties.description;
 
   const isCatalyst = recordHash in catalystIconsTable;

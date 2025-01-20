@@ -1,5 +1,5 @@
-import { LimitedDestinyVendorsResponse } from 'app/bungie-api/destiny2-api';
 import { isEmpty } from 'app/utils/collections';
+import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { produce } from 'immer';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
@@ -12,7 +12,7 @@ import * as actions from './actions';
 export interface VendorsState {
   vendorsByCharacter: Partial<{
     [characterId: string]: {
-      vendorsResponse?: LimitedDestinyVendorsResponse;
+      vendorsResponse?: DestinyVendorsResponse;
       /** ms epoch time */
       lastLoaded?: number;
       error?: Error;

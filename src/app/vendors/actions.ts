@@ -7,17 +7,18 @@ import { filterMap } from 'app/utils/collections';
 import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparators';
 import { convertToError } from 'app/utils/errors';
 import { infoLog } from 'app/utils/log';
-import { DestinyItemType, DestinyVendorResponse, TierType } from 'bungie-api-ts/destiny2';
-import { createAction } from 'typesafe-actions';
 import {
-  LimitedDestinyVendorsResponse,
-  getVendorSaleComponents,
-  getVendors,
-} from '../bungie-api/destiny2-api';
+  DestinyItemType,
+  DestinyVendorResponse,
+  DestinyVendorsResponse,
+  TierType,
+} from 'bungie-api-ts/destiny2';
+import { createAction } from 'typesafe-actions';
+import { getVendorSaleComponents, getVendors } from '../bungie-api/destiny2-api';
 
 export const loadedAll = createAction('vendors/LOADED_ALL')<{
   characterId: string;
-  vendorsResponse: LimitedDestinyVendorsResponse;
+  vendorsResponse: DestinyVendorsResponse;
 }>();
 
 export const loadedVendorComponents = createAction('vendors/LOADED_COMPONENT')<{

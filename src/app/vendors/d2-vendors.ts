@@ -1,4 +1,3 @@
-import { LimitedDestinyVendorsResponse } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VendorHashes, silverItemHash } from 'app/search/d2-known-values';
@@ -14,6 +13,7 @@ import {
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
   DestinyVendorSaleItemComponent,
+  DestinyVendorsResponse,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
@@ -35,7 +35,7 @@ const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashe
 
 export function toVendorGroups(
   context: ItemCreationContext,
-  vendorsResponse: LimitedDestinyVendorsResponse,
+  vendorsResponse: DestinyVendorsResponse,
   characterId: string,
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
@@ -76,7 +76,7 @@ export function toVendor(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
-  vendorsResponse: LimitedDestinyVendorsResponse | undefined,
+  vendorsResponse: DestinyVendorsResponse | undefined,
 ): D2Vendor | undefined {
   const { defs } = context;
   const vendorDef = defs.Vendor.get(vendorHash);
@@ -138,7 +138,7 @@ export function toVendor(
 function gatherVendorCurrencies(
   defs: D2ManifestDefinitions,
   vendor: DestinyVendorDefinition,
-  vendorsResponse: LimitedDestinyVendorsResponse | undefined,
+  vendorsResponse: DestinyVendorsResponse | undefined,
   sales:
     | {
         [key: string]: DestinyVendorSaleItemComponent;

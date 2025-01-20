@@ -194,5 +194,7 @@ function fakeReward(hash: number, level: number): DestinyProgressionRewardItemQu
     quantity: 1,
     rewardedAtProgressionLevel: level,
     uiDisplayStyle: 'free',
+    rewardItemIndex: 0,
+    socketOverrides: [],
   };
 }
