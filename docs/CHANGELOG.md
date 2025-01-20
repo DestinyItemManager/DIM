@@ -5,6 +5,9 @@
 * Restored a workaround for laggy dragging in Chrome on Windows when using some high-DPI and/or Logitech mice.
 * DIM now recognizes exotic weapons that grant intrinsic breaker abilities through a perk.
 * Logging out now properly "forgets" the page you were on, so when you log in again it doesn't try to go back to that page.
+* Loadout names and vendor names in the sidebar are no longer uppercased.
+* Double-clicking on items in the search results page will pull them to your active character.
+* The text in the search history page is selectable.
 
 ## 8.54.0 <span class="changelog-date">(2025-01-12)</span>
 
