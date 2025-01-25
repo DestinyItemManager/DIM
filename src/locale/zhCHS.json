@@ -141,8 +141,8 @@
     "Title": "发生了一些错误"
   },
   "ErrorPanel": {
-    "BrowserTooOld": "Your browser is too old to use DIM. Please update your browser to the latest version.",
-    "BrowserTooOldTitle": "Incompatible browser",
+    "BrowserTooOld": "您的浏览器过旧，无法使用 DIM。请更新您的浏览器到最新版本。",
+    "BrowserTooOldTitle": "不兼容的浏览器",
     "Description": "请尝试在命运同伴 App 中加载你的物品栏，以检测是否 Bungie.net 出现了问题。",
     "ReadTheGuide": "阅读我们的用户指南（链接位于菜单中）以了解故障排除步骤。",
     "SystemDown": "这一问题影响所有命运应用程序，DIM团队也无法修复或绕过。",
@@ -234,8 +234,8 @@
     "Engrams": "显示记忆水晶.",
     "Enhanceable": "显示可被强化的武器。",
     "Enhanced": "按强化等级显示武器。",
-    "EnhancedPerk": "Shows weapons that have the specified number of enhanced perk columns.",
-    "EnhancementReady": "Shows weapons that have reached level thresholds for perk enhancement.",
+    "EnhancedPerk": "显示具有指定列数的强化特性的武器。",
+    "EnhancementReady": "显示已达到特性强化要求的武器。",
     "Equipment": "可以装备的物品.",
     "Equipped": "目前已装备的物品.",
     "Event": "显示命运2中特定活动中的物品",
@@ -1222,8 +1222,8 @@
     "VaultArmorGroupingStyle": "将不同职业护甲隔行分开",
     "VaultGroupingNone": "无",
     "VaultWeaponGroupingStyle": "将不同类型武器隔行分开",
-    "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
-    "WishlistRefreshNotificationTitle": "Wishlists Reloaded"
+    "WishlistRefreshNotificationBody": "如果您没有看到任何更新，请检查愿望清单的来源（例如 GitHub）是否有反应！",
+    "WishlistRefreshNotificationTitle": "愿望清单已重载"
   },
   "Sockets": {
     "ApplyPerks": "应用特性",
@@ -1484,12 +1484,12 @@
     "Clear": "清除愿望清单",
     "CopiedLine": "已复制愿望清单特性组合到剪贴板",
     "CopyLine": "复制选定的特性为愿望清单特性组合",
-    "DupeRolls": " (+{{num, number}} ignored dupes)",
+    "DupeRolls": " (+{{num, number}} 个被忽略的重复项)",
     "ExternalSource": "添加另一个愿望清单",
     "ExternalSourcePlaceholder": "在此粘贴愿望清单URL",
     "Header": "愿望清单",
     "Import": "导入愿望清单物品",
-    "ImportError": "Error loading wish list from \"{{url}}\": {{error}}",
+    "ImportError": "从 \"{{url}}\" 加载愿望清单时发生错误: {{error}}",
     "ImportFailed": "您的愿望清单中没有任何有效的特性组合。",
     "ImportNoFile": "未选取任何档案。",
     "InvalidExternalSource": "请为你的外部愿望清单来源输入一个有效的 URL。URL 的开头必须为以下之一：",
