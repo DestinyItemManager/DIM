@@ -38,6 +38,7 @@ import {
   reverseComparator,
 } from '../utils/comparators';
 import { itemLockStateChanged, itemMoved } from './actions';
+import { notifyOtherTabsItemMoved } from './cross-tab';
 import {
   TagValue,
   characterDisplacePriority,
@@ -166,8 +167,19 @@ function updateItemModel(
     startSpan({ name: 'updateItemModel' }, () => {
       const stopTimer = timer(TAG, 'itemMovedUpdate');
 
+      const args = {
+        itemId: item.id,
+        itemHash: item.hash,
+        itemLocation: item.location.hash,
+        sourceId: source.id,
+        targetId: target.id,
+        equip,
+        amount,
+      };
+
       try {
-        dispatch(itemMoved({ item, source, target, equip, amount }));
+        dispatch(itemMoved(args));
+        notifyOtherTabsItemMoved(args);
         const stores = storesSelector(getState());
         return getItemAcrossStores(stores, item) || item;
       } finally {

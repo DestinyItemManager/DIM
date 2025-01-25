@@ -11,6 +11,7 @@ import {
   DestinyItemChangeResponse,
   DestinyProfileResponse,
 } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { createAction } from 'typesafe-actions';
 import { TagCommand, TagValue } from './dim-item-info';
 import { DimItem } from './item-types';
@@ -65,9 +66,11 @@ export const error = createAction('inventory/ERROR')<Error>();
  * An item has moved (or equipped/dequipped)
  */
 export const itemMoved = createAction('inventory/MOVE_ITEM')<{
-  item: DimItem;
-  source: DimStore;
-  target: DimStore;
+  itemHash: number;
+  itemId: string;
+  itemLocation: BucketHashes;
+  sourceId: string;
+  targetId: string;
   equip: boolean;
   amount: number;
 }>();
