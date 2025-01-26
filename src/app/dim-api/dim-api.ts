@@ -29,19 +29,23 @@ export async function getGlobalSettings() {
   return response.settings;
 }
 
-export async function getDimApiProfile(account?: DestinyAccount) {
+export async function getDimApiProfile(account?: DestinyAccount, syncToken?: string) {
+  const params: Record<string, string> = account
+    ? {
+        platformMembershipId: account.membershipId,
+        destinyVersion: account.destinyVersion.toString(),
+        components: 'settings,loadouts,tags,hashtags,searches,triumphs',
+      }
+    : {
+        components: 'settings',
+      };
+  if (syncToken) {
+    params.sync = syncToken;
+  }
   return authenticatedApi<ProfileResponse>({
     url: '/profile',
     method: 'GET',
-    params: account
-      ? {
-          platformMembershipId: account.membershipId,
-          destinyVersion: account.destinyVersion.toString(),
-          components: 'settings,loadouts,tags,hashtags,searches,triumphs',
-        }
-      : {
-          components: 'settings',
-        },
+    params,
   });
 }
 

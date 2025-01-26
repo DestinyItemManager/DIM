@@ -117,3 +117,7 @@ declare module 'locale/*.json' {
   const value: string;
   export default value;
 }
+
+declare module '@beyond-js/md5' {
+  export default function md5(str: string): string;
+}
