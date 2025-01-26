@@ -212,7 +212,11 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         </div>
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
-            <PageWithMenu.MenuButton onClick={() => scrollToLoadout(loadout.id)} key={loadout.id}>
+            <PageWithMenu.MenuButton
+              onClick={() => scrollToLoadout(loadout.id)}
+              key={loadout.id}
+              className={styles.menuLoadout}
+            >
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}

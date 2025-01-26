@@ -4,7 +4,7 @@ import { AppIcon, signOutIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import Account from './Account';
 import styles from './SelectAccount.m.scss';
 import { logOut } from './platforms';
@@ -25,7 +25,11 @@ export default function SelectAccount({ path }: { path?: string }) {
   const bungieName = sortedAccounts[0].displayName;
 
   const dispatch = useThunkDispatch();
-  const onLogOut = () => dispatch(logOut());
+  const navigate = useNavigate();
+  const onLogOut = async () => {
+    await dispatch(logOut());
+    await navigate('/login');
+  };
 
   return (
     <div className={styles.accountSelect}>

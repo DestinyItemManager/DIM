@@ -3,8 +3,10 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { moveItemToCurrentStore } from 'app/inventory/move-item';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import '../inventory-page/StoreBucket.scss';
@@ -43,16 +45,33 @@ export default memo(function SearchResults({
       <ClickOutsideRoot>
         <div className={clsx('sub-bucket', styles.contents)}>
           {sortItems(items).map((item) => (
-            <DraggableInventoryItem key={item.index} item={item}>
-              <ItemPopupTrigger item={item} key={item.index}>
-                {(ref, onClick) => (
-                  <ConnectedInventoryItem item={item} ref={ref} onClick={onClick} />
-                )}
-              </ItemPopupTrigger>
-            </DraggableInventoryItem>
+            <SearchResultItem key={item.index} item={item} />
           ))}
         </div>
       </ClickOutsideRoot>
     </Sheet>
   );
 });
+
+function SearchResultItem({ item }: { item: DimItem }) {
+  const dispatch = useThunkDispatch();
+  const doubleClicked = useCallback(
+    (e: React.MouseEvent) => dispatch(moveItemToCurrentStore(item, e)),
+    [dispatch, item],
+  );
+
+  return (
+    <DraggableInventoryItem item={item}>
+      <ItemPopupTrigger item={item} key={item.index}>
+        {(ref, onClick) => (
+          <ConnectedInventoryItem
+            item={item}
+            ref={ref}
+            onClick={onClick}
+            onDoubleClick={doubleClicked}
+          />
+        )}
+      </ItemPopupTrigger>
+    </DraggableInventoryItem>
+  );
+}

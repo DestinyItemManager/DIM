@@ -24,6 +24,11 @@
   text-align: left;
 }
 
+.menuLoadout > span:not(.app-icon) {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 .hashtagTip {
   display: flex;
   align-items: center;

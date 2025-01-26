@@ -8,7 +8,6 @@ import {
   AwaType,
   BungieMembershipType,
   DestinyComponentType,
-  DestinyItemComponentSetOfint32,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
   DestinyProfileResponse,
@@ -139,17 +138,10 @@ async function getProfile(
   return response.Response;
 }
 
-export type LimitedDestinyVendorsResponse = Omit<DestinyVendorsResponse, 'itemComponents'> &
-  Partial<{
-    itemComponents: {
-      [key: number]: Partial<DestinyItemComponentSetOfint32>;
-    };
-  }>;
-
 export async function getVendors(
   account: DestinyAccount,
   characterId: string,
-): Promise<LimitedDestinyVendorsResponse> {
+): Promise<DestinyVendorsResponse> {
   const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,

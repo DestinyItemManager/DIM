@@ -2,13 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'appIcon': string;
-  'hashtagTip': string;
-  'loadoutRow': string;
-  'menu': string;
-  'menuButton': string;
-  'menuButtons': string;
-  'menuLoadout': string;
-  'seasonHeader': string;
+  'vendorMenuItem': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

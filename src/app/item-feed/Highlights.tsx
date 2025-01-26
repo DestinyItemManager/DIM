@@ -3,7 +3,6 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
-import { CharacterStats } from 'app/store-stats/CharacterStats';
 import { itemTypeName } from 'app/utils/item-utils';
 import {
   getExtraIntrinsicPerkSockets,
@@ -13,7 +12,6 @@ import {
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import { keyBy } from 'es-toolkit';
 import '../store-stats/CharacterStats.m.scss';
 import styles from './Highlights.m.scss';
 
@@ -77,9 +75,6 @@ export default function Highlights({ item }: { item: DimItem }) {
       <>
         {item.bucket.hash !== BucketHashes.ClassArmor && (
           <div className={clsx(styles.stats, 'stat-bars')}>
-            <CharacterStats
-              stats={keyBy(item.stats?.filter((s) => s.statHash > 0) ?? [], (s) => s.statHash)}
-            />
             <div className={clsx('stat-row', styles.armorStats)}>
               {item.stats?.filter((s) => s.statHash > 0).map(renderStat)}
             </div>
