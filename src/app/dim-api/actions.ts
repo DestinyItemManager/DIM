@@ -171,8 +171,18 @@ let waitingForApiPermission = false;
  * for whether the user has opted in to Sync, and if they haven't, we prompt.
  * Usually they already made their choice at login, though.
  */
-export function loadDimApiData(forceLoad = false): ThunkResult {
+export function loadDimApiData(
+  options: {
+    /**
+     * forceLoad will load from the server even if the minimum refresh
+     * interval has not passed. Keep in mind the server caches full-profile data for
+     * up to 60 seconds. This will also skip using a sync token to load incremental changes.
+     */
+    forceLoad?: boolean;
+  } = {},
+): ThunkResult {
   return async (dispatch, getState) => {
+    const { forceLoad = false } = options;
     installApiPermissionObserver(dispatch);
 
     // Load from indexedDB if needed
@@ -242,8 +252,8 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     if (forceLoad || profileOutOfDateOrMissing) {
       try {
         const syncToken =
-          currentAccount && $featureFlags.dimApiSync
-            ? getState().dimApi.profiles[makeProfileKeyFromAccount(currentAccount)].syncToken
+          currentAccount && $featureFlags.dimApiSync && !forceLoad
+            ? getState().dimApi.profiles?.[makeProfileKeyFromAccount(currentAccount)]?.syncToken
             : undefined;
         const profileResponse = await getDimApiProfile(currentAccount, syncToken);
         dispatch(profileLoaded({ profileResponse, account: currentAccount }));
@@ -277,7 +287,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
         infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting profile fetch');
 
         // Wait, then retry. We don't await this here so we don't stop the finally block from running
-        delay(waitTime).then(() => dispatch(loadDimApiData(forceLoad)));
+        delay(waitTime).then(() => dispatch(loadDimApiData(options)));
       } finally {
         // Release the app to load with whatever language was saved or the
         // default. Better to have the wrong language (that fixes itself on
