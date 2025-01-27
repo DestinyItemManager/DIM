@@ -166,8 +166,6 @@ export function loadStores({
   };
 }
 
-/** time in milliseconds after which we could expect Bnet to return an updated response */
-const BUNGIE_CACHE_TTL = 15_000; // TODO: use a latch
 /** How old the profile can be and still trigger cleanup of tags. */
 const FRESH_ENOUGH_TO_CLEAN_INFOS = 90_000; // 90 seconds
 
@@ -232,22 +230,9 @@ function loadProfile(
       }
     }
 
-    let cachedProfileMintedDate = new Date(0);
-
-    // If our cached profile is up to date
-    if (cachedProfileResponse) {
-      // TODO: need to make sure we still load at the right frequency / for manual cache busts?
-      cachedProfileMintedDate = new Date(cachedProfileResponse.responseMintedTimestamp ?? 0);
-      const profileAge = Date.now() - cachedProfileMintedDate.getTime();
-      if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
-        warnLog(
-          TAG,
-          `Cached profile is only ${profileAge / 1000}s old, skipping remote load.`,
-          profileAge,
-        );
-        return { profile: cachedProfileResponse, live: false };
-      }
-    }
+    const cachedProfileMintedDate = cachedProfileResponse
+      ? new Date(cachedProfileResponse.responseMintedTimestamp ?? 0)
+      : new Date(0);
 
     try {
       const remoteProfileResponse = await getStores(account);

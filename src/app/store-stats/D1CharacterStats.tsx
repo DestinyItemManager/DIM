@@ -6,7 +6,7 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import './CharacterStats.scss';
+import styles from './D1CharacterStats.m.scss';
 
 export function D1StoreCharacterStats({ store }: { store: DimStore }) {
   const subclass = findItemsByBucket(store, BucketHashes.Subclass).find((i) => i.equipped);
@@ -47,16 +47,16 @@ export function D1CharacterStats({
   });
 
   return (
-    <div className="stat-bars">
+    <div className={styles.statBars}>
       {statList.map((stat, index) => (
         <PressTip key={stat.hash} tooltip={tooltips[index]}>
-          <div className="stat">
+          <div className={styles.stat}>
             <BungieImage src={stat.displayProperties.icon} alt={stat.displayProperties.name} />
             {getD1CharacterStatTiers(stat).map((n, index) => (
-              <div key={index} className="bar">
+              <div key={index} className={styles.bar}>
                 <div
-                  className={clsx('progress', {
-                    complete: n / 60 === 1,
+                  className={clsx(styles.progress, {
+                    [styles.complete]: n / 60 === 1,
                   })}
                   style={{ width: percent(n / 60) }}
                 />

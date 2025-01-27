@@ -1,0 +1,43 @@
+@use '../variables' as *;
+
+/* INT/DIS/STR bars */
+.statBars {
+  width: 100%;
+  max-width: $emblem-width + 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 8px;
+  gap: 4px;
+
+  @include phone-portrait {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.stat {
+  display: grid;
+  grid-template-columns: 16px repeat(5, 1fr);
+  gap: 1px;
+  align-items: center;
+
+  > img {
+    height: 14px;
+    width: 14px;
+  }
+}
+
+.bar {
+  height: 7px;
+  border-radius: 1px;
+  background-color: gray;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: white;
+  &.complete {
+    background-color: #fb9f28;
+  }
+}

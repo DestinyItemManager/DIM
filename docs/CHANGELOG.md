@@ -1,5 +1,7 @@
 ## Next
 
+## 8.56.0 <span class="changelog-date">(2025-01-26)</span>
+
 ## 8.55.0 <span class="changelog-date">(2025-01-19)</span>
 
 * Restored a workaround for laggy dragging in Chrome on Windows when using some high-DPI and/or Logitech mice.
