@@ -241,9 +241,10 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
     if (forceLoad || profileOutOfDateOrMissing) {
       try {
-        const syncToken = currentAccount
-          ? getState().dimApi.profiles[makeProfileKeyFromAccount(currentAccount)].syncToken
-          : undefined;
+        const syncToken =
+          currentAccount && $featureFlags.dimApiSync
+            ? getState().dimApi.profiles[makeProfileKeyFromAccount(currentAccount)].syncToken
+            : undefined;
         const profileResponse = await getDimApiProfile(currentAccount, syncToken);
         dispatch(profileLoaded({ profileResponse, account: currentAccount }));
         infoLog(TAG, 'Loaded profile from DIM API', profileResponse);
