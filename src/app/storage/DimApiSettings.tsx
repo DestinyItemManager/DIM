@@ -13,7 +13,7 @@ import Checkbox from 'app/settings/Checkbox';
 import { fineprintClass, horizontalClass, settingClass } from 'app/settings/SettingsPage';
 import { Settings } from 'app/settings/initial-settings';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { AppIcon, deleteIcon } from 'app/shell/icons';
+import { AppIcon, deleteIcon, refreshIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorMessage } from 'app/utils/errors';
 import React, { useState } from 'react';
@@ -84,6 +84,10 @@ export default function DimApiSettings() {
     }
   };
 
+  const refreshDimSync = async () => {
+    await dispatch(loadDimApiData({ forceLoad: true }));
+  };
+
   return (
     <section className={styles.storage} id="storage">
       {confirmDialog}
@@ -102,9 +106,14 @@ export default function DimApiSettings() {
         />
         <div className={fineprintClass}>{t('Storage.DimApiFinePrint')}</div>
         {apiPermissionGranted && (
-          <button type="button" className="dim-button" onClick={deleteAllData}>
-            <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
-          </button>
+          <>
+            <button type="button" className="dim-button" onClick={refreshDimSync}>
+              <AppIcon icon={refreshIcon} /> {t('Storage.RefreshDimSync')}
+            </button>
+            <button type="button" className="dim-button" onClick={deleteAllData}>
+              <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
+            </button>
+          </>
         )}
       </div>
       {profileLoadedError && (

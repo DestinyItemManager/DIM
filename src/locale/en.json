@@ -1336,6 +1336,7 @@
     "MenuTitle": "Sync & Backups",
     "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
     "ProfileErrorTitle": "DIM Sync Download Error",
+    "RefreshDimSync": "Reload remote data from DIM Sync",
     "UpdateErrorBody": "We had a problem saving your data to DIM Sync. We'll keep retrying while DIM is open.",
     "UpdateErrorTitle": "DIM Sync Save Error",
     "UpdateInvalid": "Failed to save data to DIM Sync",

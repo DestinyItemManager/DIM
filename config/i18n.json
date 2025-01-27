@@ -1352,6 +1352,7 @@
     "MenuTitle": "Sync & Backups",
     "ProfileErrorTitle": "DIM Sync Download Error",
     "ProfileErrorBody": "We had a problem communicating with DIM Sync. Your latest settings, tags, loadouts, and searches may not be shown. Your data is still on our servers, and any updates you make locally will be saved when we can reconnect. We'll keep retrying while DIM is open.",
+    "RefreshDimSync": "Reload remote data from DIM Sync",
     "UpdateInvalid": "Failed to save data to DIM Sync",
     "UpdateInvalidBody": "Data sent to DIM Sync was invalid and will not be saved.",
     "UpdateInvalidBodyLoadout": "The loadout \"{{name}}\" is invalid and will not be saved. If you imported it from another site, please let them know that they are exporting invalid loadouts.",
