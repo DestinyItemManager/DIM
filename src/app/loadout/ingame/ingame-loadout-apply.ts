@@ -63,7 +63,17 @@ export function updateAfterInGameLoadoutApply(loadout: InGameLoadout): ThunkResu
       // Update items to be equipped
       // TODO: we don't get updated mod states :-( https://github.com/Bungie-net/api/issues/1792
       const source = getStore(stores, item.owner)!;
-      dispatch(itemMoved({ item, source, target, equip: true, amount: 1 }));
+      dispatch(
+        itemMoved({
+          itemHash: item.hash,
+          itemId: item.id,
+          itemLocation: item.location.hash,
+          sourceId: source.id,
+          targetId: target.id,
+          equip: true,
+          amount: 1,
+        }),
+      );
 
       // TODO: update the item model to have the right mods plugged. Hard to do
       // this without knowing more about the loadouts structure.

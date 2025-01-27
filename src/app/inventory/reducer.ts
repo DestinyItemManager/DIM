@@ -36,7 +36,6 @@ export interface InventoryState {
   readonly currencies: AccountCurrency[];
 
   readonly profileResponse?: DestinyProfileResponse;
-
   readonly profileError?: Error;
 
   /**
@@ -83,8 +82,10 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return updateCharacters(state, action.payload);
 
     case getType(actions.itemMoved): {
-      const { item, source, target, equip, amount } = action.payload;
-      return produce(state, (draft) => itemMoved(draft, item, source.id, target.id, equip, amount));
+      const { itemId, itemHash, itemLocation, sourceId, targetId, equip, amount } = action.payload;
+      return produce(state, (draft) =>
+        itemMoved(draft, itemHash, itemId, itemLocation, sourceId, targetId, equip, amount),
+      );
     }
 
     case getType(actions.itemLockStateChanged): {
@@ -282,7 +283,9 @@ function setsEqual<T>(first: Set<T>, second: Set<T>) {
  */
 function itemMoved(
   draft: Draft<InventoryState>,
-  item: DimItem,
+  itemHash: number,
+  itemId: string,
+  itemLocation: BucketHashes,
   sourceStoreId: string,
   targetStoreId: string,
   equip: boolean,
@@ -297,8 +300,8 @@ function itemMoved(
     return;
   }
 
-  item = source.items.find(
-    (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash,
+  let item = source.items.find(
+    (i) => i.hash === itemHash && i.id === itemId && i.location.hash === itemLocation,
   )!;
   if (!item) {
     warnLog(TAG, 'Moved item not found', item);
