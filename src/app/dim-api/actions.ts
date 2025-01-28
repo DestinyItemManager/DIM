@@ -253,7 +253,7 @@ export function loadDimApiData(
       try {
         const syncToken =
           currentAccount && $featureFlags.dimApiSync && !forceLoad
-            ? getState().dimApi.profiles?.[makeProfileKeyFromAccount(currentAccount)]?.syncToken
+            ? getState().dimApi.profiles?.[makeProfileKeyFromAccount(currentAccount)]?.sync
             : undefined;
         const profileResponse = await getDimApiProfile(currentAccount, syncToken);
         dispatch(profileLoaded({ profileResponse, account: currentAccount }));
