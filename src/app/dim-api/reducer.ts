@@ -89,7 +89,7 @@ export interface DimApiState {
       triumphs: number[];
 
       /** This allows us to get just the items that changed from the DIM API instead of the whole deal. */
-      syncToken?: string;
+      sync?: string;
     };
   };
 
@@ -421,6 +421,8 @@ function profileLoaded(
       );
       if (foundSearchIndex >= 0) {
         newSearches[foundSearchIndex] = search;
+      } else {
+        newSearches.push(search);
       }
     }
     for (const searchHash of profileResponse.deletedSearchHashes ?? []) {
@@ -467,7 +469,7 @@ function profileLoaded(
         loadouts: newLoadouts,
         tags: newTags,
         triumphs: [...newTriumphs],
-        syncToken: profileResponse.syncToken,
+        sync: profileResponse.syncToken,
       },
     };
   }
