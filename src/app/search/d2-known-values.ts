@@ -139,6 +139,19 @@ export const D2WeaponStatHashByName = {
   accuracy: StatHashes.Accuracy,
 };
 
+export const D2PlugCategoryByStatHash = {
+  [StatHashes.Accuracy]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatAccuracy,
+  [StatHashes.BlastRadius]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatBlastRadius,
+  [StatHashes.ChargeTime]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatChargeTime,
+  [StatHashes.Impact]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatDamage,
+  [StatHashes.DrawTime]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatDrawTime,
+  [StatHashes.Handling]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatHandling,
+  [StatHashes.Speed]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatProjectileSpeed,
+  [StatHashes.Range]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatRange,
+  [StatHashes.ReloadSpeed]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatReload,
+  [StatHashes.Stability]: PlugCategoryHashes.V400PlugsWeaponsMasterworksStatStability,
+};
+
 export const swordStatsByName = {
   swingspeed: StatHashes.SwingSpeed,
   guardefficiency: StatHashes.GuardEfficiency,
