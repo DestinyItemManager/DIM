@@ -1,6 +1,10 @@
 import { t } from 'app/i18next-t';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
+import {
+  D2PlugCategoryByStatHash,
+  weaponMasterworkY2SocketTypeHash,
+} from 'app/search/d2-known-values';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
@@ -8,6 +12,7 @@ import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { maxBy } from 'es-toolkit';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimSocket } from '../inventory/item-types';
@@ -39,6 +44,40 @@ export default function ItemSocketsWeapons({
 
   if (!item.sockets || !defs) {
     return null;
+  }
+
+  if (item.crafted) {
+    const y2MasterworkSocket = item.sockets?.allSockets.find(
+      (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
+    );
+    const plugSet = y2MasterworkSocket?.plugSet;
+    if (y2MasterworkSocket && plugSet) {
+      // const plug = y2MasterworkSocket?.plugSet?.plugs.find(
+      //   (p) => p.plugDef.plug.plugCategoryHash === PlugCategoryHashes.V400PlugsWeaponsMasterworks,
+      // );
+      const mwHash = item.masterworkInfo?.stats?.find((s) => s.isPrimary)?.hash || 0;
+      const newCategory =
+        mwHash in D2PlugCategoryByStatHash
+          ? D2PlugCategoryByStatHash[mwHash as keyof typeof D2PlugCategoryByStatHash]
+          : null;
+      let fullMasterworkPlug = newCategory
+        ? maxBy(
+            plugSet.plugs.filter((p) => p.plugDef.plug.plugCategoryHash === newCategory),
+            (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
+          )
+        : null;
+      if (fullMasterworkPlug) {
+        fullMasterworkPlug = {
+          ...fullMasterworkPlug,
+          plugDef: { ...fullMasterworkPlug.plugDef, iconWatermark: '', investmentStats: [] },
+        };
+        y2MasterworkSocket.plugged = fullMasterworkPlug;
+        y2MasterworkSocket.plugOptions = [fullMasterworkPlug];
+        y2MasterworkSocket.visibleInGame = true;
+        y2MasterworkSocket.reusablePlugItems = [];
+        y2MasterworkSocket.isPerk = true;
+      }
+    }
   }
 
   // Separate out perks from sockets.
