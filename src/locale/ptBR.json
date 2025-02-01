@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Triunfo Secreto",
     "StatTrackers": "Estatísticas",
     "TrackedTriumphs": "Triunfos Rastreados",
     "VanguardPathfinder": "Desbravamento da Vanguarda"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "Sincronização e Backups",
     "ProfileErrorBody": "Ocorreu um problema durante a comunicação com a Sincronização DIM. Suas últimas configurações, etiquetas, sets e históricos de pesquisas podem não estar disponíveis no momento. Entretanto, seus dados ainda estão em nossos servidores e qualquer modificação que fizer serão salvas assim que pudermos reestabelecer a conexão. Tentaremos reconectar enquanto o DIM estiver aberto.",
     "ProfileErrorTitle": "Erro ao carregar a Sincronização DIM",
+    "RefreshDimSync": "Recarregar dados remotos do DIM Sync",
     "UpdateErrorBody": "Ocorreu um problema ao salvar os seus dados na Sincronização DIM. Tentaremos novamente enquanto o DIM estiver aberto.",
     "UpdateErrorTitle": "Erro ao salvar a Sincronização DIM",
     "UpdateInvalid": "Falha ao salvar os dados para o DIM Sync",

@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 リセット",
     "Resets_plural": "{{count}} リセット",
-    "SecretTriumph": "秘密の勝利の道のり",
     "StatTrackers": "追跡中ステータス",
     "TrackedTriumphs": "追跡中の勝利の道のり",
     "VanguardPathfinder": "バンガードパスファインダー"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "同期とバックアップ",
     "ProfileErrorBody": "DIM Syncとの通信に問題が発生しました。最新の設定、タグ、ロードアウト、検索が表示されない可能性があります。ユーザーデータはまだDIMサーバーにあり、オフライン時に変更した内容は、再接続が可能になった時点で保存されます。DIMのページが開いている間、通信再試行を続けます。",
     "ProfileErrorTitle": "DIM Sync ダウンロードエラー",
+    "RefreshDimSync": "DIM Syncを通じてリモートのデータをリロードする",
     "UpdateErrorBody": "DIM Syncにデータを保存できませんでした。DIMのページが開いている間、バックグラウンドで再試行を続けます。",
     "UpdateErrorTitle": "DIM Sync 保存エラー",
     "UpdateInvalid": "DIM Syncにデータを保存できませんでした",

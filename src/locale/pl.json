@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}pkt",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resety(/ów)",
-    "SecretTriumph": "Sekretny Triumf",
     "StatTrackers": "Śledzenie statystyk",
     "TrackedTriumphs": "Śledzone triumfy",
     "VanguardPathfinder": "Vanguard Pathfinder"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "Synchronizacja i kopie zapasowe",
     "ProfileErrorBody": "Wystąpił problem z komunikacją z DIM Sync. Twoje najnowsze ustawienia, tagi, ładunki i wyszukiwania mogą nie być wyświetlane. Twoje dane nadal znajdują się na naszych serwerach, a wszelkie aktualizacje dokonane lokalnie zostaną zapisane, gdy będziemy mogli ponownie nawiązać połączenie. Będziemy próbować, dopóki DIM jest otwarty.",
     "ProfileErrorTitle": "Błąd pobierania DIM Sync",
+    "RefreshDimSync": "Reload remote data from DIM Sync",
     "UpdateErrorBody": "Wystąpił problem podczas zapisywania Twoich danych do DIM Sync. Będziemy próbować ponownie, dopóki DIM jest otwarty.",
     "UpdateErrorTitle": "Błąd zapisu DIM Sync",
     "UpdateInvalid": "Failed to save data to DIM Sync",

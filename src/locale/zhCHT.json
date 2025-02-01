@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}點",
     "Resets": "1次重置",
     "Resets_plural": "{{count}} 次重置",
-    "SecretTriumph": "秘密勝利",
     "StatTrackers": "數據追蹤器",
     "TrackedTriumphs": "跟蹤的成就",
     "VanguardPathfinder": "Vanguard Pathfinder"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "同步和備份",
     "ProfileErrorBody": "與 DIM 同步通信時出現故障。可能無法顯示你最新的設置、標簽、配裝和搜索。你的數據仍在我們的服務器上，而我們會在重新連接后保存你的修改。我們會在 DIM 開啓時自動重試。",
     "ProfileErrorTitle": "DIM 同步下載出錯",
+    "RefreshDimSync": "Reload remote data from DIM Sync",
     "UpdateErrorBody": "將數據保存到 DIM 同步時出錯。我們會在 DIM 開啓時自動重試。",
     "UpdateErrorTitle": "DIM 同步保存錯誤",
     "UpdateInvalid": "Failed to save data to DIM Sync",
