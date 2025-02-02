@@ -105,9 +105,13 @@ export default function ModAssignmentDrawer({
     return null;
   }
 
+  // const temp = getUpgradeCost();
+
+  // console.log(temp);
+
   // TODO: button to apply mods
   // TODO: consider existing mods in assignment
-
+  // console.print(upgradeCosts);
   return (
     <>
       <Sheet
@@ -123,11 +127,16 @@ export default function ModAssignmentDrawer({
                 <div key={item.id} className={styles.itemAndMods}>
                   <div>
                     <ConnectedInventoryItem item={item} />
+
                     {energy && (
-                      <EnergyIncrementsWithPresstip
-                        energy={energy}
-                        wrapperClass={styles.energyMeter}
-                      />
+                      <>
+                        rahhhhhhhhhhhhhh
+                        <EnergyIncrementsWithPresstip
+                          energy={energy}
+                          wrapperClass={styles.energyMeter}
+                          item={item}
+                        />
+                      </>
                     )}
                   </div>
 

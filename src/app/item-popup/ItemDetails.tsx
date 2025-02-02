@@ -75,7 +75,7 @@ export default function ItemDetails({
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
         <BungieImage className={styles.itemShader} src={item.icon} width="96" height="96" />
       )}
-
+      dfasdf
       {(item.bucket.hash === BucketHashes.Quests ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
         item.secondaryIcon && (
@@ -86,21 +86,17 @@ export default function ItemDetails({
             })}
           />
         )}
-
       <ItemDescription item={item} />
-
       {!item.stats && Boolean(item.collectibleHash) && defs.isDestiny2 && (
         <div className={clsx('item-details', styles.itemSource)}>
           {defs.Collectible.get(item.collectibleHash!).sourceString}
         </div>
       )}
-
       {defs.isDestiny2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">
           <EmblemPreview item={item} />
         </div>
       )}
-
       {defs.isDestiny2 && item.availableMetricCategoryNodeHashes && (
         <div className="item-details">
           <MetricCategories
@@ -108,46 +104,35 @@ export default function ItemDetails({
           />
         </div>
       )}
-
       {defs.isDestiny2 && <WeaponCraftedInfo item={item} className="crafted-progress" />}
-
       {defs.isDestiny2 && <WeaponDeepsightInfo item={item} />}
-
       {defs.isDestiny2 && <WeaponCatalystInfo item={item} />}
-
       {killTrackerInfo && defs.isDestiny2 && (
         <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />
       )}
-
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
-
       {item.stats && (
         <div className="item-details">
           <ItemStats item={item} />
+          ddddddd
         </div>
       )}
-
       {isD1Item(item) && item.talentGrid && (
         <div className="item-details">
           <ItemTalentGrid item={item} />
         </div>
       )}
-
       {item.missingSockets && (
         <div className="item-details warning">{t(missingSocketsMessage)}</div>
       )}
-
       {defs.isDestiny2 && item.energy && defs && <EnergyMeter item={item} />}
       {item.sockets && <ItemSockets item={item} onPlugClicked={onPlugClicked} />}
-
       <ApplyPerkSelection
         item={item}
         setSocketOverride={onPlugClicked}
         onApplied={resetSocketOverrides}
       />
-
       {item.perks && <ItemPerks item={item} />}
-
       {defs && item.objectives && (
         <div className="item-details">
           {item.objectives.map((objective) => (
@@ -159,7 +144,6 @@ export default function ItemDetails({
           ))}
         </div>
       )}
-
       {item.previewVendor !== undefined &&
         item.previewVendor !== 0 &&
         (extraInfo.characterId ?? (ownerStore && !ownerStore.isVault)) && (
@@ -176,7 +160,6 @@ export default function ItemDetails({
             </a>
           </div>
         )}
-
       {defs.isDestiny2 && item.pursuit && item.pursuit.rewards.length !== 0 && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
@@ -185,7 +168,6 @@ export default function ItemDetails({
           ))}
         </div>
       )}
-
       {defs.isDestiny2 && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
         <div className="item-details">
           {item.pursuit.modifierHashes.map((modifierHash) => (
@@ -193,7 +175,6 @@ export default function ItemDetails({
           ))}
         </div>
       )}
-
       {extraInfo.mod ? (
         <div className={clsx('item-details', styles.mods)}>
           {extraInfo.owned && (
@@ -223,7 +204,6 @@ export default function ItemDetails({
           </div>
         )
       )}
-
       <ItemExpiration item={item} />
       <DestinyTooltipText item={item} />
     </div>

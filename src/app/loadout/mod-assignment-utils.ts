@@ -153,7 +153,7 @@ const upgradeToArtificePlug = 720825311; // Upgrade to Artifice Armor
  * two ascendant shards is always more costly than something that only costs one. If the ascendant shard cost
  * is the same, then we count how many prisms are spent etc.
  */
-function getUpgradeCost(
+export function getUpgradeCost(
   model: EnergyUpgradeCostModel,
   item: ItemEnergy,
   dimItem: DimItem,
@@ -410,6 +410,8 @@ export function fitMostMods({
 
         unassignedModCount += unassigned.length;
         assignments[item.id] = { assigned, unassigned };
+
+        // console.log(items[i].name);
       }
 
       // This is after the item loop
@@ -426,6 +428,10 @@ export function fitMostMods({
         upgradeCostModel,
       );
       const upgradeCostsResult = compareCosts(energyUpgradeCost, assignmentUpgradeCost);
+      // ORDER is
+      // console.log('RAHHHHHHHHHHHHHHHH');
+      // console.log(items);
+      // console.log(energyUpgradeCost);
 
       // Skip further checks if we are spending more materials that we were previously.
       if (unassignedModCount === assignmentUnassignedModCount && upgradeCostsResult > 0) {

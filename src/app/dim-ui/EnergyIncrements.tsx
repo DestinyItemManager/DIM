@@ -1,11 +1,14 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { getEnergyUpgradeHashes, sumModCosts } from 'app/inventory/store/energy';
 import { EnergySwap } from 'app/loadout-builder/generated-sets/GeneratedSetItem';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import { compareBy } from 'app/utils/comparators';
+import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import styles from './EnergyIncrements.m.scss';
 import { PressTip } from './PressTip';
-
 // TODO special display for T10 -> T10 + exotic artifice?
 
 /** this accepts either an item, or a partial DimItem.energy */
@@ -66,20 +69,42 @@ export function EnergyMeterIncrements({
 export function EnergyIncrementsWithPresstip({
   energy,
   wrapperClass,
+  item,
 }: {
   energy: {
     energyCapacity: number;
     energyUsed: number;
   };
   wrapperClass?: string | undefined;
+  item: DimItem;
 }) {
   const { energyCapacity, energyUsed } = energy;
   const energyUnused = Math.max(energyCapacity - energyUsed, 0);
 
+  const defs = useD2Definitions()!;
+  if (!item.energy) {
+    return null;
+  }
+
+  const energyModHashes = getEnergyUpgradeHashes(item, energyUsed || 0);
+  const costs = sumModCosts(
+    defs,
+    energyModHashes.map((h) => defs.InventoryItem.get(h)),
+  ).sort(compareBy((c) => c.quantity));
+
+  if (item) {
+    console.log(item, '   ', energyUsed);
+    console.log(costs);
+  }
   return (
     <PressTip
       tooltip={
         <>
+          look at me 2
+          {costs.map((cost) => (
+            <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
+          ))}
+          <br />
           {t('EnergyMeter.Energy')}
           <hr />
           {t('EnergyMeter.Used')}: {energyUsed}

@@ -49,7 +49,6 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     if (!confirm('Pay the costs to upgrade?')) {
       return;
     }
-
     const upgradeMods = getEnergyUpgradeHashes(item, previewCapacity);
     const socket = getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier)!;
 
@@ -69,6 +68,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
       <div className={styles.energyMeter}>
         <div className="item-socket-category-name">
           <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
+          energyMeter
         </div>
         <EnergyMeterIncrements
           energyCapacity={Math.max(minCapacity, previewCapacity || 0)}
@@ -92,9 +92,11 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
                 previewCapacity={previewCapacity || energyCapacity}
               />
               {$featureFlags.awa && (
-                <button type="button" onClick={applyChanges} className={styles.upgradeButton}>
-                  <AppIcon icon={enabledIcon} />
-                </button>
+                <>
+                  <button type="button" onClick={applyChanges} className={styles.upgradeButton}>
+                    <AppIcon icon={enabledIcon} />
+                  </button>
+                </>
               )}
               <button type="button" onClick={resetPreview} className={styles.upgradeButton}>
                 <AppIcon icon={disabledIcon} />
@@ -124,9 +126,13 @@ function EnergyUpgradePreview({
     defs,
     energyModHashes.map((h) => defs.InventoryItem.get(h)),
   ).sort(compareBy((c) => c.quantity));
-
+  console.log('right');
+  console.log(costs);
+  console.log(item);
+  console.log(previewCapacity);
   return (
     <>
+      is THis ist
       <span>
         {item.energy.energyCapacity} &rarr; {previewCapacity}
       </span>
