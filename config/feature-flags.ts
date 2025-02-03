@@ -54,7 +54,7 @@ export function makeFeatureFlags(env: {
     // Whether to allow setting in-game loadout identifiers on DIM loadouts.
     editInGameLoadoutIdentifiers: false,
     // Whether to sync DIM API data instead of loading everything
-    dimApiSync: !env.release,
+    dimApiSync: true,
   };
 }
 
