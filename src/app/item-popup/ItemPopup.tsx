@@ -137,7 +137,6 @@ export default function ItemPopup({
         role="dialog"
         aria-modal="false"
       >
-        gggfdgfdfdfg
         <ClickOutside onClickOutside={onClose}>
           <PressTipRoot value={popupRef}>
             <ItemTagHotkeys item={item} />
@@ -145,12 +144,10 @@ export default function ItemPopup({
               <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
                 {header}
                 {content}
-                adfasdf
               </div>
               {itemActionsModel.hasControls && (
                 <div className={styles.desktopActions}>
                   <DesktopItemActions item={item} actionsModel={itemActionsModel} />
-                  dddddddd
                 </div>
               )}
             </div>

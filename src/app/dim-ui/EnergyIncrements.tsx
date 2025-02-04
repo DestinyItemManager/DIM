@@ -9,6 +9,7 @@ import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import styles from './EnergyIncrements.m.scss';
 import { PressTip } from './PressTip';
+
 // TODO special display for T10 -> T10 + exotic artifice?
 
 /** this accepts either an item, or a partial DimItem.energy */
@@ -92,19 +93,10 @@ export function EnergyIncrementsWithPresstip({
     energyModHashes.map((h) => defs.InventoryItem.get(h)),
   ).sort(compareBy((c) => c.quantity));
 
-  if (item) {
-    console.log(item, '   ', energyUsed);
-    console.log(costs);
-  }
   return (
     <PressTip
       tooltip={
         <>
-          look at me 2
-          {costs.map((cost) => (
-            <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
-          ))}
-          <br />
           {t('EnergyMeter.Energy')}
           <hr />
           {t('EnergyMeter.Used')}: {energyUsed}
@@ -116,6 +108,11 @@ export function EnergyIncrementsWithPresstip({
               {t('EnergyMeter.UpgradeNeeded', energy)}
             </>
           )}
+          <hr />
+          <span>{t('Loadouts.ModPlacement.UpgradeCosts')}</span>
+          {costs.map((cost) => (
+            <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
+          ))}
         </>
       }
       className={wrapperClass}

@@ -129,14 +129,11 @@ export default function ModAssignmentDrawer({
                     <ConnectedInventoryItem item={item} />
 
                     {energy && (
-                      <>
-                        rahhhhhhhhhhhhhh
-                        <EnergyIncrementsWithPresstip
-                          energy={energy}
-                          wrapperClass={styles.energyMeter}
-                          item={item}
-                        />
-                      </>
+                      <EnergyIncrementsWithPresstip
+                        energy={energy}
+                        wrapperClass={styles.energyMeter}
+                        item={item}
+                      />
                     )}
                   </div>
 
@@ -158,6 +155,7 @@ export default function ModAssignmentDrawer({
               <div className={styles.costs}>
                 {upgradeCosts.map((cost) => (
                   <div key={cost.materialHash}>
+                    hello
                     <Cost
                       className={styles.cost}
                       cost={{

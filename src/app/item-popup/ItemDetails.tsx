@@ -75,7 +75,6 @@ export default function ItemDetails({
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
         <BungieImage className={styles.itemShader} src={item.icon} width="96" height="96" />
       )}
-      dfasdf
       {(item.bucket.hash === BucketHashes.Quests ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
         item.secondaryIcon && (
@@ -114,7 +113,6 @@ export default function ItemDetails({
       {item.stats && (
         <div className="item-details">
           <ItemStats item={item} />
-          ddddddd
         </div>
       )}
       {isD1Item(item) && item.talentGrid && (

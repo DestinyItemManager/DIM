@@ -115,7 +115,6 @@ export default function GeneratedSetItem({
       <div className={styles.item}>
         <div className={styles.swapButtonContainer}>
           <LoadoutBuilderItem item={item} onShiftClick={() => pinItem(item)} />
-          asdfasdff
           <EnergyIncrementsWithPresstip
             wrapperClass={styles.energyMeter}
             energy={energy}
