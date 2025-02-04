@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}Pkte",
     "Resets": "1 Zurücksetzung",
     "Resets_plural": "{{count}} Zurücksetzungen",
-    "SecretTriumph": "Geheimer Triumph",
     "StatTrackers": "Stat Tracker",
     "TrackedTriumphs": "Verfolgte Triumphe",
     "VanguardPathfinder": "Vorhut Pfadfinder"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "Sync & Backups",
     "ProfileErrorBody": "Wir hatten ein Problem bei der Kommunikation mit DIM Sync. Deine neuesten Einstellungen, Markierungen, Loadouts und Suchanfragen werden möglicherweise nicht angezeigt. Ihre Daten sind immer noch auf unseren Servern und alle Updates, die du lokal vornimmst, werden gespeichert, sobald wir eine erneute Verbindung herstellen können. Wir werden es immer wieder versuchen, solange DIM geöffnet ist.",
     "ProfileErrorTitle": "DIM-Sync-Downloadfehler",
+    "RefreshDimSync": "Reload remote data from DIM Sync",
     "UpdateErrorBody": "Beim Speichern deiner Daten in DIM Sync ist ein Problem aufgetreten. Wir versuchen es weiter, solange DIM geöffnet ist.",
     "UpdateErrorTitle": "DIM-Sync-Speicherfehler",
     "UpdateInvalid": "Fehler beim Speichern der Daten in DIM Sync",

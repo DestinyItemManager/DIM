@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reinicio",
     "Resets_plural": "{{count}} reinicios",
-    "SecretTriumph": "Triunfo Secreto",
     "StatTrackers": "Rastreadores de estadísticas",
     "TrackedTriumphs": "Triunfos seguidos",
     "VanguardPathfinder": "Trazacaminos de la Vanguardia"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "Sincronización y Copias de Seguridad",
     "ProfileErrorBody": "Tuvimos un problema comunicándonos con Sincronización DIM. Tu última configuración, etiquetas, equipamientos y búsquedas podrían no mostrarse. Tu información todavía está en nuestros servidores, y cualquier actualización que hagas localmente será guardada cuando podamos reconectar. Seguiremos intentándolo mientras DIM esté abierto.",
     "ProfileErrorTitle": "Error de Descarga de Sincronización DIM",
+    "RefreshDimSync": "Recargar información remota desde Sincronización DIM",
     "UpdateErrorBody": "Tuvimos un problema guardando tu información a Sincronización DIM. Seguiremos intentándolo mientras DIM esté abierto.",
     "UpdateErrorTitle": "Error de Guardado de Sincronización DIM",
     "UpdateInvalid": "Error al guardar los datos en DIM Sync",

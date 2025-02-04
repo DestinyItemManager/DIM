@@ -1,3 +1,4 @@
+import md5 from '@beyond-js/md5';
 import {
   CustomStatWeights,
   DestinyVersion,
@@ -5,6 +6,7 @@ import {
   ItemAnnotation,
   ItemHashTag,
   Loadout,
+  ProfileResponse,
   ProfileUpdateResult,
   Search,
   SearchType,
@@ -85,6 +87,9 @@ export interface DimApiState {
       };
       /** Tracked triumphs */
       triumphs: number[];
+
+      /** This allows us to get just the items that changed from the DIM API instead of the whole deal. */
+      sync?: string;
     };
   };
 
@@ -142,6 +147,7 @@ export const initialState: DimApiState = {
 
   itemHashTags: {},
   profiles: {},
+  // TODO: move searches into profiles
   searches: {
     1: [],
     2: [],
@@ -225,60 +231,7 @@ export const dimApi = (
 
     case getType(actions.profileLoaded): {
       const { profileResponse, account } = action.payload;
-
-      const profileKey = account ? makeProfileKeyFromAccount(account) : '';
-      const existingProfile = account ? state.profiles[profileKey] : undefined;
-
-      // TODO: clean out invalid/simple searches on first load?
-      const newState: DimApiState = migrateSettings({
-        ...state,
-        profileLoaded: true,
-        profileLoadedError: undefined,
-        profileLastLoaded: Date.now(),
-        settings: {
-          ...state.settings,
-          ...(profileResponse.settings as Settings),
-        },
-        itemHashTags: profileResponse.itemHashTags
-          ? keyBy(profileResponse.itemHashTags, (t) => t.hash)
-          : state.itemHashTags,
-        profiles: account
-          ? {
-              ...state.profiles,
-              // Overwrite just this account's profile. If a specific key is missing from the response, don't overwrite it.
-              [profileKey]: {
-                profileLastLoaded: Date.now(),
-                loadouts: profileResponse.loadouts
-                  ? keyBy(profileResponse.loadouts, (l) => l.id)
-                  : (existingProfile?.loadouts ?? {}),
-                tags: profileResponse.tags
-                  ? keyBy(profileResponse.tags, (t) => t.id)
-                  : (existingProfile?.tags ?? {}),
-                triumphs: profileResponse.triumphs
-                  ? profileResponse.triumphs.map((t) => parseInt(t.toString(), 10))
-                  : (existingProfile?.triumphs ?? []),
-              },
-            }
-          : state.profiles,
-        searches:
-          account && profileResponse.searches
-            ? {
-                ...state.searches,
-                [account.destinyVersion]: profileResponse.searches || [],
-              }
-            : state.searches,
-      });
-
-      // If this is the first load, cleanup searches
-      if (
-        account &&
-        profileResponse.searches?.length &&
-        !state.searches[account.destinyVersion].length
-      ) {
-        return produce(newState, (state) => cleanupInvalidSearches(state, account));
-      }
-
-      return newState;
+      return profileLoaded(state, profileResponse, account);
     }
 
     case getType(actions.profileLoadError): {
@@ -433,6 +386,120 @@ export const dimApi = (
       return state;
   }
 };
+
+function profileLoaded(
+  state: DimApiState,
+  profileResponse: ProfileResponse,
+  account?: DestinyAccount,
+) {
+  const profileKey = account ? makeProfileKeyFromAccount(account) : '';
+
+  // If the response is a sync, we'll start with the existing items and merge in
+  // changed items. Otherwise we don't keep anything from the existing profile.
+
+  let itemHashTags = state.itemHashTags;
+  if (profileResponse.itemHashTags || profileResponse.deletedItemHashTagHashes?.length) {
+    const existingItemHashTags = profileResponse.sync ? state.itemHashTags : undefined;
+    itemHashTags = {
+      ...existingItemHashTags,
+      ...keyBy(profileResponse.itemHashTags ?? [], (t) => t.hash),
+    };
+    for (const t of profileResponse.deletedItemHashTagHashes ?? []) {
+      delete itemHashTags[t.toString()];
+    }
+  }
+
+  let searches = state.searches ?? {};
+  if (account && (profileResponse.searches || profileResponse.deletedSearchHashes?.length)) {
+    const existingSearches = profileResponse.sync
+      ? state.searches[account.destinyVersion]
+      : undefined;
+    const newSearches = [...(existingSearches ?? [])];
+    for (const search of profileResponse.searches ?? []) {
+      const foundSearchIndex = newSearches.findIndex(
+        (s) => s.query === search.query && search.type === s.type,
+      );
+      if (foundSearchIndex >= 0) {
+        newSearches[foundSearchIndex] = search;
+      } else {
+        newSearches.push(search);
+      }
+    }
+    for (const searchHash of profileResponse.deletedSearchHashes ?? []) {
+      const foundSearchIndex = newSearches.findIndex((s) => md5(s.query) === searchHash);
+      if (foundSearchIndex >= 0) {
+        newSearches.splice(foundSearchIndex, 1);
+      }
+    }
+    searches = { ...searches, [account.destinyVersion]: newSearches };
+  }
+
+  let profiles = state.profiles;
+  if (account) {
+    const existingProfile = state.profiles[profileKey];
+    const existingLoadouts = profileResponse.sync ? existingProfile?.loadouts : undefined;
+    const newLoadouts = {
+      ...existingLoadouts,
+      ...keyBy(profileResponse.loadouts ?? [], (l) => l.id),
+    };
+    for (const l of profileResponse.deletedLoadoutIds ?? []) {
+      delete newLoadouts[l];
+    }
+
+    const existingTags = profileResponse.sync ? existingProfile?.tags : undefined;
+    const newTags = { ...existingTags, ...keyBy(profileResponse.tags ?? [], (t) => t.id) };
+    for (const t of profileResponse.deletedTagsIds ?? []) {
+      delete newTags[t];
+    }
+
+    const existingTriumphs = profileResponse.sync ? existingProfile?.triumphs : undefined;
+    const newTriumphs = new Set([
+      ...(existingTriumphs ?? []),
+      ...(profileResponse.triumphs ?? []).map((t) => parseInt(t.toString(), 10)),
+    ]);
+    for (const t of profileResponse.deletedTriumphs ?? []) {
+      newTriumphs.delete(t);
+    }
+
+    profiles = {
+      ...state.profiles,
+      // Overwrite just this account's profile. If a specific key is missing from the response, don't overwrite it.
+      [profileKey]: {
+        profileLastLoaded: Date.now(),
+        loadouts: newLoadouts,
+        tags: newTags,
+        triumphs: [...newTriumphs],
+        sync: profileResponse.syncToken,
+      },
+    };
+  }
+
+  // TODO: clean out invalid/simple searches on first load?
+  const newState: DimApiState = migrateSettings({
+    ...state,
+    profileLoaded: true,
+    profileLoadedError: undefined,
+    profileLastLoaded: Date.now(),
+    settings: {
+      ...state.settings,
+      ...(profileResponse.settings as Settings),
+    },
+    itemHashTags,
+    profiles,
+    searches,
+  });
+
+  // If this is the first load, cleanup searches
+  if (
+    account &&
+    profileResponse.searches?.length &&
+    !state.searches[account.destinyVersion].length
+  ) {
+    return produce(newState, (state) => cleanupInvalidSearches(state, account));
+  }
+
+  return newState;
+}
 
 /**
  * Migrates deprecated settings to their new equivalent, and erroneous settings values to their correct value.

@@ -1,5 +1,17 @@
 ## Next
 
+## 8.57.1 <span class="changelog-date">(2025-02-03)</span>
+
+* DIM Sync data is now loaded incrementally, instead of being completely refreshed every time. This should result in faster updates, but otherwise nothing should be different. If you notice things are out of sync, you can click the "Reload remote data from DIM sync" button in Settings, but please let us know if you needed to do that.
+
+## 8.57.0 <span class="changelog-date">(2025-02-02)</span>
+
+* DIM now coordinates in a limited way between different tabs/windows. Only one tab will load data at a time, and when it does, all other tabs will refresh immediately. Item moves are also reflected immediately across tabs. This should help prevent tabs from getting out of sync with each other.
+
+## 8.56.0 <span class="changelog-date">(2025-01-26)</span>
+
+* Removed the 15 second timer on being able to check for new data from Bungie.net.
+
 ## 8.55.0 <span class="changelog-date">(2025-01-19)</span>
 
 * Restored a workaround for laggy dragging in Chrome on Windows when using some high-DPI and/or Logitech mice.

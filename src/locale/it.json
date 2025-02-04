@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}punti",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
-    "SecretTriumph": "Trionfo Segreto",
     "StatTrackers": "Contatori Statistiche",
     "TrackedTriumphs": "Trionfi Seguiti",
     "VanguardPathfinder": "Strumento di scoperta dell'Avanguardia"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "Sync & Backup",
     "ProfileErrorBody": "Abbiamo avuto un problema di comunicazione con DIM Sync. Le tue ultime impostazioni, etichette, dotazioni e ricerche potrebbero non essere mostrate. I tuoi dati sono ancora nei nostri server, ed ogni aggiornamento che farai in locale sarà salvato appena potremo riconnetterci. Continueremo a riprovare mentre DIM è aperto.",
     "ProfileErrorTitle": "Errore Dowload DIM Sync",
+    "RefreshDimSync": "Ricarica i dati remoti da DIM Sync",
     "UpdateErrorBody": "Abbiamo avuto un problema salvando i tuoi dati su DIM Sync. Continueremo a riprovare mentre DIM è aperto.",
     "UpdateErrorTitle": "Errore Salvataggio DIM Sync",
     "UpdateInvalid": "Errore salvataggio dati su DIM Sync",

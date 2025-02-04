@@ -4,6 +4,8 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { itemMoved } from '../actions';
+import { CrossTabMessage, useCrossTabUpdates } from '../cross-tab';
 import { loadStores as d1LoadStores } from '../d1-stores';
 import { loadStores as d2LoadStores } from '../d2-stores';
 import { storesLoadedSelector } from '../selectors';
@@ -39,6 +41,26 @@ export function useLoadStores(account: DestinyAccount | undefined) {
       }
     }, [account, dispatch]),
   );
+
+  const onMessage = useCallback(
+    (msg: CrossTabMessage) => {
+      switch (msg.type) {
+        case 'stores-updated':
+          // This is only implemented for D2
+          if (account?.destinyVersion === 2) {
+            return dispatch(d2LoadStores({ fromOtherTab: true }));
+          }
+          break;
+        case 'item-moved':
+          if (account?.destinyVersion === 2) {
+            dispatch(itemMoved(msg));
+          }
+          break;
+      }
+    },
+    [account?.destinyVersion, dispatch],
+  );
+  useCrossTabUpdates(onMessage);
 
   return loaded;
 }

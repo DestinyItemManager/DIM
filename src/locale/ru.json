@@ -1119,7 +1119,6 @@
     "RecordValue": "{{value}}",
     "Resets": "1 сброс",
     "Resets_plural": "{{count}} обнулений ранга",
-    "SecretTriumph": "Скрытый Триумф",
     "StatTrackers": "Трекеры",
     "TrackedTriumphs": "Отслеживаемые Триумфы",
     "VanguardPathfinder": "Vanguard Pathfinder"
@@ -1337,6 +1336,7 @@
     "MenuTitle": "Резервные копии и DIM Sync",
     "ProfileErrorBody": "Произошла проблема связи с DIM Sync. Ваши последние настройки, тэги, наборы, и поиски могут быть не показаны. Ваши данные всё ещё находятся на наших серверах, и любые сделанные вами локально обновления будут сохранены при возобновлении подключения. Мы продолжим повторять попытку, пока DIM открыт.",
     "ProfileErrorTitle": "Ошибка загрузки DIM Sync",
+    "RefreshDimSync": "Reload remote data from DIM Sync",
     "UpdateErrorBody": "Возникла проблема с сохранением ваших данных в DIM Sync. Мы продолжим повторять попытку, пока DIM открыт.",
     "UpdateErrorTitle": "Ошибка сохранения DIM Sync",
     "UpdateInvalid": "Не удалось сохранить данные в DIM Sync",

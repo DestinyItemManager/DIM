@@ -123,7 +123,7 @@ export default function LoadoutItemCategorySection({
       {items && isArmor && (
         <>
           {equippedItems.length === 5 && (
-            <div className="stat-bars destiny2">
+            <div className="stat-bars">
               <LoadoutCharacterStats
                 loadout={loadout}
                 subclass={subclass}

@@ -34,6 +34,7 @@ import {
   profileLoaded,
   update,
 } from './actions';
+import { notifyOtherTabsStoreUpdated } from './cross-tab';
 import { cleanInfos } from './dim-item-info';
 import { d2BucketsSelector, storesLoadedSelector } from './selectors';
 import { DimStore } from './store-types';
@@ -109,40 +110,74 @@ let firstTime = true;
 /**
  * Returns a promise for a fresh view of the stores and their items.
  */
-export function loadStores(): ThunkResult<DimStore[] | undefined> {
+export function loadStores({
+  fromOtherTab = false,
+}: {
+  fromOtherTab?: boolean;
+} = {}): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
-    let account = currentAccountSelector(getState());
-    if (!account) {
-      // TODO: throw here?
-      await dispatch(getPlatforms);
-      account = currentAccountSelector(getState());
-      if (!account || account.destinyVersion !== 2) {
-        return;
+    try {
+      let stores: DimStore[] | undefined;
+      await navigator.locks.request(
+        'loadStores',
+        {
+          // If another tab is working on it, don't wait. The callback will get a null lock.
+          ifAvailable: true,
+          mode: 'exclusive',
+        },
+        async (lock) => {
+          if (!lock) {
+            infoLog('cross-tab', 'Another tab is already loading stores');
+            // This means another tab was already requesting the stores.
+            throw new Error('lock-held');
+          }
+          let account = currentAccountSelector(getState());
+          if (!account) {
+            // TODO: throw here?
+            await dispatch(getPlatforms);
+            account = currentAccountSelector(getState());
+            if (!account || account.destinyVersion !== 2) {
+              return;
+            }
+          }
+
+          dispatch(loadCoreSettings()); // no need to wait
+          $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
+          await dispatch(loadNewItems(account));
+          // The first time we load, allow the data to be loaded from IDB. We then do a second
+          // load to make sure that we immediately try to get remote data.
+          if (firstTime) {
+            await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
+            firstTime = false;
+          }
+          stores = await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
+        },
+      );
+      // Need to do this after the lock has been released
+      if (!firstTime && stores !== undefined && !fromOtherTab) {
+        notifyOtherTabsStoreUpdated();
+      }
+      return stores;
+    } catch (e) {
+      if (!(e instanceof Error) || e.message !== 'lock-held') {
+        throw e;
       }
     }
-
-    dispatch(loadCoreSettings()); // no need to wait
-    $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
-    await dispatch(loadNewItems(account));
-    // The first time we load, allow the data to be loaded from IDB. We then do a second
-    // load to make sure that we immediately try to get remote data.
-    if (firstTime) {
-      await dispatch(loadStoresData(account, firstTime));
-      firstTime = false;
-    }
-    const stores = await dispatch(loadStoresData(account, firstTime));
-    return stores;
   };
 }
 
-/** time in milliseconds after which we could expect Bnet to return an updated response */
-const BUNGIE_CACHE_TTL = 15_000;
 /** How old the profile can be and still trigger cleanup of tags. */
 const FRESH_ENOUGH_TO_CLEAN_INFOS = 90_000; // 90 seconds
 
 function loadProfile(
   account: DestinyAccount,
-  firstTime: boolean,
+  {
+    firstTime,
+    fromOtherTab,
+  }: {
+    firstTime: boolean;
+    fromOtherTab: boolean;
+  },
 ): ThunkResult<
   | {
       profile: DestinyProfileResponse;
@@ -162,21 +197,29 @@ function loadProfile(
 
     // First try loading from IndexedDB
     let cachedProfileResponse = getState().inventory.profileResponse;
-    if (!cachedProfileResponse) {
+    // TODO: always check IDB, in case another tab loaded it?
+    if (!cachedProfileResponse || fromOtherTab) {
       try {
         cachedProfileResponse = await get<DestinyProfileResponse>(cachedProfileKey);
         // Check to make sure the profile hadn't been loaded in the meantime
-        if (getState().inventory.profileResponse) {
+        if (!fromOtherTab && getState().inventory.profileResponse) {
           cachedProfileResponse = getState().inventory.profileResponse;
         } else if (cachedProfileResponse) {
           const profileAgeSecs =
             (Date.now() - new Date(cachedProfileResponse.responseMintedTimestamp ?? 0).getTime()) /
             1000;
-          infoLog(
-            TAG,
-            `Loaded cached profile from IndexedDB, using it until new data is available. It is ${profileAgeSecs}s old.`,
-          );
-          dispatch(profileLoaded({ profile: cachedProfileResponse, live: false }));
+          if (fromOtherTab) {
+            infoLog(
+              TAG,
+              `Loaded cached profile from IndexedDB because another tab updated it. It is ${profileAgeSecs}s old.`,
+            );
+          } else {
+            infoLog(
+              TAG,
+              `Loaded cached profile from IndexedDB, using it until new data is available. It is ${profileAgeSecs}s old.`,
+            );
+          }
+          dispatch(profileLoaded({ profile: cachedProfileResponse, live: fromOtherTab }));
           // The first time we load, just use the IDB version if we can, to speed up loading
           if (firstTime) {
             return { profile: cachedProfileResponse, live: false };
@@ -187,22 +230,9 @@ function loadProfile(
       }
     }
 
-    let cachedProfileMintedDate = new Date(0);
-
-    // If our cached profile is up to date
-    if (cachedProfileResponse) {
-      // TODO: need to make sure we still load at the right frequency / for manual cache busts?
-      cachedProfileMintedDate = new Date(cachedProfileResponse.responseMintedTimestamp ?? 0);
-      const profileAge = Date.now() - cachedProfileMintedDate.getTime();
-      if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
-        warnLog(
-          TAG,
-          `Cached profile is only ${profileAge / 1000}s old, skipping remote load.`,
-          profileAge,
-        );
-        return { profile: cachedProfileResponse, live: false };
-      }
-    }
+    const cachedProfileMintedDate = cachedProfileResponse
+      ? new Date(cachedProfileResponse.responseMintedTimestamp ?? 0)
+      : new Date(0);
 
     try {
       const remoteProfileResponse = await getStores(account);
@@ -248,7 +278,7 @@ function loadProfile(
         );
       }
 
-      set(cachedProfileKey, remoteProfileResponse); // don't await
+      await set(cachedProfileKey, remoteProfileResponse);
       dispatch(profileLoaded({ profile: remoteProfileResponse, live: true }));
       return { profile: remoteProfileResponse, live: true };
     } catch (e) {
@@ -271,7 +301,10 @@ let lastCheckedManifest = 0;
 
 function loadStoresData(
   account: DestinyAccount,
-  firstTime: boolean,
+  profileArgs: {
+    firstTime: boolean;
+    fromOtherTab: boolean;
+  },
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
@@ -286,7 +319,7 @@ function loadStoresData(
         try {
           const [originalDefs, profileInfo] = await Promise.all([
             dispatch(getDefinitions()),
-            dispatch(loadProfile(account, firstTime)),
+            dispatch(loadProfile(account, profileArgs)),
           ]);
 
           let defs = originalDefs;

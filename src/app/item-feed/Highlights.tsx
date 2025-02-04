@@ -12,7 +12,7 @@ import {
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import '../store-stats/CharacterStats.scss';
+import '../store-stats/CharacterStats.m.scss';
 import styles from './Highlights.m.scss';
 
 /**
@@ -74,7 +74,7 @@ export default function Highlights({ item }: { item: DimItem }) {
     return (
       <>
         {item.bucket.hash !== BucketHashes.ClassArmor && (
-          <div className={clsx(styles.stats, 'stat-bars', 'destiny2')}>
+          <div className={clsx(styles.stats, 'stat-bars')}>
             <div className={clsx('stat-row', styles.armorStats)}>
               {item.stats?.filter((s) => s.statHash > 0).map(renderStat)}
             </div>

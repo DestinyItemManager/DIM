@@ -178,7 +178,9 @@ function StoresInventory({
     <>
       {((!store.isVault && selectedCategoryId === 'Armor') ||
         (store.isVault && selectedCategoryId === 'Inventory')) && (
-        <StoreStats store={store} style={{ paddingBottom: 8 }} />
+        <div className="store-cell" style={{ paddingBottom: 8 }}>
+          <StoreStats store={store} />
+        </div>
       )}
       {showPostmaster && buckets.byCategory.Postmaster.map(renderBucket)}
       {buckets.byCategory[selectedCategoryId].map(renderBucket)}
