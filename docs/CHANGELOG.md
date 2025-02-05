@@ -1,5 +1,7 @@
 ## Next
 
+## 8.57.3 <span class="changelog-date">(2025-02-05)</span>
+
 * Also fixed armor not showing up in Organizer due to the Bungie data bug that had all armor as "unknown" class instead of Hunter/Titan/Warlock.
 
 ## 8.57.2 <span class="changelog-date">(2025-02-05)</span>

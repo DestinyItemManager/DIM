@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "8.57.2",
+  "version": "8.57.3",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
