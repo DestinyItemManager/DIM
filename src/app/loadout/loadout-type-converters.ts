@@ -89,11 +89,11 @@ function migrateLoadoutParameters(
  * storage format to the old loadout format.
  */
 export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
-  const { equipped = [], unequipped = [], clearSpace, parameters, ...rest } = loadout;
+  const { equipped = [], unequipped = [], clearSpace = false, parameters, ...rest } = loadout;
   return {
     ...rest,
-    parameters: migrateLoadoutParameters(parameters, clearSpace ?? false),
-    clearSpace: clearSpace ?? false,
+    parameters: migrateLoadoutParameters(parameters, clearSpace),
+    clearSpace,
     items: [
       ...equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
       ...unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
