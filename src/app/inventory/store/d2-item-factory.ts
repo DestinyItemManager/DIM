@@ -437,6 +437,8 @@ export function makeItem(
     }
   }
 
+  let itemCategoryHashes = getItemCategoryHashes(itemDef);
+
   let classType = itemDef.classType;
 
   // We cannot trust the defined class of redacted items,
@@ -482,6 +484,21 @@ export function makeItem(
       // Obviously a subclass is compatible with the Guardian holding it.
       classType = owner.classType;
     }
+    if (classType !== DestinyClass.Unknown) {
+      switch (classType) {
+        case DestinyClass.Hunter:
+          itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Hunter];
+          break;
+        case DestinyClass.Titan:
+          itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Titan];
+          break;
+        case DestinyClass.Warlock:
+          itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Warlock];
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   const createdItem: DimItem = {
@@ -493,7 +510,7 @@ export function makeItem(
     // The bucket the item normally resides in (even though it may be in the vault/postmaster)
     bucket: normalBucket,
     hash: item.itemHash,
-    itemCategoryHashes: getItemCategoryHashes(itemDef),
+    itemCategoryHashes,
     tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
     isExotic: itemDef.inventory!.tierType === TierType.Exotic,
     name,
