@@ -452,7 +452,8 @@ export function makeItem(
         DestinyClass.Unknown;
   } else if (itemDef.classType === DestinyClass.Unknown) {
     // This whole elseif can be removed once Bungie addresses https://github.com/Bungie-net/api/issues/1937 and restores item class information.
-    // However, the heuristics are strict, and this only adjusts Unknown armor, so there's no rush to remove it.
+    // However, the heuristics are strict, and this only adjusts Unknown armor, so there's no rush to remove it. We also need to re-enable the
+    // test in loadout-drawer-reducer.test.ts.
     if (
       itemDef.itemType === DestinyItemType.Armor ||
       // Festival masks are head armor in traits but not types.
