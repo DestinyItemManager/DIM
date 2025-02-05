@@ -1,5 +1,7 @@
 ## Next
 
+## 8.57.2 <span class="changelog-date">(2025-02-05)</span>
+
 * Worked around a bug in the Bungie data that had all armor as "unknown" class instead of Hunter/Titan/Warlock.
 
 ## 8.57.1 <span class="changelog-date">(2025-02-03)</span>
