@@ -450,32 +450,36 @@ export function makeItem(
           DestinyClass.Classified
       : // other items are marked "any class"/unknown
         DestinyClass.Unknown;
-  } else if (
+  } else if (itemDef.classType === DestinyClass.Unknown) {
     // This whole elseif can be removed once Bungie addresses https://github.com/Bungie-net/api/issues/1937 and restores item class information.
     // However, the heuristics are strict, and this only adjusts Unknown armor, so there's no rush to remove it.
-    itemDef.classType === DestinyClass.Unknown &&
-    (itemDef.itemType === DestinyItemType.Armor ||
+    if (
+      itemDef.itemType === DestinyItemType.Armor ||
       // Festival masks are head armor in traits but not types.
       (itemDef.itemType === DestinyItemType.None &&
-        itemDef.traitHashes?.includes(TraitHashes.ItemArmorHead)))
-  ) {
-    // This identifies most armors (90%+) by infusion category.
-    classType =
-      infusionCategoryHashToClass[itemDef.quality!.infusionCategoryHash] ?? DestinyClass.Unknown;
+        itemDef.traitHashes?.includes(TraitHashes.ItemArmorHead))
+    ) {
+      // This identifies most armors (90%+) by infusion category.
+      classType =
+        infusionCategoryHashToClass[itemDef.quality!.infusionCategoryHash] ?? DestinyClass.Unknown;
 
-    // This identifies the remaining armors by what class' armor they can act as an ornament for.
-    if (classType === DestinyClass.Unknown) {
-      // If this item has a plug, it can be an ornament. If not, find a visually matching ornament item.
-      const plugCheckItem = itemDef.plug
-        ? itemDef
-        : Object.values(defs.InventoryItem.getAll()).find(
-            (i) => i.plug && i.displayProperties.icon === itemDef.displayProperties.icon,
-          );
+      // This identifies the remaining armors by what class' armor they can act as an ornament for.
+      if (classType === DestinyClass.Unknown) {
+        // If this item has a plug, it can be an ornament. If not, find a visually matching ornament item.
+        const plugCheckItem = itemDef.plug
+          ? itemDef
+          : Object.values(defs.InventoryItem.getAll()).find(
+              (i) => i.plug && i.displayProperties.icon === itemDef.displayProperties.icon,
+            );
 
-      if (plugCheckItem) {
-        classType =
-          plugCategoryHashToClass[plugCheckItem.plug!.plugCategoryHash] ?? DestinyClass.Unknown;
+        if (plugCheckItem) {
+          classType =
+            plugCategoryHashToClass[plugCheckItem.plug!.plugCategoryHash] ?? DestinyClass.Unknown;
+        }
       }
+    } else if (itemDef.itemType === DestinyItemType.Subclass && owner) {
+      // Obviously a subclass is compatible with the Guardian holding it.
+      classType = owner.classType;
     }
   }
 
