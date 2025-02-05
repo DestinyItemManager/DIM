@@ -112,7 +112,6 @@ const enhancedIntrinsics = new Set<number>([
   2105054824, // Lightweight Frame
   687584589, // Rocket-Assisted Frame
   368110299, // Rocket-Assisted Frame
-  651554065, // Rocket-Assisted Frame
   2100231191, // Rocket-Assisted Frame
   3178379945, // Rocket-Assisted Frame
   1225770249, // Rocket-Assisted Frame

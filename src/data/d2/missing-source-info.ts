@@ -932,6 +932,7 @@ const missingSources: { [key: string]: number[] } = {
     4229161783, // Boots of Feltroc
   ],
   events: [
+    55393445, // The Title
     116784191, // Solstice Boots (Renewed)
     140842223, // Solstice Mask (Drained)
     143299650, // Solstice Plate (Renewed)
@@ -1024,9 +1025,11 @@ const missingSources: { [key: string]: number[] } = {
     2543971899, // Sublime Mark
     2546370410, // Solstice Hood (Majestic)
     2578820926, // Solstice Greaves (Majestic)
+    2595813005, // Taraxippos
     2603335652, // Jurassic Green
     2616697701, // Sublime Robes
     2618313500, // Solstice Greaves (Drained)
+    2666273249, // Hullabaloo
     2685001662, // Solstice Gloves (Rekindled)
     2696245301, // Solstice Grasps (Scorched)
     2720534902, // Solstice Grasps (Drained)
@@ -1475,6 +1478,23 @@ const missingSources: { [key: string]: number[] } = {
   haunted: [
     3864896927, // Nightmare Harvester
   ],
+  heresy: [
+    601574723, // Adamantite (Adept)
+    615373993, // Eyes Unveiled
+    704410186, // Psychopomp (Adept)
+    768610585, // Watchful Eye
+    861521336, // Afterlight (Adept)
+    2501377328, // Division (Adept)
+    2755584425, // Refusal of the Call (Adept)
+    2856225832, // Watchful Eye (Adept)
+    2987244302, // Adamantite
+    3054597646, // Abyssal Edge (Adept)
+    3840794631, // Psychopomp
+    3949253499, // Anamnesis (Adept)
+    4116546788, // Mirror Imago (Adept)
+    4173311704, // Eyes Unveiled (Adept)
+    4221591387, // Abyssal Edge
+  ],
   ikora: [
     89175653, // Noble Constant Mark
     185326970, // Noble Constant Type 2
@@ -1560,6 +1580,7 @@ const missingSources: { [key: string]: number[] } = {
     744156528, // Iron Symmachy Mask
     770140877, // Iron Will Greaves
     808693674, // Iron Symmachy Mark
+    829330711, // Peacebond
     831464034, // Iron Truage Vest
     863444264, // Iron Will Gloves
     888872889, // Point of the Stag

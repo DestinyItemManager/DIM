@@ -4,6 +4,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   46524085, // Osteo Striga
   204878059, // Malfeasance
   219145368, // The Manticore
+  331231237, // Finality's Auger
   347366834, // Ace of Spades
   370712896, // Salvation's Grip
   374573733, // Delicate Tomb
@@ -37,6 +38,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1864563948, // Worldline Zero
   1891561814, // Whisper of the Worm
   1912669214, // Centrifuse
+  2044500762, // The Queenbreaker
   2084878005, // Heir Apparent
   2130065553, // Arbalest
   2179048386, // Forerunner
@@ -81,6 +83,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3659414143, // Verglas Curve
   3664831848, // Heartshadow
   3698448090, // Choir of One
+  3725585710, // Lodestar
   3761898871, // Lorentz Driver
   3766045777, // Black Talon
   3821409356, // Ex Diris
