@@ -49,6 +49,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     if (!confirm('Pay the costs to upgrade?')) {
       return;
     }
+
     const upgradeMods = getEnergyUpgradeHashes(item, previewCapacity);
     const socket = getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier)!;
 
