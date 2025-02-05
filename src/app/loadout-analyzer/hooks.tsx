@@ -17,8 +17,8 @@ import { useLoadVendors } from 'app/vendors/hooks';
 import {
   ReactNode,
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useId,
   useState,
@@ -99,7 +99,7 @@ export function MakeLoadoutAnalysisAvailable({ children }: { children: ReactNode
  */
 export function useUpdateLoadoutAnalysisContext(storeId: string) {
   const account = useSelector(currentAccountSelector)!;
-  const analyzer = useContext(LoadoutAnalyzerReactContext);
+  const analyzer = use(LoadoutAnalyzerReactContext);
   const analysisContext = useSelector(autoOptimizationContextSelector(storeId));
 
   useLoadVendors(account, storeId);
@@ -122,7 +122,7 @@ export function useAnalyzeLoadout(
     }
   | undefined {
   const id = useId();
-  const analyzer = useContext(LoadoutAnalyzerReactContext);
+  const analyzer = use(LoadoutAnalyzerReactContext);
   const subscribe = useCallback(
     (callback: () => void) =>
       active && analyzer
@@ -144,7 +144,7 @@ export function useSummaryLoadoutsAnalysis(
   active: boolean,
 ): LoadoutAnalysisSummary | undefined {
   const id = useId();
-  const analyzer = useContext(LoadoutAnalyzerReactContext);
+  const analyzer = use(LoadoutAnalyzerReactContext);
   const subscribe = useCallback(
     (callback: () => void) =>
       active && analyzer
