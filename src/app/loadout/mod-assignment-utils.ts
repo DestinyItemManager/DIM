@@ -153,7 +153,7 @@ const upgradeToArtificePlug = 720825311; // Upgrade to Artifice Armor
  * two ascendant shards is always more costly than something that only costs one. If the ascendant shard cost
  * is the same, then we count how many prisms are spent etc.
  */
-export function getUpgradeCost(
+function getUpgradeCost(
   model: EnergyUpgradeCostModel,
   item: ItemEnergy,
   dimItem: DimItem,
