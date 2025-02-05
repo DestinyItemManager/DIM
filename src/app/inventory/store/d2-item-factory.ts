@@ -7,6 +7,8 @@ import {
   SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
   d2MissingIcon,
+  infusionCategoryHashToClass,
+  plugCategoryHashToClass,
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
@@ -27,6 +29,7 @@ import {
   DestinyItemResponse,
   DestinyItemSubType,
   DestinyItemTooltipNotification,
+  DestinyItemType,
   DestinyObjectiveProgress,
   DestinyProfileResponse,
   DestinyVendorSaleItemComponent,
@@ -434,17 +437,46 @@ export function makeItem(
     }
   }
 
-  // we cannot trust the claimed class of redacted items. they all say Titan
-  const classType = itemDef.redacted
-    ? normalBucket.inArmor
+  let classType = itemDef.classType;
+
+  // we cannot trust the claimed class of redacted items
+  if (itemDef.redacted) {
+    classType = normalBucket.inArmor
       ? itemInstanceData?.isEquipped && owner
         ? // equipped armor gets marked as that character's class
           owner.classType
         : // unequipped armor gets marked "no class"
           DestinyClass.Classified
       : // other items are marked "any class"
-        DestinyClass.Unknown
-    : itemDef.classType;
+        DestinyClass.Unknown;
+  } else if (
+    // This whole elseif can go, eventually.
+    itemDef.classType === DestinyClass.Unknown &&
+    (itemDef.itemType === DestinyItemType.Armor ||
+      // Festival masks are head armor in traits but not types.
+      (itemDef.itemType === DestinyItemType.None &&
+        itemDef.traitHashes?.includes(TraitHashes.ItemArmorHead)))
+  ) {
+    // This identifies 4591 armors by infusion category.
+    classType =
+      infusionCategoryHashToClass[itemDef.quality!.infusionCategoryHash] ?? DestinyClass.Unknown;
+
+    // This identifies the remaining 413 by what class' ornament they are (or look like).
+    if (classType === DestinyClass.Unknown) {
+      // If this item has a plug, it can be an ornament (and be identified). If not, find a visually matching ornament.
+      let plugCheckItem: DestinyInventoryItemDefinition | undefined = itemDef;
+      if (!itemDef.plug) {
+        plugCheckItem = Object.values(defs.InventoryItem.getAll()).find(
+          (i) => i.plug && i.displayProperties.icon === itemDef.displayProperties.icon,
+        );
+      }
+
+      if (plugCheckItem) {
+        classType =
+          plugCategoryHashToClass[plugCheckItem.plug!.plugCategoryHash] ?? DestinyClass.Unknown;
+      }
+    }
+  }
 
   const createdItem: DimItem = {
     owner: owner?.id || 'unknown',
@@ -486,7 +518,7 @@ export function makeItem(
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
     classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(defs)(itemDef.classType),
+    classTypeNameLocalized: getClassTypeNameLocalized(defs)(classType),
     element,
     energy: itemInstanceData.energy ?? null,
     lockable: normalBucket.hash !== BucketHashes.Finishers ? item.lockable : true,

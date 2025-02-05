@@ -1,6 +1,6 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
 import { HashLookup } from 'app/utils/util-types';
-import { TierType } from 'bungie-api-ts/destiny2';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 
 import {
   BreakerTypeHashes,
@@ -318,3 +318,45 @@ export const enum ModsWithConditionalStats {
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"
+
+/** Most armor's Guardian Class can be determined by what it can be infused into */
+export const infusionCategoryHashToClass: Record<number, DestinyClass | undefined> = {
+  3301232851: DestinyClass.Hunter, // hunter head
+  3853570272: DestinyClass.Hunter, // hunter arms
+  1814923096: DestinyClass.Hunter, // hunter chest
+  2542340350: DestinyClass.Hunter, // hunter legs
+  821835303: DestinyClass.Hunter, // hunter class
+
+  3548569221: DestinyClass.Titan, // titan head
+  3647016162: DestinyClass.Titan, // titan arms
+  2858080654: DestinyClass.Titan, // titan chest
+  1462658336: DestinyClass.Titan, // titan legs
+  4159907129: DestinyClass.Titan, // titan class
+
+  1046741990: DestinyClass.Warlock, // warlock head
+  673964473: DestinyClass.Warlock, // warlock arms
+  3312934999: DestinyClass.Warlock, // warlock chest
+  3441938495: DestinyClass.Warlock, // warlock legs
+  2278270520: DestinyClass.Warlock, // warlock class
+};
+
+/** Most remaining armor's Guardian Class can be determined by its ornament category */
+export const plugCategoryHashToClass: Record<number, DestinyClass | undefined> = {
+  1608828634: DestinyClass.Hunter, // armor_skins_hunter_legs
+  4147546868: DestinyClass.Hunter, // armor_skins_hunter_chest
+  3952105943: DestinyClass.Hunter, // armor_skins_hunter_head
+  1392996619: DestinyClass.Hunter, // armor_skins_hunter_class
+  4060972748: DestinyClass.Hunter, // armor_skins_hunter_arms
+
+  454950060: DestinyClass.Hunter, // armor_skins_warlock_head
+  3281006437: DestinyClass.Hunter, // armor_skins_warlock_legs
+  3934361071: DestinyClass.Hunter, // armor_skins_warlock_arms
+  1509135441: DestinyClass.Hunter, // armor_skins_warlock_chest
+  505602046: DestinyClass.Hunter, // armor_skins_warlock_class
+
+  3955281547: DestinyClass.Hunter, // armor_skins_titan_head
+  3945759584: DestinyClass.Hunter, // armor_skins_titan_chest
+  2112278838: DestinyClass.Hunter, // armor_skins_titan_legs
+  3386643992: DestinyClass.Hunter, // armor_skins_titan_arms
+  2415787951: DestinyClass.Hunter, // armor_skins_titan_class
+};
