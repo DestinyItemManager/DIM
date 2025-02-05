@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'cost': string;
+  'costs': string;
   'energyMeterIncrements': string;
   'medium': string;
   'unavailable': string;

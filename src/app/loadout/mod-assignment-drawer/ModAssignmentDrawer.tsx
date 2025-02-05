@@ -155,7 +155,6 @@ export default function ModAssignmentDrawer({
               <div className={styles.costs}>
                 {upgradeCosts.map((cost) => (
                   <div key={cost.materialHash}>
-                    hello
                     <Cost
                       className={styles.cost}
                       cost={{

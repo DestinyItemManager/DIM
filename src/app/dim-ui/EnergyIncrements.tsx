@@ -109,10 +109,12 @@ export function EnergyIncrementsWithPresstip({
             </>
           )}
           <hr />
-          <span>{t('Loadouts.ModPlacement.UpgradeCosts')}</span>
-          {costs.map((cost) => (
-            <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
-          ))}
+          <div className={styles.costs}>
+            <span>{t('Loadouts.ModPlacement.UpgradeCosts')}</span>
+            {costs.map((cost) => (
+              <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
+            ))}
+          </div>
         </>
       }
       className={wrapperClass}
