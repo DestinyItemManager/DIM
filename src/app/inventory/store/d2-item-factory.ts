@@ -435,7 +435,7 @@ export function makeItem(
   }
 
   // we cannot trust the claimed class of redacted items. they all say Titan
-  const classType = itemDef.redacted
+  let classType = itemDef.redacted
     ? normalBucket.inArmor
       ? itemInstanceData?.isEquipped && owner
         ? // equipped armor gets marked as that character's class
@@ -445,6 +445,59 @@ export function makeItem(
       : // other items are marked "any class"
         DestinyClass.Unknown
     : itemDef.classType;
+
+  if (classType == DestinyClass.Unknown) {
+    if (itemDef.collectibleHash != undefined) {
+      let presentationParentNode = defs.Collectible.getOptional(
+        itemDef.collectibleHash,
+      )?.parentNodeHashes;
+      if (presentationParentNode != undefined) {
+        if (
+          presentationParentNode.findIndex(
+            (x) => defs.PresentationNode.get(x).displayProperties.name == 'Warlock',
+          ) != -1
+        )
+          classType = DestinyClass.Warlock;
+        if (
+          presentationParentNode.findIndex(
+            (x) => defs.PresentationNode.get(x).displayProperties.name == 'Titan',
+          ) != -1
+        )
+          classType = DestinyClass.Titan;
+        if (
+          presentationParentNode.findIndex(
+            (x) => defs.PresentationNode.get(x).displayProperties.name == 'Hunter',
+          ) != -1
+        )
+          classType = DestinyClass.Hunter;
+      }
+    }
+    if (classType == DestinyClass.Unknown) {
+      itemDef.sockets?.socketEntries.forEach((socketEntry) => {
+        let socketDef = defs.SocketType.getOptional(socketEntry.socketTypeHash);
+        if (socketDef != undefined) {
+          if (
+            socketDef.plugWhitelist.findIndex((x) => x.categoryIdentifier.includes('warlock')) != -1
+          ) {
+            classType = DestinyClass.Warlock;
+            return;
+          }
+          if (
+            socketDef.plugWhitelist.findIndex((x) => x.categoryIdentifier.includes('titan')) != -1
+          ) {
+            classType = DestinyClass.Titan;
+            return;
+          }
+          if (
+            socketDef.plugWhitelist.findIndex((x) => x.categoryIdentifier.includes('hunter')) != -1
+          ) {
+            classType = DestinyClass.Hunter;
+            return;
+          }
+        }
+      });
+    }
+  }
 
   const createdItem: DimItem = {
     owner: owner?.id || 'unknown',
@@ -486,7 +539,7 @@ export function makeItem(
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
     classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(defs)(itemDef.classType),
+    classTypeNameLocalized: getClassTypeNameLocalized(defs)(classType),
     element,
     energy: itemInstanceData.energy ?? null,
     lockable: normalBucket.hash !== BucketHashes.Finishers ? item.lockable : true,
