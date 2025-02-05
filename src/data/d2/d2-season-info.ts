@@ -368,6 +368,21 @@ export const D2SeasonInfo: Record<
     numWeeks: 17,
     episode: 2,
   },
+  26: {
+    DLCName: 'Heresy',
+    seasonName: 'Episode: Heresy',
+    seasonTag: 'heresy',
+    season: 26,
+    maxLevel: 50,
+    powerFloor: 1900,
+    softCap: 1960,
+    powerfulCap: 2010,
+    pinnacleCap: 2020,
+    releaseDate: '2025-02-04',
+    resetTime: '17:00:00Z',
+    numWeeks: 23,
+    episode: 3,
+  },
 };
 
-export const D2CalculatedSeason = 25;
+export const D2CalculatedSeason = 26;
