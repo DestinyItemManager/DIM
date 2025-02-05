@@ -1,5 +1,7 @@
 ## Next
 
+* Worked around a bug in the Bungie data that had all armor as "unknown" class instead of Hunter/Titan/Warlock.
+
 ## 8.57.1 <span class="changelog-date">(2025-02-03)</span>
 
 * DIM Sync data is now loaded incrementally, instead of being completely refreshed every time. This should result in faster updates, but otherwise nothing should be different. If you notice things are out of sync, you can click the "Reload remote data from DIM sync" button in Settings, but please let us know if you needed to do that.
