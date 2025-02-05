@@ -179,6 +179,7 @@ const D2Sources: {
       3532642391, // Source: Forsaken Campaign
       3704442923, // Source: Curse of Osiris Campaign
       3936473457, // Requires Warlock Class
+      4008954452, // Requires Shaped or Enhanced Weapon
       4288102251, // Requires 1,000 Titan Kills
       4290499613, // Source: Complete the campaign as a Hunter.
     ],
@@ -237,6 +238,7 @@ const D2Sources: {
       874623537, // Cataphract GL3 (Adept)
       906840740, // Unwavering Duty
       1141586039, // Unexpected Resurgence (Adept)
+      1201528146, // Exalted Truth (Adept)
       1230660649, // Victory's Wreath
       1292594730, // The Summoner (Adept)
       1321626661, // Eye of Sol (Adept)
@@ -246,6 +248,7 @@ const D2Sources: {
       1705843397, // Exalted Truth (Adept)
       1711056134, // Incisor
       1820994983, // The Summoner
+      1893967086, // Keen Thistle
       1968410628, // The Prophet
       1973107014, // Igneous Hammer
       2022294213, // Shayura's Wrath
@@ -273,7 +276,9 @@ const D2Sources: {
       3165143747, // Whistler's Whim
       3193598749, // The Immortal (Adept)
       3332125295, // Aisha's Care (Adept)
+      3436626079, // Exalted Truth
       3444632029, // Unwavering Duty (Adept)
+      3503560035, // Keen Thistle (Adept)
       3624844116, // Unwavering Duty
       3920882229, // Exalted Truth (Adept)
       3928440584, // Crucible Carmine
@@ -370,6 +375,7 @@ const D2Sources: {
       3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     itemHashes: [
+      32287609, // Boondoggle Mk. 55
       185321778, // The Eternal Return
       814876684, // Wish-Ender
       2844014413, // Pallas Galliot
@@ -422,6 +428,7 @@ const D2Sources: {
   },
   events: {
     itemHashes: [
+      55393445, // The Title
       425681240, // Acosmic
       495940989, // Avalanche
       601948197, // Zephyr
@@ -431,8 +438,11 @@ const D2Sources: {
       1280894514, // Mechabre
       1845372864, // Albedo Wing
       1845978721, // Avalanche
+      2029899814, // Keraunios
       2477980485, // Mechabre
+      2595813005, // Taraxippos
       2603335652, // Jurassic Green
+      2666273249, // Hullabaloo
       2812100428, // Stay Frosty
       2814093983, // Cold Front
       2869466318, // BrayTech Werewolf
@@ -454,6 +464,7 @@ const D2Sources: {
       923678151, // Source: Upgraded Event Card Reward
       1054169368, // Source: Festival of the Lost 2021
       1225476079, // Source: Moments of Triumph 2022
+      1232863328, // Source: Moments of Triumph 2024
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
       1416471099, // Source: Moments of Triumph 2023
@@ -627,6 +638,12 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
+  heresy: {
+    sourceHashes: [
+      1341921330, // Source: Episode: Heresy Activities
+      3507911332, // Source: Episode: Heresy
+    ],
+  },
   ikora: {
     sourceHashes: [
       3075817319, // Source: Earn rank-up packages from Ikora Rey.
@@ -678,6 +695,7 @@ const D2Sources: {
       1448664467, // Iron Gold
       1661191199, // Grizzled Wolf
       1764868900, // Riiswalker
+      1968711238, // Warlord's Spear
       1987234560, // Iron Ruby
       1999697514, // The Wizened Rebuke
       2189073092, // Lethal Abundance
@@ -697,6 +715,28 @@ const D2Sources: {
     ],
   },
   kingsfall: {
+    itemHashes: [
+      601574723, // Adamantite (Adept)
+      615373993, // Eyes Unveiled
+      704410186, // Psychopomp (Adept)
+      768610585, // Watchful Eye
+      861521336, // Afterlight (Adept)
+      1834313033, // Afterlight
+      2501377328, // Division (Adept)
+      2671849376, // Refusal of the Call
+      2755584425, // Refusal of the Call (Adept)
+      2856225832, // Watchful Eye (Adept)
+      2987244302, // Adamantite
+      2992463569, // Division
+      3054597646, // Abyssal Edge (Adept)
+      3417731926, // Anamnesis
+      3840794631, // Psychopomp
+      3877448149, // Mirror Imago
+      3949253499, // Anamnesis (Adept)
+      4116546788, // Mirror Imago (Adept)
+      4173311704, // Eyes Unveiled (Adept)
+      4221591387, // Abyssal Edge
+    ],
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
     ],
@@ -864,7 +904,9 @@ const D2Sources: {
       2322926844, // Shadow Price
       2450917538, // Uzume RR4
       2591257541, // Scintillation
+      2697143634, // Lotus-Eater (Adept)
       2759590322, // THE SWARM
+      2876244791, // The Palindrome
       2883684343, // Hung Jury SR4 (Adept)
       2889501828, // The Slammer
       2914913838, // Loaded Question (Adept)
@@ -879,8 +921,10 @@ const D2Sources: {
       3686538757, // Undercurrent
       3832743906, // Hung Jury SR4
       3915197957, // Wendigo GL3 (Adept)
+      3922217119, // Lotus-Eater
       3997086838, // Rake Angle (Adept)
       4074251943, // Hung Jury SR4 (Adept)
+      4077588826, // The Palindrome (Adept)
       4162642204, // The Militia's Birthright (Adept)
     ],
     sourceHashes: [
@@ -1054,19 +1098,39 @@ const D2Sources: {
       70083888, // Nation of Beasts
       424291879, // Age-Old Bond
       501329015, // Chattering Bone
+      601574723, // Adamantite (Adept)
+      615373993, // Eyes Unveiled
+      704410186, // Psychopomp (Adept)
+      768610585, // Watchful Eye
+      861521336, // Afterlight (Adept)
       947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
+      1834313033, // Afterlight
       1851777734, // Apex Predator
       2027598066, // Imperial Opulence
       2027598067, // Imperial Dress
+      2501377328, // Division (Adept)
       2557722678, // Midnight Smith
+      2671849376, // Refusal of the Call
+      2755584425, // Refusal of the Call (Adept)
+      2856225832, // Watchful Eye (Adept)
       2884596447, // The Supremacy
+      2987244302, // Adamantite
+      2992463569, // Division
+      3054597646, // Abyssal Edge (Adept)
       3388655311, // Tyranny of Heaven
+      3417731926, // Anamnesis
       3580904580, // Legend of Acrius
       3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
+      3840794631, // Psychopomp
+      3877448149, // Mirror Imago
       3885259140, // Transfiguration
+      3949253499, // Anamnesis (Adept)
       4103414242, // Divinity
+      4116546788, // Mirror Imago (Adept)
+      4173311704, // Eyes Unveiled (Adept)
+      4221591387, // Abyssal Edge
     ],
   },
   rasputin: {
@@ -1232,6 +1296,9 @@ const D2Sources: {
     enteredDCV: 20,
   },
   spireofthewatcher: {
+    itemHashes: [
+      32287609, // Boondoggle Mk. 55
+    ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
@@ -1266,6 +1333,7 @@ const D2Sources: {
       2788911997, // Vanguard Divide
       2788911998, // Vanguard Metallic
       2788911999, // Vanguard Veteran
+      2876244791, // The Palindrome
       2889501828, // The Slammer
       2932922810, // Pre Astyanax IV
       3001205424, // Ecliptic Distaff
@@ -1276,6 +1344,7 @@ const D2Sources: {
       3667553455, // BrayTech Osprey
       3686538757, // Undercurrent
       3832743906, // Hung Jury SR4
+      3922217119, // Lotus-Eater
       4060882458, // Balistraria Wrap (Ornament)
     ],
     sourceHashes: [

@@ -7,6 +7,8 @@ import {
   SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
   d2MissingIcon,
+  infusionCategoryHashToClass,
+  plugCategoryHashToClass,
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
@@ -27,6 +29,7 @@ import {
   DestinyItemResponse,
   DestinyItemSubType,
   DestinyItemTooltipNotification,
+  DestinyItemType,
   DestinyObjectiveProgress,
   DestinyProfileResponse,
   DestinyVendorSaleItemComponent,
@@ -434,17 +437,52 @@ export function makeItem(
     }
   }
 
-  // we cannot trust the claimed class of redacted items. they all say Titan
-  const classType = itemDef.redacted
-    ? normalBucket.inArmor
+  let classType = itemDef.classType;
+
+  // We cannot trust the defined class of redacted items,
+  // and adjust their claimed classType based on their status in the user's inventory.
+  if (itemDef.redacted) {
+    classType = normalBucket.inArmor
       ? itemInstanceData?.isEquipped && owner
         ? // equipped armor gets marked as that character's class
           owner.classType
-        : // unequipped armor gets marked "no class"
+        : // unequipped armor gets marked "no class" (assume/allow nothing)
           DestinyClass.Classified
-      : // other items are marked "any class"
-        DestinyClass.Unknown
-    : itemDef.classType;
+      : // other items are marked "any class"/unknown
+        DestinyClass.Unknown;
+  } else if (itemDef.classType === DestinyClass.Unknown) {
+    // This whole elseif can be removed once Bungie addresses https://github.com/Bungie-net/api/issues/1937 and restores item class information.
+    // However, the heuristics are strict, and this only adjusts Unknown armor, so there's no rush to remove it. We also need to re-enable the
+    // test in loadout-drawer-reducer.test.ts.
+    if (
+      itemDef.itemType === DestinyItemType.Armor ||
+      // Festival masks are head armor in traits but not types.
+      (itemDef.itemType === DestinyItemType.None &&
+        itemDef.traitHashes?.includes(TraitHashes.ItemArmorHead))
+    ) {
+      // This identifies most armors (90%+) by infusion category.
+      classType =
+        infusionCategoryHashToClass[itemDef.quality!.infusionCategoryHash] ?? DestinyClass.Unknown;
+
+      // This identifies the remaining armors by what class' armor they can act as an ornament for.
+      if (classType === DestinyClass.Unknown) {
+        // If this item has a plug, it can be an ornament. If not, find a visually matching ornament item.
+        const plugCheckItem = itemDef.plug
+          ? itemDef
+          : Object.values(defs.InventoryItem.getAll()).find(
+              (i) => i.plug && i.displayProperties.icon === itemDef.displayProperties.icon,
+            );
+
+        if (plugCheckItem) {
+          classType =
+            plugCategoryHashToClass[plugCheckItem.plug!.plugCategoryHash] ?? DestinyClass.Unknown;
+        }
+      }
+    } else if (itemDef.itemType === DestinyItemType.Subclass && owner) {
+      // Obviously a subclass is compatible with the Guardian holding it.
+      classType = owner.classType;
+    }
+  }
 
   const createdItem: DimItem = {
     owner: owner?.id || 'unknown',
@@ -486,7 +524,7 @@ export function makeItem(
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
     classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(defs)(itemDef.classType),
+    classTypeNameLocalized: getClassTypeNameLocalized(defs)(classType),
     element,
     energy: itemInstanceData.energy ?? null,
     lockable: normalBucket.hash !== BucketHashes.Finishers ? item.lockable : true,
