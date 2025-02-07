@@ -4,7 +4,7 @@ import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import React, { useContext } from 'react';
+import React, { use } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
@@ -24,8 +24,8 @@ export default function VendorItemComponent({
   owned: boolean;
   characterId?: string;
 }) {
-  const showVendor = useContext(SingleVendorSheetContext);
   if (item.displayTile) {
+    const showVendor = use(SingleVendorSheetContext);
     return (
       <div className={styles.vendorItem}>
         <a onClick={() => showVendor?.({ characterId, vendorHash: item.previewVendorHash })}>
