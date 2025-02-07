@@ -107,7 +107,6 @@ export default function ModAssignmentDrawer({
 
   // TODO: button to apply mods
   // TODO: consider existing mods in assignment
-
   return (
     <>
       <Sheet
@@ -127,10 +126,10 @@ export default function ModAssignmentDrawer({
                       <EnergyIncrementsWithPresstip
                         energy={energy}
                         wrapperClass={styles.energyMeter}
+                        item={item}
                       />
                     )}
                   </div>
-
                   <Sockets
                     item={item}
                     lockedMods={itemModAssignments[item.id]}

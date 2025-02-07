@@ -80,3 +80,13 @@
     }
   }
 }
+
+.costs {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+
+  .cost {
+    font-size: 12px !important;
+  }
+}

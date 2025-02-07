@@ -1,7 +1,11 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { getEnergyUpgradeHashes, sumModCosts } from 'app/inventory/store/energy';
 import { EnergySwap } from 'app/loadout-builder/generated-sets/GeneratedSetItem';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import { compareBy } from 'app/utils/comparators';
+import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import styles from './EnergyIncrements.m.scss';
 import { PressTip } from './PressTip';
@@ -66,15 +70,28 @@ export function EnergyMeterIncrements({
 export function EnergyIncrementsWithPresstip({
   energy,
   wrapperClass,
+  item,
 }: {
   energy: {
     energyCapacity: number;
     energyUsed: number;
   };
   wrapperClass?: string | undefined;
+  item: DimItem;
 }) {
   const { energyCapacity, energyUsed } = energy;
   const energyUnused = Math.max(energyCapacity - energyUsed, 0);
+
+  const defs = useD2Definitions()!;
+  if (!item.energy) {
+    return null;
+  }
+
+  const energyModHashes = getEnergyUpgradeHashes(item, energyUsed || 0);
+  const costs = sumModCosts(
+    defs,
+    energyModHashes.map((h) => defs.InventoryItem.get(h)),
+  ).sort(compareBy((c) => c.quantity));
 
   return (
     <PressTip
@@ -91,6 +108,13 @@ export function EnergyIncrementsWithPresstip({
               {t('EnergyMeter.UpgradeNeeded', energy)}
             </>
           )}
+          <hr />
+          <div className={styles.costs}>
+            <span>{t('Loadouts.ModPlacement.UpgradeCosts')}</span>
+            {costs.map((cost) => (
+              <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
+            ))}
+          </div>
         </>
       }
       className={wrapperClass}
