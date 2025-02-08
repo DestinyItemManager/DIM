@@ -1110,7 +1110,7 @@
     "PointsUsed_plural": "{{count}} очков использовано",
     "PowerBonusHeader": "+{{powerBonus}} Сила Наград",
     "PowerBonusHeaderUndefined": "Другие награды",
-    "Progress": "Чек-Лист",
+    "Progress": "Прогресс",
     "QueryFilteredTrackedTriumphs": "Нет Отслеживаемых триумфов удовлетворяющих условиям поиска",
     "QuestExpired": "Просрочен",
     "QuestExpires": "Устареет через:",

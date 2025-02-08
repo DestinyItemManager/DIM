@@ -1336,7 +1336,7 @@
     "MenuTitle": "同步和备份",
     "ProfileErrorBody": "与 DIM 同步通信时出错。可能无法显示你最新的设置、标签、配装和搜索。你的数据仍在我们的服务器上，而我们会在能重新连接时保存你的本地更改。我们会在 DIM 开启时自动重试。",
     "ProfileErrorTitle": "DIM 同步下载错误",
-    "RefreshDimSync": "Reload remote data from DIM Sync",
+    "RefreshDimSync": "从 DIM 同步服务重载远程数据",
     "UpdateErrorBody": "向 DIM 同步保存你的数据时出了点问题。我们会在 DIM 开启时自动重试。",
     "UpdateErrorTitle": "DIM同步保存错误",
     "UpdateInvalid": "未能将数据保存到 DIM 同步",
