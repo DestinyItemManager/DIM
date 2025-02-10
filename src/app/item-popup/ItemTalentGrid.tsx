@@ -1,3 +1,4 @@
+import { percent } from 'app/shell/formatters';
 import { maxOf } from 'app/utils/collections';
 import clsx from 'clsx';
 import { memo } from 'react';
@@ -82,7 +83,7 @@ export default memo(function ItemTalentGrid({
                 transform="rotate(-90)"
                 className="talent-node-xp"
                 strokeWidth={node.xp ? 2 : 0}
-                strokeDasharray={`${(100 * node.xp) / node.xpRequired} 100`}
+                strokeDasharray={`${percent(node.xp / node.xpRequired)} 100`}
               />
               <image
                 className="talent-node-img"
