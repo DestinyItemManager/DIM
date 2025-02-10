@@ -39,8 +39,9 @@ export function getItemImageStyles(item: DimItem, className?: string) {
       (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram;
+  const isBounty = Boolean(!item.primaryStat && item.objectives);
   const itemImageStyles = clsx('item-img', className, {
-    [styles.complete]: item.complete || isCapped,
+    [styles.complete]: (isBounty && item.complete) || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
