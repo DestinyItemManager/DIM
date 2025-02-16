@@ -9,7 +9,7 @@ import { ThunkResult } from 'app/store/types';
 import { errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
 import { once } from 'es-toolkit';
-import { loadWishLists, touchWishLists } from './actions';
+import { clearWishLists, loadWishLists, touchWishLists } from './actions';
 import type { WishListsState } from './reducer';
 import { wishListsSelector } from './selectors';
 import { WishListAndInfo } from './types';
@@ -39,7 +39,7 @@ export function fetchWishList(newWishlistSource?: string, manualRefresh?: boolea
 
     // a blank source was submitted, indicating an intention to clear the wishlist
     if (newWishlistSource === '' && newWishlistSource !== existingWishListSource) {
-      dispatch(setSettingAction('wishListSource', newWishlistSource));
+      dispatch(clearWishLists());
       return;
     }
 
