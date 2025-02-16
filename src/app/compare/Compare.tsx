@@ -54,16 +54,8 @@ export interface StatInfo {
    * Compare and can be deprecated when we stop using "stats" for power and
    * energy.
    */
-  getStat: StatGetter;
+  getStat: (item: DimItem) => DimStat | undefined;
 }
-
-/** a DimStat with, at minimum, a statHash */
-export interface MinimalStat {
-  statHash: number;
-  value: number;
-  base?: number;
-}
-type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 // TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
@@ -368,7 +360,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       makeFakeStat(
         firstComparison.primaryStat.statHash,
         firstComparison.primaryStatDisplayProperties!,
-        (item: DimItem) => item.primaryStat || undefined,
+        (item) => item.primaryStat?.value,
       ),
     );
   }
@@ -378,12 +370,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       makeFakeStat(
         StatHashes.AnyEnergyTypeCost,
         t('EnergyMeter.Energy'),
-        (item: DimItem) =>
-          (item.energy && {
-            statHash: item.energy.energyType,
-            value: item.energy.energyCapacity,
-          }) ||
-          undefined,
+        (item) => item.energy?.energyCapacity,
         10,
         false,
       ),
@@ -440,7 +427,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
 function makeFakeStat(
   id: StatHashes,
   displayProperties: DestinyDisplayPropertiesDefinition | string,
-  getStat: StatGetter,
+  getStat: (item: DimItem) => number | undefined,
   statMaximumValue = 0,
   bar = false,
   lowerBetter = false,
@@ -448,22 +435,26 @@ function makeFakeStat(
   if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
   }
+  const stat: DimStat = {
+    statHash: id,
+    displayProperties,
+    smallerIsBetter: lowerBetter,
+    bar,
+    maximumValue: statMaximumValue,
+    sort: 0,
+    value: 0,
+    base: 0,
+    investmentValue: 0,
+    additive: false,
+  };
   return {
-    stat: {
-      statHash: id,
-      displayProperties,
-      smallerIsBetter: lowerBetter,
-      bar,
-      maximumValue: statMaximumValue,
-      sort: 0,
-      value: 0,
-      base: 0,
-      investmentValue: 0,
-      additive: false,
-    },
+    stat,
     min: Number.MAX_SAFE_INTEGER,
     max: 0,
     enabled: false,
-    getStat,
+    getStat: (item: DimItem) => {
+      const value = getStat(item);
+      return value !== undefined ? { ...stat, value } : undefined;
+    },
   };
 }

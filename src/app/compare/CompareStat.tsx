@@ -4,8 +4,8 @@ import { t } from 'app/i18next-t';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getColor, percent } from 'app/shell/formatters';
 import { StatHashes } from 'data/d2/generated-enums';
-import { D1Stat, DimItem } from '../inventory/item-types';
-import { MinimalStat, StatInfo } from './Compare';
+import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
+import { StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 
 export default function CompareStat({
@@ -61,14 +61,14 @@ export default function CompareStat({
 
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
-  stat: (MinimalStat & { qualityPercentage?: { min: number } }) | undefined,
+  stat: DimStat | D1Stat | undefined,
   statInfo: StatInfo,
   compareBaseStats = false,
 ) {
   if (!stat) {
     return -1;
   }
-  if (stat.qualityPercentage) {
+  if ('qualityPercentage' in stat && stat.qualityPercentage) {
     return stat.qualityPercentage.min;
   }
 
