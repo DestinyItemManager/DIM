@@ -11,7 +11,6 @@ import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organiz
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor } from 'app/shell/formatters';
-import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
@@ -198,8 +197,7 @@ export function getColumns(
       c({
         id: 'power',
         csv: destinyVersion === 2 ? 'Power' : 'Light',
-        header: <AppIcon icon={powerIndicatorIcon} />,
-        dropdownLabel: t('Organizer.Columns.Power'),
+        header: t('Organizer.Columns.Power'),
         value: (item) => item.power,
         defaultSort: SortDirection.DESC,
         filter: (value) => `power:>=${value}`,

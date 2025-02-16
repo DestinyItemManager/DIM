@@ -345,28 +345,6 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
   compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
   const stats: StatInfo[] = [];
 
-  if (firstComparison.primaryStat) {
-    stats.push(
-      makeFakeStat(
-        firstComparison.primaryStat.statHash,
-        firstComparison.primaryStatDisplayProperties!,
-        (item) => (item.primaryStat ? { value: item.primaryStat.value } : undefined),
-      ),
-    );
-  }
-
-  if (firstComparison.destinyVersion === 2 && firstComparison.bucket.inArmor) {
-    stats.push(
-      makeFakeStat(
-        StatHashes.AnyEnergyTypeCost,
-        t('EnergyMeter.Energy'),
-        (item) => (item.energy ? { value: item.energy.energyCapacity } : undefined),
-        10,
-        false,
-      ),
-    );
-  }
-
   const statsByHash: { [statHash: string]: StatInfo } = {};
   for (const item of comparisonItems) {
     if (item.stats) {

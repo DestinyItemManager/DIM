@@ -1,4 +1,3 @@
-import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t, tl } from 'app/i18next-t';
@@ -8,7 +7,6 @@ import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { statLabels } from 'app/organizer/Columns';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
@@ -16,7 +14,6 @@ import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
-import { StatHashes } from 'data/d2/generated-enums';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -33,7 +30,6 @@ import {
 } from '../shell/icons';
 import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss'; // eslint-disable-line css-modules/no-unused-class
-import CompareStat from './CompareStat';
 
 const possibleStyles = styles as unknown as StringLookup<string>;
 
@@ -98,7 +94,7 @@ export default memo(function CompareItem({
         </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable],
+    [item, pullItem, remove, itemNotes],
   );
 
   const missingSocketsMessage =
@@ -127,15 +123,6 @@ export default memo(function CompareItem({
         onRowClick={handleRowClick}
         setHighlight={setHighlight}
       />
-      {stats.map((stat) => (
-        <CompareStat
-          key={stat.stat.statHash}
-          item={item}
-          stat={stat}
-          setHighlight={setHighlight}
-          compareBaseStats={compareBaseStats}
-        />
-      ))}
       {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
       {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t(missingSocketsMessage)}</div>
@@ -177,7 +164,7 @@ function TableRow({
     row: Row,
     column: ColumnDefinition,
   ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
-  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  setHighlight: (value?: string | number) => void;
 }) {
   // TODO: reintroduce styles per column?
 
@@ -206,6 +193,7 @@ function TableRow({
   );
 }
 
+/** The row headers that appear on the left of the compare window */
 export function CompareHeaders({
   allStats,
   columnSorts,
@@ -256,41 +244,6 @@ export function CompareHeaders({
               <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
             )}
             {column.id === highlight && <div className={styles.highlightBar} />}
-          </div>
-        );
-      })}
-      {allStats.map((s) => {
-        const columnSort = columnSorts.find((c) => c.columnId === s.stat.statHash.toString());
-        return (
-          <div
-            key={s.stat.statHash}
-            className={clsx(
-              styles.statLabel,
-              columnSort
-                ? columnSort.sort === SortDirection.ASC
-                  ? styles.sortDesc
-                  : styles.sortAsc
-                : undefined,
-            )}
-            onPointerEnter={() => setHighlight(s.stat.statHash)}
-            onClick={toggleColumnSort(
-              s.stat.statHash.toString(),
-              isShiftHeld,
-              s.stat.smallerIsBetter ? SortDirection.DESC : SortDirection.ASC,
-            )}
-          >
-            {s.stat.displayProperties.hasIcon && (
-              <span title={s.stat.displayProperties.name}>
-                <BungieImage src={s.stat.displayProperties.icon} />
-              </span>
-            )}
-            {s.stat.statHash in statLabels
-              ? t(statLabels[s.stat.statHash as StatHashes]!)
-              : s.stat.displayProperties.name}{' '}
-            {columnSort && (
-              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
-            )}
-            {s.stat.statHash === highlight && <div className={styles.highlightBar} />}
           </div>
         );
       })}
