@@ -7,6 +7,8 @@ import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { MemoRow } from 'app/organizer/ItemTable';
+import { ColumnDefinition, Row } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
@@ -26,6 +28,8 @@ import CompareStat from './CompareStat';
 
 export default memo(function CompareItem({
   item,
+  row,
+  filteredColumns,
   stats,
   compareBaseStats,
   itemClick,
@@ -35,6 +39,8 @@ export default memo(function CompareItem({
   isInitialItem,
 }: {
   item: DimItem;
+  row: Row;
+  filteredColumns: ColumnDefinition[];
   stats: StatInfo[];
   compareBaseStats?: boolean;
   itemClick: (item: DimItem) => void;
@@ -111,6 +117,11 @@ export default memo(function CompareItem({
           compareBaseStats={compareBaseStats}
         />
       ))}
+      <MemoRow
+        row={row}
+        filteredColumns={filteredColumns}
+        onRowClick={(row, column) => console.log('clicked', row, column)}
+      />
       {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
       {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t(missingSocketsMessage)}</div>

@@ -78,7 +78,7 @@ const downloadButtonSettings = [
   { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
 ];
 
-const MemoRow = memo(TableRow);
+export const MemoRow = memo(TableRow);
 
 const EXPAND_INCREMENT = 20;
 
@@ -550,7 +550,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 /**
  * Build a list of rows with materialized values.
  */
-function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
+export function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
   const unsortedRows: Row[] = items.map((item) => ({
     item,
     values: filteredColumns.reduce<Row['values']>((memo, col) => {
@@ -564,7 +564,7 @@ function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
 /**
  * Sort the rows based on the selected columns.
  */
-function sortRows(
+export function sortRows(
   unsortedRows: Row[],
   columnSorts: ColumnSort[],
   filteredColumns: ColumnDefinition[],
@@ -607,7 +607,7 @@ function TableRow({
 }) {
   return (
     <>
-      {filteredColumns.map((column: ColumnDefinition) => (
+      {filteredColumns.map((column) => (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}

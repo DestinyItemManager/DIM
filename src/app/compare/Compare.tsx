@@ -1,3 +1,4 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
@@ -13,6 +14,8 @@ import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { statLabels } from 'app/organizer/Columns';
+import { buildRows, sortRows } from 'app/organizer/ItemTable';
+import { ColumnDefinition, Row } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
@@ -32,6 +35,7 @@ import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket, DimStat } from '../inventory/item-types';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 import styles from './Compare.m.scss';
+import { getColumns } from './CompareColumns';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
@@ -157,10 +161,41 @@ export default function Compare({ session }: { session: CompareSession }) {
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
 
+  /* ItemTable incursion */
+
+  const columns: ColumnDefinition[] = useMemo(
+    () =>
+      getColumns(
+        'weapon',
+        allStats.map((s) => s.stat),
+        itemCreationContext.customStats,
+        exampleItem.destinyVersion,
+      ),
+    [allStats, exampleItem.destinyVersion, itemCreationContext.customStats],
+  );
+
+  // TODO: Filter to enabled columns
+  const filteredColumns = columns;
+
+  // process items into Rows
+  const unsortedRows: Row[] = useMemo(
+    () => buildRows(compareItems, filteredColumns),
+    [filteredColumns, compareItems],
+  );
+  const language = useSelector(languageSelector);
+  const rows = useMemo(
+    () => sortRows(unsortedRows, columnSorts, filteredColumns, language),
+    [unsortedRows, filteredColumns, columnSorts, language],
+  );
+
+  /* End ItemTable incursion */
+
   const items = useMemo(
     () => (
       <CompareItems
         items={sortedComparisonItems}
+        rows={rows}
+        filteredColumns={filteredColumns}
         allStats={allStats}
         remove={remove}
         setHighlight={setHighlight}
@@ -171,10 +206,12 @@ export default function Compare({ session }: { session: CompareSession }) {
     ),
     [
       sortedComparisonItems,
+      rows,
+      filteredColumns,
       allStats,
-      doCompareBaseStats,
-      onPlugClicked,
       remove,
+      onPlugClicked,
+      doCompareBaseStats,
       session.initialItemId,
     ],
   );
@@ -259,6 +296,8 @@ export default function Compare({ session }: { session: CompareSession }) {
 
 function CompareItems({
   items,
+  rows,
+  filteredColumns,
   doCompareBaseStats,
   allStats,
   remove,
@@ -267,6 +306,8 @@ function CompareItems({
   initialItemId,
 }: {
   initialItemId: string | undefined;
+  rows: Row[];
+  filteredColumns: ColumnDefinition[];
   doCompareBaseStats: boolean;
   items: DimItem[];
   allStats: StatInfo[];
@@ -279,6 +320,8 @@ function CompareItems({
       {items.map((item) => (
         <CompareItem
           item={item}
+          row={rows.find((r) => r.item === item)!}
+          filteredColumns={filteredColumns}
           key={item.id}
           stats={allStats}
           itemClick={locateItem}
