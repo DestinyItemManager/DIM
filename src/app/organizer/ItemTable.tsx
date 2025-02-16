@@ -43,7 +43,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { buildStatInfo, getColumnSelectionId, getColumns } from './Columns';
+import { buildStatInfo, getColumnSelectionId } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import ItemActions, { TagCommandInfo } from './ItemActions';
 
@@ -189,7 +189,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 
   const columns: ColumnDefinition[] = useMemo(
     () =>
-      getColumns(
+      getColpumns(
         'organizer',
         itemType,
         statHashes,

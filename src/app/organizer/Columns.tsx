@@ -181,14 +181,14 @@ export function getColumns(
 
       return {
         id: `stat${statHash}`,
-        header: statInfo.displayProperties.hasIcon ? (
-          <span title={statInfo.displayProperties.name}>
-            <BungieImage src={statInfo.displayProperties.icon} />
+        header: statInfo.stat.displayProperties.hasIcon ? (
+          <span title={statInfo.stat.displayProperties.name}>
+            <BungieImage src={statInfo.stat.displayProperties.icon} />
           </span>
         ) : statLabel ? (
           t(statLabel)
         ) : (
-          statInfo.displayProperties.name
+          statInfo.stat.displayProperties.name
         ),
         statHash,
         columnGroup: statsGroup,
@@ -206,7 +206,7 @@ export function getColumns(
           }
           return <ItemStatValue stat={stat} item={item} />;
         },
-        defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
+        defaultSort: statInfo.stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
         filter: (value) => {
           const statName = invert(statHashByName)[statHash];
           return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
@@ -269,7 +269,7 @@ export function getColumns(
               id: `quality_${statHash}`,
               columnGroup: statQualityGroup,
               header: t('Organizer.Columns.StatQualityStat', {
-                stat: statInfo.displayProperties.name,
+                stat: statInfo.stat.displayProperties.name,
               }),
               value: (item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
@@ -1133,14 +1133,10 @@ export function buildStatInfo(items: DimItem[]): {
           statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
         } else {
           statHashes[stat.statHash] = {
-            id: stat.statHash,
-            displayProperties: stat.displayProperties,
+            stat,
             min: stat.value,
             max: stat.value,
             enabled: true,
-            lowerBetter: stat.smallerIsBetter,
-            statMaximumValue: stat.maximumValue,
-            bar: stat.bar,
             getStat(item) {
               return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
             },
