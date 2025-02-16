@@ -367,22 +367,17 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
   for (const item of comparisonItems) {
     if (item.stats) {
       for (const stat of item.stats) {
+        const val = (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0;
         let statInfo = statsByHash[stat.statHash];
         if (statInfo) {
-          statInfo.min = Math.min(
-            statInfo.min,
-            (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0,
-          );
-          statInfo.max = Math.max(
-            statInfo.max,
-            (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0,
-          );
+          statInfo.min = Math.min(statInfo.min, val);
+          statInfo.max = Math.max(statInfo.max, val);
           statInfo.enabled = statInfo.min !== statInfo.max;
         } else {
           statInfo = {
             stat,
-            min: Number.MAX_SAFE_INTEGER,
-            max: 0,
+            min: val,
+            max: val,
             enabled: false,
             getStat: (item: DimItem) => item.stats?.find((s) => s.statHash === stat.statHash),
           };
