@@ -92,7 +92,8 @@
 }
 
 .gildingTriumph {
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       to left bottom,
       transparent 25%,
       color.scale(#a1a2a2, $alpha: -80%) 1px,
@@ -122,7 +123,8 @@
 
 .redeemed.gildingTriumph {
   border-color: $gilded-triumph-border-color;
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       to left bottom,
       transparent 25%,
       color.scale($gilded-triumph-border-color, $alpha: -80%) 1px,
