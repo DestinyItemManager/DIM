@@ -5,7 +5,7 @@ import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getColor, percent } from 'app/shell/formatters';
 import { StatHashes } from 'data/d2/generated-enums';
 import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
-import { StatInfo } from './Compare';
+import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 
 export default function CompareStat({
@@ -39,7 +39,7 @@ export default function CompareStat({
         <EnergyCostIcon />
       )}
       {itemStat?.value !== undefined ? (
-        itemStat.statHash === StatHashes.RecoilDirection ? (
+        statInfo.stat.statHash === StatHashes.RecoilDirection ? (
           <span className={styles.recoil}>
             <span>{statValue}</span>
             <RecoilStat value={statValue} />
@@ -61,7 +61,7 @@ export default function CompareStat({
 
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
-  stat: DimStat | D1Stat | undefined,
+  stat: DimStat | D1Stat | MinimalStat | undefined,
   statInfo: StatInfo,
   compareBaseStats = false,
 ) {

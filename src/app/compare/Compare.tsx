@@ -54,8 +54,13 @@ export interface StatInfo {
    * Compare and can be deprecated when we stop using "stats" for power and
    * energy.
    */
-  getStat: (item: DimItem) => DimStat | undefined;
+  getStat: StatGetter;
 }
+export interface MinimalStat {
+  value: number;
+  base?: number;
+}
+type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 // TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
@@ -333,7 +338,7 @@ function sortCompareItemsComparator(
             return -1;
           }
           const statValue = compareBaseStats ? (stat.base ?? stat.value) : stat.value;
-          if (stat.statHash === StatHashes.RecoilDirection) {
+          if (sortStat.stat.statHash === StatHashes.RecoilDirection) {
             return recoilValue(stat.value);
           }
           return statValue;
@@ -360,7 +365,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       makeFakeStat(
         firstComparison.primaryStat.statHash,
         firstComparison.primaryStatDisplayProperties!,
-        (item) => item.primaryStat?.value,
+        (item) => (item.primaryStat ? { value: item.primaryStat.value } : undefined),
       ),
     );
   }
@@ -370,7 +375,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       makeFakeStat(
         StatHashes.AnyEnergyTypeCost,
         t('EnergyMeter.Energy'),
-        (item) => item.energy?.energyCapacity,
+        (item) => (item.energy ? { value: item.energy.energyCapacity } : undefined),
         10,
         false,
       ),
@@ -427,34 +432,30 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
 function makeFakeStat(
   id: StatHashes,
   displayProperties: DestinyDisplayPropertiesDefinition | string,
-  getStat: (item: DimItem) => number | undefined,
-  statMaximumValue = 0,
+  getStat: StatGetter,
+  maximumValue = 0,
   bar = false,
-  lowerBetter = false,
+  smallerIsBetter = false,
 ): StatInfo {
   if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
   }
-  const stat: DimStat = {
-    statHash: id,
-    displayProperties,
-    smallerIsBetter: lowerBetter,
-    bar,
-    maximumValue: statMaximumValue,
-    sort: 0,
-    value: 0,
-    base: 0,
-    investmentValue: 0,
-    additive: false,
-  };
   return {
-    stat,
+    stat: {
+      statHash: id,
+      displayProperties,
+      smallerIsBetter,
+      bar,
+      maximumValue,
+      sort: 0,
+      value: 0,
+      base: 0,
+      investmentValue: 0,
+      additive: false,
+    },
     min: Number.MAX_SAFE_INTEGER,
     max: 0,
     enabled: false,
-    getStat: (item: DimItem) => {
-      const value = getStat(item);
-      return value !== undefined ? { ...stat, value } : undefined;
-    },
+    getStat,
   };
 }

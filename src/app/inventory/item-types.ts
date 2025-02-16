@@ -178,7 +178,6 @@ export interface DimItem {
   /**
    * The primary stat (Attack, Defense, Speed) of the item. Useful for display and for some weirder stat types. Prefer using "power" if what you want is power.
    */
-  // TODO: Swap for a DimStat?
   primaryStat: DestinyStat | null;
   /**
    * Display info for the primary stat (Attack, Defense, Speed, etc).
