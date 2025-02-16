@@ -1,12 +1,11 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { StatInfo } from 'app/compare/Compare';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import useBulkNote from 'app/dim-ui/useBulkNote';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { t, tl } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimStat } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   createItemContextSelector,
@@ -33,7 +32,7 @@ import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'ap
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyArray } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { LookupTable, StringLookup } from 'app/utils/util-types';
 import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/selectors';
@@ -177,13 +176,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   );
 
   // Build a list of all the stats relevant to this set of items
-  const statHashes = useMemo(
-    () =>
-      terminal
-        ? buildStatInfo(items)
-        : emptyObject<{
-            [statHash: number]: StatInfo;
-          }>(),
+  const stats = useMemo(
+    () => (terminal ? buildStatInfo(items) : emptyArray<DimStat>()),
     [terminal, items],
   );
 
@@ -192,7 +186,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       getColumns(
         'organizer',
         itemType,
-        statHashes,
+        stats,
         getTag,
         getNotes,
         wishList,
@@ -206,7 +200,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     [
       wishList,
       hasWishList,
-      statHashes,
+      stats,
       itemType,
       getTag,
       getNotes,

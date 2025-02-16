@@ -1,6 +1,5 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { StoreIcon } from 'app/character-tile/StoreIcon';
-import { StatInfo } from 'app/compare/Compare';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
@@ -11,7 +10,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
 import { getEvent, getSeason } from 'app/inventory/store/season';
@@ -139,9 +138,7 @@ const perkStringFilter = (value: string | undefined) => {
 export function getColumns(
   useCase: 'organizer' | 'spreadsheet',
   itemsType: 'weapon' | 'armor' | 'ghost',
-  statHashes: {
-    [statHash: number]: StatInfo;
-  },
+  stats: DimStat[],
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
@@ -169,57 +166,54 @@ export function getColumns(
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
   type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
-  const statColumns: ColumnWithStat[] = filterMap(
-    Object.entries(statHashes),
-    ([statHashStr, statInfo]): ColumnWithStat | undefined => {
-      const statHash = parseInt(statHashStr, 10) as StatHashes;
-      if (customStatHashes.includes(statHash)) {
-        // Exclude custom total, it has its own column
-        return undefined;
-      }
-      const statLabel = statLabels[statHash];
+  const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
+    const statHash = stat.statHash as StatHashes;
+    if (customStatHashes.includes(statHash)) {
+      // Exclude custom total, it has its own column
+      return undefined;
+    }
+    const statLabel = statLabels[statHash];
 
-      return {
-        id: `stat${statHash}`,
-        header: statInfo.stat.displayProperties.hasIcon ? (
-          <span title={statInfo.stat.displayProperties.name}>
-            <BungieImage src={statInfo.stat.displayProperties.icon} />
-          </span>
-        ) : statLabel ? (
-          t(statLabel)
-        ) : (
-          statInfo.stat.displayProperties.name
-        ),
-        statHash,
-        columnGroup: statsGroup,
-        value: (item: DimItem) => {
-          const stat = item.stats?.find((s) => s.statHash === statHash);
-          if (stat?.statHash === StatHashes.RecoilDirection) {
-            return recoilValue(stat.value);
-          }
-          return stat?.value;
-        },
-        cell: (_val, item: DimItem) => {
-          const stat = item.stats?.find((s) => s.statHash === statHash);
-          if (!stat) {
-            return null;
-          }
-          return <ItemStatValue stat={stat} item={item} />;
-        },
-        defaultSort: statInfo.stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
-        filter: (value) => {
-          const statName = invert(statHashByName)[statHash];
-          return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
-        },
-        csv: (_value, item) => {
-          // Re-find the stat instead of using the value passed in, because the
-          // value passed in can be different if it's Recoil.
-          const stat = item.stats?.find((s) => s.statHash === statHash);
-          return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
-        },
-      };
-    },
-  ).sort(compareBy((s) => getStatSortOrder(s.statHash)));
+    return {
+      id: `stat${statHash}`,
+      header: stat.displayProperties.hasIcon ? (
+        <span title={stat.displayProperties.name}>
+          <BungieImage src={stat.displayProperties.icon} />
+        </span>
+      ) : statLabel ? (
+        t(statLabel)
+      ) : (
+        stat.displayProperties.name
+      ),
+      statHash,
+      columnGroup: statsGroup,
+      value: (item: DimItem) => {
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        if (stat?.statHash === StatHashes.RecoilDirection) {
+          return recoilValue(stat.value);
+        }
+        return stat?.value;
+      },
+      cell: (_val, item: DimItem) => {
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        if (!stat) {
+          return null;
+        }
+        return <ItemStatValue stat={stat} item={item} />;
+      },
+      defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
+      filter: (value) => {
+        const statName = invert(statHashByName)[statHash];
+        return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+      },
+      csv: (_value, item) => {
+        // Re-find the stat instead of using the value passed in, because the
+        // value passed in can be different if it's Recoil.
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
+      },
+    };
+  }).sort(compareBy((s) => getStatSortOrder(s.statHash)));
 
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
@@ -261,15 +255,15 @@ export function getColumns(
 
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
-      ? Object.entries(statHashes)
-          .map(([statHashStr, statInfo]): ColumnWithStat => {
-            const statHash = parseInt(statHashStr, 10) as StatHashes;
+      ? stats
+          .map((stat): ColumnWithStat => {
+            const statHash = stat.statHash as StatHashes;
             return {
               statHash,
               id: `quality_${statHash}`,
               columnGroup: statQualityGroup,
               header: t('Organizer.Columns.StatQualityStat', {
-                stat: statInfo.stat.displayProperties.name,
+                stat: stat.displayProperties.name,
               }),
               value: (item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
@@ -1118,27 +1112,19 @@ function getIntrinsicSockets(item: DimItem) {
  * This builds stat infos for all the stats that are relevant to a particular category of items.
  * It will return the same result for the same category, since all items in a category share stats.
  */
-export function buildStatInfo(items: DimItem[]): {
-  [statHash: number]: StatInfo;
-} {
+export function buildStatInfo(items: DimItem[]): DimStat[] {
   const statHashes: {
-    [statHash: number]: StatInfo;
+    [statHash: number]: DimStat;
   } = {};
   for (const item of items) {
     if (item.stats) {
       for (const stat of item.stats) {
-        const { statHash, value } = stat;
-        statHashes[statHash] ??= {
-          stat,
-          min: value,
-          max: value,
-          enabled: true,
-          getStat: (item) => item.stats?.find((s) => s.statHash === statHash),
-        };
+        // Just use the first item's stats as the source of truth.
+        statHashes[stat.statHash] ??= stat;
       }
     }
   }
-  return statHashes;
+  return Object.values(statHashes);
 }
 
 // ignore raid & calus sources in favor of more detailed sources
