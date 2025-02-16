@@ -93,7 +93,6 @@ export function fetchWishList(newWishlistSource?: string, manualRefresh?: boolea
           body: t('WishListRoll.ImportError', { url, error: errorMessage(result.reason) }),
         });
         errorLog(TAG, 'Unable to load wish list', url, result.reason);
-        return;
       } else if (result.status === 'fulfilled') {
         hasSuccess = true;
         wishLists.push([url, result.value]);
