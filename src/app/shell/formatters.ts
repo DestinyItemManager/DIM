@@ -16,21 +16,19 @@ export function percentWithSingleDecimal(val: number): string {
  * Given a value on (or outside) a 0-100 scale, returns a css color key and value for a react `style` attribute
  */
 export function getColor(value: number, property = 'background-color') {
-  let color = 0;
+  const hueGood = [75.48, 0.2381, 142.76];
+  const hueBad = [56.45, 0.2009, 26.56];
   if (value < 0) {
     return { [property]: 'white' };
-  } else if (value <= 85) {
-    color = 0;
-  } else if (value <= 90) {
-    color = 20;
-  } else if (value <= 95) {
-    color = 60;
-  } else if (value < 100) {
-    color = 120;
   } else if (value >= 100) {
-    color = 190;
+    return {
+      [property]: `hsl(190,65%,50%)`,
+    };
   }
+
+  const result = hueGood.map((_, i) => (hueGood[i] - hueBad[i]) * (value / 100) + hueBad[i]);
+
   return {
-    [property]: `hsla(${color},65%,50%, 1)`,
+    [property]: `oklch(${Math.min(result[0], 100)}% ${result[1]} ${result[2]})`,
   };
 }
