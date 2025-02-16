@@ -1,6 +1,6 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
 import { HashLookup } from 'app/utils/util-types';
-import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
+import { TierType } from 'bungie-api-ts/destiny2';
 
 import {
   BreakerTypeHashes,
@@ -318,45 +318,3 @@ export const enum ModsWithConditionalStats {
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"
-
-/** Most armor's Guardian Class can be determined by what it can be infused into */
-export const infusionCategoryHashToClass: Record<number, DestinyClass | undefined> = {
-  3301232851: DestinyClass.Hunter, // hunter head
-  3853570272: DestinyClass.Hunter, // hunter arms
-  1814923096: DestinyClass.Hunter, // hunter chest
-  2542340350: DestinyClass.Hunter, // hunter legs
-  821835303: DestinyClass.Hunter, // hunter class
-
-  3548569221: DestinyClass.Titan, // titan head
-  3647016162: DestinyClass.Titan, // titan arms
-  2858080654: DestinyClass.Titan, // titan chest
-  1462658336: DestinyClass.Titan, // titan legs
-  4159907129: DestinyClass.Titan, // titan class
-
-  1046741990: DestinyClass.Warlock, // warlock head
-  673964473: DestinyClass.Warlock, // warlock arms
-  3312934999: DestinyClass.Warlock, // warlock chest
-  3441938495: DestinyClass.Warlock, // warlock legs
-  2278270520: DestinyClass.Warlock, // warlock class
-};
-
-/** Most remaining armor's Guardian Class can be determined by its ornament category */
-export const plugCategoryHashToClass: Record<number, DestinyClass | undefined> = {
-  [PlugCategoryHashes.ArmorSkinsHunterLegs]: DestinyClass.Hunter,
-  [PlugCategoryHashes.ArmorSkinsHunterChest]: DestinyClass.Hunter,
-  [PlugCategoryHashes.ArmorSkinsHunterHead]: DestinyClass.Hunter,
-  [PlugCategoryHashes.ArmorSkinsHunterClass]: DestinyClass.Hunter,
-  [PlugCategoryHashes.ArmorSkinsHunterArms]: DestinyClass.Hunter,
-
-  [PlugCategoryHashes.ArmorSkinsWarlockHead]: DestinyClass.Warlock,
-  [PlugCategoryHashes.ArmorSkinsWarlockLegs]: DestinyClass.Warlock,
-  [PlugCategoryHashes.ArmorSkinsWarlockArms]: DestinyClass.Warlock,
-  [PlugCategoryHashes.ArmorSkinsWarlockChest]: DestinyClass.Warlock,
-  [PlugCategoryHashes.ArmorSkinsWarlockClass]: DestinyClass.Warlock,
-
-  [PlugCategoryHashes.ArmorSkinsTitanHead]: DestinyClass.Titan,
-  [PlugCategoryHashes.ArmorSkinsTitanChest]: DestinyClass.Titan,
-  [PlugCategoryHashes.ArmorSkinsTitanLegs]: DestinyClass.Titan,
-  [PlugCategoryHashes.ArmorSkinsTitanArms]: DestinyClass.Titan,
-  [PlugCategoryHashes.ArmorSkinsTitanClass]: DestinyClass.Titan,
-};
