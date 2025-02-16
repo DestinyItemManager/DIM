@@ -15,6 +15,7 @@ interface CssExports {
   'spacer': string;
   'statLabel': string;
   'statList': string;
+  'stats': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

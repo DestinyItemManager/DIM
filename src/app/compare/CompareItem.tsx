@@ -121,7 +121,12 @@ export default memo(function CompareItem({
       })}
     >
       {itemHeader}
-      <TableRow row={row} filteredColumns={filteredColumns} onRowClick={handleRowClick} />
+      <TableRow
+        row={row}
+        filteredColumns={filteredColumns}
+        onRowClick={handleRowClick}
+        setHighlight={setHighlight}
+      />
       {stats.map((stat) => (
         <CompareStat
           key={stat.stat.statHash}
@@ -164,6 +169,7 @@ function TableRow({
   row,
   filteredColumns,
   onRowClick,
+  setHighlight,
 }: {
   row: Row;
   filteredColumns: ColumnDefinition[];
@@ -171,25 +177,31 @@ function TableRow({
     row: Row,
     column: ColumnDefinition,
   ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
 }) {
   // TODO: reintroduce styles per column?
 
   return (
     <>
-      {filteredColumns.map((column) => (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-        <div
-          key={column.id}
-          onClick={onRowClick(row, column)}
-          className={clsx(possibleStyles[column.id], {
-            // [styles.hasFilter]: column.filter !== undefined,
-            // [styles.customstat]: column.id.startsWith('customstat_'),
-          })}
-          role="cell"
-        >
-          {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
-        </div>
-      ))}
+      {filteredColumns.map((column) => {
+        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+        return (
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+          <div
+            key={column.id}
+            onClick={onRowClick(row, column)}
+            className={clsx(possibleStyles[column.id], {
+              // [styles.hasFilter]: column.filter !== undefined,
+              // [styles.customstat]: column.id.startsWith('customstat_'),
+              [styles.stats]: isStatsColumn,
+            })}
+            role="cell"
+            onPointerEnter={() => setHighlight(column.id)}
+          >
+            {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
+          </div>
+        );
+      })}
     </>
   );
 }
@@ -215,12 +227,17 @@ export function CompareHeaders({
       <div className={styles.spacer} />
       {filteredColumns.map((column) => {
         const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
+        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
         return (
           <div
             key={column.id}
             className={clsx(
               styles.statLabel,
               possibleStyles[column.id],
+              // column.id.startsWith('customstat_') && styles.customstat,
+              {
+                [styles.stats]: isStatsColumn,
+              },
               columnSort
                 ? columnSort.sort === SortDirection.ASC
                   ? styles.sortDesc

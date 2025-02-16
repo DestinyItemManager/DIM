@@ -1,7 +1,7 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
-import { D1Item, DimItem, DimStat } from 'app/inventory/item-types';
+import { D1Item, DimItem } from 'app/inventory/item-types';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
@@ -16,6 +16,8 @@ import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
+import { StatInfo } from './Compare';
+import CompareStat from './CompareStat';
 
 /**
  * This function generates the columns.
@@ -23,8 +25,7 @@ import { StatHashes } from 'data/d2/generated-enums';
 // TODO: converge this with Columns.tsx
 export function getColumns(
   itemsType: 'weapon' | 'armor' | 'ghost',
-  /** A single example stat per stat hash among items */
-  stats: DimStat[],
+  statInfos: StatInfo[],
   customStatDefs: CustomStatDef[],
   destinyVersion: DestinyVersion,
 ): ColumnDefinition[] {
@@ -45,7 +46,8 @@ export function getColumns(
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
   type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
-  const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
+  const statColumns: ColumnWithStat[] = filterMap(statInfos, (s): ColumnWithStat | undefined => {
+    const stat = s.stat;
     const statHash = stat.statHash as StatHashes;
     if (customStatHashes.includes(statHash)) {
       // Exclude custom total, it has its own column
@@ -78,7 +80,7 @@ export function getColumns(
         if (!stat) {
           return null;
         }
-        return <ItemStatValue stat={stat} item={item} />;
+        return <CompareStat stat={s} item={item} />;
       },
       defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
       filter: (value) => {
@@ -132,8 +134,9 @@ export function getColumns(
 
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
-      ? stats
-          .map((stat): ColumnWithStat => {
+      ? statInfos
+          .map((s): ColumnWithStat => {
+            const stat = s.stat;
             const statHash = stat.statHash as StatHashes;
             return {
               statHash,

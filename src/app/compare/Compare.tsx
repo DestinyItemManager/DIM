@@ -161,12 +161,7 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   const columns: ColumnDefinition[] = useMemo(
     () =>
-      getColumns(
-        'weapon',
-        allStats.map((s) => s.stat),
-        itemCreationContext.customStats,
-        exampleItem.destinyVersion,
-      ),
+      getColumns('weapon', allStats, itemCreationContext.customStats, exampleItem.destinyVersion),
     [allStats, exampleItem.destinyVersion, itemCreationContext.customStats],
   );
 

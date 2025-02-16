@@ -17,7 +17,8 @@ export default function CompareStat({
   stat: StatInfo;
   compareBaseStats?: boolean;
   item: DimItem;
-  setHighlight: (value?: string | number) => void;
+  /** @deprecated */
+  setHighlight?: (value?: string | number) => void;
 }) {
   const { stat, getStat } = statInfo;
   const itemStat = getStat(item);
@@ -29,7 +30,11 @@ export default function CompareStat({
     : 0;
 
   return (
-    <div onPointerEnter={() => setHighlight(stat.statHash)} className={styles.stat} style={color}>
+    <div
+      onPointerEnter={setHighlight ? () => setHighlight(stat.statHash) : undefined}
+      className={styles.stat}
+      style={color}
+    >
       {statValue !== 0 && stat.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
           <span style={{ width: percent(statValue / stat.maximumValue) }} />

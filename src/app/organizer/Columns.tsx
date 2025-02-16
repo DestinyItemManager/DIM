@@ -138,6 +138,7 @@ const perkStringFilter = (value: string | undefined) => {
 export function getColumns(
   useCase: 'organizer' | 'spreadsheet',
   itemsType: 'weapon' | 'armor' | 'ghost',
+  /** A single example stat per stat hash among items */
   stats: DimStat[],
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,

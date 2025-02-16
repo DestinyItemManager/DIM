@@ -109,6 +109,8 @@ $content-cells: 5;
   }
 }
 
+// TODO: Make these styles more explicitly attached to the cells they're used for, such as by adding a classname to the cell definition
+
 .rating {
   white-space: nowrap;
 }
@@ -320,17 +322,6 @@ $modslotSize: 30px;
   text-align: center;
   grid-column: 1 / -1;
   padding: 2em !important;
-}
-
-// The numeric value of the stat
-.statValue {
-  text-align: right !important;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  > svg {
-    vertical-align: middle;
-    margin-left: 4px;
-  }
 }
 
 .shapedIcon {
