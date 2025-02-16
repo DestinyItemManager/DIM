@@ -1,3 +1,4 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t, tl } from 'app/i18next-t';
@@ -7,12 +8,15 @@ import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { ColumnDefinition, Row } from 'app/organizer/table-types';
+import { statLabels } from 'app/organizer/Columns';
+import { ColumnDefinition, ColumnSort, Row, SortDirection } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
-import { useSetCSSVarToHeight } from 'app/utils/hooks';
+import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
+import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -20,10 +24,18 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import { AppIcon, faArrowCircleDown, searchIcon, shoppingCart } from '../shell/icons';
+import {
+  AppIcon,
+  faAngleLeft,
+  faAngleRight,
+  faArrowCircleDown,
+  shoppingCart,
+} from '../shell/icons';
 import { StatInfo } from './Compare';
-import styles from './CompareItem.m.scss';
+import styles from './CompareItem.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import CompareStat from './CompareStat';
+
+const possibleStyles = styles as unknown as StringLookup<string>;
 
 export default memo(function CompareItem({
   item,
@@ -75,16 +87,6 @@ export default memo(function CompareItem({
           {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
           <button type="button" className={styles.close} onClick={() => remove(item)} />
         </div>
-        <div
-          className={clsx(styles.itemName, {
-            [styles.initialItem]: isInitialItem,
-            [styles.isFindable]: isFindable,
-          })}
-          onClick={() => itemClick(item)}
-        >
-          <span title={isInitialItem ? t('Compare.InitialItem') : undefined}>{item.name}</span>{' '}
-          {isFindable && <AppIcon icon={searchIcon} />}
-        </div>
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
@@ -104,9 +106,22 @@ export default memo(function CompareItem({
       ? tl('MovePopup.MissingSockets')
       : tl('MovePopup.LoadingSockets');
 
+  const handleRowClick = (row: Row, column: ColumnDefinition) => {
+    if (column.id === 'name' && isFindable) {
+      return () => itemClick(row.item);
+    }
+    return () => console.log('clicked', row, column);
+  };
+
   return (
-    <div className={styles.compareItem}>
+    <div
+      className={clsx(styles.compareItem, {
+        [styles.initialItem]: isInitialItem,
+        [styles.isFindable]: isFindable,
+      })}
+    >
       {itemHeader}
+      <TableRow row={row} filteredColumns={filteredColumns} onRowClick={handleRowClick} />
       {stats.map((stat) => (
         <CompareStat
           key={stat.stat.statHash}
@@ -116,11 +131,6 @@ export default memo(function CompareItem({
           compareBaseStats={compareBaseStats}
         />
       ))}
-      <TableRow
-        row={row}
-        filteredColumns={filteredColumns}
-        onRowClick={(row, column) => console.log('clicked', row, column)}
-      />
       {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
       {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t(missingSocketsMessage)}</div>
@@ -171,15 +181,102 @@ function TableRow({
         <div
           key={column.id}
           onClick={onRowClick(row, column)}
-          // className={clsx(possibleStyles[column.id], {
-          //   [styles.hasFilter]: column.filter !== undefined,
-          //   [styles.customstat]: column.id.startsWith('customstat_'),
-          // })}
+          className={clsx(possibleStyles[column.id], {
+            // [styles.hasFilter]: column.filter !== undefined,
+            // [styles.customstat]: column.id.startsWith('customstat_'),
+          })}
           role="cell"
         >
           {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
         </div>
       ))}
     </>
+  );
+}
+
+export function CompareHeaders({
+  allStats,
+  columnSorts,
+  highlight,
+  setHighlight,
+  toggleColumnSort,
+  filteredColumns,
+}: {
+  allStats: StatInfo[];
+  columnSorts: ColumnSort[];
+  highlight: string | number | undefined;
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  toggleColumnSort: (columnId: string, shiftHeld: boolean, sort?: SortDirection) => () => void;
+  filteredColumns: ColumnDefinition[];
+}) {
+  const isShiftHeld = useShiftHeld();
+  return (
+    <div className={styles.statList}>
+      <div className={styles.spacer} />
+      {filteredColumns.map((column) => {
+        const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
+        return (
+          <div
+            key={column.id}
+            className={clsx(
+              styles.statLabel,
+              possibleStyles[column.id],
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? styles.sortDesc
+                  : styles.sortAsc
+                : undefined,
+            )}
+            onPointerEnter={() => setHighlight(column.id)}
+            onClick={
+              column.noSort
+                ? undefined
+                : toggleColumnSort(column.id, isShiftHeld, column.defaultSort)
+            }
+          >
+            {column.header}{' '}
+            {columnSort && (
+              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
+            )}
+            {column.id === highlight && <div className={styles.highlightBar} />}
+          </div>
+        );
+      })}
+      {allStats.map((s) => {
+        const columnSort = columnSorts.find((c) => c.columnId === s.stat.statHash.toString());
+        return (
+          <div
+            key={s.stat.statHash}
+            className={clsx(
+              styles.statLabel,
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? styles.sortDesc
+                  : styles.sortAsc
+                : undefined,
+            )}
+            onPointerEnter={() => setHighlight(s.stat.statHash)}
+            onClick={toggleColumnSort(
+              s.stat.statHash.toString(),
+              isShiftHeld,
+              s.stat.smallerIsBetter ? SortDirection.DESC : SortDirection.ASC,
+            )}
+          >
+            {s.stat.displayProperties.hasIcon && (
+              <span title={s.stat.displayProperties.name}>
+                <BungieImage src={s.stat.displayProperties.icon} />
+              </span>
+            )}
+            {s.stat.statHash in statLabels
+              ? t(statLabels[s.stat.statHash as StatHashes]!)
+              : s.stat.displayProperties.name}{' '}
+            {columnSort && (
+              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
+            )}
+            {s.stat.statHash === highlight && <div className={styles.highlightBar} />}
+          </div>
+        );
+      })}
+    </div>
   );
 }

@@ -20,6 +20,7 @@ import { StatHashes } from 'data/d2/generated-enums';
 /**
  * This function generates the columns.
  */
+// TODO: converge this with Columns.tsx
 export function getColumns(
   itemsType: 'weapon' | 'armor' | 'ghost',
   /** A single example stat per stat hash among items */
@@ -181,6 +182,7 @@ export function getColumns(
     return columnDef;
   }
 
+  // TODO: maybe add destinyVersion / usecase to the ColumnDefinition type??
   const columns: ColumnDefinition[] = compact([
     c({
       id: 'name',

@@ -1,5 +1,4 @@
 import { languageSelector } from 'app/dim-api/selectors';
-import BungieImage from 'app/dim-ui/BungieImage';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
@@ -13,19 +12,16 @@ import {
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { statLabels } from 'app/organizer/Columns';
 import { buildRows, sortRows } from 'app/organizer/ItemTable';
 import { ColumnDefinition, Row } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
-import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
+import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
-import { useShiftHeld } from 'app/utils/hooks';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -36,7 +32,7 @@ import { DimItem, DimSocket, DimStat } from '../inventory/item-types';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 import styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
-import CompareItem from './CompareItem';
+import CompareItem, { CompareHeaders } from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import { CompareSession } from './reducer';
@@ -263,93 +259,6 @@ export default function Compare({ session }: { session: CompareSession }) {
   );
 }
 
-function CompareHeaders({
-  allStats,
-  columnSorts,
-  highlight,
-  setHighlight,
-  toggleColumnSort,
-  filteredColumns,
-}: {
-  allStats: StatInfo[];
-  columnSorts: ColumnSort[];
-  highlight: string | number | undefined;
-  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
-  toggleColumnSort: (columnId: string, shiftHeld: boolean, sort?: SortDirection) => () => void;
-  filteredColumns: ColumnDefinition[];
-}) {
-  const isShiftHeld = useShiftHeld();
-  return (
-    <div className={styles.statList}>
-      <div className={styles.spacer} />
-      {allStats.map((s) => {
-        const columnSort = columnSorts.find((c) => c.columnId === s.stat.statHash.toString());
-        return (
-          <div
-            key={s.stat.statHash}
-            className={clsx(
-              styles.statLabel,
-              columnSort
-                ? columnSort.sort === SortDirection.ASC
-                  ? styles.sortDesc
-                  : styles.sortAsc
-                : undefined,
-            )}
-            onPointerEnter={() => setHighlight(s.stat.statHash)}
-            onClick={toggleColumnSort(
-              s.stat.statHash.toString(),
-              isShiftHeld,
-              s.stat.smallerIsBetter ? SortDirection.DESC : SortDirection.ASC,
-            )}
-          >
-            {s.stat.displayProperties.hasIcon && (
-              <span title={s.stat.displayProperties.name}>
-                <BungieImage src={s.stat.displayProperties.icon} />
-              </span>
-            )}
-            {s.stat.statHash in statLabels
-              ? t(statLabels[s.stat.statHash as StatHashes]!)
-              : s.stat.displayProperties.name}{' '}
-            {columnSort && (
-              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
-            )}
-            {s.stat.statHash === highlight && <div className={styles.highlightBar} />}
-          </div>
-        );
-      })}
-      {filteredColumns.map((column) => {
-        const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
-        return (
-          // const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
-          <div
-            key={column.id}
-            className={clsx(
-              styles.statLabel,
-              columnSort
-                ? columnSort.sort === SortDirection.ASC
-                  ? styles.sortDesc
-                  : styles.sortAsc
-                : undefined,
-            )}
-            onPointerEnter={() => setHighlight(column.id)}
-            onClick={
-              column.noSort
-                ? undefined
-                : toggleColumnSort(column.id, isShiftHeld, column.defaultSort)
-            }
-          >
-            {column.header}{' '}
-            {columnSort && (
-              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
-            )}
-            {column.id === highlight && <div className={styles.highlightBar} />}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 function CompareItems({
   items,
   rows,
@@ -431,6 +340,7 @@ function sortCompareItemsComparator(
   );
 }
 
+// TODO: Combine with ItemTable.buildStatInfo
 function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): StatInfo[] {
   if (!comparisonItems.length) {
     return emptyArray<StatInfo>();
