@@ -104,7 +104,7 @@ export default memo(function CompareItem({
       {itemHeader}
       {stats.map((stat) => (
         <CompareStat
-          key={stat.id}
+          key={stat.stat.statHash}
           item={item}
           stat={stat}
           setHighlight={setHighlight}

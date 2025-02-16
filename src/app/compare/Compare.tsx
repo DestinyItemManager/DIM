@@ -4,6 +4,7 @@ import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import {
   applySocketOverrides,
   useSocketOverridesForItems,
@@ -28,7 +29,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, DimSocket } from '../inventory/item-types';
+import { DimItem, DimSocket, DimStat } from '../inventory/item-types';
 import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 import styles from './Compare.m.scss';
 import CompareItem from './CompareItem';
@@ -38,20 +39,25 @@ import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
 export interface StatInfo {
-  id: number | 'EnergyCapacity';
-  displayProperties: DestinyDisplayPropertiesDefinition;
+  /** An example of the stat, used for its constant definition. */
+  stat: DimStat;
+  /** The minimum value of this stat across all items being compared. */
   min: number;
+  /** The maximum value of this stat across all items being compared. */
   max: number;
-  statMaximumValue: number;
-  bar: boolean;
+  /**
+   * A stat is "enabled" if it has a range of values across the items being
+   * compared. This is only used in Compare.
+   */
   enabled: boolean;
-  lowerBetter: boolean;
+  /**
+   * Given an item, return the stat value for this stat. This is only used in
+   * Compare and can be deprecated when we stop using "stats" for power and
+   * energy.
+   */
   getStat: StatGetter;
 }
-
-/** a DimStat with, at minimum, a statHash */
 export interface MinimalStat {
-  statHash: number;
   value: number;
   base?: number;
 }
@@ -85,31 +91,11 @@ export default function Compare({ session }: { session: CompareSession }) {
   const compareItems = useMemo(() => {
     let items = rawCompareItems;
     if (doAssumeWeaponMasterworks) {
-      items = items.map((i) => {
-        const y2MasterworkSocket = i.sockets?.allSockets.find(
-          (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
-        );
-        const plugSet = y2MasterworkSocket?.plugSet;
-        const plugged = y2MasterworkSocket?.plugged;
-        if (plugSet && plugged) {
-          const fullMasterworkPlug = maxBy(
-            plugSet.plugs.filter(
-              (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
-            ),
-            (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
-          );
-          if (fullMasterworkPlug) {
-            return applySocketOverrides(itemCreationContext, i, {
-              [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
-            });
-          }
-        }
-        return i;
-      });
+      // Fully masterwork weapons
+      items = items.map((i) => masterworkItem(i, itemCreationContext));
     }
-    items = items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
-
-    return items;
+    // Apply any socket override selections (perk choices)
+    return items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
   }, [itemCreationContext, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
 
   const cancel = useCallback(() => {
@@ -227,11 +213,11 @@ export default function Compare({ session }: { session: CompareSession }) {
       <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
         <div className={styles.statList}>
           <div className={styles.spacer} />
-          {allStats.map((stat) => {
-            const columnSort = columnSorts.find((c) => c.columnId === stat.id.toString());
+          {allStats.map((s) => {
+            const columnSort = columnSorts.find((c) => c.columnId === s.stat.statHash.toString());
             return (
               <div
-                key={stat.id}
+                key={s.stat.statHash}
                 className={clsx(
                   styles.statLabel,
                   columnSort
@@ -240,27 +226,27 @@ export default function Compare({ session }: { session: CompareSession }) {
                       : styles.sortAsc
                     : undefined,
                 )}
-                onPointerEnter={() => setHighlight(stat.id)}
+                onPointerEnter={() => setHighlight(s.stat.statHash)}
                 onClick={toggleColumnSort(
-                  stat.id.toString(),
+                  s.stat.statHash.toString(),
                   isShiftHeld,
-                  stat.lowerBetter ? SortDirection.DESC : SortDirection.ASC,
+                  s.stat.smallerIsBetter ? SortDirection.DESC : SortDirection.ASC,
                 )}
               >
-                {stat.displayProperties.hasIcon && (
-                  <span title={stat.displayProperties.name}>
-                    <BungieImage src={stat.displayProperties.icon} />
+                {s.stat.displayProperties.hasIcon && (
+                  <span title={s.stat.displayProperties.name}>
+                    <BungieImage src={s.stat.displayProperties.icon} />
                   </span>
                 )}
-                {stat.id in statLabels
-                  ? t(statLabels[stat.id as StatHashes]!)
-                  : stat.displayProperties.name}{' '}
+                {s.stat.statHash in statLabels
+                  ? t(statLabels[s.stat.statHash as StatHashes]!)
+                  : s.stat.displayProperties.name}{' '}
                 {columnSort && (
                   <AppIcon
                     icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft}
                   />
                 )}
-                {stat.id === highlight && <div className={styles.highlightBar} />}
+                {s.stat.statHash === highlight && <div className={styles.highlightBar} />}
               </div>
             );
           })}
@@ -323,7 +309,7 @@ function sortCompareItemsComparator(
   return reverseComparator(
     chainComparator<DimItem>(
       ...columnSorts.map((sorter) => {
-        const sortStat = allStats.find((s) => s.id.toString() === sorter.columnId);
+        const sortStat = allStats.find((s) => s.stat.statHash.toString() === sorter.columnId);
         if (!sortStat) {
           return compareBy(() => 0);
         }
@@ -333,7 +319,7 @@ function sortCompareItemsComparator(
             return -1;
           }
           const statValue = compareBaseStats ? (stat.base ?? stat.value) : stat.value;
-          if (stat.statHash === StatHashes.RecoilDirection) {
+          if (sortStat.stat.statHash === StatHashes.RecoilDirection) {
             return recoilValue(stat.value);
           }
           return statValue;
@@ -360,7 +346,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       makeFakeStat(
         firstComparison.primaryStat.statHash,
         firstComparison.primaryStatDisplayProperties!,
-        (item: DimItem) => item.primaryStat || undefined,
+        (item) => (item.primaryStat ? { value: item.primaryStat.value } : undefined),
       ),
     );
   }
@@ -368,43 +354,37 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
   if (firstComparison.destinyVersion === 2 && firstComparison.bucket.inArmor) {
     stats.push(
       makeFakeStat(
-        'EnergyCapacity',
+        StatHashes.AnyEnergyTypeCost,
         t('EnergyMeter.Energy'),
-        (item: DimItem) =>
-          (item.energy && {
-            statHash: item.energy.energyType,
-            value: item.energy.energyCapacity,
-          }) ||
-          undefined,
+        (item) => (item.energy ? { value: item.energy.energyCapacity } : undefined),
         10,
         false,
       ),
     );
   }
 
-  // Todo: map of stat id => stat object
-  // add 'em up
   const statsByHash: { [statHash: string]: StatInfo } = {};
   for (const item of comparisonItems) {
     if (item.stats) {
       for (const stat of item.stats) {
         let statInfo = statsByHash[stat.statHash];
-        if (!statInfo) {
+        if (statInfo) {
+          statInfo.min = Math.min(
+            statInfo.min,
+            (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0,
+          );
+          statInfo.max = Math.max(
+            statInfo.max,
+            (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0,
+          );
+          statInfo.enabled = statInfo.min !== statInfo.max;
+        } else {
           statInfo = {
-            id: stat.statHash,
-            displayProperties: stat.displayProperties,
+            stat,
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,
-            lowerBetter: stat.smallerIsBetter,
-            statMaximumValue: stat.maximumValue,
-            bar: stat.bar,
-            getStat(item: DimItem) {
-              const itemStat = item.stats
-                ? item.stats.find((s) => s.statHash === stat.statHash)
-                : undefined;
-              return itemStat;
-            },
+            getStat: (item: DimItem) => item.stats?.find((s) => s.statHash === stat.statHash),
           };
           statsByHash[stat.statHash] = statInfo;
           stats.push(statInfo);
@@ -412,47 +392,62 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       }
     }
   }
-
-  for (const stat of stats) {
-    for (const item of comparisonItems) {
-      const itemStat = stat.getStat(item);
-      if (itemStat) {
-        stat.min = Math.min(
-          stat.min,
-          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
-        );
-        stat.max = Math.max(
-          stat.max,
-          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
-        );
-        stat.enabled = stat.min !== stat.max;
-      }
-    }
-  }
-
   return stats;
 }
 
 function makeFakeStat(
-  id: StatInfo['id'],
+  id: StatHashes,
   displayProperties: DestinyDisplayPropertiesDefinition | string,
   getStat: StatGetter,
-  statMaximumValue = 0,
+  maximumValue = 0,
   bar = false,
-  lowerBetter = false,
+  smallerIsBetter = false,
 ): StatInfo {
   if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
   }
   return {
-    id,
-    displayProperties,
+    stat: {
+      statHash: id,
+      displayProperties,
+      smallerIsBetter,
+      bar,
+      maximumValue,
+      sort: 0,
+      value: 0,
+      base: 0,
+      investmentValue: 0,
+      additive: false,
+    },
     min: Number.MAX_SAFE_INTEGER,
     max: 0,
     enabled: false,
-    lowerBetter,
-    statMaximumValue,
     getStat,
-    bar,
   };
+}
+
+/**
+ * Produce a copy of the item with the masterwork socket filled in with the best
+ * masterwork option.
+ */
+function masterworkItem(i: DimItem, itemCreationContext: ItemCreationContext): DimItem {
+  const y2MasterworkSocket = i.sockets?.allSockets.find(
+    (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
+  );
+  const plugSet = y2MasterworkSocket?.plugSet;
+  const plugged = y2MasterworkSocket?.plugged;
+  if (plugSet && plugged) {
+    const fullMasterworkPlug = maxBy(
+      plugSet.plugs.filter(
+        (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
+      ),
+      (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
+    );
+    if (fullMasterworkPlug) {
+      return applySocketOverrides(itemCreationContext, i, {
+        [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
+      });
+    }
+  }
+  return i;
 }

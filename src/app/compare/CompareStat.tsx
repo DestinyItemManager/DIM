@@ -4,12 +4,12 @@ import { t } from 'app/i18next-t';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getColor, percent } from 'app/shell/formatters';
 import { StatHashes } from 'data/d2/generated-enums';
-import { D1Stat, DimItem } from '../inventory/item-types';
+import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
 import { MinimalStat, StatInfo } from './Compare';
 import styles from './CompareStat.m.scss';
 
 export default function CompareStat({
-  stat,
+  stat: statInfo,
   compareBaseStats,
   item,
   setHighlight,
@@ -19,24 +19,27 @@ export default function CompareStat({
   item: DimItem;
   setHighlight: (value?: string | number) => void;
 }) {
-  const itemStat = stat.getStat(item);
+  const { stat, getStat } = statInfo;
+  const itemStat = getStat(item);
 
-  const color = getColor(statRange(itemStat, stat, compareBaseStats), 'color');
+  const color = getColor(statRange(itemStat, statInfo, compareBaseStats), 'color');
 
   const statValue = itemStat
     ? ((compareBaseStats ? itemStat.base : itemStat.value) ?? itemStat.value)
     : 0;
 
   return (
-    <div onPointerEnter={() => setHighlight(stat.id)} className={styles.stat} style={color}>
+    <div onPointerEnter={() => setHighlight(stat.statHash)} className={styles.stat} style={color}>
       {statValue !== 0 && stat.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
-          <span style={{ width: percent(statValue / stat.statMaximumValue) }} />
+          <span style={{ width: percent(statValue / stat.maximumValue) }} />
         </span>
       )}
-      {stat.id === 'EnergyCapacity' && itemStat && item.energy && <EnergyCostIcon />}
+      {stat.statHash === StatHashes.AnyEnergyTypeCost && itemStat && item.energy && (
+        <EnergyCostIcon />
+      )}
       {itemStat?.value !== undefined ? (
-        itemStat.statHash === StatHashes.RecoilDirection ? (
+        statInfo.stat.statHash === StatHashes.RecoilDirection ? (
           <span className={styles.recoil}>
             <span>{statValue}</span>
             <RecoilStat value={statValue} />
@@ -58,14 +61,14 @@ export default function CompareStat({
 
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(
-  stat: (MinimalStat & { qualityPercentage?: { min: number } }) | undefined,
+  stat: DimStat | D1Stat | MinimalStat | undefined,
   statInfo: StatInfo,
   compareBaseStats = false,
 ) {
   if (!stat) {
     return -1;
   }
-  if (stat.qualityPercentage) {
+  if ('qualityPercentage' in stat && stat.qualityPercentage) {
     return stat.qualityPercentage.min;
   }
 
@@ -75,11 +78,11 @@ function statRange(
 
   const statValue = (compareBaseStats ? stat.base : stat.value) ?? stat.value;
 
-  if (statInfo.id === StatHashes.RecoilDirection) {
+  if (statInfo.stat.statHash === StatHashes.RecoilDirection) {
     return recoilValue(statValue);
   }
 
-  if (statInfo.lowerBetter) {
+  if (statInfo.stat.smallerIsBetter) {
     return (100 * (statInfo.max - statValue)) / (statInfo.max - statInfo.min);
   }
 
