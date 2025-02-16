@@ -107,6 +107,8 @@ export function updateCharacters(): ThunkResult {
 
 let firstTime = true;
 
+let loading = false;
+
 /**
  * Returns a promise for a fresh view of the stores and their items.
  */
@@ -118,6 +120,9 @@ export function loadStores({
   return async (dispatch, getState) => {
     try {
       let stores: DimStore[] | undefined;
+      if (loading) {
+        return;
+      }
       await navigator.locks.request(
         'loadStores',
         {
@@ -131,26 +136,31 @@ export function loadStores({
             // This means another tab was already requesting the stores.
             throw new Error('lock-held');
           }
-          let account = currentAccountSelector(getState());
-          if (!account) {
-            // TODO: throw here?
-            await dispatch(getPlatforms);
-            account = currentAccountSelector(getState());
-            if (!account || account.destinyVersion !== 2) {
-              return;
+          loading = true;
+          try {
+            let account = currentAccountSelector(getState());
+            if (!account) {
+              // TODO: throw here?
+              await dispatch(getPlatforms);
+              account = currentAccountSelector(getState());
+              if (!account || account.destinyVersion !== 2) {
+                return;
+              }
             }
-          }
 
-          dispatch(loadCoreSettings()); // no need to wait
-          $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
-          await dispatch(loadNewItems(account));
-          // The first time we load, allow the data to be loaded from IDB. We then do a second
-          // load to make sure that we immediately try to get remote data.
-          if (firstTime) {
-            await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
-            firstTime = false;
+            dispatch(loadCoreSettings()); // no need to wait
+            $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
+            await dispatch(loadNewItems(account));
+            // The first time we load, allow the data to be loaded from IDB. We then do a second
+            // load to make sure that we immediately try to get remote data.
+            if (firstTime) {
+              await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
+              firstTime = false;
+            }
+            stores = await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
+          } finally {
+            loading = false;
           }
-          stores = await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
         },
       );
       // Need to do this after the lock has been released
