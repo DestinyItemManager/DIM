@@ -4,6 +4,7 @@ import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
+import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import {
   applySocketOverrides,
   useSocketOverridesForItems,
@@ -90,31 +91,11 @@ export default function Compare({ session }: { session: CompareSession }) {
   const compareItems = useMemo(() => {
     let items = rawCompareItems;
     if (doAssumeWeaponMasterworks) {
-      items = items.map((i) => {
-        const y2MasterworkSocket = i.sockets?.allSockets.find(
-          (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
-        );
-        const plugSet = y2MasterworkSocket?.plugSet;
-        const plugged = y2MasterworkSocket?.plugged;
-        if (plugSet && plugged) {
-          const fullMasterworkPlug = maxBy(
-            plugSet.plugs.filter(
-              (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
-            ),
-            (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
-          );
-          if (fullMasterworkPlug) {
-            return applySocketOverrides(itemCreationContext, i, {
-              [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
-            });
-          }
-        }
-        return i;
-      });
+      // Fully masterwork weapons
+      items = items.map((i) => masterworkItem(i, itemCreationContext));
     }
-    items = items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
-
-    return items;
+    // Apply any socket override selections (perk choices)
+    return items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
   }, [itemCreationContext, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
 
   const cancel = useCallback(() => {
@@ -382,25 +363,28 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
     );
   }
 
-  // Todo: map of stat id => stat object
-  // add 'em up
   const statsByHash: { [statHash: string]: StatInfo } = {};
   for (const item of comparisonItems) {
     if (item.stats) {
       for (const stat of item.stats) {
         let statInfo = statsByHash[stat.statHash];
-        if (!statInfo) {
+        if (statInfo) {
+          statInfo.min = Math.min(
+            statInfo.min,
+            (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0,
+          );
+          statInfo.max = Math.max(
+            statInfo.max,
+            (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0,
+          );
+          statInfo.enabled = statInfo.min !== statInfo.max;
+        } else {
           statInfo = {
             stat,
             min: Number.MAX_SAFE_INTEGER,
             max: 0,
             enabled: false,
-            getStat(item: DimItem) {
-              const itemStat = item.stats
-                ? item.stats.find((s) => s.statHash === stat.statHash)
-                : undefined;
-              return itemStat;
-            },
+            getStat: (item: DimItem) => item.stats?.find((s) => s.statHash === stat.statHash),
           };
           statsByHash[stat.statHash] = statInfo;
           stats.push(statInfo);
@@ -408,24 +392,6 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       }
     }
   }
-
-  for (const stat of stats) {
-    for (const item of comparisonItems) {
-      const itemStat = stat.getStat(item);
-      if (itemStat) {
-        stat.min = Math.min(
-          stat.min,
-          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
-        );
-        stat.max = Math.max(
-          stat.max,
-          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
-        );
-        stat.enabled = stat.min !== stat.max;
-      }
-    }
-  }
-
   return stats;
 }
 
@@ -458,4 +424,30 @@ function makeFakeStat(
     enabled: false,
     getStat,
   };
+}
+
+/**
+ * Produce a copy of the item with the masterwork socket filled in with the best
+ * masterwork option.
+ */
+function masterworkItem(i: DimItem, itemCreationContext: ItemCreationContext): DimItem {
+  const y2MasterworkSocket = i.sockets?.allSockets.find(
+    (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
+  );
+  const plugSet = y2MasterworkSocket?.plugSet;
+  const plugged = y2MasterworkSocket?.plugged;
+  if (plugSet && plugged) {
+    const fullMasterworkPlug = maxBy(
+      plugSet.plugs.filter(
+        (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
+      ),
+      (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
+    );
+    if (fullMasterworkPlug) {
+      return applySocketOverrides(itemCreationContext, i, {
+        [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
+      });
+    }
+  }
+  return i;
 }
