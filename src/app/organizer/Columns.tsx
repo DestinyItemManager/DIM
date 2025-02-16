@@ -1127,18 +1127,19 @@ export function buildStatInfo(items: DimItem[]): {
   for (const item of items) {
     if (item.stats) {
       for (const stat of item.stats) {
-        if (statHashes[stat.statHash]) {
+        const { statHash, value } = stat;
+        if (statHashes[statHash]) {
           // TODO: we don't yet use the min and max values
-          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
-          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
+          statHashes[statHash].max = Math.max(statHashes[statHash].max, value);
+          statHashes[statHash].min = Math.min(statHashes[statHash].min, value);
         } else {
-          statHashes[stat.statHash] = {
+          statHashes[statHash] = {
             stat,
-            min: stat.value,
-            max: stat.value,
+            min: value,
+            max: value,
             enabled: true,
             getStat(item) {
-              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
+              return item.stats ? item.stats.find((s) => s.statHash === statHash) : undefined;
             },
           };
         }
