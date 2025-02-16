@@ -7,7 +7,6 @@ import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { MemoRow } from 'app/organizer/ItemTable';
 import { ColumnDefinition, Row } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
@@ -117,7 +116,7 @@ export default memo(function CompareItem({
           compareBaseStats={compareBaseStats}
         />
       ))}
-      <MemoRow
+      <TableRow
         row={row}
         filteredColumns={filteredColumns}
         onRowClick={(row, column) => console.log('clicked', row, column)}
@@ -148,4 +147,39 @@ function VendorItemWarning({ item }: { item: DimItem }) {
       </ActionButton>
     </PressTip>
   ) : null;
+}
+
+// Copied from ItemTable - TODO: reconverge
+function TableRow({
+  row,
+  filteredColumns,
+  onRowClick,
+}: {
+  row: Row;
+  filteredColumns: ColumnDefinition[];
+  onRowClick: (
+    row: Row,
+    column: ColumnDefinition,
+  ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
+}) {
+  // TODO: reintroduce styles per column?
+
+  return (
+    <>
+      {filteredColumns.map((column) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        <div
+          key={column.id}
+          onClick={onRowClick(row, column)}
+          // className={clsx(possibleStyles[column.id], {
+          //   [styles.hasFilter]: column.filter !== undefined,
+          //   [styles.customstat]: column.id.startsWith('customstat_'),
+          // })}
+          role="cell"
+        >
+          {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
+        </div>
+      ))}
+    </>
+  );
 }

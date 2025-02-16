@@ -188,6 +188,8 @@ export default function Compare({ session }: { session: CompareSession }) {
     [unsortedRows, filteredColumns, columnSorts, language],
   );
 
+  // TODO: display items in row order, not item order
+
   /* End ItemTable incursion */
 
   const items = useMemo(
@@ -244,53 +246,107 @@ export default function Compare({ session }: { session: CompareSession }) {
     </div>
   );
 
-  const isShiftHeld = useShiftHeld();
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
       <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
-        <div className={styles.statList}>
-          <div className={styles.spacer} />
-          {allStats.map((s) => {
-            const columnSort = columnSorts.find((c) => c.columnId === s.stat.statHash.toString());
-            return (
-              <div
-                key={s.stat.statHash}
-                className={clsx(
-                  styles.statLabel,
-                  columnSort
-                    ? columnSort.sort === SortDirection.ASC
-                      ? styles.sortDesc
-                      : styles.sortAsc
-                    : undefined,
-                )}
-                onPointerEnter={() => setHighlight(s.stat.statHash)}
-                onClick={toggleColumnSort(
-                  s.stat.statHash.toString(),
-                  isShiftHeld,
-                  s.stat.smallerIsBetter ? SortDirection.DESC : SortDirection.ASC,
-                )}
-              >
-                {s.stat.displayProperties.hasIcon && (
-                  <span title={s.stat.displayProperties.name}>
-                    <BungieImage src={s.stat.displayProperties.icon} />
-                  </span>
-                )}
-                {s.stat.statHash in statLabels
-                  ? t(statLabels[s.stat.statHash as StatHashes]!)
-                  : s.stat.displayProperties.name}{' '}
-                {columnSort && (
-                  <AppIcon
-                    icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft}
-                  />
-                )}
-                {s.stat.statHash === highlight && <div className={styles.highlightBar} />}
-              </div>
-            );
-          })}
-        </div>
+        <CompareHeaders
+          allStats={allStats}
+          columnSorts={columnSorts}
+          highlight={highlight}
+          setHighlight={setHighlight}
+          toggleColumnSort={toggleColumnSort}
+          filteredColumns={filteredColumns}
+        />
         {items}
       </div>
     </Sheet>
+  );
+}
+
+function CompareHeaders({
+  allStats,
+  columnSorts,
+  highlight,
+  setHighlight,
+  toggleColumnSort,
+  filteredColumns,
+}: {
+  allStats: StatInfo[];
+  columnSorts: ColumnSort[];
+  highlight: string | number | undefined;
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  toggleColumnSort: (columnId: string, shiftHeld: boolean, sort?: SortDirection) => () => void;
+  filteredColumns: ColumnDefinition[];
+}) {
+  const isShiftHeld = useShiftHeld();
+  return (
+    <div className={styles.statList}>
+      <div className={styles.spacer} />
+      {allStats.map((s) => {
+        const columnSort = columnSorts.find((c) => c.columnId === s.stat.statHash.toString());
+        return (
+          <div
+            key={s.stat.statHash}
+            className={clsx(
+              styles.statLabel,
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? styles.sortDesc
+                  : styles.sortAsc
+                : undefined,
+            )}
+            onPointerEnter={() => setHighlight(s.stat.statHash)}
+            onClick={toggleColumnSort(
+              s.stat.statHash.toString(),
+              isShiftHeld,
+              s.stat.smallerIsBetter ? SortDirection.DESC : SortDirection.ASC,
+            )}
+          >
+            {s.stat.displayProperties.hasIcon && (
+              <span title={s.stat.displayProperties.name}>
+                <BungieImage src={s.stat.displayProperties.icon} />
+              </span>
+            )}
+            {s.stat.statHash in statLabels
+              ? t(statLabels[s.stat.statHash as StatHashes]!)
+              : s.stat.displayProperties.name}{' '}
+            {columnSort && (
+              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
+            )}
+            {s.stat.statHash === highlight && <div className={styles.highlightBar} />}
+          </div>
+        );
+      })}
+      {filteredColumns.map((column) => {
+        const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
+        return (
+          // const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+          <div
+            key={column.id}
+            className={clsx(
+              styles.statLabel,
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? styles.sortDesc
+                  : styles.sortAsc
+                : undefined,
+            )}
+            onPointerEnter={() => setHighlight(column.id)}
+            onClick={
+              column.noSort
+                ? undefined
+                : toggleColumnSort(column.id, isShiftHeld, column.defaultSort)
+            }
+          >
+            {column.header}{' '}
+            {columnSort && (
+              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
+            )}
+            {column.id === highlight && <div className={styles.highlightBar} />}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

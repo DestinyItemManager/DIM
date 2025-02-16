@@ -489,8 +489,9 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             />
           </div>
         </div>
-        {filteredColumns.map((column: ColumnDefinition) => {
+        {filteredColumns.map((column) => {
           const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+          const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
           return (
             <div
               key={column.id}
@@ -513,14 +514,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 }
               >
                 {column.header}
-                {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                {columnSort && (
                   <AppIcon
                     className={styles.sorter}
-                    icon={
-                      columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                        ? faCaretDown
-                        : faCaretUp
-                    }
+                    icon={columnSort.sort === SortDirection.DESC ? faCaretDown : faCaretUp}
                   />
                 )}
               </div>
