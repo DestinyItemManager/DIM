@@ -487,8 +487,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             />
           </div>
         </div>
-        {filteredColumns.map((column: ColumnDefinition) => {
-          const columnSort = columnSorts.find((c) => c.columnId === column.id);
+        {filteredColumns.map((column) => {
+          const columnSort = column.noSort
+            ? undefined
+            : columnSorts.find((c) => c.columnId === column.id);
           return (
             <div
               key={column.id}
@@ -510,7 +512,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 }
               >
                 {column.header}
-                {!column.noSort && columnSort && (
+                {columnSort && (
                   <AppIcon
                     className={styles.sorter}
                     icon={columnSort.sort === SortDirection.DESC ? faCaretDown : faCaretUp}
@@ -600,7 +602,7 @@ function TableRow({
 }) {
   return (
     <>
-      {filteredColumns.map((column: ColumnDefinition) => (
+      {filteredColumns.map((column) => (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
