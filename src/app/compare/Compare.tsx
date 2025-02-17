@@ -363,6 +363,17 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
     );
   }
 
+  for (const stat of stats) {
+    for (const item of comparisonItems) {
+      const itemStat = stat.getStat(item);
+      if (itemStat) {
+        stat.min = Math.min(stat.min, itemStat.value);
+        stat.max = Math.max(stat.max, itemStat.value);
+        stat.enabled = stat.min !== stat.max;
+      }
+    }
+  }
+
   const statsByHash: { [statHash: string]: StatInfo } = {};
   for (const item of comparisonItems) {
     if (item.stats) {
@@ -387,6 +398,7 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       }
     }
   }
+
   return stats;
 }
 
