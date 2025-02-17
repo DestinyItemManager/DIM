@@ -33,7 +33,6 @@
 }
 
 // The highlight behind each item
-// TODO: Use a :has(:hover) for this?
 .highlightBar {
   background-color: rgba(255, 255, 255, 0.125);
   position: absolute;
@@ -119,30 +118,24 @@
   position: absolute;
   padding: 0;
   right: 4px;
-  top: calc(32px + 4px + 1lh);
   cursor: pointer;
 }
 
 /* COLUMN STYLES */
 
+.initialItem {
+  color: var(--theme-accent-primary);
+  font-weight: bold;
+}
+
 .itemName {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   margin-top: 2px;
   margin-bottom: 2px;
-
-  // Don't let the item name wrap
-  .compareItem & {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .initialItem & {
-    color: var(--theme-accent-primary);
-    font-weight: bold;
-  }
-
   // Add the magnifying glass icons to items that can be clicked to find them
-  .isFindable & {
+  &.isFindable {
     cursor: pointer;
     &::after {
       content: '\f002';

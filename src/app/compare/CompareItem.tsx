@@ -28,7 +28,6 @@ import {
   faAngleLeft,
   faAngleRight,
   faArrowCircleDown,
-  searchIcon,
   shoppingCart,
 } from '../shell/icons';
 import { StatInfo } from './Compare';
@@ -88,8 +87,7 @@ export default memo(function CompareItem({
           })}
           onClick={() => itemClick(item)}
         >
-          <span title={isInitialItem ? t('Compare.InitialItem') : undefined}>{item.name}</span>{' '}
-          {isFindable && <AppIcon icon={searchIcon} />}
+          <span title={isInitialItem ? t('Compare.InitialItem') : undefined}>{item.name}</span>
         </div>
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
