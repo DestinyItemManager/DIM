@@ -1,5 +1,7 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
 import { t, tl } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -7,11 +9,13 @@ import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { statLabels } from 'app/organizer/Columns';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
-import { useSetCSSVarToHeight } from 'app/utils/hooks';
+import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
+import { StatHashes } from 'data/d2/generated-enums';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -19,7 +23,14 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import ItemSockets from '../item-popup/ItemSockets';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import { AppIcon, faArrowCircleDown, searchIcon, shoppingCart } from '../shell/icons';
+import {
+  AppIcon,
+  faAngleLeft,
+  faAngleRight,
+  faArrowCircleDown,
+  searchIcon,
+  shoppingCart,
+} from '../shell/icons';
 import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss';
 import CompareStat from './CompareStat';
@@ -137,4 +148,61 @@ function VendorItemWarning({ item }: { item: DimItem }) {
       </ActionButton>
     </PressTip>
   ) : null;
+}
+
+/** The row headers that appear on the left of the compare window */
+export function CompareHeaders({
+  columnSorts,
+  highlight,
+  setHighlight,
+  toggleColumnSort,
+  allStats,
+}: {
+  columnSorts: ColumnSort[];
+  highlight: string | number | undefined;
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  toggleColumnSort: (columnId: string, shiftHeld: boolean, sort?: SortDirection) => () => void;
+  allStats: StatInfo[];
+}) {
+  const isShiftHeld = useShiftHeld();
+  return (
+    <div className={styles.statList}>
+      <div className={styles.spacer} />
+      {allStats.map((s) => {
+        const columnSort = columnSorts.find((c) => c.columnId === s.stat.statHash.toString());
+        return (
+          <div
+            key={s.stat.statHash}
+            className={clsx(
+              styles.statLabel,
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? styles.sortDesc
+                  : styles.sortAsc
+                : undefined,
+            )}
+            onPointerEnter={() => setHighlight(s.stat.statHash)}
+            onClick={toggleColumnSort(
+              s.stat.statHash.toString(),
+              isShiftHeld,
+              s.stat.smallerIsBetter ? SortDirection.DESC : SortDirection.ASC,
+            )}
+          >
+            {s.stat.displayProperties.hasIcon && (
+              <span title={s.stat.displayProperties.name}>
+                <BungieImage src={s.stat.displayProperties.icon} />
+              </span>
+            )}
+            {s.stat.statHash in statLabels
+              ? t(statLabels[s.stat.statHash as StatHashes]!)
+              : s.stat.displayProperties.name}{' '}
+            {columnSort && (
+              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
+            )}
+            {s.stat.statHash === highlight && <div className={styles.highlightBar} />}
+          </div>
+        );
+      })}
+    </div>
+  );
 }

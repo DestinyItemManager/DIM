@@ -4,10 +4,16 @@ interface CssExports {
   'close': string;
   'compareItem': string;
   'header': string;
+  'highlightBar': string;
   'initialItem': string;
   'isFindable': string;
   'itemAside': string;
   'itemName': string;
+  'sortAsc': string;
+  'sortDesc': string;
+  'spacer': string;
+  'statLabel': string;
+  'statList': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

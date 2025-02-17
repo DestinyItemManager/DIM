@@ -1,5 +1,51 @@
 @use '../variables.scss' as *;
 
+/* Row Headers */
+
+.spacer {
+  height: var(--compare-item-height, 48px);
+}
+
+.statList {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  position: relative;
+  padding-right: 8px;
+  padding-left: 4px;
+  cursor: pointer;
+  height: 16px;
+  img {
+    height: 16px;
+    width: 16px;
+    vertical-align: bottom;
+    margin-right: 2px;
+  }
+}
+
+.sortDesc {
+  color: var(--theme-accent-primary);
+}
+.sortAsc {
+  color: var(--theme-accent-secondary);
+}
+
+// The highlight behind each item
+// TODO: Use a :has(:hover) for this?
+.highlightBar {
+  background-color: rgba(255, 255, 255, 0.125);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100vw;
+  z-index: -1;
+}
+
+/* Items */
+
 .compareItem {
   composes: flexColumn from '../dim-ui/common.m.scss';
   border-left: 1px solid rgba(245, 245, 245, 0.25);
@@ -35,6 +81,7 @@
   }
 }
 
+// The toolbar across the top of each item
 .header {
   display: flex;
   flex-direction: row;
@@ -52,34 +99,7 @@
   }
 }
 
-.initialItem {
-  color: var(--theme-accent-primary);
-  font-weight: bold;
-}
-
-.itemName {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  :global(.app-icon) {
-    font-size: 8px;
-    margin-right: 2px;
-    vertical-align: initial;
-  }
-  &.isFindable {
-    cursor: pointer;
-  }
-}
-
-.itemAside {
-  position: absolute;
-  padding: 0;
-  right: 4px;
-  cursor: pointer;
-}
-
+// The "dismiss" button in the item header
 .close {
   composes: resetButton from '../dim-ui/common.m.scss';
   width: 32px;
@@ -91,5 +111,55 @@
 
   @include interactive($hover: true) {
     background-color: var(--theme-accent-primary);
+  }
+}
+
+// The item icon that's floated behind the stats
+.itemAside {
+  position: absolute;
+  padding: 0;
+  right: 4px;
+  top: calc(32px + 4px + 1lh);
+  cursor: pointer;
+}
+
+/* COLUMN STYLES */
+
+.itemName {
+  margin-top: 2px;
+  margin-bottom: 2px;
+
+  // Don't let the item name wrap
+  .compareItem & {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .initialItem & {
+    color: var(--theme-accent-primary);
+    font-weight: bold;
+  }
+
+  // Add the magnifying glass icons to items that can be clicked to find them
+  .isFindable & {
+    cursor: pointer;
+    &::after {
+      content: '\f002';
+      // Copied from .fas classes:
+      /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+      font-size: 8px;
+      margin-left: 4px;
+      vertical-align: initial;
+    }
   }
 }
