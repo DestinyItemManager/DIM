@@ -1,6 +1,6 @@
 import { languageSelector } from 'app/dim-api/selectors';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
-import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
+import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -9,7 +9,6 @@ import {
   applySocketOverrides,
   useSocketOverridesForItems,
 } from 'app/inventory/store/override-sockets';
-import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { buildRows, sortRows } from 'app/organizer/ItemTable';
@@ -21,15 +20,13 @@ import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import { StatHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket, DimStat } from '../inventory/item-types';
-import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
+import { chainComparator, compareBy } from '../utils/comparators';
 import styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
 import CompareItem, { CompareHeaders } from './CompareItem';
@@ -139,31 +136,22 @@ export default function Compare({ session }: { session: CompareSession }) {
     [cancel, compareItems.length, dispatch],
   );
 
-  const sortedComparisonItems = useMemo(() => {
-    const comparator = sortCompareItemsComparator(
-      columnSorts,
-      doCompareBaseStats,
-      allStats,
-      session.initialItemId,
-    );
-    return compareItems.toSorted(comparator);
-  }, [columnSorts, doCompareBaseStats, allStats, session.initialItemId, compareItems]);
-
-  // If the session was started with a specific item, this is it
-  const initialItem = session.initialItemId
-    ? compareItems.find((i) => i.id === session.initialItemId)
-    : undefined;
-  const firstCompareItem = sortedComparisonItems[0];
-  // The example item is the one we'll use for generating suggestion buttons
-  const exampleItem = initialItem || firstCompareItem;
-
   /* ItemTable incursion */
 
+  const destinyVersion = compareItems[0].destinyVersion;
   const columns: ColumnDefinition[] = useMemo(
     () =>
-      getColumns('weapon', allStats, itemCreationContext.customStats, exampleItem.destinyVersion),
-    [allStats, exampleItem.destinyVersion, itemCreationContext.customStats],
+      getColumns(
+        'weapon',
+        allStats,
+        itemCreationContext.customStats,
+        destinyVersion,
+        compareBaseStats,
+      ),
+    [allStats, compareBaseStats, destinyVersion, itemCreationContext.customStats],
   );
+
+  console.log('columns', columns, allStats);
 
   // TODO: Filter to enabled columns
   const filteredColumns = columns;
@@ -175,13 +163,31 @@ export default function Compare({ session }: { session: CompareSession }) {
   );
   const language = useSelector(languageSelector);
   const rows = useMemo(
-    () => sortRows(unsortedRows, columnSorts, filteredColumns, language),
-    [unsortedRows, filteredColumns, columnSorts, language],
+    () =>
+      sortRows(unsortedRows, columnSorts, filteredColumns, language, (a, b) =>
+        chainComparator(
+          compareBy((item) => item.id !== session.initialItemId),
+          acquisitionRecencyComparator,
+        )(a.item, b.item),
+      ),
+    [unsortedRows, columnSorts, filteredColumns, language, session.initialItemId],
   );
 
-  // TODO: display items in row order, not item order
-
   /* End ItemTable incursion */
+
+  // TODO: once we stop displaying CompareItems at all, we can drop this
+  const sortedComparisonItems = useMemo(
+    () => compareItems.toSorted(compareBy((i) => rows.findIndex((r) => r.item === i))),
+    [compareItems, rows],
+  );
+
+  // If the session was started with a specific item, this is it
+  const initialItem = session.initialItemId
+    ? compareItems.find((i) => i.id === session.initialItemId)
+    : undefined;
+  const firstCompareItem = sortedComparisonItems[0];
+  // The example item is the one we'll use for generating suggestion buttons
+  const exampleItem = initialItem || firstCompareItem;
 
   const items = useMemo(
     () => (
@@ -296,45 +302,6 @@ function CompareItems({
   );
 }
 
-function sortCompareItemsComparator(
-  columnSorts: ColumnSort[],
-  compareBaseStats: boolean,
-  allStats: StatInfo[],
-  initialItemId?: string,
-) {
-  if (!columnSorts.length) {
-    return chainComparator(
-      compareBy((item) => item.id !== initialItemId),
-      acquisitionRecencyComparator,
-    );
-  }
-
-  return reverseComparator(
-    chainComparator<DimItem>(
-      ...columnSorts.map((sorter) => {
-        const sortStat = allStats.find((s) => s.stat.statHash.toString() === sorter.columnId);
-        if (!sortStat) {
-          return compareBy(() => 0);
-        }
-        const compare: Comparator<DimItem> = compareBy((item) => {
-          const stat = sortStat.getStat(item);
-          if (!stat) {
-            return -1;
-          }
-          const statValue = compareBaseStats ? (stat.base ?? stat.value) : stat.value;
-          if (sortStat.stat.statHash === StatHashes.RecoilDirection) {
-            return recoilValue(stat.value);
-          }
-          return statValue;
-        });
-        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
-      }),
-      compareBy((i) => i.index),
-      compareBy((i) => i.name),
-    ),
-  );
-}
-
 // TODO: Combine with ItemTable.buildStatInfo
 function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): StatInfo[] {
   if (!comparisonItems.length) {
@@ -370,37 +337,6 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
     }
   }
   return stats;
-}
-
-function makeFakeStat(
-  id: StatHashes,
-  displayProperties: DestinyDisplayPropertiesDefinition | string,
-  getStat: StatGetter,
-  maximumValue = 0,
-  bar = false,
-  smallerIsBetter = false,
-): StatInfo {
-  if (typeof displayProperties === 'string') {
-    displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
-  }
-  return {
-    stat: {
-      statHash: id,
-      displayProperties,
-      smallerIsBetter,
-      bar,
-      maximumValue,
-      sort: 0,
-      value: 0,
-      base: 0,
-      investmentValue: 0,
-      additive: false,
-    },
-    min: Number.MAX_SAFE_INTEGER,
-    max: 0,
-    enabled: false,
-    getStat,
-  };
 }
 
 /**

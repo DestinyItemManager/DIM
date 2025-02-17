@@ -566,7 +566,12 @@ export function sortRows(
   columnSorts: ColumnSort[],
   filteredColumns: ColumnDefinition[],
   language: DimLanguage,
+  defaultComparator?: Comparator<Row>,
 ) {
+  if (!columnSorts.length && defaultComparator) {
+    return unsortedRows.toSorted(defaultComparator);
+  }
+
   const comparator = chainComparator<Row>(
     ...columnSorts.map((sorter) => {
       const column = filteredColumns.find((c) => c.id === sorter.columnId);

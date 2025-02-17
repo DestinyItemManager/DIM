@@ -37,8 +37,6 @@ export default memo(function CompareItem({
   item,
   row,
   filteredColumns,
-  stats,
-  compareBaseStats,
   itemClick,
   remove,
   setHighlight,
@@ -166,8 +164,6 @@ function TableRow({
   ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
   setHighlight: (value?: string | number) => void;
 }) {
-  // TODO: reintroduce styles per column?
-
   return (
     <>
       {filteredColumns.map((column) => {

@@ -4,7 +4,6 @@ import { t } from 'app/i18next-t';
 import { D1Item, DimItem } from 'app/inventory/item-types';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
-import { ItemStatValue } from 'app/item-popup/ItemStat';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { statLabels } from 'app/organizer/Columns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
@@ -27,6 +26,7 @@ export function getColumns(
   statInfos: StatInfo[],
   customStatDefs: CustomStatDef[],
   destinyVersion: DestinyVersion,
+  compareBaseStats: boolean,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -79,7 +79,7 @@ export function getColumns(
         if (!stat) {
           return null;
         }
-        return <CompareStat stat={s} item={item} />;
+        return <CompareStat statInfo={s} stat={stat} item={item} value={stat.value} />;
       },
       defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
       filter: (value) => {
@@ -116,7 +116,8 @@ export function getColumns(
             if (!stat) {
               return null;
             }
-            return <ItemStatValue stat={stat} item={item} baseStat />;
+            const statInfo = statInfos.find((s) => s.stat.statHash === column.statHash)!;
+            return <CompareStat statInfo={statInfo} stat={stat} item={item} value={stat.base} />;
           },
           filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
           csv: (_value, item) => {
@@ -212,8 +213,7 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
       }),
-    ...statColumns,
-    ...baseStatColumns,
+    ...(compareBaseStats && isArmor ? baseStatColumns : statColumns),
     ...d1ArmorQualityByStat,
   ]);
 
