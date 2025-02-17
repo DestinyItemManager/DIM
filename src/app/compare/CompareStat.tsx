@@ -76,10 +76,10 @@ function statRange(
     return -1;
   }
 
-  const statValue = (compareBaseStats ? stat.base : stat.value) ?? stat.value;
+  let statValue = (compareBaseStats ? stat.base : stat.value) ?? stat.value;
 
   if (statInfo.stat.statHash === StatHashes.RecoilDirection) {
-    return recoilValue(statValue);
+    statValue = recoilValue(statValue);
   }
 
   if (statInfo.stat.smallerIsBetter) {

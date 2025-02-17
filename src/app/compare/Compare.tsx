@@ -378,7 +378,10 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
   for (const item of comparisonItems) {
     if (item.stats) {
       for (const stat of item.stats) {
-        const val = (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0;
+        let val = (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0;
+        if (stat.statHash === StatHashes.RecoilDirection) {
+          val = recoilValue(val);
+        }
         let statInfo = statsByHash[stat.statHash];
         if (statInfo) {
           statInfo.min = Math.min(statInfo.min, val);
