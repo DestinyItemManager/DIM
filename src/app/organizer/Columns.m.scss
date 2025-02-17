@@ -1,0 +1,192 @@
+@use '../variables' as *;
+@use './ItemTable.m.scss' as table;
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.name {
+  composes: noWrap;
+  font-weight: bold;
+}
+
+.stats {
+  text-align: right;
+}
+
+.centered {
+  text-align: center !important;
+}
+
+.dmg {
+  composes: centered;
+  padding-top: calc(var(--item-size) * 0.75 * 0.5 - 2px) !important;
+}
+.dmgHeader {
+  composes: centered;
+  padding-top: 4px;
+}
+
+.new {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  align-items: center;
+  > div {
+    position: static !important;
+  }
+}
+
+.icon {
+  --icon-item-size: calc(var(--item-size) * 0.75);
+  composes: centered;
+  padding-top: 4px !important;
+  min-width: calc(var(--item-size) * 0.75);
+  left: calc(30px + env(safe-area-inset-left));
+  position: sticky;
+  top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
+  z-index: table.$header-cells;
+  > :global(.item) {
+    --item-size: var(--icon-item-size) !important;
+    height: var(--item-size);
+
+    @include interactive($hover: true) {
+      outline: 1px solid var(--theme-item-polaroid-hover-border);
+      cursor: pointer;
+    }
+  }
+}
+.iconHeader {
+  composes: centered;
+  top: calc(var(--header-height) + var(--item-table-toolbar-height));
+}
+
+.inlineIcon {
+  height: 14px;
+  width: 14px;
+  margin-right: 0;
+}
+
+.positive {
+  color: $xp;
+}
+
+.negative {
+  color: #d14334;
+}
+
+.perkLike {
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
+}
+
+.modPerks {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  break-inside: avoid;
+  gap: 4px;
+  padding-left: 5px;
+}
+
+.perks {
+  composes: perkLike;
+  columns: 2;
+  height: 100%;
+  box-sizing: border-box;
+  column-gap: 8px;
+  > *:nth-last-child(n + 2) {
+    margin-bottom: 4px;
+  }
+  .modPerks {
+    flex: 0;
+    min-width: 160px;
+    flex-basis: 160px;
+  }
+}
+
+.isPerk {
+  border-left: 2px solid #888;
+  padding-left: 3px;
+}
+
+// Perks in the perk/mod columns
+.modPerk {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: noWrap;
+  align-items: flex-start;
+  gap: 3px;
+}
+.miniPerkContainer {
+  --item-size: 18px;
+  position: relative;
+  contain: layout paint style;
+  box-sizing: border-box;
+  height: 18px;
+  width: 18px;
+  margin-left: -1px;
+  flex-shrink: 0;
+  > img {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
+}
+.perkSelected {
+  font-weight: bold;
+}
+.perkSelectable {
+  cursor: pointer;
+}
+.enhancedArrow {
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 11px;
+    mask-image: url('images/enhancedArrow.svg');
+    background-color: $enhancedYellow;
+    margin-top: 3px;
+    margin-right: 1px;
+    margin-left: -7px;
+  }
+}
+
+.locationCell {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: noWrap;
+  align-items: flex-start;
+  img {
+    margin-right: 4px;
+    height: 16px;
+    width: 16px;
+  }
+}
+
+// Recoil circle
+.recoil {
+  composes: stats;
+  svg {
+    circle {
+      fill: black;
+    }
+  }
+}
+
+$modslotSize: 30px;
+.modslotIcon {
+  height: $modslotSize;
+  width: $modslotSize;
+  margin: 0 1px;
+}
+
+.loadout {
+  composes: noWrap;
+  img {
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+}
+
+.shapedIconOverlay {
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
+  width: calc(var(--item-size) - ($item-border-width * 2));
+}

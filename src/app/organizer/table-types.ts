@@ -56,6 +56,11 @@ export interface ColumnDefinition<V extends Value = Value> {
    */
   limitToClass?: DestinyClass;
 
+  /** An optional class name to apply to the cell. */
+  className?: string;
+  /** An optional class name to apply to the header. */
+  headerClassName?: string;
+
   /**
    * A name for this column when it is output as CSV. This will reuse the value
    * function as-is. We could reuse the header, but that's localized, while
@@ -78,6 +83,9 @@ export interface SpreadsheetContext {
   storeNamesById: { [key: string]: string };
 }
 
+/**
+ * A row is the calculated values for a single item, for all columns.
+ */
 export interface Row {
   item: DimItem;
   values: { [columnId: string]: Value };

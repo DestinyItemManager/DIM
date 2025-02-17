@@ -34,7 +34,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
-import { LookupTable, StringLookup } from 'app/utils/util-types';
+import { LookupTable } from 'app/utils/util-types';
 import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -56,11 +56,9 @@ import { createPortal } from 'react-dom';
 import { DimLanguage } from 'app/i18n';
 import { localizedSorter } from 'app/utils/intl';
 
-import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
+import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
-
-const possibleStyles = styles as unknown as StringLookup<string>;
 
 const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
   [ItemCategoryHashes.Hunter]: DestinyClass.Hunter,
@@ -490,20 +488,19 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           </div>
         </div>
         {filteredColumns.map((column: ColumnDefinition) => {
-          const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+          const columnSort = columnSorts.find((c) => c.columnId === column.id);
           return (
             <div
               key={column.id}
-              className={clsx(
-                possibleStyles[column.id],
-                column.id.startsWith('customstat_') && styles.customstat,
-                styles.header,
-                {
-                  [styles.stats]: isStatsColumn,
-                },
-              )}
+              className={clsx(column.headerClassName, styles.header)}
               role="columnheader"
-              aria-sort="none"
+              aria-sort={
+                columnSort === undefined
+                  ? 'none'
+                  : columnSort.sort === SortDirection.DESC
+                    ? 'descending'
+                    : 'ascending'
+              }
             >
               <div
                 onClick={
@@ -513,14 +510,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 }
               >
                 {column.header}
-                {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                {!column.noSort && columnSort && (
                   <AppIcon
                     className={styles.sorter}
-                    icon={
-                      columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                        ? faCaretDown
-                        : faCaretUp
-                    }
+                    icon={columnSort.sort === SortDirection.DESC ? faCaretDown : faCaretUp}
                   />
                 )}
               </div>
@@ -612,9 +605,8 @@ function TableRow({
         <div
           key={column.id}
           onClick={onRowClick(row, column)}
-          className={clsx(possibleStyles[column.id], {
+          className={clsx(column.className, {
             [styles.hasFilter]: column.filter !== undefined,
-            [styles.customstat]: column.id.startsWith('customstat_'),
           })}
           role="cell"
         >
