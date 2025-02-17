@@ -2,7 +2,7 @@ import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
-import { getColor, percent } from 'app/shell/formatters';
+import { getCompareColor, percent } from 'app/shell/formatters';
 import { StatHashes } from 'data/d2/generated-enums';
 import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
 import { MinimalStat, StatInfo } from './Compare';
@@ -22,14 +22,18 @@ export default function CompareStat({
   const { stat, getStat } = statInfo;
   const itemStat = getStat(item);
 
-  const color = getColor(statRange(itemStat, statInfo, compareBaseStats), 'color');
+  const color = getCompareColor(statRange(itemStat, statInfo, compareBaseStats));
 
   const statValue = itemStat
     ? ((compareBaseStats ? itemStat.base : itemStat.value) ?? itemStat.value)
     : 0;
 
   return (
-    <div onPointerEnter={() => setHighlight(stat.statHash)} className={styles.stat} style={color}>
+    <div
+      onPointerEnter={() => setHighlight(stat.statHash)}
+      className={styles.stat}
+      style={{ color }}
+    >
       {statValue !== 0 && stat.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
           <span style={{ width: percent(statValue / stat.maximumValue) }} />

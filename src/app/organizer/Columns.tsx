@@ -29,7 +29,7 @@ import { breakerTypeNames, weaponMasterworkY2SocketTypeHash } from 'app/search/d
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
-import { getColor, percent } from 'app/shell/formatters';
+import { getD1QualityColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
   lockIcon,
@@ -276,7 +276,9 @@ export function getColumns(
               cell: (value: number, item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 return (
-                  <span style={getColor(stat?.qualityPercentage?.min || 0, 'color')}>{value}%</span>
+                  <span style={getD1QualityColor(stat?.qualityPercentage?.min || 0, 'color')}>
+                    {value}%
+                  </span>
                 );
               },
               csv: (_value, item) => {
@@ -690,7 +692,7 @@ export function getColumns(
         header: t('Organizer.Columns.Quality'),
         csv: '% Quality',
         value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
-        cell: (value) => <span style={getColor(value, 'color')}>{value}%</span>,
+        cell: (value) => <span style={getD1QualityColor(value, 'color')}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
       }),
     ...(destinyVersion === 2 && isArmor ? customStats : []),

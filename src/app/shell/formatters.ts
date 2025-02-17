@@ -13,9 +13,10 @@ export function percentWithSingleDecimal(val: number): string {
 }
 
 /**
- * Given a value on (or outside) a 0-100 scale, returns a css color key and value for a react `style` attribute
+ * Given a value on (or outside) a 0-100 scale, returns a css color value. This
+ * is used when comparing item stats.
  */
-export function getColor(value: number, property = 'background-color') {
+export function getCompareColor(value: number) {
   let color = '';
   if (value < 0) {
     color = '#e0e0e0';
@@ -29,7 +30,30 @@ export function getColor(value: number, property = 'background-color') {
     color = 'oklch(82.08% 0.1561 215.44)';
   }
 
+  return color;
+}
+
+/**
+ * Given a value on (or outside) a 0-100 scale, returns a css color key and
+ * value for a react `style` attribute. This is the color scale DIM used for a
+ * long time, and it's preserved here for D1 reasons.
+ */
+export function getD1QualityColor(value: number, property = 'background-color') {
+  let color = 0;
+  if (value < 0) {
+    return { [property]: 'white' };
+  } else if (value <= 85) {
+    color = 0;
+  } else if (value <= 90) {
+    color = 20;
+  } else if (value <= 95) {
+    color = 60;
+  } else if (value < 100) {
+    color = 120;
+  } else if (value >= 100) {
+    color = 190;
+  }
   return {
-    [property]: color,
+    [property]: `hsla(${color},65%,50%, 1)`,
   };
 }
