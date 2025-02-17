@@ -83,8 +83,8 @@ import {
 } from 'app/inventory/spreadsheets';
 import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
-import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
+import styles from './Columns.m.scss';
+import { ColumnDefinition, ColumnGroup, ColumnWithStat, SortDirection, Value } from './table-types';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -165,7 +165,6 @@ export function getColumns(
 
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
-  type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
   const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
     const statHash = stat.statHash as StatHashes;
     if (customStatHashes.includes(statHash)) {
@@ -185,6 +184,8 @@ export function getColumns(
       ) : (
         stat.displayProperties.name
       ),
+      className: stat?.statHash === StatHashes.RecoilDirection ? styles.recoil : styles.stats,
+      headerClassName: styles.stats,
       statHash,
       columnGroup: statsGroup,
       value: (item: DimItem) => {
@@ -305,13 +306,15 @@ export function getColumns(
     return columnDef;
   }
 
-  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs);
+  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs, styles.centered);
 
   const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
       c({
         id: 'icon',
         header: t('Organizer.Columns.Icon'),
+        className: styles.icon,
+        headerClassName: styles.iconHeader,
         value: (i) => i.icon,
         cell: (_val, item) => (
           <ItemPopupTrigger item={item}>
@@ -330,6 +333,8 @@ export function getColumns(
       id: 'name',
       header: t('Organizer.Columns.Name'),
       csv: 'Name',
+      className: styles.name,
+      headerClassName: styles.noWrap,
       value: (i) => i.name,
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),
@@ -351,6 +356,8 @@ export function getColumns(
       c({
         id: 'power',
         csv: destinyVersion === 2 ? 'Power' : 'Light',
+        className: styles.centered,
+        headerClassName: styles.centered,
         header: <AppIcon icon={powerIndicatorIcon} />,
         dropdownLabel: t('Organizer.Columns.Power'),
         value: (item) => item.power,
@@ -361,6 +368,8 @@ export function getColumns(
       c({
         id: 'dmg',
         header: t('Organizer.Columns.Damage'),
+        className: styles.dmg,
+        headerClassName: styles.dmgHeader,
         csv: 'Element',
         value: (item) => item.element?.displayProperties.name,
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
@@ -380,6 +389,8 @@ export function getColumns(
       c({
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
+        className: styles.centered,
+        headerClassName: styles.centered,
         csv: 'Energy Capacity',
         value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
@@ -389,6 +400,8 @@ export function getColumns(
       id: 'locked',
       header: <AppIcon icon={lockIcon} />,
       csv: 'Locked',
+      className: styles.centered,
+      headerClassName: styles.centered,
       dropdownLabel: t('Organizer.Columns.Locked'),
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
@@ -398,6 +411,8 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
+      className: styles.centered,
+      headerClassName: styles.centered,
       value: (item) => getTag(item) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
@@ -408,6 +423,8 @@ export function getColumns(
       c({
         id: 'new',
         header: t('Organizer.Columns.New'),
+        className: styles.new,
+        headerClassName: styles.centered,
         value: (item) => newItems.has(item.id),
         cell: (value) => (value ? <NewItemIndicator /> : undefined),
         defaultSort: SortDirection.DESC,
@@ -439,6 +456,8 @@ export function getColumns(
       c({
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
+        className: styles.centered,
+        headerClassName: styles.centered,
         value: (item) => {
           const roll = wishList(item);
           return roll ? !roll.isUndesirable : undefined;
@@ -541,6 +560,7 @@ export function getColumns(
       c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
+        className: styles.noWrap,
         value: (item) => getWeaponArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
           const plugged = getWeaponArchetypeSocket(item)?.plugged;
@@ -586,6 +606,7 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'intrinsics',
+        className: styles.perkLike,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => (
@@ -600,6 +621,7 @@ export function getColumns(
       }),
     c({
       id: 'perks',
+      className: styles.perks,
       header:
         destinyVersion === 2
           ? isWeapon
@@ -634,6 +656,7 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'traits',
+        className: styles.perks,
         header: t('Organizer.Columns.Traits'),
         value: (item) => perkString(getSockets(item, 'traits')),
         cell: (_val, item) => (
@@ -652,6 +675,7 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'originTrait',
+        className: styles.perkLike,
         header: t('Organizer.Columns.OriginTraits'),
         value: (item) => perkString(getSockets(item, 'origin')),
         cell: (_val, item) => (
@@ -668,6 +692,7 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'shaders',
+        className: styles.perkLike,
         header: t('Organizer.Columns.Shaders'),
         value: (item) => perkString(getSockets(item, 'shaders')),
         cell: (_val, item) => (
@@ -743,7 +768,7 @@ export function getColumns(
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return (
             killTrackerInfo && (
-              <KillTrackerInfo tracker={killTrackerInfo} className={styles.killTrackerDisplay} />
+              <KillTrackerInfo tracker={killTrackerInfo} className={styles.locationCell} />
             )
           );
         },
@@ -770,6 +795,8 @@ export function getColumns(
     c({
       id: 'year',
       csv: 'Year',
+      className: styles.centered,
+      headerClassName: styles.centered,
       header: t('Organizer.Columns.Year'),
       value: (item) => getItemYear(item),
       filter: (value) => `year:${value}`,
@@ -778,6 +805,8 @@ export function getColumns(
       c({
         id: 'season',
         csv: 'Season',
+        className: styles.centered,
+        headerClassName: styles.centered,
         header: t('Organizer.Columns.Season'),
         value: (i) => getSeason(i),
         filter: (value) => `season:${value}`,
