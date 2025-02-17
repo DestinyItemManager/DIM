@@ -1,5 +1,7 @@
 ## Next
 
+## 8.59.0 <span class="changelog-date">(2025-02-16)</span>
+
 ## 8.58.0 <span class="changelog-date">(2025-02-09)</span>
 
 ## 8.57.3 <span class="changelog-date">(2025-02-05)</span>
