@@ -851,6 +851,7 @@ export const enum PlugCategoryHashes {
   V820NewLinearFusionRifle0Skins = 1322048781,
   V820NewPulseRifle0Masterwork = 56525756,
   V820NewPulseRifle0Skins = 382969102,
+  V820NewSubmachinegun0Skins = 2748353481,
   V820PursuitFusionRifle0Skins = 700552526,
   WarlockArcAspects = 2111409167,
   WarlockArcClassAbilities = 1308084083,

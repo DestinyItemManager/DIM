@@ -26,6 +26,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1363886209, // Gjallarhorn
   1441805468, // The Navigator
   1473821207, // Revision Zero
+  1481594633, // Barrow-Dyad
   1508896098, // The Wardcliff Coil
   1541131350, // Cerberus+1
   1594120904, // No Time to Explain
