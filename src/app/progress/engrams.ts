@@ -29,6 +29,11 @@ const engrams: HashLookup<{ cap: PowerCap; bonus: number }> = {
     cap: PowerCap.Pinnacle,
     bonus: 5,
   },
+  // Pinnacle from Pathfinder
+  863286832: {
+    cap: PowerCap.Pinnacle,
+    bonus: 5,
+  },
   // Tier 1
   3114385605: {
     cap: PowerCap.Powerful,
@@ -56,6 +61,11 @@ const engrams: HashLookup<{ cap: PowerCap; bonus: number }> = {
   },
   // Tier 3
   3114385607: {
+    cap: PowerCap.Powerful,
+    bonus: 5,
+  },
+  // Powerful (Tier 3) from Pathfinder
+  602242147: {
     cap: PowerCap.Powerful,
     bonus: 5,
   },

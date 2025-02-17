@@ -49,6 +49,8 @@ export default function StatTooltip({
                 <span>
                   {contribution.source !== 'armorStats' &&
                     contribution.source !== 'subclassPlug' &&
+                    contribution.count !== undefined &&
+                    contribution.count > 1 &&
                     `${contribution.count}x`}
                 </span>
                 <span>
