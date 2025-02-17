@@ -1,6 +1,5 @@
 @use '../variables' as *;
-
-$header-cells: 7;
+@use './ItemTable.m.scss' as table;
 
 .noWrap {
   white-space: nowrap;
@@ -44,7 +43,7 @@ $header-cells: 7;
   left: calc(30px + env(safe-area-inset-left));
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
-  z-index: $header-cells;
+  z-index: table.$header-cells;
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);

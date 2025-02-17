@@ -5,8 +5,11 @@ interface CssExports {
   'dmg': string;
   'dmgHeader': string;
   'enhancedArrow': string;
+  'hasFilter': string;
+  'header': string;
   'icon': string;
   'iconHeader': string;
+  'importButton': string;
   'inlineIcon': string;
   'isPerk': string;
   'loadout': string;
@@ -18,6 +21,7 @@ interface CssExports {
   'name': string;
   'negative': string;
   'new': string;
+  'noItems': string;
   'noWrap': string;
   'perkLike': string;
   'perkSelectable': string;
@@ -25,8 +29,13 @@ interface CssExports {
   'perks': string;
   'positive': string;
   'recoil': string;
+  'selection': string;
   'shapedIconOverlay': string;
+  'shiftHeld': string;
+  'sorter': string;
   'stats': string;
+  'table': string;
+  'toolbar': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
