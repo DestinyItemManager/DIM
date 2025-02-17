@@ -28,7 +28,6 @@ import {
   faArrowCircleDown,
   shoppingCart,
 } from '../shell/icons';
-import { StatInfo } from './Compare';
 import styles from './CompareItem.m.scss'; // eslint-disable-line css-modules/no-unused-class
 
 const possibleStyles = styles as unknown as StringLookup<string>;
@@ -46,8 +45,6 @@ export default memo(function CompareItem({
   item: DimItem;
   row: Row;
   filteredColumns: ColumnDefinition[];
-  stats: StatInfo[];
-  compareBaseStats?: boolean;
   itemClick: (item: DimItem) => void;
   remove: (item: DimItem) => void;
   setHighlight: (value?: string | number) => void;
@@ -104,7 +101,7 @@ export default memo(function CompareItem({
     if (column.id === 'name' && isFindable) {
       return () => itemClick(row.item);
     }
-    return () => console.log('clicked', row, column);
+    return undefined;
   };
 
   return (
@@ -191,14 +188,12 @@ function TableRow({
 
 /** The row headers that appear on the left of the compare window */
 export function CompareHeaders({
-  allStats,
   columnSorts,
   highlight,
   setHighlight,
   toggleColumnSort,
   filteredColumns,
 }: {
-  allStats: StatInfo[];
   columnSorts: ColumnSort[];
   highlight: string | number | undefined;
   setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;

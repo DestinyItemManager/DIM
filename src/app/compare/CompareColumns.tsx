@@ -79,7 +79,7 @@ export function getColumns(
         if (!stat) {
           return null;
         }
-        return <CompareStat statInfo={s} stat={stat} item={item} value={stat.value} />;
+        return <CompareStat min={s.min} max={s.max} stat={stat} item={item} value={stat.value} />;
       },
       defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
       filter: (value) => {
@@ -116,8 +116,16 @@ export function getColumns(
             if (!stat) {
               return null;
             }
-            const statInfo = statInfos.find((s) => s.stat.statHash === column.statHash)!;
-            return <CompareStat statInfo={statInfo} stat={stat} item={item} value={stat.base} />;
+            const s = statInfos.find((s) => s.stat.statHash === column.statHash)!;
+            return (
+              <CompareStat
+                min={s.minBase}
+                max={s.maxBase}
+                stat={stat}
+                item={item}
+                value={stat.base}
+              />
+            );
           },
           filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
           csv: (_value, item) => {

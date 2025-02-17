@@ -38,27 +38,16 @@ import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors'
 export interface StatInfo {
   /** An example of the stat, used for its constant definition. */
   stat: DimStat;
+  // TODO: Replace this max/min with a thing that walks over the rows and computes max/min over them?
   /** The minimum value of this stat across all items being compared. */
   min: number;
   /** The maximum value of this stat across all items being compared. */
   max: number;
-  /**
-   * A stat is "enabled" if it has a range of values across the items being
-   * compared. This is only used in Compare.
-   */
-  enabled: boolean;
-  /**
-   * Given an item, return the stat value for this stat. This is only used in
-   * Compare and can be deprecated when we stop using "stats" for power and
-   * energy.
-   */
-  getStat: StatGetter;
+  /** The minimum base value of this stat across all items being compared. */
+  minBase: number;
+  /** The maximum base value of this stat across all items being compared. */
+  maxBase: number;
 }
-export interface MinimalStat {
-  value: number;
-  base?: number;
-}
-type StatGetter = (item: DimItem) => undefined | MinimalStat;
 
 // TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
@@ -113,10 +102,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   }, [cancel, hasItems, session.query]);
 
   // Memoize computing the list of stats
-  const allStats = useMemo(
-    () => getAllStats(compareItems, compareBaseStats),
-    [compareItems, compareBaseStats],
-  );
+  const allStats = useMemo(() => getAllStats(compareItems), [compareItems]);
 
   const updateQuery = useCallback(
     (newQuery: string) => {
@@ -146,12 +132,10 @@ export default function Compare({ session }: { session: CompareSession }) {
         allStats,
         itemCreationContext.customStats,
         destinyVersion,
-        compareBaseStats,
+        doCompareBaseStats,
       ),
-    [allStats, compareBaseStats, destinyVersion, itemCreationContext.customStats],
+    [allStats, doCompareBaseStats, destinyVersion, itemCreationContext.customStats],
   );
-
-  console.log('columns', columns, allStats);
 
   // TODO: Filter to enabled columns
   const filteredColumns = columns;
@@ -195,24 +179,13 @@ export default function Compare({ session }: { session: CompareSession }) {
         items={sortedComparisonItems}
         rows={rows}
         filteredColumns={filteredColumns}
-        allStats={allStats}
         remove={remove}
         setHighlight={setHighlight}
         onPlugClicked={onPlugClicked}
-        doCompareBaseStats={doCompareBaseStats}
         initialItemId={session.initialItemId}
       />
     ),
-    [
-      sortedComparisonItems,
-      rows,
-      filteredColumns,
-      allStats,
-      remove,
-      onPlugClicked,
-      doCompareBaseStats,
-      session.initialItemId,
-    ],
+    [sortedComparisonItems, rows, filteredColumns, remove, onPlugClicked, session.initialItemId],
   );
 
   const header = (
@@ -247,7 +220,6 @@ export default function Compare({ session }: { session: CompareSession }) {
     <Sheet onClose={cancel} header={header} allowClickThrough>
       <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
         <CompareHeaders
-          allStats={allStats}
           columnSorts={columnSorts}
           highlight={highlight}
           setHighlight={setHighlight}
@@ -264,8 +236,6 @@ function CompareItems({
   items,
   rows,
   filteredColumns,
-  doCompareBaseStats,
-  allStats,
   remove,
   setHighlight,
   onPlugClicked,
@@ -274,9 +244,7 @@ function CompareItems({
   initialItemId: string | undefined;
   rows: Row[];
   filteredColumns: ColumnDefinition[];
-  doCompareBaseStats: boolean;
   items: DimItem[];
-  allStats: StatInfo[];
   remove: (item: DimItem) => void;
   setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
@@ -289,12 +257,10 @@ function CompareItems({
           row={rows.find((r) => r.item === item)!}
           filteredColumns={filteredColumns}
           key={item.id}
-          stats={allStats}
           itemClick={locateItem}
           remove={remove}
           setHighlight={setHighlight}
           onPlugClicked={onPlugClicked}
-          compareBaseStats={doCompareBaseStats}
           isInitialItem={initialItemId === item.id}
         />
       ))}
@@ -303,40 +269,35 @@ function CompareItems({
 }
 
 // TODO: Combine with ItemTable.buildStatInfo
-function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): StatInfo[] {
+function getAllStats(comparisonItems: DimItem[]): StatInfo[] {
   if (!comparisonItems.length) {
     return emptyArray<StatInfo>();
   }
-
-  const firstComparison = comparisonItems[0];
-  compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
-  const stats: StatInfo[] = [];
 
   const statsByHash: { [statHash: string]: StatInfo } = {};
   for (const item of comparisonItems) {
     if (item.stats) {
       for (const stat of item.stats) {
-        const val = (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0;
         let statInfo = statsByHash[stat.statHash];
         if (statInfo) {
-          statInfo.min = Math.min(statInfo.min, val);
-          statInfo.max = Math.max(statInfo.max, val);
-          statInfo.enabled = statInfo.min !== statInfo.max;
+          statInfo.min = Math.min(statInfo.min, stat.value);
+          statInfo.max = Math.max(statInfo.max, stat.value);
+          statInfo.minBase = Math.min(statInfo.minBase, stat.base);
+          statInfo.maxBase = Math.max(statInfo.minBase, stat.base);
         } else {
           statInfo = {
             stat,
-            min: val,
-            max: val,
-            enabled: false,
-            getStat: (item: DimItem) => item.stats?.find((s) => s.statHash === stat.statHash),
+            min: stat.value,
+            max: stat.value,
+            minBase: stat.base,
+            maxBase: stat.base,
           };
           statsByHash[stat.statHash] = statInfo;
-          stats.push(statInfo);
         }
       }
     }
   }
-  return stats;
+  return Object.values(statsByHash);
 }
 
 /**
