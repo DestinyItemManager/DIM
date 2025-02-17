@@ -125,16 +125,17 @@ export default function Compare({ session }: { session: CompareSession }) {
   /* ItemTable incursion */
 
   const destinyVersion = compareItems[0].destinyVersion;
+  const type = comparingArmor ? 'armor' : comparingWeapons ? 'weapon' : 'ghost';
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
-        'weapon',
+        type,
         allStats,
         itemCreationContext.customStats,
         destinyVersion,
         doCompareBaseStats,
       ),
-    [allStats, doCompareBaseStats, destinyVersion, itemCreationContext.customStats],
+    [type, allStats, doCompareBaseStats, destinyVersion, itemCreationContext.customStats],
   );
 
   // TODO: Filter to enabled columns
