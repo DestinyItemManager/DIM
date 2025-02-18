@@ -21,6 +21,10 @@ $content-cells: 5;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
     background-color: var(--theme-organizer-row-odd-bg);
   }
+
+  [role='cell'] {
+    z-index: $content-cells;
+  }
 }
 
 .toolbar {
@@ -74,10 +78,6 @@ $content-cells: 5;
 
 .sorter {
   margin-left: 2px;
-}
-
-[role='cell'] {
-  z-index: $content-cells;
 }
 
 .selection {

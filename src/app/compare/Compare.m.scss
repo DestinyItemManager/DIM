@@ -1,30 +1,5 @@
 @use '../variables' as *;
 
-.statLabel {
-  position: relative;
-  padding-right: 8px;
-  padding-left: 4px;
-  cursor: pointer;
-  height: 16px;
-  img {
-    height: 16px;
-    width: 16px;
-    vertical-align: bottom;
-    margin-right: 2px;
-  }
-}
-
-.sortDesc {
-  color: var(--theme-accent-primary);
-}
-.sortAsc {
-  color: var(--theme-accent-secondary);
-}
-
-.spacer {
-  height: var(--compare-item-height, 48px);
-}
-
 .organizerLink {
   composes: dim-button from global;
   margin-left: auto;
@@ -32,11 +7,6 @@
   @include phone-portrait {
     margin-left: 0;
   }
-}
-
-.statList {
-  display: flex;
-  flex-direction: column;
 }
 
 .bucket {
@@ -76,14 +46,4 @@
       margin: 0;
     }
   }
-}
-
-.highlightBar {
-  background-color: rgba(255, 255, 255, 0.125);
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100vw;
-  z-index: -1;
 }
