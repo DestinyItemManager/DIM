@@ -8,7 +8,7 @@ import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { ColumnDefinition, Row } from 'app/organizer/table-types';
+import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
@@ -33,6 +33,7 @@ import styles from './CompareItem.m.scss';
 export default memo(function CompareItem({
   item,
   row,
+  tableCtx,
   filteredColumns,
   itemClick,
   remove,
@@ -42,6 +43,7 @@ export default memo(function CompareItem({
 }: {
   item: DimItem;
   row: Row;
+  tableCtx: TableContext;
   filteredColumns: ColumnDefinition[];
   itemClick: (item: DimItem) => void;
   remove: (item: DimItem) => void;
@@ -112,6 +114,7 @@ export default memo(function CompareItem({
       {itemHeader}
       <TableRow
         row={row}
+        tableCtx={tableCtx}
         filteredColumns={filteredColumns}
         onRowClick={handleRowClick}
         setHighlight={setHighlight}
@@ -147,11 +150,13 @@ function VendorItemWarning({ item }: { item: DimItem }) {
 // Copied from ItemTable - TODO: reconverge
 function TableRow({
   row,
+  tableCtx,
   filteredColumns,
   onRowClick,
   setHighlight,
 }: {
   row: Row;
+  tableCtx: TableContext;
   filteredColumns: ColumnDefinition[];
   onRowClick: (
     row: Row,
@@ -172,7 +177,9 @@ function TableRow({
           role="cell"
           onPointerEnter={() => setHighlight(column.id)}
         >
-          {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
+          {column.cell
+            ? column.cell(row.values[column.id], row.item, tableCtx.minMaxValues[column.id])
+            : row.values[column.id]}
         </div>
       ))}
     </>
@@ -216,6 +223,14 @@ export function CompareHeaders({
               column.noSort
                 ? undefined
                 : toggleColumnSort(column.id, isShiftHeld, column.defaultSort)
+            }
+            role="rowheader"
+            aria-sort={
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? 'ascending'
+                  : 'descending'
+                : 'none'
             }
           >
             {column.header}{' '}

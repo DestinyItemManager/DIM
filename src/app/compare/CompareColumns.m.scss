@@ -34,7 +34,8 @@
       text-rendering: auto;
       line-height: 1;
       font-size: 8px;
-      margin-left: 4px;
+      margin-left: 3px;
+      margin-right: 2px;
       vertical-align: initial;
     }
   }
@@ -42,4 +43,9 @@
 
 .stats {
   display: block;
+}
+
+.energy {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
 }

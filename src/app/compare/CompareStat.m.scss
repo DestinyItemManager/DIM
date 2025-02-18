@@ -13,7 +13,7 @@
   // the goal width is 64px at normal item tile size (50px)
   // but allow the stat bars to shrink to account for bigger tiles,
   // so that this doesn't blow out the overall compare width
-  width: calc(114px - var(--item-size));
+  width: calc(50px + 64px + 4px - var(--item-size));
   position: relative;
 }
 
@@ -21,8 +21,8 @@
   position: absolute;
   top: 10%;
   height: 80%;
-  width: calc(100% - 3ch);
-  left: 3ch;
+  left: calc(3ch - 4px);
+  right: 0;
   > span {
     display: block;
     background-color: rgba(255, 255, 255, 0.25);

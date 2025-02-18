@@ -58,7 +58,7 @@ import { localizedSorter } from 'app/utils/intl';
 
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
-import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
+import { ColumnDefinition, ColumnSort, Row, SortDirection, TableContext } from './table-types';
 
 const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
   [ItemCategoryHashes.Hunter]: DestinyClass.Hunter,
@@ -226,7 +226,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   );
 
   // process items into Rows
-  const unsortedRows: Row[] = useMemo(
+  const [unsortedRows, _tableContext] = useMemo(
     () => buildRows(items, filteredColumns),
     [filteredColumns, items],
   );
@@ -553,7 +553,23 @@ export function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[])
       return memo;
     }, {}),
   }));
-  return unsortedRows;
+
+  // Build a map of min/max values for each column
+  const ctx: TableContext = { minMaxValues: {} };
+  for (const column of filteredColumns) {
+    if (column.cell) {
+      for (const row of unsortedRows) {
+        const value = row.values[column.id];
+        if (typeof value === 'number') {
+          const minMax = (ctx.minMaxValues[column.id] ??= { min: value, max: value });
+          minMax.min = Math.min(minMax.min, value);
+          minMax.max = Math.max(minMax.max, value);
+        }
+      }
+    }
+  }
+
+  return [unsortedRows, ctx] as const;
 }
 
 /**

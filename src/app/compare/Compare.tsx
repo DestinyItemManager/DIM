@@ -12,13 +12,14 @@ import {
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { buildRows, sortRows } from 'app/organizer/ItemTable';
-import { ColumnDefinition, Row } from 'app/organizer/table-types';
+import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -138,11 +139,20 @@ export default function Compare({ session }: { session: CompareSession }) {
     [type, allStats, doCompareBaseStats, destinyVersion, itemCreationContext.customStats],
   );
 
-  // TODO: Filter to enabled columns
-  const filteredColumns = columns;
+  const classIfAny = comparingArmor ? compareItems[0].classType : undefined;
+  const filteredColumns = useMemo(
+    () =>
+      // TODO: filter to enabled columns once you can select columns
+      compact(
+        columns.filter(
+          (column) => column.limitToClass === undefined || column.limitToClass === classIfAny,
+        ),
+      ),
+    [columns, classIfAny],
+  );
 
   // process items into Rows
-  const unsortedRows: Row[] = useMemo(
+  const [unsortedRows, tableCtx] = useMemo(
     () => buildRows(compareItems, filteredColumns),
     [filteredColumns, compareItems],
   );
@@ -179,6 +189,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       <CompareItems
         items={sortedComparisonItems}
         rows={rows}
+        tableCtx={tableCtx}
         filteredColumns={filteredColumns}
         remove={remove}
         setHighlight={setHighlight}
@@ -236,6 +247,7 @@ export default function Compare({ session }: { session: CompareSession }) {
 function CompareItems({
   items,
   rows,
+  tableCtx,
   filteredColumns,
   remove,
   setHighlight,
@@ -244,6 +256,7 @@ function CompareItems({
 }: {
   initialItemId: string | undefined;
   rows: Row[];
+  tableCtx: TableContext;
   filteredColumns: ColumnDefinition[];
   items: DimItem[];
   remove: (item: DimItem) => void;
@@ -256,6 +269,7 @@ function CompareItems({
         <CompareItem
           item={item}
           row={rows.find((r) => r.item === item)!}
+          tableCtx={tableCtx}
           filteredColumns={filteredColumns}
           key={item.id}
           itemClick={locateItem}
@@ -270,31 +284,16 @@ function CompareItems({
 }
 
 // TODO: Combine with ItemTable.buildStatInfo
-function getAllStats(comparisonItems: DimItem[]): StatInfo[] {
+function getAllStats(comparisonItems: DimItem[]): DimStat[] {
   if (!comparisonItems.length) {
-    return emptyArray<StatInfo>();
+    return emptyArray<DimStat>();
   }
 
-  const statsByHash: { [statHash: string]: StatInfo } = {};
+  const statsByHash: { [statHash: string]: DimStat } = {};
   for (const item of comparisonItems) {
     if (item.stats) {
       for (const stat of item.stats) {
-        let statInfo = statsByHash[stat.statHash];
-        if (statInfo) {
-          statInfo.min = Math.min(statInfo.min, stat.value);
-          statInfo.max = Math.max(statInfo.max, stat.value);
-          statInfo.minBase = Math.min(statInfo.minBase, stat.base);
-          statInfo.maxBase = Math.max(statInfo.minBase, stat.base);
-        } else {
-          statInfo = {
-            stat,
-            min: stat.value,
-            max: stat.value,
-            minBase: stat.base,
-            maxBase: stat.base,
-          };
-          statsByHash[stat.statHash] = statInfo;
-        }
+        statsByHash[stat.statHash] ??= stat;
       }
     }
   }

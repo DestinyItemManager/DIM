@@ -1,5 +1,4 @@
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
-import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getColor, percent } from 'app/shell/formatters';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -13,7 +12,7 @@ export default function CompareStat({
   item,
   value,
 }: {
-  stat: DimStat;
+  stat?: DimStat | D1Stat;
   item: DimItem;
   value: number;
   min: number;
@@ -23,13 +22,12 @@ export default function CompareStat({
 
   return (
     <div className={styles.stat} style={color}>
-      {value !== 0 && stat.bar && item.bucket.sort === 'Armor' && (
+      {value !== 0 && stat?.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
           <span style={{ width: percent(value / stat.maximumValue) }} />
         </span>
       )}
-      {stat.statHash === StatHashes.AnyEnergyTypeCost && stat && item.energy && <EnergyCostIcon />}
-      {stat.statHash === StatHashes.RecoilDirection ? (
+      {stat?.statHash === StatHashes.RecoilDirection ? (
         <span className={styles.recoil}>
           <span>{value}</span>
           <RecoilStat value={value} />
@@ -38,9 +36,11 @@ export default function CompareStat({
         <AnimatedNumber value={value} />
       )}
       {Boolean(value) &&
-        (stat as D1Stat).qualityPercentage &&
-        Boolean((stat as D1Stat).qualityPercentage!.range) && (
-          <span className={styles.range}>({(stat as D1Stat).qualityPercentage!.range})</span>
+        stat &&
+        'qualityPercentage' in stat &&
+        stat.qualityPercentage &&
+        Boolean(stat.qualityPercentage.range) && (
+          <span className={styles.range}>({stat.qualityPercentage.range})</span>
         )}
     </div>
   );
@@ -48,10 +48,7 @@ export default function CompareStat({
 
 // Turns a stat and a list of ranges into a 0-100 scale
 function statRange(stat: DimStat | D1Stat | undefined, min: number, max: number, value: number) {
-  if (!stat) {
-    return -1;
-  }
-  if ('qualityPercentage' in stat && stat.qualityPercentage) {
+  if (stat && 'qualityPercentage' in stat && stat.qualityPercentage) {
     return stat.qualityPercentage.min;
   }
 
@@ -59,11 +56,11 @@ function statRange(stat: DimStat | D1Stat | undefined, min: number, max: number,
     return -1;
   }
 
-  if (stat.statHash === StatHashes.RecoilDirection) {
+  if (stat?.statHash === StatHashes.RecoilDirection) {
     return recoilValue(value);
   }
 
-  if (stat.smallerIsBetter) {
+  if (stat?.smallerIsBetter) {
     return (100 * (max - value)) / (max - min);
   }
 

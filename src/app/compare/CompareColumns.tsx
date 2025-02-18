@@ -1,11 +1,13 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
-import { D1Item, DimItem } from 'app/inventory/item-types';
+import { D1Item, DimStat } from 'app/inventory/item-types';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { statLabels } from 'app/organizer/Columns';
+import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -14,7 +16,6 @@ import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
-import { StatInfo } from './Compare';
 import styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
 
@@ -24,7 +25,7 @@ import CompareStat from './CompareStat';
 // TODO: converge this with Columns.tsx
 export function getColumns(
   itemsType: 'weapon' | 'armor' | 'ghost',
-  statInfos: StatInfo[],
+  stats: DimStat[],
   customStatDefs: CustomStatDef[],
   destinyVersion: DestinyVersion,
   compareBaseStats: boolean,
@@ -46,8 +47,7 @@ export function getColumns(
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
   type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
-  const statColumns: ColumnWithStat[] = filterMap(statInfos, (s): ColumnWithStat | undefined => {
-    const stat = s.stat;
+  const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
     const statHash = stat.statHash as StatHashes;
     if (customStatHashes.includes(statHash)) {
       // Exclude custom total, it has its own column
@@ -70,19 +70,27 @@ export function getColumns(
       headerClassName: styles.stats,
       statHash,
       columnGroup: statsGroup,
-      value: (item: DimItem) => {
+      value: (item) => {
         const stat = item.stats?.find((s) => s.statHash === statHash);
         if (stat?.statHash === StatHashes.RecoilDirection) {
           return recoilValue(stat.value);
         }
         return stat?.value;
       },
-      cell: (_val, item: DimItem) => {
+      cell: (_val, item, ctx) => {
         const stat = item.stats?.find((s) => s.statHash === statHash);
         if (!stat) {
           return null;
         }
-        return <CompareStat min={s.min} max={s.max} stat={stat} item={item} value={stat.value} />;
+        return (
+          <CompareStat
+            min={ctx?.min ?? 0}
+            max={ctx?.max ?? 0}
+            stat={stat}
+            item={item}
+            value={stat.value}
+          />
+        );
       },
       defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
       filter: (value) => {
@@ -107,23 +115,22 @@ export function getColumns(
           ...column,
           id: `base${column.statHash}`,
           columnGroup: baseStatsGroup,
-          value: (item: DimItem): number | undefined => {
+          value: (item): number | undefined => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
             if (stat?.statHash === StatHashes.RecoilDirection) {
               return recoilValue(stat.base);
             }
             return stat?.base;
           },
-          cell: (_val, item: DimItem) => {
+          cell: (_val, item, ctx) => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
             if (!stat) {
               return null;
             }
-            const s = statInfos.find((s) => s.stat.statHash === column.statHash)!;
             return (
               <CompareStat
-                min={s.minBase}
-                max={s.maxBase}
+                min={ctx?.min ?? 0}
+                max={ctx?.max ?? 0}
                 stat={stat}
                 item={item}
                 value={stat.base}
@@ -145,9 +152,8 @@ export function getColumns(
 
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
-      ? statInfos
-          .map((s): ColumnWithStat => {
-            const stat = s.stat;
+      ? stats
+          .map((stat): ColumnWithStat => {
             const statHash = stat.statHash as StatHashes;
             return {
               statHash,
@@ -198,6 +204,15 @@ export function getColumns(
     return columnDef;
   }
 
+  const customStats = createCustomStatColumns(customStatDefs, undefined, true);
+  // Until everything uses compareStat
+  const cell: ColumnDefinition<number>['cell'] = (value: number, item, ctx) => (
+    <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={value} />
+  );
+  for (const c of customStats) {
+    c.cell = cell;
+  }
+
   // TODO: maybe add destinyVersion / usecase to the ColumnDefinition type??
   const columns: ColumnDefinition[] = compact([
     c({
@@ -214,7 +229,14 @@ export function getColumns(
         id: 'power',
         csv: destinyVersion === 2 ? 'Power' : 'Light',
         header: t('Organizer.Columns.Power'),
-        value: (item) => item.power,
+        // We don't want to show a value for power if it's 0
+        value: (item) => (item.power === 0 ? undefined : item.power),
+        cell: (val, item, ctx) =>
+          val !== undefined ? (
+            <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={val} />
+          ) : (
+            t('Stats.NotApplicable')
+          ),
         defaultSort: SortDirection.DESC,
         filter: (value) => `power:>=${value}`,
       }),
@@ -224,12 +246,31 @@ export function getColumns(
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
         csv: 'Energy Capacity',
+        className: styles.energy,
         value: (item) => item.energy?.energyCapacity,
+        cell: (val, item, ctx) =>
+          val !== undefined && (
+            <>
+              <EnergyCostIcon />
+              <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={val} />
+            </>
+          ),
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
       }),
     ...(compareBaseStats && isArmor ? baseStatColumns : statColumns),
     ...d1ArmorQualityByStat,
+    destinyVersion === 1 &&
+      isArmor &&
+      c({
+        id: 'quality',
+        header: t('Organizer.Columns.Quality'),
+        csv: '% Quality',
+        value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
+        cell: (value) => <span style={getColor(value, 'color')}>{value}%</span>,
+        filter: (value) => `quality:>=${value}`,
+      }),
+    ...(destinyVersion === 2 && isArmor ? customStats : []),
   ]);
 
   return columns;
