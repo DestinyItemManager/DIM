@@ -15,6 +15,7 @@ import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
 import { StatHashes } from 'data/d2/generated-enums';
 import { StatInfo } from './Compare';
+import styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
 
 /**
@@ -65,6 +66,8 @@ export function getColumns(
       ) : (
         stat.displayProperties.name
       ),
+      className: styles.stats,
+      headerClassName: styles.stats,
       statHash,
       columnGroup: statsGroup,
       value: (item: DimItem) => {
@@ -153,6 +156,8 @@ export function getColumns(
               header: t('Organizer.Columns.StatQualityStat', {
                 stat: stat.displayProperties.name,
               }),
+              className: styles.stats,
+              headerClassName: styles.stats,
               value: (item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 let pct = 0;
@@ -199,6 +204,8 @@ export function getColumns(
       id: 'name',
       header: t('Organizer.Columns.Name'),
       csv: 'Name',
+      className: styles.name,
+      headerClassName: styles.nameHeader,
       value: (i) => i.name,
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),

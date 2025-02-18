@@ -487,7 +487,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             />
           </div>
         </div>
-        {filteredColumns.map((column: ColumnDefinition) => {
+        {filteredColumns.map((column) => {
           const columnSort = column.noSort
             ? undefined
             : columnSorts.find((c) => c.columnId === column.id);

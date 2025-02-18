@@ -267,6 +267,8 @@ export function getColumns(
               header: t('Organizer.Columns.StatQualityStat', {
                 stat: stat.displayProperties.name,
               }),
+              className: styles.stats,
+              headerClassName: styles.stats,
               value: (item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 let pct = 0;

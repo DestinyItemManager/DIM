@@ -5,17 +5,12 @@ interface CssExports {
   'compareItem': string;
   'header': string;
   'highlightBar': string;
-  'initialItem': string;
-  'isFindable': string;
   'itemAside': string;
-  'itemName': string;
-  'name': string;
   'sortAsc': string;
   'sortDesc': string;
   'spacer': string;
   'statLabel': string;
   'statList': string;
-  'stats': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

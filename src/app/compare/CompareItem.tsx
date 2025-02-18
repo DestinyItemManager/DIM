@@ -1,5 +1,6 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
 import { t, tl } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -7,12 +8,11 @@ import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { ColumnDefinition, ColumnSort, Row, SortDirection } from 'app/organizer/table-types';
+import { ColumnDefinition, Row } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
-import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -28,9 +28,7 @@ import {
   faArrowCircleDown,
   shoppingCart,
 } from '../shell/icons';
-import styles from './CompareItem.m.scss'; // eslint-disable-line css-modules/no-unused-class
-
-const possibleStyles = styles as unknown as StringLookup<string>;
+import styles from './CompareItem.m.scss';
 
 export default memo(function CompareItem({
   item,
@@ -107,8 +105,8 @@ export default memo(function CompareItem({
   return (
     <div
       className={clsx(styles.compareItem, {
-        [styles.initialItem]: isInitialItem,
-        [styles.isFindable]: isFindable,
+        'compare-initial': isInitialItem,
+        'compare-findable': isFindable,
       })}
     >
       {itemHeader}
@@ -163,25 +161,20 @@ function TableRow({
 }) {
   return (
     <>
-      {filteredColumns.map((column) => {
-        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
-        return (
-          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-          <div
-            key={column.id}
-            onClick={onRowClick(row, column)}
-            className={clsx(possibleStyles[column.id], {
-              // [styles.hasFilter]: column.filter !== undefined,
-              // [styles.customstat]: column.id.startsWith('customstat_'),
-              [styles.stats]: isStatsColumn,
-            })}
-            role="cell"
-            onPointerEnter={() => setHighlight(column.id)}
-          >
-            {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
-          </div>
-        );
-      })}
+      {filteredColumns.map((column) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        <div
+          key={column.id}
+          onClick={onRowClick(row, column)}
+          className={clsx(column.className, {
+            // [styles.hasFilter]: column.filter !== undefined,
+          })}
+          role="cell"
+          onPointerEnter={() => setHighlight(column.id)}
+        >
+          {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
+        </div>
+      ))}
     </>
   );
 }
@@ -206,17 +199,12 @@ export function CompareHeaders({
       <div className={styles.spacer} />
       {filteredColumns.map((column) => {
         const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
-        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
         return (
           <div
             key={column.id}
             className={clsx(
               styles.statLabel,
-              possibleStyles[column.id],
-              // column.id.startsWith('customstat_') && styles.customstat,
-              {
-                [styles.stats]: isStatsColumn,
-              },
+              column.headerClassName,
               columnSort
                 ? columnSort.sort === SortDirection.ASC
                   ? styles.sortDesc

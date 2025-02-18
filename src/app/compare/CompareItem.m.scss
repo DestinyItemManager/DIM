@@ -33,7 +33,6 @@
 }
 
 // The highlight behind each item
-// TODO: Use a :has(:hover) for this?
 .highlightBar {
   background-color: rgba(255, 255, 255, 0.125);
   position: absolute;
@@ -121,50 +120,4 @@
   right: 4px;
   top: calc(32px + 4px + 1lh);
   cursor: pointer;
-}
-
-/* COLUMN STYLES */
-
-.itemName,
-.name {
-  margin-top: 2px;
-  margin-bottom: 2px;
-
-  // Don't let the item name wrap
-  .compareItem & {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .initialItem & {
-    color: var(--theme-accent-primary);
-    font-weight: bold;
-  }
-
-  // Add the magnifying glass icons to items that can be clicked to find them
-  .isFindable & {
-    cursor: pointer;
-    &::after {
-      content: '\f002';
-      // Copied from .fas classes:
-      /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
-      font-family: 'Font Awesome 5 Free';
-      font-weight: 900;
-      -moz-osx-font-smoothing: grayscale;
-      -webkit-font-smoothing: antialiased;
-      display: inline-block;
-      font-style: normal;
-      font-variant: normal;
-      text-rendering: auto;
-      line-height: 1;
-      font-size: 8px;
-      margin-left: 4px;
-      vertical-align: initial;
-    }
-  }
-}
-
-.stats {
-  display: block;
 }
