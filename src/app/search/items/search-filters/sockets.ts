@@ -1,4 +1,5 @@
 import { tl } from 'app/i18next-t';
+import type { DimItem } from 'app/inventory/item-types';
 import { enhancementSocketHash } from 'app/inventory/store/crafted';
 import {
   DEFAULT_GLOW,
@@ -8,9 +9,9 @@ import {
 } from 'app/search/d2-known-values';
 import { plainString } from 'app/search/text-utils';
 import {
+  braveShiny,
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
-  isShiny,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
@@ -31,6 +32,17 @@ import {
 } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
+import D2Sources from './d2-sources';
+
+function hasExtraPerks(item: DimItem) {
+  return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
+    .filter(
+      (socket) =>
+        socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
+        socket.hasRandomizedPlugItems,
+    )
+    .some((socket) => socket.plugOptions.length > 1);
+}
 
 export const modslotFilter = {
   keywords: 'modslot',
@@ -89,7 +101,28 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'shiny',
     description: tl('Filter.Shiny'),
     destinyVersion: 2,
-    filter: () => isShiny,
+    filter: () => (i) => {
+      if (braveShiny(i)) {
+        return true;
+      }
+      if (!hasExtraPerks(i)) {
+        return false;
+      }
+
+      for (const src of ['heresy', 'revenant']) {
+        const sourceInfo = D2Sources[src];
+        if (i.name === 'Psychopomp') {
+          console.log(sourceInfo, i.source);
+        }
+        if (
+          (i.source && sourceInfo.sourceHashes?.includes(i.source)) ||
+          sourceInfo.itemHashes?.includes(i.hash)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
   {
     keywords: 'extraperk',
@@ -100,13 +133,7 @@ const socketFilters: ItemFilterDefinition[] = [
         return false;
       }
 
-      return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
-        .filter(
-          (socket) =>
-            socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
-            socket.hasRandomizedPlugItems,
-        )
-        .some((socket) => socket.plugOptions.length > 1);
+      return hasExtraPerks(item);
     },
   },
   {
