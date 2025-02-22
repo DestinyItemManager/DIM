@@ -372,6 +372,7 @@ const D2Sources: {
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: "Pit of Heresy" Dungeon
       2463956052, // Source: Vesper's Host
+      2607970476, // Source: Sundered Doctrine
       3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     itemHashes: [
@@ -641,6 +642,7 @@ const D2Sources: {
   heresy: {
     sourceHashes: [
       1341921330, // Source: Episode: Heresy Activities
+      2607970476, // Source: Sundered Doctrine
       3507911332, // Source: Episode: Heresy
     ],
   },
@@ -1367,6 +1369,12 @@ const D2Sources: {
       3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
     ],
     aliases: ['zavala'],
+  },
+  sundereddoctrine: {
+    sourceHashes: [
+      2607970476, // Source: Sundered Doctrine
+    ],
+    aliases: ['sundered'],
   },
   sundial: {
     sourceHashes: [

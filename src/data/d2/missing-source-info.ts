@@ -1479,18 +1479,33 @@ const missingSources: { [key: string]: number[] } = {
     3864896927, // Nightmare Harvester
   ],
   heresy: [
+    267671509, // Skull of the Flain
+    571745874, // Hooks of the Flain
     601574723, // Adamantite (Adept)
+    608948636, // Carapace of the Flain
     615373993, // Eyes Unveiled
     704410186, // Psychopomp (Adept)
     768610585, // Watchful Eye
     861521336, // Afterlight (Adept)
+    874160718, // Claws of the Flain
+    1274101249, // Mask of the Flain
+    1930656621, // Husk's Cloak
+    2112020760, // Grasps of the Flain
+    2299285295, // Adornment of the Flain
+    2319342865, // Attendant's Mark
     2501377328, // Division (Adept)
+    2501618648, // Visage of the Flain
+    2578940720, // Scales of the Flain
     2755584425, // Refusal of the Call (Adept)
+    2791329915, // Talons of the Flain
     2856225832, // Watchful Eye (Adept)
+    2965319081, // Reach of the Flain
     2987244302, // Adamantite
     3054597646, // Abyssal Edge (Adept)
+    3238482084, // Grips of the Flain
     3840794631, // Psychopomp
     3949253499, // Anamnesis (Adept)
+    4012478142, // Weaver's Bond
     4116546788, // Mirror Imago (Adept)
     4173311704, // Eyes Unveiled (Adept)
     4221591387, // Abyssal Edge
@@ -3027,6 +3042,40 @@ const missingSources: { [key: string]: number[] } = {
     4087433052, // The Took Offense
     4138296191, // The Shelter in Place
     4288492921, // Vigil of Heroes
+  ],
+  sundered: [
+    267671509, // Skull of the Flain
+    571745874, // Hooks of the Flain
+    608948636, // Carapace of the Flain
+    874160718, // Claws of the Flain
+    1274101249, // Mask of the Flain
+    1930656621, // Husk's Cloak
+    2112020760, // Grasps of the Flain
+    2299285295, // Adornment of the Flain
+    2319342865, // Attendant's Mark
+    2501618648, // Visage of the Flain
+    2578940720, // Scales of the Flain
+    2791329915, // Talons of the Flain
+    2965319081, // Reach of the Flain
+    3238482084, // Grips of the Flain
+    4012478142, // Weaver's Bond
+  ],
+  sundereddoctrine: [
+    267671509, // Skull of the Flain
+    571745874, // Hooks of the Flain
+    608948636, // Carapace of the Flain
+    874160718, // Claws of the Flain
+    1274101249, // Mask of the Flain
+    1930656621, // Husk's Cloak
+    2112020760, // Grasps of the Flain
+    2299285295, // Adornment of the Flain
+    2319342865, // Attendant's Mark
+    2501618648, // Visage of the Flain
+    2578940720, // Scales of the Flain
+    2791329915, // Talons of the Flain
+    2965319081, // Reach of the Flain
+    3238482084, // Grips of the Flain
+    4012478142, // Weaver's Bond
   ],
   tangled: [
     177829853, // Scatterhorn Bond

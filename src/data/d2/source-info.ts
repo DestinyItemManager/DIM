@@ -749,6 +749,7 @@ const D2Sources: {
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: "Pit of Heresy" Dungeon
       2463956052, // Source: Vesper's Host
+      2607970476, // Source: Sundered Doctrine
       3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     searchString: [],
@@ -1068,6 +1069,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       1341921330, // Source: Episode: Heresy Activities
+      2607970476, // Source: Sundered Doctrine
       3507911332, // Source: Episode: Heresy
     ],
     searchString: [],
@@ -2070,6 +2072,20 @@ const D2Sources: {
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
       3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
+    ],
+    searchString: [],
+  },
+  sundered: {
+    itemHashes: [],
+    sourceHashes: [
+      2607970476, // Source: Sundered Doctrine
+    ],
+    searchString: [],
+  },
+  sundereddoctrine: {
+    itemHashes: [],
+    sourceHashes: [
+      2607970476, // Source: Sundered Doctrine
     ],
     searchString: [],
   },
