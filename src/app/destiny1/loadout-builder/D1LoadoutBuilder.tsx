@@ -7,7 +7,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { D1_StatHashes, D1BucketHashes } from 'app/search/d1-known-values';
-import { getColor } from 'app/shell/formatters';
+import { getD1QualityColor } from 'app/shell/formatters';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy, reverseComparator } from 'app/utils/comparators';
@@ -612,7 +612,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
                       {item.stats?.map((stat) => (
                         <div
                           key={stat.statHash}
-                          style={getColor(
+                          style={getD1QualityColor(
                             item.normalStats![stat.statHash].qualityPercentage,
                             'color',
                           )}

@@ -8,7 +8,7 @@ import { I18nKey, t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
 import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-known-values';
-import { getColor, percent } from 'app/shell/formatters';
+import { getD1QualityColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
 import { sumBy } from 'app/utils/collections';
@@ -172,7 +172,10 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         isD1Stat(item, stat) &&
         stat.qualityPercentage &&
         stat.qualityPercentage.min !== 0 && (
-          <div className={styles.quality} style={getColor(stat.qualityPercentage.min, 'color')}>
+          <div
+            className={styles.quality}
+            style={getD1QualityColor(stat.qualityPercentage.min, 'color')}
+          >
             ({stat.qualityPercentage.range})
           </div>
         )}
@@ -357,7 +360,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
   return (
     <>
       <div className={styles.statName}>{t('Stats.Quality')}</div>
-      <div className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
+      <div className={styles.qualitySummary} style={getD1QualityColor(item.quality.min, 'color')}>
         {t('Stats.OfMaxRoll', { range: item.quality.range })}
         <ExternalLink
           href={userGuideUrl('View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is')}
