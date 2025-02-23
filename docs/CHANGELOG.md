@@ -1,10 +1,20 @@
 ## Next
 
+* Added `source:sundereddoctrine` for the new dungeon.
+* Updated the color scale used for stats in Compare - there is now greater separation between the worst (red) and the best (green, with blue for the best stat).
+
 ## 8.59.1 <span class="changelog-date">(2025-02-16)</span>
+
+* Added Pathfinder reward info.
 
 ## 8.59.0 <span class="changelog-date">(2025-02-16)</span>
 
+* Fix a bug that could prevent removing wishlists if the wishlist no longer exists.
+* Fix D1 showing a yellow border around completed items.
+
 ## 8.58.0 <span class="changelog-date">(2025-02-09)</span>
+
+* Energy upgrade tooltips now show the material cost to upgrade.
 
 ## 8.57.3 <span class="changelog-date">(2025-02-05)</span>
 
