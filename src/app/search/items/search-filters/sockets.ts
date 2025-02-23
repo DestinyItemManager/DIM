@@ -392,6 +392,15 @@ const socketFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) => adeptWeaponHashes.includes(item.hash),
   },
+  {
+    keywords: 'origintrait',
+    description: tl('Filter.OriginTrait'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      item.sockets?.allSockets.some((s) =>
+        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
+      ),
+  },
 ];
 
 export default socketFilters;
