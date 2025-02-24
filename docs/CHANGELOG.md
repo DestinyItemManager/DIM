@@ -1,5 +1,7 @@
 ## Next
 
+## 8.60.0 <span class="changelog-date">(2025-02-23)</span>
+
 * Added `source:sundereddoctrine` for the new dungeon.
 * Updated the color scale used for stats in Compare - there is now greater separation between the worst (red) and the best (green, with blue for the best stat).
 
