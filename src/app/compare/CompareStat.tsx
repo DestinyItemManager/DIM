@@ -1,6 +1,6 @@
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
-import { getColor, percent } from 'app/shell/formatters';
+import { getCompareColor, percent } from 'app/shell/formatters';
 import { StatHashes } from 'data/d2/generated-enums';
 import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
 import styles from './CompareStat.m.scss';
@@ -18,10 +18,10 @@ export default function CompareStat({
   min: number;
   max: number;
 }) {
-  const color = getColor(statRange(stat, min, max, value), 'color');
+  const color = getCompareColor(statRange(stat, min, max, value));
 
   return (
-    <div className={styles.stat} style={color}>
+    <div className={styles.stat} style={{ color }}>
       {value !== 0 && stat?.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
           <span style={{ width: percent(value / stat.maximumValue) }} />
@@ -57,7 +57,7 @@ function statRange(stat: DimStat | D1Stat | undefined, min: number, max: number,
   }
 
   if (stat?.statHash === StatHashes.RecoilDirection) {
-    return recoilValue(value);
+    value = recoilValue(value);
   }
 
   if (stat?.smallerIsBetter) {

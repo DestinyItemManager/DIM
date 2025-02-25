@@ -106,6 +106,7 @@ export const emptyPlugHashes = new Set<number>([
   4216349042, // Experience Mod Socket (Experience Ghost Mod, enhancements.ghosts_experience)
   2085536058, // Flickering Blessing Mod Socket (Flickering Blessing Destination Mod, schism_boons.destination_mods.efficiency)
   1656746282, // Locked Artifice Socket (Artifice Armor Mod, enhancements.artifice.exotic)
+  2426387438, // No Projection (Restore Defaults, hologram)
   3725942064, // Pale Blessing Mod Socket (Pale Blessing Destination Mod, schism_boons.destination_mods.playstyle)
   1692473496, // Protocol Socket (v700.weapons.mods.mission_avalon)
   760030801, // Tracking Mod Socket (Tracking Ghost Mod, enhancements.ghosts_tracking)

@@ -11,7 +11,7 @@ import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
-import { getColor } from 'app/shell/formatters';
+import { getCompareColor } from 'app/shell/formatters';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
@@ -175,7 +175,9 @@ export function getColumns(
               cell: (value: number, item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 return (
-                  <span style={getColor(stat?.qualityPercentage?.min || 0, 'color')}>{value}%</span>
+                  <span style={{ color: getCompareColor(stat?.qualityPercentage?.min || 0) }}>
+                    {value}%
+                  </span>
                 );
               },
               csv: (_value, item) => {
@@ -267,7 +269,7 @@ export function getColumns(
         header: t('Organizer.Columns.Quality'),
         csv: '% Quality',
         value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
-        cell: (value) => <span style={getColor(value, 'color')}>{value}%</span>,
+        cell: (value) => <span style={{ color: getCompareColor(value) }}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
       }),
     ...(destinyVersion === 2 && isArmor ? customStats : []),

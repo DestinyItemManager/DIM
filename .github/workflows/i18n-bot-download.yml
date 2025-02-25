@@ -26,7 +26,7 @@ jobs:
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@v2.6.0
+        uses: crowdin/github-action@v2.6.1
         with:
           upload_sources: false
           upload_translations: false
