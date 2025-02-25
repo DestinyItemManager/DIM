@@ -353,8 +353,8 @@ devDependencies:
     specifier: ^2.0.0
     version: 2.0.0
   globals:
-    specifier: ^15.15.0
-    version: 15.15.0
+    specifier: ^16.0.0
+    version: 16.0.0
   html-loader:
     specifier: ^5.1.0
     version: 5.1.0(webpack@5.98.0)
@@ -8616,6 +8616,11 @@ packages:
 
   /globals@15.15.0:
     resolution: {integrity: sha512-7ACyT3wmyp3I61S4fG682L0VA2RGD9otkqGJIwNUMF1SWUombIIk+af1unuDYgMm082aHYwD+mzJvv9Iu8dsgg==}
+    engines: {node: '>=18'}
+    dev: true
+
+  /globals@16.0.0:
+    resolution: {integrity: sha512-iInW14XItCXET01CQFqudPOWP2jYMl7T+QRQT+UNcR/iQncN/F0UNpgd76iFkBPgNQb4+X3LV9tLJYzwh+Gl3A==}
     engines: {node: '>=18'}
     dev: true
 
