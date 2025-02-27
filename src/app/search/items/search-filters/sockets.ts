@@ -241,14 +241,16 @@ const socketFilters: ItemFilterDefinition[] = [
       (item) =>
         !patternIsUnlocked(item) &&
         (filterValue === 'harmonizable'
-          ? Boolean(
+          ? // is:harmonizable checks for an "insert harmonizer" socket
+            Boolean(
               item.sockets?.allSockets.some(
                 (s) =>
                   s.plugged?.plugDef.plug.plugCategoryHash ===
                     PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame,
               ),
             )
-          : Boolean(
+          : // is:extractable checks for red-borderness
+            Boolean(
               item.deepsightInfo &&
                 item.patternUnlockRecord &&
                 item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted,
