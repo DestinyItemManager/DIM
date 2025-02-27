@@ -31,6 +31,7 @@ import {
 } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
+import { patternIsUnlocked } from './known-values';
 
 export const modslotFilter = {
   keywords: 'modslot',
@@ -238,19 +239,22 @@ const socketFilters: ItemFilterDefinition[] = [
     filter:
       ({ filterValue }) =>
       (item) =>
-        filterValue === 'harmonizable'
-          ? Boolean(
+        !patternIsUnlocked(item) &&
+        (filterValue === 'harmonizable'
+          ? // is:harmonizable checks for an "insert harmonizer" socket
+            Boolean(
               item.sockets?.allSockets.some(
                 (s) =>
                   s.plugged?.plugDef.plug.plugCategoryHash ===
                     PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame,
               ),
             )
-          : Boolean(
+          : // is:extractable checks for red-borderness
+            Boolean(
               item.deepsightInfo &&
                 item.patternUnlockRecord &&
                 item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted,
-            ),
+            )),
   },
   {
     keywords: 'memento',

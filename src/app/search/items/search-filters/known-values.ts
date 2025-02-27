@@ -375,9 +375,7 @@ const knownValuesFilters: ItemFilterDefinition[] = [
     keywords: ['patternunlocked'],
     description: tl('Filter.PatternUnlocked'),
     destinyVersion: 2,
-    filter: () => (item) =>
-      item.patternUnlockRecord &&
-      !(item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted),
+    filter: () => patternIsUnlocked,
   },
   {
     keywords: 'source',
@@ -409,5 +407,12 @@ const knownValuesFilters: ItemFilterDefinition[] = [
     },
   },
 ];
+
+export function patternIsUnlocked(item: DimItem) {
+  return (
+    item.patternUnlockRecord &&
+    !(item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted)
+  );
+}
 
 export default knownValuesFilters;
