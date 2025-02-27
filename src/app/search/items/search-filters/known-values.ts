@@ -403,7 +403,7 @@ const knownValuesFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     filter: () => {
       const outputValues = Object.values(focusingOutputs);
-      return (item: DimItem) => outputValues.includes(item.hash);
+      return (item) => outputValues.includes(item.hash);
     },
   },
 ];
