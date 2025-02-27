@@ -93,6 +93,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "movable",
   "new",
   "onwrongclass",
+  "origintrait",
   "ornamented",
   "patternunlocked",
   "pinnaclereward",
