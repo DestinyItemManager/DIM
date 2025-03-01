@@ -75,7 +75,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
   const summaryIcon = item.crafted ? (
     <AppIcon
-      className={styles.shapedIcon}
+      className={clsx(styles.shapedIcon, item.crafted === 'enhanced' && styles.enhancedIcon)}
       icon={item.crafted === 'enhanced' ? enhancedIcon : shapedIcon}
     />
   ) : (
