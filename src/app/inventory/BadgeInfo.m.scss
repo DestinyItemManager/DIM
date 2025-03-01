@@ -38,6 +38,10 @@
   height: calc((8 / 50) * var(--item-size));
   margin-right: auto;
   color: var(--theme-item-shaped-icon);
+  &.enhancedIcon {
+    width: calc((10 / 50) * var(--item-size));
+    height: calc((10 / 50) * var(--item-size));
+  }
 }
 
 .quality {
