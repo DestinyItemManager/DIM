@@ -1,5 +1,7 @@
 ## Next
 
+## 8.61.0 <span class="changelog-date">(2025-03-02)</span>
+
 * `is:harmonizable` fixed to ignore bugged weapons with a Deepsight option that shouldn't be there.
 * `is:accountmaxpower` added to show your highest Power Level gear, determining the level of new drops.
 * `is:origintrait` added to find weapons with Origin Traits.
