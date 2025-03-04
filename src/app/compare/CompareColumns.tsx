@@ -60,6 +60,7 @@ export function getColumns(
       header: stat.displayProperties.hasIcon ? (
         <span title={stat.displayProperties.name}>
           <BungieImage src={stat.displayProperties.icon} />
+          {stat.displayProperties.name}
         </span>
       ) : statLabel ? (
         t(statLabel)
