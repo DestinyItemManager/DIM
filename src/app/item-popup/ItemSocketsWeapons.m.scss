@@ -8,10 +8,6 @@
 
 .perks {
   position: relative;
-  :global(.item-sockets) {
-    // TODO: adjust these through CSS vars?
-    gap: 3px;
-  }
 
   // Draw lines between the sockets (columns), like in game.
   // TODO: maybe get rid of this
@@ -60,6 +56,8 @@
 }
 
 .grid {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  gap: 3px;
   margin: 8px 10px;
 
   .minimal & {

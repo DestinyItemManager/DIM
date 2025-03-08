@@ -1,6 +1,7 @@
+import clsx from 'clsx';
 import { memo, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import './ItemSockets.scss';
+import styles from './ItemSockets.m.scss';
 import ItemSocketsGeneral from './ItemSocketsGeneral';
 import ItemSocketsWeapons from './ItemSocketsWeapons';
 import SocketDetails from './SocketDetails';
@@ -66,3 +67,13 @@ export default memo(function ItemSockets({
     </>
   );
 });
+
+export function ItemSocketsList({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={clsx(className, styles.itemSockets)}>{children}</div>;
+}
