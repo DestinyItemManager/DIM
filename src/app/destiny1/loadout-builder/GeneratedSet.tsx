@@ -74,9 +74,11 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
         {Object.entries(setType.set.armor).map(([type, armorpiece]) => (
           <div key={type} className="set-item">
             <LoadoutBuilderItem shiftClickCallback={excludeItem} item={armorpiece.item} />
-            <div className="smaller">
-              <ItemTalentGrid item={armorpiece.item} perksOnly={true} />
-            </div>
+            <ItemTalentGrid
+              item={armorpiece.item}
+              className="smaller-talent-grid"
+              perksOnly={true}
+            />
             <div className="label">
               <small>
                 {setType.tiers[activesets].configs[0][armorpiece.item.bucket.hash as ArmorTypes] ===

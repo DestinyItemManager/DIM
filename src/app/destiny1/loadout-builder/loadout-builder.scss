@@ -302,6 +302,7 @@ $and-color: #814bcf;
   .dim-stats {
     display: inline-block;
     margin-left: 22px;
+    flex: 1;
 
     @media (max-width: 680px) {
       margin-left: 4px;
@@ -323,10 +324,6 @@ $and-color: #814bcf;
   .set-item {
     position: relative;
     margin-right: 16px;
-    .smaller .talent-grid {
-      width: 71px;
-      max-height: 48px;
-    }
   }
   .set-item:last-child {
     margin-right: 0;
@@ -349,6 +346,11 @@ $and-color: #814bcf;
   .excluded-container:last-child {
     margin-right: 0;
   }
+}
+
+.smaller-talent-grid {
+  width: 71px;
+  max-height: 48px;
 }
 
 .perk-select-popup {
