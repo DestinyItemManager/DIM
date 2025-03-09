@@ -1,0 +1,45 @@
+@use '../../variables' as *;
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 7px;
+  gap: 8px;
+}
+
+.talentGrid {
+  width: 71px;
+  max-height: 48px;
+}
+
+.label {
+  text-align: center;
+  font-size: smaller;
+}
+
+.expandConfigs {
+  @include interactive($hover: true) {
+    color: var(--theme-accent-primary);
+    cursor: pointer;
+  }
+  :global(.app-icon) {
+    margin-right: 0.25em;
+  }
+}
+
+.setItem {
+  position: relative;
+  margin-right: 16px;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.dimStats {
+  flex: 1;
+}
+
+.loadout {
+  margin-bottom: 20px;
+}

@@ -1,0 +1,50 @@
+@use '../../variables.scss' as *;
+
+.lockedItem {
+  margin-right: 20px;
+  position: relative;
+  text-align: center;
+  width: calc(var(--item-size) + 15px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.perkAddition {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.itemSized {
+  width: var(--item-size);
+  height: var(--item-size);
+}
+
+.emptyItem {
+  composes: itemSized;
+  background-color: #656565;
+  border: 2px solid #ddd;
+  margin-bottom: 4px;
+}
+
+.perkAdditionTextContainer {
+  composes: itemSized;
+  opacity: 0;
+  display: table-cell;
+  vertical-align: middle;
+
+  @include interactive($hover: true) {
+    opacity: 1;
+  }
+}
+
+.perkAdditionText {
+  display: block;
+  font-size: 8px;
+}
+
+.label {
+  text-align: center;
+}

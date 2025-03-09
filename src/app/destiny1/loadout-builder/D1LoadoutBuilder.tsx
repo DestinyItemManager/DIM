@@ -568,13 +568,11 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   return (
     <PageWithMenu className="itemQuality">
       <PageWithMenu.Menu>
-        <div className="character-select">
-          <CharacterSelect
-            selectedStore={selectedCharacter}
-            stores={stores}
-            onCharacterChanged={onSelectedChange}
-          />
-        </div>
+        <CharacterSelect
+          selectedStore={selectedCharacter}
+          stores={stores}
+          onCharacterChanged={onSelectedChange}
+        />
       </PageWithMenu.Menu>
       <PageWithMenu.Contents className="loadout-builder">
         <CollapsibleTitle
