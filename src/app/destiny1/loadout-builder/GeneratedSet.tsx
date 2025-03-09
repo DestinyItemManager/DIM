@@ -16,7 +16,6 @@ import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
 import { d1ArmorTypes } from './D1LoadoutBuilder';
 import styles from './GeneratedSet.m.scss';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
-import './loadout-builder.scss';
 import { ArmorSet, ArmorTypes, SetType } from './types';
 
 interface Props {

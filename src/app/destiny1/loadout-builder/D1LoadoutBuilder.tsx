@@ -34,7 +34,6 @@ import GeneratedSet from './GeneratedSet';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import LoadoutBuilderLockPerk from './LoadoutBuilderLockPerk';
 import { getSetBucketsStep } from './calculate';
-import './loadout-builder.scss';
 import {
   ArmorTypes,
   ClassTypes,
