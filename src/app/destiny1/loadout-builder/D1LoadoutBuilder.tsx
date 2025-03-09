@@ -42,13 +42,7 @@ import {
   PerkCombination,
   SetType,
 } from './types';
-import {
-  getActiveBuckets,
-  getActiveHighestSets,
-  loadBucket,
-  loadVendorsBucket,
-  mergeBuckets,
-} from './utils';
+import { getActiveHighestSets, loadBucket, loadVendorsBucket, mergeBuckets } from './utils';
 
 interface State {
   selectedCharacter?: D1Store;
@@ -232,156 +226,12 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vendorsLoaded]);
 
-  const activePerks = useMemo(() => {
-    if (selectedCharacter?.classType === undefined) {
-      return undefined;
-    }
-
-    const perks: { [classType in ClassTypes]: PerkCombination } = {
-      [DestinyClass.Warlock]: {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-        [D1BucketHashes.Artifact]: [],
-        [BucketHashes.Ghost]: [],
-      },
-      [DestinyClass.Titan]: {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-        [D1BucketHashes.Artifact]: [],
-        [BucketHashes.Ghost]: [],
-      },
-      [DestinyClass.Hunter]: {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-        [D1BucketHashes.Artifact]: [],
-        [BucketHashes.Ghost]: [],
-      },
-    };
-
-    const vendorPerks: { [classType in ClassTypes]: PerkCombination } = {
-      [DestinyClass.Warlock]: {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-        [D1BucketHashes.Artifact]: [],
-        [BucketHashes.Ghost]: [],
-      },
-      [DestinyClass.Titan]: {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-        [D1BucketHashes.Artifact]: [],
-        [BucketHashes.Ghost]: [],
-      },
-      [DestinyClass.Hunter]: {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-        [D1BucketHashes.Artifact]: [],
-        [BucketHashes.Ghost]: [],
-      },
-    };
-
-    function filterItems(items: readonly D1Item[]) {
-      return items.filter(
-        (item) =>
-          item.primaryStat?.statHash === D1_StatHashes.Defense &&
-          item.talentGrid?.nodes &&
-          item.stats,
-      );
-    }
-
-    let allItems: D1Item[] = [];
-    let vendorItems: D1Item[] = [];
-    for (const store of stores) {
-      const items = filterItems(store.items);
-
-      allItems = allItems.concat(items);
-
-      // Build a map of perks
-      for (const item of items) {
-        const itemType = item.bucket.hash as ArmorTypes;
-        if (item.classType === DestinyClass.Unknown) {
-          for (const classType of allClassTypes) {
-            perks[classType][itemType] = filterPerks(perks[classType][itemType], item);
-          }
-        } else if (item.classType !== DestinyClass.Classified) {
-          perks[item.classType][itemType] = filterPerks(perks[item.classType][itemType], item);
-        }
-      }
-    }
-
-    if (vendors) {
-      // Process vendors here
-      for (const vendor of Object.values(vendors)) {
-        const vendItems = filterItems(
-          vendor.allItems
-            .map((i) => i.item)
-            .filter(
-              (item) =>
-                item.bucket.sort === 'Armor' ||
-                item.bucket.hash === D1BucketHashes.Artifact ||
-                item.bucket.hash === BucketHashes.Ghost,
-            ),
-        );
-        vendorItems = vendorItems.concat(vendItems);
-
-        // Build a map of perks
-        for (const item of vendItems) {
-          const itemType = item.bucket.hash as ArmorTypes;
-          if (item.classType === DestinyClass.Unknown) {
-            for (const classType of allClassTypes) {
-              vendorPerks[classType][itemType] = filterPerks(
-                vendorPerks[classType][itemType],
-                item,
-              );
-            }
-          } else if (item.classType !== DestinyClass.Classified) {
-            vendorPerks[item.classType][itemType] = filterPerks(
-              vendorPerks[item.classType][itemType],
-              item,
-            );
-          }
-        }
-      }
-
-      // Remove overlapping perks in allPerks from vendorPerks
-      for (const [classType, perksWithType] of Object.entries(vendorPerks) as unknown as [
-        ClassTypes,
-        PerkCombination,
-      ][]) {
-        for (const [type, perkArr] of Object.entries(perksWithType) as unknown as [
-          ArmorTypes,
-          D1GridNode[],
-        ][]) {
-          vendorPerks[classType][type] = perkArr.filter(
-            (perk) => !perks[classType][type].map((i) => i.hash).includes(perk.hash),
-          );
-        }
-      }
-    }
-
-    return getActiveBuckets<D1GridNode[]>(
-      perks[selectedCharacter.classType as ClassTypes],
-      vendorPerks[selectedCharacter.classType as ClassTypes],
-      includeVendors,
-    );
-  }, [selectedCharacter?.classType, vendors, includeVendors, stores]);
+  const activePerks = useActivePerks({
+    classType: selectedCharacter?.classType,
+    vendors,
+    includeVendors,
+    stores,
+  });
 
   const onFullModeChanged: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const fullMode = e.target.value === 'true';
@@ -874,4 +724,127 @@ function filterPerks(perks: D1GridNode[], item: D1Item) {
   return uniqBy(perks.concat(item.talentGrid.nodes), (node) => node.hash).filter(
     (node) => !unwantedPerkHashes.includes(node.hash),
   );
+}
+
+function useActivePerks({
+  classType,
+  vendors,
+  includeVendors,
+  stores,
+}: {
+  classType: DestinyClass | undefined;
+  vendors:
+    | {
+        [vendorHash: number]: Vendor;
+      }
+    | undefined;
+  includeVendors: boolean;
+  stores: D1Store[];
+}) {
+  return useMemo(() => {
+    if (classType === undefined) {
+      return undefined;
+    }
+
+    const emptyPerks = {
+      [BucketHashes.Helmet]: [],
+      [BucketHashes.Gauntlets]: [],
+      [BucketHashes.ChestArmor]: [],
+      [BucketHashes.LegArmor]: [],
+      [BucketHashes.ClassArmor]: [],
+      [D1BucketHashes.Artifact]: [],
+      [BucketHashes.Ghost]: [],
+    };
+    const perks: { [classType in ClassTypes]: PerkCombination } = {
+      [DestinyClass.Warlock]: structuredClone(emptyPerks),
+      [DestinyClass.Titan]: structuredClone(emptyPerks),
+      [DestinyClass.Hunter]: structuredClone(emptyPerks),
+    };
+
+    const vendorPerks: { [classType in ClassTypes]: PerkCombination } = structuredClone(perks);
+
+    function filterItems(items: readonly D1Item[]) {
+      return items.filter(
+        (item) =>
+          item.primaryStat?.statHash === D1_StatHashes.Defense &&
+          item.talentGrid?.nodes &&
+          item.stats,
+      );
+    }
+
+    let allItems: D1Item[] = [];
+    let vendorItems: D1Item[] = [];
+    for (const store of stores) {
+      const items = filterItems(store.items);
+
+      allItems = allItems.concat(items);
+
+      // Build a map of perks
+      for (const item of items) {
+        const itemType = item.bucket.hash as ArmorTypes;
+        if (item.classType === DestinyClass.Unknown) {
+          for (const classType of allClassTypes) {
+            perks[classType][itemType] = filterPerks(perks[classType][itemType], item);
+          }
+        } else if (item.classType !== DestinyClass.Classified) {
+          perks[item.classType][itemType] = filterPerks(perks[item.classType][itemType], item);
+        }
+      }
+    }
+
+    if (vendors && includeVendors) {
+      // Process vendors here
+      for (const vendor of Object.values(vendors)) {
+        const vendItems = filterItems(
+          vendor.allItems
+            .map((i) => i.item)
+            .filter(
+              (item) =>
+                item.bucket.sort === 'Armor' ||
+                item.bucket.hash === D1BucketHashes.Artifact ||
+                item.bucket.hash === BucketHashes.Ghost,
+            ),
+        );
+        vendorItems = vendorItems.concat(vendItems);
+
+        // Build a map of perks
+        for (const item of vendItems) {
+          const itemType = item.bucket.hash as ArmorTypes;
+          if (item.classType === DestinyClass.Unknown) {
+            for (const classType of allClassTypes) {
+              vendorPerks[classType][itemType] = filterPerks(
+                vendorPerks[classType][itemType],
+                item,
+              );
+            }
+          } else if (item.classType !== DestinyClass.Classified) {
+            vendorPerks[item.classType][itemType] = filterPerks(
+              vendorPerks[item.classType][itemType],
+              item,
+            );
+          }
+        }
+      }
+
+      // Remove overlapping perks in allPerks from vendorPerks
+      for (const [classType, perksWithType] of Object.entries(vendorPerks) as unknown as [
+        ClassTypes,
+        PerkCombination,
+      ][]) {
+        for (const [type, perkArr] of Object.entries(perksWithType) as unknown as [
+          ArmorTypes,
+          D1GridNode[],
+        ][]) {
+          vendorPerks[classType][type] = perkArr.filter(
+            (perk) => !perks[classType][type].map((i) => i.hash).includes(perk.hash),
+          );
+        }
+      }
+    }
+
+    return mergeBuckets<D1GridNode[]>(
+      perks[classType as ClassTypes],
+      vendorPerks[classType as ClassTypes],
+    );
+  }, [classType, vendors, includeVendors, stores]);
 }

@@ -242,15 +242,6 @@ export function mergeBuckets<T extends any[]>(
   return merged as { [armorType in ArmorTypes]: T };
 }
 
-export function getActiveBuckets<T extends any[]>(
-  bucket1: { [armorType in ArmorTypes]: T },
-  bucket2: { [armorType in ArmorTypes]: T },
-  merge: boolean,
-): { [armorType in ArmorTypes]: T } {
-  // Merge both buckets or return bucket1 if merge is false
-  return merge ? mergeBuckets(bucket1, bucket2) : bucket1;
-}
-
 export function loadVendorsBucket(
   currentStore: DimStore,
   vendors?: {
