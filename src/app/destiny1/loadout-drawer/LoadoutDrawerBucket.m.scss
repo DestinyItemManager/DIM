@@ -1,3 +1,64 @@
+@use '../../variables.scss' as *;
+
 .equippedAddButton {
   width: var(--item-size);
+}
+
+// Use flex instead of grid so our flex-in-flex layout works.
+.itemGrid {
+  display: flex;
+  flex-flow: row wrap;
+  min-height: var(--item-size);
+  gap: var(--item-margin);
+  align-content: flex-start;
+  align-items: flex-start;
+  padding-top: 4px;
+  flex: 1;
+
+  &.equipped {
+    margin-right: var(--item-margin);
+    flex: 0;
+  }
+}
+
+.loadoutBucket {
+  width: 100%;
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  flex: 0;
+
+  @include phone-portrait {
+    margin-right: 0;
+  }
+}
+
+.loadoutBucketName {
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.items {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  /* prettier-ignore */
+  max-width: calc(
+    #{$equipped-item-total-outset} +
+    var(--character-column-width)
+  ); // ↑ fit 1 equipped + 3-5 items
+
+  /* prettier-ignore */
+  min-width: calc(
+    #{$equipped-item-total-outset} +
+    2 * (var(--item-size) + var(--item-margin))
+  ); // ↑ fit at least 1 equipped + 1 unequipped item
+
+  width: max-content;
+
+  @include phone-portrait {
+    max-width: 100%;
+    width: 100%;
+  }
 }
