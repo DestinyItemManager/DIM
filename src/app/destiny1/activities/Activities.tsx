@@ -1,15 +1,17 @@
 import CharacterTile from 'app/character-tile/CharacterTile';
+import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { compareBy, compareByIndex } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { usePageTitle } from 'app/utils/hooks';
 import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
@@ -19,7 +21,7 @@ import { D1Store } from '../../inventory/store-types';
 import { AppIcon, starIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1ActivityComponent, D1ActivityTier, D1ObjectiveProgress } from '../d1-manifest-types';
-import './activities.scss';
+import styles from './Activities.m.scss';
 
 interface Skull {
   displayName: string;
@@ -57,76 +59,109 @@ export default function Activities({ account }: { account: DestinyAccount }) {
   usePageTitle(t('Activities.Activities'));
   const storesLoaded = useLoadStores(account);
   const stores = useSelector(sortedStoresSelector);
+  const isPhonePortrait = useIsPhonePortrait();
 
   const defs = useD1Definitions();
-
   const characters = stores.filter((s) => !s.isVault) as D1Store[];
-  const activities = useActivities(defs, characters);
+
+  const [selectedStoreId, setSelectedStoreId] = useState<string>();
+  const selectedStore =
+    (stores.find((store) => store.id === selectedStoreId) as D1Store) || characters[0];
+
+  const activities = useActivities(
+    defs,
+    isPhonePortrait && storesLoaded ? [selectedStore] : characters,
+  );
 
   if (!defs || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
   return (
-    <div className="activities dim-page">
-      <div className="activities-characters">
-        {characters.map((store) => (
-          <div key={store.id} className="activities-character">
-            <CharacterTile store={store} />
-          </div>
-        ))}
-      </div>
+    <div className={styles.activities}>
+      {isPhonePortrait ? (
+        <CharacterSelect
+          selectedStore={selectedStore}
+          stores={characters}
+          onCharacterChanged={setSelectedStoreId}
+        />
+      ) : (
+        <div className={styles.characters}>
+          {characters.map((store) => (
+            <CharacterTile key={store.id} store={store} />
+          ))}
+        </div>
+      )}
 
       {activities.map((activity) => (
-        <div key={activity.hash} className="activity">
+        <div key={activity.hash}>
           <CollapsibleTitle
             style={bungieBackgroundStyle(activity.image)}
-            className={clsx('title activity-header', {
-              'activity-featured': activity.featured,
+            className={clsx(styles.title, {
+              [styles.featured]: activity.featured,
             })}
             sectionId={`activities-${activity.hash}`}
             title={
               <>
-                <BungieImage src={activity.icon} className="small-icon" />
-                <span className="activity-name">{activity.name}</span>
+                <BungieImage src={activity.icon} className={styles.smallIcon} />
+                <span>{activity.name}</span>
                 {activity.featured && <AppIcon icon={starIcon} />}
               </>
             }
-            extra={<span className="activity-type">{activity.type}</span>}
+            extra={<span className={styles.activityType}>{activity.type}</span>}
           >
-            <div className="activity-info">
-              {activity.tiers.map((tier) => (
-                <div key={tier.name} className="activity-progress">
-                  {activity.tiers.length > 1 && <div className="tier-title">{tier.name}</div>}
-                  <div className="tier-characters">
-                    {tier.characters
-                      .toSorted(compareBy((c) => characters.findIndex((s) => s.id === c.id)))
-                      .map((character) => (
-                        <div key={character.id} className="tier-row">
-                          {character.objectives.length === 0 &&
-                            character.steps.map((step, index) => (
-                              <span
-                                key={index}
-                                className={clsx('step-icon', { complete: step.complete })}
-                              />
-                            ))}
-                          {character.objectives.map((objective) => (
-                            <Objective objective={objective} key={objective.objectiveHash} />
-                          ))}
-                          {character.objectives.length > 0 && <div className="objectives-spacer" />}
-                        </div>
-                      ))}
-                  </div>
+            <div className={styles.activityInfo}>
+              {activity.tiers.map(
+                (tier) =>
+                  tier.characters.some((c) => c.objectives.length || c.steps.length) && (
+                    <div key={tier.name}>
+                      {activity.tiers.length > 1 && (
+                        <div className={styles.tierTitle}>{tier.name}</div>
+                      )}
+                      <div className={styles.tierCharacters}>
+                        {tier.characters
+                          .toSorted(compareBy((c) => characters.findIndex((s) => s.id === c.id)))
+                          .map(
+                            (character) =>
+                              (!isPhonePortrait || character.id === selectedStore.id) && (
+                                <div key={character.id}>
+                                  {character.objectives.length === 0 &&
+                                    character.steps.length > 0 && (
+                                      <div className={styles.steps}>
+                                        {character.steps.map((step, index) => (
+                                          <span
+                                            key={index}
+                                            className={clsx(styles.stepIcon, {
+                                              [styles.complete]: step.complete,
+                                            })}
+                                          />
+                                        ))}
+                                      </div>
+                                    )}
+                                  {character.objectives.map((objective) => (
+                                    <Objective
+                                      objective={objective}
+                                      key={objective.objectiveHash}
+                                    />
+                                  ))}
+                                </div>
+                              ),
+                          )}
+                      </div>
+                    </div>
+                  ),
+              )}
+              {activity.skulls && (
+                <div className={styles.skulls}>
+                  {activity.skulls?.map((skull) => (
+                    <div key={skull.displayName}>
+                      <BungieImage src={skull.icon} className={styles.skullIcon} />
+                      {skull.displayName}
+                      <span className={styles.weak}> - {skull.description}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-
-              {activity.skulls?.map((skull) => (
-                <div key={skull.displayName} className="activity-skulls">
-                  <BungieImage src={skull.icon} className="small-icon" />
-                  {skull.displayName}
-                  <span className="weak"> - {skull.description}</span>
-                </div>
-              ))}
+              )}
             </div>
           </CollapsibleTitle>
         </div>
@@ -260,7 +295,7 @@ function useActivities(defs: D1ManifestDefinitions | undefined, characters: D1St
       return activities;
     };
 
-    if (!defs) {
+    if (!defs || !characters.length) {
       return emptyArray();
     }
     return init(characters, defs);
