@@ -575,7 +575,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           onCharacterChanged={onSelectedChange}
         />
       </PageWithMenu.Menu>
-      <PageWithMenu.Contents className="loadout-builder">
+      <PageWithMenu.Contents>
         <CollapsibleTitle
           defaultCollapsed={true}
           sectionId="lb1-classitems"
@@ -788,7 +788,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         )}
         {progress >= 1 && (
           <ErrorBoundary name="Generated Sets">
-            <div>
+            <div className={styles.section}>
               {activeHighestSets.map((setType) => (
                 <GeneratedSet
                   key={setType.set.setHash}

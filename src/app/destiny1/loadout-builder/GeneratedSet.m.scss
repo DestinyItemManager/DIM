@@ -1,8 +1,7 @@
 @use '../../variables' as *;
 
 .controls {
-  display: flex;
-  flex-direction: row;
+  composes: flexWrap from '../../dim-ui/common.m.scss';
   align-items: center;
   margin-bottom: 7px;
   gap: 8px;
@@ -42,6 +41,7 @@
 
 .dimStats {
   flex: 1;
+  min-width: 100px;
 }
 
 .loadout {

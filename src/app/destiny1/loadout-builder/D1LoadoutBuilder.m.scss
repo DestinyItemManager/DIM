@@ -7,7 +7,7 @@
 
 // TODO: Combine with the controls-strip in GeneratedSet
 .controls {
-  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: flexWrap from '../../dim-ui/common.m.scss';
   align-items: center;
   gap: 8px;
   margin: 12px 0;
@@ -47,7 +47,7 @@
   margin-bottom: 16px;
 
   @include phone-portrait {
-    margin-left: 16px;
-    margin-right: 16px;
+    margin-left: var(--inventory-column-padding);
+    margin-right: var(--inventory-column-padding);
   }
 }
