@@ -5,9 +5,11 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { compareBy, compareByIndex } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
 import { usePageTitle } from 'app/utils/hooks';
 import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
@@ -51,147 +53,19 @@ interface ActivityTier {
   }[];
 }
 
-interface Props {
-  account: DestinyAccount;
-}
-
-export default function Activities({ account }: Props) {
+export default function Activities({ account }: { account: DestinyAccount }) {
   usePageTitle(t('Activities.Activities'));
   const storesLoaded = useLoadStores(account);
   const stores = useSelector(sortedStoresSelector);
 
   const defs = useD1Definitions();
 
+  const characters = stores.filter((s) => !s.isVault) as D1Store[];
+  const activities = useActivities(defs, characters);
+
   if (!defs || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
-
-  const processActivity = (
-    defs: D1ManifestDefinitions,
-    activityId: string,
-    stores: D1Store[],
-    tier: D1ActivityTier,
-    index: number,
-  ): ActivityTier => {
-    const tierDef = defs.Activity.get(tier.activityHash);
-
-    const name =
-      tier.activityData.recommendedLight === 390
-        ? '390'
-        : tier.tierDisplayName
-          ? t(`Activities.${tier.tierDisplayName}`, {
-              metadata: { keys: 'difficulty' },
-            })
-          : tierDef.activityName;
-
-    const characters =
-      activityId === 'heroicstrike'
-        ? []
-        : stores.map((store) => {
-            const activity = store.advisors.activities[activityId];
-            let steps = activity.activityTiers[index].steps;
-
-            if (!steps) {
-              steps = [activity.activityTiers[index].completion];
-            }
-
-            const objectives = activity.extended?.objectives || [];
-
-            return {
-              name: store.name,
-              lastPlayed: store.lastPlayed,
-              id: store.id,
-              icon: store.icon,
-              steps,
-              objectives,
-            };
-          });
-
-    return {
-      hash: tierDef.activityHash,
-      icon: tierDef.icon,
-      name,
-      complete: tier.activityData.isCompleted,
-      characters,
-    };
-  };
-
-  const processActivities = (
-    defs: D1ManifestDefinitions,
-    stores: D1Store[],
-    rawActivity: D1ActivityComponent,
-  ): Activity => {
-    const def = defs.Activity.get(rawActivity.display.activityHash);
-    const activity = {
-      hash: rawActivity.display.activityHash,
-      name: def.activityName,
-      icon: rawActivity.display.icon,
-      image: rawActivity.display.image,
-      type:
-        rawActivity.identifier === 'nightfall'
-          ? t('Activities.Nightfall')
-          : rawActivity.identifier === 'heroicstrike'
-            ? t('Activities.WeeklyHeroic')
-            : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
-      skulls: null as Skull[] | null,
-      tiers: [] as ActivityTier[],
-    };
-
-    if (rawActivity.extended) {
-      activity.skulls = rawActivity.extended.skullCategories.flatMap((s) => s.skulls);
-    }
-
-    const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
-    if (rawSkullCategories?.length) {
-      activity.skulls = rawSkullCategories[0].skulls.flat();
-    }
-
-    if (activity.skulls) {
-      activity.skulls = i18nActivitySkulls(activity.skulls, defs);
-    }
-
-    // flatten modifiers and bonuses for now.
-    if (activity.skulls) {
-      activity.skulls = activity.skulls.flat();
-    }
-    activity.tiers = rawActivity.activityTiers.map((r, i) =>
-      processActivity(defs, rawActivity.identifier, stores, r, i),
-    );
-
-    return activity;
-  };
-
-  const init = (stores: D1Store[], defs: D1ManifestDefinitions) => {
-    const allowList = [
-      'vaultofglass',
-      'crota',
-      'kingsfall',
-      'wrathofthemachine',
-      'nightfall',
-      'heroicstrike',
-      'elderchallenge',
-    ];
-
-    const activities = Object.values(stores[0].advisors.activities)
-      .filter((a) => a.activityTiers && allowList.includes(a.identifier))
-      .sort(compareByIndex(allowList, (a) => a.identifier))
-      .map((a) => processActivities(defs, stores, a));
-
-    for (const a of activities) {
-      for (const t of a.tiers) {
-        if (t.hash === stores[0].advisors.activities.weeklyfeaturedraid.display.activityHash) {
-          a.featured = true;
-          t.name = t.hash === 1387993552 ? '390' : t.name;
-        }
-      }
-    }
-
-    return activities;
-  };
-
-  const characters = stores.filter((s) => !s.isVault);
-
-  const activities = init(characters as D1Store[], defs);
 
   return (
     <div className="activities dim-page">
@@ -259,6 +133,138 @@ export default function Activities({ account }: Props) {
       ))}
     </div>
   );
+}
+
+function useActivities(defs: D1ManifestDefinitions | undefined, characters: D1Store[]): Activity[] {
+  return useMemo(() => {
+    const processActivity = (
+      defs: D1ManifestDefinitions,
+      activityId: string,
+      stores: D1Store[],
+      tier: D1ActivityTier,
+      index: number,
+    ): ActivityTier => {
+      const tierDef = defs.Activity.get(tier.activityHash);
+
+      const name =
+        tier.activityData.recommendedLight === 390
+          ? '390'
+          : tier.tierDisplayName
+            ? t(`Activities.${tier.tierDisplayName}`, {
+                metadata: { keys: 'difficulty' },
+              })
+            : tierDef.activityName;
+
+      const characters =
+        activityId === 'heroicstrike'
+          ? []
+          : stores.map((store) => {
+              const activity = store.advisors.activities[activityId];
+              let steps = activity.activityTiers[index].steps;
+
+              if (!steps) {
+                steps = [activity.activityTiers[index].completion];
+              }
+
+              const objectives = activity.extended?.objectives || [];
+
+              return {
+                name: store.name,
+                lastPlayed: store.lastPlayed,
+                id: store.id,
+                icon: store.icon,
+                steps,
+                objectives,
+              };
+            });
+
+      return {
+        hash: tierDef.activityHash,
+        icon: tierDef.icon,
+        name,
+        complete: tier.activityData.isCompleted,
+        characters,
+      };
+    };
+
+    const processActivities = (
+      defs: D1ManifestDefinitions,
+      stores: D1Store[],
+      rawActivity: D1ActivityComponent,
+    ): Activity => {
+      const def = defs.Activity.get(rawActivity.display.activityHash);
+      const activity = {
+        hash: rawActivity.display.activityHash,
+        name: def.activityName,
+        icon: rawActivity.display.icon,
+        image: rawActivity.display.image,
+        type:
+          rawActivity.identifier === 'nightfall'
+            ? t('Activities.Nightfall')
+            : rawActivity.identifier === 'heroicstrike'
+              ? t('Activities.WeeklyHeroic')
+              : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
+        skulls: null as Skull[] | null,
+        tiers: [] as ActivityTier[],
+      };
+
+      if (rawActivity.extended) {
+        activity.skulls = rawActivity.extended.skullCategories.flatMap((s) => s.skulls);
+      }
+
+      const rawSkullCategories = rawActivity.activityTiers[0].skullCategories;
+      if (rawSkullCategories?.length) {
+        activity.skulls = rawSkullCategories[0].skulls.flat();
+      }
+
+      if (activity.skulls) {
+        activity.skulls = i18nActivitySkulls(activity.skulls, defs);
+      }
+
+      // flatten modifiers and bonuses for now.
+      if (activity.skulls) {
+        activity.skulls = activity.skulls.flat();
+      }
+      activity.tiers = rawActivity.activityTiers.map((r, i) =>
+        processActivity(defs, rawActivity.identifier, stores, r, i),
+      );
+
+      return activity;
+    };
+
+    const init = (stores: D1Store[], defs: D1ManifestDefinitions) => {
+      const allowList = [
+        'vaultofglass',
+        'crota',
+        'kingsfall',
+        'wrathofthemachine',
+        'nightfall',
+        'heroicstrike',
+        'elderchallenge',
+      ];
+
+      const activities = Object.values(stores[0].advisors.activities)
+        .filter((a) => a.activityTiers && allowList.includes(a.identifier))
+        .sort(compareByIndex(allowList, (a) => a.identifier))
+        .map((a) => processActivities(defs, stores, a));
+
+      for (const a of activities) {
+        for (const t of a.tiers) {
+          if (t.hash === stores[0].advisors.activities.weeklyfeaturedraid.display.activityHash) {
+            a.featured = true;
+            t.name = t.hash === 1387993552 ? '390' : t.name;
+          }
+        }
+      }
+
+      return activities;
+    };
+
+    if (!defs) {
+      return emptyArray();
+    }
+    return init(characters, defs);
+  }, [characters, defs]);
 }
 
 const skullHashesByName: StringLookup<number> = {
