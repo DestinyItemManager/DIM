@@ -1,0 +1,88 @@
+@use '../../variables.scss' as *;
+
+.recordBooks {
+  composes: dim-page from global;
+
+  h1 {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row;
+
+    span {
+      flex: 1;
+    }
+  }
+}
+
+// The controls to toggle hiding completed items
+.hideCompleted {
+  margin: 1em var(--inventory-column-padding);
+}
+
+.bookIcon {
+  height: 26px;
+}
+
+.recordBook {
+  margin-bottom: 10px;
+}
+
+.recordBookPage {
+  background: #555;
+  margin: 8px 0 0 0;
+  padding: 8px;
+
+  p {
+    margin: 0;
+    color: #e0e0e0;
+  }
+}
+
+.records {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+
+  @include phone-portrait {
+    grid-template-columns: 1fr;
+  }
+}
+
+.record {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  background: #333;
+  padding: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: normal;
+  }
+
+  p {
+    margin: 0 0 8px 0;
+    color: #e0e0e0;
+  }
+}
+
+.recordIcon {
+  border-radius: 50%;
+  background-color: rgba(245, 245, 245, 0.1);
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: 75%;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 2px solid #fff;
+  .complete & {
+    border-color: #ffce1f;
+    background-color: rgba(255, 206, 31, 0.4);
+  }
+}
+.recordInfo {
+  flex: 1;
+  margin-left: 10px;
+}

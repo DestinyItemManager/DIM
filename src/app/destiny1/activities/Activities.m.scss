@@ -2,7 +2,6 @@
 
 .activities {
   composes: dim-page from global;
-  composes: activities from global; // REMOVE
 
   width: calc(
     (40px + var(--item-size) + (3 * (var(--item-size) + 8px))) * var(--num-characters) +
