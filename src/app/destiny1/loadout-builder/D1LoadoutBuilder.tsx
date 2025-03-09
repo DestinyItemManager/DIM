@@ -60,8 +60,6 @@ interface State {
   progress: number;
   fullMode: boolean;
   includeVendors: boolean;
-  showHelp: boolean;
-  showAdvanced: boolean;
   allSetTiers: string[];
   highestsets: { [setHash: number]: SetType };
   lockeditems: { [armorType in ArmorTypes]: D1ItemWithNormalStats | null };
@@ -89,8 +87,6 @@ const initialState: State = {
   progress: 0,
   fullMode: false,
   includeVendors: false,
-  showAdvanced: false,
-  showHelp: false,
   loadingVendors: false,
   allSetTiers: [],
   highestsets: {},
@@ -115,6 +111,17 @@ const initialState: State = {
   },
 };
 
+const unwantedPerkHashes = [
+  1270552711, // Infuse
+  217480046, // Twist Fate
+  191086989, // Reforge Artifact
+  913963685, // Reforge Shell
+  1034209669, // Increase Intellect
+  1263323987, // Increase Discipline
+  193091484, // Increase Strength
+  2133116599, // Deactivate Chroma
+];
+
 export default function D1LoadoutBuilder({ account }: { account: DestinyAccount }) {
   const buckets = useSelector(bucketsSelector);
   const stores = useSelector(sortedStoresSelector) as D1Store[];
@@ -126,6 +133,22 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   const cancelToken = useRef({ cancelled: false });
   const dispatch = useThunkDispatch();
   const storesLoaded = useLoadStores(account);
+
+  const {
+    includeVendors,
+    loadingVendors,
+    type,
+    excludeditems,
+    progress,
+    allSetTiers,
+    fullMode,
+    scaleType,
+    activesets,
+    lockeditems,
+    lockedperks,
+    highestsets,
+    vendors,
+  } = state;
 
   const selectedCharacter = state.selectedCharacter || getCurrentStore(stores);
 
@@ -149,7 +172,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
   useEffect(() => {
     // TODO: replace progress with state field (calculating/done)
-    if (defs && selectedCharacter && stores.length && !state.progress) {
+    if (defs && selectedCharacter && stores.length && !progress) {
       (async () => {
         cancelToken.current.cancelled = true;
         cancelToken.current = {
@@ -158,13 +181,13 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         const result = await getSetBucketsStep(
           defs,
           loadBucket(selectedCharacter, stores),
-          loadVendorsBucket(selectedCharacter, state.vendors),
-          state.lockeditems,
-          state.lockedperks,
-          state.excludeditems,
-          state.scaleType,
-          state.includeVendors,
-          state.fullMode,
+          loadVendorsBucket(selectedCharacter, vendors),
+          lockeditems,
+          lockedperks,
+          excludeditems,
+          scaleType,
+          includeVendors,
+          fullMode,
           cancelToken.current,
         );
         setState({ ...result, progress: 1 });
@@ -173,41 +196,40 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   }, [
     defs,
     selectedCharacter,
-    state.excludeditems,
-    state.fullMode,
-    state.includeVendors,
-    state.lockeditems,
-    state.lockedperks,
-    state.progress,
-    state.scaleType,
-    state.vendors,
+    excludeditems,
+    fullMode,
+    includeVendors,
+    lockeditems,
+    lockedperks,
+    progress,
+    scaleType,
+    vendors,
     stores,
   ]);
 
   useEffect(() => {
-    if (state.includeVendors && !state.vendors && !state.loadingVendors) {
+    if (includeVendors && !vendors && !loadingVendors) {
       setState({ loadingVendors: true });
       dispatch(loadVendors()).then((vendors) => {
         setState({ vendors, loadingVendors: false });
       });
     }
-  }, [dispatch, state.includeVendors, state.loadingVendors, state.vendors]);
+  }, [dispatch, includeVendors, loadingVendors, vendors]);
 
-  const vendorsLoaded = Boolean(state.vendors);
+  const vendorsLoaded = Boolean(vendors);
 
   useEffect(() => {
     if (vendorsLoaded) {
-      const felwinters = Object.values(state.vendors!).flatMap((vendor) =>
+      const felwinters = Object.values(vendors!).flatMap((vendor) =>
         vendor.allItems.filter((i) => i.item.hash === 2672107540),
       );
       if (felwinters.length) {
-        setStateFull((state) => ({
-          ...state,
+        setState({
           excludeditems: uniqBy(
-            [...state.excludeditems, ...felwinters.map((si) => si.item)],
+            [...excludeditems, ...felwinters.map((si) => si.item)],
             (i) => i.id,
           ),
-        }));
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -217,8 +239,6 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     if (selectedCharacter?.classType === undefined) {
       return undefined;
     }
-    const vendors = state.vendors;
-    const includeVendors = state.includeVendors;
 
     const perks: { [classType in ClassTypes]: PerkCombination } = {
       [DestinyClass.Warlock]: {
@@ -364,11 +384,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       vendorPerks[selectedCharacter.classType as ClassTypes],
       includeVendors,
     );
-  }, [selectedCharacter?.classType, state.vendors, state.includeVendors, stores]);
-
-  const toggleShowHelp = () => setStateFull((state) => ({ ...state, showHelp: !state.showHelp }));
-  const toggleShowAdvanced = () =>
-    setStateFull((state) => ({ ...state, showAdvanced: !state.showAdvanced }));
+  }, [selectedCharacter?.classType, vendors, includeVendors, stores]);
 
   const onFullModeChanged: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const fullMode = e.target.value === 'true';
@@ -515,24 +531,6 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       progress: 0,
     });
   };
-
-  const {
-    includeVendors,
-    loadingVendors,
-    type,
-    excludeditems,
-    progress,
-    allSetTiers,
-    activesets,
-    fullMode,
-    scaleType,
-    showAdvanced,
-    showHelp,
-    lockeditems,
-    lockedperks,
-    highestsets,
-    vendors,
-  } = state;
 
   if (!selectedCharacter || !stores.length || !buckets || !defs || !activePerks) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -681,98 +679,15 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           </div>
         )}
         {progress >= 1 && hasSets && (
-          <div className={styles.section}>
-            <div className={styles.controls}>
-              <div>
-                <span>
-                  {t('LB.FilterSets')} ({t('Stats.Intellect')}/{t('Stats.Discipline')}/
-                  {t('Stats.Strength')}):{' '}
-                </span>
-                <select name="activesets" onChange={onActiveSetsChange} value={activesets}>
-                  {allSetTiers.map((val) => (
-                    <option key={val} disabled={val.startsWith('-')} value={val}>
-                      {val}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button type="button" className="dim-button" onClick={toggleShowAdvanced}>
-                {t('LB.AdvancedOptions')}
-              </button>
-              <button type="button" className="dim-button" onClick={toggleShowHelp}>
-                {t('LB.Help.Help')}
-              </button>
-            </div>
-            <span>
-              {showAdvanced && (
-                <div>
-                  <p>
-                    <label>
-                      <select
-                        name="fullMode"
-                        onChange={onFullModeChanged}
-                        value={fullMode ? 'true' : 'false'}
-                      >
-                        <option value="false">{t('LB.ProcessingMode.Fast')}</option>
-                        <option value="true">{t('LB.ProcessingMode.Full')}</option>
-                      </select>{' '}
-                      <span>{t('LB.ProcessingMode.ProcessingMode')}</span>
-                    </label>
-                    <small>
-                      {' '}
-                      -{' '}
-                      {fullMode ? t('LB.ProcessingMode.HelpFull') : t('LB.ProcessingMode.HelpFast')}
-                    </small>
-                  </p>
-                  <p>
-                    <label>
-                      <select name="scaleType" value={scaleType} onChange={onChange}>
-                        <option value="scaled">{t('LB.Scaled')}</option>
-                        <option value="base">{t('LB.Current')}</option>
-                      </select>{' '}
-                      <span>{t('LB.LightMode.LightMode')}</span>
-                    </label>
-                    <small>
-                      {' '}
-                      - {scaleType === 'scaled' && t('LB.LightMode.HelpScaled')}
-                      {scaleType === 'base' && t('LB.LightMode.HelpCurrent')}
-                    </small>
-                  </p>
-                </div>
-              )}
-            </span>
-            <span>
-              {showHelp && (
-                <div>
-                  <ul>
-                    <li>{t('LB.Help.Lock')}</li>
-                    <ul>
-                      <li>{t('LB.Help.NoPerk')}</li>
-                      <li>{t('LB.Help.MultiPerk')}</li>
-                      <li>
-                        <div className={clsx(styles.example, styles.or)}>- {t('LB.Help.Or')}</div>
-                      </li>
-                      <li>
-                        <div className={clsx(styles.example, styles.and)}>- {t('LB.Help.And')}</div>
-                      </li>
-                    </ul>
-                    <li>{t('LB.Help.DragAndDrop')}</li>
-                    <li>{t('LB.Help.ShiftClick')}</li>
-                    <li>{t('LB.Help.HigherTiers')}</li>
-                    <ul>
-                      <li>{t('LB.Help.Tier11Example')}</li>
-                      <li>{t('LB.Help.Intellect')}</li>
-                      <li>{t('LB.Help.Discipline')}</li>
-                      <li>{t('LB.Help.Strength')}</li>
-                    </ul>
-                    <li>{t('LB.Help.Synergy')}</li>
-                    <li>{t('LB.Help.ChangeNodes')}</li>
-                    <li>{t('LB.Help.StatsIncrease')}</li>
-                  </ul>
-                </div>
-              )}
-            </span>
-          </div>
+          <SetControls
+            allSetTiers={allSetTiers}
+            activesets={activesets}
+            fullMode={fullMode}
+            scaleType={scaleType}
+            onActiveSetsChange={onActiveSetsChange}
+            onFullModeChanged={onFullModeChanged}
+            onChangeScaleType={onChange}
+          />
         )}
         {progress >= 1 && !hasSets && (
           <div>
@@ -806,11 +721,122 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   );
 }
 
-const unwantedPerkHashes = [
-  // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
-  1270552711,
-  217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599,
-];
+function SetControls({
+  allSetTiers,
+  activesets,
+  fullMode,
+  scaleType,
+  onActiveSetsChange,
+  onFullModeChanged,
+  onChangeScaleType,
+}: {
+  allSetTiers: string[];
+  activesets: string;
+  fullMode: boolean;
+  scaleType: 'base' | 'scaled';
+  onActiveSetsChange: React.ChangeEventHandler<HTMLSelectElement>;
+  onFullModeChanged: React.ChangeEventHandler<HTMLSelectElement>;
+  onChangeScaleType: React.ChangeEventHandler<HTMLSelectElement>;
+}) {
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const toggleShowHelp = () => setShowHelp((show) => !show);
+  const toggleShowAdvanced = () => setShowAdvanced((show) => !show);
+
+  return (
+    <div className={styles.section}>
+      <div className={styles.controls}>
+        <div>
+          <span>
+            {t('LB.FilterSets')} ({t('Stats.Intellect')}/{t('Stats.Discipline')}/
+            {t('Stats.Strength')}):{' '}
+          </span>
+          <select name="activesets" onChange={onActiveSetsChange} value={activesets}>
+            {allSetTiers.map((val) => (
+              <option key={val} disabled={val.startsWith('-')} value={val}>
+                {val}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button type="button" className="dim-button" onClick={toggleShowAdvanced}>
+          {t('LB.AdvancedOptions')}
+        </button>
+        <button type="button" className="dim-button" onClick={toggleShowHelp}>
+          {t('LB.Help.Help')}
+        </button>
+      </div>
+      <span>
+        {showAdvanced && (
+          <div>
+            <p>
+              <label>
+                <select
+                  name="fullMode"
+                  onChange={onFullModeChanged}
+                  value={fullMode ? 'true' : 'false'}
+                >
+                  <option value="false">{t('LB.ProcessingMode.Fast')}</option>
+                  <option value="true">{t('LB.ProcessingMode.Full')}</option>
+                </select>{' '}
+                <span>{t('LB.ProcessingMode.ProcessingMode')}</span>
+              </label>
+              <small>
+                {' '}
+                - {fullMode ? t('LB.ProcessingMode.HelpFull') : t('LB.ProcessingMode.HelpFast')}
+              </small>
+            </p>
+            <p>
+              <label>
+                <select name="scaleType" value={scaleType} onChange={onChangeScaleType}>
+                  <option value="scaled">{t('LB.Scaled')}</option>
+                  <option value="base">{t('LB.Current')}</option>
+                </select>{' '}
+                <span>{t('LB.LightMode.LightMode')}</span>
+              </label>
+              <small>
+                {' '}
+                - {scaleType === 'scaled' && t('LB.LightMode.HelpScaled')}
+                {scaleType === 'base' && t('LB.LightMode.HelpCurrent')}
+              </small>
+            </p>
+          </div>
+        )}
+      </span>
+      <span>
+        {showHelp && (
+          <div>
+            <ul>
+              <li>{t('LB.Help.Lock')}</li>
+              <ul>
+                <li>{t('LB.Help.NoPerk')}</li>
+                <li>{t('LB.Help.MultiPerk')}</li>
+                <li>
+                  <div className={clsx(styles.example, styles.or)}>- {t('LB.Help.Or')}</div>
+                </li>
+                <li>
+                  <div className={clsx(styles.example, styles.and)}>- {t('LB.Help.And')}</div>
+                </li>
+              </ul>
+              <li>{t('LB.Help.DragAndDrop')}</li>
+              <li>{t('LB.Help.ShiftClick')}</li>
+              <li>{t('LB.Help.HigherTiers')}</li>
+              <ul>
+                <li>{t('LB.Help.Tier11Example')}</li>
+                <li>{t('LB.Help.Intellect')}</li>
+                <li>{t('LB.Help.Discipline')}</li>
+                <li>{t('LB.Help.Strength')}</li>
+              </ul>
+              <li>{t('LB.Help.Synergy')}</li>
+              <li>{t('LB.Help.ChangeNodes')}</li>
+              <li>{t('LB.Help.StatsIncrease')}</li>
+            </ul>
+          </div>
+        )}
+      </span>
+    </div>
+  );
+}
 
 function filterPerks(perks: D1GridNode[], item: D1Item) {
   if (!item.talentGrid) {
