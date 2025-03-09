@@ -28,12 +28,16 @@
   }
 }
 
+.set {
+  composes: flexWrap from '../../dim-ui/common.m.scss';
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .setItem {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 4px;
   position: relative;
-  margin-right: 16px;
-  &:last-child {
-    margin-right: 0;
-  }
 }
 
 .dimStats {

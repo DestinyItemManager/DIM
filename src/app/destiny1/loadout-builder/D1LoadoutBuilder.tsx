@@ -2,6 +2,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -14,6 +15,7 @@ import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -26,6 +28,7 @@ import { bucketsSelector, sortedStoresSelector } from '../../inventory/selectors
 import { D1Store } from '../../inventory/store-types';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { loadVendors, Vendor } from '../vendors/vendor.service';
+import styles from './D1LoadoutBuilder.m.scss';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import GeneratedSet from './GeneratedSet';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
@@ -406,8 +409,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     });
   };
 
-  const onIncludeVendorsChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const includeVendors = e.target.checked;
+  const onIncludeVendorsChange = (includeVendors: boolean) => {
     setState({ includeVendors, progress: 0 });
   };
 
@@ -580,70 +582,71 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           sectionId="lb1-classitems"
           title={t('LB.ShowGear', { class: selectedCharacter.className })}
         >
-          <div className="section all-armor">
-            {/* TODO: break into its own component */}
-            <span>{t('Bucket.Armor')}</span>:{' '}
-            <select name="type" value={type} onChange={onChange}>
-              {d1ArmorTypes.map((type) => (
-                <option key={type} value={type}>
-                  {i18nItemNames[type]}
-                </option>
-              ))}
-            </select>
-            <label>
-              <input
-                className="vendor-checkbox"
-                type="checkbox"
-                name="includeVendors"
-                checked={includeVendors}
-                onChange={onIncludeVendorsChange}
-              />{' '}
-              {t('LB.Vendor')} {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
-            </label>
-            <div className="loadout-builder-section">
+          <div className={styles.section}>
+            <div className={styles.controls}>
+              <div>
+                {/* TODO: break into its own component */}
+                <span>{t('Bucket.Armor')}:</span>{' '}
+                <select name="type" value={type} onChange={onChange}>
+                  {d1ArmorTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {i18nItemNames[type]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Switch
+                  name="includeVendors"
+                  checked={includeVendors}
+                  onChange={onIncludeVendorsChange}
+                />
+                <label htmlFor="includeVendors">{t('LB.Vendor')}</label>
+              </div>
+              {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
+            </div>
+            <div className={styles.itemRow}>
               {bucket[type]
                 .filter((i) => i.power >= 280)
                 .sort(reverseComparator(compareBy((i) => i.quality?.min ?? 0)))
                 .map((item) => (
-                  <div key={item.index} className="item-container">
-                    <div className="item-stats">
-                      {item.stats?.map((stat) => (
-                        <div
-                          key={stat.statHash}
-                          style={getD1QualityColor(
-                            item.normalStats![stat.statHash].qualityPercentage,
-                            'color',
-                          )}
-                        >
-                          {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
-                          {item.normalStats![stat.statHash].scaled > 0 && (
-                            <span>
-                              <small>{item.normalStats![stat.statHash].scaled}</small>/
-                              <small>{stat.split}</small>
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                    <div>
-                      <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
-                    </div>
+                  <div key={item.index}>
+                    {item.stats?.map((stat) => (
+                      <div
+                        key={stat.statHash}
+                        style={getD1QualityColor(
+                          item.normalStats![stat.statHash].qualityPercentage,
+                          'color',
+                        )}
+                      >
+                        {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
+                        {item.normalStats![stat.statHash].scaled > 0 && (
+                          <span>
+                            <small>{item.normalStats![stat.statHash].scaled}</small>/
+                            <small>{stat.split}</small>
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                    <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
                   </div>
                 ))}
             </div>
           </div>
         </CollapsibleTitle>
-        <div className="section">
-          <p>
-            <span className="dim-button locked-button" onClick={lockEquipped}>
+        <div className={styles.section}>
+          <div className={styles.controls}>
+            <button type="button" className="dim-button" onClick={lockEquipped}>
               {t('LB.LockEquipped')}
-            </span>
-            <span className="dim-button locked-button" onClick={clearLocked}>
+            </button>
+            <button type="button" className="dim-button" onClick={clearLocked}>
               {t('LB.ClearLocked')}
+            </button>
+            <span>
+              {t('LB.Locked')} - <small>{t('LB.LockedHelp')}</small>
             </span>
-            <span>{t('LB.Locked')}</span> - <small>{t('LB.LockedHelp')}</small>
-          </p>
-          <div className="loadout-builder-section">
+          </div>
+          <div className={styles.itemRow}>
             {Object.entries(lockeditems).map(([type, lockeditem]) => (
               <LoadoutBuilderLockPerk
                 key={type}
@@ -660,44 +663,47 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           </div>
         </div>
         {excludeditems.length > 0 && (
-          <div className="section">
+          <div className={styles.section}>
             <p>
               <span>{t('LB.Exclude')}</span> - <small>{t('LB.ExcludeHelp')}</small>
             </p>
-            <div className="loadout-builder-section">
-              <ExcludeItemsDropTarget onExcluded={excludeItem} className="excluded-container">
-                <div className="excluded-items">
-                  {excludeditems.map((excludeditem) => (
-                    <ClosableContainer
-                      key={excludeditem.index}
-                      className="excluded-item"
-                      onClose={() => onExcludedRemove(excludeditem)}
-                    >
-                      <LoadoutBuilderItem item={excludeditem} />
-                    </ClosableContainer>
-                  ))}
-                </div>
+            <div className={styles.itemRow}>
+              <ExcludeItemsDropTarget onExcluded={excludeItem} className={styles.excludedItems}>
+                {excludeditems.map((excludeditem) => (
+                  <ClosableContainer
+                    key={excludeditem.index}
+                    onClose={() => onExcludedRemove(excludeditem)}
+                  >
+                    <LoadoutBuilderItem item={excludeditem} />
+                  </ClosableContainer>
+                ))}
               </ExcludeItemsDropTarget>
             </div>
           </div>
         )}
         {progress >= 1 && hasSets && (
-          <div className="section">
-            {t('LB.FilterSets')} ({t('Stats.Intellect')}/{t('Stats.Discipline')}/
-            {t('Stats.Strength')}):{' '}
-            <select name="activesets" onChange={onActiveSetsChange} value={activesets}>
-              {allSetTiers.map((val) => (
-                <option key={val} disabled={val.startsWith('-')} value={val}>
-                  {val}
-                </option>
-              ))}
-            </select>{' '}
-            <span className="dim-button" onClick={toggleShowAdvanced}>
-              {t('LB.AdvancedOptions')}
-            </span>{' '}
-            <span className="dim-button" onClick={toggleShowHelp}>
-              {t('LB.Help.Help')}
-            </span>
+          <div className={styles.section}>
+            <div className={styles.controls}>
+              <div>
+                <span>
+                  {t('LB.FilterSets')} ({t('Stats.Intellect')}/{t('Stats.Discipline')}/
+                  {t('Stats.Strength')}):{' '}
+                </span>
+                <select name="activesets" onChange={onActiveSetsChange} value={activesets}>
+                  {allSetTiers.map((val) => (
+                    <option key={val} disabled={val.startsWith('-')} value={val}>
+                      {val}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button type="button" className="dim-button" onClick={toggleShowAdvanced}>
+                {t('LB.AdvancedOptions')}
+              </button>
+              <button type="button" className="dim-button" onClick={toggleShowHelp}>
+                {t('LB.Help.Help')}
+              </button>
+            </div>
             <span>
               {showAdvanced && (
                 <div>
@@ -745,10 +751,10 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
                       <li>{t('LB.Help.NoPerk')}</li>
                       <li>{t('LB.Help.MultiPerk')}</li>
                       <li>
-                        <div className="example ex-or">- {t('LB.Help.Or')}</div>
+                        <div className={clsx(styles.example, styles.or)}>- {t('LB.Help.Or')}</div>
                       </li>
                       <li>
-                        <div className="example ex-and">- {t('LB.Help.And')}</div>
+                        <div className={clsx(styles.example, styles.and)}>- {t('LB.Help.And')}</div>
                       </li>
                     </ul>
                     <li>{t('LB.Help.DragAndDrop')}</li>

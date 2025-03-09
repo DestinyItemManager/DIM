@@ -6,6 +6,7 @@ interface CssExports {
   'expandConfigs': string;
   'label': string;
   'loadout': string;
+  'set': string;
   'setItem': string;
   'talentGrid': string;
 }

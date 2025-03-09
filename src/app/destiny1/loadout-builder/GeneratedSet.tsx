@@ -75,7 +75,7 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
           <D1CharacterStats stats={setType.tiers[activesets].stats} subclassHash={subclass?.hash} />
         </div>
       </div>
-      <div className="loadout-builder-section">
+      <div className={styles.set}>
         {Object.entries(setType.set.armor).map(([type, armorpiece]) => (
           <div key={type} className={styles.setItem}>
             <LoadoutBuilderItem shiftClickCallback={excludeItem} item={armorpiece.item} />

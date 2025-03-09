@@ -23,33 +23,29 @@ export default function LoadoutBuilderItem({ item, shiftClickCallback }: Props) 
   // no owner means this is a vendor item
   if (!item.owner) {
     return (
-      <div className={styles.item}>
-        <DraggableInventoryItem item={item}>
-          <div className={styles.overlayContainer}>
-            <div className={styles.vendorIconBackground}>
-              <BungieImage src={item.vendorIcon!} />
-            </div>
-            <ConnectedInventoryItem item={item} onShiftClick={onShiftClick} />
+      <DraggableInventoryItem item={item}>
+        <div className={styles.overlayContainer}>
+          <div className={styles.vendorIconBackground}>
+            <BungieImage src={item.vendorIcon!} />
           </div>
-        </DraggableInventoryItem>
-      </div>
+          <ConnectedInventoryItem item={item} onShiftClick={onShiftClick} />
+        </div>
+      </DraggableInventoryItem>
     );
   }
 
   return (
-    <div className={styles.item}>
-      <DraggableInventoryItem item={item}>
-        <ItemPopupTrigger item={item}>
-          {(ref, onClick) => (
-            <ConnectedInventoryItem
-              item={item}
-              ref={ref}
-              onClick={onClick}
-              onShiftClick={onShiftClick}
-            />
-          )}
-        </ItemPopupTrigger>
-      </DraggableInventoryItem>
-    </div>
+    <DraggableInventoryItem item={item}>
+      <ItemPopupTrigger item={item}>
+        {(ref, onClick) => (
+          <ConnectedInventoryItem
+            item={item}
+            ref={ref}
+            onClick={onClick}
+            onShiftClick={onShiftClick}
+          />
+        )}
+      </ItemPopupTrigger>
+    </DraggableInventoryItem>
   );
 }

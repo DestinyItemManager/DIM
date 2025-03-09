@@ -2,39 +2,12 @@
 @use './LoadoutBuilderLocksDialog.m.scss' as locks;
 
 .loadout-builder {
-  .section {
-    margin-bottom: 16px;
-
-    @include phone-portrait {
-      margin-left: 16px;
-      margin-right: 16px;
-    }
-  }
-
-  .all-armor {
-    padding-top: 16px;
-  }
-
   #includeVendors {
     vertical-align: middle;
   }
   .includeRares {
     vertical-align: middle;
     margin-left: 0;
-  }
-
-  .example {
-    width: 10px;
-    height: 10px;
-    display: inline-block;
-  }
-
-  .ex-or {
-    background-color: locks.$or-color;
-  }
-
-  .ex-and {
-    background-color: locks.$and-color;
   }
 
   .perk-select-hidden .perk-select-box {
@@ -44,17 +17,6 @@
   .labels {
     float: left;
     clear: both;
-  }
-  .vendor-checkbox {
-    margin: 0;
-    margin-left: 10px;
-  }
-
-  .loadout-builder-section {
-    width: 100%;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: flex-start;
   }
 
   .loadout-builder-select-box {
@@ -159,42 +121,5 @@
       background-color: rgba(10, 10, 10, 0.25);
       color: rgba(245, 245, 245, 0.75);
     }
-  }
-
-  .item-container {
-    margin: 20px 17px 0 0;
-  }
-
-  .item-stats {
-    display: inline-block;
-  }
-
-  .locked-button {
-    margin-right: 5px;
-  }
-
-  .excluded-item {
-    margin-right: 5px;
-    margin-left: 5px;
-    margin-top: 5px;
-    position: relative;
-  }
-
-  .excluded-items {
-    border: 2px solid #ddd;
-    display: flex;
-    flex-flow: row wrap;
-    width: calc((var(--item-size) + 14px) * 7);
-    min-height: var(--item-size);
-    max-width: 100%;
-  }
-
-  .excluded-container {
-    margin-right: 10px;
-    width: 100%;
-  }
-
-  .excluded-container:last-child {
-    margin-right: 0;
   }
 }
