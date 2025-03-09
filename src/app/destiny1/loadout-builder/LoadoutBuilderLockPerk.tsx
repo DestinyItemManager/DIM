@@ -48,31 +48,23 @@ export default function LoadoutBuilderLockPerk({
       bucketHash={type}
       onItemLocked={onItemLocked}
     >
-      {lockeditem === null ? (
-        <div className={styles.emptyItem}>
-          <div className={styles.perkAddition} onClick={addPerkClicked}>
-            {hasLockedPerks ? (
-              <div>
-                <BungieImage
-                  src={firstPerk.icon}
-                  title={firstPerk.description}
-                  className={styles.itemSized}
-                />
-              </div>
-            ) : (
-              <div className={styles.perkAdditionTextContainer}>
-                <AppIcon icon={plusIcon} />
-                <small className={styles.perkAdditionText}>{t('LB.LockPerk')}</small>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
+      {lockeditem ? (
         <ClosableContainer onClose={() => onRemove({ type })}>
           <LoadoutBuilderItem item={lockeditem} />
         </ClosableContainer>
+      ) : (
+        <div className={styles.emptyItem} onClick={addPerkClicked}>
+          {hasLockedPerks ? (
+            <BungieImage src={firstPerk.icon} title={firstPerk.description} />
+          ) : (
+            <div className={styles.lockPerkIcon}>
+              <AppIcon icon={plusIcon} />
+              <small>{t('LB.LockPerk')}</small>
+            </div>
+          )}
+        </div>
       )}
-      <div className={styles.label}>{i18nItemNames[type]}</div>
+      <div>{i18nItemNames[type]}</div>
       {dialogOpen && (
         <LoadoutBuilderLocksDialog
           activePerks={activePerks}

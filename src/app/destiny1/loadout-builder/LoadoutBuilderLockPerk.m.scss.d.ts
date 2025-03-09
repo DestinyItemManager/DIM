@@ -3,11 +3,8 @@
 interface CssExports {
   'emptyItem': string;
   'itemSized': string;
-  'label': string;
+  'lockPerkIcon': string;
   'lockedItem': string;
-  'perkAddition': string;
-  'perkAdditionText': string;
-  'perkAdditionTextContainer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
