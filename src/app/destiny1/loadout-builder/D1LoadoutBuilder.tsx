@@ -55,7 +55,6 @@ interface State {
   excludeditems: D1Item[];
   lockedperks: { [armorType in ArmorTypes]: LockedPerkHash };
   activesets: string;
-  type: ArmorTypes;
   scaleType: 'base' | 'scaled';
   progress: number;
   fullMode: boolean;
@@ -82,7 +81,6 @@ const allClassTypes: ClassTypes[] = [DestinyClass.Titan, DestinyClass.Warlock, D
 
 const initialState: State = {
   activesets: '5/5/2',
-  type: BucketHashes.Helmet,
   scaleType: 'scaled',
   progress: 0,
   fullMode: false,
@@ -137,7 +135,6 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   const {
     includeVendors,
     loadingVendors,
-    type,
     excludeditems,
     progress,
     allSetTiers,
@@ -152,7 +149,6 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
   const selectedCharacter = state.selectedCharacter || getCurrentStore(stores);
 
-  // TODO: felwinters selectors??
   useEffect(() => {
     if (storesLoaded) {
       // Exclude felwinters if we have them, but only the first time stores load
@@ -166,7 +162,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         }));
       }
     }
-    // Don't depend on storesLoaded because we only want this to run once?
+    // Only depend on storesLoaded because we only want this to run once
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storesLoaded]);
 
@@ -232,6 +228,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         });
       }
     }
+    // Only depend on vendorsLoaded because we only want this to run once
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vendorsLoaded]);
 
@@ -396,17 +393,10 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       errorLog('loadout optimizer', new Error('You need to have a name on the form input'));
     }
 
-    if (e.target.name === 'type') {
-      setState({
-        [e.target.name]: parseInt(e.target.value, 10),
-        progress: 0,
-      });
-    } else {
-      setState({
-        [e.target.name]: e.target.value,
-        progress: 0,
-      });
-    }
+    setState({
+      [e.target.name]: e.target.value,
+      progress: 0,
+    });
   };
 
   const onActiveSetsChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -536,6 +526,10 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
+  const hasSets = allSetTiers.length > 0;
+
+  const activeHighestSets = getActiveHighestSets(highestsets, activesets);
+
   const i18nItemNames = Object.fromEntries(
     d1ArmorTypes.map((type, i) => [
       type,
@@ -553,17 +547,6 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     ]),
   ) as { [key in ArmorTypes]: string };
 
-  // Armor of each type on a particular character
-  // TODO: don't even need to load this much!
-  let bucket = loadBucket(selectedCharacter, stores);
-  if (includeVendors) {
-    bucket = mergeBuckets(bucket, loadVendorsBucket(selectedCharacter, vendors));
-  }
-
-  const hasSets = allSetTiers.length > 0;
-
-  const activeHighestSets = getActiveHighestSets(highestsets, activesets);
-
   return (
     <PageWithMenu className="itemQuality">
       <PageWithMenu.Menu>
@@ -580,55 +563,15 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           title={t('LB.ShowGear', { class: selectedCharacter.className })}
         >
           <div className={styles.section}>
-            <div className={styles.controls}>
-              <div>
-                {/* TODO: break into its own component */}
-                <span>{t('Bucket.Armor')}:</span>{' '}
-                <select name="type" value={type} onChange={onChange}>
-                  {d1ArmorTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {i18nItemNames[type]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <Switch
-                  name="includeVendors"
-                  checked={includeVendors}
-                  onChange={onIncludeVendorsChange}
-                />
-                <label htmlFor="includeVendors">{t('LB.Vendor')}</label>
-              </div>
-              {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
-            </div>
-            <div className={styles.itemRow}>
-              {bucket[type]
-                .filter((i) => i.power >= 280)
-                .sort(reverseComparator(compareBy((i) => i.quality?.min ?? 0)))
-                .map((item) => (
-                  <div key={item.index}>
-                    {item.stats?.map((stat) => (
-                      <div
-                        key={stat.statHash}
-                        style={getD1QualityColor(
-                          item.normalStats![stat.statHash].qualityPercentage,
-                          'color',
-                        )}
-                      >
-                        {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
-                        {item.normalStats![stat.statHash].scaled > 0 && (
-                          <span>
-                            <small>{item.normalStats![stat.statHash].scaled}</small>/
-                            <small>{stat.split}</small>
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                    <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
-                  </div>
-                ))}
-            </div>
+            <ArmorForClass
+              i18nItemNames={i18nItemNames}
+              selectedCharacter={selectedCharacter}
+              stores={stores}
+              includeVendors={includeVendors}
+              loadingVendors={loadingVendors}
+              onIncludeVendorsChange={onIncludeVendorsChange}
+              excludeItem={excludeItem}
+            />
           </div>
         </CollapsibleTitle>
         <div className={styles.section}>
@@ -835,6 +778,92 @@ function SetControls({
         )}
       </span>
     </div>
+  );
+}
+
+function ArmorForClass({
+  i18nItemNames,
+  selectedCharacter,
+  stores,
+  vendors,
+  includeVendors,
+  loadingVendors,
+  onIncludeVendorsChange,
+  excludeItem,
+}: {
+  i18nItemNames: { [key in ArmorTypes]: string };
+  selectedCharacter: D1Store;
+  stores: D1Store[];
+  vendors?: {
+    [vendorHash: number]: Vendor;
+  };
+  includeVendors: boolean;
+  loadingVendors: boolean;
+  onIncludeVendorsChange: (includeVendors: boolean) => void;
+  excludeItem: (item: D1Item) => void;
+}) {
+  const [type, setType] = useState<ArmorTypes>(BucketHashes.Helmet);
+
+  // Armor of each type on a particular character
+  // TODO: don't even need to load this much!
+  let bucket = loadBucket(selectedCharacter, stores);
+  if (includeVendors) {
+    bucket = mergeBuckets(bucket, loadVendorsBucket(selectedCharacter, vendors));
+  }
+
+  const items = bucket[type]
+    .filter((i) => i.power >= 280)
+    .sort(reverseComparator(compareBy((i) => i.quality?.min ?? 0)));
+
+  return (
+    <>
+      <div className={styles.controls}>
+        <div>
+          {/* TODO: break into its own component */}
+          <span>{t('Bucket.Armor')}:</span>{' '}
+          <select name="type" value={type} onChange={(e) => setType(parseInt(e.target.value, 10))}>
+            {d1ArmorTypes.map((type) => (
+              <option key={type} value={type}>
+                {i18nItemNames[type]}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <Switch
+            name="includeVendors"
+            checked={includeVendors}
+            onChange={onIncludeVendorsChange}
+          />
+          <label htmlFor="includeVendors">{t('LB.Vendor')}</label>
+        </div>
+        {loadingVendors && <AppIcon spinning={true} icon={refreshIcon} />}
+      </div>
+      <div className={styles.itemRow}>
+        {items.map((item) => (
+          <div key={item.index}>
+            {item.stats?.map((stat) => (
+              <div
+                key={stat.statHash}
+                style={getD1QualityColor(
+                  item.normalStats![stat.statHash].qualityPercentage,
+                  'color',
+                )}
+              >
+                {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
+                {item.normalStats![stat.statHash].scaled > 0 && (
+                  <span>
+                    <small>{item.normalStats![stat.statHash].scaled}</small>/
+                    <small>{stat.split}</small>
+                  </span>
+                )}
+              </div>
+            ))}
+            <LoadoutBuilderItem shiftClickCallback={excludeItem} item={item} />
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
