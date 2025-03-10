@@ -14,8 +14,8 @@ import {
 } from 'motion/react';
 import React, {
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -80,7 +80,7 @@ function useDisableParent(
   forceDisabled?: boolean,
 ): [disabled: boolean, setParentDisabled: React.Dispatch<React.SetStateAction<boolean>>] {
   const [disabledByChildSheet, setDisabledByChildSheet] = useState(false);
-  const setParentDisabled = useContext(SheetDisabledContext);
+  const setParentDisabled = use(SheetDisabledContext);
 
   const effectivelyDisabled = forceDisabled || disabledByChildSheet;
 

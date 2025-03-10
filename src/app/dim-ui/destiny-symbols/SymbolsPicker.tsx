@@ -3,15 +3,7 @@ import { SearchInput } from 'app/search/SearchInput';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { FontGlyphs } from 'data/font/d2-font-glyphs';
-import React, {
-  HTMLProps,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { HTMLProps, memo, use, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
 import ClickOutside from '../ClickOutside';
@@ -114,7 +106,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
   const controlRef = useRef<HTMLButtonElement>(null);
   const tooltipContents = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const pressTipRoot = useContext(PressTipRoot);
+  const pressTipRoot = use(PressTipRoot);
 
   usePopper(
     {
