@@ -18,7 +18,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import '../item-popup/ItemObjectives.scss';
 import styles from './Objective.m.scss';
 
 /**
@@ -108,8 +107,8 @@ export default function Objective({
       {showCheckbox && (
         <ObjectiveCheckbox completed={showComplete ?? false} passageFlawed={passageFlawed} />
       )}
-      <ObjectiveProgress isDate={isDate}>
-        {showProgress && (
+      <ObjectiveProgress>
+        {showProgress && !showComplete && (
           <ObjectiveProgressBar progress={progress} completionValue={completionValue} />
         )}
         <ObjectiveDescription description={progressDescription} />
@@ -142,10 +141,9 @@ export function ObjectiveRow({
   children?: React.ReactNode;
   className?: string;
 }) {
-  const classes = clsx(className, 'objective-row', {
-    'objective-complete': complete,
-    // Boolean hides pprogress-bar, text, progress, and description!
-    'objective-boolean': boolean,
+  const classes = clsx(className, styles.objective, {
+    [styles.objectiveComplete]: complete,
+    [styles.boolean]: boolean,
   });
 
   return <div className={classes}>{children}</div>;
@@ -163,8 +161,8 @@ export function ObjectiveCheckbox({
 }) {
   return (
     <div
-      className={clsx('objective-checkbox', {
-        'objective-complete': completed,
+      className={clsx(styles.checkbox, {
+        [styles.complete]: completed,
         [styles.passageFlawed]: passageFlawed,
       })}
     />
@@ -185,7 +183,7 @@ export function ObjectiveProgressBar({
 }) {
   return (
     <div
-      className={clsx(className, 'objective-progress-bar')}
+      className={clsx(className, styles.progressBar)}
       style={{
         width: percent(progress / completionValue),
       }}
@@ -196,17 +194,8 @@ export function ObjectiveProgressBar({
 /**
  * This is the container component for the progress bar and description.
  */
-export function ObjectiveProgress({
-  isDate,
-  children,
-}: {
-  isDate?: boolean;
-  children: React.ReactNode;
-}) {
-  // DateTime style just makes the background transparent, could be done with a :has(time) selector
-  return (
-    <div className={clsx('objective-progress', { [styles.dateTime]: isDate })}>{children}</div>
-  );
+export function ObjectiveProgress({ children }: { children: React.ReactNode }) {
+  return <div className={styles.progressContainer}>{children}</div>;
 }
 
 /**
@@ -220,7 +209,7 @@ export function ObjectiveDescription({
   description: string;
 }) {
   return (
-    <div className="objective-description">
+    <div className={styles.description}>
       {icon && typeof icon === 'string' ? <BungieImage src={icon} /> : icon}
       <RichDestinyText text={description} />
     </div>
@@ -231,7 +220,7 @@ export function ObjectiveDescription({
  * The text at the end of the objective, usually this shows the value of a counter (e.g. 4/10)
  */
 export function ObjectiveText({ children }: { children: React.ReactNode }) {
-  return <div className="objective-text">{children}</div>;
+  return <div className={styles.text}>{children}</div>;
 }
 
 /**
