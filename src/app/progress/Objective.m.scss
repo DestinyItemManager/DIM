@@ -1,0 +1,34 @@
+@use '../variables.scss' as *;
+
+.counter {
+  height: 17px;
+  margin-left: 4px;
+  margin-right: 2px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.integer {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--theme-text);
+  img {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+}
+
+.dateTime {
+  background-color: transparent;
+}
+
+.passageFlawed::after {
+  content: '\274c';
+  position: relative;
+  top: -1px;
+  left: -0.2px;
+}

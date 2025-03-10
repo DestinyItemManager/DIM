@@ -1,6 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
-import Objective from 'app/progress/Objective';
+import Objective, { ObjectiveCheckbox } from 'app/progress/Objective';
 import { DeepsightHarmonizerIcon } from './DeepsightHarmonizerIcon';
 import styles from './WeaponDeepsightInfo.m.scss';
 /**
@@ -21,7 +21,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
           {isHarmonizable(item) ? (
             <DeepsightHarmonizerIcon item={item} />
           ) : (
-            <div className="objective-checkbox" />
+            <ObjectiveCheckbox completed={false} />
           )}
           <div className={styles.deepsightProgressBar}>
             {relevantObjectives.map((objective) => (

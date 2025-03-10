@@ -1,4 +1,5 @@
 import { D1ObjectiveDefinition, D1ObjectiveProgress } from 'app/destiny1/d1-manifest-types';
+import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import {
@@ -16,9 +17,15 @@ import {
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import React from 'react';
 import '../item-popup/ItemObjectives.scss';
-import ObjectiveDescription from './ObjectiveDescription';
+import styles from './Objective.m.scss';
 
+/**
+ * Display an Objective given Destiny Objective information. This will figure
+ * out the right way to display it. If you know exactly how you want to display
+ * something you can use the lower-level ObjectiveDisplay component.
+ */
 export default function Objective({
   objective,
   suppressObjectiveDescription,
@@ -69,16 +76,18 @@ export default function Objective({
   const isDate = isD2Def && valueStyle === DestinyUnlockValueUIStyle.DateTime;
 
   if (valueStyle === DestinyUnlockValueUIStyle.Integer) {
+    const icon =
+      objectiveDef && 'displayProperties' in objectiveDef && objectiveDef.displayProperties.hasIcon
+        ? objectiveDef.displayProperties.icon
+        : undefined;
+
     return (
-      <div className="objective-row">
-        <div className="objective-integer">
-          <ObjectiveDescription
-            progressDescription={progressDescription}
-            objectiveDef={objectiveDef}
-          />
-          <div className="objective-text">{progress.toLocaleString()}</div>
+      <ObjectiveRow>
+        <div className={styles.integer}>
+          <ObjectiveDescription icon={icon} description={progressDescription} />
+          <ObjectiveText>{progress.toLocaleString()}</ObjectiveText>
         </div>
-      </div>
+      </ObjectiveRow>
     );
   }
 
@@ -87,44 +96,148 @@ export default function Objective({
   const passageFlawed =
     isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !complete;
 
-  const classes = clsx('objective-row', {
-    'objective-complete': complete && !showAsCounter && !isDate,
-    'objective-boolean': isBoolean,
-    'passage-flawed': passageFlawed,
-    'date-time': isDate,
-  });
-
-  const progressBarStyle = {
-    width: percent(progress / completionValue),
-  };
-
   // TODO: green pips, red pips
 
+  const showCheckbox = !noCheckbox && !showAsCounter && !isDate;
+  const showProgress =
+    progress !== undefined && completionValue !== undefined && !isBoolean && !isDate;
+  const showComplete = complete && !showAsCounter && !isDate;
+
   return (
-    <div className={classes}>
-      {!noCheckbox && !showAsCounter && !isDate && <div className="objective-checkbox" />}
-      <div className="objective-progress">
-        {!isBoolean && !isDate && (
-          <div className="objective-progress-bar" style={progressBarStyle} />
+    <ObjectiveRow complete={showComplete} boolean={isBoolean}>
+      {showCheckbox && (
+        <ObjectiveCheckbox completed={showComplete ?? false} passageFlawed={passageFlawed} />
+      )}
+      <ObjectiveProgress isDate={isDate}>
+        {showProgress && (
+          <ObjectiveProgressBar progress={progress} completionValue={completionValue} />
         )}
-        <div className="objective-description">
-          <RichDestinyText text={progressDescription} />
-        </div>
+        <ObjectiveDescription description={progressDescription} />
         {!isBoolean && (
-          <div className="objective-text">
+          <ObjectiveText>
             <ObjectiveValue
               objectiveDef={objectiveDef}
               progress={progress}
               completionValue={completionValue}
             />
-          </div>
+          </ObjectiveText>
         )}
-      </div>
-      {showAsCounter && <div className="objective-counter">{progress}</div>}
+      </ObjectiveProgress>
+      {showAsCounter && <div className={styles.counter}>{progress}</div>}
+    </ObjectiveRow>
+  );
+}
+
+/**
+ * An ObjectiveRow is the top-level container for a single objective display.
+ */
+export function ObjectiveRow({
+  complete,
+  boolean,
+  children,
+  className,
+}: {
+  complete?: boolean;
+  boolean?: boolean;
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  const classes = clsx(className, 'objective-row', {
+    'objective-complete': complete,
+    // Boolean hides pprogress-bar, text, progress, and description!
+    'objective-boolean': boolean,
+  });
+
+  return <div className={classes}>{children}</div>;
+}
+
+/**
+ * This is the little checkbox that's shown next to an objective.
+ */
+export function ObjectiveCheckbox({
+  completed,
+  passageFlawed,
+}: {
+  completed: boolean;
+  passageFlawed?: boolean;
+}) {
+  return (
+    <div
+      className={clsx('objective-checkbox', {
+        'objective-complete': completed,
+        [styles.passageFlawed]: passageFlawed,
+      })}
+    />
+  );
+}
+
+/**
+ * This is the progress bar that's shown behind objectives that have progress.
+ */
+export function ObjectiveProgressBar({
+  progress,
+  completionValue,
+  className,
+}: {
+  progress: number;
+  completionValue: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={clsx(className, 'objective-progress-bar')}
+      style={{
+        width: percent(progress / completionValue),
+      }}
+    />
+  );
+}
+
+/**
+ * This is the container component for the progress bar and description.
+ */
+export function ObjectiveProgress({
+  isDate,
+  children,
+}: {
+  isDate?: boolean;
+  children: React.ReactNode;
+}) {
+  // DateTime style just makes the background transparent, could be done with a :has(time) selector
+  return (
+    <div className={clsx('objective-progress', { [styles.dateTime]: isDate })}>{children}</div>
+  );
+}
+
+/**
+ * This is the description of the objective, e.g. "kill enemies"
+ */
+export function ObjectiveDescription({
+  icon,
+  description,
+}: {
+  icon?: string | React.ReactNode;
+  description: string;
+}) {
+  return (
+    <div className="objective-description">
+      {icon && typeof icon === 'string' ? <BungieImage src={icon} /> : icon}
+      <RichDestinyText text={description} />
     </div>
   );
 }
 
+/**
+ * The text at the end of the objective, usually this shows the value of a counter (e.g. 4/10)
+ */
+export function ObjectiveText({ children }: { children: React.ReactNode }) {
+  return <div className="objective-text">{children}</div>;
+}
+
+/**
+ * This is the formatted value of the objective, e.g. "5/10". It depends on the
+ * value style of the objective.
+ */
 export function ObjectiveValue({
   objectiveDef,
   progress,
@@ -140,7 +253,11 @@ export function ObjectiveValue({
 
   switch (valueStyle) {
     case DestinyUnlockValueUIStyle.DateTime:
-      return <>{new Date(progress * 1000).toLocaleString()}</>;
+      return (
+        <time dateTime={new Date(progress * 1000).toISOString()}>
+          {new Date(progress * 1000).toLocaleString()}
+        </time>
+      );
     case DestinyUnlockValueUIStyle.Percentage:
       if (completionValue === 100) {
         return <>{percent(progress / completionValue)}</>;
@@ -158,7 +275,7 @@ export function ObjectiveValue({
       return <>{(progress / 100).toLocaleString()}</>;
     case DestinyUnlockValueUIStyle.TimeDuration:
       return <>{timerDurationFromMs(progress)}</>;
-    case DestinyUnlockValueUIStyle.Checkbox:
+    case DestinyUnlockValueUIStyle.Checkbox: // This was already rendered as a checkbox
     case DestinyUnlockValueUIStyle.Hidden:
       return null;
     default:
