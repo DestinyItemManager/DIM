@@ -1,0 +1,11 @@
+@use '../../variables.scss' as *;
+
+.classIcon {
+  width: calc(var(--item-size) / 4) !important;
+  height: calc(var(--item-size) / 4) !important;
+  color: white;
+  position: absolute;
+  left: 3px;
+  bottom: 3px;
+  filter: drop-shadow(0 0 2px black);
+}

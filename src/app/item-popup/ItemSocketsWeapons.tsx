@@ -13,8 +13,7 @@ import { DimItem, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';
-import { PlugClickHandler } from './ItemSockets';
-import './ItemSockets.scss';
+import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import styles from './ItemSocketsWeapons.m.scss';
 import Socket from './Socket';
 
@@ -89,7 +88,7 @@ export default function ItemSocketsWeapons({
             </ArchetypeSocket>
           )}
           {!minimal && mods.length > 0 && (
-            <div className="item-sockets">{mods.map(renderSocket)}</div>
+            <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>
           )}
         </ArchetypeRow>
       )}
@@ -120,7 +119,7 @@ export default function ItemSocketsWeapons({
                 <AppIcon icon={faList} />
               </button>
             )}
-            <div className={clsx('item-sockets', styles.grid)}>
+            <ItemSocketsList className={styles.grid}>
               {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
                 (socketInfo) =>
                   !isKillTrackerSocket(socketInfo) && (
@@ -133,10 +132,10 @@ export default function ItemSocketsWeapons({
                     />
                   ),
               )}
-            </div>
+            </ItemSocketsList>
           </div>
         ))}
-      {minimal && mods.length > 0 && <div className="item-sockets">{mods.map(renderSocket)}</div>}
+      {minimal && mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}
     </div>
   );
 }

@@ -2,14 +2,19 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { DimItem } from '../../inventory/item-types';
+import styles from './LoadoutBuilderDropTarget.m.scss';
 
-interface Props {
+export default function LoadoutBucketDropTarget({
+  bucketHash,
+  children,
+  onItemLocked,
+  className,
+}: {
   bucketHash: number;
+  className?: string;
   children?: React.ReactNode;
   onItemLocked: (lockedItem: DimItem) => void;
-}
-
-export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLocked }: Props) {
+}) {
   const [{ isOver, canDrop }, dropRef] = useDrop<
     DimItem,
     unknown,
@@ -28,12 +33,16 @@ export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLo
       ref={(el) => {
         dropRef(el);
       }}
-      className={clsx({
-        'on-drag-hover': canDrop && isOver,
-        'on-drag-enter': canDrop,
-      })}
+      className={dropClasses(isOver, canDrop, className)}
     >
       {children}
     </div>
   );
+}
+
+export function dropClasses(isOver: boolean, canDrop: boolean, className?: string) {
+  return clsx(className, {
+    [styles.onDragHover]: canDrop && isOver,
+    [styles.onDragEnter]: canDrop,
+  });
 }

@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { PressTip, Tooltip } from '../dim-ui/PressTip';
 import { D1GridNode, D1Item } from '../inventory/item-types';
-import './ItemTalentGrid.scss';
+import styles from './ItemTalentGrid.m.scss';
 
 /**
  * The talent grid was the grid of perks for D1 items. It is not used for any D2 item.
@@ -13,8 +13,10 @@ import './ItemTalentGrid.scss';
 export default memo(function ItemTalentGrid({
   item,
   perksOnly,
+  className,
 }: {
   item: D1Item;
+  className?: string;
   perksOnly?: boolean;
 }) {
   const talentGrid = item.talentGrid;
@@ -49,7 +51,7 @@ export default memo(function ItemTalentGrid({
     <svg
       preserveAspectRatio="xMaxYMin meet"
       viewBox={`0 0 ${width} ${height}`}
-      className="talent-grid"
+      className={clsx(styles.talentGrid, className)}
       height={height}
       width={width}
     >
@@ -69,10 +71,10 @@ export default memo(function ItemTalentGrid({
               transform={`translate(${(node.column - hiddenColumns) * totalNodeSize},${
                 node.row * totalNodeSize
               })`}
-              className={clsx('talent-node', {
-                'talent-node-activated': node.activated,
-                'talent-node-showxp': !node.activated && node.xpRequired,
-                'talent-node-default':
+              className={clsx({
+                [styles.activated]: node.activated,
+                [styles.showXp]: !node.activated && node.xpRequired,
+                [styles.default]:
                   node.activated && !node.xpRequired && !node.exclusiveInColumn && node.column < 1,
               })}
             >
@@ -81,12 +83,12 @@ export default memo(function ItemTalentGrid({
                 cx="-17"
                 cy="17"
                 transform="rotate(-90)"
-                className="talent-node-xp"
+                className={styles.nodeXp}
                 strokeWidth={node.xp ? 2 : 0}
                 strokeDasharray={`${percent(node.xp / node.xpRequired)} 100`}
               />
               <image
-                className="talent-node-img"
+                className={styles.nodeImg}
                 href={bungieNetPath(node.icon)}
                 x="20"
                 y="20"

@@ -1,0 +1,13 @@
+.reputationBucket {
+  composes: sub-bucket from global;
+  width: 100%;
+}
+
+.factionrep {
+  position: relative;
+
+  svg {
+    width: var(--item-size);
+    height: var(--item-size);
+  }
+}

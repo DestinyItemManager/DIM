@@ -68,8 +68,8 @@
     // On mobile, the inner div can be full size and we just allow scrollbars to
     // appear over the content.
     > div {
-      width: 100%;
-      padding: 0;
+      width: 100% !important;
+      padding: 0 !important;
     }
   }
 

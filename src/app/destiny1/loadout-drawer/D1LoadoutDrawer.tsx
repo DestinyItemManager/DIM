@@ -25,9 +25,9 @@ import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-util
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
+import styles from './D1LoadoutDrawer.m.scss';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
-import './loadout-drawer.scss';
 
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
@@ -196,39 +196,35 @@ function LoadoutDrawerBody({
   };
 
   return (
-    <div className="loadout-drawer loadout-create">
-      <div className="loadout-content">
-        <LoadoutDrawerDropTarget onDroppedItem={onAddItem} classType={loadout.classType}>
-          {warnitems.length > 0 && (
-            <div className="loadout-contents">
-              <p>
-                <AlertIcon />
-                {t('Loadouts.VendorsCannotEquip')}
-              </p>
-              <div className="loadout-warn-items">
-                {warnitems.map((li) => (
-                  <div key={li.item.id} className="loadout-item" onClick={() => fixWarnItem(li)}>
-                    <ClosableContainer onClose={(e) => onRemoveItem(li, e)}>
-                      <ItemIcon item={li.item} />
-                    </ClosableContainer>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          <div className="loadout-contents">
-            <LoadoutDrawerContents
-              storeId={storeId}
-              loadout={loadout}
-              items={items}
-              equip={handleToggleEquipped}
-              remove={onRemoveItem}
-              add={onAddItem}
-              setLoadout={setLoadout}
-            />
+    <LoadoutDrawerDropTarget onDroppedItem={onAddItem} classType={loadout.classType}>
+      {warnitems.length > 0 && (
+        <div className={styles.contents}>
+          <p>
+            <AlertIcon />
+            {t('Loadouts.VendorsCannotEquip')}
+          </p>
+          <div className={styles.warnItems}>
+            {warnitems.map((li) => (
+              <ClosableContainer key={li.item.id} onClose={(e) => onRemoveItem(li, e)}>
+                <div onClick={() => fixWarnItem(li)}>
+                  <ItemIcon item={li.item} />
+                </div>
+              </ClosableContainer>
+            ))}
           </div>
-        </LoadoutDrawerDropTarget>
+        </div>
+      )}
+      <div className={styles.contents}>
+        <LoadoutDrawerContents
+          storeId={storeId}
+          loadout={loadout}
+          items={items}
+          equip={handleToggleEquipped}
+          remove={onRemoveItem}
+          add={onAddItem}
+          setLoadout={setLoadout}
+        />
       </div>
-    </div>
+    </LoadoutDrawerDropTarget>
   );
 }

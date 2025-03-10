@@ -1,8 +1,8 @@
-import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { D1Item } from '../../inventory/item-types';
 import { d1ArmorTypes } from './D1LoadoutBuilder';
+import { dropClasses } from './LoadoutBuilderDropTarget';
 
 interface Props {
   className?: string;
@@ -28,10 +28,7 @@ export default function ExcludeItemsDropTarget({ className, children, onExcluded
       ref={(el) => {
         dropRef(el);
       }}
-      className={clsx(className, {
-        'on-drag-hover': canDrop && isOver,
-        'on-drag-enter': canDrop,
-      })}
+      className={dropClasses(isOver, canDrop, className)}
     >
       {children}
     </div>

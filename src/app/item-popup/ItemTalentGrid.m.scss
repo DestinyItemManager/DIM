@@ -1,0 +1,31 @@
+@use '../variables.scss' as *;
+
+.talentGrid {
+  max-width: 100%;
+  box-sizing: border-box;
+
+  g {
+    outline-width: 0;
+  }
+}
+
+.nodeXp {
+  fill: rgba(255, 255, 255, 0.1);
+  stroke: none;
+  .showXp & {
+    stroke: $xp;
+  }
+  .activated & {
+    fill: #4887ba;
+  }
+  .default & {
+    fill: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.nodeImg {
+  opacity: 0.25;
+  .activated & {
+    opacity: 1;
+  }
+}

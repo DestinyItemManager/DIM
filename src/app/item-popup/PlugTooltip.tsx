@@ -28,7 +28,6 @@ import { TraitHashes } from 'data/d2/generated-enums';
 import { useCallback } from 'react';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import Objective from '../progress/Objective';
-import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
 export function DimPlugTooltip({

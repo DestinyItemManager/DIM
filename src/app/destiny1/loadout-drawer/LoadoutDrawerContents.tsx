@@ -23,6 +23,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
+import styles from './LoadoutDrawerContents.m.scss';
 
 const loadoutTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Subclass,
@@ -87,21 +88,13 @@ export default function LoadoutDrawerContents({
 
   return (
     <>
-      <div className="loadout-add-types">
+      <div className={styles.addTypes}>
         {showFillFromEquipped && (
-          <button
-            type="button"
-            className="dim-button loadout-add"
-            onClick={doFillLoadoutFromEquipped}
-          >
+          <button type="button" className="dim-button" onClick={doFillLoadoutFromEquipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.AddEquippedItems')}
           </button>
         )}
-        <button
-          type="button"
-          className="dim-button loadout-add"
-          onClick={doFillLoadOutFromUnequipped}
-        >
+        <button type="button" className="dim-button" onClick={doFillLoadOutFromUnequipped}>
           <AppIcon icon={addIcon} /> {t('Loadouts.AddUnequippedItems')}
         </button>
         {typesWithoutItems.length > 0 &&
@@ -109,13 +102,13 @@ export default function LoadoutDrawerContents({
             <a
               key={bucket.hash}
               onClick={() => pickLoadoutItem(defs, loadout, bucket, add, showItemPicker)}
-              className="dim-button loadout-add"
+              className="dim-button"
             >
               <AppIcon icon={addIcon} /> {bucket.name}
             </a>
           ))}
       </div>
-      <div className="loadout-added-items">
+      <div className={styles.addedItems}>
         {typesWithItems.map((bucket) => (
           <LoadoutDrawerBucket
             key={bucket.hash}

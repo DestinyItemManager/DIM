@@ -1,7 +1,6 @@
 import 'app/inventory-page/StoreBucket.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
-import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { partition } from 'es-toolkit';
@@ -23,6 +22,11 @@ export default function LoadoutDrawerBucket({
   equip: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
   remove: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
 }) {
+  // This is never called with an empty items array
+  if (!items.length) {
+    return null;
+  }
+
   const [equippedItems, unequippedItems] = partition(items, (li) => li.loadoutItem.equip);
 
   // Only allow one emblem
@@ -33,43 +37,31 @@ export default function LoadoutDrawerBucket({
   );
 
   return (
-    <div className="loadout-bucket">
-      {equippedItems.length > 0 || unequippedItems.length > 0 ? (
-        <>
-          <div className="loadout-bucket-name">{bucket.name}</div>
-          <div
-            className={clsx('loadout-bucket-items', {
-              'bucket-Class': bucket.hash === BucketHashes.Subclass,
-            })}
-          >
-            <div className="sub-bucket equipped">
-              <div className="equipped-item">
-                {equippedItems.length > 0 ? (
-                  equippedItems.map(mapItem)
-                ) : (
-                  <AddButton
-                    className={styles.equippedAddButton}
-                    onClick={() => pickLoadoutItem(bucket)}
-                  />
-                )}
-              </div>
-            </div>
-            {(equippedItems.length > 0 || unequippedItems.length > 0) &&
-              bucket.hash !== BucketHashes.Subclass && (
-                <div className="sub-bucket">
-                  {unequippedItems.map(mapItem)}
-                  {equippedItems.length > 0 && unequippedItems.length < capacity - 1 && (
-                    <AddButton onClick={() => pickLoadoutItem(bucket)} />
-                  )}
-                </div>
-              )}
+    <div className={styles.loadoutBucket}>
+      <div className={styles.loadoutBucketName}>{bucket.name}</div>
+      <div className={styles.items}>
+        <div className={clsx(styles.equipped, styles.itemGrid)}>
+          <div className="equipped-item">
+            {equippedItems.length > 0 ? (
+              equippedItems.map(mapItem)
+            ) : (
+              <AddButton
+                className={styles.equippedAddButton}
+                onClick={() => pickLoadoutItem(bucket)}
+              />
+            )}
           </div>
-        </>
-      ) : (
-        <a onClick={() => pickLoadoutItem(bucket)} className="dim-button loadout-add">
-          <AppIcon icon={addIcon} /> {bucket.name}
-        </a>
-      )}
+        </div>
+        {(equippedItems.length > 0 || unequippedItems.length > 0) &&
+          bucket.hash !== BucketHashes.Subclass && (
+            <div className={styles.itemGrid}>
+              {unequippedItems.map(mapItem)}
+              {equippedItems.length > 0 && unequippedItems.length < capacity - 1 && (
+                <AddButton onClick={() => pickLoadoutItem(bucket)} />
+              )}
+            </div>
+          )}
+      </div>
     </div>
   );
 }

@@ -15,6 +15,7 @@ import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, Tween, Variants, motion } from 'motion/react';
 import { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
+import { SocketCategoryHeader } from './ItemSocketsGeneral';
 
 const upgradeAnimateVariants: Variants = {
   shown: { height: 'auto', opacity: 1 },
@@ -67,9 +68,9 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
   return (
     defs && (
       <div className={styles.energyMeter}>
-        <div className="item-socket-category-name">
+        <SocketCategoryHeader>
           <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
-        </div>
+        </SocketCategoryHeader>
         <EnergyMeterIncrements
           energyCapacity={Math.max(minCapacity, previewCapacity || 0)}
           energyUsed={item.energy.energyUsed}
