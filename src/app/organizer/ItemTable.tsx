@@ -537,7 +537,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           </React.Fragment>
         ))}
       </div>
-      {rows.length > maxItems && <ItemListExpander onExpand={expandItems} />}
+      {rows.length > maxItems && <ItemListExpander numItems={maxItems} onExpand={expandItems} />}
     </>
   );
 }
@@ -630,7 +630,7 @@ function columnSetting(itemType: 'weapon' | 'armor' | 'ghost') {
   }
 }
 
-function ItemListExpander({ onExpand }: { onExpand: () => void }) {
+function ItemListExpander({ onExpand, numItems }: { onExpand: () => void; numItems: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -655,8 +655,18 @@ function ItemListExpander({ onExpand }: { onExpand: () => void }) {
     );
 
     observer.observe(elem);
+
     return () => observer.unobserve(elem);
-  }, [onExpand]);
+  }, [
+    onExpand,
+    // This is a hack to fix the case where:
+    // 1. The expander is on screen when the component renders.
+    // 2. After adding more items, it's still on screen. Since the observer only
+    //    runs if the item is initially onscreen, or enters the screen, there
+    //    are no changes. So we'll just reconstruct the observer every time to
+    //    allow it to re-fire if it's still on the screen.
+    numItems,
+  ]);
 
   return <div ref={ref} />;
 }
