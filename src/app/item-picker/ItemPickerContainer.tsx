@@ -1,5 +1,5 @@
 import { noop } from 'app/utils/functions';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, use, useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import ItemPicker from './ItemPicker';
 import { ItemPickerState } from './item-picker';
@@ -13,7 +13,7 @@ export const ItemPickerContext = createContext<(value: ItemPickerState | undefin
  * closest one in the tree to your component will handle showing the picker.
  */
 export default function ItemPickerContainer({ children }: { children: React.ReactNode }) {
-  const parentSetOptions = useContext(ItemPickerContext);
+  const parentSetOptions = use(ItemPickerContext);
 
   // The "generation" just allows us to set a key so the item picker isn't reused between different invocations
   const [generation, setGeneration] = useState(0);

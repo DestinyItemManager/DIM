@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import React, {
   RefObject,
   createContext,
+  use,
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -19,6 +19,7 @@ import { usePopper } from './usePopper';
  * but other elements (like Sheet) can use this to override the attachment point
  * for PressTips below them in the tree.
  */
+// eslint-disable-next-line @eslint-react/naming-convention/context-name
 export const PressTipRoot = createContext<RefObject<HTMLElement | null>>({
   current: null,
 });
@@ -89,7 +90,7 @@ function Control({
   ...rest
 }: ControlProps) {
   const tooltipContents = useRef<HTMLDivElement>(null);
-  const pressTipRoot = useContext(PressTipRoot);
+  const pressTipRoot = use(PressTipRoot);
   const [customization, customizeTooltip] = useState<TooltipCustomization>({ className: null });
 
   usePopper(
@@ -170,7 +171,7 @@ export function useTooltipCustomization({
   /** The CSS class(es) to be applied to the tooltip's root element. */
   className?: string | null;
 }) {
-  const customizeTooltip = useContext(TooltipContext);
+  const customizeTooltip = use(TooltipContext);
   useEffect(() => {
     if (customizeTooltip) {
       customizeTooltip((existing) => ({
@@ -225,7 +226,7 @@ export const Tooltip = {
    * If not, a fragment containing the children is returned instead.
    */
   Section: ({ children, className }: { children: React.ReactNode; className?: string }) => {
-    const tooltip = useContext(TooltipContext);
+    const tooltip = use(TooltipContext);
     if (!tooltip) {
       return <>{children}</>;
     }
