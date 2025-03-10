@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed a bug where the Organizer wouldn't show all the items if your screen was very tall or zoomed out.
+
 ## 8.62.0 <span class="changelog-date">(2025-03-09)</span>
 
 ## 8.61.0 <span class="changelog-date">(2025-03-02)</span>
