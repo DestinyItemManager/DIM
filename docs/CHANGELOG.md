@@ -1,5 +1,16 @@
 ## Next
 
+* Fixed a bug where the Organizer wouldn't show all the items if your screen was very tall or zoomed out.
+
+## 8.62.0 <span class="changelog-date">(2025-03-09)</span>
+
+## 8.61.0 <span class="changelog-date">(2025-03-02)</span>
+
+* `is:harmonizable` fixed to ignore bugged weapons with a Deepsight option that shouldn't be there.
+* `is:accountmaxpower` added to show your highest Power Level gear, determining the level of new drops.
+* `is:origintrait` added to find weapons with Origin Traits.
+* Fixed styling missing sometimes on the tooltip for Artifact Power.
+
 ## 8.60.0 <span class="changelog-date">(2025-02-23)</span>
 
 * Added `source:sundereddoctrine` for the new dungeon.

@@ -126,17 +126,16 @@ const statFilters: ItemFilterDefinition[] = [
     },
   },
   {
-    keywords: 'maxpower',
+    keywords: ['maxpower', 'accountmaxpower'],
     description: tl('Filter.MaxPower'),
     destinyVersion: 2,
-    filter: ({ allItems }) => {
-      const maxPowerPerBucket = calculateMaxPowerPerBucket(allItems);
+    filter: ({ allItems, filterValue }) => {
+      const classMatters = filterValue === 'maxpower';
+      const maxPowerPerBucket = calculateMaxPowerPerBucket(allItems, classMatters);
       return (item: DimItem) =>
-        Boolean(
-          // items can be 0pl but king of their own little kingdom,
-          // like halloween masks, so let's exclude 0pl
-          item.power && maxPowerPerBucket[maxPowerKey(item)] <= item.power,
-        );
+        // items can be 0pl but king of their own little kingdom,
+        // like halloween masks, so let's exclude 0pl
+        Boolean(item.power) && maxPowerPerBucket[maxPowerKey(item, classMatters)] <= item.power;
     },
   },
 ];
@@ -336,17 +335,15 @@ function calculateMaxPowerLoadoutItems(stores: DimStore[], allItems: DimItem[]) 
   return stores.flatMap((store) => maxLightItemSet(allItems, store).equippable.map((i) => i.id));
 }
 
-function maxPowerKey(item: DimItem) {
-  return `${item.bucket.hash}-${item.bucket.inArmor ? item.classType : ''}`;
+function maxPowerKey(item: DimItem, classMatters: boolean) {
+  return `${item.bucket.hash}-${classMatters && item.bucket.inArmor ? item.classType : ''}`;
 }
 
-function calculateMaxPowerPerBucket(allItems: DimItem[]) {
-  return mapValues(
-    Object.groupBy(
-      // disregard no-class armor
-      allItems.filter((i) => i.classType !== DestinyClass.Classified),
-      (i) => maxPowerKey(i),
-    ),
-    (items) => (items.length ? maxOf(items, (i) => i.power) : 0),
+function calculateMaxPowerPerBucket(allItems: DimItem[], classMatters: boolean) {
+  // disregard no-class armor
+  const validItems = allItems.filter((i) => i.classType !== DestinyClass.Classified);
+  const allItemsByBucketClass = Object.groupBy(validItems, (i) => maxPowerKey(i, classMatters));
+  return mapValues(allItemsByBucketClass, (items) =>
+    items.length ? maxOf(items, (i) => i.power) : 0,
   );
 }

@@ -1,0 +1,19 @@
+.overlayContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.vendorIconBackground {
+  background-color: rgba(100, 100, 100, 0.6);
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0;
+  left: 0;
+  z-index: 2;
+
+  > img {
+    width: 20px;
+    height: 20px;
+  }
+}

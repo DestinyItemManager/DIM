@@ -7,6 +7,8 @@
   height: $emblem-height;
   max-width: $emblem-width;
   text-align: left;
+  white-space: nowrap;
+  box-sizing: border-box;
 
   // Set the text off from the background
   text-shadow:

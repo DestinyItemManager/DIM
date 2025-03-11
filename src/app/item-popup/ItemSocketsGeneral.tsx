@@ -11,8 +11,7 @@ import { DimItem, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
-import { PlugClickHandler } from './ItemSockets';
-import './ItemSockets.scss';
+import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import styles from './ItemSocketsGeneral.m.scss';
 import Socket from './Socket';
 
@@ -88,11 +87,11 @@ export default function ItemSocketsGeneral({
         {modSocketCategories.map(([category, sockets]) => (
           <div key={category.category.hash}>
             {!minimal && (
-              <div className="item-socket-category-name">
+              <SocketCategoryHeader>
                 {category.category.displayProperties.name}
-              </div>
+              </SocketCategoryHeader>
             )}
-            <div className="item-sockets">
+            <ItemSocketsList>
               {sockets.map((socketInfo) => (
                 <Socket
                   key={socketInfo.socketIndex}
@@ -102,7 +101,7 @@ export default function ItemSocketsGeneral({
                   onClick={onPlugClicked}
                 />
               ))}
-            </div>
+            </ItemSocketsList>
           </div>
         ))}
       </div>
@@ -151,4 +150,8 @@ function IntrinsicArmorPerk({
       </ArchetypeSocket>
     </ArchetypeRow>
   );
+}
+
+export function SocketCategoryHeader({ children }: { children: React.ReactNode }) {
+  return <div className={styles.socketCategoryHeader}>{children}</div>;
 }

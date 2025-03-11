@@ -3,6 +3,7 @@
 exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
 [
   "accessories",
+  "accountmaxpower",
   "adept",
   "arc",
   "armor",
@@ -93,6 +94,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "movable",
   "new",
   "onwrongclass",
+  "origintrait",
   "ornamented",
   "patternunlocked",
   "pinnaclereward",

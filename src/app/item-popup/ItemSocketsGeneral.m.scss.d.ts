@@ -5,6 +5,7 @@ interface CssExports {
   'clarityDescription': string;
   'generalSockets': string;
   'minimalSockets': string;
+  'socketCategoryHeader': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

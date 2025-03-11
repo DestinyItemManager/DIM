@@ -11,7 +11,12 @@ import clsx from 'clsx';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { ActivityModifier } from './ActivityModifier';
-import CompletionCheckbox from './CompletionCheckbox';
+import {
+  ObjectiveCheckbox,
+  ObjectiveDescription,
+  ObjectiveProgress,
+  ObjectiveRow,
+} from './Objective';
 import styles from './RaidDisplay.m.scss';
 
 /**
@@ -72,14 +77,18 @@ export function RaidActivity({
           ),
       )}
       {activity.phases && activity.phases.length > 0 && (
-        <div className={clsx(styles.questObjectives, 'objective-row objective-boolean')}>
+        <ObjectiveRow
+          complete={activity.phases.every((p) => p.complete)}
+          className={styles.questObjectives}
+          boolean
+        >
           {activity.phases?.map((phase) => (
-            <CompletionCheckbox key={phase.phaseHash} completed={phase.complete} />
+            <ObjectiveCheckbox key={phase.phaseHash} completed={phase.complete} />
           ))}
-          <div className="objective-progress">
-            <div className="objective-description">{encountersString}</div>
-          </div>
-        </div>
+          <ObjectiveProgress>
+            <ObjectiveDescription description={encountersString} />
+          </ObjectiveProgress>
+        </ObjectiveRow>
       )}
     </div>
   );

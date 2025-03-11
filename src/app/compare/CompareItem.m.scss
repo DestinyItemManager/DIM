@@ -71,13 +71,13 @@
       --item-size: var(--item-size-mod) !important;
     }
   }
+}
 
-  // D1 talent grids are like sockets
-  :global(.talent-grid) {
-    padding: 4px 2px 0 2px;
-    max-width: 150px;
-    height: auto;
-  }
+// D1 talent grids are like sockets
+.talentGrid {
+  padding: 4px 2px 0 2px;
+  max-width: 150px;
+  height: auto;
 }
 
 // The toolbar across the top of each item

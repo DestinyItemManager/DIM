@@ -11,6 +11,7 @@ interface CssExports {
   'spacer': string;
   'statLabel': string;
   'statList': string;
+  'talentGrid': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

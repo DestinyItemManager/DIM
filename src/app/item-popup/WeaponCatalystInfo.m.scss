@@ -15,6 +15,7 @@
 }
 
 .catalystProgress {
+  --objective-background-color: var(--theme-item-popup-progress-bar-bg);
   composes: flexColumn from '../dim-ui/common.m.scss';
   background: var(--theme-item-popup-panel-bg);
   padding: 4px 10px;
@@ -22,9 +23,5 @@
   // Add spacer when adjacent to crafted weapon progress
   :global(.crafted-progress) + & {
     margin-top: 4px;
-  }
-
-  :global(.objective-progress) {
-    background: var(--theme-item-popup-progress-bar-bg);
   }
 }

@@ -1,0 +1,60 @@
+@use '../../variables' as *;
+
+$or-color: var(--theme-accent-primary);
+$and-color: #814bcf;
+
+.perkSelectPopup {
+  left: 6px;
+  top: 0;
+}
+
+.perk {
+  width: calc(var(--item-size) + 20px);
+  padding-left: 3px;
+  padding-right: 3px;
+  cursor: pointer;
+
+  @include interactive($hover: true) {
+    background-color: $or-color;
+  }
+
+  img {
+    width: var(--item-size);
+    height: var(--item-size);
+    display: block;
+    margin: auto;
+  }
+
+  small {
+    text-align: center;
+    display: block;
+  }
+}
+
+.perkSelectBox {
+  user-select: none;
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-template-rows: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  background-color: #656565;
+  border: 2px solid #ddd;
+  z-index: 3;
+
+  & .or {
+    background-color: $or-color;
+  }
+
+  &.shiftHeld .perk {
+    @include interactive($hover: true) {
+      background-color: $and-color;
+    }
+  }
+
+  & .and {
+    background-color: $and-color;
+  }
+}

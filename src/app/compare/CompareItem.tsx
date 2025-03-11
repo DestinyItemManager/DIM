@@ -119,7 +119,9 @@ export default memo(function CompareItem({
         onRowClick={handleRowClick}
         setHighlight={setHighlight}
       />
-      {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
+      {isD1Item(item) && item.talentGrid && (
+        <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+      )}
       {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t(missingSocketsMessage)}</div>
       )}

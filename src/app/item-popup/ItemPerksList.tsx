@@ -9,7 +9,6 @@ import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/ite
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
 import { PlugClickHandler } from './ItemSockets';
-import './ItemSockets.scss';
 import { PerkCircleWithTooltip } from './Plug';
 import { DimPlugTooltip } from './PlugTooltip';
 
