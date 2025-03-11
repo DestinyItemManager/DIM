@@ -49,12 +49,15 @@ export function getValueStyle(
   objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition | undefined,
   progress: number,
   completionValue = 0,
-) {
+): DestinyUnlockValueUIStyle {
   return objectiveDef
     ? ((progress < completionValue
-        ? 'inProgressValueStyle' in objectiveDef && objectiveDef.inProgressValueStyle
-        : 'completedValueStyle' in objectiveDef && objectiveDef.completedValueStyle) ??
-        objectiveDef.valueStyle)
+        ? 'inProgressValueStyle' in objectiveDef
+          ? objectiveDef.inProgressValueStyle
+          : undefined
+        : 'completedValueStyle' in objectiveDef
+          ? objectiveDef.completedValueStyle
+          : undefined) ?? objectiveDef.valueStyle)
     : DestinyUnlockValueUIStyle.Automatic;
 }
 

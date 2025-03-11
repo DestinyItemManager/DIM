@@ -3,8 +3,13 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getCraftedSocket } from 'app/inventory/store/crafted';
 import { KillTrackerInfo } from 'app/item-popup/KillTracker';
-import Objective from 'app/progress/Objective';
-import { percent, percentWithSingleDecimal } from 'app/shell/formatters';
+import Objective, {
+  ObjectiveDescription,
+  ObjectiveProgress,
+  ObjectiveProgressBar,
+  ObjectiveText,
+} from 'app/progress/Objective';
+import { percentWithSingleDecimal } from 'app/shell/formatters';
 import { AppIcon, enhancedIcon, shapedIcon } from 'app/shell/icons';
 import { filterMap } from 'app/utils/collections';
 import { isKillTrackerSocket, plugToKillTracker } from 'app/utils/item-utils';
@@ -18,23 +23,20 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
     return null;
   }
   const progress = item.craftedInfo.progress;
-  const progressBarStyle = {
-    // can't use percentWithSingleDecimal because the decimal separator is locale-dependent (can be `.` or `,`)
-    width: percent(progress),
-  };
-
   return (
     <div className={className}>
       {item.craftedInfo && <CraftedDataMedallion item={item} />}
-      <div className="objective-progress">
-        <div className="objective-progress-bar" style={progressBarStyle} />
-        <div className="objective-description">
-          {item.craftedInfo?.enhancementTier > 0 &&
-            `${t('MovePopup.EnhancementTier', { tier: item.craftedInfo?.enhancementTier })} - `}
-          {t('MovePopup.WeaponLevel', { level: item.craftedInfo.level })}
-        </div>
-        <div className="objective-text">{percentWithSingleDecimal(progress)}</div>
-      </div>
+      <ObjectiveProgress>
+        <ObjectiveProgressBar progress={progress} completionValue={1} />
+        <ObjectiveDescription
+          description={
+            item.craftedInfo?.enhancementTier > 0
+              ? `${t('MovePopup.EnhancementTier', { tier: item.craftedInfo?.enhancementTier })} - `
+              : `${t('MovePopup.WeaponLevel', { level: item.craftedInfo.level })}`
+          }
+        />
+        <ObjectiveText>{percentWithSingleDecimal(progress)}</ObjectiveText>
+      </ObjectiveProgress>
     </div>
   );
 }
