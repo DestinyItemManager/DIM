@@ -11,6 +11,7 @@ import {
 } from 'app/inventory/store/override-sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { buildStatInfo } from 'app/organizer/Columns';
 import { buildRows, sortRows } from 'app/organizer/ItemTable';
 import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
@@ -20,13 +21,12 @@ import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
-import { emptyArray } from 'app/utils/empty';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, DimSocket, DimStat } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy } from '../utils/comparators';
 import styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
@@ -36,21 +36,6 @@ import { endCompareSession, removeCompareItem, updateCompareQuery } from './acti
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
-export interface StatInfo {
-  /** An example of the stat, used for its constant definition. */
-  stat: DimStat;
-  // TODO: Replace this max/min with a thing that walks over the rows and computes max/min over them?
-  /** The minimum value of this stat across all items being compared. */
-  min: number;
-  /** The maximum value of this stat across all items being compared. */
-  max: number;
-  /** The minimum base value of this stat across all items being compared. */
-  minBase: number;
-  /** The maximum base value of this stat across all items being compared. */
-  maxBase: number;
-}
-
-// TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
 // TODO: dropdowns for query buttons
 // TODO: freeform query
@@ -103,7 +88,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   }, [cancel, hasItems, session.query]);
 
   // Memoize computing the list of stats
-  const allStats = useMemo(() => getAllStats(compareItems), [compareItems]);
+  const allStats = useMemo(() => buildStatInfo(compareItems), [compareItems]);
 
   const updateQuery = useCallback(
     (newQuery: string) => {
@@ -197,7 +182,15 @@ export default function Compare({ session }: { session: CompareSession }) {
         initialItemId={session.initialItemId}
       />
     ),
-    [sortedComparisonItems, rows, filteredColumns, remove, onPlugClicked, session.initialItemId],
+    [
+      sortedComparisonItems,
+      rows,
+      tableCtx,
+      filteredColumns,
+      remove,
+      onPlugClicked,
+      session.initialItemId,
+    ],
   );
 
   const header = (
@@ -281,23 +274,6 @@ function CompareItems({
       ))}
     </SheetHorizontalScrollContainer>
   );
-}
-
-// TODO: Combine with ItemTable.buildStatInfo
-function getAllStats(comparisonItems: DimItem[]): DimStat[] {
-  if (!comparisonItems.length) {
-    return emptyArray<DimStat>();
-  }
-
-  const statsByHash: { [statHash: string]: DimStat } = {};
-  for (const item of comparisonItems) {
-    if (item.stats) {
-      for (const stat of item.stats) {
-        statsByHash[stat.statHash] ??= stat;
-      }
-    }
-  }
-  return Object.values(statsByHash);
 }
 
 /**

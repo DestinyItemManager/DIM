@@ -82,6 +82,7 @@ import {
   csvStatNamesForDestinyVersion,
 } from 'app/inventory/spreadsheets';
 import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
+import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import styles from './Columns.m.scss';
 import { ColumnDefinition, ColumnGroup, ColumnWithStat, SortDirection, Value } from './table-types';
@@ -1147,9 +1148,11 @@ function getIntrinsicSockets(item: DimItem) {
  * It will return the same result for the same category, since all items in a category share stats.
  */
 export function buildStatInfo(items: DimItem[]): DimStat[] {
-  const statHashes: {
-    [statHash: number]: DimStat;
-  } = {};
+  if (!items.length) {
+    return emptyArray<DimStat>();
+  }
+
+  const statHashes: { [statHash: number]: DimStat } = {};
   for (const item of items) {
     if (item.stats) {
       for (const stat of item.stats) {

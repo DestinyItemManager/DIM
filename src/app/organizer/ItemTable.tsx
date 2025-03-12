@@ -555,6 +555,7 @@ export function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[])
   }));
 
   // Build a map of min/max values for each column
+  // TODO: Use these to color stats in the ItemTable view
   const ctx: TableContext = { minMaxValues: {} };
   for (const column of filteredColumns) {
     if (column.cell) {
