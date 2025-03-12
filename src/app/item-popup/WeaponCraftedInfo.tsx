@@ -23,18 +23,18 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
     return null;
   }
   const progress = item.craftedInfo.progress;
+
+  let desc = t('MovePopup.WeaponLevel', { level: item.craftedInfo.level });
+  if (item.craftedInfo?.enhancementTier > 0) {
+    desc = `${t('MovePopup.EnhancementTier', { tier: item.craftedInfo?.enhancementTier })} - ${desc}`;
+  }
+
   return (
     <div className={className}>
       {item.craftedInfo && <CraftedDataMedallion item={item} />}
       <ObjectiveProgress>
         <ObjectiveProgressBar progress={progress} completionValue={1} />
-        <ObjectiveDescription
-          description={
-            item.craftedInfo?.enhancementTier > 0
-              ? `${t('MovePopup.EnhancementTier', { tier: item.craftedInfo?.enhancementTier })} - `
-              : `${t('MovePopup.WeaponLevel', { level: item.craftedInfo.level })}`
-          }
-        />
+        <ObjectiveDescription description={desc} />
         <ObjectiveText>{percentWithSingleDecimal(progress)}</ObjectiveText>
       </ObjectiveProgress>
     </div>
