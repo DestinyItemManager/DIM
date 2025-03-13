@@ -353,6 +353,8 @@ export function makeItem(
   if (
     itemInstanceData.primaryStat &&
     normalBucket.hash !== BucketHashes.Subclass &&
+    // All sparrows/skimmers have 190 speed now, no need to show it
+    normalBucket.hash !== BucketHashes.Vehicle &&
     !itemDef.stats?.disablePrimaryStatDisplay
   ) {
     primaryStat = itemInstanceData.primaryStat;
@@ -485,7 +487,7 @@ export function makeItem(
     equippingLabel: itemDef.equippingBlock?.uniqueLabel,
     complete: false,
     amount: item.quantity || 1,
-    primaryStat: primaryStat,
+    primaryStat,
     typeName,
     equipRequiredLevel: itemInstanceData.equipRequiredLevel ?? 0,
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
