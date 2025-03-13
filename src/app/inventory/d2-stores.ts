@@ -131,7 +131,7 @@ export function loadStores({
           mode: 'exclusive',
         },
         async (lock) => {
-          if (!lock) {
+          if (!lock && !firstTime) {
             infoLog('cross-tab', 'Another tab is already loading stores');
             // This means another tab was already requesting the stores.
             throw new Error('lock-held');
@@ -277,7 +277,7 @@ function loadProfile(
         } else {
           infoLog(
             TAG,
-            `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
+            `Profile from Bungie.net is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
             `Using the new profile from Bungie.net.`,
           );
         }
@@ -360,10 +360,10 @@ function loadStoresData(
             // One reason stores could have errors is if the manifest was not up
             // to date. Check to see if it has updated, and if so, download it and
             // immediately try again.
-            if (stores.some((s) => s.hadErrors)) {
-              if (lastCheckedManifest - Date.now() < 5 * 60 * 1000) {
-                return;
-              }
+            if (
+              stores.some((s) => s.hadErrors) &&
+              lastCheckedManifest - Date.now() > 5 * 60 * 1000
+            ) {
               lastCheckedManifest = Date.now();
 
               if (await checkForNewManifest()) {
@@ -390,7 +390,7 @@ function loadStoresData(
 
             stopTimer();
 
-            startSpan({ name: 'updateInventoryState' }, () => {
+            return startSpan({ name: 'updateInventoryState' }, () => {
               const stopStateTimer = timer(TAG, 'Inventory state update');
 
               // If we switched account since starting this, give up before saving
@@ -425,9 +425,9 @@ function loadStoresData(
               dispatch(inGameLoadoutLoaded(loadouts));
 
               stopStateTimer();
-            });
 
-            return stores;
+              return stores;
+            });
           }
         } catch (e) {
           errorLog(TAG, 'Error loading stores', e);
