@@ -24,7 +24,8 @@ import CompareStat from './CompareStat';
  */
 // TODO: converge this with Columns.tsx
 export function getColumns(
-  itemsType: 'weapon' | 'armor' | 'ghost',
+  itemsType: 'weapon' | 'armor' | 'general',
+  hasEnergy: boolean,
   stats: DimStat[],
   customStatDefs: CustomStatDef[],
   destinyVersion: DestinyVersion,
@@ -107,8 +108,8 @@ export function getColumns(
     };
   }).sort(compareBy((s) => getStatSortOrder(s.statHash)));
 
-  const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
+  const isWeapon = itemsType === 'weapon';
 
   const baseStatColumns: ColumnWithStat[] =
     destinyVersion === 2 && isArmor
@@ -227,7 +228,7 @@ export function getColumns(
       value: (i) => i.name,
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),
-    !isGhost &&
+    (isArmor || isWeapon) &&
       c({
         id: 'power',
         csv: destinyVersion === 2 ? 'Power' : 'Light',
@@ -243,8 +244,7 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `power:>=${value}`,
       }),
-    (isArmor || isGhost) &&
-      destinyVersion === 2 &&
+    hasEnergy &&
       c({
         id: 'energy',
         header: t('Organizer.Columns.Energy'),

@@ -111,17 +111,26 @@ export default function Compare({ session }: { session: CompareSession }) {
   /* ItemTable incursion */
 
   const destinyVersion = compareItems[0].destinyVersion;
-  const type = comparingArmor ? 'armor' : comparingWeapons ? 'weapon' : 'ghost';
+  const type = comparingArmor ? 'armor' : comparingWeapons ? 'weapon' : 'general';
+  const hasEnergy = compareItems.some((i) => i.energy);
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
         type,
+        hasEnergy,
         allStats,
         itemCreationContext.customStats,
         destinyVersion,
         doCompareBaseStats,
       ),
-    [type, allStats, doCompareBaseStats, destinyVersion, itemCreationContext.customStats],
+    [
+      type,
+      hasEnergy,
+      allStats,
+      doCompareBaseStats,
+      destinyVersion,
+      itemCreationContext.customStats,
+    ],
   );
 
   const classIfAny = comparingArmor ? compareItems[0].classType : undefined;
