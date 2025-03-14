@@ -113,6 +113,11 @@ export default function Compare({ session }: { session: CompareSession }) {
   const destinyVersion = compareItems[0].destinyVersion;
   const type = comparingArmor ? 'armor' : comparingWeapons ? 'weapon' : 'general';
   const hasEnergy = compareItems.some((i) => i.energy);
+  const primaryStatDescription =
+    (!comparingArmor &&
+      !comparingWeapons &&
+      compareItems.find((i) => i.primaryStat)?.primaryStatDisplayProperties) ||
+    undefined;
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
@@ -122,6 +127,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         itemCreationContext.customStats,
         destinyVersion,
         doCompareBaseStats,
+        primaryStatDescription,
       ),
     [
       type,
@@ -130,6 +136,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       doCompareBaseStats,
       destinyVersion,
       itemCreationContext.customStats,
+      primaryStatDescription,
     ],
   );
 

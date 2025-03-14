@@ -2,7 +2,6 @@
 
 * Fixed a bug where the Organizer wouldn't show all the items if your screen was very tall or zoomed out.
 * Added a sortable name label to the Compare view.
-* Sparrows no longer show their speed (all Sparrows and Skimmers have the same speed now).
 
 ## 8.62.0 <span class="changelog-date">(2025-03-09)</span>
 

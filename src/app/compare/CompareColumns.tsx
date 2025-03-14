@@ -15,6 +15,7 @@ import { getCompareColor } from 'app/shell/formatters';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
@@ -30,6 +31,7 @@ export function getColumns(
   customStatDefs: CustomStatDef[],
   destinyVersion: DestinyVersion,
   compareBaseStats: boolean,
+  primaryStatDescription: DestinyDisplayPropertiesDefinition | undefined,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -243,6 +245,21 @@ export function getColumns(
           ),
         defaultSort: SortDirection.DESC,
         filter: (value) => `power:>=${value}`,
+      }),
+    primaryStatDescription &&
+      c({
+        id: 'primaryStat',
+        csv: undefined,
+        header: primaryStatDescription.name,
+        // We don't want to show a value for power if it's 0
+        value: (item) => item.primaryStat?.value,
+        cell: (val, item, ctx) =>
+          val !== undefined ? (
+            <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={val} />
+          ) : (
+            t('Stats.NotApplicable')
+          ),
+        defaultSort: SortDirection.DESC,
       }),
     hasEnergy &&
       c({
