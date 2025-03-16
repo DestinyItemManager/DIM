@@ -56,7 +56,7 @@
   composes: flexColumn from '../dim-ui/common.m.scss';
   gap: 8px;
   padding: 8px;
-  background-color: var(--theme-search-bg);
+  background-color: var(--theme-section-bg);
 
   @include phone-portrait {
     margin-left: -10px;
