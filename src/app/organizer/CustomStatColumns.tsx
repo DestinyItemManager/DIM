@@ -7,11 +7,14 @@ import { ColumnDefinition, SortDirection } from './table-types';
 export function createCustomStatColumns(
   customStatDefs: CustomStatDef[],
   className?: string,
-): (ColumnDefinition | undefined)[] {
+  hideFormula = false,
+): ColumnDefinition[] {
   return customStatDefs.map(
     (c): ColumnDefinition => ({
       id: `customstat_${c.shortLabel}${c.statHash}`,
-      header: (
+      header: hideFormula ? (
+        c.label
+      ) : (
         <>
           {c.label}
           <CustomStatWeightsDisplay customStat={c} />

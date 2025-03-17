@@ -58,7 +58,7 @@ import { localizedSorter } from 'app/utils/intl';
 
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
-import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
+import { ColumnDefinition, ColumnSort, Row, SortDirection, TableContext } from './table-types';
 
 const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
   [ItemCategoryHashes.Hunter]: DestinyClass.Hunter,
@@ -76,7 +76,7 @@ const downloadButtonSettings = [
   { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
 ];
 
-const MemoRow = memo(TableRow);
+export const MemoRow = memo(TableRow);
 
 const EXPAND_INCREMENT = 20;
 
@@ -226,7 +226,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   );
 
   // process items into Rows
-  const unsortedRows: Row[] = useMemo(
+  const [unsortedRows, _tableContext] = useMemo(
     () => buildRows(items, filteredColumns),
     [filteredColumns, items],
   );
@@ -545,7 +545,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 /**
  * Build a list of rows with materialized values.
  */
-function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
+export function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
   const unsortedRows: Row[] = items.map((item) => ({
     item,
     values: filteredColumns.reduce<Row['values']>((memo, col) => {
@@ -553,18 +553,40 @@ function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
       return memo;
     }, {}),
   }));
-  return unsortedRows;
+
+  // Build a map of min/max values for each column
+  // TODO: Use these to color stats in the ItemTable view
+  const ctx: TableContext = { minMaxValues: {} };
+  for (const column of filteredColumns) {
+    if (column.cell) {
+      for (const row of unsortedRows) {
+        const value = row.values[column.id];
+        if (typeof value === 'number') {
+          const minMax = (ctx.minMaxValues[column.id] ??= { min: value, max: value });
+          minMax.min = Math.min(minMax.min, value);
+          minMax.max = Math.max(minMax.max, value);
+        }
+      }
+    }
+  }
+
+  return [unsortedRows, ctx] as const;
 }
 
 /**
  * Sort the rows based on the selected columns.
  */
-function sortRows(
+export function sortRows(
   unsortedRows: Row[],
   columnSorts: ColumnSort[],
   filteredColumns: ColumnDefinition[],
   language: DimLanguage,
+  defaultComparator?: Comparator<Row>,
 ) {
+  if (!columnSorts.length && defaultComparator) {
+    return unsortedRows.toSorted(defaultComparator);
+  }
+
   const comparator = chainComparator<Row>(
     ...columnSorts.map((sorter) => {
       const column = filteredColumns.find((c) => c.id === sorter.columnId);

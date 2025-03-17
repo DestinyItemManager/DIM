@@ -1,5 +1,6 @@
+import { languageSelector } from 'app/dim-api/selectors';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
-import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
+import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -8,58 +9,33 @@ import {
   applySocketOverrides,
   useSocketOverridesForItems,
 } from 'app/inventory/store/override-sockets';
-import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
+import { buildStatInfo } from 'app/organizer/Columns';
+import { buildRows, sortRows } from 'app/organizer/ItemTable';
+import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { emptyArray } from 'app/utils/empty';
-import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import { StatHashes } from 'data/d2/generated-enums';
+import { compact } from 'app/utils/collections';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
-import { DimItem, DimSocket, DimStat } from '../inventory/item-types';
-import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
+import { DimItem, DimSocket } from '../inventory/item-types';
+import { chainComparator, compareBy } from '../utils/comparators';
 import styles from './Compare.m.scss';
+import { getColumns } from './CompareColumns';
 import CompareItem, { CompareHeaders } from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
-export interface StatInfo {
-  /** An example of the stat, used for its constant definition. */
-  stat: DimStat;
-  /** The minimum value of this stat across all items being compared. */
-  min: number;
-  /** The maximum value of this stat across all items being compared. */
-  max: number;
-  /**
-   * A stat is "enabled" if it has a range of values across the items being
-   * compared. This is only used in Compare.
-   */
-  enabled: boolean;
-  /**
-   * Given an item, return the stat value for this stat. This is only used in
-   * Compare and can be deprecated when we stop using "stats" for power and
-   * energy.
-   */
-  getStat: StatGetter;
-}
-export interface MinimalStat {
-  value: number;
-  base?: number;
-}
-type StatGetter = (item: DimItem) => undefined | MinimalStat;
-
-// TODO: replace rows with Column from organizer
 // TODO: CSS grid-with-sticky layout
 // TODO: dropdowns for query buttons
 // TODO: freeform query
@@ -112,10 +88,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   }, [cancel, hasItems, session.query]);
 
   // Memoize computing the list of stats
-  const allStats = useMemo(
-    () => getAllStats(compareItems, compareBaseStats),
-    [compareItems, compareBaseStats],
-  );
+  const allStats = useMemo(() => buildStatInfo(compareItems), [compareItems]);
 
   const updateQuery = useCallback(
     (newQuery: string) => {
@@ -135,15 +108,74 @@ export default function Compare({ session }: { session: CompareSession }) {
     [cancel, compareItems.length, dispatch],
   );
 
-  const sortedComparisonItems = useMemo(() => {
-    const comparator = sortCompareItemsComparator(
-      columnSorts,
-      doCompareBaseStats,
+  /* ItemTable incursion */
+
+  const destinyVersion = compareItems[0].destinyVersion;
+  const type = comparingArmor ? 'armor' : comparingWeapons ? 'weapon' : 'general';
+  const hasEnergy = compareItems.some((i) => i.energy);
+  const primaryStatDescription =
+    (!comparingArmor &&
+      !comparingWeapons &&
+      compareItems.find((i) => i.primaryStat)?.primaryStatDisplayProperties) ||
+    undefined;
+  const columns: ColumnDefinition[] = useMemo(
+    () =>
+      getColumns(
+        type,
+        hasEnergy,
+        allStats,
+        itemCreationContext.customStats,
+        destinyVersion,
+        doCompareBaseStats,
+        primaryStatDescription,
+      ),
+    [
+      type,
+      hasEnergy,
       allStats,
-      session.initialItemId,
-    );
-    return compareItems.toSorted(comparator);
-  }, [columnSorts, doCompareBaseStats, allStats, session.initialItemId, compareItems]);
+      doCompareBaseStats,
+      destinyVersion,
+      itemCreationContext.customStats,
+      primaryStatDescription,
+    ],
+  );
+
+  const classIfAny = comparingArmor ? compareItems[0].classType : undefined;
+  const filteredColumns = useMemo(
+    () =>
+      // TODO: filter to enabled columns once you can select columns
+      compact(
+        columns.filter(
+          (column) => column.limitToClass === undefined || column.limitToClass === classIfAny,
+        ),
+      ),
+    [columns, classIfAny],
+  );
+
+  // process items into Rows
+  const [unsortedRows, tableCtx] = useMemo(
+    () => buildRows(compareItems, filteredColumns),
+    [filteredColumns, compareItems],
+  );
+  const language = useSelector(languageSelector);
+  const rows = useMemo(
+    () =>
+      sortRows(unsortedRows, columnSorts, filteredColumns, language, (a, b) =>
+        chainComparator(
+          compareBy((item) => item.id !== session.initialItemId),
+          acquisitionRecencyComparator,
+        )(a.item, b.item),
+      ),
+    [unsortedRows, columnSorts, filteredColumns, language, session.initialItemId],
+  );
+
+  /* End ItemTable incursion */
+
+  // TODO: once we stop displaying CompareItems at all, we can drop this
+  const sortedComparisonItems = useMemo(
+    () => compareItems.toSorted(compareBy((i) => rows.findIndex((r) => r.item === i))),
+    [compareItems, rows],
+  );
 
   // If the session was started with a specific item, this is it
   const initialItem = session.initialItemId
@@ -157,20 +189,22 @@ export default function Compare({ session }: { session: CompareSession }) {
     () => (
       <CompareItems
         items={sortedComparisonItems}
-        allStats={allStats}
+        rows={rows}
+        tableCtx={tableCtx}
+        filteredColumns={filteredColumns}
         remove={remove}
         setHighlight={setHighlight}
         onPlugClicked={onPlugClicked}
-        doCompareBaseStats={doCompareBaseStats}
         initialItemId={session.initialItemId}
       />
     ),
     [
       sortedComparisonItems,
-      allStats,
-      doCompareBaseStats,
-      onPlugClicked,
+      rows,
+      tableCtx,
+      filteredColumns,
       remove,
+      onPlugClicked,
       session.initialItemId,
     ],
   );
@@ -211,7 +245,7 @@ export default function Compare({ session }: { session: CompareSession }) {
           highlight={highlight}
           setHighlight={setHighlight}
           toggleColumnSort={toggleColumnSort}
-          allStats={allStats}
+          filteredColumns={filteredColumns}
         />
         {items}
       </div>
@@ -221,17 +255,19 @@ export default function Compare({ session }: { session: CompareSession }) {
 
 function CompareItems({
   items,
-  doCompareBaseStats,
-  allStats,
+  rows,
+  tableCtx,
+  filteredColumns,
   remove,
   setHighlight,
   onPlugClicked,
   initialItemId,
 }: {
   initialItemId: string | undefined;
-  doCompareBaseStats: boolean;
+  rows: Row[];
+  tableCtx: TableContext;
+  filteredColumns: ColumnDefinition[];
   items: DimItem[];
-  allStats: StatInfo[];
   remove: (item: DimItem) => void;
   setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
@@ -241,161 +277,19 @@ function CompareItems({
       {items.map((item) => (
         <CompareItem
           item={item}
+          row={rows.find((r) => r.item === item)!}
+          tableCtx={tableCtx}
+          filteredColumns={filteredColumns}
           key={item.id}
-          stats={allStats}
           itemClick={locateItem}
           remove={remove}
           setHighlight={setHighlight}
           onPlugClicked={onPlugClicked}
-          compareBaseStats={doCompareBaseStats}
           isInitialItem={initialItemId === item.id}
         />
       ))}
     </SheetHorizontalScrollContainer>
   );
-}
-
-function sortCompareItemsComparator(
-  columnSorts: ColumnSort[],
-  compareBaseStats: boolean,
-  allStats: StatInfo[],
-  initialItemId?: string,
-) {
-  if (!columnSorts.length) {
-    return chainComparator(
-      compareBy((item) => item.id !== initialItemId),
-      acquisitionRecencyComparator,
-    );
-  }
-
-  return reverseComparator(
-    chainComparator<DimItem>(
-      ...columnSorts.map((sorter) => {
-        const sortStat = allStats.find((s) => s.stat.statHash.toString() === sorter.columnId);
-        if (!sortStat) {
-          return compareBy(() => 0);
-        }
-        const compare: Comparator<DimItem> = compareBy((item) => {
-          const stat = sortStat.getStat(item);
-          if (!stat) {
-            return -1;
-          }
-          const statValue = compareBaseStats ? (stat.base ?? stat.value) : stat.value;
-          if (sortStat.stat.statHash === StatHashes.RecoilDirection) {
-            return recoilValue(stat.value);
-          }
-          return statValue;
-        });
-        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
-      }),
-      compareBy((i) => i.index),
-      compareBy((i) => i.name),
-    ),
-  );
-}
-
-function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): StatInfo[] {
-  if (!comparisonItems.length) {
-    return emptyArray<StatInfo>();
-  }
-
-  const firstComparison = comparisonItems[0];
-  compareBaseStats = Boolean(compareBaseStats && firstComparison.bucket.inArmor);
-  const stats: StatInfo[] = [];
-
-  if (firstComparison.primaryStat) {
-    stats.push(
-      makeFakeStat(
-        firstComparison.primaryStat.statHash,
-        firstComparison.primaryStatDisplayProperties!,
-        (item) => (item.primaryStat ? { value: item.primaryStat.value } : undefined),
-      ),
-    );
-  }
-
-  if (firstComparison.destinyVersion === 2 && firstComparison.bucket.inArmor) {
-    stats.push(
-      makeFakeStat(
-        StatHashes.AnyEnergyTypeCost,
-        t('EnergyMeter.Energy'),
-        (item) => (item.energy ? { value: item.energy.energyCapacity } : undefined),
-        10,
-        false,
-      ),
-    );
-  }
-
-  for (const stat of stats) {
-    for (const item of comparisonItems) {
-      const itemStat = stat.getStat(item);
-      if (itemStat) {
-        stat.min = Math.min(stat.min, itemStat.value);
-        stat.max = Math.max(stat.max, itemStat.value);
-        stat.enabled = stat.min !== stat.max;
-      }
-    }
-  }
-
-  const statsByHash: { [statHash: string]: StatInfo } = {};
-  for (const item of comparisonItems) {
-    if (item.stats) {
-      for (const stat of item.stats) {
-        let val = (compareBaseStats ? (stat.base ?? stat.value) : stat.value) || 0;
-        if (stat.statHash === StatHashes.RecoilDirection) {
-          val = recoilValue(val);
-        }
-        let statInfo = statsByHash[stat.statHash];
-        if (statInfo) {
-          statInfo.min = Math.min(statInfo.min, val);
-          statInfo.max = Math.max(statInfo.max, val);
-          statInfo.enabled = statInfo.min !== statInfo.max;
-        } else {
-          statInfo = {
-            stat,
-            min: val,
-            max: val,
-            enabled: false,
-            getStat: (item: DimItem) => item.stats?.find((s) => s.statHash === stat.statHash),
-          };
-          statsByHash[stat.statHash] = statInfo;
-          stats.push(statInfo);
-        }
-      }
-    }
-  }
-
-  return stats;
-}
-
-function makeFakeStat(
-  id: StatHashes,
-  displayProperties: DestinyDisplayPropertiesDefinition | string,
-  getStat: StatGetter,
-  maximumValue = 0,
-  bar = false,
-  smallerIsBetter = false,
-): StatInfo {
-  if (typeof displayProperties === 'string') {
-    displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
-  }
-  return {
-    stat: {
-      statHash: id,
-      displayProperties,
-      smallerIsBetter,
-      bar,
-      maximumValue,
-      sort: 0,
-      value: 0,
-      base: 0,
-      investmentValue: 0,
-      additive: false,
-    },
-    min: Number.MAX_SAFE_INTEGER,
-    max: 0,
-    enabled: false,
-    getStat,
-  };
 }
 
 /**
