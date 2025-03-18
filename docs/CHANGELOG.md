@@ -1,5 +1,7 @@
 ## Next
 
+* Fix a bug in Chrome for Android 134 and newer where the space reserved for the virtual keyboard would not be reclaimed after the keyboard is dismissed.
+
 ## 8.63.0 <span class="changelog-date">(2025-03-16)</span>
 
 * Fixed a bug where the Organizer wouldn't show all the items if your screen was very tall or zoomed out.

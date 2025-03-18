@@ -108,3 +108,16 @@ Check out the [docs]() folder for more tips.
 * We use [i18next](https://github.com/i18next/i18next) for all our translated strings, so if you want to translate something that's currently English-only, take a look at that. Usually it's as simple as replacing some text with `<span>{t('KEY')}</span>` and then defining KEY in the `config\i18n.json` file.
 
 * `pnpm i18n` will add, sort, and prune `src/locale/en.json`. You should never manually edit `src/locale/en.json`. Some keys are obfuscated by code and will need to be added as comments into the code such as `// t('LoadoutBuilder.ObfuscatedKey1')`. If you have any questions, ping @delphiactual via GitHub, Slack, or Discord.
+
+### Android Debugging
+
+Assuming you have an Android phone:
+
+1. Enable Developer Mode
+2. Enable USB debugging
+3. In Chrome, visit chrome://inspect/#devices and connect to the device.
+4. Enable port forwarding for port 8080.
+5. Visit https://localhost:8080/developer on your laptop and copy the "Open this link in another browser" link address.
+6. Back in the inspect devices screen, paste that URL into the "Open tab with URL" box to open it on your Android device.
+7. Save the API keys on the Android device and log in as normal.
+8. Back in the inspect devices screen, click "inspect" under the tab you want to debug.
