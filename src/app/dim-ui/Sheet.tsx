@@ -266,7 +266,7 @@ export default function Sheet({
       dragListener={false}
       dragConstraints={dragConstraints}
       dragElastic={0}
-      onDragEnd={handleDragEnd}
+      onDragEnd={disabled ? undefined : handleDragEnd}
       // regular props
       style={{ zIndex }}
       className={clsx(styles.sheet, sheetClassName, { [styles.sheetDisabled]: disabled })}
@@ -288,7 +288,7 @@ export default function Sheet({
         <AppIcon icon={disabledIcon} />
       </button>
 
-      <div className={styles.container} onPointerDown={dragHandleDown}>
+      <div className={styles.container} onPointerDown={disabled ? undefined : dragHandleDown}>
         {Boolean(header) && (
           <div className={clsx(styles.header, headerClassName)}>
             {typeof header === 'function' ? header({ onClose: triggerClose }) : header}
