@@ -1,12 +1,17 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { D1Item, DimStat } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
+import ItemSockets from 'app/item-popup/ItemSockets';
+import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
+import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
-import { statLabels } from 'app/organizer/Columns';
+import { getSockets, perkString, perkStringSort, statLabels } from 'app/organizer/Columns';
 import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -15,6 +20,7 @@ import { getCompareColor } from 'app/shell/formatters';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import styles from './CompareColumns.m.scss';
@@ -32,6 +38,8 @@ export function getColumns(
   destinyVersion: DestinyVersion,
   compareBaseStats: boolean,
   primaryStatDescription: DestinyDisplayPropertiesDefinition | undefined,
+  initialItemId: string | undefined,
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -249,7 +257,6 @@ export function getColumns(
     primaryStatDescription &&
       c({
         id: 'primaryStat',
-        csv: undefined,
         header: primaryStatDescription.name,
         // We don't want to show a value for power if it's 0
         value: (item) => item.primaryStat?.value,
@@ -291,6 +298,58 @@ export function getColumns(
         filter: (value) => `quality:>=${value}`,
       }),
     ...(destinyVersion === 2 && isArmor ? customStats : []),
+    destinyVersion === 2 &&
+      isWeapon &&
+      c({
+        id: 'archetype',
+        header: t('Organizer.Columns.Archetype'),
+        className: styles.archetype,
+        headerClassName: styles.archetype,
+        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        cell: (_val, item) => {
+          const plugged = getWeaponArchetypeSocket(item)?.plugged;
+          return (
+            plugged && (
+              <PressTip
+                key={plugged.plugDef.hash}
+                tooltip={() => <DimPlugTooltip item={item} plug={plugged} />}
+              >
+                <div className={styles.modPerk}>
+                  <div className={styles.miniPerkContainer}>
+                    <DefItemIcon itemDef={plugged.plugDef} borderless={true} />
+                  </div>{' '}
+                  {plugged.plugDef.displayProperties.name}
+                </div>
+              </PressTip>
+            )
+          );
+        },
+        filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
+      }),
+    isWeapon &&
+      c({
+        id: 'perks',
+        className: styles.perks,
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Perks'),
+        value: (item) => perkString(getSockets(item, 'all')),
+        cell: (_val, item) => (
+          <>
+            {isD1Item(item) && item.talentGrid && (
+              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+            )}
+            {item.missingSockets && item.id === initialItemId && (
+              <div className="item-details warning">
+                {item.missingSockets === 'missing'
+                  ? t('MovePopup.MissingSockets')
+                  : t('MovePopup.LoadingSockets')}
+              </div>
+            )}
+            {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+          </>
+        ),
+        sort: perkStringSort,
+      }),
   ]);
 
   return columns;

@@ -69,7 +69,7 @@ export default function ItemSocketsWeapons({
 
   return (
     <div className={clsx(styles.weaponSockets, { [styles.minimal]: minimal })}>
-      {(intrinsicSocket?.plugged || (!minimal && mods.length > 0)) && (
+      {!minimal && (intrinsicSocket?.plugged || mods.length > 0) && (
         <ArchetypeRow minimal={minimal} isWeapons={true}>
           {intrinsicSocket?.plugged && (
             <ArchetypeSocket archetypeSocket={intrinsicSocket} item={item}>

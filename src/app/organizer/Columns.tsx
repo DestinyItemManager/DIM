@@ -105,7 +105,7 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
 
-const perkStringSort: Comparator<string | undefined> = (a, b) => {
+export const perkStringSort: Comparator<string | undefined> = (a, b) => {
   const aParts = (a ?? '').split(',');
   const bParts = (b ?? '').split(',');
   let ai = 0;
@@ -1047,7 +1047,7 @@ function StoreLocation({ storeId }: { storeId: string }) {
   );
 }
 
-function perkString(sockets: DimSocket[]): string | undefined {
+export function perkString(sockets: DimSocket[]): string | undefined {
   if (!sockets.length) {
     return undefined;
   }
@@ -1058,7 +1058,10 @@ function perkString(sockets: DimSocket[]): string | undefined {
     .join(',');
 }
 
-function getSockets(item: DimItem, type?: 'all' | 'traits' | 'shaders' | 'origin'): DimSocket[] {
+export function getSockets(
+  item: DimItem,
+  type?: 'all' | 'traits' | 'shaders' | 'origin',
+): DimSocket[] {
   if (!item.sockets) {
     return [];
   }

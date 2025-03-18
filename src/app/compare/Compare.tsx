@@ -108,6 +108,11 @@ export default function Compare({ session }: { session: CompareSession }) {
     [cancel, compareItems.length, dispatch],
   );
 
+  // If the session was started with a specific item, this is it
+  const initialItem = session.initialItemId
+    ? compareItems.find((i) => i.id === session.initialItemId)
+    : undefined;
+
   /* ItemTable incursion */
 
   const destinyVersion = compareItems[0].destinyVersion;
@@ -128,6 +133,8 @@ export default function Compare({ session }: { session: CompareSession }) {
         destinyVersion,
         doCompareBaseStats,
         primaryStatDescription,
+        initialItem?.id,
+        onPlugClicked,
       ),
     [
       type,
@@ -137,6 +144,8 @@ export default function Compare({ session }: { session: CompareSession }) {
       destinyVersion,
       itemCreationContext.customStats,
       primaryStatDescription,
+      initialItem?.id,
+      onPlugClicked,
     ],
   );
 
@@ -177,10 +186,6 @@ export default function Compare({ session }: { session: CompareSession }) {
     [compareItems, rows],
   );
 
-  // If the session was started with a specific item, this is it
-  const initialItem = session.initialItemId
-    ? compareItems.find((i) => i.id === session.initialItemId)
-    : undefined;
   const firstCompareItem = sortedComparisonItems[0];
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
