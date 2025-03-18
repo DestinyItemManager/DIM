@@ -1,6 +1,7 @@
 ## Next
 
 * Fix a bug in Chrome for Android 134 and newer where the space reserved for the virtual keyboard would not be reclaimed after the keyboard is dismissed.
+* When you update DIM, it will no longer reload other tabs if you have a sheet up or are on the Loadout Optimizer. DIM may fail to load some pages until you refresh, though.
 
 ## 8.63.0 <span class="changelog-date">(2025-03-16)</span>
 

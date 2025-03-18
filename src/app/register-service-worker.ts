@@ -1,5 +1,6 @@
 import { getClient } from '@sentry/browser';
 import { toHttpStatusError } from './bungie-api/http-client';
+import { sheetsOpen } from './dim-ui/Sheet';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
 import { delay } from './utils/promises';
@@ -89,7 +90,16 @@ export default function registerServiceWorker() {
                     return;
                   }
                   preventDevToolsReloadLoop = true;
-                  window.location.reload();
+                  if (
+                    // Loadout optimizer is all about state, don't reload it
+                    !window.location.pathname.endsWith('/optimizer') &&
+                    // If a sheet is up, the user is doing something. We check sheetsOpen here, because it is not reactive!
+                    sheetsOpen <= 0
+                  ) {
+                    window.location.reload();
+                  } else {
+                    warnLog(TAG, 'Not reloading because user is in the middle of something');
+                  }
                 });
               } else if ($featureFlags.debugSW) {
                 // At this point, everything has been precached.
