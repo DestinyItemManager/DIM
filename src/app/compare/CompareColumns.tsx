@@ -236,6 +236,9 @@ export function getColumns(
       className: styles.name,
       headerClassName: styles.nameHeader,
       value: (i) => i.name,
+      cell: (val, i) => (
+        <span title={initialItemId === i.id ? t('Compare.InitialItem') : undefined}>{val}</span>
+      ),
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),
     (isArmor || isWeapon) &&

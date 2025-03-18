@@ -103,6 +103,7 @@
       "Invalid": "There are no valid items for comparison.",
       "Unmatched": "This item doesn't match the type of items being compared."
     },
+    "InitialItem": "This is the item the Compare tool was launched from",
     "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it.",
     "NoModArmor": "Pre-mods"
   },
