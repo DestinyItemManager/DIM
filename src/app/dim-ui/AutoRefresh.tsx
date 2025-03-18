@@ -10,7 +10,7 @@ import { useLocation } from 'react-router';
 import { isDragging$ } from '../inventory/drag-events';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$, refresh as triggerRefresh } from '../shell/refresh-events';
-import { sheetsOpen } from './Sheet';
+import { sheetsOpen } from './sheets-open';
 
 const globalSettingsSelector = (state: RootState) => state.dimApi.globalSettings;
 
@@ -197,7 +197,7 @@ function useVisibilityRefresh() {
         // Loadout optimizer is all about state, don't reload it
         !onOptimizerPage &&
         // If a sheet is up, the user is doing something. We check sheetsOpen here, because it is not reactive!
-        sheetsOpen <= 0
+        sheetsOpen.open <= 0
       ) {
         // Sneaky updates - if DIM is hidden and needs an update, do the update.
         reloadDIM();

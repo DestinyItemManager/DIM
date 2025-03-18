@@ -1,6 +1,6 @@
 import { getClient } from '@sentry/browser';
 import { toHttpStatusError } from './bungie-api/http-client';
-import { sheetsOpen } from './dim-ui/Sheet';
+import { sheetsOpen } from './dim-ui/sheets-open';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
 import { delay } from './utils/promises';
@@ -94,7 +94,7 @@ export default function registerServiceWorker() {
                     // Loadout optimizer is all about state, don't reload it
                     !window.location.pathname.endsWith('/optimizer') &&
                     // If a sheet is up, the user is doing something. We check sheetsOpen here, because it is not reactive!
-                    sheetsOpen <= 0
+                    sheetsOpen.open <= 0
                   ) {
                     window.location.reload();
                   } else {

@@ -25,6 +25,7 @@ import { AppIcon, disabledIcon } from '../shell/icons';
 import ErrorBoundary from './ErrorBoundary';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
+import { sheetsOpen } from './sheets-open';
 import { useFixOverscrollBehavior } from './useFixOverscrollBehavior';
 
 /**
@@ -91,12 +92,6 @@ function useDisableParent(
 
   return [effectivelyDisabled, setDisabledByChildSheet];
 }
-
-/**
- * The total number of sheets that are open. Used by the sneaky updates code to
- * determine if the user is in the middle of something.
- */
-export let sheetsOpen = 0;
 
 /**
  * A Sheet is a UI element that comes up from the bottom of the screen,
@@ -247,9 +242,9 @@ export default function Sheet({
 
   // Track the total number of sheets that are open (to help prevent reloads while users are doing things)
   useEffect(() => {
-    sheetsOpen++;
+    sheetsOpen.open++;
     return () => {
-      sheetsOpen--;
+      sheetsOpen.open--;
     };
   }, []);
 
