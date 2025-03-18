@@ -326,30 +326,29 @@ export function getColumns(
         },
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
-    isWeapon &&
-      c({
-        id: 'perks',
-        className: styles.perks,
-        headerClassName: styles.perks,
-        header: t('Organizer.Columns.Perks'),
-        value: (item) => perkString(getSockets(item, 'all')),
-        cell: (_val, item) => (
-          <>
-            {isD1Item(item) && item.talentGrid && (
-              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-            )}
-            {item.missingSockets && item.id === initialItemId && (
-              <div className="item-details warning">
-                {item.missingSockets === 'missing'
-                  ? t('MovePopup.MissingSockets')
-                  : t('MovePopup.LoadingSockets')}
-              </div>
-            )}
-            {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
-          </>
-        ),
-        sort: perkStringSort,
-      }),
+    c({
+      id: 'perks',
+      className: styles.perks,
+      headerClassName: styles.perks,
+      header: !isWeapon ? t('Organizer.Columns.Mods') : t('Organizer.Columns.Perks'),
+      value: (item) => perkString(getSockets(item, 'all')),
+      cell: (_val, item) => (
+        <>
+          {isD1Item(item) && item.talentGrid && (
+            <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+          )}
+          {item.missingSockets && item.id === initialItemId && (
+            <div className="item-details warning">
+              {item.missingSockets === 'missing'
+                ? t('MovePopup.MissingSockets')
+                : t('MovePopup.LoadingSockets')}
+            </div>
+          )}
+          {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+        </>
+      ),
+      sort: perkStringSort,
+    }),
   ]);
 
   return columns;
