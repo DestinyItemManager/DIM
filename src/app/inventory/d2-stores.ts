@@ -121,6 +121,7 @@ export function loadStores({
     try {
       let stores: DimStore[] | undefined;
       if (loading) {
+        infoLog(TAG, 'Already loading stores, skipping this load');
         return;
       }
       await navigator.locks.request(
@@ -421,7 +422,13 @@ function loadStoresData(
               if (live && Date.now() - profileMintedDate.getTime() < FRESH_ENOUGH_TO_CLEAN_INFOS) {
                 dispatch(cleanInfos(stores));
               }
-              dispatch(update({ stores, currencies }));
+              dispatch(
+                update({
+                  stores,
+                  currencies,
+                  responseMintedTimestamp: profileResponse.responseMintedTimestamp,
+                }),
+              );
               dispatch(inGameLoadoutLoaded(loadouts));
 
               stopStateTimer();
