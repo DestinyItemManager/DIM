@@ -46,6 +46,7 @@ export type SheetContent = React.ReactNode | ((args: { onClose: () => void }) =>
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity,
 // or dragged down more than dismissAmount times the height of the sheet.
 const dismissVelocity = 120; // px/ms
+const dismissByVelocityMinOffset = 16; // px
 const dismissAmount = 0.5;
 
 const spring: Spring = {
@@ -210,9 +211,11 @@ export default function Sheet({
   // drag velocity or if the sheet has been dragged halfway the down from its height.
   const handleDragEnd = useCallback(
     (_event: TouchEvent | MouseEvent | PointerEvent, info: PanInfo) => {
+      const velocity = info.velocity.y / window.devicePixelRatio;
+      const offset = info.offset.y;
       if (
-        info.velocity.y > dismissVelocity ||
-        (sheet.current && info.offset.y > dismissAmount * sheet.current.clientHeight)
+        (velocity > dismissVelocity && offset > dismissByVelocityMinOffset) ||
+        (sheet.current && offset > dismissAmount * sheet.current.clientHeight)
       ) {
         triggerClose();
         return;
@@ -266,7 +269,7 @@ export default function Sheet({
       dragListener={false}
       dragConstraints={dragConstraints}
       dragElastic={0}
-      onDragEnd={handleDragEnd}
+      onDragEnd={disabled ? undefined : handleDragEnd}
       // regular props
       style={{ zIndex }}
       className={clsx(styles.sheet, sheetClassName, { [styles.sheetDisabled]: disabled })}
@@ -288,7 +291,7 @@ export default function Sheet({
         <AppIcon icon={disabledIcon} />
       </button>
 
-      <div className={styles.container} onPointerDown={dragHandleDown}>
+      <div className={styles.container} onPointerDown={disabled ? undefined : dragHandleDown}>
         {Boolean(header) && (
           <div className={clsx(styles.header, headerClassName)}>
             {typeof header === 'function' ? header({ onClose: triggerClose }) : header}
