@@ -12,16 +12,18 @@
 }
 
 .statLabel {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
   position: relative;
   padding-right: 8px;
   padding-left: 4px;
   cursor: pointer;
   height: 16px;
+  gap: 2px;
   img {
     height: 16px;
     width: 16px;
     vertical-align: bottom;
-    margin-right: 2px;
   }
 }
 
@@ -71,13 +73,6 @@
       --item-size: var(--item-size-mod) !important;
     }
   }
-}
-
-// D1 talent grids are like sockets
-.talentGrid {
-  padding: 4px 2px 0 2px;
-  max-width: 150px;
-  height: auto;
 }
 
 // The toolbar across the top of each item

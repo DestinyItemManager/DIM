@@ -49,3 +49,52 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
 }
+
+// D1 talent grids are like sockets
+.talentGrid {
+  padding: 4px 2px 0 2px;
+  max-width: 150px;
+  height: auto;
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.archetype {
+  --item-size-mod: calc(24 / 50 * var(--item-size));
+  composes: noWrap;
+  height: var(--item-size-mod) !important;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+// Perks in the perk/mod columns
+.modPerk {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: noWrap;
+  align-items: center;
+  gap: 2px;
+}
+.miniPerkContainer {
+  position: relative;
+  contain: layout paint style;
+  box-sizing: border-box;
+  height: var(--item-size-mod);
+  width: var(--item-size-mod);
+  padding: 4px;
+  margin-left: -1px;
+  flex-shrink: 0;
+  > img {
+    height: 16px !important;
+    transform: scale(1.4);
+    width: 16px !important;
+  }
+}
+
+.perks {
+  padding-top: 0;
+  > * {
+    margin-top: 0;
+  }
+}
