@@ -1,6 +1,5 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { CustomStatWeightsDisplay } from 'app/dim-ui/CustomStatWeights';
-import { DimItem } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ColumnDefinition, SortDirection } from './table-types';
 
@@ -21,7 +20,7 @@ export function createCustomStatColumns(
         </>
       ),
       className,
-      value: (item: DimItem) => item.stats?.find((s) => s.statHash === c.statHash)?.value,
+      value: (item) => item.stats?.find((s) => s.statHash === c.statHash)?.value ?? 0,
       defaultSort: SortDirection.DESC,
       filter: (value) => `stat:${c.label}:>=${value}`,
       columnGroup: {

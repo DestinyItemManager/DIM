@@ -51,7 +51,6 @@ import { compareSelectedItems } from 'app/compare/actions';
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { compact, filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
-import { createPortal } from 'react-dom';
 
 import { DimLanguage } from 'app/i18n';
 import { localizedSorter } from 'app/utils/intl';
@@ -345,7 +344,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const rowStyle = [...Array(numColumns).keys()]
     .map(
       (_v, n) =>
-        `[role="cell"]:nth-of-type(${numColumns * 2}n+${
+        `${styles.table}[role="cell"]:nth-of-type(${numColumns * 2}n+${
           n + 2
         }){background-color:var(--theme-organizer-row-even-bg) !important;}`,
     )
@@ -469,7 +468,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             onChangeEnabledColumn={onChangeEnabledColumn}
             forClass={classIfAny}
           />
-          {createPortal(<style>{rowStyle}</style>, document.head)}
+          <style>{rowStyle}</style>
         </div>
         <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
           <div>

@@ -1,3 +1,4 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { languageSelector } from 'app/dim-api/selectors';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
@@ -21,6 +22,8 @@ import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
+import { emptyArray } from 'app/utils/empty';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -123,13 +126,20 @@ export default function Compare({ session }: { session: CompareSession }) {
       !comparingWeapons &&
       compareItems.find((i) => i.primaryStat)?.primaryStatDisplayProperties) ||
     undefined;
+
+  // TODO: Rather than hardcode, check to see if any of the items have any armor stat
+  const customStats =
+    compareItems[0].bucket.hash !== BucketHashes.ClassArmor
+      ? itemCreationContext.customStats
+      : emptyArray<CustomStatDef>();
+
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
         type,
         hasEnergy,
         allStats,
-        itemCreationContext.customStats,
+        customStats,
         destinyVersion,
         doCompareBaseStats,
         primaryStatDescription,
@@ -142,7 +152,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       allStats,
       doCompareBaseStats,
       destinyVersion,
-      itemCreationContext.customStats,
+      customStats,
       primaryStatDescription,
       initialItem?.id,
       onPlugClicked,

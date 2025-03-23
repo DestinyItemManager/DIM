@@ -1159,8 +1159,10 @@ export function buildStatInfo(items: DimItem[]): DimStat[] {
   for (const item of items) {
     if (item.stats) {
       for (const stat of item.stats) {
-        // Just use the first item's stats as the source of truth.
-        statHashes[stat.statHash] ??= stat;
+        if (stat.value > 0 || stat.base > 0) {
+          // Just use the first item's stats as the source of truth.
+          statHashes[stat.statHash] ??= stat;
+        }
       }
     }
   }
