@@ -525,6 +525,7 @@ export function getColumns(
       c({
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
+        className: styles.modslot,
         // TODO: only show if there are mod slots
         value: (item) =>
           getInterestingSocketMetadatas(item)
