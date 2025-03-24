@@ -1,5 +1,7 @@
 ## Next
 
+## 8.64.0 <span class="changelog-date">(2025-03-23)</span>
+
 ## 8.63.1 <span class="changelog-date">(2025-03-19)</span>
 
 * Fix a bug in Chrome for Android 134 and newer where the space reserved for the virtual keyboard would not be reclaimed after the keyboard is dismissed.
