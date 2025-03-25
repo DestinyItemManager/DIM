@@ -736,10 +736,43 @@ const D2Sources: {
   },
   dungeon: {
     itemHashes: [
+      14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
       185321778, // The Eternal Return
+      189194532, // No Survivors
+      233402416, // New Pacific Epitaph
+      291447487, // Cold Comfort
+      492673102, // New Pacific Epitaph
+      559523765, // Wilderflight
       814876684, // Wish-Ender
+      1050582210, // Greasy Luck
+      1157220231, // No Survivors
+      1206729100, // Wilderflight
+      1303313141, // Unsworn
+      1460079227, // Liminal Vigil
+      1685406703, // Greasy Luck
+      1817605554, // Cold Comfort
+      1905934655, // Liminal Vigil
+      2059741649, // New Pacific Epitaph
+      2126543269, // Cold Comfort
+      2210806903, // Terminus Horizon
+      2477408004, // Wilderflight
+      2575844666, // Liminal Vigil
+      2730671571, // Terminus Horizon
+      2760833884, // Cold Comfort
       2844014413, // Pallas Galliot
+      2934305134, // Greasy Luck
+      2982006965, // Wilderflight
+      3185151619, // New Pacific Epitaph
+      3210739171, // Greasy Luck
+      3421639790, // Liminal Vigil
+      3692140710, // Long Arm
+      3984556130, // Terminus Horizon
+      4193602194, // No Survivors
+      4228149269, // No Survivors
+      4239378215, // Long Arm
+      4249949938, // Long Arm
+      4267192886, // Terminus Horizon
     ],
     sourceHashes: [
       506073192, // Source: "Prophecy" Dungeon
@@ -817,7 +850,6 @@ const D2Sources: {
   },
   events: {
     itemHashes: [
-      55393445, // The Title
       425681240, // Acosmic
       495940989, // Avalanche
       601948197, // Zephyr
@@ -827,11 +859,8 @@ const D2Sources: {
       1280894514, // Mechabre
       1845372864, // Albedo Wing
       1845978721, // Avalanche
-      2029899814, // Keraunios
       2477980485, // Mechabre
-      2595813005, // Taraxippos
       2603335652, // Jurassic Green
-      2666273249, // Hullabaloo
       2812100428, // Stay Frosty
       2814093983, // Cold Front
       2869466318, // BrayTech Werewolf
@@ -871,6 +900,7 @@ const D2Sources: {
       2502262376, // Source: Earned during the seasonal Crimson Days event.
       2797674516, // Source: Moments of Triumph 2021
       3092212681, // Source: Dawning 2019
+      3095773956, // Source: Guardian Games 2025
       3112857249, // Completed all 10 Moments of Triumph in Destiny's first year.
       3190938946, // Source: Festival of the Lost 2019
       3388021959, // Source: Guardian Games
@@ -1005,7 +1035,24 @@ const D2Sources: {
     searchString: [],
   },
   ghostsofthedeep: {
-    itemHashes: [],
+    itemHashes: [
+      189194532, // No Survivors
+      233402416, // New Pacific Epitaph
+      291447487, // Cold Comfort
+      492673102, // New Pacific Epitaph
+      1050582210, // Greasy Luck
+      1157220231, // No Survivors
+      1685406703, // Greasy Luck
+      1817605554, // Cold Comfort
+      2059741649, // New Pacific Epitaph
+      2126543269, // Cold Comfort
+      2760833884, // Cold Comfort
+      2934305134, // Greasy Luck
+      3185151619, // New Pacific Epitaph
+      3210739171, // Greasy Luck
+      4193602194, // No Survivors
+      4228149269, // No Survivors
+    ],
     sourceHashes: [
       3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
@@ -1021,7 +1068,24 @@ const D2Sources: {
     searchString: [],
   },
   gotd: {
-    itemHashes: [],
+    itemHashes: [
+      189194532, // No Survivors
+      233402416, // New Pacific Epitaph
+      291447487, // Cold Comfort
+      492673102, // New Pacific Epitaph
+      1050582210, // Greasy Luck
+      1157220231, // No Survivors
+      1685406703, // Greasy Luck
+      1817605554, // Cold Comfort
+      2059741649, // New Pacific Epitaph
+      2126543269, // Cold Comfort
+      2760833884, // Cold Comfort
+      2934305134, // Greasy Luck
+      3185151619, // New Pacific Epitaph
+      3210739171, // Greasy Luck
+      4193602194, // No Survivors
+      4228149269, // No Survivors
+    ],
     sourceHashes: [
       3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
@@ -1987,7 +2051,23 @@ const D2Sources: {
   },
   sotw: {
     itemHashes: [
+      14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
+      559523765, // Wilderflight
+      1206729100, // Wilderflight
+      1460079227, // Liminal Vigil
+      1905934655, // Liminal Vigil
+      2210806903, // Terminus Horizon
+      2477408004, // Wilderflight
+      2575844666, // Liminal Vigil
+      2730671571, // Terminus Horizon
+      2982006965, // Wilderflight
+      3421639790, // Liminal Vigil
+      3692140710, // Long Arm
+      3984556130, // Terminus Horizon
+      4239378215, // Long Arm
+      4249949938, // Long Arm
+      4267192886, // Terminus Horizon
     ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
@@ -2004,7 +2084,23 @@ const D2Sources: {
   },
   spireofthewatcher: {
     itemHashes: [
+      14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
+      559523765, // Wilderflight
+      1206729100, // Wilderflight
+      1460079227, // Liminal Vigil
+      1905934655, // Liminal Vigil
+      2210806903, // Terminus Horizon
+      2477408004, // Wilderflight
+      2575844666, // Liminal Vigil
+      2730671571, // Terminus Horizon
+      2982006965, // Wilderflight
+      3421639790, // Liminal Vigil
+      3692140710, // Long Arm
+      3984556130, // Terminus Horizon
+      4239378215, // Long Arm
+      4249949938, // Long Arm
+      4267192886, // Terminus Horizon
     ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
@@ -2076,14 +2172,18 @@ const D2Sources: {
     searchString: [],
   },
   sundered: {
-    itemHashes: [],
+    itemHashes: [
+      1303313141, // Unsworn
+    ],
     sourceHashes: [
       2607970476, // Source: Sundered Doctrine
     ],
     searchString: [],
   },
   sundereddoctrine: {
-    itemHashes: [],
+    itemHashes: [
+      1303313141, // Unsworn
+    ],
     sourceHashes: [
       2607970476, // Source: Sundered Doctrine
     ],
@@ -2310,7 +2410,23 @@ const D2Sources: {
   },
   watcher: {
     itemHashes: [
+      14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
+      559523765, // Wilderflight
+      1206729100, // Wilderflight
+      1460079227, // Liminal Vigil
+      1905934655, // Liminal Vigil
+      2210806903, // Terminus Horizon
+      2477408004, // Wilderflight
+      2575844666, // Liminal Vigil
+      2730671571, // Terminus Horizon
+      2982006965, // Wilderflight
+      3421639790, // Liminal Vigil
+      3692140710, // Long Arm
+      3984556130, // Terminus Horizon
+      4239378215, // Long Arm
+      4249949938, // Long Arm
+      4267192886, // Terminus Horizon
     ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon

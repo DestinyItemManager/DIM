@@ -20,6 +20,7 @@ export const enum PlugCategoryHashes {
   Arrows = 1257608559,
   ArtifactBoostsColumn01 = 3904218908,
   ArtifactBoostsColumn02 = 3904218911,
+  ArtifactBoostsColumn03 = 3904218910,
   Barrels = 2833605196,
   Batteries = 1757026848,
   Blades = 1041766312,
