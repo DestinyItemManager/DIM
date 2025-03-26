@@ -9148,7 +9148,7 @@ exports[`process stores generates a correct weapon CSV export 1`] = `
     "Handling": 0,
     "Hash": 35794111,
     "Id": ""6917529200352312365"",
-    "Impact": 45,
+    "Impact": 59,
     "Kill Tracker": 0,
     "Loadouts": "",
     "Locked": true,
