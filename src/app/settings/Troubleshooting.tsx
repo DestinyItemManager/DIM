@@ -83,6 +83,12 @@ function importMockProfileResponse(file: File): ThunkResult {
     if (!profileResponse?.profileInventory) {
       throw new Error('uploaded profile response looks invalid');
     }
-    dispatch(setMockProfileResponse(profileResponse));
+    dispatch(
+      setMockProfileResponse({
+        ...profileResponse,
+        // Make it always look like the freshest data so it'll overwrite any existing data
+        responseMintedTimestamp: new Date().toISOString(),
+      }),
+    );
   };
 }
