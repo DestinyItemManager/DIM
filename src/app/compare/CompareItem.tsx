@@ -1,7 +1,7 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
-import { t, tl } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
 import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
@@ -12,15 +12,12 @@ import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
-import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket } from '../inventory/item-types';
-import ItemSockets from '../item-popup/ItemSockets';
-import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 import {
   AppIcon,
   faAngleLeft,
@@ -38,7 +35,6 @@ export default memo(function CompareItem({
   itemClick,
   remove,
   setHighlight,
-  onPlugClicked,
   isInitialItem,
 }: {
   item: DimItem;
@@ -92,11 +88,6 @@ export default memo(function CompareItem({
     [item, pullItem, remove, itemNotes],
   );
 
-  const missingSocketsMessage =
-    item.missingSockets === 'missing'
-      ? tl('MovePopup.MissingSockets')
-      : tl('MovePopup.LoadingSockets');
-
   const handleRowClick = (row: Row, column: ColumnDefinition) => {
     if (column.id === 'name' && isFindable) {
       return () => itemClick(row.item);
@@ -112,20 +103,22 @@ export default memo(function CompareItem({
       })}
     >
       {itemHeader}
-      <TableRow
-        row={row}
-        tableCtx={tableCtx}
-        filteredColumns={filteredColumns}
-        onRowClick={handleRowClick}
-        setHighlight={setHighlight}
-      />
-      {isD1Item(item) && item.talentGrid && (
-        <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-      )}
-      {item.missingSockets && isInitialItem && (
-        <div className="item-details warning">{t(missingSocketsMessage)}</div>
-      )}
-      {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+      {filteredColumns.map((column) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        <div
+          key={column.id}
+          onClick={handleRowClick(row, column)}
+          className={clsx(column.className, {
+            // [styles.hasFilter]: column.filter !== undefined,
+          })}
+          role="cell"
+          onPointerEnter={() => setHighlight(column.id)}
+        >
+          {column.cell
+            ? column.cell(row.values[column.id], row.item, tableCtx.minMaxValues[column.id])
+            : row.values[column.id]}
+        </div>
+      ))}
     </div>
   );
 });
@@ -147,45 +140,6 @@ function VendorItemWarning({ item }: { item: DimItem }) {
       </ActionButton>
     </PressTip>
   ) : null;
-}
-
-// Copied from ItemTable - TODO: reconverge
-function TableRow({
-  row,
-  tableCtx,
-  filteredColumns,
-  onRowClick,
-  setHighlight,
-}: {
-  row: Row;
-  tableCtx: TableContext;
-  filteredColumns: ColumnDefinition[];
-  onRowClick: (
-    row: Row,
-    column: ColumnDefinition,
-  ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
-  setHighlight: (value?: string | number) => void;
-}) {
-  return (
-    <>
-      {filteredColumns.map((column) => (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-        <div
-          key={column.id}
-          onClick={onRowClick(row, column)}
-          className={clsx(column.className, {
-            // [styles.hasFilter]: column.filter !== undefined,
-          })}
-          role="cell"
-          onPointerEnter={() => setHighlight(column.id)}
-        >
-          {column.cell
-            ? column.cell(row.values[column.id], row.item, tableCtx.minMaxValues[column.id])
-            : row.values[column.id]}
-        </div>
-      ))}
-    </>
-  );
 }
 
 /** The row headers that appear on the left of the compare window */
