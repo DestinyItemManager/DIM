@@ -21,6 +21,7 @@ export const enum PlugCategoryHashes {
   ArtifactBoostsColumn01 = 3904218908,
   ArtifactBoostsColumn02 = 3904218911,
   ArtifactBoostsColumn03 = 3904218910,
+  ArtifactBoostsColumn04 = 3904218905,
   Barrels = 2833605196,
   Batteries = 1757026848,
   Blades = 1041766312,
