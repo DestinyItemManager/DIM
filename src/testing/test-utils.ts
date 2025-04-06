@@ -15,8 +15,19 @@ import { F_OK } from 'constants';
 import { maxBy, once } from 'es-toolkit';
 import i18next from 'i18next';
 import fetchMock from 'jest-fetch-mock';
+import de from 'locale/de.json';
 import en from 'locale/en.json';
+import es from 'locale/es.json';
+import esMX from 'locale/esMX.json';
+import fr from 'locale/fr.json';
+import it from 'locale/it.json';
 import ja from 'locale/ja.json';
+import ko from 'locale/ko.json';
+import pl from 'locale/pl.json';
+import ptBR from 'locale/ptBR.json';
+import ru from 'locale/ru.json';
+import zhCHS from 'locale/zhCHS.json';
+import zhCHT from 'locale/zhCHT.json';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
@@ -170,6 +181,39 @@ export function setupi18n() {
       },
       ja: {
         translation: ja,
+      },
+      de: {
+        translation: de,
+      },
+      es: {
+        translation: es,
+      },
+      'es-mx': {
+        translation: esMX,
+      },
+      fr: {
+        translation: fr,
+      },
+      it: {
+        translation: it,
+      },
+      ko: {
+        translation: ko,
+      },
+      pl: {
+        translation: pl,
+      },
+      'pt-br': {
+        translation: ptBR,
+      },
+      ru: {
+        translation: ru,
+      },
+      'zh-chs': {
+        translation: zhCHS,
+      },
+      'zh-cht': {
+        translation: zhCHT,
       },
     },
   });
