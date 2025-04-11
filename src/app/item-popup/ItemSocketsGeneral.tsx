@@ -21,7 +21,7 @@ export default function ItemSocketsGeneral({
   onPlugClicked,
 }: {
   item: DimItem;
-  /** minimal style used for loadout generator and compare */
+  /** minimal style used for compare */
   minimal?: boolean;
   onPlugClicked: PlugClickHandler;
 }) {
@@ -105,7 +105,6 @@ export default function ItemSocketsGeneral({
           </div>
         ))}
       </div>
-      {minimal && intrinsicRows}
     </>
   );
 }

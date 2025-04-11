@@ -7,11 +7,19 @@ import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
+import ArchetypeSocket, { ArchetypeRow } from 'app/item-popup/ArchetypeSocket';
 import ItemSockets from 'app/item-popup/ItemSockets';
+import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
 import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
-import { getSockets, perkString, perkStringSort, statLabels } from 'app/organizer/Columns';
+import {
+  getIntrinsicSockets,
+  getSockets,
+  perkString,
+  perkStringSort,
+  statLabels,
+} from 'app/organizer/Columns';
 import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -39,7 +47,7 @@ export function getColumns(
   compareBaseStats: boolean,
   primaryStatDescription: DestinyDisplayPropertiesDefinition | undefined,
   initialItemId: string | undefined,
-  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -219,7 +227,7 @@ export function getColumns(
   }
 
   const customStats = createCustomStatColumns(customStatDefs, undefined, true);
-  // Until everything uses compareStat
+  // TODO: Until Organizer also uses compareStat
   const cell: ColumnDefinition<number>['cell'] = (value: number, item, ctx) => (
     <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={value} />
   );
@@ -329,29 +337,86 @@ export function getColumns(
         },
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
-    c({
-      id: 'perks',
-      className: styles.perks,
-      headerClassName: styles.perks,
-      header: !isWeapon ? t('Organizer.Columns.Mods') : t('Organizer.Columns.Perks'),
-      value: (item) => perkString(getSockets(item, 'all')),
-      cell: (_val, item) => (
-        <>
-          {isD1Item(item) && item.talentGrid && (
-            <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-          )}
-          {item.missingSockets && item.id === initialItemId && (
-            <div className="item-details warning">
-              {item.missingSockets === 'missing'
-                ? t('MovePopup.MissingSockets')
-                : t('MovePopup.LoadingSockets')}
-            </div>
-          )}
-          {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
-        </>
-      ),
-      sort: perkStringSort,
-    }),
+    // TODO: look at how Organizer does perks for armor
+    isWeapon &&
+      c({
+        id: 'perks',
+        className: styles.perks,
+        headerClassName: styles.perks,
+        header: isArmor ? t('Organizer.Columns.Mods') : t('Organizer.Columns.Perks'),
+        // TODO: limit to perks
+        // TODO: Make sure this skips empty sockets
+        value: (item) => perkString(getSockets(item, 'perks')),
+        cell: (_val, item) => {
+          console.log('perks', _val);
+          return (
+            <>
+              {isD1Item(item) && item.talentGrid && (
+                <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+              )}
+              {item.missingSockets && item.id === initialItemId && (
+                <div className="item-details warning">
+                  {item.missingSockets === 'missing'
+                    ? t('MovePopup.MissingSockets')
+                    : t('MovePopup.LoadingSockets')}
+                </div>
+              )}
+              {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+            </>
+          );
+        },
+        sort: perkStringSort,
+      }),
+    // TODO: What about D1??
+    (isWeapon || isArmor) &&
+      c({
+        id: 'mods',
+        className: styles.perks,
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Mods'),
+        value: (item) => perkString(getSockets(item, 'mods')),
+        cell: (_val, item) => {
+          console.log('mods', _val);
+          return (
+            <>
+              {isD1Item(item) && item.talentGrid && (
+                <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+              )}
+              {item.sockets &&
+                (isWeapon ? (
+                  <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
+                ) : (
+                  <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
+                ))}
+            </>
+          );
+        },
+        sort: perkStringSort,
+      }),
+    // Armor intrinsic perks
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
+        id: 'intrinsics',
+        className: styles.perks,
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Intrinsics'),
+        value: (item) => perkString(getIntrinsicSockets(item)),
+        cell: (_val, item) => {
+          const sockets = getIntrinsicSockets(item);
+          // TODO: I think we can style this directly
+          return (
+            <>
+              {sockets.map((s) => (
+                <ArchetypeRow minimal={true} key={s.socketIndex}>
+                  <ArchetypeSocket archetypeSocket={s} noTooltip item={item} />
+                </ArchetypeRow>
+              ))}
+            </>
+          );
+        },
+        sort: perkStringSort,
+      }),
   ]);
 
   return columns;

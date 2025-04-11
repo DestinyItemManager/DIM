@@ -1053,6 +1053,7 @@ export function perkString(sockets: DimSocket[]): string | undefined {
     return undefined;
   }
 
+  // TODO: filter out empty sockets, maybe sort?
   return sockets
     .flatMap((socket) => socket.plugOptions.map((p) => p.plugDef.displayProperties.name))
     .filter(Boolean)
@@ -1061,7 +1062,7 @@ export function perkString(sockets: DimSocket[]): string | undefined {
 
 export function getSockets(
   item: DimItem,
-  type?: 'all' | 'traits' | 'shaders' | 'origin',
+  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks',
 ): DimSocket[] {
   if (!item.sockets) {
     return [];
@@ -1104,6 +1105,29 @@ export function getSockets(
       break;
     }
 
+    case 'mods': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          !s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+    case 'perks': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+
     default: {
       // Improve this when we use iterator-helpers
       sockets.push(...[...modSocketsByCategory.values()].flat());
@@ -1137,7 +1161,7 @@ export function getSockets(
   return sockets;
 }
 
-function getIntrinsicSockets(item: DimItem) {
+export function getIntrinsicSockets(item: DimItem) {
   const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
   return intrinsicSocket &&
@@ -1160,10 +1184,8 @@ export function buildStatInfo(items: DimItem[]): DimStat[] {
   for (const item of items) {
     if (item.stats) {
       for (const stat of item.stats) {
-        if (stat.value > 0 || stat.base > 0) {
-          // Just use the first item's stats as the source of truth.
-          statHashes[stat.statHash] ??= stat;
-        }
+        // Just use the first item's stats as the source of truth.
+        statHashes[stat.statHash] ??= stat;
       }
     }
   }
