@@ -215,18 +215,9 @@ export default function Compare({ session }: { session: CompareSession }) {
         remove={remove}
         setHighlight={setHighlight}
         onPlugClicked={onPlugClicked}
-        initialItemId={session.initialItemId}
       />
     ),
-    [
-      sortedComparisonItems,
-      rows,
-      tableCtx,
-      filteredColumns,
-      remove,
-      onPlugClicked,
-      session.initialItemId,
-    ],
+    [sortedComparisonItems, rows, tableCtx, filteredColumns, remove, onPlugClicked],
   );
 
   const header = (
@@ -290,9 +281,7 @@ function CompareItems({
   remove,
   setHighlight,
   onPlugClicked,
-  initialItemId,
 }: {
-  initialItemId: string | undefined;
   rows: Row[];
   tableCtx: TableContext;
   filteredColumns: ColumnDefinition[];
