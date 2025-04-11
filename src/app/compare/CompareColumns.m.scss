@@ -7,7 +7,7 @@
   white-space: nowrap;
   overflow: hidden;
 
-  &:global(.compare-initial) {
+  &.initialItem {
     color: var(--theme-accent-primary);
     font-weight: bold;
   }

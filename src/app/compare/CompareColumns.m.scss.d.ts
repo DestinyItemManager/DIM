@@ -4,6 +4,7 @@ interface CssExports {
   'archetype': string;
   'energy': string;
   'imageRoom': string;
+  'initialItem': string;
   'miniPerkContainer': string;
   'modPerk': string;
   'name': string;

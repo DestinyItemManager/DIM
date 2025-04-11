@@ -35,7 +35,6 @@ export default memo(function CompareItem({
   itemClick,
   remove,
   setHighlight,
-  isInitialItem,
 }: {
   item: DimItem;
   row: Row;
@@ -45,7 +44,6 @@ export default memo(function CompareItem({
   remove: (item: DimItem) => void;
   setHighlight: (value?: string | number) => void;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
-  isInitialItem: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
@@ -96,12 +94,6 @@ export default memo(function CompareItem({
   };
 
   return (
-    // <div
-    //   className={clsx(styles.compareItem, {
-    //     'compare-initial': isInitialItem,
-    //     'compare-findable': isFindable,
-    //   })}
-    // >
     <>
       {itemHeader}
       {filteredColumns.map((column, i) => (
@@ -112,7 +104,6 @@ export default memo(function CompareItem({
           className={clsx(
             column.className,
             column.id === 'name' && {
-              'compare-initial': isInitialItem,
               'compare-findable': isFindable,
             },
             i === filteredColumns.length - 1 && styles.lastRow,

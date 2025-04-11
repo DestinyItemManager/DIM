@@ -312,7 +312,6 @@ function CompareItems({
       remove={remove}
       setHighlight={setHighlight}
       onPlugClicked={onPlugClicked}
-      isInitialItem={initialItemId === item.id}
     />
   ));
 }

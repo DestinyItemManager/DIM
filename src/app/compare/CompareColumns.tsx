@@ -242,7 +242,14 @@ export function getColumns(
       className: styles.name,
       value: (i) => i.name,
       cell: (val, i) => (
-        <span title={initialItemId === i.id ? t('Compare.InitialItem') : undefined}>{val}</span>
+        <span
+          className={clsx({
+            [styles.initialItem]: initialItemId === i.id,
+          })}
+          title={initialItemId === i.id ? t('Compare.InitialItem') : undefined}
+        >
+          {val}
+        </span>
       ),
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),

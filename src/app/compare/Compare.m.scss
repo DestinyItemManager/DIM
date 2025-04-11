@@ -12,15 +12,20 @@
 .bucket {
   white-space: nowrap;
   display: grid;
+  // each item is a column of cells
   grid-auto-flow: column;
+  // the first column is the header
   grid-template-columns: min-content;
+  // the rest are item, then separator, repeated forever
   grid-auto-columns: min-content 1px;
-  justify-content: flex-start;
   gap: 0 4px;
+  // This is necessary - otherwise sticky headers will stop at one screens-width of scrollign
   width: max-content;
+  // Always give enough room for the item icon
   min-height: calc(36px + 1lh + var(--item-size) + 8px);
 }
 
+// the header and items live in a horizontal scrolling container
 .scroller {
   width: 100%;
   overflow-x: auto;
