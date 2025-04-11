@@ -4,6 +4,7 @@ interface CssExports {
   'bucket': string;
   'options': string;
   'organizerLink': string;
+  'scroller': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

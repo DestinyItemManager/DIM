@@ -256,19 +256,21 @@ export default function Compare({ session }: { session: CompareSession }) {
     .join(' ')}`;
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
-      <div
-        className={styles.bucket}
-        style={{ gridTemplateRows: gridSpec }}
-        onPointerLeave={() => setHighlight(undefined)}
-      >
-        <CompareHeaders
-          columnSorts={columnSorts}
-          highlight={highlight}
-          setHighlight={setHighlight}
-          toggleColumnSort={toggleColumnSort}
-          filteredColumns={filteredColumns}
-        />
-        {items}
+      <div className={styles.scroller}>
+        <div
+          className={styles.bucket}
+          style={{ gridTemplateRows: gridSpec }}
+          onPointerLeave={() => setHighlight(undefined)}
+        >
+          <CompareHeaders
+            columnSorts={columnSorts}
+            highlight={highlight}
+            setHighlight={setHighlight}
+            toggleColumnSort={toggleColumnSort}
+            filteredColumns={filteredColumns}
+          />
+          {items}
+        </div>
       </div>
     </Sheet>
   );

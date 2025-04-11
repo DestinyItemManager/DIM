@@ -30,6 +30,7 @@ import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
@@ -126,6 +127,7 @@ export function getColumns(
 
   const isArmor = itemsType === 'armor';
   const isWeapon = itemsType === 'weapon';
+  const isGeneral = itemsType === 'general';
 
   const baseStatColumns: ColumnWithStat[] =
     destinyVersion === 2 && isArmor
@@ -310,6 +312,7 @@ export function getColumns(
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         className: styles.archetype,
+        headerClassName: styles.archetype,
         value: (item) => getWeaponArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
           const plugged = getWeaponArchetypeSocket(item)?.plugged;
@@ -336,7 +339,7 @@ export function getColumns(
       c({
         id: 'perks',
         className: styles.perks,
-        headerClassName: styles.verticalTop,
+        headerClassName: styles.perks,
         header: isArmor ? t('Organizer.Columns.Mods') : t('Organizer.Columns.Perks'),
         // TODO: limit to perks
         // TODO: Make sure this skips empty sockets
@@ -362,38 +365,35 @@ export function getColumns(
         sort: perkStringSort,
       }),
     // TODO: What about D1??
-    (isWeapon || isArmor) &&
-      c({
-        id: 'mods',
-        className: styles.perks,
-        headerClassName: styles.verticalTop,
-        header: t('Organizer.Columns.Mods'),
-        value: (item) => perkString(getSockets(item, 'mods')),
-        cell: (_val, item) => {
-          console.log('mods', _val);
-          return (
-            <>
-              {isD1Item(item) && item.talentGrid && (
-                <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-              )}
-              {item.sockets &&
-                (isWeapon ? (
-                  <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
-                ) : (
-                  <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
-                ))}
-            </>
-          );
-        },
-        sort: perkStringSort,
-      }),
+    c({
+      id: 'mods',
+      className: clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
+      headerClassName: styles.perks,
+      header: t('Organizer.Columns.Mods'),
+      // TODO: for ghosts this should return ghost mods, not cosmetics
+      value: (item) => perkString(getSockets(item, 'mods')),
+      cell: (_val, item) => (
+        <>
+          {isD1Item(item) && item.talentGrid && (
+            <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+          )}
+          {item.sockets &&
+            (isWeapon ? (
+              <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
+            ) : (
+              <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
+            ))}
+        </>
+      ),
+      sort: perkStringSort,
+    }),
     // Armor intrinsic perks
     destinyVersion === 2 &&
       isArmor &&
       c({
         id: 'intrinsics',
         className: styles.perks,
-        headerClassName: styles.verticalTop,
+        headerClassName: styles.perks,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => {

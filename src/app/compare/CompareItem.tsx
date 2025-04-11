@@ -104,15 +104,19 @@ export default memo(function CompareItem({
     // >
     <>
       {itemHeader}
-      {filteredColumns.map((column) => (
+      {filteredColumns.map((column, i) => (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
           onClick={handleRowClick(row, column)}
-          className={clsx(column.className, {
-            'compare-initial': isInitialItem,
-            'compare-findable': isFindable,
-          })}
+          className={clsx(
+            column.className,
+            column.id === 'name' && {
+              'compare-initial': isInitialItem,
+              'compare-findable': isFindable,
+            },
+            i === filteredColumns.length - 1 && styles.lastRow,
+          )}
           role="cell"
           onPointerEnter={() => setHighlight(column.id)}
         >
@@ -163,7 +167,7 @@ export function CompareHeaders({
   return (
     <>
       <div className={styles.header} />
-      {filteredColumns.map((column) => {
+      {filteredColumns.map((column, i) => {
         const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
         return (
           <div
@@ -176,6 +180,7 @@ export function CompareHeaders({
                   ? styles.sortDesc
                   : styles.sortAsc
                 : undefined,
+              i === filteredColumns.length - 1 && styles.lastRow,
             )}
             onPointerEnter={() => setHighlight(column.id)}
             onClick={

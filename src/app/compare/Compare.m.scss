@@ -15,10 +15,15 @@
   grid-auto-flow: column;
   grid-template-columns: min-content;
   grid-auto-columns: min-content 1px;
-  flex-direction: row;
   justify-content: flex-start;
   gap: 0 4px;
   width: max-content;
+  min-height: calc(36px + 1lh + var(--item-size) + 8px);
+}
+
+.scroller {
+  width: 100%;
+  overflow-x: auto;
 }
 
 .options {
