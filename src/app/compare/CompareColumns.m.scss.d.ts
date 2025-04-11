@@ -5,8 +5,6 @@ interface CssExports {
   'energy': string;
   'imageRoom': string;
   'initialItem': string;
-  'miniPerkContainer': string;
-  'modPerk': string;
   'name': string;
   'noWrap': string;
   'perks': string;

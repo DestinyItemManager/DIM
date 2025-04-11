@@ -1,17 +1,14 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
-import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import ArchetypeSocket, { ArchetypeRow } from 'app/item-popup/ArchetypeSocket';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
 import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
-import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import {
   getIntrinsicSockets,
@@ -322,20 +319,12 @@ export function getColumns(
         headerClassName: styles.archetype,
         value: (item) => getWeaponArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
-          const plugged = getWeaponArchetypeSocket(item)?.plugged;
+          const s = getWeaponArchetypeSocket(item);
           return (
-            plugged && (
-              <PressTip
-                key={plugged.plugDef.hash}
-                tooltip={() => <DimPlugTooltip item={item} plug={plugged} />}
-              >
-                <div className={styles.modPerk}>
-                  <div className={styles.miniPerkContainer}>
-                    <DefItemIcon itemDef={plugged.plugDef} borderless={true} />
-                  </div>{' '}
-                  {plugged.plugDef.displayProperties.name}
-                </div>
-              </PressTip>
+            s && (
+              <ArchetypeRow minimal={true} key={s.socketIndex}>
+                <ArchetypeSocket archetypeSocket={s} item={item} />
+              </ArchetypeRow>
             )
           );
         },
@@ -399,12 +388,11 @@ export function getColumns(
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => {
           const sockets = getIntrinsicSockets(item);
-          // TODO: I think we can style this directly
           return (
             <>
               {sockets.map((s) => (
                 <ArchetypeRow minimal={true} key={s.socketIndex}>
-                  <ArchetypeSocket archetypeSocket={s} noTooltip item={item} />
+                  <ArchetypeSocket archetypeSocket={s} item={item} />
                 </ArchetypeRow>
               ))}
             </>

@@ -61,27 +61,6 @@
 }
 
 // Perks in the perk/mod columns
-.modPerk {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  composes: noWrap;
-  align-items: center;
-  gap: 2px;
-}
-.miniPerkContainer {
-  position: relative;
-  contain: layout paint style;
-  box-sizing: border-box;
-  height: var(--item-size-mod);
-  width: var(--item-size-mod);
-  padding: 4px;
-  margin-left: -1px;
-  flex-shrink: 0;
-  > img {
-    height: 16px !important;
-    transform: scale(1.4);
-    width: 16px !important;
-  }
-}
 
 .perks {
   padding-top: 0;
