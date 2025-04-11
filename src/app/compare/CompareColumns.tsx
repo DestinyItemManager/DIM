@@ -334,59 +334,53 @@ export function getColumns(
         },
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
-    // TODO: look at how Organizer does perks for armor
-    isWeapon &&
+    (isWeapon || ((isArmor || isGeneral) && destinyVersion === 1)) &&
       c({
         id: 'perks',
         className: styles.perks,
         headerClassName: styles.perks,
-        header: isArmor ? t('Organizer.Columns.Mods') : t('Organizer.Columns.Perks'),
-        // TODO: limit to perks
-        // TODO: Make sure this skips empty sockets
+        header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getSockets(item, 'perks')),
-        cell: (_val, item) => {
-          console.log('perks', _val);
-          return (
-            <>
-              {isD1Item(item) && item.talentGrid && (
-                <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-              )}
-              {item.missingSockets && item.id === initialItemId && (
-                <div className="item-details warning">
-                  {item.missingSockets === 'missing'
-                    ? t('MovePopup.MissingSockets')
-                    : t('MovePopup.LoadingSockets')}
-                </div>
-              )}
-              {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
-            </>
-          );
-        },
+        cell: (_val, item) => (
+          <>
+            {isD1Item(item) && item.talentGrid && (
+              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+            )}
+            {item.missingSockets && item.id === initialItemId && (
+              <div className="item-details warning">
+                {item.missingSockets === 'missing'
+                  ? t('MovePopup.MissingSockets')
+                  : t('MovePopup.LoadingSockets')}
+              </div>
+            )}
+            {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+          </>
+        ),
         sort: perkStringSort,
       }),
-    // TODO: What about D1??
-    c({
-      id: 'mods',
-      className: clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
-      headerClassName: styles.perks,
-      header: t('Organizer.Columns.Mods'),
-      // TODO: for ghosts this should return ghost mods, not cosmetics
-      value: (item) => perkString(getSockets(item, 'mods')),
-      cell: (_val, item) => (
-        <>
-          {isD1Item(item) && item.talentGrid && (
-            <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-          )}
-          {item.sockets &&
-            (isWeapon ? (
-              <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
-            ) : (
-              <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
-            ))}
-        </>
-      ),
-      sort: perkStringSort,
-    }),
+    destinyVersion === 2 &&
+      c({
+        id: 'mods',
+        className: clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Mods'),
+        // TODO: for ghosts this should return ghost mods, not cosmetics
+        value: (item) => perkString(getSockets(item, 'mods')),
+        cell: (_val, item) => (
+          <>
+            {isD1Item(item) && item.talentGrid && (
+              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+            )}
+            {item.sockets &&
+              (isWeapon ? (
+                <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
+              ) : (
+                <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
+              ))}
+          </>
+        ),
+        sort: perkStringSort,
+      }),
     // Armor intrinsic perks
     destinyVersion === 2 &&
       isArmor &&

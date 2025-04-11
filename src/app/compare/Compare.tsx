@@ -64,13 +64,19 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Produce new items which have had their sockets changed
   const compareItems = useMemo(() => {
     let items = rawCompareItems;
-    if (doAssumeWeaponMasterworks) {
+    if (doAssumeWeaponMasterworks && comparingWeapons) {
       // Fully masterwork weapons
       items = items.map((i) => masterworkItem(i, itemCreationContext));
     }
     // Apply any socket override selections (perk choices)
     return items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
-  }, [itemCreationContext, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
+  }, [
+    itemCreationContext,
+    doAssumeWeaponMasterworks,
+    rawCompareItems,
+    socketOverrides,
+    comparingWeapons,
+  ]);
 
   const cancel = useCallback(() => {
     dispatch(endCompareSession());
@@ -233,7 +239,7 @@ export default function Compare({ session }: { session: CompareSession }) {
           onChange={setCompareBaseStats}
         />
       )}
-      {comparingWeapons && defs && (
+      {comparingWeapons && defs && destinyVersion === 2 && (
         <Checkbox
           label={t('Compare.AssumeMasterworked')}
           name="compareWeaponMasterwork"
@@ -316,6 +322,9 @@ function CompareItems({
  * masterwork option.
  */
 function masterworkItem(i: DimItem, itemCreationContext: ItemCreationContext): DimItem {
+  if (i.destinyVersion !== 2 || !i.sockets) {
+    return i;
+  }
   const y2MasterworkSocket = i.sockets?.allSockets.find(
     (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
   );

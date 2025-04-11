@@ -60,10 +60,6 @@
   padding-bottom: 4px;
 }
 
-.verticalTop {
-  align-self: self-start;
-}
-
 // Perks in the perk/mod columns
 .modPerk {
   composes: flexRow from '../dim-ui/common.m.scss';

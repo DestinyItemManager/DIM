@@ -11,8 +11,6 @@ interface CssExports {
   'separator': string;
   'sortAsc': string;
   'sortDesc': string;
-  'spacer': string;
-  'statList': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

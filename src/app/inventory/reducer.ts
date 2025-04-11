@@ -89,13 +89,15 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
 
     case getType(actions.update):
       if (
-        action.payload.responseMintedTimestamp !== state.profileResponse?.responseMintedTimestamp
+        action.payload.responseMintedTimestamp &&
+        state.profileResponse &&
+        action.payload.responseMintedTimestamp !== state.profileResponse.responseMintedTimestamp
       ) {
         warnLog(
           'd2-stores',
           'Not updating inventory - the profile has changed from under us',
           action.payload.responseMintedTimestamp,
-          state.profileResponse?.responseMintedTimestamp,
+          state.profileResponse.responseMintedTimestamp,
         );
         return state;
       }

@@ -1,17 +1,6 @@
 @use '../variables.scss' as *;
 
 /* Row Headers */
-
-.spacer {
-  height: var(--compare-item-height, 48px);
-}
-
-.statList {
-  display: flex;
-  flex-direction: column;
-}
-
-// The header for each row
 .header {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
@@ -31,7 +20,6 @@
     vertical-align: bottom;
   }
 }
-
 .sortDesc {
   padding-right: 8px;
   color: var(--theme-accent-primary);

@@ -10,7 +10,6 @@ interface CssExports {
   'noWrap': string;
   'perks': string;
   'talentGrid': string;
-  'verticalTop': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
