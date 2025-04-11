@@ -61,8 +61,8 @@ export default memo(function CompareItem({
 
   const itemHeader = useMemo(
     () => (
-      <div ref={headerRef}>
-        <div className={styles.header}>
+      <div ref={headerRef} className={styles.headerContainer}>
+        <div className={styles.itemActions}>
           {item.vendor ? (
             <VendorItemWarning item={item} />
           ) : (
@@ -96,12 +96,13 @@ export default memo(function CompareItem({
   };
 
   return (
-    <div
-      className={clsx(styles.compareItem, {
-        'compare-initial': isInitialItem,
-        'compare-findable': isFindable,
-      })}
-    >
+    // <div
+    //   className={clsx(styles.compareItem, {
+    //     'compare-initial': isInitialItem,
+    //     'compare-findable': isFindable,
+    //   })}
+    // >
+    <>
       {itemHeader}
       {filteredColumns.map((column) => (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
@@ -109,7 +110,8 @@ export default memo(function CompareItem({
           key={column.id}
           onClick={handleRowClick(row, column)}
           className={clsx(column.className, {
-            // [styles.hasFilter]: column.filter !== undefined,
+            'compare-initial': isInitialItem,
+            'compare-findable': isFindable,
           })}
           role="cell"
           onPointerEnter={() => setHighlight(column.id)}
@@ -119,7 +121,8 @@ export default memo(function CompareItem({
             : row.values[column.id]}
         </div>
       ))}
-    </div>
+      <div className={styles.separator} />
+    </>
   );
 });
 
@@ -158,15 +161,15 @@ export function CompareHeaders({
 }) {
   const isShiftHeld = useShiftHeld();
   return (
-    <div className={styles.statList}>
-      <div className={styles.spacer} />
+    <>
+      <div className={styles.header} />
       {filteredColumns.map((column) => {
         const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
         return (
           <div
             key={column.id}
             className={clsx(
-              styles.statLabel,
+              styles.header,
               column.headerClassName,
               columnSort
                 ? columnSort.sort === SortDirection.ASC
@@ -189,7 +192,7 @@ export function CompareHeaders({
                 : 'none'
             }
           >
-            {column.header}{' '}
+            {column.header}
             {columnSort && (
               <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
             )}
@@ -197,6 +200,6 @@ export function CompareHeaders({
           </div>
         );
       })}
-    </div>
+    </>
   );
 }

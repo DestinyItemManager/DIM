@@ -86,8 +86,6 @@ export function getColumns(
       ) : (
         stat.displayProperties.name
       ),
-      className: styles.stats,
-      headerClassName: styles.stats,
       statHash,
       columnGroup: statsGroup,
       value: (item) => {
@@ -182,8 +180,6 @@ export function getColumns(
               header: t('Organizer.Columns.StatQualityStat', {
                 stat: stat.displayProperties.name,
               }),
-              className: styles.stats,
-              headerClassName: styles.stats,
               value: (item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 let pct = 0;
@@ -242,7 +238,6 @@ export function getColumns(
       header: t('Organizer.Columns.Name'),
       csv: 'Name',
       className: styles.name,
-      headerClassName: styles.nameHeader,
       value: (i) => i.name,
       cell: (val, i) => (
         <span title={initialItemId === i.id ? t('Compare.InitialItem') : undefined}>{val}</span>
@@ -315,7 +310,6 @@ export function getColumns(
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         className: styles.archetype,
-        headerClassName: styles.archetype,
         value: (item) => getWeaponArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
           const plugged = getWeaponArchetypeSocket(item)?.plugged;
@@ -342,7 +336,7 @@ export function getColumns(
       c({
         id: 'perks',
         className: styles.perks,
-        headerClassName: styles.perks,
+        headerClassName: styles.verticalTop,
         header: isArmor ? t('Organizer.Columns.Mods') : t('Organizer.Columns.Perks'),
         // TODO: limit to perks
         // TODO: Make sure this skips empty sockets
@@ -372,7 +366,7 @@ export function getColumns(
       c({
         id: 'mods',
         className: styles.perks,
-        headerClassName: styles.perks,
+        headerClassName: styles.verticalTop,
         header: t('Organizer.Columns.Mods'),
         value: (item) => perkString(getSockets(item, 'mods')),
         cell: (_val, item) => {
@@ -399,7 +393,7 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perks,
-        headerClassName: styles.perks,
+        headerClassName: styles.verticalTop,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => {

@@ -1,10 +1,5 @@
 @use '../variables.scss' as *;
 
-.nameHeader {
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-
 .name {
   margin-top: 2px;
   margin-bottom: 2px;
@@ -12,13 +7,13 @@
   white-space: nowrap;
   overflow: hidden;
 
-  :global(.compare-initial) & {
+  &:global(.compare-initial) {
     color: var(--theme-accent-primary);
     font-weight: bold;
   }
 
   // Add the magnifying glass icons to items that can be clicked to find them
-  :global(.compare-findable) & {
+  &:global(.compare-findable) {
     cursor: pointer;
     &::after {
       content: '\f002';
@@ -39,10 +34,6 @@
       vertical-align: initial;
     }
   }
-}
-
-.stats {
-  display: block;
 }
 
 .energy {
@@ -67,6 +58,10 @@
   height: var(--item-size-mod) !important;
   margin-top: 10px;
   margin-bottom: 4px;
+}
+
+.verticalTop {
+  align-self: self-start;
 }
 
 // Perks in the perk/mod columns

@@ -11,15 +11,20 @@
   flex-direction: column;
 }
 
-.statLabel {
+// The header for each row
+.header {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  position: relative;
-  padding-right: 8px;
+  padding-right: 16px;
   padding-left: 4px;
   cursor: pointer;
-  height: 16px;
   gap: 2px;
+  position: sticky;
+  left: 0;
+  height: 100%;
+  background-color: var(--theme-item-sheet-bg);
+  z-index: 2;
+  border-right: 1px solid #f5f5f540;
   img {
     height: 16px;
     width: 16px;
@@ -28,9 +33,11 @@
 }
 
 .sortDesc {
+  padding-right: 8px;
   color: var(--theme-accent-primary);
 }
 .sortAsc {
+  padding-right: 8px;
   color: var(--theme-accent-secondary);
 }
 
@@ -76,7 +83,7 @@
 }
 
 // The toolbar across the top of each item
-.header {
+.itemActions {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -91,6 +98,17 @@
   > div > div > button {
     padding: 3px !important;
   }
+}
+
+.headerContainer {
+  position: relative;
+}
+
+.separator {
+  width: 0;
+  height: 100%;
+  border-right: 1px solid #f5f5f540;
+  grid-row: 1 / -1; // Span all columns in the grid
 }
 
 // The "dismiss" button in the item header

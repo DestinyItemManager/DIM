@@ -1,6 +1,5 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { languageSelector } from 'app/dim-api/selectors';
-import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
@@ -252,9 +251,16 @@ export default function Compare({ session }: { session: CompareSession }) {
     </div>
   );
 
+  const gridSpec = `min-content ${filteredColumns
+    .map((c) => c.gridWidth ?? 'min-content')
+    .join(' ')}`;
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
-      <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
+      <div
+        className={styles.bucket}
+        style={{ gridTemplateRows: gridSpec }}
+        onPointerLeave={() => setHighlight(undefined)}
+      >
         <CompareHeaders
           columnSorts={columnSorts}
           highlight={highlight}
@@ -287,24 +293,20 @@ function CompareItems({
   setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
-  return (
-    <SheetHorizontalScrollContainer>
-      {items.map((item) => (
-        <CompareItem
-          item={item}
-          row={rows.find((r) => r.item === item)!}
-          tableCtx={tableCtx}
-          filteredColumns={filteredColumns}
-          key={item.id}
-          itemClick={locateItem}
-          remove={remove}
-          setHighlight={setHighlight}
-          onPlugClicked={onPlugClicked}
-          isInitialItem={initialItemId === item.id}
-        />
-      ))}
-    </SheetHorizontalScrollContainer>
-  );
+  return items.map((item) => (
+    <CompareItem
+      item={item}
+      row={rows.find((r) => r.item === item)!}
+      tableCtx={tableCtx}
+      filteredColumns={filteredColumns}
+      key={item.id}
+      itemClick={locateItem}
+      remove={remove}
+      setHighlight={setHighlight}
+      onPlugClicked={onPlugClicked}
+      isInitialItem={initialItemId === item.id}
+    />
+  ));
 }
 
 /**
