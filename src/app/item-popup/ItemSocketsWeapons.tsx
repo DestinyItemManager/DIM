@@ -8,6 +8,7 @@ import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -16,6 +17,7 @@ import ItemPerksList from './ItemPerksList';
 import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import styles from './ItemSocketsWeapons.m.scss';
 import Socket from './Socket';
+import SocketDetails from './SocketDetails';
 
 export default function ItemSocketsWeapons({
   item,
@@ -24,7 +26,7 @@ export default function ItemSocketsWeapons({
   onPlugClicked,
 }: {
   item: DimItem;
-  /** minimal style used for loadout generator and compare */
+  /** minimal style used for compare */
   minimal?: boolean;
   /** Force grid style */
   grid?: boolean;
@@ -69,7 +71,7 @@ export default function ItemSocketsWeapons({
 
   return (
     <div className={clsx(styles.weaponSockets, { [styles.minimal]: minimal })}>
-      {(intrinsicSocket?.plugged || (!minimal && mods.length > 0)) && (
+      {!minimal && (intrinsicSocket?.plugged || mods.length > 0) && (
         <ArchetypeRow minimal={minimal} isWeapons={true}>
           {intrinsicSocket?.plugged && (
             <ArchetypeSocket archetypeSocket={intrinsicSocket} item={item}>
@@ -135,7 +137,67 @@ export default function ItemSocketsWeapons({
             </ItemSocketsList>
           </div>
         ))}
-      {minimal && mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}
+    </div>
+  );
+}
+
+// TODO: just pass in sockets?
+export function ItemModSockets({
+  item,
+  onPlugClicked,
+}: {
+  item: DimItem;
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
+}) {
+  const defs = useD2Definitions();
+  const wishlistRoll = useSelector(wishListSelector(item));
+  const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
+
+  if (!item.sockets || !defs) {
+    return null;
+  }
+
+  // Separate out perks from sockets.
+  const { modSocketsByCategory } = getWeaponSockets(item)!;
+
+  // Improve this when we use iterator-helpers
+  const mods = [...modSocketsByCategory.values()].flat();
+
+  const handlePlugClick: PlugClickHandler = (item, socket, plug, hasMenu) => {
+    if (hasMenu) {
+      setSocketInMenu(socket);
+    } else {
+      onPlugClicked?.({
+        item,
+        socket,
+        plugHash: plug.plugDef.hash,
+      });
+    }
+  };
+
+  const renderSocket = (socketInfo: DimSocket) => (
+    <Socket
+      key={socketInfo.socketIndex}
+      item={item}
+      socket={socketInfo}
+      wishlistRoll={wishlistRoll}
+      onClick={handlePlugClick}
+    />
+  );
+
+  return (
+    <div className={clsx(styles.weaponSockets, styles.minimal)}>
+      {mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}{' '}
+      {socketInMenu && (
+        <SocketDetails
+          key={socketInMenu.socketIndex}
+          item={item}
+          socket={socketInMenu}
+          allowInsertPlug
+          onClose={() => setSocketInMenu(null)}
+          onPlugSelected={onPlugClicked}
+        />
+      )}
     </div>
   );
 }

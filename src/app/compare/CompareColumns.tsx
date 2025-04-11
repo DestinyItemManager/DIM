@@ -2,11 +2,21 @@ import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types
 import BungieImage from 'app/dim-ui/BungieImage';
 import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
-import { D1Item, DimStat } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
+import ArchetypeSocket, { ArchetypeRow } from 'app/item-popup/ArchetypeSocket';
+import ItemSockets from 'app/item-popup/ItemSockets';
+import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
+import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
 import { recoilValue } from 'app/item-popup/RecoilStat';
-import { statLabels } from 'app/organizer/Columns';
+import {
+  getIntrinsicSockets,
+  getSockets,
+  perkString,
+  perkStringSort,
+  statLabels,
+} from 'app/organizer/Columns';
 import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -15,7 +25,9 @@ import { getCompareColor } from 'app/shell/formatters';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
@@ -32,6 +44,8 @@ export function getColumns(
   destinyVersion: DestinyVersion,
   compareBaseStats: boolean,
   primaryStatDescription: DestinyDisplayPropertiesDefinition | undefined,
+  initialItemId: string | undefined,
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -70,8 +84,6 @@ export function getColumns(
       ) : (
         stat.displayProperties.name
       ),
-      className: styles.stats,
-      headerClassName: styles.stats,
       statHash,
       columnGroup: statsGroup,
       value: (item) => {
@@ -112,6 +124,7 @@ export function getColumns(
 
   const isArmor = itemsType === 'armor';
   const isWeapon = itemsType === 'weapon';
+  const isGeneral = itemsType === 'general';
 
   const baseStatColumns: ColumnWithStat[] =
     destinyVersion === 2 && isArmor
@@ -166,8 +179,6 @@ export function getColumns(
               header: t('Organizer.Columns.StatQualityStat', {
                 stat: stat.displayProperties.name,
               }),
-              className: styles.stats,
-              headerClassName: styles.stats,
               value: (item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 let pct = 0;
@@ -211,7 +222,7 @@ export function getColumns(
   }
 
   const customStats = createCustomStatColumns(customStatDefs, undefined, true);
-  // Until everything uses compareStat
+  // TODO: Until Organizer also uses compareStat
   const cell: ColumnDefinition<number>['cell'] = (value: number, item, ctx) => (
     <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={value} />
   );
@@ -226,8 +237,17 @@ export function getColumns(
       header: t('Organizer.Columns.Name'),
       csv: 'Name',
       className: styles.name,
-      headerClassName: styles.nameHeader,
       value: (i) => i.name,
+      cell: (val, i) => (
+        <span
+          className={clsx({
+            [styles.initialItem]: initialItemId === i.id,
+          })}
+          title={initialItemId === i.id ? t('Compare.InitialItem') : undefined}
+        >
+          {val}
+        </span>
+      ),
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),
     (isArmor || isWeapon) &&
@@ -249,7 +269,6 @@ export function getColumns(
     primaryStatDescription &&
       c({
         id: 'primaryStat',
-        csv: undefined,
         header: primaryStatDescription.name,
         // We don't want to show a value for power if it's 0
         value: (item) => item.primaryStat?.value,
@@ -291,6 +310,96 @@ export function getColumns(
         filter: (value) => `quality:>=${value}`,
       }),
     ...(destinyVersion === 2 && isArmor ? customStats : []),
+    destinyVersion === 2 &&
+      isWeapon &&
+      c({
+        id: 'archetype',
+        header: t('Organizer.Columns.Archetype'),
+        className: styles.archetype,
+        headerClassName: styles.archetype,
+        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        cell: (_val, item) => {
+          const s = getWeaponArchetypeSocket(item);
+          return (
+            s && (
+              <ArchetypeRow minimal={true} key={s.socketIndex}>
+                <ArchetypeSocket archetypeSocket={s} item={item} />
+              </ArchetypeRow>
+            )
+          );
+        },
+        filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
+      }),
+    (isWeapon || ((isArmor || isGeneral) && destinyVersion === 1)) &&
+      c({
+        id: 'perks',
+        className: styles.perks,
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Perks'),
+        value: (item) => perkString(getSockets(item, 'perks')),
+        cell: (_val, item) => (
+          <>
+            {isD1Item(item) && item.talentGrid && (
+              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+            )}
+            {item.missingSockets && item.id === initialItemId && (
+              <div className="item-details warning">
+                {item.missingSockets === 'missing'
+                  ? t('MovePopup.MissingSockets')
+                  : t('MovePopup.LoadingSockets')}
+              </div>
+            )}
+            {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+          </>
+        ),
+        sort: perkStringSort,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'mods',
+        className: clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Mods'),
+        // TODO: for ghosts this should return ghost mods, not cosmetics
+        value: (item) => perkString(getSockets(item, 'mods')),
+        cell: (_val, item) => (
+          <>
+            {isD1Item(item) && item.talentGrid && (
+              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+            )}
+            {item.sockets &&
+              (isWeapon ? (
+                <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
+              ) : (
+                <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
+              ))}
+          </>
+        ),
+        sort: perkStringSort,
+      }),
+    // Armor intrinsic perks
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
+        id: 'intrinsics',
+        className: styles.perks,
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Intrinsics'),
+        value: (item) => perkString(getIntrinsicSockets(item)),
+        cell: (_val, item) => {
+          const sockets = getIntrinsicSockets(item);
+          return (
+            <>
+              {sockets.map((s) => (
+                <ArchetypeRow minimal={true} key={s.socketIndex}>
+                  <ArchetypeSocket archetypeSocket={s} item={item} />
+                </ArchetypeRow>
+              ))}
+            </>
+          );
+        },
+        sort: perkStringSort,
+      }),
   ]);
 
   return columns;

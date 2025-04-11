@@ -1,5 +1,5 @@
+import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { languageSelector } from 'app/dim-api/selectors';
-import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
@@ -21,6 +21,8 @@ import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
+import { emptyArray } from 'app/utils/empty';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -62,13 +64,19 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Produce new items which have had their sockets changed
   const compareItems = useMemo(() => {
     let items = rawCompareItems;
-    if (doAssumeWeaponMasterworks) {
+    if (doAssumeWeaponMasterworks && comparingWeapons) {
       // Fully masterwork weapons
       items = items.map((i) => masterworkItem(i, itemCreationContext));
     }
     // Apply any socket override selections (perk choices)
     return items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
-  }, [itemCreationContext, doAssumeWeaponMasterworks, rawCompareItems, socketOverrides]);
+  }, [
+    itemCreationContext,
+    doAssumeWeaponMasterworks,
+    rawCompareItems,
+    socketOverrides,
+    comparingWeapons,
+  ]);
 
   const cancel = useCallback(() => {
     dispatch(endCompareSession());
@@ -108,6 +116,11 @@ export default function Compare({ session }: { session: CompareSession }) {
     [cancel, compareItems.length, dispatch],
   );
 
+  // If the session was started with a specific item, this is it
+  const initialItem = session.initialItemId
+    ? compareItems.find((i) => i.id === session.initialItemId)
+    : undefined;
+
   /* ItemTable incursion */
 
   const destinyVersion = compareItems[0].destinyVersion;
@@ -118,16 +131,25 @@ export default function Compare({ session }: { session: CompareSession }) {
       !comparingWeapons &&
       compareItems.find((i) => i.primaryStat)?.primaryStatDisplayProperties) ||
     undefined;
+
+  // TODO: Rather than hardcode, check to see if any of the items have any armor stat
+  const customStats =
+    compareItems[0].bucket.hash !== BucketHashes.ClassArmor
+      ? itemCreationContext.customStats
+      : emptyArray<CustomStatDef>();
+
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
         type,
         hasEnergy,
         allStats,
-        itemCreationContext.customStats,
+        customStats,
         destinyVersion,
         doCompareBaseStats,
         primaryStatDescription,
+        initialItem?.id,
+        onPlugClicked,
       ),
     [
       type,
@@ -135,8 +157,10 @@ export default function Compare({ session }: { session: CompareSession }) {
       allStats,
       doCompareBaseStats,
       destinyVersion,
-      itemCreationContext.customStats,
+      customStats,
       primaryStatDescription,
+      initialItem?.id,
+      onPlugClicked,
     ],
   );
 
@@ -177,10 +201,6 @@ export default function Compare({ session }: { session: CompareSession }) {
     [compareItems, rows],
   );
 
-  // If the session was started with a specific item, this is it
-  const initialItem = session.initialItemId
-    ? compareItems.find((i) => i.id === session.initialItemId)
-    : undefined;
   const firstCompareItem = sortedComparisonItems[0];
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
@@ -195,18 +215,9 @@ export default function Compare({ session }: { session: CompareSession }) {
         remove={remove}
         setHighlight={setHighlight}
         onPlugClicked={onPlugClicked}
-        initialItemId={session.initialItemId}
       />
     ),
-    [
-      sortedComparisonItems,
-      rows,
-      tableCtx,
-      filteredColumns,
-      remove,
-      onPlugClicked,
-      session.initialItemId,
-    ],
+    [sortedComparisonItems, rows, tableCtx, filteredColumns, remove, onPlugClicked],
   );
 
   const header = (
@@ -219,7 +230,7 @@ export default function Compare({ session }: { session: CompareSession }) {
           onChange={setCompareBaseStats}
         />
       )}
-      {comparingWeapons && defs && (
+      {comparingWeapons && defs && destinyVersion === 2 && (
         <Checkbox
           label={t('Compare.AssumeMasterworked')}
           name="compareWeaponMasterwork"
@@ -237,17 +248,26 @@ export default function Compare({ session }: { session: CompareSession }) {
     </div>
   );
 
+  const gridSpec = `min-content ${filteredColumns
+    .map((c) => c.gridWidth ?? 'min-content')
+    .join(' ')}`;
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
-      <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
-        <CompareHeaders
-          columnSorts={columnSorts}
-          highlight={highlight}
-          setHighlight={setHighlight}
-          toggleColumnSort={toggleColumnSort}
-          filteredColumns={filteredColumns}
-        />
-        {items}
+      <div className={styles.scroller}>
+        <div
+          className={styles.bucket}
+          style={{ gridTemplateRows: gridSpec }}
+          onPointerLeave={() => setHighlight(undefined)}
+        >
+          <CompareHeaders
+            columnSorts={columnSorts}
+            highlight={highlight}
+            setHighlight={setHighlight}
+            toggleColumnSort={toggleColumnSort}
+            filteredColumns={filteredColumns}
+          />
+          {items}
+        </div>
       </div>
     </Sheet>
   );
@@ -261,9 +281,7 @@ function CompareItems({
   remove,
   setHighlight,
   onPlugClicked,
-  initialItemId,
 }: {
-  initialItemId: string | undefined;
   rows: Row[];
   tableCtx: TableContext;
   filteredColumns: ColumnDefinition[];
@@ -272,24 +290,19 @@ function CompareItems({
   setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
-  return (
-    <SheetHorizontalScrollContainer>
-      {items.map((item) => (
-        <CompareItem
-          item={item}
-          row={rows.find((r) => r.item === item)!}
-          tableCtx={tableCtx}
-          filteredColumns={filteredColumns}
-          key={item.id}
-          itemClick={locateItem}
-          remove={remove}
-          setHighlight={setHighlight}
-          onPlugClicked={onPlugClicked}
-          isInitialItem={initialItemId === item.id}
-        />
-      ))}
-    </SheetHorizontalScrollContainer>
-  );
+  return items.map((item) => (
+    <CompareItem
+      item={item}
+      row={rows.find((r) => r.item === item)!}
+      tableCtx={tableCtx}
+      filteredColumns={filteredColumns}
+      key={item.id}
+      itemClick={locateItem}
+      remove={remove}
+      setHighlight={setHighlight}
+      onPlugClicked={onPlugClicked}
+    />
+  ));
 }
 
 /**
@@ -297,6 +310,9 @@ function CompareItems({
  * masterwork option.
  */
 function masterworkItem(i: DimItem, itemCreationContext: ItemCreationContext): DimItem {
+  if (i.destinyVersion !== 2 || !i.sockets) {
+    return i;
+  }
   const y2MasterworkSocket = i.sockets?.allSockets.find(
     (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
   );

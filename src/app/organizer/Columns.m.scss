@@ -171,7 +171,11 @@ $modslotSize: 30px;
 .modslotIcon {
   height: $modslotSize;
   width: $modslotSize;
-  margin: 0 1px;
+}
+
+.modslot {
+  composes: centered;
+  padding-top: calc(4px + (var(--item-size) * 0.75 - #{$modslotSize}) / 2) !important;
 }
 
 .loadout {

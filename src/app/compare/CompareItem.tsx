@@ -1,7 +1,7 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
-import { t, tl } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
 import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
@@ -12,15 +12,12 @@ import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
-import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket } from '../inventory/item-types';
-import ItemSockets from '../item-popup/ItemSockets';
-import ItemTalentGrid from '../item-popup/ItemTalentGrid';
 import {
   AppIcon,
   faAngleLeft,
@@ -38,8 +35,6 @@ export default memo(function CompareItem({
   itemClick,
   remove,
   setHighlight,
-  onPlugClicked,
-  isInitialItem,
 }: {
   item: DimItem;
   row: Row;
@@ -49,7 +44,6 @@ export default memo(function CompareItem({
   remove: (item: DimItem) => void;
   setHighlight: (value?: string | number) => void;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
-  isInitialItem: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
@@ -65,8 +59,8 @@ export default memo(function CompareItem({
 
   const itemHeader = useMemo(
     () => (
-      <div ref={headerRef}>
-        <div className={styles.header}>
+      <div ref={headerRef} className={styles.headerContainer}>
+        <div className={styles.itemActions}>
           {item.vendor ? (
             <VendorItemWarning item={item} />
           ) : (
@@ -92,11 +86,6 @@ export default memo(function CompareItem({
     [item, pullItem, remove, itemNotes],
   );
 
-  const missingSocketsMessage =
-    item.missingSockets === 'missing'
-      ? tl('MovePopup.MissingSockets')
-      : tl('MovePopup.LoadingSockets');
-
   const handleRowClick = (row: Row, column: ColumnDefinition) => {
     if (column.id === 'name' && isFindable) {
       return () => itemClick(row.item);
@@ -105,28 +94,30 @@ export default memo(function CompareItem({
   };
 
   return (
-    <div
-      className={clsx(styles.compareItem, {
-        'compare-initial': isInitialItem,
-        'compare-findable': isFindable,
-      })}
-    >
+    <>
       {itemHeader}
-      <TableRow
-        row={row}
-        tableCtx={tableCtx}
-        filteredColumns={filteredColumns}
-        onRowClick={handleRowClick}
-        setHighlight={setHighlight}
-      />
-      {isD1Item(item) && item.talentGrid && (
-        <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-      )}
-      {item.missingSockets && isInitialItem && (
-        <div className="item-details warning">{t(missingSocketsMessage)}</div>
-      )}
-      {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
-    </div>
+      {filteredColumns.map((column, i) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        <div
+          key={column.id}
+          onClick={handleRowClick(row, column)}
+          className={clsx(
+            column.className,
+            column.id === 'name' && {
+              'compare-findable': isFindable,
+            },
+            i === filteredColumns.length - 1 && styles.lastRow,
+          )}
+          role="cell"
+          onPointerEnter={() => setHighlight(column.id)}
+        >
+          {column.cell
+            ? column.cell(row.values[column.id], row.item, tableCtx.minMaxValues[column.id])
+            : row.values[column.id]}
+        </div>
+      ))}
+      <div className={styles.separator} />
+    </>
   );
 });
 
@@ -149,45 +140,6 @@ function VendorItemWarning({ item }: { item: DimItem }) {
   ) : null;
 }
 
-// Copied from ItemTable - TODO: reconverge
-function TableRow({
-  row,
-  tableCtx,
-  filteredColumns,
-  onRowClick,
-  setHighlight,
-}: {
-  row: Row;
-  tableCtx: TableContext;
-  filteredColumns: ColumnDefinition[];
-  onRowClick: (
-    row: Row,
-    column: ColumnDefinition,
-  ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
-  setHighlight: (value?: string | number) => void;
-}) {
-  return (
-    <>
-      {filteredColumns.map((column) => (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-        <div
-          key={column.id}
-          onClick={onRowClick(row, column)}
-          className={clsx(column.className, {
-            // [styles.hasFilter]: column.filter !== undefined,
-          })}
-          role="cell"
-          onPointerEnter={() => setHighlight(column.id)}
-        >
-          {column.cell
-            ? column.cell(row.values[column.id], row.item, tableCtx.minMaxValues[column.id])
-            : row.values[column.id]}
-        </div>
-      ))}
-    </>
-  );
-}
-
 /** The row headers that appear on the left of the compare window */
 export function CompareHeaders({
   columnSorts,
@@ -204,21 +156,22 @@ export function CompareHeaders({
 }) {
   const isShiftHeld = useShiftHeld();
   return (
-    <div className={styles.statList}>
-      <div className={styles.spacer} />
-      {filteredColumns.map((column) => {
+    <>
+      <div className={styles.header} />
+      {filteredColumns.map((column, i) => {
         const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
         return (
           <div
             key={column.id}
             className={clsx(
-              styles.statLabel,
+              styles.header,
               column.headerClassName,
               columnSort
                 ? columnSort.sort === SortDirection.ASC
                   ? styles.sortDesc
                   : styles.sortAsc
                 : undefined,
+              i === filteredColumns.length - 1 && styles.lastRow,
             )}
             onPointerEnter={() => setHighlight(column.id)}
             onClick={
@@ -235,7 +188,7 @@ export function CompareHeaders({
                 : 'none'
             }
           >
-            {column.header}{' '}
+            {column.header}
             {columnSort && (
               <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
             )}
@@ -243,6 +196,6 @@ export function CompareHeaders({
           </div>
         );
       })}
-    </div>
+    </>
   );
 }

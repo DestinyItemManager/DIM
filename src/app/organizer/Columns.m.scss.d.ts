@@ -17,6 +17,7 @@ interface CssExports {
   'miniPerkContainer': string;
   'modPerk': string;
   'modPerks': string;
+  'modslot': string;
   'modslotIcon': string;
   'name': string;
   'negative': string;

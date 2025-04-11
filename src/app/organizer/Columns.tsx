@@ -105,7 +105,7 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
 
-const perkStringSort: Comparator<string | undefined> = (a, b) => {
+export const perkStringSort: Comparator<string | undefined> = (a, b) => {
   const aParts = (a ?? '').split(',');
   const bParts = (b ?? '').split(',');
   let ai = 0;
@@ -525,6 +525,7 @@ export function getColumns(
       c({
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
+        className: styles.modslot,
         // TODO: only show if there are mod slots
         value: (item) =>
           getInterestingSocketMetadatas(item)
@@ -1047,18 +1048,22 @@ function StoreLocation({ storeId }: { storeId: string }) {
   );
 }
 
-function perkString(sockets: DimSocket[]): string | undefined {
+export function perkString(sockets: DimSocket[]): string | undefined {
   if (!sockets.length) {
     return undefined;
   }
 
+  // TODO: filter out empty sockets, maybe sort?
   return sockets
     .flatMap((socket) => socket.plugOptions.map((p) => p.plugDef.displayProperties.name))
     .filter(Boolean)
     .join(',');
 }
 
-function getSockets(item: DimItem, type?: 'all' | 'traits' | 'shaders' | 'origin'): DimSocket[] {
+export function getSockets(
+  item: DimItem,
+  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks',
+): DimSocket[] {
   if (!item.sockets) {
     return [];
   }
@@ -1100,6 +1105,29 @@ function getSockets(item: DimItem, type?: 'all' | 'traits' | 'shaders' | 'origin
       break;
     }
 
+    case 'mods': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          !s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+    case 'perks': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+
     default: {
       // Improve this when we use iterator-helpers
       sockets.push(...[...modSocketsByCategory.values()].flat());
@@ -1133,7 +1161,7 @@ function getSockets(item: DimItem, type?: 'all' | 'traits' | 'shaders' | 'origin
   return sockets;
 }
 
-function getIntrinsicSockets(item: DimItem) {
+export function getIntrinsicSockets(item: DimItem) {
   const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
   return intrinsicSocket &&

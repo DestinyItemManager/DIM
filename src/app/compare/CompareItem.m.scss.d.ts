@@ -2,16 +2,15 @@
 // Please do not change this file!
 interface CssExports {
   'close': string;
-  'compareItem': string;
   'header': string;
+  'headerContainer': string;
   'highlightBar': string;
+  'itemActions': string;
   'itemAside': string;
+  'lastRow': string;
+  'separator': string;
   'sortAsc': string;
   'sortDesc': string;
-  'spacer': string;
-  'statLabel': string;
-  'statList': string;
-  'talentGrid': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

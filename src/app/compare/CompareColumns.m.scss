@@ -1,10 +1,5 @@
 @use '../variables.scss' as *;
 
-.nameHeader {
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-
 .name {
   margin-top: 2px;
   margin-bottom: 2px;
@@ -12,13 +7,13 @@
   white-space: nowrap;
   overflow: hidden;
 
-  :global(.compare-initial) & {
+  &.initialItem {
     color: var(--theme-accent-primary);
     font-weight: bold;
   }
 
   // Add the magnifying glass icons to items that can be clicked to find them
-  :global(.compare-findable) & {
+  &:global(.compare-findable) {
     cursor: pointer;
     &::after {
       content: '\f002';
@@ -41,11 +36,52 @@
   }
 }
 
-.stats {
-  display: block;
-}
-
 .energy {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+}
+
+// D1 talent grids are like sockets
+.talentGrid {
+  padding: 4px 2px 0 2px;
+  max-width: 150px;
+  height: auto;
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.archetype {
+  --item-size-mod: calc(24 / 50 * var(--item-size));
+  composes: noWrap;
+  height: var(--item-size-mod) !important;
+  padding-top: 10px;
+  padding-bottom: 4px;
+}
+
+// Perks in the perk/mod columns
+
+.perks {
+  padding-top: 0;
+  > * {
+    margin-top: 0;
+  }
+  // TODO push these into sockets component?
+  :global(.plug) {
+    --item-size-mod: calc(26 / 50 * var(--item-size));
+
+    @include phone-portrait {
+      --item-size-mod: 26px;
+    }
+    // This relies on the fact that only mods are img - perks are svg
+    img {
+      --item-size: var(--item-size-mod) !important;
+    }
+  }
+}
+
+// Make room for the item image
+.imageRoom {
+  padding-right: calc(var(--item-size) + 16px);
 }
