@@ -1,11 +1,6 @@
 .mod {
-  :global(.plug) {
-    --item-size-mod: calc(34 / 50 * var(--item-size));
-
-    img {
-      --item-size: var(--item-size-mod);
-    }
-  }
+  // Change the perk image to be a bit larger
+  --mod-size: var(--archetype-size, calc(34 / 50 * var(--item-size)));
 }
 
 .row {

@@ -82,14 +82,8 @@
 }
 
 .archetypeRow {
+  --archetype-size: 22px !important;
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
   gap: 2px;
-
-  :global(.plug) {
-    img {
-      width: 22px !important;
-      height: 22px !important;
-    }
-  }
 }
