@@ -75,8 +75,8 @@ export function getColumns(
     return {
       id: `stat${statHash}`,
       header: stat.displayProperties.hasIcon ? (
-        <span title={stat.displayProperties.name}>
-          <BungieImage src={stat.displayProperties.icon} />
+        <span>
+          <BungieImage src={stat.displayProperties.icon} aria-hidden={true} />
           {stat.displayProperties.name}
         </span>
       ) : statLabel ? (
@@ -322,7 +322,7 @@ export function getColumns(
           const s = getWeaponArchetypeSocket(item);
           return (
             s && (
-              <ArchetypeRow minimal={true} key={s.socketIndex}>
+              <ArchetypeRow minimal key={s.socketIndex}>
                 <ArchetypeSocket archetypeSocket={s} item={item} />
               </ArchetypeRow>
             )
@@ -333,8 +333,8 @@ export function getColumns(
     (isWeapon || ((isArmor || isGeneral) && destinyVersion === 1)) &&
       c({
         id: 'perks',
-        className: styles.perks,
-        headerClassName: styles.perks,
+        className: clsx(styles.perks, { [styles.weaponPerks]: isWeapon }),
+        headerClassName: clsx(styles.perks, { [styles.weaponPerksHeader]: isWeapon }),
         header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getSockets(item, 'perks')),
         cell: (_val, item) => (
@@ -349,7 +349,7 @@ export function getColumns(
                   : t('MovePopup.LoadingSockets')}
               </div>
             )}
-            {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+            {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
           </>
         ),
         sort: perkStringSort,
@@ -371,7 +371,7 @@ export function getColumns(
               (isWeapon ? (
                 <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
               ) : (
-                <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
+                <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
               ))}
           </>
         ),
@@ -383,7 +383,6 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perks,
-        headerClassName: styles.perks,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => {
@@ -391,7 +390,7 @@ export function getColumns(
           return (
             <>
               {sockets.map((s) => (
-                <ArchetypeRow minimal={true} key={s.socketIndex}>
+                <ArchetypeRow minimal key={s.socketIndex}>
                   <ArchetypeSocket archetypeSocket={s} item={item} />
                 </ArchetypeRow>
               ))}

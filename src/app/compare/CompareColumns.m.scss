@@ -1,8 +1,8 @@
 @use '../variables.scss' as *;
 
 .name {
-  margin-top: 2px;
-  margin-bottom: 2px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -56,14 +56,20 @@
   --item-size-mod: calc(24 / 50 * var(--item-size));
   composes: noWrap;
   height: var(--item-size-mod) !important;
-  padding-top: 10px;
+  padding-top: 4px;
   padding-bottom: 4px;
+
+  // Shrink down the intrinsic perk - it's super large
+  :global(.plug) {
+    padding-left: 0;
+  }
 }
 
 // Perks in the perk/mod columns
 
 .perks {
-  padding-top: 0;
+  padding-top: 4px;
+  padding-bottom: 4px;
   > * {
     margin-top: 0;
   }
@@ -81,7 +87,19 @@
   }
 }
 
+.weaponPerksHeader {
+  align-items: flex-start !important;
+}
+.weaponPerks {
+  // Trim the perk-circle margins off
+  > * {
+    margin-bottom: -4px;
+    margin-left: -3px;
+    margin-right: -3px;
+  }
+}
+
 // Make room for the item image
 .imageRoom {
-  padding-right: calc(var(--item-size) + 16px);
+  padding-right: calc(var(--item-size) + 16px) !important;
 }

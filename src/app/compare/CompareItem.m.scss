@@ -7,7 +7,6 @@
   padding-right: 16px;
   padding-left: 4px;
   cursor: pointer;
-  gap: 2px;
   position: sticky;
   left: 0;
   align-self: stretch;
@@ -35,6 +34,11 @@
   composes: header;
   cursor: default !important;
 }
+.headerContent {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 2px;
+}
 
 // The highlight behind each item
 .highlightBar {
@@ -59,7 +63,7 @@
 }
 
 .lastRow {
-  padding-bottom: 8px;
+  padding-bottom: 8px !important;
 }
 
 /* Items */
@@ -71,8 +75,6 @@
   align-items: center;
   justify-content: space-between;
   height: 32px;
-  padding-left: 4px;
-  padding-right: 4px;
   // pull & lock buttons
   > div:nth-child(1),
   > div:nth-child(2) {
@@ -114,7 +116,7 @@
 .itemAside {
   position: absolute;
   padding: 0;
-  right: 8px;
+  right: 4px;
   top: calc(32px + 4px + 1lh);
   cursor: pointer;
 }

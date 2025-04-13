@@ -198,10 +198,14 @@ export function CompareHeaders({
                 : 'none'
             }
           >
-            {column.header}
-            {columnSort && (
-              <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
-            )}
+            <div className={styles.headerContent}>
+              {column.header}
+              {columnSort && (
+                <AppIcon
+                  icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft}
+                />
+              )}
+            </div>
           </div>
         );
       })}

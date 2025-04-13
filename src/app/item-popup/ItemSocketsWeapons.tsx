@@ -34,7 +34,8 @@ export default function ItemSocketsWeapons({
 }) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
-  const [listPerks, setListPerks] = useSetting('perkList');
+  const [listPerksSetting, setListPerks] = useSetting('perkList');
+  const listPerks = grid === undefined ? listPerksSetting : !grid;
 
   if (!item.sockets || !defs) {
     return null;
@@ -75,7 +76,7 @@ export default function ItemSocketsWeapons({
         <ArchetypeRow minimal={minimal} isWeapons={true}>
           {intrinsicSocket?.plugged && (
             <ArchetypeSocket archetypeSocket={intrinsicSocket} item={item}>
-              {!minimal && keyStats && keyStats.length > 0 && (
+              {keyStats && keyStats.length > 0 && (
                 <div className={styles.stats}>
                   {keyStats
                     ?.map(
@@ -89,15 +90,13 @@ export default function ItemSocketsWeapons({
               )}
             </ArchetypeSocket>
           )}
-          {!minimal && mods.length > 0 && (
-            <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>
-          )}
+          {mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}
         </ArchetypeRow>
       )}
       {perks &&
-        (listPerks && !minimal && !grid ? (
+        (listPerks ? (
           <div className={styles.perks}>
-            {!minimal && !grid && (
+            {!grid && (
               <button
                 className={styles.displayStyleButton}
                 type="button"
@@ -111,7 +110,7 @@ export default function ItemSocketsWeapons({
           </div>
         ) : (
           <div className={styles.perks}>
-            {!minimal && !grid && (
+            {!grid && (
               <button
                 className={styles.displayStyleButton}
                 type="button"
