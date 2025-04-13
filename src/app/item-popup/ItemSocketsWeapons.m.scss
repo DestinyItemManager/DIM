@@ -1,8 +1,7 @@
 @use '../variables.scss' as *;
 
 .weaponSockets {
-  display: flex;
-  flex-flow: column nowrap;
+  composes: flexColumn from '../dim-ui/common.m.scss';
   margin-top: 10px;
 }
 
@@ -11,7 +10,7 @@
 
   // Draw lines between the sockets (columns), like in game.
   // TODO: maybe get rid of this
-  :global(.item-socket) {
+  .socket {
     border-right: 0.5px solid #444;
     padding-right: 3px;
 
@@ -59,13 +58,14 @@
     gap: 0;
 
     // Remove line between sockets in minimal mode
-    :global(.item-socket) {
+    .socket {
       border: none;
       padding: 0;
     }
   }
 
-  :global(.item-socket) {
+  /* stylelint-disable-next-line no-descending-specificity */
+  .socket {
     gap: 0;
   }
 

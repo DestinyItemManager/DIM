@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 
 // Horizontal list of sockets
-.item-sockets {
+.itemSockets {
   composes: flexRow from '../dim-ui/common.m.scss';
   gap: 4px;
 }

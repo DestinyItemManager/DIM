@@ -67,6 +67,7 @@ export default function ItemSocketsWeapons({
       socket={socketInfo}
       wishlistRoll={wishlistRoll}
       onClick={onPlugClicked}
+      className={styles.socket}
     />
   );
 
@@ -130,6 +131,7 @@ export default function ItemSocketsWeapons({
                       socket={socketInfo}
                       wishlistRoll={wishlistRoll}
                       onClick={onPlugClicked}
+                      className={styles.socket}
                     />
                   ),
               )}
@@ -181,6 +183,7 @@ export function ItemModSockets({
       socket={socketInfo}
       wishlistRoll={wishlistRoll}
       onClick={handlePlugClick}
+      className={styles.socket}
     />
   );
 
