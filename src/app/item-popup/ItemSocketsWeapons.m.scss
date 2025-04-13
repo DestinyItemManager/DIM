@@ -49,12 +49,6 @@
   }
 }
 
-.minimal {
-  > * {
-    margin-bottom: 4px !important;
-  }
-}
-
 .grid {
   composes: flexRow from '../dim-ui/common.m.scss';
   gap: 3px;

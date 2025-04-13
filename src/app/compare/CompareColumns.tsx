@@ -323,7 +323,7 @@ export function getColumns(
           const s = getWeaponArchetypeSocket(item);
           return (
             s && (
-              <ArchetypeRow minimal={true} key={s.socketIndex}>
+              <ArchetypeRow minimal key={s.socketIndex}>
                 <ArchetypeSocket archetypeSocket={s} item={item} />
               </ArchetypeRow>
             )
@@ -335,6 +335,7 @@ export function getColumns(
       c({
         id: 'perks',
         className: styles.perks,
+        headerClassName: styles.perks,
         header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getSockets(item, 'perks')),
         cell: (_val, item) => (
@@ -349,7 +350,7 @@ export function getColumns(
                   : t('MovePopup.LoadingSockets')}
               </div>
             )}
-            {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
+            {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
           </>
         ),
         sort: perkStringSort,
@@ -358,6 +359,7 @@ export function getColumns(
       c({
         id: 'mods',
         className: clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
+        headerClassName: styles.perks,
         header: t('Organizer.Columns.Mods'),
         // TODO: for ghosts this should return ghost mods, not cosmetics
         value: (item) => perkString(getSockets(item, 'mods')),
@@ -370,7 +372,7 @@ export function getColumns(
               (isWeapon ? (
                 <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
               ) : (
-                <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />
+                <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
               ))}
           </>
         ),
@@ -382,6 +384,7 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perks,
+        headerClassName: styles.perks,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => {
@@ -389,7 +392,7 @@ export function getColumns(
           return (
             <>
               {sockets.map((s) => (
-                <ArchetypeRow minimal={true} key={s.socketIndex}>
+                <ArchetypeRow minimal key={s.socketIndex}>
                   <ArchetypeSocket archetypeSocket={s} item={item} />
                 </ArchetypeRow>
               ))}
