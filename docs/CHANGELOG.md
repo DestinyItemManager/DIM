@@ -1,5 +1,12 @@
 ## Next
 
+* May have finally fixed the issue where DIM sometimes fails to load live data.
+* In Compare, you can now sort items by perks, mods, intrinsic, archetype, etc. The mods and perks rows.
+* In Compare, the masterworked stat is highlighted with an orange dot.
+* Ghosts show all their mods in Compare.
+* Removed a duplicate tooltip that showed an item's notes in Compare.
+* Restored the colored border for completed D1 items.
+
 ## 8.66.0 <span class="changelog-date">(2025-04-06)</span>
 
 ## 8.65.0 <span class="changelog-date">(2025-03-30)</span>
