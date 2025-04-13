@@ -44,10 +44,9 @@ export default function ItemSocketsGeneral({
 
   // Only show the first of each style of category when minimal
   const modSocketCategories = (
-    minimal
+    minimal && item.bucket.inArmor
       ? uniqBy(modSocketsByCategory.entries(), ([category]) => category.category.categoryStyle)
-      : // This might not be necessary with iterator-helpers
-        [...modSocketsByCategory.entries()]
+      : [...modSocketsByCategory.entries()]
   )
     .map(
       ([category, sockets]) =>
