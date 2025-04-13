@@ -1236,56 +1236,14 @@ const D2Sources: {
     searchString: [],
   },
   kf: {
-    itemHashes: [
-      601574723, // Adamantite (Adept)
-      615373993, // Eyes Unveiled
-      704410186, // Psychopomp (Adept)
-      768610585, // Watchful Eye
-      861521336, // Afterlight (Adept)
-      1834313033, // Afterlight
-      2501377328, // Division (Adept)
-      2671849376, // Refusal of the Call
-      2755584425, // Refusal of the Call (Adept)
-      2856225832, // Watchful Eye (Adept)
-      2987244302, // Adamantite
-      2992463569, // Division
-      3054597646, // Abyssal Edge (Adept)
-      3417731926, // Anamnesis
-      3840794631, // Psychopomp
-      3877448149, // Mirror Imago
-      3949253499, // Anamnesis (Adept)
-      4116546788, // Mirror Imago (Adept)
-      4173311704, // Eyes Unveiled (Adept)
-      4221591387, // Abyssal Edge
-    ],
+    itemHashes: [],
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
     ],
     searchString: [],
   },
   kingsfall: {
-    itemHashes: [
-      601574723, // Adamantite (Adept)
-      615373993, // Eyes Unveiled
-      704410186, // Psychopomp (Adept)
-      768610585, // Watchful Eye
-      861521336, // Afterlight (Adept)
-      1834313033, // Afterlight
-      2501377328, // Division (Adept)
-      2671849376, // Refusal of the Call
-      2755584425, // Refusal of the Call (Adept)
-      2856225832, // Watchful Eye (Adept)
-      2987244302, // Adamantite
-      2992463569, // Division
-      3054597646, // Abyssal Edge (Adept)
-      3417731926, // Anamnesis
-      3840794631, // Psychopomp
-      3877448149, // Mirror Imago
-      3949253499, // Anamnesis (Adept)
-      4116546788, // Mirror Imago (Adept)
-      4173311704, // Eyes Unveiled (Adept)
-      4221591387, // Abyssal Edge
-    ],
+    itemHashes: [],
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
     ],
@@ -1677,39 +1635,19 @@ const D2Sources: {
       70083888, // Nation of Beasts
       424291879, // Age-Old Bond
       501329015, // Chattering Bone
-      601574723, // Adamantite (Adept)
-      615373993, // Eyes Unveiled
-      704410186, // Psychopomp (Adept)
-      768610585, // Watchful Eye
-      861521336, // Afterlight (Adept)
       947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
-      1834313033, // Afterlight
       1851777734, // Apex Predator
       2027598066, // Imperial Opulence
       2027598067, // Imperial Dress
-      2501377328, // Division (Adept)
       2557722678, // Midnight Smith
-      2671849376, // Refusal of the Call
-      2755584425, // Refusal of the Call (Adept)
-      2856225832, // Watchful Eye (Adept)
       2884596447, // The Supremacy
-      2987244302, // Adamantite
-      2992463569, // Division
-      3054597646, // Abyssal Edge (Adept)
       3388655311, // Tyranny of Heaven
-      3417731926, // Anamnesis
       3580904580, // Legend of Acrius
       3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
-      3840794631, // Psychopomp
-      3877448149, // Mirror Imago
       3885259140, // Transfiguration
-      3949253499, // Anamnesis (Adept)
       4103414242, // Divinity
-      4116546788, // Mirror Imago (Adept)
-      4173311704, // Eyes Unveiled (Adept)
-      4221591387, // Abyssal Edge
     ],
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
