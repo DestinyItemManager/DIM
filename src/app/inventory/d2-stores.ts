@@ -1,6 +1,6 @@
 import { startSpan } from '@sentry/browser';
 import { handleAuthErrors } from 'app/accounts/actions';
-import { DestinyAccount } from 'app/accounts/destiny-account';
+import { compareAccounts, DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
@@ -159,12 +159,7 @@ export function loadStores({
               await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
               firstTime = false;
             }
-            if (!getState().inventory.live) {
-              infoLog(TAG, 'Fast-follow load live stores from Bungie.net');
-              stores = await dispatch(loadStoresData(account, { firstTime: false, fromOtherTab }));
-            } else {
-              infoLog(TAG, 'Initial load got live data, skipping fast-follow load');
-            }
+            stores = await dispatch(loadStoresData(account, { firstTime: false, fromOtherTab }));
           } finally {
             loading = false;
           }
@@ -326,10 +321,11 @@ function loadStoresData(
   return async (dispatch, getState) => {
     const promise = (async () => {
       // If we switched account since starting this, give up
-      if (account !== currentAccountSelector(getState())) {
+      if (!compareAccounts(account, currentAccountSelector(getState()))) {
         infoLog(
           TAG,
           'Switched accounts, giving up on loading stores',
+          1,
           account,
           currentAccountSelector(getState()),
         );
@@ -348,10 +344,11 @@ function loadStoresData(
           let defs = originalDefs;
 
           // If we switched account since starting this, give up
-          if (account !== currentAccountSelector(getState())) {
+          if (!compareAccounts(account, currentAccountSelector(getState()))) {
             infoLog(
               TAG,
               'Switched accounts, giving up on loading stores',
+              2,
               account,
               currentAccountSelector(getState()),
             );
@@ -417,10 +414,11 @@ function loadStoresData(
               const stopStateTimer = timer(TAG, 'Inventory state update');
 
               // If we switched account since starting this, give up before saving
-              if (account !== currentAccountSelector(getState())) {
+              if (!compareAccounts(account, currentAccountSelector(getState()))) {
                 infoLog(
                   TAG,
                   'Switched accounts, giving up on loading stores',
+                  3,
                   account,
                   currentAccountSelector(getState()),
                 );
@@ -469,7 +467,7 @@ function loadStoresData(
           reportException('d2stores', e);
 
           // If we switched account since starting this, give up
-          if (account !== currentAccountSelector(getState())) {
+          if (!compareAccounts(account, currentAccountSelector(getState()))) {
             return;
           }
 
