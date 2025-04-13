@@ -165,6 +165,12 @@ export function loadStores({
                 infoLog(TAG, 'Fast-follow load live stores from Bungie.net');
               }
             }
+            // The account can be mutated by the first load (lastPlayedDate)
+            account = currentAccountSelector(getState());
+            if (!account) {
+              errorLog(TAG, 'No account after loading stores');
+              return;
+            }
             stores = await dispatch(loadStoresData(account, { firstTime: false, fromOtherTab }));
           } finally {
             loading = false;
