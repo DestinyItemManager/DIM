@@ -37,7 +37,9 @@
   left: 0;
   height: 100%;
   // Reserve space for always-on scrollbars :-(
-  width: calc(100vw - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));
+  width: calc(
+    100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
+  );
   z-index: -1;
   pointer-events: none;
 }

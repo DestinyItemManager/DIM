@@ -96,6 +96,21 @@ export function setCssVariableEventListeners() {
     defineVH();
     window.addEventListener('resize', defineVH);
   }
+
+  // Set a css var for the width of a scrollbar
+  const scrollDiv = document.createElement('div');
+  scrollDiv.className = 'scrollbar-measure';
+  scrollDiv.style.width = '100px';
+  scrollDiv.style.height = '100px';
+  scrollDiv.style.overflow = 'scroll';
+  scrollDiv.style.position = 'absolute';
+  scrollDiv.style.top = '-9999px';
+  document.body.appendChild(scrollDiv);
+  const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+
+  // Delete the div
+  document.body.removeChild(scrollDiv);
+  setCSSVariable('--scrollbar-width', `${scrollbarWidth}px`);
 }
 
 /**

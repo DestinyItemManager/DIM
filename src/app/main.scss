@@ -118,6 +118,10 @@
     // How big to render each engram in the row of engrams in the Postmaster (on the Inventory screen).
     --engram-size: calc(var(--character-column-width) / 10);
 
+    // Rumors have it that the Windows scrollbar size is 17px. I always thought
+    // it was 16px. We'll override this with a detected value in JavaScript.
+    --scrollbar-size: 17px;
+
     // prevents content shift with persistent scroll-y bar
     overflow-y: scroll;
   }
