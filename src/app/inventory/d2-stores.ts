@@ -158,6 +158,18 @@ export function loadStores({
               infoLog(TAG, 'First time loading stores, only loading from IDB (if available)');
               await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
               firstTime = false;
+              if (getState().inventory.live) {
+                infoLog(TAG, 'Initial load got live data, skipping fast-follow load');
+                return;
+              } else {
+                infoLog(TAG, 'Fast-follow load live stores from Bungie.net');
+              }
+            }
+            // The account can be mutated by the first load (lastPlayedDate)
+            account = currentAccountSelector(getState());
+            if (!account) {
+              errorLog(TAG, 'No account after loading stores');
+              return;
             }
             stores = await dispatch(loadStoresData(account, { firstTime: false, fromOtherTab }));
           } finally {
