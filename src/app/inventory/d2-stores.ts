@@ -155,10 +155,16 @@ export function loadStores({
             // The first time we load, allow the data to be loaded from IDB. We then do a second
             // load to make sure that we immediately try to get remote data.
             if (firstTime) {
+              infoLog(TAG, 'First time loading stores, only loading from IDB (if available)');
               await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
               firstTime = false;
             }
-            stores = await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
+            if (!getState().inventory.live) {
+              infoLog(TAG, 'Fast-follow load live stores from Bungie.net');
+              stores = await dispatch(loadStoresData(account, { firstTime: false, fromOtherTab }));
+            } else {
+              infoLog(TAG, 'Initial load got live data, skipping fast-follow load');
+            }
           } finally {
             loading = false;
           }
@@ -321,6 +327,12 @@ function loadStoresData(
     const promise = (async () => {
       // If we switched account since starting this, give up
       if (account !== currentAccountSelector(getState())) {
+        infoLog(
+          TAG,
+          'Switched accounts, giving up on loading stores',
+          account,
+          currentAccountSelector(getState()),
+        );
         return;
       }
 
@@ -337,11 +349,21 @@ function loadStoresData(
 
           // If we switched account since starting this, give up
           if (account !== currentAccountSelector(getState())) {
+            infoLog(
+              TAG,
+              'Switched accounts, giving up on loading stores',
+              account,
+              currentAccountSelector(getState()),
+            );
             return;
           }
 
           for (let i = 0; i < 2; i++) {
             if (!defs || !profileInfo) {
+              infoLog(TAG, 'No defs or profile info, skipping store load', {
+                defs: Boolean(defs),
+                profileInfo: Boolean(profileInfo),
+              });
               return;
             }
 
@@ -396,6 +418,12 @@ function loadStoresData(
 
               // If we switched account since starting this, give up before saving
               if (account !== currentAccountSelector(getState())) {
+                infoLog(
+                  TAG,
+                  'Switched accounts, giving up on loading stores',
+                  account,
+                  currentAccountSelector(getState()),
+                );
                 return;
               }
 

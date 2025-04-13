@@ -1,5 +1,13 @@
 /* eslint-disable no-console */
 
+// Track how long it's been since the page load started and add that to each
+// log. Most folks who paste us logs won't have timestamps enabled and they can
+// be very useful.
+const start = Date.now();
+function logTime() {
+  return (Date.now() - start) / 1000;
+}
+
 /**
  * A wrapper around console.log. Use this when you mean to have logging in the shipped app.
  * Otherwise, we'll prevent console.log from getting submitted via a lint rule.
@@ -8,7 +16,7 @@
  * @example infoLog("Manifest", "The manifest loaded")
  */
 export function infoLog(tag: string, message: unknown, ...args: unknown[]) {
-  console.log(`[${tag}]`, message, ...args);
+  console.log(`[${tag}]`, logTime(), message, ...args);
 }
 
 /**
@@ -19,7 +27,7 @@ export function infoLog(tag: string, message: unknown, ...args: unknown[]) {
  * @example warnLog("Manifest", "The manifest is out of date")
  */
 export function warnLog(tag: string, message: unknown, ...args: unknown[]) {
-  console.warn(`[${tag}]`, message, ...args);
+  console.warn(`[${tag}]`, logTime(), message, ...args);
 }
 
 /**
@@ -31,7 +39,7 @@ export function warnLog(tag: string, message: unknown, ...args: unknown[]) {
  * @example warnLogCollapsedStack("Manifest", "The manifest is out of date")
  */
 export function warnLogCollapsedStack(tag: string, message: unknown, ...args: unknown[]) {
-  console.groupCollapsed(`[${tag}]`, message);
+  console.groupCollapsed(`[${tag}]`, logTime(), message);
   console.warn(`[${tag}]`, message, ...args);
   console.groupEnd();
 }
@@ -44,7 +52,7 @@ export function warnLogCollapsedStack(tag: string, message: unknown, ...args: un
  * @example errorLog("Manifest", "The manifest failed to load")
  */
 export function errorLog(tag: string, message: unknown, ...args: unknown[]) {
-  console.error(`[${tag}]`, message, ...args);
+  console.error(`[${tag}]`, logTime(), message, ...args);
 }
 
 /**
@@ -54,7 +62,9 @@ export function errorLog(tag: string, message: unknown, ...args: unknown[]) {
  * Unlike the real console.time, this returns a function that is used to end the timer.
  */
 export function timer(tag: string, message: string) {
-  const label = `[${tag}] ${message}`;
+  // Note: This will log the time when the timer started, but the log entry will
+  // only appear when it ends.
+  const label = `[${tag}] ${logTime()} ${message}`;
   console.time(label);
   return () => console.timeEnd(label);
 }

@@ -35,6 +35,7 @@ export interface InventoryState {
    */
   readonly currencies: AccountCurrency[];
 
+  readonly live: boolean;
   readonly profileResponse?: DestinyProfileResponse;
   readonly profileError?: Error;
 
@@ -58,6 +59,7 @@ const initialState: InventoryState = {
   currencies: [],
   newItems: new Set(),
   newItemsLoaded: false,
+  live: false,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -82,6 +84,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         ...state,
         profileResponse: action.payload.profile,
         profileError: action.payload.live ? undefined : state.profileError,
+        live: action.payload.live,
       };
 
     case getType(actions.profileError):
