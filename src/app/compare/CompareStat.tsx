@@ -1,6 +1,7 @@
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getCompareColor, percent } from 'app/shell/formatters';
+import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
 import styles from './CompareStat.m.scss';
@@ -18,6 +19,9 @@ export default function CompareStat({
   min: number;
   max: number;
 }) {
+  const isMasterworkStat = Boolean(
+    stat && item.masterworkInfo?.stats?.some((s) => s.isPrimary && s.hash === stat.statHash),
+  );
   const color = getCompareColor(statRange(stat, min, max, value));
 
   return (
@@ -27,14 +31,11 @@ export default function CompareStat({
           <span style={{ width: percent(value / stat.maximumValue) }} />
         </span>
       )}
-      {stat?.statHash === StatHashes.RecoilDirection ? (
-        <span className={styles.recoil}>
-          <span>{value}</span>
-          <RecoilStat value={value} />
-        </span>
-      ) : (
-        <AnimatedNumber value={value} />
-      )}
+      <AnimatedNumber
+        value={value}
+        className={clsx(styles.statValue, { [styles.masterwork]: isMasterworkStat })}
+      />
+      {stat?.statHash === StatHashes.RecoilDirection && <RecoilStat value={value} />}
       {Boolean(value) &&
         stat &&
         'qualityPercentage' in stat &&
