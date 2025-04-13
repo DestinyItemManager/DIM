@@ -2,9 +2,10 @@
 // Please do not change this file!
 interface CssExports {
   'bar': string;
+  'masterwork': string;
   'range': string;
-  'recoil': string;
   'stat': string;
+  'statValue': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

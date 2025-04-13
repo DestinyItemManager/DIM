@@ -10,7 +10,13 @@ const spring: Tween = {
 /**
  * A number that animates between values.
  */
-export default function AnimatedNumber({ value }: { value: number }) {
+export default function AnimatedNumber({
+  value,
+  className,
+}: {
+  value: number;
+  className?: string;
+}) {
   const val = useMotionValue(value);
   const transformedVal = useTransform(val, (v) => Math.floor(v));
 
@@ -18,5 +24,5 @@ export default function AnimatedNumber({ value }: { value: number }) {
     animate(val, value, spring);
   }, [val, value]);
 
-  return <motion.span>{transformedVal}</motion.span>;
+  return <motion.span className={className}>{transformedVal}</motion.span>;
 }

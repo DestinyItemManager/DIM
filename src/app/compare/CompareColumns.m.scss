@@ -7,11 +7,6 @@
   white-space: nowrap;
   overflow: hidden;
 
-  &.initialItem {
-    color: var(--theme-accent-primary);
-    font-weight: bold;
-  }
-
   // Add the magnifying glass icons to items that can be clicked to find them
   &:global(.compare-findable) {
     cursor: pointer;
@@ -34,6 +29,11 @@
       vertical-align: initial;
     }
   }
+}
+
+.initialItem {
+  color: var(--theme-accent-primary);
+  font-weight: bold;
 }
 
 .energy {
