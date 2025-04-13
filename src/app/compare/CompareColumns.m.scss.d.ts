@@ -9,7 +9,6 @@ interface CssExports {
   'noWrap': string;
   'perks': string;
   'talentGrid': string;
-  'weaponPerks': string;
   'weaponPerksHeader': string;
 }
 export const cssExports: CssExports;

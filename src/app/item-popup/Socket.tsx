@@ -1,6 +1,5 @@
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import clsx from 'clsx';
 import { PlugClickHandler } from './ItemSockets';
 import Plug from './Plug';
 import styles from './Socket.m.scss';
@@ -15,7 +14,6 @@ export default function Socket({
   wishlistRoll,
   onClick,
   pluggedOnly = false,
-  className,
 }: {
   item: DimItem;
   socket: DimSocket;
@@ -23,7 +21,6 @@ export default function Socket({
   wishlistRoll?: InventoryWishListRoll;
   onClick?: PlugClickHandler;
   pluggedOnly?: boolean;
-  className?: string;
 }) {
   const hasMenu = Boolean(onClick && !socket.isPerk && socket.socketDefinition.plugSources);
   if (!socket.plugOptions.length) {
@@ -31,7 +28,7 @@ export default function Socket({
   }
 
   return (
-    <div className={clsx(styles.socket, className)}>
+    <div className={styles.socket}>
       {socket.plugOptions.map(
         (plug) =>
           (!pluggedOnly || socket.plugged === plug) && (

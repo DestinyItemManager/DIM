@@ -70,9 +70,6 @@
 .perks {
   padding-top: 4px;
   padding-bottom: 4px;
-  > * {
-    margin-top: 0;
-  }
   // TODO push these into sockets component?
   :global(.plug) {
     --item-size-mod: calc(26 / 50 * var(--item-size));
@@ -89,14 +86,6 @@
 
 .weaponPerksHeader {
   align-items: flex-start !important;
-}
-.weaponPerks {
-  // Trim the perk-circle margins off
-  > * {
-    margin-bottom: -4px;
-    margin-left: -3px;
-    margin-right: -3px;
-  }
 }
 
 // Make room for the item image

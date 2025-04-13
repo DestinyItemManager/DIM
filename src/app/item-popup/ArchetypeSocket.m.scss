@@ -29,7 +29,6 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
   padding: 6px 10px;
-  margin-bottom: 4px;
   background-color: var(--theme-item-popup-panel-bg);
   width: 100%;
   border-bottom: none;
@@ -39,7 +38,6 @@
     background-color: transparent;
     align-items: center;
     padding: 0;
-    margin: 0;
   }
 
   :global(.armory) & {

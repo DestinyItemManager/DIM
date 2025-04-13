@@ -333,7 +333,7 @@ export function getColumns(
     (isWeapon || ((isArmor || isGeneral) && destinyVersion === 1)) &&
       c({
         id: 'perks',
-        className: clsx(styles.perks, { [styles.weaponPerks]: isWeapon }),
+        className: styles.perks,
         headerClassName: clsx(styles.perks, { [styles.weaponPerksHeader]: isWeapon }),
         header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getSockets(item, 'perks')),
