@@ -27,7 +27,9 @@
     --item-size-adjusted: 32px;
   }
 
-  img,
+  img {
+    --item-size: var(--mod-size, var(--item-size-adjusted));
+  }
   .perkCircle {
     --item-size: var(--item-size-adjusted);
   }

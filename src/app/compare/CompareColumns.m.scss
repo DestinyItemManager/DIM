@@ -58,29 +58,17 @@
   height: var(--item-size-mod) !important;
   padding-top: 4px;
   padding-bottom: 4px;
-
-  // Shrink down the intrinsic perk - it's super large
-  :global(.plug) {
-    padding-left: 0;
-  }
 }
 
 // Perks in the perk/mod columns
 
 .perks {
+  --mod-size: calc(24 / 50 * var(--item-size));
   padding-top: 4px;
   padding-bottom: 4px;
-  // TODO push these into sockets component?
-  :global(.plug) {
-    --item-size-mod: calc(26 / 50 * var(--item-size));
 
-    @include phone-portrait {
-      --item-size-mod: 26px;
-    }
-    // This relies on the fact that only mods are img - perks are svg
-    img {
-      --item-size: var(--item-size-mod) !important;
-    }
+  @include phone-portrait {
+    --mod-size: 26px;
   }
 }
 
@@ -91,4 +79,17 @@
 // Make room for the item image
 .imageRoom {
   padding-right: calc(var(--item-size) + 16px) !important;
+}
+
+.archetypeRow {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 2px;
+
+  :global(.plug) {
+    img {
+      width: 22px !important;
+      height: 22px !important;
+    }
+  }
 }

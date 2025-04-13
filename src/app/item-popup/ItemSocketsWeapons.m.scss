@@ -6,10 +6,6 @@
 
 .perks {
   position: relative; // to help contain the displayStyleButton
-  // in the item popup, when the archetype row is shown, inset the perks
-  &:nth-child(n + 2) {
-    padding: 8px 10px;
-  }
 }
 
 .stats {
@@ -39,11 +35,16 @@
   }
 }
 
+// For when perks are displayed in a grid
 .grid {
   composes: flexRow from '../dim-ui/common.m.scss';
+  // in the item popup, when the archetype row is shown, inset the perks
+  &:nth-child(n + 2) {
+    padding: 8px 10px;
+  }
   > div {
-    padding-right: 1px;
-    padding-left: 1px;
+    padding-right: 2px;
+    padding-left: 2px;
     &:first-child {
       padding-left: 0;
     }
