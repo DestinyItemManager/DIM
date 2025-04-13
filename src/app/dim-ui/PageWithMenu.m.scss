@@ -84,8 +84,8 @@
   // Add in some width when a scrollbar is present!
   // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
   &.menuScrollbars {
-    // Windows scrollbars are 17px, then padding p
-    width: calc(var(--page-with-menu-menu-width) + 17px + 8px);
+    // Windows scrollbars are var(--scrollbar-size), then padding p
+    width: calc(var(--page-with-menu-menu-width) + var(--scrollbar-size) + 8px);
   }
 
   ul {

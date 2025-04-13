@@ -42,7 +42,9 @@ $content-cells: 5;
   position: sticky;
   left: env(safe-area-inset-left);
   // Reserve space for always-on scrollbars :-(
-  width: calc(100vw - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));
+  width: calc(
+    100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
+  );
   gap: 4px;
 }
 
