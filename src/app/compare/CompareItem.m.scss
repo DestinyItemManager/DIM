@@ -7,7 +7,6 @@
   padding-right: 16px;
   padding-left: 4px;
   cursor: pointer;
-  gap: 2px;
   position: sticky;
   left: 0;
   align-self: stretch;
@@ -35,27 +34,25 @@
   composes: header;
   cursor: default !important;
 }
+.headerContent {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 2px;
+}
 
 // The highlight behind each item
 .highlightBar {
-  position: relative;
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    // Reserve space for always-on scrollbars :-(
-    width: calc(
-      100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
-    );
-    z-index: -1;
-    pointer-events: none;
-  }
-  &.highlighted::after {
-    background-color: #202020;
-  }
+  background-color: rgba(255, 255, 255, 0.125);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  // Reserve space for always-on scrollbars :-(
+  width: calc(
+    100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
+  );
+  z-index: -1;
+  pointer-events: none;
 }
 
 .lastRow {
@@ -71,8 +68,6 @@
   align-items: center;
   justify-content: space-between;
   height: 32px;
-  padding-left: 4px;
-  padding-right: 4px;
   // pull & lock buttons
   > div:nth-child(1),
   > div:nth-child(2) {
@@ -114,7 +109,7 @@
 .itemAside {
   position: absolute;
   padding: 0;
-  right: 8px;
+  right: 4px;
   top: calc(32px + 4px + 1lh);
   cursor: pointer;
 }

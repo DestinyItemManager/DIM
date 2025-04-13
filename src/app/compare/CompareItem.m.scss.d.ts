@@ -4,6 +4,7 @@ interface CssExports {
   'close': string;
   'header': string;
   'headerContainer': string;
+  'headerContent': string;
   'highlightBar': string;
   'highlighted': string;
   'itemActions': string;

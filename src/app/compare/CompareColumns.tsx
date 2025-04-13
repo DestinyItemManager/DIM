@@ -75,8 +75,8 @@ export function getColumns(
     return {
       id: `stat${statHash}`,
       header: stat.displayProperties.hasIcon ? (
-        <span title={stat.displayProperties.name}>
-          <BungieImage src={stat.displayProperties.icon} />
+        <span>
+          <BungieImage src={stat.displayProperties.icon} aria-hidden={true} />
           {stat.displayProperties.name}
         </span>
       ) : statLabel ? (
@@ -237,6 +237,7 @@ export function getColumns(
       header: t('Organizer.Columns.Name'),
       csv: 'Name',
       className: styles.name,
+      headerClassName: styles.name,
       value: (i) => i.name,
       cell: (val, i) => (
         <span
@@ -334,7 +335,6 @@ export function getColumns(
       c({
         id: 'perks',
         className: styles.perks,
-        headerClassName: styles.perks,
         header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getSockets(item, 'perks')),
         cell: (_val, item) => (
@@ -358,7 +358,6 @@ export function getColumns(
       c({
         id: 'mods',
         className: clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
-        headerClassName: styles.perks,
         header: t('Organizer.Columns.Mods'),
         // TODO: for ghosts this should return ghost mods, not cosmetics
         value: (item) => perkString(getSockets(item, 'mods')),
@@ -383,7 +382,6 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perks,
-        headerClassName: styles.perks,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => {

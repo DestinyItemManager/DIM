@@ -1,8 +1,8 @@
 @use '../variables.scss' as *;
 
 .name {
-  margin-top: 2px;
-  margin-bottom: 2px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
