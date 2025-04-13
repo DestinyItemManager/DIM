@@ -154,7 +154,16 @@ export function CompareHeaders({
   const isShiftHeld = useShiftHeld();
   return (
     <>
-      <div className={styles.header} />
+      <div key="spacer-1" className={styles.spacer} />
+      {filteredColumns.map((column) => (
+        <div
+          key={`hl-${column.id}`}
+          className={clsx(styles.highlightBar, {
+            [styles.highlighted]: highlight === column.id,
+          })}
+        />
+      ))}
+      <div key="spacer-2" className={styles.spacer} />
       {filteredColumns.map((column, i) => {
         const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
         return (
@@ -168,9 +177,13 @@ export function CompareHeaders({
                   ? styles.sortDesc
                   : styles.sortAsc
                 : undefined,
-              i === filteredColumns.length - 1 && styles.lastRow,
+              {
+                [styles.lastRow]: i === filteredColumns.length - 1,
+                [styles.highlighted]: highlight === column.id,
+              },
             )}
             onPointerEnter={() => setHighlight(column.id)}
+            onPointerLeave={() => setHighlight(undefined)}
             onClick={
               column.noSort
                 ? undefined
@@ -189,7 +202,6 @@ export function CompareHeaders({
             {columnSort && (
               <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
             )}
-            {column.id === highlight && <div className={styles.highlightBar} />}
           </div>
         );
       })}
