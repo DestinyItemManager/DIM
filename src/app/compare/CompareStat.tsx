@@ -20,7 +20,9 @@ export default function CompareStat({
   max: number;
 }) {
   const isMasterworkStat = Boolean(
-    stat && item.masterworkInfo?.stats?.some((s) => s.isPrimary && s.hash === stat.statHash),
+    item?.bucket.inWeapons &&
+      stat &&
+      item.masterworkInfo?.stats?.some((s) => s.isPrimary && s.hash === stat.statHash),
   );
   const color = getCompareColor(statRange(stat, min, max, value));
 
