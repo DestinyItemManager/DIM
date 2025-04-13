@@ -4,7 +4,7 @@ import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
-import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
+import { currentStoreSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -47,7 +47,6 @@ export default memo(function CompareItem({
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
-  const itemNotes = useSelector(notesSelector(item));
   const dispatch = useThunkDispatch();
   const currentStore = useSelector(currentStoreSelector)!;
   const pullItem = useCallback(() => {
@@ -75,15 +74,13 @@ export default memo(function CompareItem({
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <PressTip minimal tooltip={itemNotes}>
-                <ConnectedInventoryItem item={item} />
-              </PressTip>
+              <ConnectedInventoryItem item={item} />
             </div>
           )}
         </ItemPopupTrigger>
       </div>
     ),
-    [item, pullItem, remove, itemNotes],
+    [item, pullItem, remove],
   );
 
   const handleRowClick = (row: Row, column: ColumnDefinition) => {
