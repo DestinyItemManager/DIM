@@ -20,7 +20,6 @@
 
 .statValue {
   composes: flexRow from '../dim-ui/common.m.scss';
-  width: 4ch;
   align-items: center;
   justify-content: flex-end;
   gap: 3px;
@@ -39,7 +38,7 @@
   }
 }
 
-.masterwork::before {
+.masterwork::after {
   content: '';
   display: block;
   border-radius: 50%;
