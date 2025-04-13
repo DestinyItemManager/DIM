@@ -42,17 +42,24 @@
 
 // The highlight behind each item
 .highlightBar {
-  background-color: rgba(255, 255, 255, 0.125);
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  // Reserve space for always-on scrollbars :-(
-  width: calc(
-    100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
-  );
-  z-index: -1;
-  pointer-events: none;
+  position: relative;
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    // Reserve space for always-on scrollbars :-(
+    width: calc(
+      100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
+    );
+    z-index: -1;
+    pointer-events: none;
+  }
+  &.highlighted::after {
+    background-color: #202020;
+  }
 }
 
 .lastRow {
