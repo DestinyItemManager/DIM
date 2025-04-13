@@ -101,5 +101,5 @@
 
 // Make room for the item image
 .imageRoom {
-  padding-right: calc(var(--item-size) + 16px);
+  padding-right: calc(var(--item-size) + 16px) !important;
 }
