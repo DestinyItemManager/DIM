@@ -5,12 +5,14 @@ interface CssExports {
   'header': string;
   'headerContainer': string;
   'highlightBar': string;
+  'highlighted': string;
   'itemActions': string;
   'itemAside': string;
   'lastRow': string;
   'separator': string;
   'sortAsc': string;
   'sortDesc': string;
+  'spacer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
