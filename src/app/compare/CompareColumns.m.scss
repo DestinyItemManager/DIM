@@ -56,16 +56,20 @@
   --item-size-mod: calc(24 / 50 * var(--item-size));
   composes: noWrap;
   height: var(--item-size-mod) !important;
-  padding-top: 10px;
+  padding-top: 4px;
   padding-bottom: 4px;
-  align-items: center !important;
+
+  // Shrink down the intrinsic perk - it's super large
+  :global(.plug) {
+    padding-left: 0;
+  }
 }
 
 // Perks in the perk/mod columns
 
 .perks {
   padding-top: 4px;
-  padding-bottom: 0;
+  padding-bottom: 4px;
   > * {
     margin-top: 0;
   }
@@ -80,6 +84,18 @@
     img {
       --item-size: var(--item-size-mod) !important;
     }
+  }
+}
+
+.weaponPerksHeader {
+  align-items: flex-start !important;
+}
+.weaponPerks {
+  // Trim the perk-circle margins off
+  > * {
+    margin-bottom: -4px;
+    margin-left: -3px;
+    margin-right: -3px;
   }
 }
 

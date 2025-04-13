@@ -237,7 +237,6 @@ export function getColumns(
       header: t('Organizer.Columns.Name'),
       csv: 'Name',
       className: styles.name,
-      headerClassName: styles.name,
       value: (i) => i.name,
       cell: (val, i) => (
         <span
@@ -334,8 +333,8 @@ export function getColumns(
     (isWeapon || ((isArmor || isGeneral) && destinyVersion === 1)) &&
       c({
         id: 'perks',
-        className: styles.perks,
-        headerClassName: styles.perks,
+        className: clsx(styles.perks, { [styles.weaponPerks]: isWeapon }),
+        headerClassName: clsx(styles.perks, { [styles.weaponPerksHeader]: isWeapon }),
         header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getSockets(item, 'perks')),
         cell: (_val, item) => (
@@ -384,7 +383,6 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perks,
-        headerClassName: styles.perks,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => {
