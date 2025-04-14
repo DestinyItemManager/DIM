@@ -1,5 +1,7 @@
 ## Next
 
+## 8.67.0 <span class="changelog-date">(2025-04-13)</span>
+
 * May have finally fixed the issue where DIM sometimes fails to load live data.
 * In Compare, you can now sort items by perks, mods, intrinsic, archetype, etc. The mods and perks rows.
 * In Compare, the masterworked stat is highlighted with an orange dot.
