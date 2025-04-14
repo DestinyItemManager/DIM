@@ -7,6 +7,7 @@ interface CssExports {
   'enhancedArrow': string;
   'hasFilter': string;
   'header': string;
+  'headerRow': string;
   'icon': string;
   'iconHeader': string;
   'importButton': string;
@@ -30,6 +31,7 @@ interface CssExports {
   'perks': string;
   'positive': string;
   'recoil': string;
+  'row': string;
   'selection': string;
   'shapedIconOverlay': string;
   'shiftHeld': string;
