@@ -1,5 +1,4 @@
 import { tl } from 'app/i18next-t';
-import type { DimItem } from 'app/inventory/item-types';
 import { enhancementSocketHash } from 'app/inventory/store/crafted';
 import {
   DEFAULT_GLOW,
@@ -33,16 +32,6 @@ import {
 } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
-
-function hasExtraPerks(item: DimItem) {
-  return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
-    .filter(
-      (socket) =>
-        socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
-        socket.hasRandomizedPlugItems,
-    )
-    .some((socket) => socket.plugOptions.length > 1);
-}
 
 export const modslotFilter = {
   keywords: 'modslot',
@@ -132,7 +121,13 @@ const socketFilters: ItemFilterDefinition[] = [
         return false;
       }
 
-      return hasExtraPerks(item);
+      return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
+        .filter(
+          (socket) =>
+            socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
+            socket.hasRandomizedPlugItems,
+        )
+        .some((socket) => socket.plugOptions.length > 1);
     },
   },
   {
