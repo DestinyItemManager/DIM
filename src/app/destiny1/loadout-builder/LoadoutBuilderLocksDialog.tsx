@@ -4,6 +4,7 @@ import React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import ClickOutside from '../../dim-ui/ClickOutside';
 import { D1GridNode } from '../../inventory/item-types';
+import styles from './LoadoutBuilderLocksDialog.m.scss';
 import { ArmorTypes, LockedPerkHash, PerkCombination } from './types';
 
 interface Props {
@@ -24,15 +25,17 @@ export default function LoadoutBuilderLocksDialog({
   const shiftHeld = useShiftHeld();
 
   return (
-    <ClickOutside className="perk-select-popup" onClickOutside={onClose}>
-      <div className={clsx('perk-select-box', '', { 'shift-held': shiftHeld })}>
+    <ClickOutside className={styles.perkSelectPopup} onClickOutside={onClose}>
+      <div className={clsx(styles.perkSelectBox, { [styles.shiftHeld]: shiftHeld })}>
         {activePerks[type].map((perk) => (
           <div
             key={perk.hash}
             className={clsx(
-              'perk',
+              styles.perk,
               lockedPerks[type][perk.hash]
-                ? `active-perk-${lockedPerks[type][perk.hash].lockType}`
+                ? lockedPerks[type][perk.hash].lockType === 'and'
+                  ? styles.and
+                  : styles.or
                 : undefined,
             )}
             onClick={(e) => onPerkLocked(perk, type, e)}

@@ -230,12 +230,15 @@ function getLastPlayedD1Character(characters: D1Character[]): Date {
 /**
  * @return whether the accounts represent the same account
  */
-export function compareAccounts(account1: DestinyAccount, account2: DestinyAccount): boolean {
-  return (
+export function compareAccounts(
+  account1: DestinyAccount | undefined,
+  account2: DestinyAccount | undefined,
+): boolean {
+  return Boolean(
     account1 === account2 ||
-    (account1 &&
-      account2 &&
-      account1.membershipId === account2.membershipId &&
-      account1.destinyVersion === account2.destinyVersion)
+      (account1 &&
+        account2 &&
+        account1.membershipId === account2.membershipId &&
+        account1.destinyVersion === account2.destinyVersion),
   );
 }

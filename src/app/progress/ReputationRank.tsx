@@ -6,7 +6,7 @@ import { sumBy } from 'app/utils/collections';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
-import CompletionCheckbox from './CompletionCheckbox';
+import { ObjectiveCheckbox, ObjectiveRow } from './Objective';
 import styles from './ReputationRank.m.scss';
 
 /**
@@ -62,11 +62,11 @@ export function ReputationRank({
           {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
         </div>
         {streakCheckboxes && (
-          <div className={clsx(styles.winStreak, 'objective-row')}>
+          <ObjectiveRow className={styles.winStreak}>
             {streakCheckboxes.map((c, i) => (
-              <CompletionCheckbox key={i} completed={c} />
+              <ObjectiveCheckbox key={i} completed={c} />
             ))}
-          </div>
+          </ObjectiveRow>
         )}
         <div className={clsx(styles.factionLevel, rankPercent === 100 && styles.max)}>
           {t(resetLabel, {

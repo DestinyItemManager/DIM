@@ -17,7 +17,7 @@ import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
-import { useContext } from 'react';
+import { use } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
@@ -63,7 +63,7 @@ export default function ItemDetails({
 
   const killTrackerInfo = getItemKillTrackerInfo(item);
 
-  const showVendor = useContext(SingleVendorSheetContext);
+  const showVendor = use(SingleVendorSheetContext);
 
   const missingSocketsMessage =
     item.missingSockets === 'missing'

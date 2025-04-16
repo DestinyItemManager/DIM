@@ -69,7 +69,7 @@
     }
 
     &:nth-child(n + 2) {
-      justify-content: space-between;
+      justify-content: space-between !important;
     }
   }
 }

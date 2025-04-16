@@ -61,24 +61,18 @@
 }
 
 .winStreak {
+  /* yellow for crucibles, green override for gambit */
+  --objective-checkbox-color: #dde330;
   margin-top: 5px;
   gap: 4px;
-  & > :global(.objective-checkbox) {
+
+  :global(.faction-3008065600) & {
+    --objective-checkbox-color: #409a80;
+  }
+  & > * {
     height: 14px;
     width: 14px;
     margin: 0;
-    &:global(.objective-complete) {
-      opacity: 1;
-      /* yellow for crucibles, green override for gambit */
-      &::after {
-        background-color: #dde330;
-        height: 8px;
-        width: 8px;
-        :global(.faction-3008065600) & {
-          background-color: #409a80;
-        }
-      }
-    }
   }
 }
 

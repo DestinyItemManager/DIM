@@ -1,0 +1,105 @@
+@use '../variables.scss' as *;
+
+.name {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  // Add the magnifying glass icons to items that can be clicked to find them
+  &:global(.compare-findable) {
+    cursor: pointer;
+    &::after {
+      content: '\f002';
+      // Copied from .fas classes:
+      /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+      font-size: 8px;
+      margin-left: 4px;
+      margin-right: 0;
+      vertical-align: initial;
+    }
+  }
+}
+
+.initialItem {
+  color: var(--theme-accent-primary);
+  font-weight: bold;
+}
+
+.energy {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+// D1 talent grids are like sockets
+.talentGrid {
+  padding: 4px 2px 0 2px;
+  max-width: 150px;
+  height: auto;
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.archetype {
+  --item-size-mod: calc(24 / 50 * var(--item-size));
+  composes: noWrap;
+  height: var(--item-size-mod) !important;
+  padding-top: 4px;
+  padding-bottom: 4px;
+
+  // Shrink down the intrinsic perk - it's super large
+  :global(.plug) {
+    padding-left: 0;
+  }
+}
+
+// Perks in the perk/mod columns
+
+.perks {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  > * {
+    margin-top: 0;
+  }
+  // TODO push these into sockets component?
+  :global(.plug) {
+    --item-size-mod: calc(26 / 50 * var(--item-size));
+
+    @include phone-portrait {
+      --item-size-mod: 26px;
+    }
+    // This relies on the fact that only mods are img - perks are svg
+    img {
+      --item-size: var(--item-size-mod) !important;
+    }
+  }
+}
+
+.weaponPerksHeader {
+  align-items: flex-start !important;
+}
+.weaponPerks {
+  // Trim the perk-circle margins off
+  > * {
+    margin-bottom: -4px;
+    margin-left: -3px;
+    margin-right: -3px;
+  }
+}
+
+// Make room for the item image
+.imageRoom {
+  padding-right: calc(var(--item-size) + 16px) !important;
+}

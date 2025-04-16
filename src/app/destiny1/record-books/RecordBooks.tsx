@@ -1,4 +1,5 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
@@ -8,7 +9,6 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
 import { keyBy } from 'es-toolkit';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
@@ -18,11 +18,7 @@ import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1ObjectiveProgress, D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
-import './record-books.scss';
-
-interface Props {
-  account: DestinyAccount;
-}
+import styles from './RecordBooks.m.scss';
 
 interface RecordBook {
   hash: number;
@@ -55,7 +51,7 @@ interface RecordBookPage {
   completedCount: number;
 }
 
-export default function RecordBooks({ account }: Props) {
+export default function RecordBooks({ account }: { account: DestinyAccount }) {
   usePageTitle(t('RecordBooks.RecordBooks'));
   const defs = useD1Definitions();
   const stores = useSelector(storesSelector) as D1Store[];
@@ -65,22 +61,11 @@ export default function RecordBooks({ account }: Props) {
   if (!defs || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
-  const hideCompletedRecordsChanged = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setHideCompletedRecords(e.currentTarget.checked);
-
-  // TODO: Ideally there would be an Advisors service that would
-  // lazily load advisor info, and we'd get that info
-  // here. Unfortunately we're also using advisor info to populate
-  // extra info in Trials cards in Store service, and it's more
-  // efficient to just fish the info out of there.
 
   const processRecordBook = (
     defs: D1ManifestDefinitions,
     rawRecordBook: D1RecordBook,
   ): RecordBook => {
-    // TODO: rewards are in "spotlights"
-    // TODO: rank
-
     const recordBookDef = defs.RecordBook.get(rawRecordBook.bookHash);
     const recordBook = {
       hash: rawRecordBook.bookHash,
@@ -119,9 +104,6 @@ export default function RecordBooks({ account }: Props) {
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
         records: page.records.map((r) => recordByHash[r.recordHash]),
-        // rewards - map to items!
-        // ItemFactory.processItems({ id: null }
-        // may have to extract store service bits...
         complete: false,
         completedCount: 0,
       };
@@ -161,23 +143,17 @@ export default function RecordBooks({ account }: Props) {
     );
 
   return (
-    <div
-      className={clsx('record-books', 'dim-page', {
-        'hide-complete': hideCompletedRecords,
-      })}
-    >
-      <h1>
-        <div className="hide-completed">
-          <label>
-            <input
-              type="checkbox"
-              checked={hideCompletedRecords}
-              onChange={hideCompletedRecordsChanged}
-            />
-            <span>{t('RecordBooks.HideCompleted')}</span>
-          </label>
-        </div>
-      </h1>
+    <div className={styles.recordBooks}>
+      <div className={styles.hideCompleted}>
+        <label>
+          <Switch
+            checked={hideCompletedRecords}
+            onChange={setHideCompletedRecords}
+            name="hideCompleted"
+          />
+          <span>{t('RecordBooks.HideCompleted')}</span>
+        </label>
+      </div>
 
       {recordBooks.map((book) => (
         <CollapsibleTitle
@@ -185,54 +161,60 @@ export default function RecordBooks({ account }: Props) {
           sectionId={`rb-${book.hash}`}
           title={
             <>
-              <BungieImage src={book.icon} className="book-icon" /> {book.name}
+              <BungieImage src={book.icon} className={styles.bookIcon} /> {book.name}
             </>
           }
           extra={
-            <span className="record-book-completion">
+            <>
               {book.completedCount} / {book.recordCount}
-            </span>
+            </>
           }
         >
-          <div className="record-book">
+          <div className={styles.recordBook}>
             {book.pages.map(
               (page) =>
-                !page.rewardsPage && (
-                  <div
-                    key={page.id}
-                    className={clsx('record-book-page', { complete: page.complete })}
-                  >
+                !page.rewardsPage &&
+                !(page.complete && hideCompletedRecords) && (
+                  <div key={page.id} className={styles.recordBookPage}>
                     <CollapsibleTitle
                       sectionId={`rbpage-${page.id}`}
-                      title={<span className="record-book-page-title">{page.name}</span>}
+                      title={page.name}
                       extra={
-                        <span className="record-book-completion">
+                        <>
                           {page.completedCount} / {page.records.length}
-                        </span>
+                        </>
                       }
                     >
                       <p>{page.description}</p>
 
                       {page.records.length > 0 && (
-                        <div className="record-page-records">
-                          {page.records.map((record) => (
-                            <div
-                              key={record.hash}
-                              className={clsx('record', { complete: record.complete })}
-                            >
-                              <div
-                                className="record-icon"
-                                style={bungieBackgroundStyle(record.icon)}
-                              />
-                              <div className="record-info">
-                                <h3>{record.name}</h3>
-                                <p>{record.description}</p>
-                                {record.objectives.map((objective) => (
-                                  <Objective key={objective.objectiveHash} objective={objective} />
-                                ))}
-                              </div>
-                            </div>
-                          ))}
+                        <div className={styles.records}>
+                          {page.records.map(
+                            (record) =>
+                              !(record.complete && hideCompletedRecords) && (
+                                <div
+                                  key={record.hash}
+                                  className={clsx(styles.record, {
+                                    [styles.complete]: record.complete,
+                                  })}
+                                >
+                                  <div
+                                    className={styles.recordIcon}
+                                    style={bungieBackgroundStyle(record.icon)}
+                                  />
+                                  <div className={styles.recordInfo}>
+                                    <h3>{record.name}</h3>
+                                    <p>{record.description}</p>
+                                    {record.objectives.map((objective) => (
+                                      <Objective
+                                        key={objective.objectiveHash}
+                                        objective={objective}
+                                      />
+                                    ))}
+                                  </div>
+                                </div>
+                              ),
+                          )}
                         </div>
                       )}
                     </CollapsibleTitle>

@@ -1,5 +1,5 @@
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
-import { getColor } from 'app/shell/formatters';
+import { getD1QualityColor } from 'app/shell/formatters';
 import { enhancedIcon, shapedIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isD1Item } from 'app/utils/item-utils';
@@ -75,7 +75,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
   const summaryIcon = item.crafted ? (
     <AppIcon
-      className={styles.shapedIcon}
+      className={clsx(styles.shapedIcon, item.crafted === 'enhanced' && styles.enhancedIcon)}
       icon={item.crafted === 'enhanced' ? enhancedIcon : shapedIcon}
     />
   ) : (
@@ -93,7 +93,10 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       })}
     >
       {isD1Item(item) && item.quality && (
-        <div className={styles.quality} style={getColor(item.quality.min, 'backgroundColor')}>
+        <div
+          className={styles.quality}
+          style={getD1QualityColor(item.quality.min, 'backgroundColor')}
+        >
           {item.quality.min}%
         </div>
       )}

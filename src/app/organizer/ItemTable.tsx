@@ -1,12 +1,11 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { StatInfo } from 'app/compare/Compare';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import useBulkNote from 'app/dim-ui/useBulkNote';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { t, tl } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimStat } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   createItemContextSelector,
@@ -33,9 +32,9 @@ import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'ap
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyArray } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
-import { LookupTable, StringLookup } from 'app/utils/util-types';
+import { LookupTable } from 'app/utils/util-types';
 import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -52,16 +51,13 @@ import { compareSelectedItems } from 'app/compare/actions';
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { compact, filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
-import { createPortal } from 'react-dom';
 
 import { DimLanguage } from 'app/i18n';
 import { localizedSorter } from 'app/utils/intl';
 
-import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
+import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
-import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
-
-const possibleStyles = styles as unknown as StringLookup<string>;
+import { ColumnDefinition, ColumnSort, Row, SortDirection, TableContext } from './table-types';
 
 const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
   [ItemCategoryHashes.Hunter]: DestinyClass.Hunter,
@@ -79,7 +75,7 @@ const downloadButtonSettings = [
   { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
 ];
 
-const MemoRow = memo(TableRow);
+export const MemoRow = memo(TableRow);
 
 const EXPAND_INCREMENT = 20;
 
@@ -177,13 +173,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   );
 
   // Build a list of all the stats relevant to this set of items
-  const statHashes = useMemo(
-    () =>
-      terminal
-        ? buildStatInfo(items)
-        : emptyObject<{
-            [statHash: number]: StatInfo;
-          }>(),
+  const stats = useMemo(
+    () => (terminal ? buildStatInfo(items) : emptyArray<DimStat>()),
     [terminal, items],
   );
 
@@ -192,7 +183,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       getColumns(
         'organizer',
         itemType,
-        statHashes,
+        stats,
         getTag,
         getNotes,
         wishList,
@@ -206,7 +197,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     [
       wishList,
       hasWishList,
-      statHashes,
+      stats,
       itemType,
       getTag,
       getNotes,
@@ -234,7 +225,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   );
 
   // process items into Rows
-  const unsortedRows: Row[] = useMemo(
+  const [unsortedRows, _tableContext] = useMemo(
     () => buildRows(items, filteredColumns),
     [filteredColumns, items],
   );
@@ -353,7 +344,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const rowStyle = [...Array(numColumns).keys()]
     .map(
       (_v, n) =>
-        `[role="cell"]:nth-of-type(${numColumns * 2}n+${
+        `${styles.table}[role="cell"]:nth-of-type(${numColumns * 2}n+${
           n + 2
         }){background-color:var(--theme-organizer-row-even-bg) !important;}`,
     )
@@ -477,7 +468,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             onChangeEnabledColumn={onChangeEnabledColumn}
             forClass={classIfAny}
           />
-          {createPortal(<style>{rowStyle}</style>, document.head)}
+          <style>{rowStyle}</style>
         </div>
         <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
           <div>
@@ -495,21 +486,22 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             />
           </div>
         </div>
-        {filteredColumns.map((column: ColumnDefinition) => {
-          const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+        {filteredColumns.map((column) => {
+          const columnSort = column.noSort
+            ? undefined
+            : columnSorts.find((c) => c.columnId === column.id);
           return (
             <div
               key={column.id}
-              className={clsx(
-                possibleStyles[column.id],
-                column.id.startsWith('customstat_') && styles.customstat,
-                styles.header,
-                {
-                  [styles.stats]: isStatsColumn,
-                },
-              )}
+              className={clsx(column.headerClassName, styles.header)}
               role="columnheader"
-              aria-sort="none"
+              aria-sort={
+                columnSort === undefined
+                  ? 'none'
+                  : columnSort.sort === SortDirection.DESC
+                    ? 'descending'
+                    : 'ascending'
+              }
             >
               <div
                 onClick={
@@ -519,14 +511,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 }
               >
                 {column.header}
-                {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                {columnSort && (
                   <AppIcon
                     className={styles.sorter}
-                    icon={
-                      columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                        ? faCaretDown
-                        : faCaretUp
-                    }
+                    icon={columnSort.sort === SortDirection.DESC ? faCaretDown : faCaretUp}
                   />
                 )}
               </div>
@@ -548,7 +536,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           </React.Fragment>
         ))}
       </div>
-      {rows.length > maxItems && <ItemListExpander onExpand={expandItems} />}
+      {rows.length > maxItems && <ItemListExpander numItems={maxItems} onExpand={expandItems} />}
     </>
   );
 }
@@ -556,7 +544,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 /**
  * Build a list of rows with materialized values.
  */
-function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
+export function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
   const unsortedRows: Row[] = items.map((item) => ({
     item,
     values: filteredColumns.reduce<Row['values']>((memo, col) => {
@@ -564,18 +552,40 @@ function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
       return memo;
     }, {}),
   }));
-  return unsortedRows;
+
+  // Build a map of min/max values for each column
+  // TODO: Use these to color stats in the ItemTable view
+  const ctx: TableContext = { minMaxValues: {} };
+  for (const column of filteredColumns) {
+    if (column.cell) {
+      for (const row of unsortedRows) {
+        const value = row.values[column.id];
+        if (typeof value === 'number') {
+          const minMax = (ctx.minMaxValues[column.id] ??= { min: value, max: value });
+          minMax.min = Math.min(minMax.min, value);
+          minMax.max = Math.max(minMax.max, value);
+        }
+      }
+    }
+  }
+
+  return [unsortedRows, ctx] as const;
 }
 
 /**
  * Sort the rows based on the selected columns.
  */
-function sortRows(
+export function sortRows(
   unsortedRows: Row[],
   columnSorts: ColumnSort[],
   filteredColumns: ColumnDefinition[],
   language: DimLanguage,
+  defaultComparator?: Comparator<Row>,
 ) {
+  if (!columnSorts.length && defaultComparator) {
+    return unsortedRows.toSorted(defaultComparator);
+  }
+
   const comparator = chainComparator<Row>(
     ...columnSorts.map((sorter) => {
       const column = filteredColumns.find((c) => c.id === sorter.columnId);
@@ -613,14 +623,13 @@ function TableRow({
 }) {
   return (
     <>
-      {filteredColumns.map((column: ColumnDefinition) => (
+      {filteredColumns.map((column) => (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
           onClick={onRowClick(row, column)}
-          className={clsx(possibleStyles[column.id], {
+          className={clsx(column.className, {
             [styles.hasFilter]: column.filter !== undefined,
-            [styles.customstat]: column.id.startsWith('customstat_'),
           })}
           role="cell"
         >
@@ -642,7 +651,7 @@ function columnSetting(itemType: 'weapon' | 'armor' | 'ghost') {
   }
 }
 
-function ItemListExpander({ onExpand }: { onExpand: () => void }) {
+function ItemListExpander({ onExpand, numItems }: { onExpand: () => void; numItems: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -667,8 +676,18 @@ function ItemListExpander({ onExpand }: { onExpand: () => void }) {
     );
 
     observer.observe(elem);
+
     return () => observer.unobserve(elem);
-  }, [onExpand]);
+  }, [
+    onExpand,
+    // This is a hack to fix the case where:
+    // 1. The expander is on screen when the component renders.
+    // 2. After adding more items, it's still on screen. Since the observer only
+    //    runs if the item is initially onscreen, or enters the screen, there
+    //    are no changes. So we'll just reconstruct the observer every time to
+    //    allow it to re-fire if it's still on the screen.
+    numItems,
+  ]);
 
   return <div ref={ref} />;
 }

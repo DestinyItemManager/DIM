@@ -1,0 +1,53 @@
+@use '../../variables' as *;
+@use './LoadoutBuilderLocksDialog.m.scss' as locks;
+
+.lockedButton {
+  composes: dim-button from global;
+}
+
+// TODO: Combine with the controls-strip in GeneratedSet
+.controls {
+  composes: flexWrap from '../../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.excludedItems {
+  border: 2px solid #ddd;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px;
+  width: calc((var(--item-size) + 14px) * 7);
+  min-height: var(--item-size);
+  max-width: 100%;
+  padding: 5px;
+}
+
+.itemRow {
+  composes: flexWrap from '../../dim-ui/common.m.scss';
+  width: 100%;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.example {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  .or {
+    background-color: locks.$or-color;
+  }
+  .and {
+    background-color: locks.$and-color;
+  }
+}
+
+.section {
+  margin-bottom: 16px;
+
+  @include phone-portrait {
+    margin-left: var(--inventory-column-padding);
+    margin-right: var(--inventory-column-padding);
+  }
+}

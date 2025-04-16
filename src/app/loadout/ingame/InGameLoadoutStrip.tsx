@@ -193,7 +193,11 @@ function InGameLoadoutTile({
   const loadoutIcon = (
     <div className={styles.inGameTile} onClick={() => onShowDetails(gameLoadout)}>
       <div className={styles.igtIconHolder}>
-        <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} size={32} />{' '}
+        <InGameLoadoutIconWithIndex
+          loadout={gameLoadout}
+          className={styles.igtIcon}
+          size={32}
+        />{' '}
       </div>
       <AppIcon
         icon={isEquipped || isEquippable ? faCheckCircle : faExclamationCircle}

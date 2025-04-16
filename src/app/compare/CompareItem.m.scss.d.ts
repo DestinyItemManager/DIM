@@ -2,12 +2,18 @@
 // Please do not change this file!
 interface CssExports {
   'close': string;
-  'compareItem': string;
   'header': string;
-  'initialItem': string;
-  'isFindable': string;
+  'headerContainer': string;
+  'headerContent': string;
+  'highlightBar': string;
+  'highlighted': string;
+  'itemActions': string;
   'itemAside': string;
-  'itemName': string;
+  'lastRow': string;
+  'separator': string;
+  'sortAsc': string;
+  'sortDesc': string;
+  'spacer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

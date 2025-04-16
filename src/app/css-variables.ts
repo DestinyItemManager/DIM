@@ -76,7 +76,10 @@ export function setCssVariableEventListeners() {
        * viewport to change. As a result, we only apply the following CSS Variable if the
        * viewport size change is large enough (such as when the keyboard opens).
        */
-      const bottomOffset = window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop));
+      const bottomOffset = Math.max(
+        0,
+        window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop)),
+      );
 
       // bottomOffset === 0 means the visual viewport has been reset to its initial size
       if (bottomOffset === 0 || bottomOffset >= KEYBOARD_THRESHOLD) {
@@ -93,6 +96,25 @@ export function setCssVariableEventListeners() {
     defineVH();
     window.addEventListener('resize', defineVH);
   }
+
+  const defineScrollbarWidth = () => {
+    // Set a css var for the width of a scrollbar
+    const scrollDiv = document.createElement('div');
+    scrollDiv.className = 'scrollbar-measure';
+    scrollDiv.style.width = '100px';
+    scrollDiv.style.height = '100px';
+    scrollDiv.style.overflow = 'scroll';
+    scrollDiv.style.position = 'absolute';
+    scrollDiv.style.top = '-9999px';
+    document.body.appendChild(scrollDiv);
+    const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+
+    // Delete the div
+    document.body.removeChild(scrollDiv);
+    setCSSVariable('--scrollbar-width', `${scrollbarWidth}px`);
+  };
+  defineScrollbarWidth();
+  window.addEventListener('resize', defineScrollbarWidth);
 }
 
 /**

@@ -26,7 +26,7 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
 import { maxBy } from 'es-toolkit';
-import React, { JSX, useState } from 'react';
+import React, { JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
 import popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class
@@ -100,7 +100,6 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
   const disabled = !wishlistItem;
   const collapsedSetting = useSelector(collapsedSelector('triage-wishlist'));
   const collapsed = disabled || collapsedSetting;
-  const [alreadyOpen] = useState(collapsed);
 
   return (
     <CollapsibleTitle
@@ -115,7 +114,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
         <ExpandableTextBlock
           linesWhenClosed={3}
           className={popupStyles.description}
-          alreadyOpen={alreadyOpen}
+          alreadyOpen={collapsed}
         >
           <span className={popupStyles.secondaryText}>{wishlistItem.notes}</span>
         </ExpandableTextBlock>

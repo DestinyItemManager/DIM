@@ -1,16 +1,13 @@
 @use '../variables.scss' as *;
 
 .deepsightProgress {
+  --objective-background-color: var(--theme-item-popup-progress-bar-bg);
   display: flex;
   padding: 4px 10px;
   gap: 4px;
   background: var(--theme-item-popup-panel-bg);
   place-content: stretch center;
   align-items: center;
-
-  :global(.objective-progress) {
-    background: var(--theme-item-popup-progress-bar-bg);
-  }
 }
 
 .deepsightProgressBar {

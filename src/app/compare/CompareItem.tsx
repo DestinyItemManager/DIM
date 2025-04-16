@@ -1,51 +1,52 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { t, tl } from 'app/i18next-t';
+import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
+import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
-import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
+import { currentStoreSelector } from 'app/inventory/selectors';
 import ActionButton from 'app/item-actions/ActionButton';
 import { LockActionButton, TagActionButton } from 'app/item-actions/ActionButtons';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
-import { useSetCSSVarToHeight } from 'app/utils/hooks';
-import { isD1Item } from 'app/utils/item-utils';
+import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem, DimSocket } from '../inventory/item-types';
-import ItemSockets from '../item-popup/ItemSockets';
-import ItemTalentGrid from '../item-popup/ItemTalentGrid';
-import { AppIcon, faArrowCircleDown, searchIcon, shoppingCart } from '../shell/icons';
-import { StatInfo } from './Compare';
+import {
+  AppIcon,
+  faAngleLeft,
+  faAngleRight,
+  faArrowCircleDown,
+  shoppingCart,
+} from '../shell/icons';
 import styles from './CompareItem.m.scss';
-import CompareStat from './CompareStat';
 
 export default memo(function CompareItem({
   item,
-  stats,
-  compareBaseStats,
+  row,
+  tableCtx,
+  filteredColumns,
   itemClick,
   remove,
   setHighlight,
-  onPlugClicked,
-  isInitialItem,
 }: {
   item: DimItem;
-  stats: StatInfo[];
-  compareBaseStats?: boolean;
+  row: Row;
+  tableCtx: TableContext;
+  filteredColumns: ColumnDefinition[];
   itemClick: (item: DimItem) => void;
   remove: (item: DimItem) => void;
   setHighlight: (value?: string | number) => void;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
-  isInitialItem: boolean;
 }) {
   const headerRef = useRef<HTMLDivElement>(null);
   useSetCSSVarToHeight(headerRef, '--compare-item-height');
-  const itemNotes = useSelector(notesSelector(item));
   const dispatch = useThunkDispatch();
   const currentStore = useSelector(currentStoreSelector)!;
   const pullItem = useCallback(() => {
@@ -57,8 +58,8 @@ export default memo(function CompareItem({
 
   const itemHeader = useMemo(
     () => (
-      <div ref={headerRef}>
-        <div className={styles.header}>
+      <div ref={headerRef} className={styles.headerContainer}>
+        <div className={styles.itemActions}>
           {item.vendor ? (
             <VendorItemWarning item={item} />
           ) : (
@@ -70,53 +71,50 @@ export default memo(function CompareItem({
           {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
           <button type="button" className={styles.close} onClick={() => remove(item)} />
         </div>
-        <div
-          className={clsx(styles.itemName, {
-            [styles.initialItem]: isInitialItem,
-            [styles.isFindable]: isFindable,
-          })}
-          onClick={() => itemClick(item)}
-        >
-          <span title={isInitialItem ? t('Compare.InitialItem') : undefined}>{item.name}</span>{' '}
-          {isFindable && <AppIcon icon={searchIcon} />}
-        </div>
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <PressTip minimal tooltip={itemNotes}>
-                <ConnectedInventoryItem item={item} />
-              </PressTip>
+              <ConnectedInventoryItem item={item} />
             </div>
           )}
         </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable],
+    [item, pullItem, remove],
   );
 
-  const missingSocketsMessage =
-    item.missingSockets === 'missing'
-      ? tl('MovePopup.MissingSockets')
-      : tl('MovePopup.LoadingSockets');
+  const handleRowClick = (row: Row, column: ColumnDefinition) => {
+    if (column.id === 'name' && isFindable) {
+      return () => itemClick(row.item);
+    }
+    return undefined;
+  };
 
   return (
-    <div className={styles.compareItem}>
+    <>
       {itemHeader}
-      {stats.map((stat) => (
-        <CompareStat
-          key={stat.id}
-          item={item}
-          stat={stat}
-          setHighlight={setHighlight}
-          compareBaseStats={compareBaseStats}
-        />
+      {filteredColumns.map((column, i) => (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        <div
+          key={column.id}
+          onClick={handleRowClick(row, column)}
+          className={clsx(
+            column.className,
+            column.id === 'name' && {
+              'compare-findable': isFindable,
+            },
+            i === filteredColumns.length - 1 && styles.lastRow,
+          )}
+          role="cell"
+          onPointerEnter={() => setHighlight(column.id)}
+        >
+          {column.cell
+            ? column.cell(row.values[column.id], row.item, tableCtx.minMaxValues[column.id])
+            : row.values[column.id]}
+        </div>
       ))}
-      {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
-      {item.missingSockets && isInitialItem && (
-        <div className="item-details warning">{t(missingSocketsMessage)}</div>
-      )}
-      {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
-    </div>
+      <div className={styles.separator} />
+    </>
   );
 });
 
@@ -137,4 +135,80 @@ function VendorItemWarning({ item }: { item: DimItem }) {
       </ActionButton>
     </PressTip>
   ) : null;
+}
+
+/** The row headers that appear on the left of the compare window */
+export function CompareHeaders({
+  columnSorts,
+  highlight,
+  setHighlight,
+  toggleColumnSort,
+  filteredColumns,
+}: {
+  columnSorts: ColumnSort[];
+  highlight: string | number | undefined;
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  toggleColumnSort: (columnId: string, shiftHeld: boolean, sort?: SortDirection) => () => void;
+  filteredColumns: ColumnDefinition[];
+}) {
+  const isShiftHeld = useShiftHeld();
+  return (
+    <>
+      <div key="spacer-1" className={styles.spacer} />
+      {filteredColumns.map((column) => (
+        <div
+          key={`hl-${column.id}`}
+          className={clsx(styles.highlightBar, {
+            [styles.highlighted]: highlight === column.id,
+          })}
+        />
+      ))}
+      <div key="spacer-2" className={styles.spacer} />
+      {filteredColumns.map((column, i) => {
+        const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
+        return (
+          <div
+            key={column.id}
+            className={clsx(
+              styles.header,
+              column.headerClassName,
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? styles.sortDesc
+                  : styles.sortAsc
+                : undefined,
+              {
+                [styles.lastRow]: i === filteredColumns.length - 1,
+                [styles.highlighted]: highlight === column.id,
+              },
+            )}
+            onPointerEnter={() => setHighlight(column.id)}
+            onPointerLeave={() => setHighlight(undefined)}
+            onClick={
+              column.noSort
+                ? undefined
+                : toggleColumnSort(column.id, isShiftHeld, column.defaultSort)
+            }
+            role="rowheader"
+            aria-sort={
+              columnSort
+                ? columnSort.sort === SortDirection.ASC
+                  ? 'ascending'
+                  : 'descending'
+                : 'none'
+            }
+          >
+            <div className={styles.headerContent}>
+              {column.header}
+              {columnSort && (
+                <AppIcon
+                  icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft}
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
 }

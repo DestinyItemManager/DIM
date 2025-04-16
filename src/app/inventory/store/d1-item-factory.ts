@@ -369,7 +369,9 @@ function makeItem(
 
   // *able
   createdItem.taggable = Boolean(createdItem.lockable && !createdItem.isEngram);
-  createdItem.comparable = Boolean(createdItem.equipment && createdItem.lockable);
+  createdItem.comparable = Boolean(
+    createdItem.equipment && createdItem.lockable && createdItem.bucket.hash !== BucketHashes.Ships,
+  );
 
   // Moving rare masks destroys them
   if (

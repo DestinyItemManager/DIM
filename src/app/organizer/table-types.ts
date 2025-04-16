@@ -44,8 +44,8 @@ export interface ColumnDefinition<V extends Value = Value> {
   columnGroup?: ColumnGroup;
   /** The raw value of the column for this item. */
   value(item: DimItem): V;
-  /** Renderer for the cell. Default: value */
-  cell?(value: V, item: DimItem): React.ReactNode;
+  /** Renderer for the cell. Default: value. If the value is numeric we may pass max and min in. */
+  cell?(value: V, item: DimItem, context?: { max?: number; min?: number }): React.ReactNode;
   /** A generator for search terms matching this item. Default: No filtering. */
   filter?(value: V, item: DimItem): string | undefined;
   /** A custom sort function. Default: Something reasonable. */
@@ -55,6 +55,11 @@ export interface ColumnDefinition<V extends Value = Value> {
    * but sometimes a custom stat should be limited to only displaying for a certain class
    */
   limitToClass?: DestinyClass;
+
+  /** An optional class name to apply to the cell. */
+  className?: string;
+  /** An optional class name to apply to the header. */
+  headerClassName?: string;
 
   /**
    * A name for this column when it is output as CSV. This will reuse the value
@@ -78,9 +83,22 @@ export interface SpreadsheetContext {
   storeNamesById: { [key: string]: string };
 }
 
+/**
+ * A row is the calculated values for a single item, for all columns.
+ */
 export interface Row {
   item: DimItem;
   values: { [columnId: string]: Value };
+}
+
+/**
+ * Additional context about the table as a whole (all the rows in it.)
+ */
+export interface TableContext {
+  /**
+   * For numeric-valued columns, the min and max values across all rows.
+   */
+  minMaxValues: { [columnId: string]: { max: number; min: number } | undefined };
 }
 
 export type ColumnWithStat = ColumnDefinition & { statHash: number };

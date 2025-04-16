@@ -1,9 +1,8 @@
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import styles from './EmoteSockets.m.scss';
-import { PlugClickHandler } from './ItemSockets';
+import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import Socket from './Socket';
 
 /**
@@ -25,7 +24,7 @@ export default function EmoteSockets({
   const selectorIcon = <DefItemIcon itemDef={itemDef} className={styles.collectionIcon} />;
 
   return (
-    <div className={clsx(styles.emoteWheel, 'item-sockets')}>
+    <ItemSocketsList className={styles.emoteWheel}>
       {sockets.map((s, i) => (
         <div style={{ gridArea: `slot${i}` }} key={`${item.id}${s.socketIndex}`}>
           <Socket item={item} socket={s} onClick={onClick} />
@@ -34,6 +33,6 @@ export default function EmoteSockets({
       <div className="plug" style={{ gridArea: 'collection' }}>
         {selectorIcon}
       </div>
-    </div>
+    </ItemSocketsList>
   );
 }

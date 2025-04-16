@@ -7,6 +7,7 @@ interface CssExports {
   'deepsight': string;
   'energyCapacity': string;
   'engram': string;
+  'enhancedIcon': string;
   'fixContrast': string;
   'fullstack': string;
   'masterwork': string;

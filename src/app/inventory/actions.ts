@@ -26,6 +26,7 @@ import { ItemCreationContext } from './store/d2-item-factory';
 export const update = createAction('inventory/UPDATE')<{
   stores: DimStore[];
   currencies: AccountCurrency[];
+  responseMintedTimestamp?: string;
 }>();
 
 /**

@@ -1,0 +1,18 @@
+@use '../../variables.scss' as *;
+
+.addTypes {
+  composes: flexWrap from '../../dim-ui/common.m.scss';
+  gap: 4px;
+}
+
+.addedItems {
+  composes: flexWrap from '../../dim-ui/common.m.scss';
+  min-height: calc(var(--item-size) + 4px);
+  margin-top: 4px;
+  margin-bottom: 1em;
+  gap: 16px;
+
+  @include phone-portrait {
+    flex-flow: column nowrap;
+  }
+}

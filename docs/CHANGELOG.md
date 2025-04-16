@@ -1,6 +1,58 @@
 ## Next
 
+## 8.67.0 <span class="changelog-date">(2025-04-13)</span>
+
+* May have finally fixed the issue where DIM sometimes fails to load live data.
+* In Compare, you can now sort items by perks, mods, intrinsic, archetype, etc. The mods and perks rows.
+* In Compare, the masterworked stat is highlighted with an orange dot.
+* Ghosts show all their mods in Compare.
+* Removed a duplicate tooltip that showed an item's notes in Compare.
+* Restored the colored border for completed D1 items.
+
+## 8.66.0 <span class="changelog-date">(2025-04-06)</span>
+
+## 8.65.0 <span class="changelog-date">(2025-03-30)</span>
+
+## 8.64.0 <span class="changelog-date">(2025-03-23)</span>
+
+## 8.63.1 <span class="changelog-date">(2025-03-19)</span>
+
+* Fix a bug in Chrome for Android 134 and newer where the space reserved for the virtual keyboard would not be reclaimed after the keyboard is dismissed.
+* When you update DIM, it will no longer reload other tabs if you have a sheet up or are on the Loadout Optimizer. DIM may fail to load some pages until you refresh, though.
+* Fixed an issue where vigorous scrolling in a sheet (like the mod picker) can dismiss the sheet and its parent, losing progress in things like the loadout editor.
+* Attempt to prevent an issue where DIM loads fresh data from Bungie but doesn't update the view of inventory.
+
+## 8.63.0 <span class="changelog-date">(2025-03-16)</span>
+
+* Fixed a bug where the Organizer wouldn't show all the items if your screen was very tall or zoomed out.
+* Added a sortable name label to the Compare view.
+
+## 8.62.0 <span class="changelog-date">(2025-03-09)</span>
+
+## 8.61.0 <span class="changelog-date">(2025-03-02)</span>
+
+* `is:harmonizable` fixed to ignore bugged weapons with a Deepsight option that shouldn't be there.
+* `is:accountmaxpower` added to show your highest Power Level gear, determining the level of new drops.
+* `is:origintrait` added to find weapons with Origin Traits.
+* Fixed styling missing sometimes on the tooltip for Artifact Power.
+
+## 8.60.0 <span class="changelog-date">(2025-02-23)</span>
+
+* Added `source:sundereddoctrine` for the new dungeon.
+* Updated the color scale used for stats in Compare - there is now greater separation between the worst (red) and the best (green, with blue for the best stat).
+
+## 8.59.1 <span class="changelog-date">(2025-02-16)</span>
+
+* Added Pathfinder reward info.
+
+## 8.59.0 <span class="changelog-date">(2025-02-16)</span>
+
+* Fix a bug that could prevent removing wishlists if the wishlist no longer exists.
+* Fix D1 showing a yellow border around completed items.
+
 ## 8.58.0 <span class="changelog-date">(2025-02-09)</span>
+
+* Energy upgrade tooltips now show the material cost to upgrade.
 
 ## 8.57.3 <span class="changelog-date">(2025-02-05)</span>
 

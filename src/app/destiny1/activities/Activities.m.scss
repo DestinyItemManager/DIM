@@ -1,0 +1,109 @@
+@use '../../variables.scss' as *;
+
+.activities {
+  composes: dim-page from global;
+
+  width: calc(
+    (40px + var(--item-size) + (3 * (var(--item-size) + 8px))) * var(--num-characters) +
+      ((var(--num-characters) - 1) * 12px)
+  );
+  margin: 0 auto;
+
+  @include phone-portrait {
+    width: 100%;
+  }
+}
+
+.characters {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  justify-content: space-between;
+  margin-top: 12px;
+  margin-bottom: 12px;
+
+  > * {
+    flex-shrink: 0;
+    width: $emblem-width;
+  }
+}
+
+.title {
+  background-blend-mode: multiply;
+  background: #666;
+  text-shadow: 2px 2px 5px black;
+
+  @include interactive($hover: true) {
+    background: #aaa;
+  }
+}
+
+.featured {
+  color: gold;
+}
+
+.smallIcon {
+  height: 26px;
+}
+
+.activityType {
+  font-size: 0.85em;
+}
+
+.activityInfo {
+  padding: 8px 0 16px 0;
+
+  @include phone-portrait {
+    padding-left: var(--inventory-column-padding);
+    padding-right: var(--inventory-column-padding);
+  }
+}
+
+.tierTitle {
+  text-transform: uppercase;
+  position: absolute;
+  font-size: 12px;
+  color: #ccc;
+}
+
+.tierCharacters {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  justify-content: space-around;
+}
+
+.steps {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+}
+
+.stepIcon {
+  border-radius: 50%;
+  background-color: rgba(245, 245, 245, 0.1);
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border: 2px solid #fff;
+  margin: 2px;
+  &.complete {
+    border-color: #ffce1f;
+    background-color: rgba(255, 206, 31, 0.4);
+  }
+}
+
+.skulls {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 8px;
+  max-width: 350px;
+  margin: 0 auto;
+
+  &:not(:first-child) {
+    margin-top: 12px;
+  }
+}
+
+.skullIcon {
+  height: 16px;
+  padding: 2px 7px;
+  float: left;
+}
+
+.weak {
+  color: var(--theme-text-secondary);
+}

@@ -46,9 +46,7 @@ export default function Login() {
   };
 
   // If API permissions had been explicitly disabled before, don't even show the option to enable DIM Sync
-  const [apiPermissionPreviouslyDisabled] = useState(
-    localStorage.getItem('dim-api-enabled') === 'false',
-  );
+  const apiPermissionPreviouslyDisabled = localStorage.getItem('dim-api-enabled') === 'false';
   const [apiPermissionGranted, setApiPermissionGranted] = useState(() => {
     const enabled = localStorage.getItem('dim-api-enabled') !== 'false';
     localStorage.setItem('dim-api-enabled', JSON.stringify(enabled));

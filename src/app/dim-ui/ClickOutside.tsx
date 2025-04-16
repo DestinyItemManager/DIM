@@ -1,6 +1,6 @@
 import { useEventBusListener } from 'app/utils/hooks';
 import { EventBus } from 'app/utils/observable';
-import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import React, { createContext, use, useCallback, useEffect, useRef } from 'react';
 
 export const ClickOutsideContext = createContext(new EventBus<React.MouseEvent>());
 
@@ -31,7 +31,7 @@ export default function ClickOutside({
   }
 
   const wrapperRef = ref || localRef;
-  const mouseEvents = useContext(ClickOutsideContext);
+  const mouseEvents = use(ClickOutsideContext);
 
   /**
    * Alert if clicked on outside of element

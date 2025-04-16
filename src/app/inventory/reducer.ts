@@ -35,6 +35,7 @@ export interface InventoryState {
    */
   readonly currencies: AccountCurrency[];
 
+  readonly live: boolean;
   readonly profileResponse?: DestinyProfileResponse;
   readonly profileError?: Error;
 
@@ -58,6 +59,7 @@ const initialState: InventoryState = {
   currencies: [],
   newItems: new Set(),
   newItemsLoaded: false,
+  live: false,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
@@ -66,16 +68,42 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
 ): InventoryState => {
   switch (action.type) {
     case getType(actions.profileLoaded):
+      if (
+        action.payload.profile.responseMintedTimestamp <=
+        (state.profileResponse?.responseMintedTimestamp ?? 0)
+      ) {
+        warnLog(
+          'd2-stores',
+          'Not updating profile, it is older than what we already have',
+          action.payload.profile.responseMintedTimestamp,
+          state.profileResponse?.responseMintedTimestamp,
+        );
+        return state;
+      }
       return {
         ...state,
         profileResponse: action.payload.profile,
         profileError: action.payload.live ? undefined : state.profileError,
+        live: action.payload.live,
       };
 
     case getType(actions.profileError):
       return { ...state, profileError: action.payload };
 
     case getType(actions.update):
+      if (
+        action.payload.responseMintedTimestamp &&
+        state.profileResponse &&
+        action.payload.responseMintedTimestamp !== state.profileResponse.responseMintedTimestamp
+      ) {
+        warnLog(
+          'd2-stores',
+          'Not updating inventory - the profile has changed from under us',
+          action.payload.responseMintedTimestamp,
+          state.profileResponse.responseMintedTimestamp,
+        );
+        return state;
+      }
       return updateInventory(state, action.payload);
 
     case getType(actions.charactersUpdated):

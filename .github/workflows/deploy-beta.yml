@@ -64,12 +64,10 @@ jobs:
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
       # Send webpack stats and build information to RelativeCI
-      - name: Send webpack stats to RelativeCI
-        uses: relative-ci/agent-action@v2
+      - name: Upload bundle stats artifact
+        uses: relative-ci/agent-upload-artifact-action@v2
         with:
           webpackStatsFile: ./webpack-stats.json
-          key: ${{ secrets.RELATIVE_CI_KEY }}
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check Syntax
         run: pnpm syntax
@@ -91,7 +89,7 @@ jobs:
           APP_DOMAIN: beta.destinyitemmanager.com
 
       - name: Create Sentry release
-        uses: getsentry/action-release@v1
+        uses: getsentry/action-release@v3
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: destiny-item-manager

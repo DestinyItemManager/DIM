@@ -6,6 +6,7 @@ import { D1GridNode, DimItem } from '../../inventory/item-types';
 import { AppIcon, plusIcon } from '../../shell/icons';
 import LoadoutBucketDropTarget from './LoadoutBuilderDropTarget';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
+import styles from './LoadoutBuilderLockPerk.m.scss';
 import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
 import { ArmorTypes, D1ItemWithNormalStats, LockedPerkHash, PerkCombination } from './types';
 
@@ -42,39 +43,37 @@ export default function LoadoutBuilderLockPerk({
   const hasLockedPerks = Object.keys(lockedPerks[type]).length > 0;
 
   return (
-    <div className="locked-item">
-      <LoadoutBucketDropTarget bucketHash={type} onItemLocked={onItemLocked}>
-        {lockeditem === null ? (
-          <div className="empty-item">
-            <div className="perk-addition" onClick={addPerkClicked}>
-              {hasLockedPerks ? (
-                <div className="locked-perk-notification">
-                  <BungieImage src={firstPerk.icon} title={firstPerk.description} />
-                </div>
-              ) : (
-                <div className="perk-addition-text-container">
-                  <AppIcon icon={plusIcon} />
-                  <small className="perk-addition-text">{t('LB.LockPerk')}</small>
-                </div>
-              )}
+    <LoadoutBucketDropTarget
+      className={styles.lockedItem}
+      bucketHash={type}
+      onItemLocked={onItemLocked}
+    >
+      {lockeditem ? (
+        <ClosableContainer onClose={() => onRemove({ type })}>
+          <LoadoutBuilderItem item={lockeditem} />
+        </ClosableContainer>
+      ) : (
+        <div className={styles.emptyItem} onClick={addPerkClicked}>
+          {hasLockedPerks ? (
+            <BungieImage src={firstPerk.icon} title={firstPerk.description} />
+          ) : (
+            <div className={styles.lockPerkIcon}>
+              <AppIcon icon={plusIcon} />
+              <small>{t('LB.LockPerk')}</small>
             </div>
-          </div>
-        ) : (
-          <ClosableContainer className="lock-container" onClose={() => onRemove({ type })}>
-            <LoadoutBuilderItem item={lockeditem} />
-          </ClosableContainer>
-        )}
-        <div className="label">{i18nItemNames[type]}</div>
-        {dialogOpen && (
-          <LoadoutBuilderLocksDialog
-            activePerks={activePerks}
-            lockedPerks={lockedPerks}
-            type={type}
-            onPerkLocked={doOnPerkLocked}
-            onClose={closeDialog}
-          />
-        )}
-      </LoadoutBucketDropTarget>
-    </div>
+          )}
+        </div>
+      )}
+      <div>{i18nItemNames[type]}</div>
+      {dialogOpen && (
+        <LoadoutBuilderLocksDialog
+          activePerks={activePerks}
+          lockedPerks={lockedPerks}
+          type={type}
+          onPerkLocked={doOnPerkLocked}
+          onClose={closeDialog}
+        />
+      )}
+    </LoadoutBucketDropTarget>
   );
 }

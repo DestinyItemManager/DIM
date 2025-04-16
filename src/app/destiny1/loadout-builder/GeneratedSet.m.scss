@@ -1,0 +1,49 @@
+@use '../../variables' as *;
+
+.controls {
+  composes: flexWrap from '../../dim-ui/common.m.scss';
+  align-items: center;
+  margin-bottom: 7px;
+  gap: 8px;
+}
+
+.talentGrid {
+  width: 71px;
+  max-height: 48px;
+}
+
+.label {
+  text-align: center;
+  font-size: smaller;
+}
+
+.expandConfigs {
+  @include interactive($hover: true) {
+    color: var(--theme-accent-primary);
+    cursor: pointer;
+  }
+  :global(.app-icon) {
+    margin-right: 0.25em;
+  }
+}
+
+.set {
+  composes: flexWrap from '../../dim-ui/common.m.scss';
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.setItem {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 4px;
+  position: relative;
+}
+
+.dimStats {
+  flex: 1;
+  min-width: 100px;
+}
+
+.loadout {
+  margin-bottom: 20px;
+}

@@ -1,6 +1,5 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { StoreIcon } from 'app/character-tile/StoreIcon';
-import { StatInfo } from 'app/compare/Compare';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
@@ -11,7 +10,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
 import { getEvent, getSeason } from 'app/inventory/store/season';
@@ -26,11 +25,11 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { breakerTypeNames } from 'app/search/d2-known-values';
+import { breakerTypeNames, weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
-import { getColor, percent } from 'app/shell/formatters';
+import { getD1QualityColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
   lockIcon,
@@ -49,20 +48,29 @@ import {
   getMasterworkStatNames,
   isArtificeSocket,
   isD1Item,
+  isKillTrackerSocket,
 } from 'app/utils/item-utils';
 import {
+  getDisplayedItemSockets,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
-  getSocketsByType,
+  getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
   isEnhancedPerk,
+  socketContainsIntrinsicPlug,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
-import { BreakerTypeHashes, BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  BreakerTypeHashes,
+  BucketHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -74,9 +82,10 @@ import {
   csvStatNamesForDestinyVersion,
 } from 'app/inventory/spreadsheets';
 import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
+import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
-import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
+import styles from './Columns.m.scss';
+import { ColumnDefinition, ColumnGroup, ColumnWithStat, SortDirection, Value } from './table-types';
 
 /**
  * Get the ID used to select whether this column is shown or not.
@@ -96,7 +105,7 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
 
-const perkStringSort: Comparator<string | undefined> = (a, b) => {
+export const perkStringSort: Comparator<string | undefined> = (a, b) => {
   const aParts = (a ?? '').split(',');
   const bParts = (b ?? '').split(',');
   let ai = 0;
@@ -130,9 +139,8 @@ const perkStringFilter = (value: string | undefined) => {
 export function getColumns(
   useCase: 'organizer' | 'spreadsheet',
   itemsType: 'weapon' | 'armor' | 'ghost',
-  statHashes: {
-    [statHash: number]: StatInfo;
-  },
+  /** A single example stat per stat hash among items */
+  stats: DimStat[],
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   wishList: (item: DimItem) => InventoryWishListRoll | undefined,
@@ -159,58 +167,56 @@ export function getColumns(
 
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
-  type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
-  const statColumns: ColumnWithStat[] = filterMap(
-    Object.entries(statHashes),
-    ([statHashStr, statInfo]): ColumnWithStat | undefined => {
-      const statHash = parseInt(statHashStr, 10) as StatHashes;
-      if (customStatHashes.includes(statHash)) {
-        // Exclude custom total, it has its own column
-        return undefined;
-      }
-      const statLabel = statLabels[statHash];
+  const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
+    const statHash = stat.statHash as StatHashes;
+    if (customStatHashes.includes(statHash)) {
+      // Exclude custom total, it has its own column
+      return undefined;
+    }
+    const statLabel = statLabels[statHash];
 
-      return {
-        id: `stat${statHash}`,
-        header: statInfo.displayProperties.hasIcon ? (
-          <span title={statInfo.displayProperties.name}>
-            <BungieImage src={statInfo.displayProperties.icon} />
-          </span>
-        ) : statLabel ? (
-          t(statLabel)
-        ) : (
-          statInfo.displayProperties.name
-        ),
-        statHash,
-        columnGroup: statsGroup,
-        value: (item: DimItem) => {
-          const stat = item.stats?.find((s) => s.statHash === statHash);
-          if (stat?.statHash === StatHashes.RecoilDirection) {
-            return recoilValue(stat.value);
-          }
-          return stat?.value;
-        },
-        cell: (_val, item: DimItem) => {
-          const stat = item.stats?.find((s) => s.statHash === statHash);
-          if (!stat) {
-            return null;
-          }
-          return <ItemStatValue stat={stat} item={item} />;
-        },
-        defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
-        filter: (value) => {
-          const statName = invert(statHashByName)[statHash];
-          return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
-        },
-        csv: (_value, item) => {
-          // Re-find the stat instead of using the value passed in, because the
-          // value passed in can be different if it's Recoil.
-          const stat = item.stats?.find((s) => s.statHash === statHash);
-          return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
-        },
-      };
-    },
-  ).sort(compareBy((s) => getStatSortOrder(s.statHash)));
+    return {
+      id: `stat${statHash}`,
+      header: stat.displayProperties.hasIcon ? (
+        <span title={stat.displayProperties.name}>
+          <BungieImage src={stat.displayProperties.icon} />
+        </span>
+      ) : statLabel ? (
+        t(statLabel)
+      ) : (
+        stat.displayProperties.name
+      ),
+      className: stat?.statHash === StatHashes.RecoilDirection ? styles.recoil : styles.stats,
+      headerClassName: styles.stats,
+      statHash,
+      columnGroup: statsGroup,
+      value: (item: DimItem) => {
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        if (stat?.statHash === StatHashes.RecoilDirection) {
+          return recoilValue(stat.value);
+        }
+        return stat?.value;
+      },
+      cell: (_val, item: DimItem) => {
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        if (!stat) {
+          return null;
+        }
+        return <ItemStatValue stat={stat} item={item} />;
+      },
+      defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
+      filter: (value) => {
+        const statName = invert(statHashByName)[statHash];
+        return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+      },
+      csv: (_value, item) => {
+        // Re-find the stat instead of using the value passed in, because the
+        // value passed in can be different if it's Recoil.
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
+      },
+    };
+  }).sort(compareBy((s) => getStatSortOrder(s.statHash)));
 
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
@@ -252,16 +258,18 @@ export function getColumns(
 
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
-      ? Object.entries(statHashes)
-          .map(([statHashStr, statInfo]): ColumnWithStat => {
-            const statHash = parseInt(statHashStr, 10) as StatHashes;
+      ? stats
+          .map((stat): ColumnWithStat => {
+            const statHash = stat.statHash as StatHashes;
             return {
               statHash,
               id: `quality_${statHash}`,
               columnGroup: statQualityGroup,
               header: t('Organizer.Columns.StatQualityStat', {
-                stat: statInfo.displayProperties.name,
+                stat: stat.displayProperties.name,
               }),
+              className: styles.stats,
+              headerClassName: styles.stats,
               value: (item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 let pct = 0;
@@ -273,7 +281,9 @@ export function getColumns(
               cell: (value: number, item: D1Item) => {
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 return (
-                  <span style={getColor(stat?.qualityPercentage?.min || 0, 'color')}>{value}%</span>
+                  <span style={getD1QualityColor(stat?.qualityPercentage?.min || 0, 'color')}>
+                    {value}%
+                  </span>
                 );
               },
               csv: (_value, item) => {
@@ -302,13 +312,15 @@ export function getColumns(
     return columnDef;
   }
 
-  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs);
+  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs, styles.centered);
 
   const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
       c({
         id: 'icon',
         header: t('Organizer.Columns.Icon'),
+        className: styles.icon,
+        headerClassName: styles.iconHeader,
         value: (i) => i.icon,
         cell: (_val, item) => (
           <ItemPopupTrigger item={item}>
@@ -327,6 +339,8 @@ export function getColumns(
       id: 'name',
       header: t('Organizer.Columns.Name'),
       csv: 'Name',
+      className: styles.name,
+      headerClassName: styles.noWrap,
       value: (i) => i.name,
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),
@@ -348,6 +362,8 @@ export function getColumns(
       c({
         id: 'power',
         csv: destinyVersion === 2 ? 'Power' : 'Light',
+        className: styles.centered,
+        headerClassName: styles.centered,
         header: <AppIcon icon={powerIndicatorIcon} />,
         dropdownLabel: t('Organizer.Columns.Power'),
         value: (item) => item.power,
@@ -358,6 +374,8 @@ export function getColumns(
       c({
         id: 'dmg',
         header: t('Organizer.Columns.Damage'),
+        className: styles.dmg,
+        headerClassName: styles.dmgHeader,
         csv: 'Element',
         value: (item) => item.element?.displayProperties.name,
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
@@ -377,6 +395,8 @@ export function getColumns(
       c({
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
+        className: styles.centered,
+        headerClassName: styles.centered,
         csv: 'Energy Capacity',
         value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
@@ -386,6 +406,8 @@ export function getColumns(
       id: 'locked',
       header: <AppIcon icon={lockIcon} />,
       csv: 'Locked',
+      className: styles.centered,
+      headerClassName: styles.centered,
       dropdownLabel: t('Organizer.Columns.Locked'),
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
@@ -395,6 +417,8 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
+      className: styles.centered,
+      headerClassName: styles.centered,
       value: (item) => getTag(item) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
@@ -405,6 +429,8 @@ export function getColumns(
       c({
         id: 'new',
         header: t('Organizer.Columns.New'),
+        className: styles.new,
+        headerClassName: styles.centered,
         value: (item) => newItems.has(item.id),
         cell: (value) => (value ? <NewItemIndicator /> : undefined),
         defaultSort: SortDirection.DESC,
@@ -436,6 +462,8 @@ export function getColumns(
       c({
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
+        className: styles.centered,
+        headerClassName: styles.centered,
         value: (item) => {
           const roll = wishList(item);
           return roll ? !roll.isUndesirable : undefined;
@@ -497,6 +525,7 @@ export function getColumns(
       c({
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
+        className: styles.modslot,
         // TODO: only show if there are mod slots
         value: (item) =>
           getInterestingSocketMetadatas(item)
@@ -538,6 +567,7 @@ export function getColumns(
       c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
+        className: styles.noWrap,
         value: (item) => getWeaponArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
           const plugged = getWeaponArchetypeSocket(item)?.plugged;
@@ -583,6 +613,7 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'intrinsics',
+        className: styles.perkLike,
         header: t('Organizer.Columns.Intrinsics'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => (
@@ -597,22 +628,19 @@ export function getColumns(
       }),
     c({
       id: 'perks',
+      className: styles.perks,
       header:
         destinyVersion === 2
           ? isWeapon
             ? t('Organizer.Columns.OtherPerks')
             : t('Organizer.Columns.PerksMods')
           : t('Organizer.Columns.Perks'),
-      value: (item) => perkString(getSocketsByType(item, 'all')),
+      value: (item) => perkString(getSockets(item, 'all')),
       cell: (_val, item) =>
         isD1Item(item) ? (
           <D1PerksCell item={item} />
         ) : (
-          <PerksCell
-            item={item}
-            sockets={getSocketsByType(item, 'all')}
-            onPlugClicked={onPlugClicked}
-          />
+          <PerksCell item={item} sockets={getSockets(item, 'all')} onPlugClicked={onPlugClicked} />
         ),
       sort: perkStringSort,
       filter: perkStringFilter,
@@ -635,12 +663,13 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'traits',
+        className: styles.perks,
         header: t('Organizer.Columns.Traits'),
-        value: (item) => perkString(getSocketsByType(item, 'traits')),
+        value: (item) => perkString(getSockets(item, 'traits')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSocketsByType(item, 'traits')}
+            sockets={getSockets(item, 'traits')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -653,12 +682,13 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'originTrait',
+        className: styles.perkLike,
         header: t('Organizer.Columns.OriginTraits'),
-        value: (item) => perkString(getSocketsByType(item, 'origin')),
+        value: (item) => perkString(getSockets(item, 'origin')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSocketsByType(item, 'origin')}
+            sockets={getSockets(item, 'origin')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -669,12 +699,13 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'shaders',
+        className: styles.perkLike,
         header: t('Organizer.Columns.Shaders'),
-        value: (item) => perkString(getSocketsByType(item, 'shaders')),
+        value: (item) => perkString(getSockets(item, 'shaders')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSocketsByType(item, 'shaders')}
+            sockets={getSockets(item, 'shaders')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -691,7 +722,7 @@ export function getColumns(
         header: t('Organizer.Columns.Quality'),
         csv: '% Quality',
         value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
-        cell: (value) => <span style={getColor(value, 'color')}>{value}%</span>,
+        cell: (value) => <span style={getD1QualityColor(value, 'color')}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
       }),
     ...(destinyVersion === 2 && isArmor ? customStats : []),
@@ -744,7 +775,7 @@ export function getColumns(
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return (
             killTrackerInfo && (
-              <KillTrackerInfo tracker={killTrackerInfo} className={styles.killTrackerDisplay} />
+              <KillTrackerInfo tracker={killTrackerInfo} className={styles.locationCell} />
             )
           );
         },
@@ -771,6 +802,8 @@ export function getColumns(
     c({
       id: 'year',
       csv: 'Year',
+      className: styles.centered,
+      headerClassName: styles.centered,
       header: t('Organizer.Columns.Year'),
       value: (item) => getItemYear(item),
       filter: (value) => `year:${value}`,
@@ -779,6 +812,8 @@ export function getColumns(
       c({
         id: 'season',
         csv: 'Season',
+        className: styles.centered,
+        headerClassName: styles.centered,
         header: t('Organizer.Columns.Season'),
         value: (i) => getSeason(i),
         filter: (value) => `season:${value}`,
@@ -1013,18 +1048,120 @@ function StoreLocation({ storeId }: { storeId: string }) {
   );
 }
 
-function perkString(sockets: DimSocket[]): string | undefined {
+export function perkString(sockets: DimSocket[]): string | undefined {
   if (!sockets.length) {
     return undefined;
   }
 
+  // TODO: filter out empty sockets, maybe sort?
   return sockets
     .flatMap((socket) => socket.plugOptions.map((p) => p.plugDef.displayProperties.name))
     .filter(Boolean)
     .join(',');
 }
 
-function getIntrinsicSockets(item: DimItem) {
+export function getSockets(
+  item: DimItem,
+  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks',
+): DimSocket[] {
+  if (!item.sockets) {
+    return [];
+  }
+
+  let sockets = [];
+  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true,
+  )!;
+
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
+  switch (type) {
+    case 'traits':
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
+      );
+      break;
+
+    case 'origin':
+      sockets = sockets.filter((s) =>
+        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
+      );
+      break;
+
+    case 'shaders': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
+      );
+      break;
+    }
+
+    case 'mods': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          !s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+    case 'perks': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+
+    default: {
+      // Improve this when we use iterator-helpers
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          !(
+            s.plugged &&
+            (s.plugged?.plugDef.itemCategoryHashes?.includes(
+              ItemCategoryHashes.WeaponModsOriginTraits,
+            ) ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+              s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
+          ),
+      );
+      break;
+    }
+  }
+
+  sockets = sockets.filter(
+    (s) =>
+      // we have a separate column for the kill tracker
+      !isKillTrackerSocket(s) &&
+      // and for the regular weapon masterworks
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash &&
+      // Remove "extra intrinsics" for exotic class items
+      (!item.bucket.inArmor || !(s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))),
+  );
+  return sockets;
+}
+
+export function getIntrinsicSockets(item: DimItem) {
   const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
   return intrinsicSocket &&
@@ -1038,38 +1175,21 @@ function getIntrinsicSockets(item: DimItem) {
  * This builds stat infos for all the stats that are relevant to a particular category of items.
  * It will return the same result for the same category, since all items in a category share stats.
  */
-export function buildStatInfo(items: DimItem[]): {
-  [statHash: number]: StatInfo;
-} {
-  const statHashes: {
-    [statHash: number]: StatInfo;
-  } = {};
+export function buildStatInfo(items: DimItem[]): DimStat[] {
+  if (!items.length) {
+    return emptyArray<DimStat>();
+  }
+
+  const statHashes: { [statHash: number]: DimStat } = {};
   for (const item of items) {
     if (item.stats) {
       for (const stat of item.stats) {
-        if (statHashes[stat.statHash]) {
-          // TODO: we don't yet use the min and max values
-          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
-          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
-        } else {
-          statHashes[stat.statHash] = {
-            id: stat.statHash,
-            displayProperties: stat.displayProperties,
-            min: stat.value,
-            max: stat.value,
-            enabled: true,
-            lowerBetter: stat.smallerIsBetter,
-            statMaximumValue: stat.maximumValue,
-            bar: stat.bar,
-            getStat(item) {
-              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
-            },
-          };
-        }
+        // Just use the first item's stats as the source of truth.
+        statHashes[stat.statHash] ??= stat;
       }
     }
   }
-  return statHashes;
+  return Object.values(statHashes);
 }
 
 // ignore raid & calus sources in favor of more detailed sources

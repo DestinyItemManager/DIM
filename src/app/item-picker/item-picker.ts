@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { use, useCallback } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { ItemPickerContext } from './ItemPickerContainer';
 
@@ -29,7 +29,7 @@ export type ShowItemPickerFn = (options: ItemPickerOptions) => Promise<DimItem |
  * is closed without a selection.
  */
 export function useItemPicker(): ShowItemPickerFn {
-  const setOptions = useContext(ItemPickerContext);
+  const setOptions = use(ItemPickerContext);
   return useCallback(
     (options) =>
       new Promise((resolve) => {
@@ -43,6 +43,6 @@ export function useItemPicker(): ShowItemPickerFn {
  * Returns a function that can be used to hide the item picker.
  */
 export function useHideItemPicker() {
-  const setOptions = useContext(ItemPickerContext);
+  const setOptions = use(ItemPickerContext);
   return useCallback(() => setOptions(undefined), [setOptions]);
 }

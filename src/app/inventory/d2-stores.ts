@@ -1,6 +1,6 @@
 import { startSpan } from '@sentry/browser';
 import { handleAuthErrors } from 'app/accounts/actions';
-import { DestinyAccount } from 'app/accounts/destiny-account';
+import { compareAccounts, DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
@@ -107,6 +107,8 @@ export function updateCharacters(): ThunkResult {
 
 let firstTime = true;
 
+let loading = false;
+
 /**
  * Returns a promise for a fresh view of the stores and their items.
  */
@@ -118,6 +120,10 @@ export function loadStores({
   return async (dispatch, getState) => {
     try {
       let stores: DimStore[] | undefined;
+      if (loading) {
+        infoLog(TAG, 'Already loading stores, skipping this load');
+        return;
+      }
       await navigator.locks.request(
         'loadStores',
         {
@@ -126,31 +132,49 @@ export function loadStores({
           mode: 'exclusive',
         },
         async (lock) => {
-          if (!lock) {
+          if (!lock && !firstTime) {
             infoLog('cross-tab', 'Another tab is already loading stores');
             // This means another tab was already requesting the stores.
             throw new Error('lock-held');
           }
-          let account = currentAccountSelector(getState());
-          if (!account) {
-            // TODO: throw here?
-            await dispatch(getPlatforms);
+          loading = true;
+          try {
+            let account = currentAccountSelector(getState());
+            if (!account) {
+              // TODO: throw here?
+              await dispatch(getPlatforms);
+              account = currentAccountSelector(getState());
+              if (!account || account.destinyVersion !== 2) {
+                return;
+              }
+            }
+
+            dispatch(loadCoreSettings()); // no need to wait
+            $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
+            await dispatch(loadNewItems(account));
+            // The first time we load, allow the data to be loaded from IDB. We then do a second
+            // load to make sure that we immediately try to get remote data.
+            if (firstTime) {
+              infoLog(TAG, 'First time loading stores, only loading from IDB (if available)');
+              await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
+              firstTime = false;
+              if (getState().inventory.live) {
+                infoLog(TAG, 'Initial load got live data, skipping fast-follow load');
+                return;
+              } else {
+                infoLog(TAG, 'Fast-follow load live stores from Bungie.net');
+              }
+            }
+            // The account can be mutated by the first load (lastPlayedDate)
             account = currentAccountSelector(getState());
-            if (!account || account.destinyVersion !== 2) {
+            if (!account) {
+              errorLog(TAG, 'No account after loading stores');
               return;
             }
+            stores = await dispatch(loadStoresData(account, { firstTime: false, fromOtherTab }));
+          } finally {
+            loading = false;
           }
-
-          dispatch(loadCoreSettings()); // no need to wait
-          $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
-          await dispatch(loadNewItems(account));
-          // The first time we load, allow the data to be loaded from IDB. We then do a second
-          // load to make sure that we immediately try to get remote data.
-          if (firstTime) {
-            await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
-            firstTime = false;
-          }
-          stores = await dispatch(loadStoresData(account, { firstTime, fromOtherTab }));
         },
       );
       // Need to do this after the lock has been released
@@ -267,7 +291,7 @@ function loadProfile(
         } else {
           infoLog(
             TAG,
-            `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
+            `Profile from Bungie.net is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
             `Using the new profile from Bungie.net.`,
           );
         }
@@ -309,7 +333,14 @@ function loadStoresData(
   return async (dispatch, getState) => {
     const promise = (async () => {
       // If we switched account since starting this, give up
-      if (account !== currentAccountSelector(getState())) {
+      if (!compareAccounts(account, currentAccountSelector(getState()))) {
+        infoLog(
+          TAG,
+          'Switched accounts, giving up on loading stores',
+          1,
+          account,
+          currentAccountSelector(getState()),
+        );
         return;
       }
 
@@ -325,12 +356,23 @@ function loadStoresData(
           let defs = originalDefs;
 
           // If we switched account since starting this, give up
-          if (account !== currentAccountSelector(getState())) {
+          if (!compareAccounts(account, currentAccountSelector(getState()))) {
+            infoLog(
+              TAG,
+              'Switched accounts, giving up on loading stores',
+              2,
+              account,
+              currentAccountSelector(getState()),
+            );
             return;
           }
 
           for (let i = 0; i < 2; i++) {
             if (!defs || !profileInfo) {
+              infoLog(TAG, 'No defs or profile info, skipping store load', {
+                defs: Boolean(defs),
+                profileInfo: Boolean(profileInfo),
+              });
               return;
             }
 
@@ -350,10 +392,10 @@ function loadStoresData(
             // One reason stores could have errors is if the manifest was not up
             // to date. Check to see if it has updated, and if so, download it and
             // immediately try again.
-            if (stores.some((s) => s.hadErrors)) {
-              if (lastCheckedManifest - Date.now() < 5 * 60 * 1000) {
-                return;
-              }
+            if (
+              stores.some((s) => s.hadErrors) &&
+              lastCheckedManifest - Date.now() > 5 * 60 * 1000
+            ) {
               lastCheckedManifest = Date.now();
 
               if (await checkForNewManifest()) {
@@ -380,11 +422,18 @@ function loadStoresData(
 
             stopTimer();
 
-            startSpan({ name: 'updateInventoryState' }, () => {
+            return startSpan({ name: 'updateInventoryState' }, () => {
               const stopStateTimer = timer(TAG, 'Inventory state update');
 
               // If we switched account since starting this, give up before saving
-              if (account !== currentAccountSelector(getState())) {
+              if (!compareAccounts(account, currentAccountSelector(getState()))) {
+                infoLog(
+                  TAG,
+                  'Switched accounts, giving up on loading stores',
+                  3,
+                  account,
+                  currentAccountSelector(getState()),
+                );
                 return;
               }
 
@@ -411,20 +460,26 @@ function loadStoresData(
               if (live && Date.now() - profileMintedDate.getTime() < FRESH_ENOUGH_TO_CLEAN_INFOS) {
                 dispatch(cleanInfos(stores));
               }
-              dispatch(update({ stores, currencies }));
+              dispatch(
+                update({
+                  stores,
+                  currencies,
+                  responseMintedTimestamp: profileResponse.responseMintedTimestamp,
+                }),
+              );
               dispatch(inGameLoadoutLoaded(loadouts));
 
               stopStateTimer();
-            });
 
-            return stores;
+              return stores;
+            });
           }
         } catch (e) {
           errorLog(TAG, 'Error loading stores', e);
           reportException('d2stores', e);
 
           // If we switched account since starting this, give up
-          if (account !== currentAccountSelector(getState())) {
+          if (!compareAccounts(account, currentAccountSelector(getState()))) {
             return;
           }
 

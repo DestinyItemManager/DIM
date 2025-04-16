@@ -41,6 +41,8 @@
 
   // App
   --theme-app-bg: var(--theme-app-bg-gradient);
+  // Background color for (currently only) Settings page sections. Distinguishes them from theme-app-bg.
+  --theme-section-bg: var(--theme-search-bg);
   // The color of PWA elements like the title bar. This cannot be a gradient.
   --theme-pwa-background: #0d2f63;
   --theme-mobile-background: #0d2f63;
@@ -55,6 +57,7 @@
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
+  // Background color for the search bar. Distinguishes it from theme-header-nav-bg.
   --theme-search-bg: rgba(255, 255, 255, 0.15);
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
   --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);

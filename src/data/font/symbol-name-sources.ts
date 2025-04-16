@@ -597,8 +597,8 @@ export const symbolData: {
     codepoint: 57617,
     glyph: '',
     source: {
-      tableName: 'Objective',
-      hash: 45245118,
+      tableName: 'SandboxPerk',
+      hash: 528482921,
       fromRichText: true,
     },
   },
@@ -1835,7 +1835,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1213975022,
+      hash: 901468309,
       fromRichText: true,
     },
   },
@@ -1979,7 +1979,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1878887814,
+      hash: 1848286660,
       fromRichText: true,
     },
   },
@@ -1988,7 +1988,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 298337117,
+      hash: 419936834,
       fromRichText: true,
     },
   },
@@ -2035,8 +2035,8 @@ export const symbolData: {
     codepoint: 57667,
     glyph: '',
     source: {
-      tableName: 'Objective',
-      hash: 85239849,
+      tableName: 'SandboxPerk',
+      hash: 1637834409,
       fromRichText: true,
     },
   },
@@ -2044,8 +2044,8 @@ export const symbolData: {
     codepoint: 57668,
     glyph: '',
     source: {
-      tableName: 'Objective',
-      hash: 33657378,
+      tableName: 'SandboxPerk',
+      hash: 1554078996,
       fromRichText: true,
     },
   },
@@ -2053,8 +2053,8 @@ export const symbolData: {
     codepoint: 57664,
     glyph: '',
     source: {
-      tableName: 'Objective',
-      hash: 85535853,
+      tableName: 'SandboxPerk',
+      hash: 1821367741,
       fromRichText: true,
     },
   },
@@ -2062,8 +2062,8 @@ export const symbolData: {
     codepoint: 57657,
     glyph: '',
     source: {
-      tableName: 'Objective',
-      hash: 270151386,
+      tableName: 'SandboxPerk',
+      hash: 35992462,
       fromRichText: true,
     },
   },
@@ -2403,7 +2403,7 @@ export const symbolData: {
     glyph: '󰃂',
     source: {
       tableName: 'Objective',
-      hash: 502686402,
+      hash: 274399838,
       fromRichText: false,
     },
   },
@@ -2579,11 +2579,6 @@ export type TranslateManually =
 
 
  * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game): 
- * [Stasis: Glyph 0]
- * [Stasis: Glyph 3 Locked]
- * [Stasis: Glyph 1 Locked]
- * [Stasis: Glyph 2 Locked]
- * [Insert Medal Here]
  * [Aim Down Sights]
  * [Alternate Weapon Action]
  * [Light Attack]
@@ -2597,4 +2592,9 @@ export type TranslateManually =
  * [Boost]
  * [Air Move]
  * [Brake]
+ * [Stasis: Glyph 0]
+ * [Stasis: Glyph 3 Locked]
+ * [Stasis: Glyph 1 Locked]
+ * [Stasis: Glyph 2 Locked]
+ * [Insert Medal Here]
  */

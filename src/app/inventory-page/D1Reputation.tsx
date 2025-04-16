@@ -3,7 +3,7 @@ import { compareBy } from 'app/utils/comparators';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import DiamondProgress from '../dim-ui/DiamondProgress';
 import { PressTip, Tooltip } from '../dim-ui/PressTip';
-import './D1Reputation.scss';
+import styles from './D1Reputation.m.scss';
 
 export default function D1Reputation({ store }: { store: D1Store }) {
   if (!store.progressions.length) {
@@ -11,7 +11,7 @@ export default function D1Reputation({ store }: { store: D1Store }) {
   }
   const progressions = store.progressions.toSorted(compareBy((p) => p.order));
   return (
-    <div className="reputation-bucket">
+    <div className={styles.reputationBucket}>
       {progressions.map(
         (rep) =>
           rep.order >= 0 && (
@@ -24,7 +24,7 @@ export default function D1Reputation({ store }: { store: D1Store }) {
                 </>
               }
             >
-              <div className="factionrep">
+              <div className={styles.factionrep}>
                 <DiamondProgress
                   icon={bungieNetPath(rep.faction.factionIcon)}
                   level={rep.level}
