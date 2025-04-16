@@ -26,7 +26,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { breakerTypeNames, weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import { breakerTypeNames } from 'app/search/d2-known-values';
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -49,29 +49,20 @@ import {
   getMasterworkStatNames,
   isArtificeSocket,
   isD1Item,
-  isKillTrackerSocket,
 } from 'app/utils/item-utils';
 import {
-  getDisplayedItemSockets,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
-  getSocketsByIndexes,
+  getSocketsByType,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
   isEnhancedPerk,
-  socketContainsIntrinsicPlug,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
-import {
-  BreakerTypeHashes,
-  BucketHashes,
-  ItemCategoryHashes,
-  PlugCategoryHashes,
-  StatHashes,
-} from 'data/d2/generated-enums';
+import { BreakerTypeHashes, BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -612,12 +603,16 @@ export function getColumns(
             ? t('Organizer.Columns.OtherPerks')
             : t('Organizer.Columns.PerksMods')
           : t('Organizer.Columns.Perks'),
-      value: (item) => perkString(getSockets(item, 'all')),
+      value: (item) => perkString(getSocketsByType(item, 'all')),
       cell: (_val, item) =>
         isD1Item(item) ? (
           <D1PerksCell item={item} />
         ) : (
-          <PerksCell item={item} sockets={getSockets(item, 'all')} onPlugClicked={onPlugClicked} />
+          <PerksCell
+            item={item}
+            sockets={getSocketsByType(item, 'all')}
+            onPlugClicked={onPlugClicked}
+          />
         ),
       sort: perkStringSort,
       filter: perkStringFilter,
@@ -641,11 +636,11 @@ export function getColumns(
       c({
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
-        value: (item) => perkString(getSockets(item, 'traits')),
+        value: (item) => perkString(getSocketsByType(item, 'traits')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSockets(item, 'traits')}
+            sockets={getSocketsByType(item, 'traits')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -659,11 +654,11 @@ export function getColumns(
       c({
         id: 'originTrait',
         header: t('Organizer.Columns.OriginTraits'),
-        value: (item) => perkString(getSockets(item, 'origin')),
+        value: (item) => perkString(getSocketsByType(item, 'origin')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSockets(item, 'origin')}
+            sockets={getSocketsByType(item, 'origin')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -675,11 +670,11 @@ export function getColumns(
       c({
         id: 'shaders',
         header: t('Organizer.Columns.Shaders'),
-        value: (item) => perkString(getSockets(item, 'shaders')),
+        value: (item) => perkString(getSocketsByType(item, 'shaders')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSockets(item, 'shaders')}
+            sockets={getSocketsByType(item, 'shaders')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -1027,81 +1022,6 @@ function perkString(sockets: DimSocket[]): string | undefined {
     .flatMap((socket) => socket.plugOptions.map((p) => p.plugDef.displayProperties.name))
     .filter(Boolean)
     .join(',');
-}
-
-function getSockets(item: DimItem, type?: 'all' | 'traits' | 'shaders' | 'origin'): DimSocket[] {
-  if (!item.sockets) {
-    return [];
-  }
-
-  let sockets = [];
-  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
-    item,
-    /* excludeEmptySockets */ true,
-  )!;
-
-  if (perks) {
-    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
-  }
-  switch (type) {
-    case 'traits':
-      sockets = sockets.filter(
-        (s) =>
-          s.plugged &&
-          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
-      );
-      break;
-
-    case 'origin':
-      sockets = sockets.filter((s) =>
-        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
-      );
-      break;
-
-    case 'shaders': {
-      sockets.push(...[...modSocketsByCategory.values()].flat());
-      sockets = sockets.filter(
-        (s) =>
-          s.plugged &&
-          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
-            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
-      );
-      break;
-    }
-
-    default: {
-      // Improve this when we use iterator-helpers
-      sockets.push(...[...modSocketsByCategory.values()].flat());
-      sockets = sockets.filter(
-        (s) =>
-          !(
-            s.plugged &&
-            (s.plugged?.plugDef.itemCategoryHashes?.includes(
-              ItemCategoryHashes.WeaponModsOriginTraits,
-            ) ||
-              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
-              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
-              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
-              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
-              s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
-          ),
-      );
-      break;
-    }
-  }
-
-  sockets = sockets.filter(
-    (s) =>
-      // we have a separate column for the kill tracker
-      !isKillTrackerSocket(s) &&
-      // and for the regular weapon masterworks
-      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash &&
-      // Remove "extra intrinsics" for exotic class items
-      (!item.bucket.inArmor || !(s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))),
-  );
-  return sockets;
 }
 
 function getIntrinsicSockets(item: DimItem) {

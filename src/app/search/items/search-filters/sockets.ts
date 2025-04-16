@@ -19,6 +19,7 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
+  getSocketsByType,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
@@ -32,7 +33,6 @@ import {
 } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
-import D2Sources from './d2-sources';
 
 function hasExtraPerks(item: DimItem) {
   return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable)
@@ -102,25 +102,24 @@ const socketFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Shiny'),
     destinyVersion: 2,
     filter: () => (i) => {
-      if (braveShiny(i)) {
-        return true;
-      }
-      if (!hasExtraPerks(i)) {
-        return false;
-      }
-
-      for (const src of ['heresy', 'revenant']) {
-        const sourceInfo = D2Sources[src];
-        if (i.name === 'Psychopomp') {
-          console.log(sourceInfo, i.source);
+      if (i.bucket.inWeapons) {
+        // Brave weapons are the original type of shiny
+        if (braveShiny(i)) {
+          return true;
         }
+
+        // There are special Heresy weapons with an extra Origin Trait
+        const plugOptions = getSocketsByType(i, 'origin')[0]?.plugOptions;
         if (
-          (i.source && sourceInfo.sourceHashes?.includes(i.source)) ||
-          sourceInfo.itemHashes?.includes(i.hash)
+          plugOptions &&
+          plugOptions.length === 2 &&
+          plugOptions[0].plugDef.hash === 878237828 && // Willing Vessel
+          plugOptions[1].plugDef.hash === 120721526 // Runneth Over
         ) {
           return true;
         }
       }
+
       return false;
     },
   },
