@@ -10,13 +10,7 @@ import ItemSockets from 'app/item-popup/ItemSockets';
 import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
 import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
 import { recoilValue } from 'app/item-popup/RecoilStat';
-import {
-  getIntrinsicSockets,
-  getSockets,
-  perkString,
-  perkStringSort,
-  statLabels,
-} from 'app/organizer/Columns';
+import { getIntrinsicSockets, perkString, perkStringSort, statLabels } from 'app/organizer/Columns';
 import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
