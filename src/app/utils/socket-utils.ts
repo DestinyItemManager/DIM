@@ -325,7 +325,7 @@ export function getDisplayedItemSockets(
 
 export function getSocketsByType(
   item: DimItem,
-  type?: 'all' | 'traits' | 'shaders' | 'origin',
+  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks',
 ): DimSocket[] {
   if (!item.sockets) {
     return [];
@@ -364,6 +364,29 @@ export function getSocketsByType(
           (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
             s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
             s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
+      );
+      break;
+    }
+
+    case 'mods': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          !s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+    case 'perks': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
       );
       break;
     }
