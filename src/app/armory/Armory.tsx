@@ -27,16 +27,17 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
-import { AppIcon, compareIcon } from 'app/shell/icons';
+import { AppIcon, compareIcon, thumbsUpIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getItemYear, itemTypeName } from 'app/utils/item-utils';
+import { wishListsByHashSelector } from 'app/wishlists/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import AllWishlistRolls from './AllWishlistRolls';
 import styles from './Armory.m.scss';
@@ -65,7 +66,7 @@ export default function Armory({
   const [socketOverrides, onPlugClicked] = useSocketOverrides();
   const itemCreationContext = useSelector(createItemContextSelector);
   const [armoryItemHash, setArmoryItemHash] = useState<number | undefined>(undefined);
-
+  const wishlistsByHash = useSelector(wishListsByHashSelector);
   const itemDef = defs.InventoryItem.get(itemHash);
 
   const itemWithoutSockets = makeFakeItem(itemCreationContext, itemHash, { allowWishList: true });
@@ -225,22 +226,42 @@ export default function Armory({
         <>
           <h2>{t('Armory.AlternateItems')}</h2>
           <div className={styles.list}>
-            {alternates.map((alternate) => (
-              <button
-                type="button"
-                key={alternate.hash}
-                className={styles.alternate}
-                onClick={() => setArmoryItemHash(alternate.hash)}
-              >
-                <div className="item">
-                  <DefItemIcon itemDef={alternate} />
-                </div>
-                <div>
-                  <b>{alternate.displayProperties.name}</b>
-                  <SeasonInfo defs={defs} item={alternate} />
-                </div>
-              </button>
-            ))}
+            {alternates.map((alternate) => {
+              const diffs = compareItemPerks(item.hash, alternate.hash, defs);
+              return (
+                <button
+                  type="button"
+                  key={alternate.hash}
+                  className={styles.alternate}
+                  onClick={() => setArmoryItemHash(alternate.hash)}
+                >
+                  <div className="item">
+                    <DefItemIcon itemDef={alternate} />
+                  </div>
+                  <div>
+                    <b>{alternate.displayProperties.name}</b>
+                    <SeasonInfo defs={defs} item={alternate} />
+                    {wishlistsByHash.has(alternate.hash) && (
+                      <div>
+                        <AppIcon icon={thumbsUpIcon} />{' '}
+                        {`This version has loaded wishlist entries (${wishlistsByHash.has(item.hash) ? `current ^ Armory version also has some` : `current ^ Armory version has none`})`}
+                      </div>
+                    )}
+                    {diffs?.map(([i1, i2]) => (
+                      <React.Fragment key={`${i1.join()}${i2.join()}`}>
+                        <div>
+                          {i1.length > 0 &&
+                            `<- Cannot roll ${i1.map((h) => defs.InventoryItem.get(h).displayProperties.name).join()} (current ^ Armory version can)`}
+                          <br />
+                          {i2.length > 0 &&
+                            `<- Can roll ${i2.map((h) => defs.InventoryItem.get(h).displayProperties.name).join()} (current ^ Armory version cannot)`}
+                        </div>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </>
       )}
@@ -303,6 +324,46 @@ function getAlternateItems(
   );
 
   return alternates;
+}
+
+const typeHashes = new Set([1215804696, 1215804697, 3993098925]);
+
+function compareItemPerks(itemHash1: number, itemHash2: number, defs: D2ManifestDefinitions) {
+  const socketInfo1 = defs.InventoryItem.get(itemHash1).sockets;
+  const socketInfo2 = defs.InventoryItem.get(itemHash2).sockets;
+  if (!socketInfo1 || !socketInfo2) {
+    return;
+  }
+
+  const sockets1 = socketInfo1.socketEntries.filter((s) => typeHashes.has(s.socketTypeHash));
+  const sockets2 = socketInfo2.socketEntries.filter((s) => typeHashes.has(s.socketTypeHash));
+
+  if (sockets1.length !== sockets2.length) {
+    return;
+  }
+  const diff: [number[], number[]][] = [];
+  for (let i = 0; i < sockets1.length; i++) {
+    const rph1 = sockets1[i].randomizedPlugSetHash || sockets1[i].reusablePlugSetHash;
+    const rph2 = sockets2[i].randomizedPlugSetHash || sockets2[i].reusablePlugSetHash;
+    const ps1 = new Set(
+      (rph1 && defs.PlugSet.get(rph1).reusablePlugItems.map((pi) => pi.plugItemHash)) || [],
+    );
+    const ps2 = new Set(
+      (rph2 && defs.PlugSet.get(rph2).reusablePlugItems.map((pi) => pi.plugItemHash)) || [],
+    );
+    for (const set of [ps1, ps2]) {
+      for (const h of set) {
+        if (ps1.has(h) && ps2.has(h)) {
+          ps1.delete(h);
+          ps2.delete(h);
+        }
+      }
+    }
+    if (ps1.size || ps2.size) {
+      diff.push([[...ps1], [...ps2]]);
+    }
+  }
+  return diff;
 }
 
 function SeasonInfo({
