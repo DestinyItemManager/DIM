@@ -27,15 +27,14 @@ export default function ArchetypeSocket({
 
   return (
     <>
-      <div className={styles.mod}>
-        <Socket
-          key={archetypeSocket.socketIndex}
-          item={item}
-          noTooltip={noTooltip}
-          socket={archetypeSocket}
-          onClick={onClick}
-        />
-      </div>
+      <Socket
+        key={archetypeSocket.socketIndex}
+        className={styles.mod}
+        item={item}
+        noTooltip={noTooltip}
+        socket={archetypeSocket}
+        onClick={onClick}
+      />
       <div className={styles.info}>
         <div className={styles.name}>{archetypeSocket.plugged.plugDef.displayProperties.name}</div>
         {children}
@@ -47,18 +46,15 @@ export default function ArchetypeSocket({
 export function ArchetypeRow({
   className,
   children,
-  minimal,
   isWeapons,
 }: {
   className?: string;
   children: React.ReactNode;
-  minimal?: boolean;
   isWeapons?: boolean;
 }) {
   return (
     <div
       className={clsx(className, styles.row, {
-        [styles.minimal]: minimal,
         [styles.isWeapons]: isWeapons,
       })}
     >

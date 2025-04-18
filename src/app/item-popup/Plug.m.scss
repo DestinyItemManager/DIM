@@ -15,9 +15,7 @@
   }
 }
 
-// A global class because some things still tweak the size of the plug image.
-// TODO: customize with CSS vars instead
-:global(.plug) {
+.plug {
   --item-size-adjusted: calc(32 / 50 * var(--item-size));
   position: relative; // to position the thumbs-up correctly
   display: flex;
@@ -27,7 +25,11 @@
     --item-size-adjusted: 32px;
   }
 
-  img,
+  // Mods and intrinsic perks are all images, while perks are SVGs.
+  // You can adjust the size of mods/intrinsics by setting --mod-size.
+  img {
+    --item-size: var(--mod-size, var(--item-size-adjusted));
+  }
   .perkCircle {
     --item-size: var(--item-size-adjusted);
   }

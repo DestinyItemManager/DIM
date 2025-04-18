@@ -57,23 +57,24 @@ export default function ItemSocketsGeneral({
     )
     .filter(([, sockets]) => sockets.length > 0);
 
-  const intrinsicRows = filterMap(
-    [intrinsicSocket, ...extraIntrinsicSockets],
-    (s) =>
-      s && (
-        <IntrinsicArmorPerk
-          key={s.socketIndex}
-          item={item}
-          socket={s}
-          minimal={minimal}
-          onPlugClicked={onPlugClicked}
-        />
-      ),
-  );
+  const intrinsicRows =
+    !minimal &&
+    filterMap(
+      [intrinsicSocket, ...extraIntrinsicSockets],
+      (s) =>
+        s && (
+          <IntrinsicArmorPerk
+            key={s.socketIndex}
+            item={item}
+            socket={s}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+    );
 
   return (
     <>
-      {!minimal && intrinsicRows}
+      {intrinsicRows}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets
@@ -111,40 +112,36 @@ export default function ItemSocketsGeneral({
 function IntrinsicArmorPerk({
   item,
   socket,
-  minimal,
   onPlugClicked,
 }: {
   item: DimItem;
   socket: DimSocket;
-  minimal?: boolean;
   onPlugClicked: PlugClickHandler;
 }) {
   const plugDescriptions = usePlugDescriptions(socket.plugged?.plugDef);
   return (
-    <ArchetypeRow minimal={minimal}>
+    <ArchetypeRow>
       <ArchetypeSocket
         archetypeSocket={socket}
-        /* entire description is shown when not minimal, so no tooltip needed then */
-        noTooltip={!minimal}
+        /* entire description is shown here, so no tooltip needed */
+        noTooltip
         item={item}
         onClick={onPlugClicked}
       >
-        {!minimal && (
-          <div className={styles.armorIntrinsicDescription}>
-            {plugDescriptions.perks.map(
-              (perkDesc) =>
-                perkDesc.description && (
-                  <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
-                ),
-            )}
-            {plugDescriptions.communityInsight && (
-              <ClarityDescriptions
-                perk={plugDescriptions.communityInsight}
-                className={styles.clarityDescription}
-              />
-            )}
-          </div>
-        )}
+        <div className={styles.armorIntrinsicDescription}>
+          {plugDescriptions.perks.map(
+            (perkDesc) =>
+              perkDesc.description && (
+                <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
+              ),
+          )}
+          {plugDescriptions.communityInsight && (
+            <ClarityDescriptions
+              perk={plugDescriptions.communityInsight}
+              className={styles.clarityDescription}
+            />
+          )}
+        </div>
       </ArchetypeSocket>
     </ArchetypeRow>
   );

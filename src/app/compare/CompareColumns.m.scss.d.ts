@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'archetype': string;
+  'archetypeRow': string;
   'energy': string;
   'imageRoom': string;
   'initialItem': string;
@@ -9,7 +10,6 @@ interface CssExports {
   'noWrap': string;
   'perks': string;
   'talentGrid': string;
-  'weaponPerks': string;
   'weaponPerksHeader': string;
 }
 export const cssExports: CssExports;

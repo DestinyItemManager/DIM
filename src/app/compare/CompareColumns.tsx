@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
 import { getStatSortOrder } from 'app/inventory/store/stats';
-import ArchetypeSocket, { ArchetypeRow } from 'app/item-popup/ArchetypeSocket';
+import ArchetypeSocket from 'app/item-popup/ArchetypeSocket';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
 import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
@@ -320,9 +320,9 @@ export function getColumns(
           const s = getWeaponArchetypeSocket(item);
           return (
             s && (
-              <ArchetypeRow minimal key={s.socketIndex}>
+              <div className={styles.archetypeRow}>
                 <ArchetypeSocket archetypeSocket={s} item={item} />
-              </ArchetypeRow>
+              </div>
             )
           );
         },
@@ -331,7 +331,7 @@ export function getColumns(
     (isWeapon || ((isArmor || isGeneral) && destinyVersion === 1)) &&
       c({
         id: 'perks',
-        className: clsx(styles.perks, { [styles.weaponPerks]: isWeapon }),
+        className: styles.perks,
         headerClassName: clsx(styles.perks, { [styles.weaponPerksHeader]: isWeapon }),
         header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getSocketsByType(item, 'perks')),
@@ -388,9 +388,9 @@ export function getColumns(
           return (
             <>
               {sockets.map((s) => (
-                <ArchetypeRow minimal key={s.socketIndex}>
+                <div className={styles.archetypeRow} key={s.socketIndex}>
                   <ArchetypeSocket archetypeSocket={s} item={item} />
-                </ArchetypeRow>
+                </div>
               ))}
             </>
           );

@@ -22,11 +22,11 @@ import SocketDetails from './SocketDetails';
 export default function ItemSocketsWeapons({
   item,
   minimal,
-  grid,
+  grid: forceGrid,
   onPlugClicked,
 }: {
   item: DimItem;
-  /** minimal style used for compare */
+  /** minimal style used for compare. suppresses the archetype/mods row */
   minimal?: boolean;
   /** Force grid style */
   grid?: boolean;
@@ -35,7 +35,7 @@ export default function ItemSocketsWeapons({
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
   const [listPerksSetting, setListPerks] = useSetting('perkList');
-  const listPerks = grid === undefined ? listPerksSetting : !grid;
+  const listPerks = forceGrid === undefined ? listPerksSetting : !forceGrid;
 
   if (!item.sockets || !defs) {
     return null;
@@ -71,9 +71,9 @@ export default function ItemSocketsWeapons({
   );
 
   return (
-    <div className={clsx(styles.weaponSockets, { [styles.minimal]: minimal })}>
+    <>
       {!minimal && (intrinsicSocket?.plugged || mods.length > 0) && (
-        <ArchetypeRow minimal={minimal} isWeapons={true}>
+        <ArchetypeRow isWeapons className={styles.archetype}>
           {intrinsicSocket?.plugged && (
             <ArchetypeSocket archetypeSocket={intrinsicSocket} item={item}>
               {keyStats && keyStats.length > 0 && (
@@ -96,7 +96,7 @@ export default function ItemSocketsWeapons({
       {perks &&
         (listPerks ? (
           <div className={styles.perks}>
-            {!grid && (
+            {!forceGrid && (
               <button
                 className={styles.displayStyleButton}
                 type="button"
@@ -109,8 +109,8 @@ export default function ItemSocketsWeapons({
             <ItemPerksList item={item} perks={perks} onClick={onPlugClicked} />
           </div>
         ) : (
-          <div className={styles.perks}>
-            {!grid && (
+          <div className={clsx(styles.perks, styles.grid, { [styles.gridLines]: !minimal })}>
+            {!forceGrid && (
               <button
                 className={styles.displayStyleButton}
                 type="button"
@@ -120,23 +120,21 @@ export default function ItemSocketsWeapons({
                 <AppIcon icon={faList} />
               </button>
             )}
-            <ItemSocketsList className={styles.grid}>
-              {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
-                (socketInfo) =>
-                  !isKillTrackerSocket(socketInfo) && (
-                    <Socket
-                      key={socketInfo.socketIndex}
-                      item={item}
-                      socket={socketInfo}
-                      wishlistRoll={wishlistRoll}
-                      onClick={onPlugClicked}
-                    />
-                  ),
-              )}
-            </ItemSocketsList>
+            {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
+              (socketInfo) =>
+                !isKillTrackerSocket(socketInfo) && (
+                  <Socket
+                    key={socketInfo.socketIndex}
+                    item={item}
+                    socket={socketInfo}
+                    wishlistRoll={wishlistRoll}
+                    onClick={onPlugClicked}
+                  />
+                ),
+            )}
           </div>
         ))}
-    </div>
+    </>
   );
 }
 
@@ -185,7 +183,7 @@ export function ItemModSockets({
   );
 
   return (
-    <div className={clsx(styles.weaponSockets, styles.minimal)}>
+    <>
       {mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}{' '}
       {socketInMenu && (
         <SocketDetails
@@ -197,6 +195,6 @@ export function ItemModSockets({
           onPlugSelected={onPlugClicked}
         />
       )}
-    </div>
+    </>
   );
 }
