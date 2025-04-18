@@ -10,13 +10,7 @@ import ItemSockets from 'app/item-popup/ItemSockets';
 import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
 import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
 import { recoilValue } from 'app/item-popup/RecoilStat';
-import {
-  getIntrinsicSockets,
-  getSockets,
-  perkString,
-  perkStringSort,
-  statLabels,
-} from 'app/organizer/Columns';
+import { getIntrinsicSockets, perkString, perkStringSort, statLabels } from 'app/organizer/Columns';
 import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -25,7 +19,11 @@ import { getCompareColor } from 'app/shell/formatters';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { isD1Item } from 'app/utils/item-utils';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
+import {
+  getSocketsByType,
+  getWeaponArchetype,
+  getWeaponArchetypeSocket,
+} from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -336,7 +334,7 @@ export function getColumns(
         className: clsx(styles.perks, { [styles.weaponPerks]: isWeapon }),
         headerClassName: clsx(styles.perks, { [styles.weaponPerksHeader]: isWeapon }),
         header: t('Organizer.Columns.Perks'),
-        value: (item) => perkString(getSockets(item, 'perks')),
+        value: (item) => perkString(getSocketsByType(item, 'perks')),
         cell: (_val, item) => (
           <>
             {isD1Item(item) && item.talentGrid && (
@@ -361,7 +359,7 @@ export function getColumns(
         headerClassName: styles.perks,
         header: t('Organizer.Columns.Mods'),
         // TODO: for ghosts this should return ghost mods, not cosmetics
-        value: (item) => perkString(getSockets(item, 'mods')),
+        value: (item) => perkString(getSocketsByType(item, 'mods')),
         cell: (_val, item) => (
           <>
             {isD1Item(item) && item.talentGrid && (

@@ -11,6 +11,7 @@ import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
 import {
   GhostActivitySocketTypeHashes,
   armor2PlugCategoryHashes,
+  weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
 import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
@@ -320,6 +321,107 @@ export function getDisplayedItemSockets(
   } else {
     return getGeneralSockets(item, excludeEmptySockets);
   }
+}
+
+export function getSocketsByType(
+  item: DimItem,
+  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks',
+): DimSocket[] {
+  if (!item.sockets) {
+    return [];
+  }
+
+  let sockets = [];
+  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true,
+  )!;
+
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
+  switch (type) {
+    case 'traits':
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
+      );
+      break;
+
+    case 'origin':
+      sockets = sockets.filter((s) =>
+        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
+      );
+      break;
+
+    case 'shaders': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
+      );
+      break;
+    }
+
+    case 'mods': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          !s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+    case 'perks': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+
+    default: {
+      // Improve this when we use iterator-helpers
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          !(
+            s.plugged &&
+            (s.plugged?.plugDef.itemCategoryHashes?.includes(
+              ItemCategoryHashes.WeaponModsOriginTraits,
+            ) ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+              s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
+          ),
+      );
+      break;
+    }
+  }
+
+  sockets = sockets.filter(
+    (s) =>
+      // we have a separate column for the kill tracker
+      !isKillTrackerSocket(s) &&
+      // and for the regular weapon masterworks
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash &&
+      // Remove "extra intrinsics" for exotic class items
+      (!item.bucket.inArmor || !(s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))),
+  );
+  return sockets;
 }
 
 export function getWeaponSockets(
