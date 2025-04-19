@@ -87,8 +87,8 @@ dependencies:
     specifier: ^5.2.2
     version: 5.2.2
   i18next:
-    specifier: ^23.16.8
-    version: 23.16.8
+    specifier: ^25.0.0
+    version: 25.0.0(typescript@5.8.3)
   i18next-http-backend:
     specifier: ^3.0.2
     version: 3.0.2
@@ -366,7 +366,7 @@ devDependencies:
     version: 9.1.7
   i18next-scanner:
     specifier: ^4.6.0
-    version: 4.6.0
+    version: 4.6.0(typescript@5.8.3)
   identity-obj-proxy:
     specifier: ^3.0.0
     version: 3.0.0
@@ -9114,7 +9114,7 @@ packages:
       - encoding
     dev: false
 
-  /i18next-scanner@4.6.0:
+  /i18next-scanner@4.6.0(typescript@5.8.3):
     resolution: {integrity: sha512-I/xKcwKfii3L3is3bUvfaIU0QA/wYhpZnjppfrzyb61QQddxkcpspASEtmfnxSYvE6yIaAxDlIxg0EHV7mxssg==}
     engines: {node: '>=12'}
     hasBin: true
@@ -9131,19 +9131,27 @@ packages:
       eol: 0.9.1
       esprima-next: 5.8.4
       gulp-sort: 2.0.0
-      i18next: 23.16.8
+      i18next: 25.0.0(typescript@5.8.3)
       lodash: 4.17.21
       parse5: 6.0.1
       sortobject: 4.17.0
       through2: 4.0.2
       vinyl: 3.0.0
       vinyl-fs: 4.0.0
+    transitivePeerDependencies:
+      - typescript
     dev: true
 
-  /i18next@23.16.8:
-    resolution: {integrity: sha512-06r/TitrM88Mg5FdUXAKL96dJMzgqLE5dv3ryBAra4KCwD9mJ4ndOTS95ZuymIGoE+2hzfdaMak2X11/es7ZWg==}
+  /i18next@25.0.0(typescript@5.8.3):
+    resolution: {integrity: sha512-POPvwjOPR1GQvRnbikTMPEhQD+ekd186MHE6NtVxl3Lby+gPp0iq60eCqGrY6wfRnp1lejjFNu0EKs1afA322w==}
+    peerDependencies:
+      typescript: ^5
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dependencies:
       '@babel/runtime': 7.27.0
+      typescript: 5.8.3
 
   /iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -13986,7 +13994,6 @@ packages:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /ua-parser-js@1.0.39:
     resolution: {integrity: sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw==}
