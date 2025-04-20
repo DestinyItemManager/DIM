@@ -1,5 +1,11 @@
 ## Next
 
+* `is:shiny` now detects Heresy weapons with the bonus Runneth Over Origin Trait.
+* Fixed Triage tab generating a very generic search filter for In-Game Loadouts.
+* Gave In-Game Loadouts an Edit button in Triage tab.
+* Fixed Enhanced Perks on an Enhanced item showing no selected Perks in the Armory.
+* Style cleanup for Perks, Weapon Components, Weapon intrinsics/archetypes. If something seems 2 pixels different, you aren't crazy.
+
 ## 8.67.0 <span class="changelog-date">(2025-04-13)</span>
 
 * May have finally fixed the issue where DIM sometimes fails to load live data.
