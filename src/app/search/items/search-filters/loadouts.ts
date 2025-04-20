@@ -43,6 +43,7 @@ const loadoutFilters: ItemFilterDefinition[] = [
       return (item) =>
         loadoutsByItem[item.id]?.some(
           ({ loadout }) =>
+            loadout.id === filterValue ||
             loadout.name.toLowerCase().includes(filterValue) ||
             (filterValue.startsWith('#') && // short circuit for less load
               !isInGameLoadout(loadout) &&
