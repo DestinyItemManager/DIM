@@ -33,7 +33,7 @@ import { usePageTitle } from 'app/utils/hooks';
 import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import { updateLoadoutStore } from './actions';
@@ -128,7 +128,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [editingInGameLoadout, setEditingInGameLoadout] = useState<InGameLoadout>();
   const handleEditSheetClose = useCallback(() => setEditingInGameLoadout(undefined), []);
 
-  const [viewingInGameLoadout, setViewingInGameLoadout] = useState<InGameLoadout>();
+  const location = useLocation();
+  const locationState = location.state as
+    | {
+        inGameLoadout: InGameLoadout;
+      }
+    | undefined;
+
+  const [viewingInGameLoadout, setViewingInGameLoadout] = useState(locationState?.inGameLoadout);
   const handleViewingSheetClose = useCallback(() => setViewingInGameLoadout(undefined), []);
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
