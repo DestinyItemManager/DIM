@@ -47,9 +47,9 @@ export function applySocketOverrides(
       let newPlug, actuallyPlugged;
 
       if (s.isPerk) {
-        newPlug = plugOptions.find(
-          (p) => p.plugDef.hash === override || perkToEnhanced[p.plugDef.hash] === override,
-        );
+        newPlug =
+          plugOptions.find((p) => p.plugDef.hash === override) ??
+          plugOptions.find((p) => perkToEnhanced[p.plugDef.hash] === override);
         actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
       } else {
         // This is likely a mod selection!
