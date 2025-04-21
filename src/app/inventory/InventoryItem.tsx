@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -116,7 +117,11 @@ export default function InventoryItem({
             {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}
-        {isNew && <NewItemIndicator />}
+        (
+        {(item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster && (
+          <AlertIcon className={styles.warningIcon} />
+        )) ||
+          (isNew && <NewItemIndicator />)}
       </>
     );
   }, [isNew, item, hasNotes, subclassIconInfo, tag, wishlistRoll, autoLockTagged]);
