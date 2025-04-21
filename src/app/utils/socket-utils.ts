@@ -461,11 +461,11 @@ export function getWeaponSockets(
     PlugCategoryHashes.V300WeaponDamageTypeKinetic,
   ];
 
-  const moddedSockets: DimSockets = {
-    ...item.sockets,
-    allSockets: !includeFakeMasterwork
-      ? item.sockets.allSockets
-      : item.sockets.allSockets.map((socket) => {
+  const moddedSockets: DimSockets = !includeFakeMasterwork
+    ? item.sockets
+    : {
+        ...item.sockets,
+        allSockets: item.sockets.allSockets.map((socket) => {
           if (socket.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash) {
             return socket;
           }
@@ -500,7 +500,7 @@ export function getWeaponSockets(
             isPerk: true,
           };
         }),
-  };
+      };
 
   const modSocketsByCategory = filterSocketCategories(
     moddedSockets.categories.toReversed(),
