@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClickOutside from 'app/dim-ui/ClickOutside';
 import { PressTipRoot } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
@@ -76,9 +77,6 @@ export default function ItemPopup({
   );
 
   const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
-  if (item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster) {
-    failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
-  }
 
   const header = (
     <div className={styles.header}>
@@ -90,6 +88,12 @@ export default function ItemPopup({
               <RichDestinyText text={failureString} ownerId={item.owner} />
             </div>
           ),
+      )}
+      {item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster && (
+        <div className={styles.failureReason}>
+          <AlertIcon />
+          <RichDestinyText text={t('MovePopup.CantPullFromPostmaster')} ownerId={item.owner} />
+        </div>
       )}
       {isPhonePortrait && itemActionsModel.hasAccessoryControls && (
         <div className={styles.mobileItemActions}>
