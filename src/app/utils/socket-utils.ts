@@ -472,11 +472,11 @@ export function getWeaponSockets(
         return socket;
       }
       const mwHash = item.masterworkInfo?.stats?.find((s) => s.isPrimary)?.hash || 0;
-      const newCategory = D2PlugCategoryByStatHash.get(mwHash);
+      const plugCategory = D2PlugCategoryByStatHash.get(mwHash);
       let fullMasterworkPlug =
-        newCategory &&
+        plugCategory &&
         maxBy(
-          plugSet.plugs.filter((p) => p.plugDef.plug.plugCategoryHash === newCategory),
+          plugSet.plugs.filter((p) => p.plugDef.plug.plugCategoryHash === plugCategory),
           (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
         );
       if (!fullMasterworkPlug) {
