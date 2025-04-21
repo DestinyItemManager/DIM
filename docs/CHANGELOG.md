@@ -1,5 +1,7 @@
 ## Next
 
+## 8.68.0 <span class="changelog-date">(2025-04-20)</span>
+
 * `is:shiny` now detects Heresy weapons with the bonus Runneth Over Origin Trait.
 * Fixed Triage tab generating a very generic search filter for In-Game Loadouts.
 * Gave In-Game Loadouts an Edit button in Triage tab.
