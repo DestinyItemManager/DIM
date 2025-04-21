@@ -467,16 +467,13 @@ export function getWeaponSockets(
       if (socket.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash) {
         return socket;
       }
-      const plugSet = socket.plugSet;
-      if (!plugSet) {
-        return socket;
-      }
       const mwHash = item.masterworkInfo?.stats?.find((s) => s.isPrimary)?.hash || 0;
       const plugCategory = D2PlugCategoryByStatHash.get(mwHash);
       let fullMasterworkPlug =
+        socket.plugSet &&
         plugCategory &&
         maxBy(
-          plugSet.plugs.filter((p) => p.plugDef.plug.plugCategoryHash === plugCategory),
+          socket.plugSet.plugs.filter((p) => p.plugDef.plug.plugCategoryHash === plugCategory),
           (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
         );
       if (!fullMasterworkPlug) {
