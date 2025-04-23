@@ -1,0 +1,4 @@
+.socket {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: calc((2 / 50 * var(--item-size)) * 2);
+}

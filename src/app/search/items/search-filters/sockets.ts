@@ -8,9 +8,9 @@ import {
 } from 'app/search/d2-known-values';
 import { plainString } from 'app/search/text-utils';
 import {
+  braveShiny,
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
-  isShiny,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
@@ -18,6 +18,7 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
+  getSocketsByType,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
@@ -90,7 +91,27 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'shiny',
     description: tl('Filter.Shiny'),
     destinyVersion: 2,
-    filter: () => isShiny,
+    filter: () => (i) => {
+      if (i.bucket.inWeapons) {
+        // Brave weapons are the original type of shiny
+        if (braveShiny(i)) {
+          return true;
+        }
+
+        // There are special Heresy weapons with an extra Origin Trait
+        const plugOptions = getSocketsByType(i, 'origin')[0]?.plugOptions;
+        if (
+          plugOptions &&
+          plugOptions.length === 2 &&
+          plugOptions[0].plugDef.hash === 878237828 && // Willing Vessel
+          plugOptions[1].plugDef.hash === 120721526 // Runneth Over
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    },
   },
   {
     keywords: 'extraperk',

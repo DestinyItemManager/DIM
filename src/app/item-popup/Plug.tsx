@@ -58,7 +58,7 @@ export default function Plug({
   return (
     <div
       key={plug.plugDef.hash}
-      className={clsx('plug', {
+      className={clsx(styles.plug, {
         [styles.disabled]: !plug.enabled,
         [styles.selectable]: selectable,
         [styles.hasMenu]: hasMenu,

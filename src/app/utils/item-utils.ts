@@ -333,8 +333,8 @@ export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: D
   return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
 }
 
-/** "shiny" special-edtion items from Into The Light, with a unique ornament and extra perks */
-export function isShiny(item: DimItem) {
+/** "shiny" items, special-edition items from Into The Light, with a unique ornament and extra perks */
+export function braveShiny(item: DimItem) {
   return item.sockets?.allSockets.some(
     (s) =>
       s.plugOptions.some((s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared'), //

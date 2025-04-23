@@ -1,3 +1,4 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -28,6 +29,7 @@ import helmet from 'destiny-icons/armor_types/helmet.svg';
 import { maxBy } from 'es-toolkit';
 import React, { JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router';
 import { DimItem } from '../inventory/item-types';
 import popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import styles from './ItemTriage.m.scss';
@@ -126,7 +128,8 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
 function LoadoutsTriageSection({ item }: { item: DimItem }) {
   const loadoutsByItem = useSelector(loadoutsByItemSelector);
   const inLoadouts = loadoutsByItem[item.id] || [];
-
+  // We need to build an absolute path rather than a relative one because the loadout editor is mounted higher than the destiny routes.
+  const account = useSelector(currentAccountSelector);
   return (
     <CollapsibleTitle
       title={t('Triage.InLoadouts')}
@@ -145,12 +148,6 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
         {inLoadouts.map((l) => {
           const loadout = l.loadout;
           const isDimLoadout = !isInGameLoadout(loadout);
-          const edit =
-            isDimLoadout &&
-            (() => {
-              editLoadout(loadout, item.owner);
-              hideItemPopup();
-            });
           return (
             <li className={styles.loadoutRow} key={loadout.id}>
               {isDimLoadout ? (
@@ -160,16 +157,35 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
               )}
               <ColorDestinySymbols text={loadout.name} className={styles.loadoutName} />
               <span className={styles.controls}>
-                {edit && (
+                {isInGameLoadout(loadout) ? (
+                  account && (
+                    <Link
+                      className={filterButtonStyles.setFilterButton}
+                      to={`/${account.membershipId}/d${account.destinyVersion}/loadouts`}
+                      state={{ inGameLoadout: loadout }}
+                    >
+                      <AppIcon icon={editIcon} />
+                    </Link>
+                  )
+                ) : (
                   <a
-                    onClick={edit}
+                    onClick={() => {
+                      editLoadout(loadout, item.owner);
+                      hideItemPopup();
+                    }}
                     title={t('Loadouts.Edit')}
                     className={filterButtonStyles.setFilterButton}
                   >
                     <AppIcon icon={editIcon} />
                   </a>
                 )}
-                <SetFilterButton filter={loadoutToSearchString(loadout)} />
+                <SetFilterButton
+                  filter={
+                    isInGameLoadout(loadout)
+                      ? `inloadout:${loadout.id}`
+                      : loadoutToSearchString(loadout)
+                  }
+                />
               </span>
             </li>
           );

@@ -72,7 +72,7 @@ describe('japanese localization', () => {
   test.each([
     [1000, '0:00'],
     [0, '0:00'],
-    [86400000, '1日 0:00'],
+    [86400000, '1日間 0:00'],
     [279241234, '3日間 5:34'],
     [20041234, '5:34'],
   ])('i15dDurationFromMs(%s) === "%s"', (timestamp, expected) => {
@@ -82,7 +82,7 @@ describe('japanese localization', () => {
   test.each([
     [1000, '0:00'],
     [0, '0:00'],
-    [86400000, '1日 0:00'],
+    [86400000, '1日間 0:00'],
     [279241234, '3日間 5:34'],
     [20041234, '5:34'],
   ])('i15dDurationFromMs(%s) === "%s"', (timestamp, expected) => {

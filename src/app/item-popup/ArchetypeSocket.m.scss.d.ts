@@ -3,7 +3,6 @@
 interface CssExports {
   'info': string;
   'isWeapons': string;
-  'minimal': string;
   'mod': string;
   'name': string;
   'row': string;

@@ -1,25 +1,11 @@
 @use '../variables.scss' as *;
 
-.weaponSockets {
-  display: flex;
-  flex-flow: column nowrap;
-  margin-top: 10px;
+.archetype {
+  margin-bottom: 4px;
 }
 
 .perks {
-  position: relative;
-
-  // Draw lines between the sockets (columns), like in game.
-  // TODO: maybe get rid of this
-  :global(.item-socket) {
-    border-right: 0.5px solid #444;
-    padding-right: 3px;
-
-    &:last-child {
-      border: none;
-      padding-right: 0;
-    }
-  }
+  position: relative; // to help contain the displayStyleButton
 }
 
 .stats {
@@ -49,32 +35,29 @@
   }
 }
 
+// For when perks are displayed in a grid
 .grid {
   composes: flexRow from '../dim-ui/common.m.scss';
-  gap: 3px;
-  margin: 8px 10px;
-
-  .minimal & {
-    margin: 0;
-    gap: 0;
-
-    // Remove line between sockets in minimal mode
-    :global(.item-socket) {
-      border: none;
-      padding: 0;
+  // in the item popup, when the archetype row is shown, inset the perks
+  &:nth-child(n + 2) {
+    padding: 8px 10px;
+  }
+  > div {
+    padding-right: 2px;
+    padding-left: 2px;
+    &:first-child {
+      padding-left: 0;
     }
   }
-
-  :global(.item-socket) {
-    gap: 0;
-  }
-
-  :global(.plug) {
-    padding: calc(2 / 50 * var(--item-size));
-
-    @include phone-portrait {
-      --item-size: 32px;
-      padding: 2px;
+  &.gridLines > div {
+    border-right: 0.5px solid #444;
+    padding-right: 5px;
+    padding-left: 5px;
+    &:last-child {
+      border-right: none;
+    }
+    &:first-child {
+      padding-left: 0;
     }
   }
 }
