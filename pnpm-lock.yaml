@@ -452,8 +452,8 @@ devDependencies:
     specifier: ^14.0.0
     version: 14.0.0(postcss@8.5.3)(stylelint@16.18.0)
   stylelint-order:
-    specifier: ^6.0.4
-    version: 6.0.4(stylelint@16.18.0)
+    specifier: ^7.0.0
+    version: 7.0.0(stylelint@16.18.0)
   svgo:
     specifier: ^3.3.2
     version: 3.3.2
@@ -11883,8 +11883,8 @@ packages:
       sort-css-media-queries: 2.2.0
     dev: true
 
-  /postcss-sorting@8.0.2(postcss@8.5.3):
-    resolution: {integrity: sha512-M9dkSrmU00t/jK7rF6BZSZauA5MAaBW4i5EnJXspMwt4iqTh/L9j6fgMnbElEOfyRyfLfVbIHj/R52zHzAPe1Q==}
+  /postcss-sorting@9.1.0(postcss@8.5.3):
+    resolution: {integrity: sha512-Mn8KJ45HNNG6JBpBizXcyf6LqY/qyqetGcou/nprDnFwBFBLGj0j/sNKV2lj2KMOVOwdXu14aEzqJv8CIV6e8g==}
     peerDependencies:
       postcss: ^8.4.20
     dependencies:
@@ -13398,13 +13398,14 @@ packages:
       stylelint-config-recommended: 14.0.1(stylelint@16.18.0)
     dev: true
 
-  /stylelint-order@6.0.4(stylelint@16.18.0):
-    resolution: {integrity: sha512-0UuKo4+s1hgQ/uAxlYU4h0o0HS4NiQDud0NAUNI0aa8FJdmYHA5ZZTFHiV5FpmE3071e9pZx5j0QpVJW5zOCUA==}
+  /stylelint-order@7.0.0(stylelint@16.18.0):
+    resolution: {integrity: sha512-rSWxx0KscYfxU02wEskKXES9lkRzuuONMMNkZ7SUc6uiF3tDKm7e+sE0Ax/SBlG4TUf1sp1R6f3/SlsPGmzthg==}
+    engines: {node: '>=20.19.0'}
     peerDependencies:
-      stylelint: ^14.0.0 || ^15.0.0 || ^16.0.1 || ^16.0.2
+      stylelint: ^16.18.0 || ^16.0.2
     dependencies:
       postcss: 8.5.3
-      postcss-sorting: 8.0.2(postcss@8.5.3)
+      postcss-sorting: 9.1.0(postcss@8.5.3)
       stylelint: 16.18.0(typescript@5.8.3)
     dev: true
 
