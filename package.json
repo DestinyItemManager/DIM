@@ -216,7 +216,7 @@
     "downshift": "^9.0.9",
     "es-toolkit": "^1.35.0",
     "fast-equals": "^5.2.2",
-    "i18next": "^23.16.8",
+    "i18next": "^25.0.0",
     "i18next-http-backend": "^3.0.2",
     "immer": "^10.1.1",
     "memoize-one": "^6.0.0",

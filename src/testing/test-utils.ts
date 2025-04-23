@@ -1,6 +1,5 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
-import { DIM_LANG_INFOS } from 'app/i18n';
 import { buildStores } from 'app/inventory/store/d2-store-factory';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
@@ -16,8 +15,19 @@ import { F_OK } from 'constants';
 import { maxBy, once } from 'es-toolkit';
 import i18next from 'i18next';
 import fetchMock from 'jest-fetch-mock';
+import de from 'locale/de.json';
 import en from 'locale/en.json';
+import es from 'locale/es.json';
+import esMX from 'locale/esMX.json';
+import fr from 'locale/fr.json';
+import it from 'locale/it.json';
 import ja from 'locale/ja.json';
+import ko from 'locale/ko.json';
+import pl from 'locale/pl.json';
+import ptBR from 'locale/ptBR.json';
+import ru from 'locale/ru.json';
+import zhCHS from 'locale/zhCHS.json';
+import zhCHT from 'locale/zhCHT.json';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
@@ -149,8 +159,6 @@ export function setupi18n() {
   i18next.init({
     lng: 'en',
     debug: true,
-    initImmediate: true,
-    compatibilityJSON: 'v3',
     lowerCaseLng: true,
     interpolation: {
       escapeValue: false,
@@ -174,17 +182,39 @@ export function setupi18n() {
       ja: {
         translation: ja,
       },
+      de: {
+        translation: de,
+      },
+      es: {
+        translation: es,
+      },
+      'es-mx': {
+        translation: esMX,
+      },
+      fr: {
+        translation: fr,
+      },
+      it: {
+        translation: it,
+      },
+      ko: {
+        translation: ko,
+      },
+      pl: {
+        translation: pl,
+      },
+      'pt-br': {
+        translation: ptBR,
+      },
+      ru: {
+        translation: ru,
+      },
+      'zh-chs': {
+        translation: zhCHS,
+      },
+      'zh-cht': {
+        translation: zhCHT,
+      },
     },
   });
-
-  for (const [otherLang, { pluralOverride }] of Object.entries(DIM_LANG_INFOS)) {
-    if (pluralOverride) {
-      // eslint-disable-next-line
-      i18next.services.pluralResolver.addRule(
-        otherLang,
-        // eslint-disable-next-line
-        i18next.services.pluralResolver.getRule('en'),
-      );
-    }
-  }
 }

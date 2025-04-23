@@ -22,19 +22,19 @@ import { invert } from './utils/collections';
 import { infoLog } from './utils/log';
 
 export const DIM_LANG_INFOS = {
-  de: { pluralOverride: false, latinBased: true },
-  en: { pluralOverride: false, latinBased: true },
-  es: { pluralOverride: false, latinBased: true },
-  'es-mx': { pluralOverride: false, latinBased: true },
-  fr: { pluralOverride: false, latinBased: true },
-  it: { pluralOverride: false, latinBased: true },
-  ja: { pluralOverride: true, latinBased: false },
-  ko: { pluralOverride: true, latinBased: false },
-  pl: { pluralOverride: true, latinBased: true },
-  'pt-br': { pluralOverride: false, latinBased: true },
-  ru: { pluralOverride: true, latinBased: false },
-  'zh-chs': { pluralOverride: true, latinBased: false },
-  'zh-cht': { pluralOverride: true, latinBased: false },
+  de: { latinBased: true },
+  en: { latinBased: true },
+  es: { latinBased: true },
+  'es-mx': { latinBased: true },
+  fr: { latinBased: true },
+  it: { latinBased: true },
+  ja: { latinBased: false },
+  ko: { latinBased: false },
+  pl: { latinBased: true },
+  'pt-br': { latinBased: true },
+  ru: { latinBased: false },
+  'zh-chs': { latinBased: false },
+  'zh-cht': { latinBased: false },
 };
 
 export type DimLanguage = keyof typeof DIM_LANG_INFOS;
@@ -85,8 +85,6 @@ export function initi18n(): Promise<unknown> {
     // See https://github.com/i18next/i18next
     i18next.use(HttpApi).init<HttpBackendOptions>(
       {
-        initImmediate: true,
-        compatibilityJSON: 'v3',
         debug: false,
         lng: lang,
         fallbackLng: 'en',
@@ -145,16 +143,6 @@ export function initi18n(): Promise<unknown> {
         }
       },
     );
-    for (const otherLang of DIM_LANGS) {
-      if (DIM_LANG_INFOS[otherLang]?.pluralOverride) {
-        // eslint-disable-next-line
-        i18next.services.pluralResolver.addRule(
-          otherLang,
-          // eslint-disable-next-line
-          i18next.services.pluralResolver.getRule('en'),
-        );
-      }
-    }
   });
 }
 

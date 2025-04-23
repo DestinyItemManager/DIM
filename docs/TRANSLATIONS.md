@@ -41,7 +41,17 @@ If you just apply a comment stating something is wrong, the only way someone wou
 Also ensure you join the [Discord](https://discord.gg/NV2YeC8) and PM @DelphiActual#3093 for an invite to the translation channel(#i18n). If you have any questions about translating/translations do not hesitate to ask in the #i18n channel.
 
 # Plurals & Gender
-Plurals, and gender are handled by strings that end in _plural, _male, or _female. If your language does not require the plural or gender form just copy the singular or neutral form and mark the translation as 'Fuzzy' and 'Proofread'. By marking it 'Fuzzy' it will not be downloaded automatically.
+Plurals, and gender are handled by strings that end in _one, _few, _many, _other, _male, or _female. If your language does not require the plural or gender form just copy the singular or neutral form and mark the translation as 'Fuzzy' and 'Proofread'. By marking it 'Fuzzy' it will not be downloaded automatically.
+
+Some locales handle plurals different and do not currently work using the `_one` and `_other` combination.
+
+* `_many` and `_few`
+  * Polish
+  * Russian
+* Only `_other`
+  * Japanese
+  * Chinese (Simplified)
+  * Chinese (Traditional)
 
 If your language requires plural or gender support for a translation do not hesitate to ask!
 
