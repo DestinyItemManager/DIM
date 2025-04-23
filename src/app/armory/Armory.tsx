@@ -2,6 +2,7 @@ import ItemGrid from 'app/armory/ItemGrid';
 import { addCompareItem } from 'app/compare/actions';
 import { stripAdept } from 'app/compare/compare-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { languageSelector } from 'app/dim-api/selectors';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
@@ -27,10 +28,12 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
-import { AppIcon, compareIcon, thumbsUpIcon } from 'app/shell/icons';
+import { AppIcon, compareIcon, faMinusSquare, faPlusSquare, thumbsUpIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { chainComparator, compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { emptyArray } from 'app/utils/empty';
+import { localizedListFormatter } from 'app/utils/intl';
 import { getItemYear, itemTypeName } from 'app/utils/item-utils';
 import { wishListsByHashSelector } from 'app/wishlists/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -98,6 +101,8 @@ export default function Armory({
   // TODO: Show Catalyst benefits for exotics
   const alternates = getAlternateItems(item, defs);
 
+  const seasonNum = getSeason(item);
+
   return (
     <div
       className={clsx(styles.armory, 'armory')}
@@ -131,7 +136,7 @@ export default function Armory({
                 })}
               </div>
             )}
-            <SeasonInfo defs={defs} item={item} />
+            {seasonNum >= 0 && <SeasonInfo defs={defs} item={item} seasonNum={seasonNum} />}
           </div>
           <DestinyTooltipText item={item} />
           {item.classified && <div>{t('ItemService.Classified2')}</div>}
@@ -227,39 +232,36 @@ export default function Armory({
           <h2>{t('Armory.AlternateItems')}</h2>
           <div className={styles.list}>
             {alternates.map((alternate) => {
-              const diffs = compareItemPerks(item.hash, alternate.hash, defs);
+              const altSeasonNum = getSeason(alternate);
               return (
-                <button
-                  type="button"
-                  key={alternate.hash}
-                  className={styles.alternate}
-                  onClick={() => setArmoryItemHash(alternate.hash)}
-                >
-                  <div className="item">
+                <div key={alternate.hash} className={styles.alternate}>
+                  <button
+                    type="button"
+                    onClick={() => setArmoryItemHash(alternate.hash)}
+                    className={styles.alternateButton}
+                  >
                     <DefItemIcon itemDef={alternate} />
-                  </div>
+                  </button>
                   <div>
                     <b>{alternate.displayProperties.name}</b>
-                    <SeasonInfo defs={defs} item={alternate} />
+                    {altSeasonNum >= 0 && (
+                      <SeasonInfo defs={defs} item={alternate} seasonNum={altSeasonNum} />
+                    )}
                     {wishlistsByHash.has(alternate.hash) && (
-                      <div>
+                      <div className={styles.alternateWishlist}>
                         <AppIcon icon={thumbsUpIcon} />{' '}
-                        {`This version has loaded wishlist entries (${wishlistsByHash.has(item.hash) ? `current ^ Armory version also has some` : `current ^ Armory version has none`})`}
+                        {t('Armory.WishlistedRolls', {
+                          count: wishlistsByHash.get(alternate.hash)?.length ?? 0,
+                        })}
                       </div>
                     )}
-                    {diffs?.map(([i1, i2]) => (
-                      <React.Fragment key={`${i1.join()}${i2.join()}`}>
-                        <div>
-                          {i1.length > 0 &&
-                            `<- Cannot roll ${i1.map((h) => defs.InventoryItem.get(h).displayProperties.name).join()} (current ^ Armory version can)`}
-                          <br />
-                          {i2.length > 0 &&
-                            `<- Can roll ${i2.map((h) => defs.InventoryItem.get(h).displayProperties.name).join()} (current ^ Armory version cannot)`}
-                        </div>
-                      </React.Fragment>
-                    ))}
+                    {altSeasonNum === seasonNum ? (
+                      <AlternatePerkDiffs itemDef={itemDef} alternate={alternate} defs={defs} />
+                    ) : (
+                      <div>{t('Armory.DifferentSeason')}</div>
+                    )}
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -318,8 +320,8 @@ function getAlternateItems(
 
   alternates.sort(
     chainComparator(
+      reverseComparator(compareBy((i) => getSeason(i, defs) ?? 0)),
       compareBy((i) => i.displayProperties.name),
-      compareBy((i) => getSeason(i, defs) ?? 0),
     ),
   );
 
@@ -328,39 +330,85 @@ function getAlternateItems(
 
 const typeHashes = new Set([1215804696, 1215804697, 3993098925]);
 
-function compareItemPerks(itemHash1: number, itemHash2: number, defs: D2ManifestDefinitions) {
-  const socketInfo1 = defs.InventoryItem.get(itemHash1).sockets;
-  const socketInfo2 = defs.InventoryItem.get(itemHash2).sockets;
-  if (!socketInfo1 || !socketInfo2) {
-    return;
+function AlternatePerkDiffs({
+  itemDef,
+  alternate,
+  defs,
+}: {
+  itemDef: DestinyInventoryItemDefinition;
+  alternate: DestinyInventoryItemDefinition;
+  defs: D2ManifestDefinitions;
+}) {
+  const diffs = compareItemPerks(itemDef, alternate, defs);
+  const language = useSelector(languageSelector);
+  const listFormat = localizedListFormatter(language);
+  return (
+    <>
+      {diffs.map(([i1, i2]) => {
+        const removals = i1
+          .map((h) => defs.InventoryItem.get(h).displayProperties.name)
+          .filter(Boolean);
+        const additions = i2
+          .map((h) => defs.InventoryItem.get(h).displayProperties.name)
+          .filter(Boolean);
+        return (
+          (additions.length > 0 || removals.length > 0) && (
+            <React.Fragment key={`diff-${additions.join()}-${removals.join()}`}>
+              {removals.length > 0 && (
+                <div key={`rem-${removals.join()}`}>
+                  <AppIcon icon={faMinusSquare} /> {listFormat.format(removals)}
+                </div>
+              )}
+              {additions.length > 0 && (
+                <div key={`add-${additions.join()}`}>
+                  <AppIcon icon={faPlusSquare} /> {listFormat.format(additions)}
+                </div>
+              )}
+            </React.Fragment>
+          )
+        );
+      })}
+    </>
+  );
+}
+
+/**
+ * Compare the perks of two item definitions. Returns a tuple for each socket
+ * with a list of perks exclusive to the first item, and exclusive to the second
+ * item.
+ */
+function compareItemPerks(
+  itemDef1: DestinyInventoryItemDefinition,
+  itemDef2: DestinyInventoryItemDefinition,
+  defs: D2ManifestDefinitions,
+): [firstItemExclusivePerkHashes: number[], secondItemExclusivePerkHashes: number[]][] {
+  if (!itemDef1.sockets || !itemDef2.sockets) {
+    return emptyArray();
   }
 
-  const sockets1 = socketInfo1.socketEntries.filter((s) => typeHashes.has(s.socketTypeHash));
-  const sockets2 = socketInfo2.socketEntries.filter((s) => typeHashes.has(s.socketTypeHash));
+  const sockets1 = itemDef1.sockets.socketEntries.filter((s) => typeHashes.has(s.socketTypeHash));
+  const sockets2 = itemDef2.sockets.socketEntries.filter((s) => typeHashes.has(s.socketTypeHash));
 
-  if (sockets1.length !== sockets2.length) {
-    return;
-  }
   const diff: [number[], number[]][] = [];
-  for (let i = 0; i < sockets1.length; i++) {
-    const rph1 = sockets1[i].randomizedPlugSetHash || sockets1[i].reusablePlugSetHash;
-    const rph2 = sockets2[i].randomizedPlugSetHash || sockets2[i].reusablePlugSetHash;
+  for (let i = 0; i < Math.max(sockets1.length, sockets2.length); i++) {
+    const rph1 =
+      i < sockets1.length
+        ? sockets1[i].randomizedPlugSetHash || sockets1[i].reusablePlugSetHash
+        : undefined;
+    const rph2 =
+      i < sockets2.length
+        ? sockets2[i].randomizedPlugSetHash || sockets2[i].reusablePlugSetHash
+        : undefined;
     const ps1 = new Set(
       (rph1 && defs.PlugSet.get(rph1).reusablePlugItems.map((pi) => pi.plugItemHash)) || [],
     );
     const ps2 = new Set(
       (rph2 && defs.PlugSet.get(rph2).reusablePlugItems.map((pi) => pi.plugItemHash)) || [],
     );
-    for (const set of [ps1, ps2]) {
-      for (const h of set) {
-        if (ps1.has(h) && ps2.has(h)) {
-          ps1.delete(h);
-          ps2.delete(h);
-        }
-      }
-    }
-    if (ps1.size || ps2.size) {
-      diff.push([[...ps1], [...ps2]]);
+    const ps1MinusPs2 = ps1.difference(ps2);
+    const ps2MinusPs1 = ps2.difference(ps1);
+    if (ps1MinusPs2.size || ps2MinusPs1.size) {
+      diff.push([[...ps1MinusPs2], [...ps2MinusPs1]]);
     }
   }
   return diff;
@@ -370,15 +418,14 @@ function SeasonInfo({
   defs,
   item,
   className,
+  seasonNum,
 }: {
   item: DestinyInventoryItemDefinition | DimItem;
   defs: D2ManifestDefinitions;
   className?: string;
+  seasonNum: number;
 }) {
-  const seasonNum = getSeason(item);
-  const season = seasonNum
-    ? Object.values(defs.Season.getAll()).find((s) => s.seasonNumber === seasonNum)
-    : undefined;
+  const season = Object.values(defs.Season.getAll()).find((s) => s.seasonNumber === seasonNum);
   const event = 'displayProperties' in item ? undefined : getEvent(item);
   return (
     season && (

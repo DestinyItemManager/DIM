@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'alternate': string;
+  'alternateButton': string;
+  'alternateWishlist': string;
   'armory': string;
   'element': string;
   'flavor': string;

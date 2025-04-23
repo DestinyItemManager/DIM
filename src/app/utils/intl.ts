@@ -30,6 +30,14 @@ const cachedSearchCollator = memoizeOne(
     new Intl.Collator(mapLocale(language), { usage: 'search', sensitivity: 'base' }),
 );
 
+const cachedListFormatter = memoizeOne(
+  (language: DimLanguage) => new Intl.ListFormat(mapLocale(language)),
+);
+
+export function localizedListFormatter(language: DimLanguage) {
+  return cachedListFormatter(language);
+}
+
 /**
  * Return a sorting function that can sort arrays of type `T[]` in a locale-aware
  * way using some projection function on `T`.

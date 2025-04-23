@@ -91,7 +91,7 @@
 
 .openInArmoryLabel {
   font-style: italic;
-  color: grey;
+  opacity: 0.5;
   margin-left: 2px;
   margin-right: 4px;
 }
@@ -112,21 +112,22 @@
 .namedQueryBody {
   display: block;
   font-size: 10.5px;
-  letter-spacing: 1px;
   opacity: 0.5;
 }
 
 .highlightedItem {
   background-color: var(--theme-accent-primary);
   color: var(--theme-text-invert) !important;
-  .menuItemIcon {
+  .menuItemIcon,
+  .openInArmoryLabel {
     color: var(--theme-text-invert);
   }
   .deleteIcon {
     color: #333;
     visibility: visible;
   }
-  .namedQueryBody {
+  .namedQueryBody,
+  .openInArmoryLabel {
     opacity: 1;
   }
 }
