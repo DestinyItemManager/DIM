@@ -150,6 +150,7 @@ export const D2PlugCategoryByStatHash = new Map<StatHashes, PlugCategoryHashes>(
   [StatHashes.Range, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatRange],
   [StatHashes.ReloadSpeed, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatReload],
   [StatHashes.Stability, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatStability],
+  [StatHashes.Velocity, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatProjectileSpeed],
 ]);
 
 export const swordStatsByName = {
