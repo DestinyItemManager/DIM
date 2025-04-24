@@ -493,7 +493,7 @@ export function getWeaponSockets(
         plugOptions: [fullMasterworkPlug],
         visibleInGame: true,
         reusablePlugItems: [],
-        isPerk: true,
+        isPerk: true, // isPerk is required to prevent the socket from being selectable/modifiable
       };
     });
 
