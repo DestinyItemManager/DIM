@@ -485,7 +485,11 @@ export function getWeaponSockets(
       }
       fullMasterworkPlug = {
         ...fullMasterworkPlug,
-        plugDef: { ...fullMasterworkPlug.plugDef, iconWatermark: '', investmentStats: [] },
+        plugDef: {
+          ...fullMasterworkPlug.plugDef,
+          iconWatermark: '', // remove the '10' in the top left of the icon
+          investmentStats: [], // remove the stats from the fake plug
+        },
       };
       return {
         ...socket,
