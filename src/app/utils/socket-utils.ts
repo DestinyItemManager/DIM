@@ -319,7 +319,7 @@ export function getDisplayedItemSockets(
   excludeEmptySockets = false,
 ): DisplayedSockets | undefined {
   if (item.bucket.inWeapons) {
-    return getWeaponSockets(item, excludeEmptySockets);
+    return getWeaponSockets(item, { excludeEmptySockets });
   } else {
     return getGeneralSockets(item, excludeEmptySockets);
   }
@@ -428,9 +428,13 @@ export function getSocketsByType(
 
 export function getWeaponSockets(
   item: DimItem,
-  excludeEmptySockets = false,
-  includeFakeMasterwork = false,
+  options: {
+    excludeEmptySockets?: boolean;
+    includeFakeMasterwork?: boolean;
+  },
 ): DisplayedSockets | undefined {
+  const { excludeEmptySockets = false, includeFakeMasterwork = false } = options;
+
   if (!item.sockets) {
     return undefined;
   }

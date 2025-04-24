@@ -42,11 +42,9 @@ export default function ItemSocketsWeapons({
   }
 
   // Separate out perks from sockets.
-  const { intrinsicSocket, perks, modSocketsByCategory } = getWeaponSockets(
-    item,
-    /* excludeEmptySockets */ false,
-    /* includeFakeMasterwork */ Boolean(item.crafted),
-  )!;
+  const { intrinsicSocket, perks, modSocketsByCategory } = getWeaponSockets(item, {
+    includeFakeMasterwork: Boolean(item.crafted),
+  })!;
 
   // Improve this when we use iterator-helpers
   const mods = [...modSocketsByCategory.values()].flat();
@@ -159,11 +157,9 @@ export function ItemModSockets({
   }
 
   // Separate out perks from sockets.
-  const { modSocketsByCategory } = getWeaponSockets(
-    item,
-    /* excludeEmptySockets */ false,
-    /* includeFakeMasterwork */ Boolean(item.crafted),
-  )!;
+  const { modSocketsByCategory } = getWeaponSockets(item, {
+    includeFakeMasterwork: Boolean(item.crafted),
+  })!;
 
   // Improve this when we use iterator-helpers
   const mods = [...modSocketsByCategory.values()].flat();
