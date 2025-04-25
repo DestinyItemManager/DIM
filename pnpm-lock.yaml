@@ -132,8 +132,8 @@ dependencies:
     specifier: ^9.2.0
     version: 9.2.0(@types/react@19.1.2)(react@19.1.0)(redux@5.0.1)
   react-router:
-    specifier: ^7.5.1
-    version: 7.5.1(react-dom@19.1.0)(react@19.1.0)
+    specifier: ^7.5.2
+    version: 7.5.2(react-dom@19.1.0)(react@19.1.0)
   react-textarea-autosize:
     specifier: ^8.5.9
     version: 8.5.9(@types/react@19.1.2)(react@19.1.0)
@@ -12282,8 +12282,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-router@7.5.1(react-dom@19.1.0)(react@19.1.0):
-    resolution: {integrity: sha512-/jjU3fcYNd2bwz9Q0xt5TwyiyoO8XjSEFXJY4O/lMAlkGTHWuHRAbR9Etik+lSDqMC7A7mz3UlXzgYT6Vl58sA==}
+  /react-router@7.5.2(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-9Rw8r199klMnlGZ8VAsV/I8WrIF6IyJ90JQUdboupx1cdkgYqwnrYjH+I/nY/7cA1X5zia4mDJqH36npP7sxGQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
