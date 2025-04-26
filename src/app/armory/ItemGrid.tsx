@@ -8,7 +8,7 @@ import '../inventory-page/StoreBucket.scss';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 
-interface PopupState {
+export interface PopupState {
   item: DimItem;
   element: HTMLElement;
 }
@@ -42,7 +42,7 @@ export default function ItemGrid({
   );
 }
 
-function BasicItemTrigger({
+export function BasicItemTrigger({
   item,
   onShowPopup,
   children,
