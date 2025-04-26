@@ -9,6 +9,7 @@ import {
 import { craftedSocketCategoryHash, mementoSocketCategoryHash } from 'app/inventory/store/crafted';
 import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
 import {
+  D2PlugCategoryByStatHash,
   GhostActivitySocketTypeHashes,
   armor2PlugCategoryHashes,
   weaponMasterworkY2SocketTypeHash,
@@ -21,6 +22,7 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import { maxBy } from 'es-toolkit';
 import { count, filterMap } from './collections';
 import { isKillTrackerSocket } from './item-utils';
 
@@ -317,7 +319,7 @@ export function getDisplayedItemSockets(
   excludeEmptySockets = false,
 ): DisplayedSockets | undefined {
   if (item.bucket.inWeapons) {
-    return getWeaponSockets(item, excludeEmptySockets);
+    return getWeaponSockets(item, { excludeEmptySockets });
   } else {
     return getGeneralSockets(item, excludeEmptySockets);
   }
@@ -426,8 +428,13 @@ export function getSocketsByType(
 
 export function getWeaponSockets(
   item: DimItem,
-  excludeEmptySockets = false,
+  options: {
+    excludeEmptySockets?: boolean;
+    includeFakeMasterwork?: boolean;
+  },
 ): DisplayedSockets | undefined {
+  const { excludeEmptySockets = false, includeFakeMasterwork = false } = options;
+
   if (!item.sockets) {
     return undefined;
   }
@@ -458,9 +465,51 @@ export function getWeaponSockets(
     PlugCategoryHashes.V300WeaponDamageTypeKinetic,
   ];
 
+  let moddedSockets: DimSockets = item.sockets;
+  if (includeFakeMasterwork) {
+    const allSockets = item.sockets.allSockets.map((socket) => {
+      if (socket.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash) {
+        return socket;
+      }
+      const mwHash = item.masterworkInfo?.stats?.find((s) => s.isPrimary)?.hash || 0;
+      const plugCategory = D2PlugCategoryByStatHash.get(mwHash);
+      let fullMasterworkPlug =
+        socket.plugSet &&
+        plugCategory &&
+        maxBy(
+          socket.plugSet.plugs.filter((p) => p.plugDef.plug.plugCategoryHash === plugCategory),
+          (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
+        );
+      if (!fullMasterworkPlug) {
+        return socket;
+      }
+      fullMasterworkPlug = {
+        ...fullMasterworkPlug,
+        plugDef: {
+          ...fullMasterworkPlug.plugDef,
+          iconWatermark: '', // remove the '10' in the top left of the icon
+          investmentStats: [], // remove the stats from the fake plug
+        },
+      };
+      return {
+        ...socket,
+        plugged: fullMasterworkPlug,
+        plugOptions: [fullMasterworkPlug],
+        visibleInGame: true,
+        reusablePlugItems: [],
+        isPerk: true, // isPerk is required to prevent the socket from being selectable/modifiable
+      };
+    });
+
+    moddedSockets = {
+      ...item.sockets,
+      allSockets,
+    };
+  }
+
   const modSocketsByCategory = filterSocketCategories(
-    item.sockets.categories.toReversed(),
-    item.sockets,
+    moddedSockets.categories.toReversed(),
+    moddedSockets,
     (category) =>
       !excludedSocketCategoryHashes.includes(category.category.hash) && category !== perks,
     (socket) =>
