@@ -1,5 +1,7 @@
 ## Next
 
+* The Armory page will now link to alternate versions of an item if they exist, including reissues, shiny versions, adept versions, etc.
+
 ## 8.68.0 <span class="changelog-date">(2025-04-20)</span>
 
 * `is:shiny` now detects Heresy weapons with the bonus Runneth Over Origin Trait.
