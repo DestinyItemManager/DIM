@@ -30,7 +30,7 @@
 .season {
   display: flex;
   align-items: center;
-  &:nth-child(n + 1) {
+  .header &:nth-child(n + 1) {
     border-left: 1px solid #ccc;
     padding-left: 8px;
     margin-left: 4px;
@@ -116,4 +116,37 @@
   @include phone-portrait {
     width: 100%;
   }
+}
+
+.list {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 16px;
+}
+
+.alternate {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  gap: 8px;
+  text-align: left;
+  width: max-content;
+  max-width: 100%;
+
+  > *:first-child {
+    flex-shrink: 0;
+  }
+
+  b {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 14px;
+  }
+}
+
+.alternateButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  composes: item from global;
+}
+
+.alternateWishlist {
+  text-transform: lowercase;
 }

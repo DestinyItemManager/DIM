@@ -29,7 +29,9 @@
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
+    "AlternateItems": "Alternate Versions",
     "Armory": "Armory",
+    "DifferentSeason": "Reissue from a different season",
     "OpenInArmory": "view in Armory",
     "WishlistedRolls_one": "Wishlisted Roll",
     "WishlistedRolls_other": "{{count, number}} Wishlisted Rolls",
