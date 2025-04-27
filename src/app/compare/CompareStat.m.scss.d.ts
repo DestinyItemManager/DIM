@@ -3,6 +3,7 @@
 interface CssExports {
   'bar': string;
   'masterwork': string;
+  'noMinWidth': string;
   'range': string;
   'stat': string;
   'statValue': string;

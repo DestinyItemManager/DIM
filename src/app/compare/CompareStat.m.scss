@@ -23,6 +23,11 @@
   align-items: center;
   justify-content: flex-end;
   gap: 3px;
+  min-width: 2ch; // Try to right-align 2-digit numbers
+
+  &.noMinWidth {
+    min-width: none;
+  }
 }
 
 .bar {
