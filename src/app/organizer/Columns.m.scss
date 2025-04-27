@@ -12,6 +12,12 @@
 
 .stats {
   text-align: right;
+  // Recoil background semi-circle
+  svg {
+    circle {
+      fill: black;
+    }
+  }
 }
 
 .centered {
@@ -154,16 +160,6 @@
     margin-right: 4px;
     height: 16px;
     width: 16px;
-  }
-}
-
-// Recoil circle
-.recoil {
-  composes: stats;
-  svg {
-    circle {
-      fill: black;
-    }
   }
 }
 

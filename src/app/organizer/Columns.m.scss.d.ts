@@ -29,7 +29,6 @@ interface CssExports {
   'perkSelected': string;
   'perks': string;
   'positive': string;
-  'recoil': string;
   'selection': string;
   'shapedIconOverlay': string;
   'shiftHeld': string;

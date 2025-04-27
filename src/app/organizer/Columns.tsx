@@ -142,172 +142,22 @@ export function getColumns(
   destinyVersion: DestinyVersion,
   onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
-  const customStatHashes = customStatDefs.map((c) => c.statHash);
-  const statsGroup: ColumnGroup = {
-    id: 'stats',
-    header: t('Organizer.Columns.Stats'),
-  };
-  const baseStatsGroup: ColumnGroup = {
-    id: 'baseStats',
-    header: t('Organizer.Columns.BaseStats'),
-  };
-  const statQualityGroup: ColumnGroup = {
-    id: 'statQuality',
-    header: t('Organizer.Columns.StatQuality'),
-  };
-
-  const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
-
-  const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
-    const statHash = stat.statHash as StatHashes;
-    if (customStatHashes.includes(statHash)) {
-      // Exclude custom total, it has its own column
-      return undefined;
-    }
-    const statLabel = statLabels[statHash];
-
-    return {
-      id: `stat${statHash}`,
-      header: stat.displayProperties.hasIcon ? (
-        <span title={stat.displayProperties.name}>
-          <BungieImage src={stat.displayProperties.icon} />
-        </span>
-      ) : statLabel ? (
-        t(statLabel)
-      ) : (
-        stat.displayProperties.name
-      ),
-      className: stat?.statHash === StatHashes.RecoilDirection ? styles.recoil : styles.stats,
-      headerClassName: styles.stats,
-      statHash,
-      columnGroup: statsGroup,
-      value: (item) => {
-        const stat = item.stats?.find((s) => s.statHash === statHash);
-        if (stat?.statHash === StatHashes.RecoilDirection) {
-          return recoilValue(stat.value);
-        }
-        return stat?.value;
-      },
-      cell: (_val, item, ctx) => {
-        const stat = item.stats?.find((s) => s.statHash === statHash);
-        if (!stat) {
-          return null;
-        }
-        return (
-          <CompareStat
-            min={ctx?.min ?? 0}
-            max={ctx?.max ?? 0}
-            stat={stat}
-            item={item}
-            value={stat.value}
-          />
-        );
-      },
-      defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
-      filter: (value) => {
-        const statName = invert(statHashByName)[statHash];
-        return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
-      },
-      csv: (_value, item) => {
-        // Re-find the stat instead of using the value passed in, because the
-        // value passed in can be different if it's Recoil.
-        const stat = item.stats?.find((s) => s.statHash === statHash);
-        return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
-      },
-    };
-  }).sort(compareBy((s) => getStatSortOrder(s.statHash)));
-
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
   const isWeapon = itemsType === 'weapon';
   const isSpreadsheet = useCase === 'spreadsheet';
 
-  const baseStatColumns: ColumnWithStat[] =
-    destinyVersion === 2 && (isArmor || !isSpreadsheet)
-      ? statColumns.map((column) => ({
-          ...column,
-          id: `base${column.statHash}`,
-          columnGroup: baseStatsGroup,
-          value: (item): number | undefined => {
-            const stat = item.stats?.find((s) => s.statHash === column.statHash);
-            if (stat?.statHash === StatHashes.RecoilDirection) {
-              return recoilValue(stat.base);
-            }
-            return stat?.base;
-          },
-          cell: (_val, item, ctx) => {
-            const stat = item.stats?.find((s) => s.statHash === column.statHash);
-            if (!stat) {
-              return null;
-            }
-            // TODO: force a width if this is armor, so we see the bar?
-            return (
-              <CompareStat
-                min={ctx?.min ?? 0}
-                max={ctx?.max ?? 0}
-                stat={stat}
-                item={item}
-                value={stat.base}
-              />
-            );
-          },
-          filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
-          csv: (_value, item) => {
-            // Re-find the stat instead of using the value passed in, because the
-            // value passed in can be different if it's Recoil.
-            const stat = item.stats?.find((s) => s.statHash === column.statHash);
-            return [
-              `${csvStatNames.get(column.statHash) ?? `UnknownStatBase ${column.statHash}`} (Base)`,
-              stat?.base ?? 0,
-            ];
-          },
-        }))
-      : [];
-
-  const d1ArmorQualityByStat =
-    destinyVersion === 1 && isArmor
-      ? stats
-          .map((stat): ColumnWithStat => {
-            const statHash = stat.statHash as StatHashes;
-            return {
-              statHash,
-              id: `quality_${statHash}`,
-              columnGroup: statQualityGroup,
-              header: t('Organizer.Columns.StatQualityStat', {
-                stat: stat.displayProperties.name,
-              }),
-              className: styles.stats,
-              headerClassName: styles.stats,
-              value: (item: D1Item) => {
-                const stat = item.stats?.find((s) => s.statHash === statHash);
-                let pct = 0;
-                if (stat?.scaled?.min) {
-                  pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
-                }
-                return pct;
-              },
-              cell: (value: number, item: D1Item) => {
-                const stat = item.stats?.find((s) => s.statHash === statHash);
-                return (
-                  <span style={getD1QualityColor(stat?.qualityPercentage?.min || 0, 'color')}>
-                    {value}%
-                  </span>
-                );
-              },
-              csv: (_value, item) => {
-                if (!isD1Item(item)) {
-                  throw new Error('Expected D1 item');
-                }
-                const stat = item.stats?.find((s) => s.statHash === statHash);
-                return [
-                  `% ${csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`}Q`,
-                  stat?.scaled?.min ? Math.round((100 * stat.scaled.min) / (stat.split || 1)) : 0,
-                ];
-              },
-            };
-          })
-          .sort(compareBy((s) => getStatSortOrder(s.statHash)))
-      : [];
+  const { statColumns, baseStatColumns, d1ArmorQualityByStat } = getStatColumns(
+    stats,
+    customStatDefs,
+    destinyVersion,
+    {
+      isArmor,
+      isSpreadsheet,
+    },
+    styles.stats,
+  );
+  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs, styles.centered);
 
   /**
    * This helper allows TypeScript to perform type inference to determine the
@@ -319,8 +169,6 @@ export function getColumns(
   function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
     return columnDef;
   }
-
-  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs, styles.centered);
 
   const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
@@ -909,6 +757,191 @@ export function getColumns(
   ]);
 
   return columns;
+}
+
+export function getStatColumns(
+  stats: DimStat[],
+  customStatDefs: CustomStatDef[],
+  destinyVersion: DestinyVersion,
+  {
+    isArmor,
+    isSpreadsheet = false,
+    showStatLabel = false,
+  }: {
+    isArmor: boolean;
+    isSpreadsheet?: boolean;
+    showStatLabel?: boolean;
+  },
+  className?: string,
+) {
+  const customStatHashes = customStatDefs.map((c) => c.statHash);
+  const statsGroup: ColumnGroup = {
+    id: 'stats',
+    header: t('Organizer.Columns.Stats'),
+  };
+  const baseStatsGroup: ColumnGroup = {
+    id: 'baseStats',
+    header: t('Organizer.Columns.BaseStats'),
+  };
+  const statQualityGroup: ColumnGroup = {
+    id: 'statQuality',
+    header: t('Organizer.Columns.StatQuality'),
+  };
+
+  const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
+
+  const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
+    const statHash = stat.statHash as StatHashes;
+    if (customStatHashes.includes(statHash)) {
+      // Exclude custom total, it has its own column
+      return undefined;
+    }
+    const statLabel = statLabels[statHash];
+
+    return {
+      id: `stat${statHash}`,
+      header: stat.displayProperties.hasIcon ? (
+        <span title={stat.displayProperties.name}>
+          <BungieImage src={stat.displayProperties.icon} />
+          {showStatLabel && stat.displayProperties.name}
+        </span>
+      ) : statLabel ? (
+        t(statLabel)
+      ) : (
+        stat.displayProperties.name
+      ),
+      className,
+      headerClassName: className,
+      statHash,
+      columnGroup: statsGroup,
+      value: (item) => {
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        if (stat?.statHash === StatHashes.RecoilDirection) {
+          return recoilValue(stat.value);
+        }
+        return stat?.value;
+      },
+      cell: (_val, item, ctx) => {
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        if (!stat) {
+          return null;
+        }
+        return (
+          <CompareStat
+            min={ctx?.min ?? 0}
+            max={ctx?.max ?? 0}
+            stat={stat}
+            item={item}
+            value={stat.value}
+          />
+        );
+      },
+      defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
+      filter: (value) => {
+        const statName = invert(statHashByName)[statHash];
+        return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+      },
+      csv: (_value, item) => {
+        // Re-find the stat instead of using the value passed in, because the
+        // value passed in can be different if it's Recoil.
+        const stat = item.stats?.find((s) => s.statHash === statHash);
+        return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
+      },
+    };
+  }).sort(compareBy((s) => getStatSortOrder(s.statHash)));
+
+  const baseStatColumns: ColumnWithStat[] =
+    destinyVersion === 2 && (isArmor || !isSpreadsheet)
+      ? statColumns.map((column) => ({
+          ...column,
+          id: `base${column.statHash}`,
+          columnGroup: baseStatsGroup,
+          value: (item): number | undefined => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            if (stat?.statHash === StatHashes.RecoilDirection) {
+              return recoilValue(stat.base);
+            }
+            return stat?.base;
+          },
+          cell: (_val, item, ctx) => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            if (!stat) {
+              return null;
+            }
+            // TODO: force a width if this is armor, so we see the bar?
+            return (
+              <CompareStat
+                min={ctx?.min ?? 0}
+                max={ctx?.max ?? 0}
+                stat={stat}
+                item={item}
+                value={stat.base}
+              />
+            );
+          },
+          filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
+          csv: (_value, item) => {
+            // Re-find the stat instead of using the value passed in, because the
+            // value passed in can be different if it's Recoil.
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            return [
+              `${csvStatNames.get(column.statHash) ?? `UnknownStatBase ${column.statHash}`} (Base)`,
+              stat?.base ?? 0,
+            ];
+          },
+        }))
+      : [];
+
+  const d1ArmorQualityByStat =
+    destinyVersion === 1 && isArmor
+      ? stats
+          .map((stat): ColumnWithStat => {
+            const statHash = stat.statHash as StatHashes;
+            return {
+              statHash,
+              id: `quality_${statHash}`,
+              columnGroup: statQualityGroup,
+              header: t('Organizer.Columns.StatQualityStat', {
+                stat: stat.displayProperties.name,
+              }),
+              className,
+              headerClassName: className,
+              value: (item: D1Item) => {
+                const stat = item.stats?.find((s) => s.statHash === statHash);
+                let pct = 0;
+                if (stat?.scaled?.min) {
+                  pct = Math.round((100 * stat.scaled.min) / (stat.split || 1));
+                }
+                return pct;
+              },
+              cell: (value: number, item: D1Item) => {
+                const stat = item.stats?.find((s) => s.statHash === statHash);
+                return (
+                  <span style={getD1QualityColor(stat?.qualityPercentage?.min || 0, 'color')}>
+                    {value}%
+                  </span>
+                );
+              },
+              csv: (_value, item) => {
+                if (!isD1Item(item)) {
+                  throw new Error('Expected D1 item');
+                }
+                const stat = item.stats?.find((s) => s.statHash === statHash);
+                return [
+                  `% ${csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`}Q`,
+                  stat?.scaled?.min ? Math.round((100 * stat.scaled.min) / (stat.split || 1)) : 0,
+                ];
+              },
+            };
+          })
+          .sort(compareBy((s) => getStatSortOrder(s.statHash)))
+      : [];
+
+  return {
+    statColumns,
+    baseStatColumns,
+    d1ArmorQualityByStat,
+  };
 }
 
 function LoadoutsCell({
