@@ -99,7 +99,7 @@
     "Archetype": "Archétype",
     "AssumeMasterworked": "Considérer pièce maîtresse",
     "Button": "Comparer",
-    "ButtonHelp": "Comparer des objets",
+    "ButtonHelp": "Comparer les objets",
     "CompareBaseStats": "Afficher les statistiques de base",
     "Error": {
       "Invalid": "Il n'y a aucun objet valide à comparer.",
@@ -445,7 +445,7 @@
     "MatchingLoadouts": "Équipements correspondants :",
     "PrepareEquip": "Préparer pour équipement",
     "Replace": "Remplacer l'équipement {{index}}",
-    "Save": "Modifier l'équipement",
+    "Save": "Mettre à jour l'équipement",
     "SaveIdentifiers": "Mettre à jour les identifiants",
     "SnapshotFailed": "Échec de la sauvegarde de l'équipement actuel"
   },
@@ -484,7 +484,7 @@
   },
   "ItemPicker": {
     "ChooseItem": "Choisissez un objet :",
-    "SearchPlaceholder": "Rechercher des objets"
+    "SearchPlaceholder": "Éléments de recherche"
   },
   "ItemService": {
     "BucketFull": {
@@ -821,9 +821,9 @@
     "ManageLoadouts": "Gérer les équipements",
     "MaxSlots": "Vous ne pouvez avoir que {{slots}} {{bucketName}} dans un équipement.",
     "MaximizeLight": "Lumière maximale",
-    "MaximizePower": "Puissance maximale",
+    "MaximizePower": "Puissance Max",
     "MaximizeStat": "Maximiser la Stat",
-    "MissingItemsWarning": "Certains des objets dans cet équipement ne sont plus dans votre inventaire.",
+    "MissingItemsWarning": "Certains objets de cet équipement ne sont plus dans votre inventaire.",
     "ModErrorSummary_one": "1 erreur de mod :",
     "ModErrorSummary_other": "{{count}} erreurs de mod:",
     "ModPlacement": {
@@ -1056,7 +1056,7 @@
       "OriginTraits": "Attribut d'origine",
       "OtherPerks": "Autres attributs",
       "PercentComplete": "% Complet",
-      "Perks": "Attributs",
+      "Perks": "Compétences",
       "PerksMods": "Attributs & Mods",
       "Power": "Puissance",
       "Quality": "Qualité %",
@@ -1067,7 +1067,7 @@
       "StatQuality": "Qualité de la Stat",
       "StatQualityStat": "{{stat}}%",
       "Stats": "Statistiques",
-      "Tag": "Étiquette",
+      "Tag": "Étiqueter",
       "Tier": "Palier",
       "Traits": "Caractéristiques de l'Arme",
       "WishList": "Liste de souhaits",
@@ -1114,7 +1114,7 @@
     "PointsUsed_other": "{{count}} points utilisés",
     "PowerBonusHeader": "Récompenses +{{powerBonus}} puissance",
     "PowerBonusHeaderUndefined": "Autres récompenses",
-    "Progress": "Progression",
+    "Progress": "Avancement",
     "QueryFilteredTrackedTriumphs": "Aucun de vos triomphes suivis ne correspond à la recherche",
     "QuestExpired": "Expiré",
     "QuestExpires": "Expire dans ",
@@ -1191,7 +1191,7 @@
     "Language": "Langue",
     "LoadoutSort": "Ordre des équipements :",
     "LogOut": "Se déconnecter",
-    "Masterworked": "Pièce maîtresse",
+    "Masterworked": "Pièce Maîtresse",
     "PerkDisplay": "Affichage des attributs dans la fenêtre contextuelle des objets",
     "PerkGrid": "Grille",
     "PerkList": "Liste",

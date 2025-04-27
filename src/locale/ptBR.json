@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM modificar seus itens.",
+    "ConfirmDescription": "Por favor, utilize o app Destiny Companion para dar permissão ao DIM de modificar seus itens.",
     "ConfirmTitle": "Confirmar Ação",
     "Error": "Erro ao modificar mods ou perks",
     "ErrorMessage": "Não foi possível equipar {{plug}} em {{item}}.\n\n{{error}}",
@@ -15,7 +15,7 @@
     "MissingAccountWarning": "Caso não encontre sua conta aqui, significa que você ainda não a autorizou através da Bungie.net ou o serviço da Bungie pode estar em manutenção no momento.",
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada ao seu perfil da Bungie.net. Selecione uma das suas contas abaixo.",
     "MissingTitle": "Conta não encontrada",
-    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente.",
+    "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente se logar com uma conta diferente.",
     "NoCharactersTitle": "Nenhum Personagem Encontrado",
     "SwitchAccounts": "Você poderá alternar entre contas posteriormente através do menu superior.",
     "Title": "Contas"
@@ -54,7 +54,7 @@
     "Inventory": "Inventário",
     "Postmaster": "Chefe do Correio",
     "Progress": "Progresso",
-    "Reputation": "Reputação",
+    "Reputation": "Reputações",
     "Unknown": "Desconhecido",
     "Vault": "Cofre",
     "Weapons": "Armas"
@@ -79,13 +79,13 @@
     "Difficulties": "Bungie.net está enfrentando dificuldades no momento.",
     "ErrorTitle": "Erro na Bungie.net",
     "ItemUniquenessExplanation": "Um personagem só pode ter um '{{name}}' equipado.",
-    "Maintenance": "Servidores Bungie.net estão fora do ar para manutenção.",
+    "Maintenance": "Os servidores Bungie.net estão fora do ar para manutenção.",
     "MissingInventory": "Não foi possível receber seu inventário da Bungie.net, possivelmente devido às suas configurações de privacidade. Tente desconectar sua conta e autenticar-se novamente.",
     "NetworkError": "Erro de rede - {{status}} {{statusText}}",
     "NoAccount": "Nenhuma conta de Destiny encontrada. Você escolheu a plataforma certa?",
-    "NoAccountForPlatform": "Incapaz de encontrar uma conta de Destiny no {{platform}}.",
+    "NoAccountForPlatform": "Não foi possível encontrar uma conta de Destiny no {{platform}}.",
     "NotConnected": "Você deve estar sem conexão com a Internet.",
-    "NotConnectedOrBlocked": "Você pode não estar conectado à internet, ou uma extensão de bloqueio de anúncios ou privacidade pode estar bloqueando Bungie.net.",
+    "NotConnectedOrBlocked": "Você deve estar sem conexão com a Internet ou uma extensão de bloqueio de anúncios ou privacidade pode estar bloqueando Bungie.net.",
     "NotLoggedIn": "Por favor, autorize o DIM para poder utilizar este app.",
     "Slow": "Bungie.net está temporariamente lento",
     "SlowDetails": "Bungie.net está levando mais tempo que o esperado para responder. Normalmente isto ocorre quando vários jogadores estão ativos no jogo ao mesmo tempo ou quando a Bungie.net está instável. E, quem sabe, seja apenas sua conexão com a internet mesmo. De qualquer forma, vamos continuar esperando por uma resposta.",
@@ -99,7 +99,7 @@
     "Archetype": "Arquétipo",
     "AssumeMasterworked": "Assumir Obra-prima",
     "Button": "Comparar",
-    "ButtonHelp": "Comparar itens",
+    "ButtonHelp": "Comparar Itens",
     "CompareBaseStats": "Exibir atributos base",
     "Error": {
       "Invalid": "Não existem itens válidos para comparação.",
@@ -167,7 +167,7 @@
     "FarmingModeNote": "(mantém espaço livre para drops)",
     "MakeRoom": {
       "Desc": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
-      "Desc_female": "O DIM está movendo apenas engramas e consumíveis da {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
+      "Desc_female": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "Desc_male": "O DIM está movendo apenas engramas e consumíveis do {{store}} para o cofre ou outros personagens para evitar que eles vão para o Chefe dos Correios.",
       "MakeRoom": "Abrir espaço para novos itens movendo equipamentos",
       "Tooltip": "Se marcado, o DIM irá mover também armas e armaduras para abrir espaço no cofre para engramas."
@@ -430,7 +430,7 @@
   },
   "InGameLoadout": {
     "ClearSlot": "Limpar Slot {{index}}",
-    "Create": "Criar Set",
+    "Create": "Criar set",
     "CreateTitle": "Criar Set no Jogo a partir do Equipamento Atual",
     "CurrentlyEquipped": "Equipado Atualmente",
     "DeleteFailed": "Falha ao excluir Set",
@@ -451,7 +451,7 @@
   },
   "Infusion": {
     "Filter": "Filtrar itens",
-    "InfuseSource": "Selecione o item para infundir {{name}} em",
+    "InfuseSource": "Selecione o item para infundir {{name}}",
     "InfuseTarget": "Selecione o item para infundir em {{name}}",
     "InfusionMaterials": "Materiais de infusão",
     "NoItems": "Nenhum item para infusão disponível.",
@@ -478,7 +478,7 @@
     "Distributed": "{{name}} distribuído\n{{name}} está agora dividido por igual entre os personagens.",
     "MovingItem": "Transferir para o cofre",
     "MovingItem_female": "Transferir para a {{target}}",
-    "MovingItem_male": "Transferir para o {{target}}",
+    "MovingItem_male": "Transferir para a {{target}}",
     "ToStore": "Todos os {{name}} estão agora no seu {{store}}.",
     "ToVault": "Todos os {{name}} estão agora no seu cofre."
   },
@@ -488,9 +488,9 @@
   },
   "ItemService": {
     "BucketFull": {
-      "Guardian": "Há muitos '{{itemtype}}' em seu {{store}}.",
-      "Guardian_female": "Há muitos '{{itemtype}}' em seu {{store}}.",
-      "Guardian_male": "Há muitos '{{itemtype}}' em seu {{store}}.",
+      "Guardian": "There are too many '{{itemtype}}' items on your {{store}}.",
+      "Guardian_female": "There are too many '{{itemtype}}' items on your {{store}}.",
+      "Guardian_male": "There are too many '{{itemtype}}' items on your {{store}}.",
       "Vault": "Há muitos '{{itemtype}}' no {{store}}."
     },
     "Classified": "Este item é confidencial e não pode ser transferido no momento.",
@@ -667,10 +667,10 @@
     "DecreaseStatPriority": "Reduz prioridade de atributo",
     "DisabledByAutoStatMods": "Mods de atributos estão sendo escolhidos automaticamente pelo Otimizador de Set.",
     "DisabledDueToMaintenance": "O Otimizador de Set está indisponível temporariamente devido à manutenção da API da Bungie.",
-    "EquipItems": "Equipar",
+    "EquipItems": "Equip",
     "ExcludeItem": "Ignorar item",
     "ExcludeVendors": "Pesquise \"-is:vendor\" para excluir itens do fornecedor do Otimizador de Sets.",
-    "ExcludedItems": "Itens Excluídos",
+    "ExcludedItems": "Itens ignorados",
     "ExistingLoadout": "Set Existente",
     "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
@@ -705,7 +705,7 @@
     "NoExoticPreference": "Nenhum Exótico Selecionado",
     "NoExoticPreferenceDescription": "Armadura exótica será usada se maximizar os atributos.",
     "NoLoadoutsToCompare": "Nenhum Set para comparar",
-    "None": "Nenhuma",
+    "None": "Nenhum",
     "OptimizerExplanationGuide": "Leia o Guia de Usuário para mais informações e um vídeo tutorial.",
     "OptimizerExplanationMods": "Escolha um exótico, mods e uma subclasse. Otimizador de Sets só inclui atributos bônus de mods e opções de subclasse escolhidos - todos os mods que já estão na armadura são ignorados.",
     "OptimizerExplanationSearch": "Use a barra de pesquisa para restringir qual armadura deve ser considerada. Se nenhuma armadura corresponder à busca em um slot, todas as armaduras desse slot serão consideradas.",
@@ -770,9 +770,9 @@
     "ClearingSpace": "Movendo outros itens para fora",
     "CopyAndEdit": "Editar Cópia",
     "Create": "Criar set",
-    "CurrentlyEquipped": "Atualmente Equipado",
+    "CurrentlyEquipped": "Equipado Atualmente",
     "Deequip": "Desequipando itens de outros personagens",
-    "Delete": "Remover",
+    "Delete": "Apagar",
     "DimLoadouts": "Sets no DIM",
     "Edit": "Editar set",
     "EditBrief": "Editar",
@@ -821,7 +821,7 @@
     "ManageLoadouts": "Gerenciar Sets",
     "MaxSlots": "Você só pode ter {{slots}} {{bucketName}} em um set.",
     "MaximizeLight": "Maximizar Luz",
-    "MaximizePower": "Maximizar Poder",
+    "MaximizePower": "Poder Máximo",
     "MaximizeStat": "Maximizar atributos",
     "MissingItemsWarning": "Alguns itens deste set não estão mais em seu inventário.",
     "ModErrorSummary_one": "1 erro no mod:",
@@ -955,7 +955,7 @@
     "AddNote": "Adicionar anotações",
     "AddToLoadout": "Set",
     "AddToLoadoutTitle": "Adicionar isto a um set",
-    "All": "Tudo",
+    "All": "Todos",
     "CannotCurrentlyRoll": "Este perk não pode ser utilizado na versão atual deste item.",
     "CantPullFromPostmaster": "Você deve visitar o postmaster no jogo para recuperar este item.",
     "CatalystProgress": "Progresso do Catalisador",
@@ -977,7 +977,7 @@
     "LockUnlock": {
       "AutoLock": "Estado do bloqueio está sincronizado com a etiqueta deste item",
       "Lock": "Travar {{itemType}}",
-      "Locked": "Bloqueado",
+      "Locked": "Travado",
       "Unlock": "Destravar {{itemType}}",
       "Unlocked": "Desbloqueado"
     },
@@ -1002,9 +1002,9 @@
     "TabList": "Abas de detalhe do item",
     "ToggleSidecar": "Expandir ou recolher ações do item",
     "TrackUntrack": {
-      "Track": "Rastrear {{itemType}}",
+      "Track": "Seguir {{itemType}}",
       "Tracked": "Rastreado",
-      "Untrack": "Não rastrear {{itemType}}",
+      "Untrack": "Não seguir {{itemType}}",
       "Untracked": "Não rastreado"
     },
     "TriageTab": "Triagem",
@@ -1070,7 +1070,7 @@
       "Tag": "Etiqueta",
       "Tier": "Nível",
       "Traits": "Atributos de Arma",
-      "WishList": "Lista de desejos",
+      "WishList": "Lista de Desejos",
       "WishListNotes": "Anotações da lista de desejos",
       "Year": "Ano"
     },
@@ -1118,7 +1118,7 @@
     "QueryFilteredTrackedTriumphs": "Nenhum dos triunfos que você está rastreando coincidiram com a pesquisa",
     "QuestExpired": "Expirado",
     "QuestExpires": "Expira em ",
-    "Quests": "Jornadas",
+    "Quests": "Missões",
     "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets_one": "1 reset",
@@ -1223,7 +1223,7 @@
     "SpacesSize_other": "{{count}} espaços",
     "Theme": "Tema",
     "VaultArmorGroupingStyle": "Separe as armaduras em linhas diferentes por classe",
-    "VaultGroupingNone": "Nenhuma",
+    "VaultGroupingNone": "Nenhum",
     "VaultWeaponGroupingStyle": "Separe grupos de armas em linhas diferentes",
     "WishlistRefreshNotificationBody": "Se você não vê nenhuma atualização, certifique-se de que a fonte (como o GitHub) as reflete!",
     "WishlistRefreshNotificationTitle": "Lista de Desejos Recarregada"
@@ -1404,7 +1404,7 @@
     "BetterWorseArmor": "Armadura Pior/Melhor",
     "BetterWorseIncludes": "Identifica peças de armaduras com:",
     "HighStats": "Atributos Altos",
-    "InLoadouts": "Vinculado aos Sets",
+    "InLoadouts": "Em Sets",
     "OwnedCount": "# Possuído",
     "PerkBetterArmorDesc": "O mesmo, ou mais, perks intrínsecas ou slots especiais de mods.",
     "PerkWorseArmorDesc": "O mesmo perk intrínseco, ou nenhum.",
@@ -1457,7 +1457,7 @@
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM é um app gratuito e de código-aberto, construído pela comunidade de desenvolvedores sobre os mesmos serviços usados pela Bungie.net e pelo app Destiny Companion.",
       "Schedule": {
-        "beta": "Esta versão beta do DIM é atualizada toda vez que alteramos o código - ele recebe os recursos mais recentes e correções, mas também os erros mais recentes!",
+        "beta": "Essa versão beta do DIM é atualizada toda vez que mudamos o código - ele pega as funcionalidades mais atuais, mas pega os bugs mais atuais também!",
         "release": "Esta versão do DIM é atualizada uma vez por semana, aproximadamente à meia-noite de Domingo, hora do Pacífico dos EUA."
       },
       "Translation": "Junte-se à equipe de tradução!",
