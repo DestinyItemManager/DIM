@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'bar': string;
+  'forCompare': string;
   'masterwork': string;
   'range': string;
   'stat': string;

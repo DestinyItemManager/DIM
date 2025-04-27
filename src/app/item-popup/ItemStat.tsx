@@ -311,46 +311,6 @@ function StatTotal({
 }
 
 /**
- * A single stat value, for the table view
- */
-export function ItemStatValue({
-  stat,
-  item,
-  baseStat,
-}: {
-  stat: DimStat;
-  item: DimItem;
-  /** Display base stat value instead of modded/masterworked value */
-  baseStat?: boolean;
-}) {
-  const masterworkIndex =
-    item.masterworkInfo?.stats?.findIndex((s) => s.hash === stat.statHash) || 0;
-
-  const isMasterworkedStat =
-    !baseStat && item.masterworkInfo?.stats?.[masterworkIndex]?.hash === stat.statHash;
-
-  const moddedStatValue = !baseStat && getTotalModEffects(item, stat.statHash);
-
-  const value = (baseStat ? stat.base : stat.value) ?? 0;
-
-  const optionalClasses = {
-    [styles.masterworked]: isMasterworkedStat,
-    [styles.mod]: Boolean(moddedStatValue && moddedStatValue > 0 && stat.value !== stat.base),
-    [styles.negativeModded]: Boolean(
-      moddedStatValue && moddedStatValue < 0 && stat.value !== stat.base,
-    ),
-  };
-
-  return (
-    <div className={clsx(styles.value, optionalClasses)}>
-      <AnimatedNumber value={value} />
-      {statsMs.includes(stat.statHash) && t('Stats.Milliseconds')}
-      {stat.statHash === StatHashes.RecoilDirection && <RecoilStat value={value} />}
-    </div>
-  );
-}
-
-/**
  * A special stat row for D1 items that have item quality calculations
  */
 export function D1QualitySummaryStat({ item }: { item: D1Item }) {
@@ -402,13 +362,6 @@ function getWeaponPartSockets(item: DimItem) {
   );
 }
 
-/**
- * Looks through the item sockets to find any weapon/armor mods that modify this stat.
- * Returns the total value the stat is modified by, or 0 if it is not being modified.
- */
-function getTotalModEffects(item: DimItem, statHash: number) {
-  return sumBy(getModEffects(item, statHash), ([s]) => s);
-}
 /**
  * Looks through the item sockets to find any weapon/armor mods that modify this stat.
  * Returns the value the stat is modified by, or 0 if it is not being modified.

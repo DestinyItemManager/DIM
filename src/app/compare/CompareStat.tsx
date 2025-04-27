@@ -12,12 +12,14 @@ export default function CompareStat({
   stat,
   item,
   value,
+  forCompare = false,
 }: {
   stat?: DimStat | D1Stat;
   item: DimItem;
   value: number;
   min: number;
   max: number;
+  forCompare?: boolean;
 }) {
   const isMasterworkStat = Boolean(
     item?.bucket.inWeapons &&
@@ -27,7 +29,12 @@ export default function CompareStat({
   const color = getCompareColor(statRange(stat, min, max, value));
 
   return (
-    <div className={styles.stat} style={{ color }}>
+    <div
+      className={clsx(styles.stat, {
+        [styles.forCompare]: forCompare,
+      })}
+      style={{ color }}
+    >
       {value !== 0 && stat?.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
           <span style={{ width: percent(value / stat.maximumValue) }} />

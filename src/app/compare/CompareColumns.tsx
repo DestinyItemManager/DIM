@@ -98,6 +98,7 @@ export function getColumns(
         }
         return (
           <CompareStat
+            forCompare
             min={ctx?.min ?? 0}
             max={ctx?.max ?? 0}
             stat={stat}
@@ -144,6 +145,7 @@ export function getColumns(
             }
             return (
               <CompareStat
+                forCompare
                 min={ctx?.min ?? 0}
                 max={ctx?.max ?? 0}
                 stat={stat}
@@ -222,7 +224,7 @@ export function getColumns(
   const customStats = createCustomStatColumns(customStatDefs, undefined, true);
   // TODO: Until Organizer also uses compareStat
   const cell: ColumnDefinition<number>['cell'] = (value: number, item, ctx) => (
-    <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={value} />
+    <CompareStat forCompare min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={value} />
   );
   for (const c of customStats) {
     c.cell = cell;
@@ -257,7 +259,13 @@ export function getColumns(
         value: (item) => (item.power === 0 ? undefined : item.power),
         cell: (val, item, ctx) =>
           val !== undefined ? (
-            <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={val} />
+            <CompareStat
+              forCompare
+              min={ctx?.min ?? 0}
+              max={ctx?.max ?? 0}
+              item={item}
+              value={val}
+            />
           ) : (
             t('Stats.NotApplicable')
           ),
@@ -272,7 +280,13 @@ export function getColumns(
         value: (item) => item.primaryStat?.value,
         cell: (val, item, ctx) =>
           val !== undefined ? (
-            <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={val} />
+            <CompareStat
+              forCompare
+              min={ctx?.min ?? 0}
+              max={ctx?.max ?? 0}
+              item={item}
+              value={val}
+            />
           ) : (
             t('Stats.NotApplicable')
           ),
@@ -289,7 +303,13 @@ export function getColumns(
           val !== undefined && (
             <>
               <EnergyCostIcon />
-              <CompareStat min={ctx?.min ?? 0} max={ctx?.max ?? 0} item={item} value={val} />
+              <CompareStat
+                forCompare
+                min={ctx?.min ?? 0}
+                max={ctx?.max ?? 0}
+                item={item}
+                value={val}
+              />
             </>
           ),
         defaultSort: SortDirection.DESC,

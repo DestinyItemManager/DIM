@@ -16,7 +16,6 @@ import { isHarmonizable } from 'app/inventory/store/deepsight';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
-import { ItemStatValue } from 'app/item-popup/ItemStat';
 import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
@@ -67,6 +66,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
 
+import CompareStat from 'app/compare/CompareStat';
 import {
   buildNodeNames,
   buildSocketNames,
@@ -181,19 +181,27 @@ export function getColumns(
       headerClassName: styles.stats,
       statHash,
       columnGroup: statsGroup,
-      value: (item: DimItem) => {
+      value: (item) => {
         const stat = item.stats?.find((s) => s.statHash === statHash);
         if (stat?.statHash === StatHashes.RecoilDirection) {
           return recoilValue(stat.value);
         }
         return stat?.value;
       },
-      cell: (_val, item: DimItem) => {
+      cell: (_val, item, ctx) => {
         const stat = item.stats?.find((s) => s.statHash === statHash);
         if (!stat) {
           return null;
         }
-        return <ItemStatValue stat={stat} item={item} />;
+        return (
+          <CompareStat
+            min={ctx?.min ?? 0}
+            max={ctx?.max ?? 0}
+            stat={stat}
+            item={item}
+            value={stat.value}
+          />
+        );
       },
       defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
       filter: (value) => {
@@ -220,19 +228,28 @@ export function getColumns(
           ...column,
           id: `base${column.statHash}`,
           columnGroup: baseStatsGroup,
-          value: (item: DimItem): number | undefined => {
+          value: (item): number | undefined => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
             if (stat?.statHash === StatHashes.RecoilDirection) {
               return recoilValue(stat.base);
             }
             return stat?.base;
           },
-          cell: (_val, item: DimItem) => {
+          cell: (_val, item, ctx) => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
             if (!stat) {
               return null;
             }
-            return <ItemStatValue stat={stat} item={item} baseStat />;
+            // TODO: force a width if this is armor, so we see the bar?
+            return (
+              <CompareStat
+                min={ctx?.min ?? 0}
+                max={ctx?.max ?? 0}
+                stat={stat}
+                item={item}
+                value={stat.base}
+              />
+            );
           },
           filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
           csv: (_value, item) => {
