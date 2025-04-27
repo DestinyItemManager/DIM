@@ -37,7 +37,7 @@ export default function CompareStat({
         value={value}
         className={clsx(styles.statValue, {
           [styles.masterwork]: isMasterworkStat,
-          [styles.noMinWidth]: stat?.statHash === StatHashes.AnyEnergyTypeCost,
+          [styles.noMinWidth]: !stat || stat.statHash === StatHashes.AnyEnergyTypeCost,
         })}
       />
       {stat?.statHash === StatHashes.RecoilDirection && <RecoilStat value={value} />}
