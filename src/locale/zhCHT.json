@@ -28,15 +28,17 @@
     "WeeklyHeroic": "每週英雄突擊"
   },
   "Armory": {
+    "AlternateItems": "Alternate Versions",
     "Armory": "軍械庫",
+    "DifferentSeason": "Reissue from a different season",
     "NoNotes": "無注釋",
     "OpenInArmory": "查看武器詳情",
     "Season": "年 {{year}}，第 {{season}} 賽季",
-    "TrashlistedRolls_one": "Trashlisted Roll",
-    "TrashlistedRolls_other": "{{count, number}} Trashlisted Rolls",
+    "TrashlistedRolls_one": "垃圾列表特性組合",
+    "TrashlistedRolls_other": "{{count, number}} 個垃圾列表特性組合",
     "Unknown": "未知物品",
-    "WishlistedRolls_one": "Wishlisted Roll",
-    "WishlistedRolls_other": "{{count, number}} Wishlisted Rolls",
+    "WishlistedRolls_one": "願望清單特性組合",
+    "WishlistedRolls_other": "{{count, number}} 個願望清單特性組合",
     "YourItems": "你的物品"
   },
   "Browsercheck": {
@@ -62,8 +64,8 @@
     "Confirm": "更新説明",
     "Remove": "從備注中移除 / 移除 #標簽",
     "Replace": "替換備注",
-    "Title_one": "Change notes for 1 item",
-    "Title_other": "Change notes for {{count}} items"
+    "Title_one": "更改一個物品的備注",
+    "Title_other": "更改 {{count}} 個物品的備注"
   },
   "BungieAlert": {
     "Title": "一則來自Bungie的資訊:"
@@ -113,17 +115,17 @@
     "Super": "超能冷卻：{{cooldown}}"
   },
   "Countdown": {
-    "Days_compact_one": "{{count}}d",
-    "Days_compact_other": "{{count}}d",
-    "Days_one": "1 Day",
-    "Days_other": "{{count}} Days"
+    "Days_compact_one": "{{count}}天",
+    "Days_compact_other": "{{count}}天",
+    "Days_one": "1天",
+    "Days_other": "{{count}} 天"
   },
   "Csv": {
     "EmptyFile": "檔案中沒有行",
     "ImportConfirm": "您確定要從CSV導入標籤/筆記？這將覆蓋您試算表中所包含的所有項目/標記。",
     "ImportFailed": "從CSV導入標籤/注釋失敗：{{error}}",
-    "ImportSuccess_one": "Tags/notes loaded for one item.",
-    "ImportSuccess_other": "Tags/notes loaded for {{count}} items.",
+    "ImportSuccess_one": "為一個物品加載的標籤/注釋。",
+    "ImportSuccess_other": "為{{count}} 個物品加載的標籤/注釋。",
     "ImportWrongFileType": "此檔案不是一個CSV檔案。",
     "WrongFields": "CSV檔案中必須有'Id'，'Notes'，'Tag'，'Hash'列（編號，注釋，標籤，雜湊）"
   },
@@ -149,18 +151,18 @@
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
-    "D2Desc_female_one": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
-    "D2Desc_female_other": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
-    "D2Desc_male_one": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
-    "D2Desc_male_other": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
-    "D2Desc_one": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}.",
-    "D2Desc_other": "DIM is preventing items from going to the Postmaster by making sure there's always {{count}} empty spaces per item type on {{store}}.",
-    "Desc_female_one": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_female_other": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
-    "Desc_male_one": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_male_other": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
-    "Desc_one": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping one empty space open per item type to prevent anything from going to the Postmaster.",
-    "Desc_other": "DIM is moving Engram and Glimmer items from {{store}} to the vault and keeping {{count}} spaces open per item type to prevent anything from going to the Postmaster.",
+    "D2Desc_female_one": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有空位。",
+    "D2Desc_female_other": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有 {{count}} 個空位。",
+    "D2Desc_male_one": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有空位。",
+    "D2Desc_male_other": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有 {{count}} 個空位。",
+    "D2Desc_one": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有空位。",
+    "D2Desc_other": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有 {{count}} 個空位。",
+    "Desc_female_one": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有空位。",
+    "Desc_female_other": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
+    "Desc_male_one": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有空位。",
+    "Desc_male_other": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
+    "Desc_one": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有空位。",
+    "Desc_other": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
     "FarmingMode": "收集模式",
     "FarmingModeNote": "(為掉落物留出空間)",
     "MakeRoom": {
@@ -204,12 +206,12 @@
     "ArmorIntrinsic": "顯示帶有固有特性的傳説防具，例如詭計護甲。",
     "Ascended": "顯示可提升光等且已提升的物品。",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
-    "BulkClear_one": "Removed tag from 1 item.",
-    "BulkClear_other": "Removed tags from {{count}} items.",
-    "BulkRevert_one": "Reverted tag on 1 item.",
-    "BulkRevert_other": "Reverted tags on {{count}} items.",
-    "BulkTag_one": "Tagged selected item as {{tag}}.",
-    "BulkTag_other": "Tagged {{count}} selected items as {{tag}}.",
+    "BulkClear_one": "移除物品標籤",
+    "BulkClear_other": "移除 {{count}} 物品標籤",
+    "BulkRevert_one": "恢復物品標籤",
+    "BulkRevert_other": "恢復 {{count}} 件物品標籤",
+    "BulkTag_one": "將選擇物品標記為 {{tag}}.",
+    "BulkTag_other": "將 {{count}} 件選擇物品標記為 {{tag}}.",
     "Catalyst": "按狀態顯示催化。catalyst:complete 顯示已解鎖并已套用的催化， catalyst:incomplete 顯示已解鎖但尚未完成目標或套用的催化，而 catalyst:missing 顯示你尚未解鎖催化的物品。",
     "Class": "按照職業類別顯示.",
     "Combine": "可以用括號來組合過濾器，或用「or」和「and」來進一步篩選你的搜索，例如「{{example}}」。",

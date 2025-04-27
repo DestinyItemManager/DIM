@@ -28,7 +28,9 @@
     "WeeklyHeroic": "Assalto Eroico Settimanale"
   },
   "Armory": {
+    "AlternateItems": "Versione alternative",
     "Armory": "Armeria",
+    "DifferentSeason": "Riproposta da una stagione diversa",
     "NoNotes": "Nessuna Nota",
     "OpenInArmory": "mostra in Armeria",
     "Season": "Stagione {{season}}, Anno {{year}}",

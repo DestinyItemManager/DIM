@@ -28,7 +28,9 @@
     "WeeklyHeroic": "주간 영웅 공격전"
   },
   "Armory": {
+    "AlternateItems": "다른 버전",
     "Armory": "무기고",
+    "DifferentSeason": "다른 시즌에서 재출시됨",
     "NoNotes": "메모 없음",
     "OpenInArmory": "무기고에서 보기",
     "Season": "{{season}}시즌, {{year}}년차",
