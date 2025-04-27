@@ -28,7 +28,9 @@
     "WeeklyHeroic": "Assalto Eroico Settimanale"
   },
   "Armory": {
+    "AlternateItems": "Versione alternative",
     "Armory": "Armeria",
+    "DifferentSeason": "Riproposta da una stagione diversa",
     "NoNotes": "Nessuna Nota",
     "OpenInArmory": "mostra in Armeria",
     "Season": "Stagione {{season}}, Anno {{year}}",
@@ -54,7 +56,7 @@
     "Progress": "Progresso",
     "Reputation": "Reputazione",
     "Unknown": "Sconosciuto",
-    "Vault": "Deposito",
+    "Vault": "Depos",
     "Weapons": "Armi"
   },
   "BulkNote": {
@@ -113,7 +115,7 @@
     "Super": "Recupero della super: {{cooldown}}"
   },
   "Countdown": {
-    "Days_compact_one": "{{count}}g",
+    "Days_compact_one": "{{count}}gg",
     "Days_compact_other": "{{count}}gg",
     "Days_one": "1 Giorno",
     "Days_other": "{{count}} Giorni"
@@ -128,7 +130,7 @@
     "WrongFields": "Il CSV deve avere le colonne 'Id', 'Notes', 'Tags' e 'Hash'."
   },
   "Dialog": {
-    "Cancel": "Annulla",
+    "Cancel": "Cancella",
     "OK": "OK"
   },
   "EnergyMeter": {
@@ -149,14 +151,14 @@
     "Troubleshooting": "Guida alla risoluzione dei problemi"
   },
   "FarmingMode": {
-    "D2Desc_female_one": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sulla {{store}}.",
-    "D2Desc_female_other": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci siano sempre {{count}} spazi liberi per tipo di oggetto sulla {{store}}.",
+    "D2Desc_female_one": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sul {{store}}.",
+    "D2Desc_female_other": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci siano sempre {{count}} spazi liberi per tipo di oggetto sul {{store}}.",
     "D2Desc_male_one": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sul {{store}}.",
     "D2Desc_male_other": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci siano sempre {{count}} spazi liberi per tipo di oggetto sul {{store}}.",
     "D2Desc_one": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto sul {{store}}.",
     "D2Desc_other": "DIM sta impedendo agli oggetti di finire dagli Amministratori assicurandosi che ci siano sempre {{count}} spazi liberi per tipo di oggetto sul {{store}}.",
-    "Desc_female_one": "DIM sta spostando Engrammi e Lumen dalla {{store}} nel Deposito e tenendo uno spazio vuoto per tipo di oggetto per evitare che qualcosa finisca dagli Amministratori.",
-    "Desc_female_other": "DIM sta spostando Engrammi e Lumen dalla {{store}} nel Deposito e tenendo {{count}} spazi vuoti per tipo di oggetto per evitare che qualcosa finisca dagli Amministratori.",
+    "Desc_female_one": "DIM sta spostando Engrammi e Lumen dal {{store}} nel Deposito e tenendo uno spazio vuoto per tipo di oggetto per evitare che qualcosa finisca dagli Amministratori.",
+    "Desc_female_other": "DIM sta spostando Engrammi e Lumen dal {{store}} nel Deposito e tenendo {{count}} spazi vuoti per tipo di oggetto per evitare che qualcosa finisca dagli Amministratori.",
     "Desc_male_one": "DIM sta spostando Engrammi e Lumen dal {{store}} nel Deposito e tenendo uno spazio vuoto per tipo di oggetto per evitare che qualcosa finisca dagli Amministratori.",
     "Desc_male_other": "DIM sta spostando Engrammi e Lumen dal {{store}} nel Deposito e tenendo {{count}} spazi vuoti per tipo di oggetto per evitare che qualcosa finisca dagli Amministratori.",
     "Desc_one": "DIM sta spostando Engrammi e Lumen dal {{store}} nel Deposito e tenendo uno spazio vuoto per tipo di oggetto per evitare che qualcosa finisca dagli Amministratori.",
@@ -164,9 +166,9 @@
     "FarmingMode": "Modalità Farming",
     "FarmingModeNote": "(mantiene spazio per i drop)",
     "MakeRoom": {
-      "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dagli Amministratori.",
+      "Desc": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dagli Amministratori.",
       "Desc_female": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dagli Amministratori.",
-      "Desc_male": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dal {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dagli Amministratori.",
+      "Desc_male": "DIM sposta solo gli Engrammi e i consumabili per i Lumen dalla {{store}} al deposito o agli altri personaggi per evitare che qualcosa finisca dagli Amministratori.",
       "MakeRoom": "Fai spazio per poter raccogliere oggetti, spostando l'equipaggiamento",
       "Tooltip": "Se selezionato, DIM sposterà armi e equipaggiamento per creare spazio per gli engrammi nel deposito."
     },
@@ -486,8 +488,8 @@
   },
   "ItemService": {
     "BucketFull": {
-      "Guardian": "La {{store}} ha troppe '{{itemtype}}'.",
-      "Guardian_female": "La {{store}} ha troppe '{{itemtype}}'.",
+      "Guardian": "Il {{store}} ha troppe '{{itemtype}}'.",
+      "Guardian_female": "Il {{store}} ha troppe '{{itemtype}}'.",
       "Guardian_male": "Il {{store}} ha troppe '{{itemtype}}'.",
       "Vault": "Il {{store}} ha troppe '{{itemtype}}'."
     },
@@ -552,7 +554,7 @@
     "LightMode": {
       "HelpCurrent": "Calcola le dotazioni con i livelli di difesa attuali.",
       "HelpScaled": "Calcola le dotazioni, supponendo che tutti gli oggetti abbiano 350 di difesa.",
-      "LightMode": "Modalità Luce"
+      "LightMode": "Tema chiaro"
     },
     "Loading": "Caricando i migliori set",
     "LockEquipped": "Blocca Equipaggiati",
@@ -665,7 +667,7 @@
     "DecreaseStatPriority": "Diminuisci la priorità della statistica",
     "DisabledByAutoStatMods": "Le Modifiche alle statistiche vengono scelte automaticamente dall'Ottimizzatore di Dotazioni.",
     "DisabledDueToMaintenance": "L'Ottimizzatore di Dotazioni è al momento disabilitato a causa della manutenzione delle API di Bungie.",
-    "EquipItems": "Equipaggia",
+    "EquipItems": "Usa",
     "ExcludeItem": "Escludi Oggetto",
     "ExcludeVendors": "Cerca \"-is:vendor\" per escludere gli oggetti dei mercanti dall'Ottimizzatore di dotazioni.",
     "ExcludedItems": "Oggetti esclusi",
@@ -768,7 +770,7 @@
     "ClearingSpace": "Spostando via gli altri oggetti",
     "CopyAndEdit": "Copia e modifica",
     "Create": "Crea dotazione",
-    "CurrentlyEquipped": "Attualmente Equipaggiato",
+    "CurrentlyEquipped": "Attualmente equipaggiato",
     "Deequip": "Togliendo oggetti dagli altri personaggi",
     "Delete": "Elimina",
     "DimLoadouts": "Dotazioni DIM",
@@ -785,7 +787,7 @@
     "FillFromInventory": "Riempi utilizzando i non equipaggiati",
     "FilteredItems": "Oggetti Filtrati",
     "FindAnother": "Trova un altro {{name}}",
-    "FromEquipped": "Da equipaggiato",
+    "FromEquipped": "Equipaggiato",
     "Generated": "Dotazione T{{tier}}",
     "HashtagTip": "Consiglio: Usa gli #hashtag nel nome della tua dotazione e verranno mostrati qui.",
     "Import": {
@@ -809,17 +811,17 @@
     "LoadoutParametersStats": "Priorità statistiche e gradi minimi/massimi statistiche",
     "Loadouts": "Dotazioni",
     "MakeRoom": "Crea spazio per gli Amministratori",
-    "MakeRoomDone_female_one": "Ho terminato di creare spazio per 1 oggetto dagli Amministratori togliendo 1 oggetto dalla {{store}}.",
-    "MakeRoomDone_female_other": "Ho terminato di creare spazio per {{count}} oggetti dagli Amministratori togliendo {{movedNum}} oggetti dalla {{store}}.",
-    "MakeRoomDone_male_one": "Ho terminato di creare spazio per 1 oggetto dagli Amministratori togliendo 1 oggetto dal {{store}}.",
-    "MakeRoomDone_male_other": "Ho terminato di creare spazio per {{count}} oggetti dagli Amministratori togliendo {{movedNum}} oggetti dal {{store}}.",
-    "MakeRoomDone_one": "Ho terminato di creare spazio per 1 oggetto dagli Amministratori togliendo 1 oggetto dal {{store}}.",
-    "MakeRoomDone_other": "Ho terminato di creare spazio per {{count}} oggetti dagli Amministratori togliendo {{movedNum}} oggetti dal {{store}}.",
+    "MakeRoomDone_female_one": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dalla {{store}}.",
+    "MakeRoomDone_female_other": "Ho terminato di creare spazio per {{count}} oggetti dell'Amministratore togliendo {{movedNum}} oggetti dalla {{store}}.",
+    "MakeRoomDone_male_one": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dalla {{store}}.",
+    "MakeRoomDone_male_other": "Ho terminato di creare spazio per {{count}} oggetti dell'Amministratore togliendo {{movedNum}} oggetti dalla {{store}}.",
+    "MakeRoomDone_one": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dalla {{store}}.",
+    "MakeRoomDone_other": "Ho terminato di creare spazio per {{count}} oggetti dell'Amministratore togliendo {{movedNum}} oggetti dalla {{store}}.",
     "MakeRoomError": "Impossibile creare spazio per tutti gli oggetti degli Amministratori: {{error}}.",
     "ManageLoadouts": "Gestisci dotazioni",
     "MaxSlots": "Puoi avere soltanto {{slots}} {{bucketName}} in una dotazione.",
     "MaximizeLight": "Potere Max",
-    "MaximizePower": "Potere Max",
+    "MaximizePower": "Potere Massimo",
     "MaximizeStat": "Massimizza Statistica",
     "MissingItemsWarning": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
     "ModErrorSummary_one": "1 errore modifica:",
@@ -1007,7 +1009,7 @@
     },
     "TriageTab": "Triage",
     "UnreliablePerkOption": "Questa peculiarità compare solo nella vista delle Collezioni. Potrebbe non comparire casualmente su questo oggetto.",
-    "Vault": "Deposito",
+    "Vault": "Depos",
     "WeaponLevel": "Livello Arma {{level}}"
   },
   "Notes": {
@@ -1015,7 +1017,7 @@
     "Help": "Aggiungi note, #hashtags e :symbols:"
   },
   "Notification": {
-    "Cancel": "Annulla",
+    "Cancel": "Cancella",
     "OK": "Ignora"
   },
   "Objectives": {
@@ -1054,7 +1056,7 @@
       "OriginTraits": "Peculiarità originale",
       "OtherPerks": "Altre peculiarità",
       "PercentComplete": "% Completato",
-      "Perks": "Peculiarità",
+      "Perks": "Perks",
       "PerksMods": "Peculiarità & Modifiche",
       "Power": "Potere",
       "Quality": "Qualità %",
@@ -1068,7 +1070,7 @@
       "Tag": "Etichetta",
       "Tier": "Rarità",
       "Traits": "Caratteristiche Arma",
-      "WishList": "Lista Desideri",
+      "WishList": "Lista dei desideri",
       "WishListNotes": "Note Lista Desideri",
       "Year": "Anno"
     },
@@ -1112,7 +1114,7 @@
     "PointsUsed_other": "{{count}} punti utilizzati",
     "PowerBonusHeader": "Ricompense +{{powerBonus}} Potere",
     "PowerBonusHeaderUndefined": "Altre Ricompense",
-    "Progress": "Avanzamento",
+    "Progress": "Progresso",
     "QueryFilteredTrackedTriumphs": "Nessuno dei tuoi trionfi seguiti corrisponde alla ricerca",
     "QuestExpired": "Scaduta",
     "QuestExpires": "Scade tra ",
@@ -1189,7 +1191,7 @@
     "Language": "Lingua",
     "LoadoutSort": "Ordine dotazioni:",
     "LogOut": "Disconnetti",
-    "Masterworked": "Grado Prodigio",
+    "Masterworked": "Prodigioso",
     "PerkDisplay": "Visualizzazione peculiarità nel popup degli oggetti",
     "PerkGrid": "Griglia",
     "PerkList": "Lista",
@@ -1221,7 +1223,7 @@
     "SpacesSize_other": "{{count}} spazi",
     "Theme": "Tema",
     "VaultArmorGroupingStyle": "Separa le armature su righe diverse ordinate per classe",
-    "VaultGroupingNone": "Non raggruppare",
+    "VaultGroupingNone": "Nessuno",
     "VaultWeaponGroupingStyle": "Separa i gruppi di armi su righe diverse",
     "WishlistRefreshNotificationBody": "Se non vedi nessun cambiamento, assicurati che la fonte (come GitHub) li rifletta!",
     "WishlistRefreshNotificationTitle": "Lista Desideri ricaricata"
@@ -1369,7 +1371,7 @@
     "Action": "Svuota alloggiamenti",
     "ArmorMods": "{{count}}x Modifiche armatura",
     "Button": "Svuotamento {{numSockets}} alloggiamenti",
-    "Cancel": "Annulla",
+    "Cancel": "Cancella",
     "Choose": "Scegli gli alloggiamenti da svuotare",
     "DiscountedMods": "{{count}}x Modifiche sconto",
     "Done": "Alloggiamenti svuotati",
@@ -1489,7 +1491,7 @@
     "DupeRolls": " (+{{num, number}} doppioni ignorati)",
     "ExternalSource": "Aggiungi un'altra Lista dei desideri",
     "ExternalSourcePlaceholder": "Incolla qui l'URL della Lista desideri",
-    "Header": "Lista Desideri",
+    "Header": "Lista dei desideri",
     "Import": "Carica i roll della Lista Desideri",
     "ImportError": "Errore nel caricamento della Lista Desideri da \"{{url}}\":{{error}}",
     "ImportFailed": "Nessuna delle tue Liste Desideri contieneva roll validi.",
