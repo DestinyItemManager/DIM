@@ -113,7 +113,7 @@
   },
   "Countdown": {
     "Days_compact_other": "{{count}}日間",
-    "Days_other": "{{count}} 日"
+    "Days_other": "{{count}}日間"
   },
   "Csv": {
     "EmptyFile": "ファイルにラインがありませんでした。",
