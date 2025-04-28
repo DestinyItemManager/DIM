@@ -23,6 +23,7 @@ import {
   faAngleLeft,
   faAngleRight,
   faArrowCircleDown,
+  faExclamationTriangle,
   shoppingCart,
 } from '../shell/icons';
 import styles from './CompareItem.m.scss';
@@ -62,6 +63,17 @@ export default memo(function CompareItem({
         <div className={styles.itemActions}>
           {item.vendor ? (
             <VendorItemWarning item={item} />
+          ) : item.owner !== 'unknown' &&
+            !item.canPullFromPostmaster &&
+            item.location.inPostmaster ? (
+            <PressTip
+              elementType="span"
+              tooltip={() => <>{t('MovePopup.CantPullFromPostmaster')}</>}
+            >
+              <ActionButton onClick={noop} disabled>
+                <AppIcon icon={faExclamationTriangle} />
+              </ActionButton>
+            </PressTip>
           ) : (
             <ActionButton title={t('Hotkey.Pull')} onClick={pullItem}>
               <AppIcon icon={faArrowCircleDown} />
