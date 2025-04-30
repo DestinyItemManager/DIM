@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
 const d1BrokenSelector = createSelector(
   storesSelector,
   (stores: DimStore[]) =>
-    stores[0].destinyVersion === 1 && !stores.some((s) => s.items.some((i) => !i.equipped)),
+    stores[0]?.destinyVersion === 1 && !stores.some((s) => s.items.some((i) => !i.equipped)),
 );
 
 export default function D1BrokenWarning() {
