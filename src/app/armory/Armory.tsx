@@ -405,10 +405,16 @@ function compareItemPerks(
     const ps2 = new Set(
       (rph2 && defs.PlugSet.get(rph2).reusablePlugItems.map((pi) => pi.plugItemHash)) || [],
     );
-    const ps1MinusPs2 = ps1.difference(ps2);
-    const ps2MinusPs1 = ps2.difference(ps1);
-    if (ps1MinusPs2.size || ps2MinusPs1.size) {
-      diff.push([[...ps1MinusPs2], [...ps2MinusPs1]]);
+    for (const set of [ps1, ps2]) {
+      for (const h of set) {
+        if (ps1.has(h) && ps2.has(h)) {
+          ps1.delete(h);
+          ps2.delete(h);
+        }
+      }
+    }
+    if (ps1.size || ps2.size) {
+      diff.push([[...ps1], [...ps2]]);
     }
   }
   return diff;
