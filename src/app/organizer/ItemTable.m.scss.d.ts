@@ -3,8 +3,10 @@
 interface CssExports {
   'hasFilter': string;
   'header': string;
+  'headerRow': string;
   'importButton': string;
   'noItems': string;
+  'row': string;
   'selection': string;
   'shiftHeld': string;
   'sorter': string;
