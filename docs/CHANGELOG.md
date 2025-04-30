@@ -1,6 +1,9 @@
 ## Next
 
+## 8.69.0 <span class="changelog-date">(2025-04-27)</span>
+
 * The Armory page will now link to alternate versions of an item if they exist, including reissues, shiny versions, adept versions, etc.
+* Crafted and enhanced weapons will now show their masterwork stat icon in the same place regular weapons do.
 
 ## 8.68.0 <span class="changelog-date">(2025-04-20)</span>
 
