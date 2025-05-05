@@ -1,5 +1,8 @@
 ## Next
 
+* Warning banner for Destiny 1 accounts when DIM detects the D1 API is still broken.
+* Fix for an Armory crash in outdated versions of Firefox.
+
 ## 8.69.0 <span class="changelog-date">(2025-04-27)</span>
 
 * The Armory page will now link to alternate versions of an item if they exist, including reissues, shiny versions, adept versions, etc.
