@@ -1,5 +1,7 @@
 ## Next
 
+## 8.70.0 <span class="changelog-date">(2025-05-04)</span>
+
 * Warning banner for Destiny 1 accounts when DIM detects the D1 API is still broken.
 * Fix for an Armory crash in outdated versions of Firefox.
 
