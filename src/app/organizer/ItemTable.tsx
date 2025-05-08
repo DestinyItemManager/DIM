@@ -339,17 +339,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     .map((c) => c.gridWidth ?? 'min-content')
     .join(' ')}`;
 
-  const numColumns = filteredColumns.length + 1;
-
-  const rowStyle = [...Array(numColumns).keys()]
-    .map(
-      (_v, n) =>
-        `.${styles.table} [role="cell"]:nth-of-type(${numColumns * 2}n+${
-          n + 2
-        }){background-color:var(--theme-organizer-row-even-bg) !important;}`,
-    )
-    .join('\n');
-
   /**
    * Select all items, or if any are selected, clear the selection.
    */
@@ -468,62 +457,67 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             onChangeEnabledColumn={onChangeEnabledColumn}
             forClass={classIfAny}
           />
-          <style>{rowStyle}</style>
         </div>
-        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-          <div>
-            <input
-              name="selectAll"
-              title={t('Organizer.SelectAll')}
-              type="checkbox"
-              checked={selectedItems.length === rows.length}
-              ref={(el) => {
-                el &&
-                  (el.indeterminate =
-                    selectedItems.length !== rows.length && selectedItems.length > 0);
-              }}
-              onChange={selectAllItems}
-            />
+        <div className={styles.headerRow} role="row">
+          <div
+            className={clsx(styles.selection, styles.header)}
+            role="columnheader"
+            aria-sort="none"
+          >
+            <div>
+              <input
+                name="selectAll"
+                title={t('Organizer.SelectAll')}
+                type="checkbox"
+                checked={selectedItems.length === rows.length}
+                ref={(el) => {
+                  el &&
+                    (el.indeterminate =
+                      selectedItems.length !== rows.length && selectedItems.length > 0);
+                }}
+                onChange={selectAllItems}
+              />
+            </div>
           </div>
-        </div>
-        {filteredColumns.map((column) => {
-          const columnSort = column.noSort
-            ? undefined
-            : columnSorts.find((c) => c.columnId === column.id);
-          return (
-            <div
-              key={column.id}
-              className={clsx(column.headerClassName, styles.header)}
-              role="columnheader"
-              aria-sort={
-                columnSort === undefined
-                  ? 'none'
-                  : columnSort.sort === SortDirection.DESC
-                    ? 'descending'
-                    : 'ascending'
-              }
-            >
+          {filteredColumns.map((column) => {
+            const columnSort = column.noSort
+              ? undefined
+              : columnSorts.find((c) => c.columnId === column.id);
+            return (
               <div
-                onClick={
-                  column.noSort
-                    ? undefined
-                    : toggleColumnSort(column.id, shiftHeld, column.defaultSort)
+                key={column.id}
+                className={clsx(column.headerClassName, styles.header)}
+                role="columnheader"
+                aria-sort={
+                  columnSort === undefined
+                    ? 'none'
+                    : columnSort.sort === SortDirection.DESC
+                      ? 'descending'
+                      : 'ascending'
                 }
               >
-                {column.header}
-                {columnSort && (
-                  <AppIcon
-                    className={styles.sorter}
-                    icon={columnSort.sort === SortDirection.DESC ? faCaretDown : faCaretUp}
-                  />
-                )}
+                <div
+                  onClick={
+                    column.noSort
+                      ? undefined
+                      : toggleColumnSort(column.id, shiftHeld, column.defaultSort)
+                  }
+                >
+                  {column.header}
+                  {columnSort && (
+                    <AppIcon
+                      className={styles.sorter}
+                      icon={columnSort.sort === SortDirection.DESC ? faCaretDown : faCaretUp}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
         {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
         {rows.slice(0, maxItems).map((row) => (
-          <React.Fragment key={row.item.id}>
+          <div key={row.item.id} className={styles.row} role="row">
             <div className={styles.selection} role="cell">
               <input
                 type="checkbox"
@@ -538,7 +532,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
               onRowClick={onRowClick}
               tableCtx={tableContext}
             />
-          </React.Fragment>
+          </div>
         ))}
       </div>
       {rows.length > maxItems && <ItemListExpander numItems={maxItems} onExpand={expandItems} />}

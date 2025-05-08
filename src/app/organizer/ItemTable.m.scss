@@ -16,12 +16,6 @@ $content-cells: 5;
   display: grid;
   margin: 8px 0 16px 0;
 
-  > div {
-    padding: 4px 8px;
-    padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
-    background-color: var(--theme-organizer-row-odd-bg);
-  }
-
   [role='cell'] {
     z-index: $content-cells;
   }
@@ -35,6 +29,7 @@ $content-cells: 5;
   top: var(--header-height);
   padding: 8px 8px !important;
   border-bottom: none !important;
+  background-color: var(--theme-organizer-row-odd-bg);
 
   display: flex;
   flex-direction: row;
@@ -60,10 +55,6 @@ $content-cells: 5;
   text-align: left;
   border-bottom: 1px solid #ddd !important;
   background: #313233;
-  position: sticky;
-  z-index: $header-cells;
-
-  top: calc(var(--header-height) + var(--item-table-toolbar-height));
   white-space: nowrap;
   padding-top: 4px !important;
 
@@ -109,4 +100,38 @@ $content-cells: 5;
   text-align: center;
   grid-column: 1 / -1;
   padding: 2em !important;
+}
+
+.row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  background-color: var(--theme-organizer-row-odd-bg);
+
+  > div {
+    padding: 4px 8px;
+    padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
+  }
+  &:nth-of-type(2n) {
+    background-color: var(--theme-organizer-row-even-bg);
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.headerRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  background: #313233;
+  position: sticky;
+  z-index: $header-cells;
+
+  top: calc(var(--header-height) + var(--item-table-toolbar-height));
+
+  > * {
+    background-color: var(--theme-organizer-row-odd-bg);
+  }
 }

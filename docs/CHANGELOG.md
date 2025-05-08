@@ -1,6 +1,14 @@
 ## Next
 
+## 8.70.0 <span class="changelog-date">(2025-05-04)</span>
+
+* Warning banner for Destiny 1 accounts when DIM detects the D1 API is still broken.
+* Fix for an Armory crash in outdated versions of Firefox.
+
+## 8.69.0 <span class="changelog-date">(2025-04-27)</span>
+
 * The Armory page will now link to alternate versions of an item if they exist, including reissues, shiny versions, adept versions, etc.
+* Crafted and enhanced weapons will now show their masterwork stat icon in the same place regular weapons do.
 
 ## 8.68.0 <span class="changelog-date">(2025-04-20)</span>
 

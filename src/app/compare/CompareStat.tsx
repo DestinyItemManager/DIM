@@ -35,7 +35,10 @@ export default function CompareStat({
       )}
       <AnimatedNumber
         value={value}
-        className={clsx(styles.statValue, { [styles.masterwork]: isMasterworkStat })}
+        className={clsx(styles.statValue, {
+          [styles.masterwork]: isMasterworkStat,
+          [styles.noMinWidth]: !stat || stat.statHash === StatHashes.AnyEnergyTypeCost,
+        })}
       />
       {stat?.statHash === StatHashes.RecoilDirection && <RecoilStat value={value} />}
       {Boolean(value) &&
