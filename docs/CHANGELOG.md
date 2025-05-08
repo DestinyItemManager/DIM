@@ -1,5 +1,7 @@
 ## Next
 
+* Stats in Organizer are now colored the same as in Compare, and armor stats have little bars just like in Compare.
+
 ## 8.70.0 <span class="changelog-date">(2025-05-04)</span>
 
 * Warning banner for Destiny 1 accounts when DIM detects the D1 API is still broken.
