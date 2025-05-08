@@ -26712,7 +26712,7 @@ exports[`process stores generates a correct weapon CSV export 1`] = `
   {
     "AA": 85,
     "Accuracy": 0,
-    "Airborne Effectiveness": 17,
+    "Airborne Effectiveness": 28,
     "Blast Radius": 0,
     "Category": "Energy",
     "Charge Rate": 0,
