@@ -225,7 +225,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   );
 
   // process items into Rows
-  const [unsortedRows, _tableContext] = useMemo(
+  const [unsortedRows, tableContext] = useMemo(
     () => buildRows(items, filteredColumns),
     [filteredColumns, items],
   );
@@ -526,7 +526,12 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 onChange={(e) => selectItem(e, row.item)}
               />
             </div>
-            <MemoRow row={row} filteredColumns={filteredColumns} onRowClick={onRowClick} />
+            <MemoRow
+              row={row}
+              filteredColumns={filteredColumns}
+              onRowClick={onRowClick}
+              tableCtx={tableContext}
+            />
           </div>
         ))}
       </div>
@@ -607,9 +612,11 @@ function TableRow({
   row,
   filteredColumns,
   onRowClick,
+  tableCtx,
 }: {
   row: Row;
   filteredColumns: ColumnDefinition[];
+  tableCtx: TableContext;
   onRowClick: (
     row: Row,
     column: ColumnDefinition,
@@ -627,7 +634,9 @@ function TableRow({
           })}
           role="cell"
         >
-          {column.cell ? column.cell(row.values[column.id], row.item) : row.values[column.id]}
+          {column.cell
+            ? column.cell(row.values[column.id], row.item, tableCtx.minMaxValues[column.id])
+            : row.values[column.id]}
         </div>
       ))}
     </>

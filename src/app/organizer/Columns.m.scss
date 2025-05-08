@@ -12,6 +12,12 @@
 
 .stats {
   text-align: right;
+  // Recoil background semi-circle
+  svg {
+    circle {
+      fill: black;
+    }
+  }
 }
 
 .centered {
@@ -43,7 +49,7 @@
   left: calc(30px + env(safe-area-inset-left));
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
-  z-index: table.$header-cells;
+  z-index: table.$header-cells !important;
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
@@ -154,16 +160,6 @@
     margin-right: 4px;
     height: 16px;
     width: 16px;
-  }
-}
-
-// Recoil circle
-.recoil {
-  composes: stats;
-  svg {
-    circle {
-      fill: black;
-    }
   }
 }
 

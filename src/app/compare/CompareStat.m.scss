@@ -8,14 +8,17 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
   height: 16px;
-  margin-right: calc(var(--item-size) + 16px);
-  // the goal width is 64px at normal item tile size (50px)
-  // but allow the stat bars to shrink to account for bigger tiles,
-  // so that this doesn't blow out the overall compare width
-  width: calc(50px + 64px + 4px - var(--item-size));
   position: relative;
   font-variant-numeric: tabular-nums;
   gap: 5px;
+  // the goal width is 64px at normal item tile size (50px)
+  // but allow the stat bars to shrink to account for bigger tiles,
+  // so that this doesn't blow out the overall compare width
+  max-width: calc(50px + 64px + 4px - var(--item-size));
+
+  &:has(.bar) {
+    min-width: 6em;
+  }
 }
 
 .statValue {

@@ -80,7 +80,7 @@ $content-cells: 5;
   left: env(safe-area-inset-left);
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
-  z-index: $header-cells;
+  z-index: $header-cells !important;
   &.header {
     top: calc(var(--header-height) + var(--item-table-toolbar-height));
   }

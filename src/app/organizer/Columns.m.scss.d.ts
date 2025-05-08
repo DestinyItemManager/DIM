@@ -30,7 +30,6 @@ interface CssExports {
   'perkSelected': string;
   'perks': string;
   'positive': string;
-  'recoil': string;
   'row': string;
   'selection': string;
   'shapedIconOverlay': string;
