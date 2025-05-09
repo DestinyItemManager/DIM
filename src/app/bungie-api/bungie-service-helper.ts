@@ -150,12 +150,14 @@ export function handleErrors(error: unknown): never {
       case PlatformErrorCodes.ThrottleLimitExceededMinutes:
       case PlatformErrorCodes.ThrottleLimitExceededMomentarily:
       case PlatformErrorCodes.ThrottleLimitExceededSeconds:
-      case PlatformErrorCodes.DestinyThrottledByGameServer:
       case PlatformErrorCodes.PerApplicationThrottleExceeded:
       case PlatformErrorCodes.PerApplicationAnonymousThrottleExceeded:
       case PlatformErrorCodes.PerApplicationAuthenticatedThrottleExceeded:
       case PlatformErrorCodes.PerUserThrottleExceeded:
         throw new DimError('BungieService.Throttled').withError(error);
+
+      case PlatformErrorCodes.DestinyThrottledByGameServer:
+        throw new DimError('BungieService.Difficulties').withError(error);
 
       case PlatformErrorCodes.AccessTokenHasExpired:
       case PlatformErrorCodes.WebAuthRequired:
