@@ -64,7 +64,7 @@ export default function ErrorPanel({
   if (message?.includes('toSorted') || message?.includes('toReversed')) {
     title = t('ErrorPanel.BrowserTooOldTitle');
     name = 'BrowserTooOld';
-    message = t('ErrorPanel.BrowserTooOld');
+    message = `${t('ErrorPanel.BrowserTooOld')}\n${navigator.userAgent}`;
   }
 
   const content = (
