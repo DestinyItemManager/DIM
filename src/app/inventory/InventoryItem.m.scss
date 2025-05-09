@@ -96,3 +96,15 @@
   color: #29f36a; // #5eff92;
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }
+
+.warningIcon {
+  display: block;
+  width: calc(var(--item-size) / 5);
+  height: calc(var(--item-size) / 5);
+  font-size: calc(var(--item-size) / 5);
+  position: absolute;
+  top: $item-border-width + 2px;
+  right: $item-border-width + 3px;
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+}
