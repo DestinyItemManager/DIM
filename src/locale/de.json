@@ -42,7 +42,7 @@
     "YourItems": "Deine Gegenstände"
   },
   "Browsercheck": {
-    "Samsung": "Samsung Internet kann Websites zu dunkel erscheinen lassen, wenn der dunkle Modus eingeschaltet ist. Einstellungen > Labs > Webseite dunkles Theme verwenden oder zu einem anderen Browser wechseln.",
+    "Samsung": "Samsung Internet kann Websites zu dunkel erscheinen lassen, wenn der dunkle Modus eingeschaltet ist. Einstellungen > Labs > Webseite dunkles Theme verwenden oder wechsle zu einem anderen Browser.",
     "Steam": "Der Steam-Overlay-Browser ist sehr alt und einige oder alle DIM-Funktionen funktionieren möglicherweise nicht. Wir können dies nicht unterstützen.",
     "Unsupported": "Das DIM-Team unterstützt diesen Browser nicht. Einige oder alle DIM-Funktionen funktionieren möglicherweise nicht."
   },
@@ -135,7 +135,7 @@
   },
   "EnergyMeter": {
     "Energy": "Energie",
-    "Unused": "Nicht benutzt",
+    "Unused": "Unbenutzt",
     "UpgradeNeeded": "Die aktuelle Energiekapazität dieses Gegenstands ist {{energyCapacity}}. Um die ausgewählten Mods auszurüsten, muss seine Energiekapazität {{energyUsed}} sein.",
     "Used": "Benutzt"
   },
@@ -143,7 +143,7 @@
     "Title": "Ein Fehler ist aufgetreten"
   },
   "ErrorPanel": {
-    "BrowserTooOld": "Dein Browser ist zu alt für DIM. Bitte aktualisiere Deinen Browser auf die neueste Version.",
+    "BrowserTooOld": "Dein Browser ist zu alt für DIM. Bitte aktualisiere deinen Browser auf die neueste Version.",
     "BrowserTooOldTitle": "Inkompatibler Browser",
     "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "ReadTheGuide": "Lies unser Benutzerhandbuch (im Menü verlinkt) für Schritte zur Fehlerbehebung.",

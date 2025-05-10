@@ -53,7 +53,7 @@ export const steamBrowser = {
 
 export const samsungInternet = {
   en: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
-  de: 'Samsung Internet kann Websites zu dunkel erscheinen lassen, wenn der dunkle Modus eingeschaltet ist. Einstellungen > Labs > Webseite dunkles Theme verwenden oder zu einem anderen Browser wechseln.',
+  de: 'Samsung Internet kann Websites zu dunkel erscheinen lassen, wenn der dunkle Modus eingeschaltet ist. Einstellungen > Labs > Webseite dunkles Theme verwenden oder wechsle zu einem anderen Browser.',
   es: 'El Internet de Samsung puede hacer que los sitios parezcan demasiado oscuros cuando el modo oscuro está activo. Activa Opciones > Laboratorios > Usar tema oscuro o cambia a otro navegador.',
   'es-mx':
     'El Internet de Samsung puede hacer que los sitios parezcan demasiado oscuros cuando el modo oscuro está activo. Activa Opciones > Laboratorios > Usar tema oscuro o cambia a otro navegador.',

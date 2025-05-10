@@ -56,7 +56,7 @@
     "Progress": "Progresso",
     "Reputation": "Reputazione",
     "Unknown": "Sconosciuto",
-    "Vault": "Depos",
+    "Vault": "Deposito",
     "Weapons": "Armi"
   },
   "BulkNote": {
@@ -1009,7 +1009,7 @@
     },
     "TriageTab": "Triage",
     "UnreliablePerkOption": "Questa peculiarità compare solo nella vista delle Collezioni. Potrebbe non comparire casualmente su questo oggetto.",
-    "Vault": "Depos",
+    "Vault": "Deposito",
     "WeaponLevel": "Livello Arma {{level}}"
   },
   "Notes": {
@@ -1026,7 +1026,7 @@
   },
   "Organizer": {
     "BulkMove": "Sposta a",
-    "BulkMoveLoadoutName": "Seleziona in Gestore Deposito",
+    "BulkMoveLoadoutName": "Seleziona in Gestione Deposito",
     "BulkTag": "Etichetta",
     "Columns": {
       "Archetype": "Archetipo",
@@ -1077,7 +1077,7 @@
     "EnabledColumns": "Colonne Abilitate",
     "Lock": "Blocca",
     "NoItems": "Nessun oggetto corrisponde ai filtri. Se hai una query di ricerca, prova a cancellarla.",
-    "NoMobile": "Gira il telefono in orizzontale per usare Il Gestore Deposito.",
+    "NoMobile": "Gira il telefono in orizzontale per usare Gestione Deposito.",
     "Note": "Imposta note",
     "OpenIn": "Mostra in Gestione Deposito",
     "Organizer": "Gestione Deposito",
@@ -1173,7 +1173,7 @@
     "CustomStatTitle": "Totale statistica personalizzata",
     "Data": "Fogli di calcolo",
     "DefaultItemSizeNote": "Una dimensione di 50px sarà la più nitida, senza sfocare l'immagine dell'oggetto o il testo.",
-    "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe per trovare velocemente oggetti duplicati, e che puoi utilizzare lo strumento di confronto o il gestore deposito per valutarli.",
+    "DontForgetDupes": "Non dimenticare che puoi cercare is:dupe per trovare velocemente oggetti duplicati, e che puoi utilizzare lo strumento di confronto o \n Gestione Deposito per valutarli.",
     "EnableAdvancedStats": "Mostra i giudizi sulle statistiche delle armature (D1)",
     "ExpandSingleCharacter": "Mostra tutti i personaggi",
     "ExportLoadoutSS": "Foglio di calcolo delle dotazioni",

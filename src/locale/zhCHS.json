@@ -28,9 +28,9 @@
     "WeeklyHeroic": "每周英雄突击"
   },
   "Armory": {
-    "AlternateItems": "Alternate Versions",
+    "AlternateItems": "其他版本",
     "Armory": "军械库",
-    "DifferentSeason": "Reissue from a different season",
+    "DifferentSeason": "其他赛季的复刻版",
     "NoNotes": "无注释",
     "OpenInArmory": "查看武器详情",
     "Season": "年 {{year}}，第 {{season}} 赛季",
