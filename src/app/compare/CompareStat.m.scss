@@ -7,6 +7,7 @@
 .stat {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+  justify-content: flex-end;
   height: 16px;
   position: relative;
   font-variant-numeric: tabular-nums;
@@ -15,10 +16,6 @@
   // but allow the stat bars to shrink to account for bigger tiles,
   // so that this doesn't blow out the overall compare width
   max-width: calc(50px + 64px + 4px - var(--item-size));
-
-  &:has(.bar) {
-    min-width: 6em;
-  }
 }
 
 .statValue {

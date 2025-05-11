@@ -10,12 +10,29 @@
   font-weight: bold;
 }
 
+.new {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  align-items: center;
+  > div {
+    position: static !important;
+  }
+}
+
 .stats {
   text-align: right;
   // Recoil background semi-circle
   svg {
     circle {
       fill: black;
+    }
+  }
+
+  &[role='columnheader'] {
+    text-align: center;
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
   }
 }
@@ -31,14 +48,6 @@
 .dmgHeader {
   composes: centered;
   padding-top: 4px;
-}
-
-.new {
-  composes: flexColumn from '../dim-ui/common.m.scss';
-  align-items: center;
-  > div {
-    position: static !important;
-  }
 }
 
 .icon {
