@@ -11,6 +11,7 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
@@ -89,7 +90,7 @@ export default function ItemPopup({
             </div>
           ),
       )}
-      {item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster && (
+      {nonPullablePostmasterItem(item) && (
         <div className={styles.failureReason}>
           <AlertIcon />
           <RichDestinyText text={t('MovePopup.CantPullFromPostmaster')} ownerId={item.owner} />

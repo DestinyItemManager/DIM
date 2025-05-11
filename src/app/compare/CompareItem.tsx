@@ -12,6 +12,7 @@ import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
+import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -63,9 +64,7 @@ export default memo(function CompareItem({
         <div className={styles.itemActions}>
           {item.vendor ? (
             <VendorItemWarning item={item} />
-          ) : item.owner !== 'unknown' &&
-            !item.canPullFromPostmaster &&
-            item.location.inPostmaster ? (
+          ) : nonPullablePostmasterItem(item) ? (
             <PressTip elementType="span" tooltip={t('MovePopup.CantPullFromPostmaster')}>
               <ActionButton onClick={noop} disabled>
                 <AppIcon icon={faExclamationTriangle} />
