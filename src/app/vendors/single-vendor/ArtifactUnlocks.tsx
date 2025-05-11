@@ -1,15 +1,43 @@
 import { BasicItemTrigger, PopupState } from 'app/armory/ItemGrid';
 import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { createItemContextSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import ItemPopup from 'app/item-popup/ItemPopup';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { emptyArray } from 'app/utils/empty';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ArtifactUnlocks.m.scss';
+
+const ArtifactMod = memo(function ArtifactMod({
+  ref,
+  showPopup,
+  item,
+}: {
+  ref: React.Ref<HTMLDivElement>;
+  showPopup: (e: React.MouseEvent) => void;
+  item: {
+    item: DimItem | undefined;
+    isActive: boolean;
+  };
+}) {
+  return (
+    <div
+      ref={ref}
+      onClick={showPopup}
+      title={item.item!.name}
+      style={bungieBackgroundStyle(item.item!.icon)}
+      className={clsx('item', styles.item, {
+        [styles.unlocked]: item.isActive,
+        [styles.locked]: !item.isActive,
+      })}
+    />
+  );
+});
 
 export default function ArtifactUnlocks({ characterId }: { characterId: string }) {
   const profileResponse = useSelector(profileResponseSelector);
@@ -17,7 +45,22 @@ export default function ArtifactUnlocks({ characterId }: { characterId: string }
   const context = useSelector(createItemContextSelector);
   const [popup, setPopup] = useState<PopupState | undefined>();
 
-  if (!profileResponse || !defs) {
+  const artifactUnlockData =
+    profileResponse?.characterProgressions.data?.[characterId]?.seasonalArtifact;
+
+  const tierSource = artifactUnlockData?.tiers ?? emptyArray();
+  const tiers = useMemo(
+    () =>
+      tierSource.map((tier) => ({
+        ...tier,
+        items: tier.items
+          .filter((i) => i.isVisible)
+          .map((i) => ({ item: makeFakeItem(context, i.itemHash), isActive: i.isActive })),
+      })),
+    [tierSource, context],
+  );
+
+  if (!profileResponse || !defs || !artifactUnlockData) {
     return null;
   }
 
@@ -25,19 +68,6 @@ export default function ArtifactUnlocks({ characterId }: { characterId: string }
     infoLog('clicked item', popup.item);
   }
 
-  const artifactUnlockData =
-    profileResponse.characterProgressions.data?.[characterId]?.seasonalArtifact;
-
-  if (!artifactUnlockData) {
-    return null;
-  }
-
-  const tiers = artifactUnlockData.tiers.map((tier) => ({
-    ...tier,
-    items: tier.items
-      .filter((i) => i.isVisible)
-      .map((i) => ({ item: makeFakeItem(context, i.itemHash), isActive: i.isActive })),
-  }));
   const { resetCount = 0, pointsUsed = 0 } = artifactUnlockData;
 
   return (
@@ -59,16 +89,7 @@ export default function ArtifactUnlocks({ characterId }: { characterId: string }
                 item.item && (
                   <BasicItemTrigger key={item.item.index} item={item.item} onShowPopup={setPopup}>
                     {(ref, showPopup) => (
-                      <div
-                        ref={ref}
-                        onClick={showPopup}
-                        title={item.item!.name}
-                        style={bungieBackgroundStyle(item.item!.icon)}
-                        className={clsx('item', styles.item, {
-                          [styles.unlocked]: item.isActive,
-                          [styles.locked]: !item.isActive,
-                        })}
-                      />
+                      <ArtifactMod ref={ref} showPopup={showPopup} item={item} />
                     )}
                   </BasicItemTrigger>
                 ),
