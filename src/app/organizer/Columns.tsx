@@ -157,7 +157,7 @@ export function getColumns(
     },
     styles.stats,
   );
-  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs, styles.centered);
+  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs, styles.stats);
 
   /**
    * This helper allows TypeScript to perform type inference to determine the

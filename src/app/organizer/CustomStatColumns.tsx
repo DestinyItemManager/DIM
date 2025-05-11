@@ -21,6 +21,7 @@ export function createCustomStatColumns(
         </>
       ),
       className,
+      headerClassName: className,
       value: (item) => item.stats?.find((s) => s.statHash === c.statHash)?.value ?? 0,
       cell: (_val, item, ctx) => {
         const stat = item.stats?.find((s) => s.statHash === c.statHash);
