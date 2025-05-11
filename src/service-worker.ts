@@ -40,6 +40,7 @@ const navigationRoute = new NavigationRoute(handler, {
     /backup\.html/,
     /\.well-known/,
     /\.(php|json|wasm|js|css|png|jpg|map)(\.(gz|br))?$/,
+    /\/data\/d1\/manifests\//,
   ],
 });
 registerRoute(navigationRoute);
