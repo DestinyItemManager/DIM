@@ -1,6 +1,7 @@
 ## Next
 
-* Stats in Organizer are now colored the same as in Compare, and armor stats have little bars just like in Compare.
+* Stats in Organizer are now colored the same as in Compare.
+* Fixed the positioning of the item popup when clicking on artifact mods.
 
 ## 8.70.0 <span class="changelog-date">(2025-05-04)</span>
 
