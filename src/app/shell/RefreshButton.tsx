@@ -22,6 +22,7 @@ import { refresh } from './refresh-events';
 
 /** We consider the profile stale if it's out of date with respect to the game data by this much */
 const STALE_PROFILE_THRESHOLD = 90_000;
+const MIN_SPIN = 1000; // 1 second
 
 export default function RefreshButton({ className }: { className?: string }) {
   const [disabled, setDisabled] = useState(false);
@@ -32,6 +33,26 @@ export default function RefreshButton({ className }: { className?: string }) {
     [],
   );
   const active = useSubscription(loadingTracker.active$);
+
+  // Always show the spinner for at least MIN_SPIN milliseconds
+  const [spin, setSpin] = useState(active ? Date.now() : 0);
+  useEffect(() => {
+    if (active && spin === 0) {
+      setSpin(Date.now());
+    } else if (!active && spin !== 0) {
+      const elapsed = Date.now() - spin;
+      const remainingTime = Math.max(0, MIN_SPIN - elapsed);
+      if (remainingTime > 0) {
+        const timer = window.setTimeout(() => {
+          setSpin(0);
+        }, remainingTime);
+        return () => window.clearTimeout(timer);
+      } else {
+        setSpin(0);
+      }
+    }
+  }, [active, spin]);
+
   useEventBusListener(isDragging$, handleChanges);
 
   useEffect(() => {
@@ -59,7 +80,7 @@ export default function RefreshButton({ className }: { className?: string }) {
         title={t('Header.Refresh') + (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '')}
         aria-keyshortcuts="R"
       >
-        <AppIcon icon={refreshIcon} spinning={active} />
+        <AppIcon icon={refreshIcon} spinning={spin !== 0} />
         {autoRefresh && <div className={styles.userIsPlaying} />}
         {(profileError || showOutOfDateWarning) && (
           <div className={styles.outOfDate}>
