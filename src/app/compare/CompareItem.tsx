@@ -66,10 +66,7 @@ export default memo(function CompareItem({
           ) : item.owner !== 'unknown' &&
             !item.canPullFromPostmaster &&
             item.location.inPostmaster ? (
-            <PressTip
-              elementType="span"
-              tooltip={t('MovePopup.CantPullFromPostmaster')}
-            >
+            <PressTip elementType="span" tooltip={t('MovePopup.CantPullFromPostmaster')}>
               <ActionButton onClick={noop} disabled>
                 <AppIcon icon={faExclamationTriangle} />
               </ActionButton>
