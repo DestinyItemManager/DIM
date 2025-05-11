@@ -13,6 +13,7 @@ import {
   getSpecialtySocketMetadatas,
   modSlotTags,
   modTypeTags,
+  riteShiny,
 } from 'app/utils/item-utils';
 import {
   countEnhancedPerks,
@@ -93,8 +94,7 @@ const socketFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (i) => {
       if (i.bucket.inWeapons) {
-        // Brave weapons are the original type of shiny
-        if (braveShiny(i)) {
+        if (braveShiny(i) || riteShiny(i)) {
           return true;
         }
 
