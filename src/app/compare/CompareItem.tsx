@@ -68,7 +68,7 @@ export default memo(function CompareItem({
             item.location.inPostmaster ? (
             <PressTip
               elementType="span"
-              tooltip={() => <>{t('MovePopup.CantPullFromPostmaster')}</>}
+              tooltip={t('MovePopup.CantPullFromPostmaster')}
             >
               <ActionButton onClick={noop} disabled>
                 <AppIcon icon={faExclamationTriangle} />
