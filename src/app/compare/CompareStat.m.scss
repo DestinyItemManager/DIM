@@ -7,7 +7,6 @@
 .stat {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  justify-content: flex-end;
   height: 16px;
   position: relative;
   font-variant-numeric: tabular-nums;
@@ -21,7 +20,7 @@
 .statValue {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   gap: 3px;
   min-width: 2ch; // Try to right-align 2-digit numbers
 
