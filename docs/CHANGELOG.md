@@ -1,5 +1,7 @@
 ## Next
 
+* Fix misaligned stat numbers in Compare box.
+
 ## 8.71.0 <span class="changelog-date">(2025-05-11)</span>
 
 * Stats in Organizer are now colored the same as in Compare.
