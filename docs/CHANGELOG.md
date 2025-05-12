@@ -1,5 +1,7 @@
 ## Next
 
+## 8.71.1 <span class="changelog-date">(2025-05-12)</span>
+
 * Fix misaligned stat numbers in Compare box.
 
 ## 8.71.0 <span class="changelog-date">(2025-05-11)</span>
