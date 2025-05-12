@@ -2,6 +2,7 @@
 
 * Stats in Organizer are now colored the same as in Compare.
 * Fixed the positioning of the item popup when clicking on artifact mods.
+* Rite of the Nine shiny weapons now have icon stripes and detect in `is:shiny` filter.
 
 ## 8.70.0 <span class="changelog-date">(2025-05-04)</span>
 
