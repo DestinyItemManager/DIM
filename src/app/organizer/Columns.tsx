@@ -248,10 +248,10 @@ export function getColumns(
         header: t('Organizer.Columns.Ammo'),
         className: styles.dmg,
         headerClassName: styles.dmgHeader,
-        csv: 'Ammo',
         value: (item) => item.ammoType,
         cell: (_val, item) => <AmmoIcon className={styles.inlineIcon} type={item.ammoType} />,
         filter: (_val, item) => ammoTypeFilter.fromItem(item),
+        csv: (_val, item) => ['Ammo', ammoTypeFilter.fromItem(item).replace('is:', '')],
       }),
     isArmor &&
       isSpreadsheet &&
@@ -589,7 +589,8 @@ export function getColumns(
         sort: perkStringSort,
         filter: perkStringFilter,
       }),
-    (isWeapon || (isArmor && destinyVersion === 1)) &&
+    !isSpreadsheet &&
+      (isWeapon || (isArmor && destinyVersion === 1)) &&
       c({
         id: 'perksgrid',
         className: styles.perksGrid,
@@ -606,7 +607,8 @@ export function getColumns(
         ),
         sort: perkStringSort,
       }),
-    destinyVersion === 2 &&
+    !isSpreadsheet &&
+      destinyVersion === 2 &&
       c({
         id: 'mods',
         className: styles.perksGrid,

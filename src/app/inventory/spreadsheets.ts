@@ -159,6 +159,7 @@ export function generateCSVExportData(
     'Equippable',
     'Category',
     'dmg',
+    'ammo',
     'power',
     'energy',
     'masterworkStat',
