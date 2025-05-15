@@ -32,6 +32,8 @@ export function MaterialCounts({
   const transmogCurrencies = useSelector(transmogCurrenciesSelector);
   const vendorCurrencyEngrams = useSelector(vendorCurrencyEngramsSelector);
 
+  // Track materials which have already appeared, in case these categories overlap
+  const shownMats = new Set<number>();
   const content = [
     includeCurrencies && <CurrencyGroup key="currencies" currencies={currencies} />,
     vendorCurrencyEngrams.length > 0 && (
@@ -41,9 +43,10 @@ export function MaterialCounts({
       <React.Fragment key={matgroup[0]}>
         {matgroup.map((h) => {
           const items = materials.get(h);
-          if (!items) {
+          if (!items || shownMats.has(h)) {
             return null;
           }
+          shownMats.add(h);
           const amount = items.reduce((total, i) => total + i.amount, 0);
           const item = items[0];
           const materialName = item.name;
