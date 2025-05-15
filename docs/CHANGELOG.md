@@ -1,5 +1,7 @@
 ## Next
 
+* Postmaster items now have warning indicator if DIM is not allowed to pull them
+
 ## 8.71.1 <span class="changelog-date">(2025-05-12)</span>
 
 * Fix misaligned stat numbers in Compare box.

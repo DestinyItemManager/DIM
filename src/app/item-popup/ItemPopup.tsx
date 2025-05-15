@@ -1,3 +1,4 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClickOutside from 'app/dim-ui/ClickOutside';
 import { PressTipRoot } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
@@ -10,6 +11,7 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
@@ -76,9 +78,6 @@ export default function ItemPopup({
   );
 
   const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
-  if (item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster) {
-    failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
-  }
 
   const header = (
     <div className={styles.header}>
@@ -90,6 +89,12 @@ export default function ItemPopup({
               <RichDestinyText text={failureString} ownerId={item.owner} />
             </div>
           ),
+      )}
+      {nonPullablePostmasterItem(item) && (
+        <div className={styles.failureReason}>
+          <AlertIcon />
+          <RichDestinyText text={t('MovePopup.CantPullFromPostmaster')} ownerId={item.owner} />
+        </div>
       )}
       {isPhonePortrait && itemActionsModel.hasAccessoryControls && (
         <div className={styles.mobileItemActions}>

@@ -1,4 +1,6 @@
+import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { percent } from 'app/shell/formatters';
+import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
@@ -116,7 +118,9 @@ export default function InventoryItem({
             {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}
-        {isNew && <NewItemIndicator />}
+        (
+        {(nonPullablePostmasterItem(item) && <AlertIcon className={styles.warningIcon} />) ||
+          (isNew && <NewItemIndicator />)}
       </>
     );
   }, [isNew, item, hasNotes, subclassIconInfo, tag, wishlistRoll, autoLockTagged]);

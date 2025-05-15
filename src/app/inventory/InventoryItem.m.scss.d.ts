@@ -8,6 +8,7 @@ interface CssExports {
   'subclass': string;
   'subclassBase': string;
   'subclassSuperIcon': string;
+  'warningIcon': string;
   'xpBar': string;
   'xpBarAmount': string;
 }

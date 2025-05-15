@@ -163,6 +163,12 @@ export function itemCanBeEquippedByStoreId(
   );
 }
 
+export function nonPullablePostmasterItem(item: DimItem): boolean {
+  return (
+    item.owner !== 'unknown' && !item.canPullFromPostmaster && Boolean(item.location.inPostmaster)
+  );
+}
+
 /** Could this be added to a loadout? */
 export function itemCanBeInLoadout(item: DimItem): boolean {
   return (
