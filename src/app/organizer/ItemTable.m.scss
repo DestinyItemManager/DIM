@@ -75,6 +75,7 @@ $content-cells: 5;
 }
 
 .selection {
+  background-color: var(--org-row-bg);
   padding-left: 8px !important;
   padding-right: 2px !important;
   min-width: 20px;
@@ -104,17 +105,18 @@ $content-cells: 5;
 }
 
 .row {
+  --org-row-bg: var(--theme-organizer-row-odd-bg);
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: subgrid;
-  background-color: var(--theme-organizer-row-odd-bg);
+  background-color: var(--org-row-bg);
 
   > div {
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
   }
   &:nth-of-type(2n) {
-    background-color: var(--theme-organizer-row-even-bg);
+    --org-row-bg: var(--theme-organizer-row-even-bg);
   }
 
   &:hover {
@@ -128,7 +130,7 @@ $content-cells: 5;
   grid-template-columns: subgrid;
   background: #313233;
   position: sticky;
-  z-index: $header-cells;
+  z-index: $header-cells + 1;
 
   top: calc(var(--header-height) + var(--item-table-toolbar-height));
 
