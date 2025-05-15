@@ -29,6 +29,7 @@ interface CssExports {
   'perkSelectable': string;
   'perkSelected': string;
   'perks': string;
+  'perksGrid': string;
   'positive': string;
   'row': string;
   'selection': string;
@@ -37,6 +38,7 @@ interface CssExports {
   'sorter': string;
   'stats': string;
   'table': string;
+  'talentGrid': string;
   'toolbar': string;
 }
 export const cssExports: CssExports;

@@ -72,7 +72,12 @@ import {
   buildSocketNames,
   csvStatNamesForDestinyVersion,
 } from 'app/inventory/spreadsheets';
-import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
+import { AmmoIcon } from 'app/item-popup/AmmoIcon';
+import { DeepsightHarmonizerIcon, HarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
+import ItemSockets from 'app/item-popup/ItemSockets';
+import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
+import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
+import { ammoTypeFilter } from 'app/search/items/search-filters/known-values';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import styles from './Columns.m.scss';
@@ -237,6 +242,17 @@ export function getColumns(
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
       }),
+    isWeapon &&
+      c({
+        id: 'ammo',
+        header: t('Organizer.Columns.Ammo'),
+        className: styles.dmg,
+        headerClassName: styles.dmgHeader,
+        csv: 'Ammo',
+        value: (item) => item.ammoType,
+        cell: (_val, item) => <AmmoIcon className={styles.inlineIcon} type={item.ammoType} />,
+        filter: (_val, item) => ammoTypeFilter.fromItem(item),
+      }),
     isArmor &&
       isSpreadsheet &&
       c({
@@ -317,7 +333,8 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'wishList',
-        header: t('Organizer.Columns.WishList'),
+        header: <AppIcon icon={thumbsUpIcon} />,
+        dropdownLabel: t('Organizer.Columns.WishList'),
         className: styles.centered,
         headerClassName: styles.centered,
         value: (item) => {
@@ -421,6 +438,25 @@ export function getColumns(
       isWeapon &&
       !isSpreadsheet &&
       c({
+        id: 'breaker',
+        header: t('Organizer.Columns.Breaker'),
+        value: (item) => item.breakerType?.displayProperties.name,
+        cell: (value, item) =>
+          value && (
+            <BungieImage
+              className={styles.inlineIcon}
+              src={item.breakerType!.displayProperties.icon}
+            />
+          ),
+        filter: (_val, item) =>
+          item.breakerType
+            ? `breaker:${breakerTypeNames[item.breakerType.hash as BreakerTypeHashes]}`
+            : undefined,
+      }),
+    destinyVersion === 2 &&
+      isWeapon &&
+      !isSpreadsheet &&
+      c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         className: styles.noWrap,
@@ -444,25 +480,6 @@ export function getColumns(
           );
         },
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
-      }),
-    destinyVersion === 2 &&
-      isWeapon &&
-      !isSpreadsheet &&
-      c({
-        id: 'breaker',
-        header: t('Organizer.Columns.Breaker'),
-        value: (item) => item.breakerType?.displayProperties.name,
-        cell: (value, item) =>
-          value && (
-            <BungieImage
-              className={styles.inlineIcon}
-              src={item.breakerType!.displayProperties.icon}
-            />
-          ),
-        filter: (_val, item) =>
-          item.breakerType
-            ? `breaker:${breakerTypeNames[item.breakerType.hash as BreakerTypeHashes]}`
-            : undefined,
       }),
     destinyVersion === 2 &&
       isArmor &&
@@ -572,6 +589,46 @@ export function getColumns(
         sort: perkStringSort,
         filter: perkStringFilter,
       }),
+    (isWeapon || (isArmor && destinyVersion === 1)) &&
+      c({
+        id: 'perksgrid',
+        className: styles.perksGrid,
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.PerksGrid'),
+        value: (item) => perkString(getSocketsByType(item, 'perks')),
+        cell: (_val, item) => (
+          <>
+            {isD1Item(item) && item.talentGrid && (
+              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+            )}
+            {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
+          </>
+        ),
+        sort: perkStringSort,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'mods',
+        className: styles.perksGrid,
+        headerClassName: styles.perks,
+        header: t('Organizer.Columns.Mods'),
+        // TODO: for ghosts this should return ghost mods, not cosmetics
+        value: (item) => perkString(getSocketsByType(item, 'mods')),
+        cell: (_val, item) => (
+          <>
+            {isD1Item(item) && item.talentGrid && (
+              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+            )}
+            {item.sockets &&
+              (isWeapon ? (
+                <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
+              ) : (
+                <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
+              ))}
+          </>
+        ),
+        sort: perkStringSort,
+      }),
     ...statColumns,
     ...baseStatColumns,
     ...d1ArmorQualityByStat,
@@ -618,7 +675,8 @@ export function getColumns(
       !isSpreadsheet &&
       c({
         id: 'harmonizable',
-        header: t('Organizer.Columns.Harmonizable'),
+        header: <HarmonizerIcon />,
+        dropdownLabel: t('Organizer.Columns.Harmonizable'),
         value: (item) => isHarmonizable(item),
         cell: (value, item) => (value ? <DeepsightHarmonizerIcon item={item} /> : undefined),
       }),
@@ -656,8 +714,11 @@ export function getColumns(
         id: 'source',
         csv: 'Source',
         header: t('Organizer.Columns.Source'),
-        value: source,
-        filter: (value) => `source:${value}`,
+        value: (item) => {
+          const s = source(item);
+          return s === 'legendaryengram' ? 'engram' : s;
+        },
+        filter: (value) => `source:${value === 'engram' ? 'legendaryengram' : value}`,
       }),
     c({
       id: 'year',

@@ -48,7 +48,7 @@ const tierMap: NodeJS.Dict<ItemTierName> = {
   exotic: 'Exotic',
 };
 
-const d2AmmoTypes = {
+export const d2AmmoTypes = {
   primary: DestinyAmmunitionType.Primary,
   special: DestinyAmmunitionType.Special,
   heavy: DestinyAmmunitionType.Heavy,
@@ -269,6 +269,22 @@ export const itemCategoryFilter = {
   },
 } satisfies ItemFilterDefinition;
 
+export const ammoTypeFilter = {
+  keywords: ['special', 'primary', 'heavy'],
+  description: tl('Filter.AmmoType'),
+  destinyVersion: 2,
+  filter: ({ filterValue }) => {
+    const ammoType = d2AmmoTypes[filterValue as keyof typeof d2AmmoTypes];
+    return (item: DimItem) => item.ammoType === ammoType;
+  },
+  fromItem: (item) => {
+    const ammoType = Object.entries(d2AmmoTypes).find(
+      ([_ammoType, value]) => value === item.ammoType,
+    );
+    return ammoType ? `is:${ammoType[0]}` : '';
+  },
+} satisfies ItemFilterDefinition;
+
 const knownValuesFilters: ItemFilterDefinition[] = [
   damageFilter,
   prismaticDamageFilter,
@@ -276,6 +292,7 @@ const knownValuesFilters: ItemFilterDefinition[] = [
   itemCategoryFilter,
   itemTypeFilter,
   d1itemTypeFilter,
+  ammoTypeFilter,
   {
     keywords: [
       'common',
@@ -296,15 +313,6 @@ const knownValuesFilters: ItemFilterDefinition[] = [
         throw new Error(`Unknown rarity type ${filterValue}`);
       }
       return (item) => item.tier === tierName;
-    },
-  },
-  {
-    keywords: ['special', 'primary', 'heavy'],
-    description: tl('Filter.AmmoType'),
-    destinyVersion: 2,
-    filter: ({ filterValue }) => {
-      const ammoType = d2AmmoTypes[filterValue as keyof typeof d2AmmoTypes];
-      return (item: DimItem) => item.ammoType === ammoType;
     },
   },
   {

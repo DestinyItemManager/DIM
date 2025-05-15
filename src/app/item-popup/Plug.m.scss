@@ -31,7 +31,7 @@
     --item-size: var(--mod-size, var(--item-size-adjusted));
   }
   .perkCircle {
-    --item-size: var(--item-size-adjusted);
+    --item-size: var(--perk-size, var(--item-size-adjusted));
   }
 }
 
