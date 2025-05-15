@@ -79,7 +79,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       icon={item.crafted === 'enhanced' ? enhancedIcon : shapedIcon}
     />
   ) : (
-    wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />
+    wishlistRollIcon !== undefined && <RatingIcon uiWishListRoll={wishlistRollIcon} />
   );
 
   return (

@@ -130,7 +130,9 @@ function PlugTooltip({
   const statsArray = stats || [];
   const plugDescriptions = usePlugDescriptions(def, statsArray);
   const sourceString =
-    defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
+    defs && def.collectibleHash
+      ? defs.Collectible.get(def.collectibleHash).sourceString
+      : undefined;
 
   // filter out hidden objectives
   const filteredPlugObjectives = plugObjectives?.filter(
