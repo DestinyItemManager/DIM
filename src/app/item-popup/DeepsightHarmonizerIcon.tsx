@@ -7,17 +7,20 @@ import { DEEPSIGHT_HARMONIZER } from 'app/search/d2-known-values';
 import styles from './DeepSightHarmonizerIcon.m.scss';
 
 export function DeepsightHarmonizerIcon({ item }: { item: DimItem }) {
-  const defs = useD2Definitions()!;
-  const harmonizerIcon = defs.InventoryItem.get(DEEPSIGHT_HARMONIZER)?.displayProperties.icon;
-
   return (
     <PressTip
       tooltip={<HarmonizableTooltipContent item={item} />}
       className={styles.deepsightHarmonizerIcon}
     >
-      <BungieImage src={harmonizerIcon} />
+      <HarmonizerIcon />
     </PressTip>
   );
+}
+
+export function HarmonizerIcon() {
+  const defs = useD2Definitions()!;
+  const harmonizerIcon = defs.InventoryItem.get(DEEPSIGHT_HARMONIZER)?.displayProperties.icon;
+  return <BungieImage src={harmonizerIcon} height={15} width={15} />;
 }
 
 function HarmonizableTooltipContent({ item }: { item: DimItem }) {

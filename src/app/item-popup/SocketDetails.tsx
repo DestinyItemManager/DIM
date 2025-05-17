@@ -4,7 +4,6 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import 'app/inventory-page/StoreBucket.scss';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';

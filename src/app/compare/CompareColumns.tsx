@@ -55,8 +55,9 @@ export function getColumns(
       isArmor,
       showStatLabel: true,
     },
+    styles.stat,
   );
-  const customStats = createCustomStatColumns(customStatDefs, undefined, true);
+  const customStats = createCustomStatColumns(customStatDefs, styles.stat, undefined, true);
 
   /**
    * This helper allows TypeScript to perform type inference to determine the

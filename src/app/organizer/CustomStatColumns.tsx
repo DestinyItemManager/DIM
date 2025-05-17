@@ -7,6 +7,7 @@ import { ColumnDefinition, SortDirection } from './table-types';
 export function createCustomStatColumns(
   customStatDefs: CustomStatDef[],
   className?: string,
+  headerClassName?: string,
   hideFormula = false,
 ): ColumnDefinition[] {
   return customStatDefs.map(
@@ -15,13 +16,13 @@ export function createCustomStatColumns(
       header: hideFormula ? (
         c.label
       ) : (
-        <>
+        <div>
           {c.label}
           <CustomStatWeightsDisplay customStat={c} />
-        </>
+        </div>
       ),
       className,
-      headerClassName: className,
+      headerClassName,
       value: (item) => item.stats?.find((s) => s.statHash === c.statHash)?.value ?? 0,
       cell: (_val, item, ctx) => {
         const stat = item.stats?.find((s) => s.statHash === c.statHash);
