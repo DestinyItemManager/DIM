@@ -37,6 +37,7 @@ interface CssExports {
   'shiftHeld': string;
   'sorter': string;
   'stats': string;
+  'statsHeader': string;
   'table': string;
   'talentGrid': string;
   'toolbar': string;

@@ -28,11 +28,6 @@ export default function CompareStat({
 
   return (
     <div className={styles.stat} style={{ color }}>
-      {value !== 0 && stat?.bar && item.bucket.sort === 'Armor' && (
-        <span className={styles.bar}>
-          <span style={{ width: percent(value / stat.maximumValue) }} />
-        </span>
-      )}
       <AnimatedNumber
         value={value}
         className={clsx(styles.statValue, {
@@ -40,6 +35,11 @@ export default function CompareStat({
           [styles.noMinWidth]: !stat || stat.statHash === StatHashes.AnyEnergyTypeCost,
         })}
       />
+      {value !== 0 && stat?.bar && item.bucket.sort === 'Armor' && (
+        <span className={styles.bar}>
+          <span style={{ width: percent(value / stat.maximumValue) }} />
+        </span>
+      )}
       {stat?.statHash === StatHashes.RecoilDirection && <RecoilStat value={value} />}
       {Boolean(value) &&
         stat &&

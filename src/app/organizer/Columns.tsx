@@ -161,8 +161,11 @@ export function getColumns(
       isSpreadsheet,
     },
     styles.stats,
+    styles.statsHeader,
   );
-  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs, styles.stats);
+  const customStats = isSpreadsheet
+    ? []
+    : createCustomStatColumns(customStatDefs, styles.stats, styles.statsHeader);
 
   /**
    * This helper allows TypeScript to perform type inference to determine the
@@ -836,6 +839,7 @@ export function getStatColumns(
     showStatLabel?: boolean;
   },
   className?: string,
+  headerClassName?: string,
 ) {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -874,7 +878,7 @@ export function getStatColumns(
         stat.displayProperties.name
       ),
       className,
-      headerClassName: className,
+      headerClassName,
       statHash,
       columnGroup: statsGroup,
       value: (item) => {

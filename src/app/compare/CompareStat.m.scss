@@ -7,15 +7,10 @@
 .stat {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  justify-content: flex-end;
   height: 16px;
   position: relative;
   font-variant-numeric: tabular-nums;
-  gap: 5px;
-  // the goal width is 64px at normal item tile size (50px)
-  // but allow the stat bars to shrink to account for bigger tiles,
-  // so that this doesn't blow out the overall compare width
-  max-width: calc(50px + 64px + 4px - var(--item-size));
+  gap: 4px;
 }
 
 .statValue {
@@ -31,11 +26,8 @@
 }
 
 .bar {
-  position: absolute;
-  top: 10%;
   height: 80%;
-  left: calc(3ch - 4px);
-  right: 0;
+  width: 100%;
   > span {
     display: block;
     background-color: rgba(255, 255, 255, 0.25);
