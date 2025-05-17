@@ -1,6 +1,8 @@
 ## Next
 
-* Postmaster items now have warning indicator if DIM is not allowed to pull them
+* Postmaster items now have a warning indicator if DIM is not allowed to pull them.
+* Added an "ammo" column, a "perks grid" column, and a "mods" column to the Organizer.
+* Slimmed down column labels for some Organizer columns.
 
 ## 8.71.1 <span class="changelog-date">(2025-05-12)</span>
 
