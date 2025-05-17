@@ -103,6 +103,7 @@ export default function ItemPopup({
             mobile={true}
             showLabel={false}
             actionsModel={itemActionsModel}
+            fromCompare={extraInfo?.fromCompare}
           />
         </div>
       )}
@@ -152,7 +153,11 @@ export default function ItemPopup({
               </div>
               {itemActionsModel.hasControls && (
                 <div className={styles.desktopActions}>
-                  <DesktopItemActions item={item} actionsModel={itemActionsModel} />
+                  <DesktopItemActions
+                    item={item}
+                    actionsModel={itemActionsModel}
+                    fromCompare={extraInfo?.fromCompare}
+                  />
                 </div>
               )}
             </div>
