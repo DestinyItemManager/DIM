@@ -1835,7 +1835,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 901468309,
+      hash: 256516254,
       fromRichText: true,
     },
   },
@@ -1871,7 +1871,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 495917258,
+      hash: 190392071,
       fromRichText: true,
     },
   },
@@ -1943,7 +1943,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1047174894,
+      hash: 538850654,
       fromRichText: true,
     },
   },
@@ -1952,7 +1952,7 @@ export const symbolData: {
     glyph: '󰅀',
     source: {
       tableName: 'Objective',
-      hash: 1047174894,
+      hash: 538850654,
       fromRichText: true,
     },
   },
@@ -1979,7 +1979,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1848286660,
+      hash: 233397309,
       fromRichText: true,
     },
   },
@@ -1997,7 +1997,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 384756495,
+      hash: 169521666,
       fromRichText: true,
     },
   },

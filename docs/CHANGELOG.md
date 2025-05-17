@@ -1,7 +1,16 @@
 ## Next
 
+* Postmaster items now have warning indicator if DIM is not allowed to pull them
+
+## 8.71.1 <span class="changelog-date">(2025-05-12)</span>
+
+* Fix misaligned stat numbers in Compare box.
+
+## 8.71.0 <span class="changelog-date">(2025-05-11)</span>
+
 * Stats in Organizer are now colored the same as in Compare.
 * Fixed the positioning of the item popup when clicking on artifact mods.
+* Rite of the Nine shiny weapons now have icon stripes and detect in `is:shiny` filter.
 
 ## 8.70.0 <span class="changelog-date">(2025-05-04)</span>
 
