@@ -76,7 +76,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       {item.iconOverlay && (
         <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
       )}
-      {(item.masterwork || item.deepsightInfo) && (
+      {(itemIsShiny || item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
             [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !itemIsShiny,
