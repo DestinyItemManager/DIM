@@ -92,8 +92,7 @@ export default function ItemPopup({
       )}
       {nonPullablePostmasterItem(item) && (
         <div className={styles.failureReason}>
-          <AlertIcon />
-          <RichDestinyText text={t('MovePopup.CantPullFromPostmaster')} ownerId={item.owner} />
+          <AlertIcon /> {t('MovePopup.CantPullFromPostmaster')}
         </div>
       )}
       {isPhonePortrait && itemActionsModel.hasAccessoryControls && (
