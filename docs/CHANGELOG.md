@@ -1,5 +1,8 @@
 ## Next
 
+* Updated season number filter for some items.
+* `source:riteofthenine` filter added.
+
 ## 8.72.0 <span class="changelog-date">(2025-05-18)</span>
 
 * Postmaster items now have a warning indicator if DIM is not allowed to pull them.
