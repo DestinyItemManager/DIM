@@ -2656,6 +2656,56 @@ const missingSources: { [key: string]: number[] } = {
     3901727798, // Spacewalk Boots
     4036496212, // Spacewalk Helm
   ],
+  riteofthenine: [
+    14929251, // Long Arm
+    492673102, // New Pacific Epitaph
+    749483159, // Prosecutor (Adept)
+    1050582210, // Greasy Luck (Adept)
+    1066598837, // Relentless (Adept)
+    1157220231, // No Survivors (Adept)
+    1685406703, // Greasy Luck
+    2126543269, // Cold Comfort (Adept)
+    2477408004, // Wilderflight (Adept)
+    2730671571, // Terminus Horizon
+    2764074355, // A Sudden Death (Adept)
+    3185151619, // New Pacific Epitaph (Adept)
+    3329218848, // Judgement (Adept)
+    3421639790, // Liminal Vigil (Adept)
+    3598944128, // Foretold
+    3598944129, // Seer
+    3598944130, // Esper
+    3598944131, // Calibrated
+    3598944132, // Immortality
+    3681280908, // Relentless
+    3692140710, // Long Arm (Adept)
+    4193602194, // No Survivors
+    4267192886, // Terminus Horizon (Adept)
+  ],
+  rotn: [
+    14929251, // Long Arm
+    492673102, // New Pacific Epitaph
+    749483159, // Prosecutor (Adept)
+    1050582210, // Greasy Luck (Adept)
+    1066598837, // Relentless (Adept)
+    1157220231, // No Survivors (Adept)
+    1685406703, // Greasy Luck
+    2126543269, // Cold Comfort (Adept)
+    2477408004, // Wilderflight (Adept)
+    2730671571, // Terminus Horizon
+    2764074355, // A Sudden Death (Adept)
+    3185151619, // New Pacific Epitaph (Adept)
+    3329218848, // Judgement (Adept)
+    3421639790, // Liminal Vigil (Adept)
+    3598944128, // Foretold
+    3598944129, // Seer
+    3598944130, // Esper
+    3598944131, // Calibrated
+    3598944132, // Immortality
+    3681280908, // Relentless
+    3692140710, // Long Arm (Adept)
+    4193602194, // No Survivors
+    4267192886, // Terminus Horizon (Adept)
+  ],
   saint14: [
     3360014173, // The Lantern of Osiris
   ],
