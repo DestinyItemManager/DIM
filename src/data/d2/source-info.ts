@@ -307,6 +307,7 @@ const D2Sources: {
   crucible: {
     itemHashes: [
       2307365, // The Inquisitor (Adept)
+      51129316, // The Inquisitor
       161675590, // Whistler's Whim (Adept)
       303107619, // Tomorrow's Answer (Adept)
       501345268, // Shayura's Wrath (Adept)
@@ -337,6 +338,7 @@ const D2Sources: {
       2185327324, // The Inquisitor
       2300143112, // Yesterday's Question
       2314610827, // Igneous Hammer (Adept)
+      2330860573, // The Inquisitor (Adept)
       2378785953, // Yesterday's Question (Adept)
       2414564781, // Punctuation Marks
       2420153991, // Made Shaxx Proud
@@ -739,40 +741,40 @@ const D2Sources: {
       14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
       185321778, // The Eternal Return
-      189194532, // No Survivors
-      233402416, // New Pacific Epitaph
+      189194532, // No Survivors (Adept)
+      233402416, // New Pacific Epitaph (Adept)
       291447487, // Cold Comfort
       492673102, // New Pacific Epitaph
-      559523765, // Wilderflight
+      559523765, // Wilderflight (Adept)
       814876684, // Wish-Ender
-      1050582210, // Greasy Luck
-      1157220231, // No Survivors
+      1050582210, // Greasy Luck (Adept)
+      1157220231, // No Survivors (Adept)
       1206729100, // Wilderflight
       1303313141, // Unsworn
       1460079227, // Liminal Vigil
       1685406703, // Greasy Luck
-      1817605554, // Cold Comfort
-      1905934655, // Liminal Vigil
+      1817605554, // Cold Comfort (Adept)
+      1905934655, // Liminal Vigil (Adept)
       2059741649, // New Pacific Epitaph
-      2126543269, // Cold Comfort
-      2210806903, // Terminus Horizon
-      2477408004, // Wilderflight
+      2126543269, // Cold Comfort (Adept)
+      2210806903, // Terminus Horizon (Adept)
+      2477408004, // Wilderflight (Adept)
       2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2760833884, // Cold Comfort
       2844014413, // Pallas Galliot
       2934305134, // Greasy Luck
       2982006965, // Wilderflight
-      3185151619, // New Pacific Epitaph
-      3210739171, // Greasy Luck
-      3421639790, // Liminal Vigil
-      3692140710, // Long Arm
+      3185151619, // New Pacific Epitaph (Adept)
+      3210739171, // Greasy Luck (Adept)
+      3421639790, // Liminal Vigil (Adept)
+      3692140710, // Long Arm (Adept)
       3984556130, // Terminus Horizon
       4193602194, // No Survivors
       4228149269, // No Survivors
-      4239378215, // Long Arm
+      4239378215, // Long Arm (Adept)
       4249949938, // Long Arm
-      4267192886, // Terminus Horizon
+      4267192886, // Terminus Horizon (Adept)
     ],
     sourceHashes: [
       506073192, // Source: "Prophecy" Dungeon
@@ -879,6 +881,7 @@ const D2Sources: {
       629617846, // Source: Dawning 2020
       641018908, // Source: Solstice 2018
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
+      894030814, // Source: Heavy Metal Event
       923678151, // Source: Upgraded Event Card Reward
       1054169368, // Source: Festival of the Lost 2021
       1225476079, // Source: Moments of Triumph 2022
@@ -1036,20 +1039,20 @@ const D2Sources: {
   },
   ghostsofthedeep: {
     itemHashes: [
-      189194532, // No Survivors
-      233402416, // New Pacific Epitaph
+      189194532, // No Survivors (Adept)
+      233402416, // New Pacific Epitaph (Adept)
       291447487, // Cold Comfort
       492673102, // New Pacific Epitaph
-      1050582210, // Greasy Luck
-      1157220231, // No Survivors
+      1050582210, // Greasy Luck (Adept)
+      1157220231, // No Survivors (Adept)
       1685406703, // Greasy Luck
-      1817605554, // Cold Comfort
+      1817605554, // Cold Comfort (Adept)
       2059741649, // New Pacific Epitaph
-      2126543269, // Cold Comfort
+      2126543269, // Cold Comfort (Adept)
       2760833884, // Cold Comfort
       2934305134, // Greasy Luck
-      3185151619, // New Pacific Epitaph
-      3210739171, // Greasy Luck
+      3185151619, // New Pacific Epitaph (Adept)
+      3210739171, // Greasy Luck (Adept)
       4193602194, // No Survivors
       4228149269, // No Survivors
     ],
@@ -1069,20 +1072,20 @@ const D2Sources: {
   },
   gotd: {
     itemHashes: [
-      189194532, // No Survivors
-      233402416, // New Pacific Epitaph
+      189194532, // No Survivors (Adept)
+      233402416, // New Pacific Epitaph (Adept)
       291447487, // Cold Comfort
       492673102, // New Pacific Epitaph
-      1050582210, // Greasy Luck
-      1157220231, // No Survivors
+      1050582210, // Greasy Luck (Adept)
+      1157220231, // No Survivors (Adept)
       1685406703, // Greasy Luck
-      1817605554, // Cold Comfort
+      1817605554, // Cold Comfort (Adept)
       2059741649, // New Pacific Epitaph
-      2126543269, // Cold Comfort
+      2126543269, // Cold Comfort (Adept)
       2760833884, // Cold Comfort
       2934305134, // Greasy Luck
-      3185151619, // New Pacific Epitaph
-      3210739171, // Greasy Luck
+      3185151619, // New Pacific Epitaph (Adept)
+      3210739171, // Greasy Luck (Adept)
       4193602194, // No Survivors
       4228149269, // No Survivors
     ],
@@ -1429,6 +1432,7 @@ const D2Sources: {
       42874240, // Uzume RR4
       192784503, // Pre Astyanax IV
       213264394, // Buzzard
+      233635202, // Cruel Mercy
       267089201, // Warden's Law (Adept)
       496556698, // Pre Astyanax IV (Adept)
       555148853, // Wendigo GL3 (Adept)
@@ -1456,6 +1460,7 @@ const D2Sources: {
       2152484073, // Warden's Law
       2298039571, // Rake Angle
       2322926844, // Shadow Price
+      2347178967, // Cruel Mercy (Adept)
       2450917538, // Uzume RR4
       2591257541, // Scintillation
       2697143634, // Lotus-Eater (Adept)
@@ -1851,6 +1856,7 @@ const D2Sources: {
   shaxx: {
     itemHashes: [
       2307365, // The Inquisitor (Adept)
+      51129316, // The Inquisitor
       161675590, // Whistler's Whim (Adept)
       303107619, // Tomorrow's Answer (Adept)
       501345268, // Shayura's Wrath (Adept)
@@ -1881,6 +1887,7 @@ const D2Sources: {
       2185327324, // The Inquisitor
       2300143112, // Yesterday's Question
       2314610827, // Igneous Hammer (Adept)
+      2330860573, // The Inquisitor (Adept)
       2378785953, // Yesterday's Question (Adept)
       2414564781, // Punctuation Marks
       2420153991, // Made Shaxx Proud
@@ -1991,21 +1998,21 @@ const D2Sources: {
     itemHashes: [
       14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
-      559523765, // Wilderflight
+      559523765, // Wilderflight (Adept)
       1206729100, // Wilderflight
       1460079227, // Liminal Vigil
-      1905934655, // Liminal Vigil
-      2210806903, // Terminus Horizon
-      2477408004, // Wilderflight
+      1905934655, // Liminal Vigil (Adept)
+      2210806903, // Terminus Horizon (Adept)
+      2477408004, // Wilderflight (Adept)
       2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2982006965, // Wilderflight
-      3421639790, // Liminal Vigil
-      3692140710, // Long Arm
+      3421639790, // Liminal Vigil (Adept)
+      3692140710, // Long Arm (Adept)
       3984556130, // Terminus Horizon
-      4239378215, // Long Arm
+      4239378215, // Long Arm (Adept)
       4249949938, // Long Arm
-      4267192886, // Terminus Horizon
+      4267192886, // Terminus Horizon (Adept)
     ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
@@ -2024,21 +2031,21 @@ const D2Sources: {
     itemHashes: [
       14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
-      559523765, // Wilderflight
+      559523765, // Wilderflight (Adept)
       1206729100, // Wilderflight
       1460079227, // Liminal Vigil
-      1905934655, // Liminal Vigil
-      2210806903, // Terminus Horizon
-      2477408004, // Wilderflight
+      1905934655, // Liminal Vigil (Adept)
+      2210806903, // Terminus Horizon (Adept)
+      2477408004, // Wilderflight (Adept)
       2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2982006965, // Wilderflight
-      3421639790, // Liminal Vigil
-      3692140710, // Long Arm
+      3421639790, // Liminal Vigil (Adept)
+      3692140710, // Long Arm (Adept)
       3984556130, // Terminus Horizon
-      4239378215, // Long Arm
+      4239378215, // Long Arm (Adept)
       4249949938, // Long Arm
-      4267192886, // Terminus Horizon
+      4267192886, // Terminus Horizon (Adept)
     ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
@@ -2050,6 +2057,7 @@ const D2Sources: {
       42874240, // Uzume RR4
       192784503, // Pre Astyanax IV
       213264394, // Buzzard
+      233635202, // Cruel Mercy
       274843196, // Vanguard Unyielding
       772231794, // Hung Jury SR4
       781498181, // Persuader
@@ -2176,6 +2184,7 @@ const D2Sources: {
     itemHashes: [
       2307365, // The Inquisitor (Adept)
       711889599, // Whistler's Whim (Adept)
+      825554997, // The Inquisitor (Adept)
       1401300690, // Eye of Sol
       1574601402, // Whistler's Whim
       1983519830, // Hardened by Trial
@@ -2184,6 +2193,7 @@ const D2Sources: {
       2071635915, // Flawless Empyrean
       2185327324, // The Inquisitor
       2421180981, // Incisor (Adept)
+      2653171212, // The Inquisitor
       2759251821, // Unwavering Duty (Adept)
       3102421004, // Exalted Truth
       3624844116, // Unwavering Duty
@@ -2350,21 +2360,21 @@ const D2Sources: {
     itemHashes: [
       14929251, // Long Arm
       32287609, // Boondoggle Mk. 55
-      559523765, // Wilderflight
+      559523765, // Wilderflight (Adept)
       1206729100, // Wilderflight
       1460079227, // Liminal Vigil
-      1905934655, // Liminal Vigil
-      2210806903, // Terminus Horizon
-      2477408004, // Wilderflight
+      1905934655, // Liminal Vigil (Adept)
+      2210806903, // Terminus Horizon (Adept)
+      2477408004, // Wilderflight (Adept)
       2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2982006965, // Wilderflight
-      3421639790, // Liminal Vigil
-      3692140710, // Long Arm
+      3421639790, // Liminal Vigil (Adept)
+      3692140710, // Long Arm (Adept)
       3984556130, // Terminus Horizon
-      4239378215, // Long Arm
+      4239378215, // Long Arm (Adept)
       4249949938, // Long Arm
-      4267192886, // Terminus Horizon
+      4267192886, // Terminus Horizon (Adept)
     ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
@@ -2414,6 +2424,7 @@ const D2Sources: {
       42874240, // Uzume RR4
       192784503, // Pre Astyanax IV
       213264394, // Buzzard
+      233635202, // Cruel Mercy
       274843196, // Vanguard Unyielding
       772231794, // Hung Jury SR4
       781498181, // Persuader

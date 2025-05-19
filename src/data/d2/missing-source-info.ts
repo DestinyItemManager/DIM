@@ -799,23 +799,15 @@ const missingSources: { [key: string]: number[] } = {
     4047213660, // Deep Explorer Mask
   ],
   dungeon: [
-    14929251, // Long Arm
     51786498, // Vest of the Taken King
     145651147, // Deep Explorer Vest
-    189194532, // No Survivors
-    233402416, // New Pacific Epitaph
-    280985435, // Prosecutor
     286271818, // Twisting Echo Cloak
-    291447487, // Cold Comfort
     399065241, // Descending Echo Greaves
     420895300, // Deep Explorer Mark
     436695703, // TM-Cogburn Custom Plate
-    492673102, // New Pacific Epitaph
     498918879, // TM-Earp Custom Grips
     557092665, // Dark Age Cloak
-    559523765, // Wilderflight
     587312237, // Twisting Echo Grips
-    599883935, // Prosecutor
     632989816, // Dark Age Gauntlets
     638836294, // Plate of the Taken King
     708921139, // TM-Cogburn Custom Legguards
@@ -825,36 +817,25 @@ const missingSources: { [key: string]: number[] } = {
     837865641, // Vestment of the Taken King
     851401651, // Dark Age Overcoat
     956827695, // Mark of the Taken King
-    1050582210, // Greasy Luck
     1148597205, // Deep Explorer Grasps
-    1157220231, // No Survivors
-    1206729100, // Wilderflight
     1349399252, // TM-Earp Custom Cloaked Stetson
     1460079227, // Liminal Vigil
     1476803535, // Dark Age Legbraces
-    1635931988, // Judgment
     1664757090, // Gauntlets of the Taken King
-    1685406703, // Greasy Luck
     1756483796, // Twisting Echo Mask
-    1817605554, // Cold Comfort
-    1905934655, // Liminal Vigil
+    1773934241, // Judgment
+    1904170910, // A Sudden Death
     1913823311, // Gloves of the Taken King
     1933599476, // Dark Age Visor
     1951355667, // Twisting Echo Vest
-    1962751375, // A Sudden Death
     2057955626, // Deep Explorer Vestments
-    2059741649, // New Pacific Epitaph
-    2126543269, // Cold Comfort
-    2210806903, // Terminus Horizon
+    2129814338, // Prosecutor
     2244604734, // Corrupting Echo Gloves
     2341879253, // TM-Moss Custom Bond
     2426502022, // Dark Age Strides
-    2477408004, // Wilderflight
     2488323569, // Boots of the Taken King
     2499351855, // Deep Explorer Gauntlets
-    2557589026, // A Sudden Death
     2565015142, // TM-Cogburn Custom Mark
-    2575844666, // Liminal Vigil
     2618168932, // Bond of the Taken King
     2643850526, // Hood of the Taken King
     2649394513, // Deep Explorer Greaves
@@ -862,7 +843,6 @@ const missingSources: { [key: string]: number[] } = {
     2663987096, // Corrupting Echo Boots
     2694773307, // Deep Explorer Bond
     2724719415, // Deep Explorer Strides
-    2730671571, // Terminus Horizon
     2760833884, // Cold Comfort
     2771011469, // Dark Age Mask
     2797334754, // Deep Explorer Cloak
@@ -870,42 +850,29 @@ const missingSources: { [key: string]: number[] } = {
     2820604007, // Mask of the Taken King
     2850384360, // Strides of the Taken King
     2885497847, // Descending Echo Gauntlets
-    2907694858, // Judgment
-    2909639533, // Judgment
-    2934305134, // Greasy Luck
     2935559305, // Deep Explorer Plate
-    2946572750, // A Sudden Death
     2963224754, // Dark Age Sabatons
     2982006965, // Wilderflight
     3048458482, // Corrupting Echo Robes
     3056827626, // Dark Age Bond
-    3146195546, // Prosecutor
-    3164166855, // Judgment
     3171090615, // Corrupting Echo Cover
-    3185151619, // New Pacific Epitaph
-    3210739171, // Greasy Luck
     3260781446, // Deep Explorer Gloves
     3267969345, // Descending Echo Cage
     3270955774, // Deep Explorer Helmet
     3326914239, // Deep Explorer Hood
     3344225390, // TM-Earp Custom Hood
-    3421639790, // Liminal Vigil
     3423574140, // Dark Age Grips
     3511740432, // TM-Moss Custom Gloves
-    3535064067, // A Sudden Death
     3570749779, // Cloak of the Taken King
     3683772388, // Dark Age Harness
     3685276035, // Corrupting Echo Bond
-    3692140710, // Long Arm
     3708902812, // Greaves of the Taken King
     3715136417, // TM-Earp Custom Chaps
     3735435664, // Dark Age Chestrig
     3870375786, // TM-Moss Custom Pants
     3871537958, // Descending Echo Helm
-    3912734222, // Prosecutor
     3933500353, // TM-Cogburn Custom Gauntlets
     3946384952, // TM-Moss Custom Duster
-    3984556130, // Terminus Horizon
     4039955353, // TM-Moss Custom Hat
     4047213660, // Deep Explorer Mask
     4050474396, // Descending Echo Mark
@@ -913,11 +880,6 @@ const missingSources: { [key: string]: number[] } = {
     4097972038, // A Sudden Death
     4130276947, // Helm of the Taken King
     4177293424, // TM-Cogburn Custom Cover
-    4193602194, // No Survivors
-    4228149269, // No Survivors
-    4239378215, // Long Arm
-    4249949938, // Long Arm
-    4267192886, // Terminus Horizon
     4288623897, // TM-Earp Custom Vest
   ],
   edz: [
@@ -1444,36 +1406,21 @@ const missingSources: { [key: string]: number[] } = {
   ],
   ghostsofthedeep: [
     51786498, // Vest of the Taken King
-    189194532, // No Survivors
-    233402416, // New Pacific Epitaph
-    291447487, // Cold Comfort
-    492673102, // New Pacific Epitaph
     638836294, // Plate of the Taken King
     767306222, // Grasps of the Taken King
     837865641, // Vestment of the Taken King
     956827695, // Mark of the Taken King
-    1050582210, // Greasy Luck
-    1157220231, // No Survivors
     1664757090, // Gauntlets of the Taken King
-    1685406703, // Greasy Luck
-    1817605554, // Cold Comfort
     1913823311, // Gloves of the Taken King
-    2059741649, // New Pacific Epitaph
-    2126543269, // Cold Comfort
     2488323569, // Boots of the Taken King
     2618168932, // Bond of the Taken King
     2643850526, // Hood of the Taken King
     2760833884, // Cold Comfort
     2820604007, // Mask of the Taken King
     2850384360, // Strides of the Taken King
-    2934305134, // Greasy Luck
-    3185151619, // New Pacific Epitaph
-    3210739171, // Greasy Luck
     3570749779, // Cloak of the Taken King
     3708902812, // Greaves of the Taken King
     4130276947, // Helm of the Taken King
-    4193602194, // No Survivors
-    4228149269, // No Survivors
   ],
   gos: [
     11974904, // Greaves of Ascendancy
@@ -1501,36 +1448,21 @@ const missingSources: { [key: string]: number[] } = {
   ],
   gotd: [
     51786498, // Vest of the Taken King
-    189194532, // No Survivors
-    233402416, // New Pacific Epitaph
-    291447487, // Cold Comfort
-    492673102, // New Pacific Epitaph
     638836294, // Plate of the Taken King
     767306222, // Grasps of the Taken King
     837865641, // Vestment of the Taken King
     956827695, // Mark of the Taken King
-    1050582210, // Greasy Luck
-    1157220231, // No Survivors
     1664757090, // Gauntlets of the Taken King
-    1685406703, // Greasy Luck
-    1817605554, // Cold Comfort
     1913823311, // Gloves of the Taken King
-    2059741649, // New Pacific Epitaph
-    2126543269, // Cold Comfort
     2488323569, // Boots of the Taken King
     2618168932, // Bond of the Taken King
     2643850526, // Hood of the Taken King
     2760833884, // Cold Comfort
     2820604007, // Mask of the Taken King
     2850384360, // Strides of the Taken King
-    2934305134, // Greasy Luck
-    3185151619, // New Pacific Epitaph
-    3210739171, // Greasy Luck
     3570749779, // Cloak of the Taken King
     3708902812, // Greaves of the Taken King
     4130276947, // Helm of the Taken King
-    4193602194, // No Survivors
-    4228149269, // No Survivors
   ],
   grasp: [
     286271818, // Twisting Echo Cloak
@@ -2449,18 +2381,9 @@ const missingSources: { [key: string]: number[] } = {
     2871264750, // Skeleton Key
   ],
   prophecy: [
-    280985435, // Prosecutor
-    599883935, // Prosecutor
-    1635931988, // Judgment
-    1962751375, // A Sudden Death
-    2557589026, // A Sudden Death
-    2907694858, // Judgment
-    2909639533, // Judgment
-    2946572750, // A Sudden Death
-    3146195546, // Prosecutor
-    3164166855, // Judgment
-    3535064067, // A Sudden Death
-    3912734222, // Prosecutor
+    1773934241, // Judgment
+    1904170910, // A Sudden Death
+    2129814338, // Prosecutor
     4097972038, // A Sudden Death
   ],
   psiops: [
@@ -2975,36 +2898,22 @@ const missingSources: { [key: string]: number[] } = {
     4238134294, // Gunsmith's Devotion Robes
   ],
   sotw: [
-    14929251, // Long Arm
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
-    559523765, // Wilderflight
     708921139, // TM-Cogburn Custom Legguards
-    1206729100, // Wilderflight
     1349399252, // TM-Earp Custom Cloaked Stetson
     1460079227, // Liminal Vigil
-    1905934655, // Liminal Vigil
-    2210806903, // Terminus Horizon
     2341879253, // TM-Moss Custom Bond
-    2477408004, // Wilderflight
     2565015142, // TM-Cogburn Custom Mark
-    2575844666, // Liminal Vigil
-    2730671571, // Terminus Horizon
     2982006965, // Wilderflight
     3344225390, // TM-Earp Custom Hood
-    3421639790, // Liminal Vigil
     3511740432, // TM-Moss Custom Gloves
-    3692140710, // Long Arm
     3715136417, // TM-Earp Custom Chaps
     3870375786, // TM-Moss Custom Pants
     3933500353, // TM-Cogburn Custom Gauntlets
     3946384952, // TM-Moss Custom Duster
-    3984556130, // Terminus Horizon
     4039955353, // TM-Moss Custom Hat
     4177293424, // TM-Cogburn Custom Cover
-    4239378215, // Long Arm
-    4249949938, // Long Arm
-    4267192886, // Terminus Horizon
     4288623897, // TM-Earp Custom Vest
   ],
   spireofstars: [
@@ -3040,36 +2949,22 @@ const missingSources: { [key: string]: number[] } = {
     4247935492, // Equitis Shade Cloak
   ],
   spireofthewatcher: [
-    14929251, // Long Arm
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
-    559523765, // Wilderflight
     708921139, // TM-Cogburn Custom Legguards
-    1206729100, // Wilderflight
     1349399252, // TM-Earp Custom Cloaked Stetson
     1460079227, // Liminal Vigil
-    1905934655, // Liminal Vigil
-    2210806903, // Terminus Horizon
     2341879253, // TM-Moss Custom Bond
-    2477408004, // Wilderflight
     2565015142, // TM-Cogburn Custom Mark
-    2575844666, // Liminal Vigil
-    2730671571, // Terminus Horizon
     2982006965, // Wilderflight
     3344225390, // TM-Earp Custom Hood
-    3421639790, // Liminal Vigil
     3511740432, // TM-Moss Custom Gloves
-    3692140710, // Long Arm
     3715136417, // TM-Earp Custom Chaps
     3870375786, // TM-Moss Custom Pants
     3933500353, // TM-Cogburn Custom Gauntlets
     3946384952, // TM-Moss Custom Duster
-    3984556130, // Terminus Horizon
     4039955353, // TM-Moss Custom Hat
     4177293424, // TM-Cogburn Custom Cover
-    4239378215, // Long Arm
-    4249949938, // Long Arm
-    4267192886, // Terminus Horizon
     4288623897, // TM-Earp Custom Vest
   ],
   strikes: [
@@ -3253,7 +3148,6 @@ const missingSources: { [key: string]: number[] } = {
   trials: [
     2307365, // The Inquisitor (Adept)
     72827962, // Focusing Robes
-    94414241, // Relentless
     142864314, // Bond of the Exile
     150551028, // Boots of the Exile
     155955678, // Mark Relentless
@@ -3263,11 +3157,11 @@ const missingSources: { [key: string]: number[] } = {
     495541988, // Hood of the Exile
     532746994, // Astral Horizon (Adept)
     571925067, // Cover of the Exile
-    684264976, // Relentless
     686607149, // Focusing Cowl
     711889599, // Whistler's Whim (Adept)
     773318267, // Floating Vest
     784751927, // Annihilating Plate
+    825554997, // The Inquisitor (Adept)
     861160515, // Robe of the Exile
     875395086, // Vest of the Exile
     945907383, // Floating Grips
@@ -3283,6 +3177,7 @@ const missingSources: { [key: string]: number[] } = {
     2185327324, // The Inquisitor
     2421180981, // Incisor (Adept)
     2579999316, // Plate of the Exile
+    2653171212, // The Inquisitor
     2759251821, // Unwavering Duty (Adept)
     2764588986, // Grips of the Exile
     2808362207, // Legs of the Exile
@@ -3290,7 +3185,6 @@ const missingSources: { [key: string]: number[] } = {
     3102421004, // Exalted Truth
     3127319342, // Floating Cowl
     3149072083, // Bond Relentless
-    3340037896, // Relentless
     3365406121, // Mark of the Exile
     3426704397, // Annihilating Greaves
     3624844116, // Unwavering Duty
@@ -3300,7 +3194,6 @@ const missingSources: { [key: string]: number[] } = {
     4023807721, // Shayura's Wrath (Adept)
     4100217958, // Focusing Boots
     4177448932, // Focusing Wraps
-    4193661297, // Relentless
     4248997900, // Incisor
   ],
   vesper: [
@@ -3364,36 +3257,22 @@ const missingSources: { [key: string]: number[] } = {
     4090037601, // Dark Age Helm
   ],
   watcher: [
-    14929251, // Long Arm
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
-    559523765, // Wilderflight
     708921139, // TM-Cogburn Custom Legguards
-    1206729100, // Wilderflight
     1349399252, // TM-Earp Custom Cloaked Stetson
     1460079227, // Liminal Vigil
-    1905934655, // Liminal Vigil
-    2210806903, // Terminus Horizon
     2341879253, // TM-Moss Custom Bond
-    2477408004, // Wilderflight
     2565015142, // TM-Cogburn Custom Mark
-    2575844666, // Liminal Vigil
-    2730671571, // Terminus Horizon
     2982006965, // Wilderflight
     3344225390, // TM-Earp Custom Hood
-    3421639790, // Liminal Vigil
     3511740432, // TM-Moss Custom Gloves
-    3692140710, // Long Arm
     3715136417, // TM-Earp Custom Chaps
     3870375786, // TM-Moss Custom Pants
     3933500353, // TM-Cogburn Custom Gauntlets
     3946384952, // TM-Moss Custom Duster
-    3984556130, // Terminus Horizon
     4039955353, // TM-Moss Custom Hat
     4177293424, // TM-Cogburn Custom Cover
-    4239378215, // Long Arm
-    4249949938, // Long Arm
-    4267192886, // Terminus Horizon
     4288623897, // TM-Earp Custom Vest
   ],
   zavala: [
