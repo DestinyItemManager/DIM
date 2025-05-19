@@ -370,6 +370,7 @@ const D2Sources: {
       506073192, // Source: "Prophecy" Dungeon
       613435025, // Source: "Warlord's Ruin" Dungeon
       675740011, // Source: "Grasp of Avarice" Dungeon
+      877404349, // Source: Rite of the Nine
       1282207663, // Source: Dungeon "Duality"
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: "Pit of Heresy" Dungeon
@@ -386,28 +387,36 @@ const D2Sources: {
       291447487, // Cold Comfort
       492673102, // New Pacific Epitaph
       559523765, // Wilderflight (Adept)
+      749483159, // Prosecutor (Adept)
       814876684, // Wish-Ender
       1050582210, // Greasy Luck (Adept)
+      1066598837, // Relentless (Adept)
       1157220231, // No Survivors (Adept)
       1206729100, // Wilderflight
       1303313141, // Unsworn
       1460079227, // Liminal Vigil
       1685406703, // Greasy Luck
+      1773934241, // Judgment
       1817605554, // Cold Comfort (Adept)
+      1904170910, // A Sudden Death
       1905934655, // Liminal Vigil (Adept)
       2059741649, // New Pacific Epitaph
       2126543269, // Cold Comfort (Adept)
+      2129814338, // Prosecutor
       2210806903, // Terminus Horizon (Adept)
       2477408004, // Wilderflight (Adept)
       2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2760833884, // Cold Comfort
+      2764074355, // A Sudden Death (Adept)
       2844014413, // Pallas Galliot
       2934305134, // Greasy Luck
       2982006965, // Wilderflight
       3185151619, // New Pacific Epitaph (Adept)
       3210739171, // Greasy Luck (Adept)
+      3329218848, // Judgement (Adept)
       3421639790, // Liminal Vigil (Adept)
+      3681280908, // Relentless
       3692140710, // Long Arm (Adept)
       3984556130, // Terminus Horizon
       4193602194, // No Survivors
@@ -1168,6 +1177,38 @@ const D2Sources: {
       2463956052, // Source: Vesper's Host
       3906217258, // Source: Revenant Fortress
     ],
+  },
+  riteofthenine: {
+    itemHashes: [
+      14929251, // Long Arm
+      492673102, // New Pacific Epitaph
+      749483159, // Prosecutor (Adept)
+      1050582210, // Greasy Luck (Adept)
+      1066598837, // Relentless (Adept)
+      1157220231, // No Survivors (Adept)
+      1460079227, // Liminal Vigil
+      1685406703, // Greasy Luck
+      1773934241, // Judgment
+      1904170910, // A Sudden Death
+      2126543269, // Cold Comfort (Adept)
+      2129814338, // Prosecutor
+      2477408004, // Wilderflight (Adept)
+      2730671571, // Terminus Horizon
+      2760833884, // Cold Comfort
+      2764074355, // A Sudden Death (Adept)
+      2982006965, // Wilderflight
+      3185151619, // New Pacific Epitaph (Adept)
+      3329218848, // Judgement (Adept)
+      3421639790, // Liminal Vigil (Adept)
+      3681280908, // Relentless
+      3692140710, // Long Arm (Adept)
+      4193602194, // No Survivors
+      4267192886, // Terminus Horizon (Adept)
+    ],
+    sourceHashes: [
+      877404349, // Source: Rite of the Nine
+    ],
+    aliases: ['rotn'],
   },
   'ritual-weapon': {
     itemHashes: [
