@@ -54,6 +54,6 @@ export function getD1QualityColor(value: number, property = 'background-color') 
     color = 190;
   }
   return {
-    [property]: `hsla(${color},65%,50%, 1)`,
+    [property]: `hsl(${color},65%,50%, 1)`,
   };
 }

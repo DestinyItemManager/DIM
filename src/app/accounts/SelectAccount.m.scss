@@ -23,7 +23,7 @@
   @include interactive($hover: true, $focus: true) {
     border-color: var(--theme-accent-primary);
     color: var(--theme-accent-primary);
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgb(255, 255, 255, 0.1);
   }
 
   &:focus,

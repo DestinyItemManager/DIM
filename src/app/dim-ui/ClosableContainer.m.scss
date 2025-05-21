@@ -14,7 +14,7 @@
   top: 2px;
   right: 2px;
   background-image: url('images/close.png');
-  background-color: rgba(100, 100, 100, 0.8);
+  background-color: rgb(100, 100, 100, 0.8);
 
   @include interactive($hover: true, $focus: true) {
     background-color: var(--theme-accent-primary);

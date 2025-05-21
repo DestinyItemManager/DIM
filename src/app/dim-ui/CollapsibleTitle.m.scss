@@ -8,12 +8,12 @@
   align-items: center;
   margin-top: 0;
   margin-bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgb(0, 0, 0, 0.2);
   padding-right: 16px;
   gap: 8px;
 
   @include interactive($hover: true, $focusWithin: true) {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgb(0, 0, 0, 0.4);
   }
 
   // The interactive button within
@@ -52,7 +52,7 @@
 
   /* stylelint-disable-next-line no-descending-specificity */
   &.collapsed {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgb(0, 0, 0, 0.4);
 
     @include phone-portrait {
       color: var(--theme-text);

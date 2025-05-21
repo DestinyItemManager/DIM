@@ -62,7 +62,7 @@
 
 // The bar we show for items that have some progress on them
 .xpBar {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0, 0, 0, 0.5);
   position: absolute;
   width: auto;
   left: $item-border-width + 2px;
@@ -94,7 +94,7 @@
   font-size: calc(var(--item-size) / 5);
   margin-right: 1px;
   color: #29f36a; // #5eff92;
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow(0 0 2px rgb(0, 0, 0, 0.8));
 }
 
 .warningIcon {
@@ -106,5 +106,5 @@
   top: $item-border-width + 2px;
   right: $item-border-width + 3px;
   pointer-events: none;
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow(0 0 2px rgb(0, 0, 0, 0.8));
 }

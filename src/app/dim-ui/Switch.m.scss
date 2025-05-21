@@ -31,7 +31,7 @@ $touchPadding: 2px; // A bit of extra hit area
       height: $barHeight;
       margin: math.div($dotSize - $barHeight, 2) !important;
       padding: 0 !important;
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgb(255, 255, 255, 0.2);
       border-radius: 20px;
       transition: background-color $duration ease-out;
     }
@@ -50,7 +50,7 @@ $touchPadding: 2px; // A bit of extra hit area
       top: $touchPadding;
       left: $touchPadding;
       border: 2px solid transparent;
-      box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 3px rgb(0, 0, 0, 0.5);
     }
   }
 
@@ -76,7 +76,7 @@ $touchPadding: 2px; // A bit of extra hit area
       & + label {
         &::before {
           cursor: not-allowed;
-          background-color: rgba(255, 255, 255, 0.2) !important;
+          background-color: rgb(255, 255, 255, 0.2) !important;
         }
         // The dot
         &::after {

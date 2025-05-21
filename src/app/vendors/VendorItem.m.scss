@@ -17,7 +17,7 @@
   position: absolute;
   top: calc(#{$item-border-width} - 4px - var(--item-size) / 4 + var(--item-size));
   right: $item-border-width + 2px;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 2px rgb(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
 }

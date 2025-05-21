@@ -22,7 +22,7 @@
   composes: flexColumn from '../../dim-ui/common.m.scss';
   position: relative;
   padding: 8px 12px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255, 255, 255, 0.1);
 
   @include phone-portrait {
     --item-margin: 4px;

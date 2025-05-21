@@ -24,13 +24,13 @@
   align-items: center;
   padding: 0 4px;
   flex: 1;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  text-shadow: 1px 1px 3px rgb(0, 0, 0, 0.25);
 }
 
 .text {
   position: relative; // so it z-stacks over the progress bar
   margin-right: 4px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  text-shadow: 1px 1px 3px rgb(0, 0, 0, 0.25);
 }
 
 .objective {
@@ -91,7 +91,7 @@
   border: 1px solid #999;
   margin-right: 4px;
   box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgb(0, 0, 0, 0.3);
 
   &.complete::after {
     content: '';

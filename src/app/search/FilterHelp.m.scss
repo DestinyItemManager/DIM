@@ -8,7 +8,7 @@
     padding: 0;
     border-collapse: collapse;
     border-spacing: 0;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgb(255, 255, 255, 0.15);
     width: 100%;
 
     @include phone-portrait {
@@ -16,10 +16,10 @@
     }
 
     tr:nth-child(2n) {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: rgb(0, 0, 0, 0.1);
     }
     tr:nth-child(2n + 1) {
-      background-color: rgba(0, 0, 0, 0.3);
+      background-color: rgb(0, 0, 0, 0.3);
     }
   }
   th {

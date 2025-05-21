@@ -69,7 +69,7 @@
 
 .recordIcon {
   border-radius: 50%;
-  background-color: rgba(245, 245, 245, 0.1);
+  background-color: rgb(245, 245, 245, 0.1);
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: 75%;
@@ -79,7 +79,7 @@
   border: 2px solid #fff;
   .complete & {
     border-color: #ffce1f;
-    background-color: rgba(255, 206, 31, 0.4);
+    background-color: rgb(255, 206, 31, 0.4);
   }
 }
 .recordInfo {

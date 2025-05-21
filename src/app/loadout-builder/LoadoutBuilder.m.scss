@@ -82,7 +82,7 @@
   // Fit 7 mods across, regardless of what the user's item size is
   --item-size: 50px;
   font-size: 12px; // reset from where PageWithMenu sets it to 14px
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgb(0, 0, 0, 0.3);
   padding: 8px;
   gap: 0;
 }
@@ -95,7 +95,7 @@
 }
 
 .referenceTiersInfo {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgb(0, 0, 0, 0.4);
   padding: 10px;
   position: relative;
   max-width: 800px;
@@ -111,7 +111,7 @@
 .dismissButton {
   composes: resetButton from '../dim-ui/common.m.scss';
   padding: 12px 12px 12px 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgb(255, 255, 255, 0.5);
   cursor: pointer;
   position: absolute;
   right: 0;

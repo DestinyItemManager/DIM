@@ -44,9 +44,9 @@
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 6px -10px rgba(174, 244, 175, 0.6);
+    box-shadow: 0 0 6px -10px rgb(174, 244, 175, 0.6);
   }
   to {
-    box-shadow: 0 0 6px 6px rgba(174, 244, 175, 0.6);
+    box-shadow: 0 0 6px 6px rgb(174, 244, 175, 0.6);
   }
 }

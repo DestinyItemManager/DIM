@@ -17,7 +17,7 @@
 }
 .pursuit.flawedPassage::before {
   content: '';
-  background: rgba(255, 0, 0, 0.2);
+  background: rgb(255, 0, 0, 0.2);
   width: 100%;
   height: 100%;
   position: absolute;
@@ -100,7 +100,7 @@
 }
 
 .progress {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0, 0, 0, 0.5);
   position: absolute;
   width: auto;
   left: 2px;

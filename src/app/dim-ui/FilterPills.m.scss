@@ -16,7 +16,7 @@
   composes: resetButton from '../dim-ui/common.m.scss';
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgb(0, 0, 0, 0.4);
   border-radius: 12px;
   padding: 2px 8px;
   color: white;
@@ -27,7 +27,7 @@
   user-select: none;
 
   @include interactive($hover: true) {
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgb(255, 255, 255, 0.3);
   }
 
   .darkBackground & {
@@ -41,5 +41,5 @@
 
 .selected {
   border-color: var(--theme-accent-primary) !important;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgb(0, 0, 0, 0.6);
 }

@@ -46,11 +46,11 @@
   width: 100%;
   padding-bottom: 4px;
   margin-bottom: 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgb(255, 255, 255, 0.1);
 }
 
 .versionTable {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgb(255, 255, 255, 0.05);
   padding: 2px;
   width: 100%;
   margin-top: 4px;
@@ -63,6 +63,6 @@
     padding-right: 8px;
   }
   tr:first-child td {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgb(255, 255, 255, 0.1);
   }
 }

@@ -74,7 +74,7 @@ $commonBg: #366f42;
 // Masterwork pattern emulating .src/images/masterwork.png
 $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 .legendaryMasterwork {
-  box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0 1px 0 rgb(0, 0, 0, 0.25);
   background-image:
     radial-gradient(
       ellipse at bottom,
@@ -169,14 +169,14 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 
 // Exotic Masterwork pattern emulating .src/images/exotic-masterwork.png
 .exoticMasterwork {
-  $light-stripe: rgba(255, 255, 255, 0.003);
-  $dark-stripe: rgba(0, 0, 0, 0.025);
-  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.15);
+  $light-stripe: rgb(255, 255, 255, 0.003);
+  $dark-stripe: rgb(0, 0, 0, 0.025);
+  box-shadow: inset 0 0 1px 1px rgb(0, 0, 0, 0.15);
   background:
-    linear-gradient(rgba(0, 0, 0, 0.3) 0%, transparent 20%),
-    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.225), transparent 75%) center
+    linear-gradient(rgb(0, 0, 0, 0.3) 0%, transparent 20%),
+    radial-gradient(ellipse at center bottom, rgb(255, 255, 255, 0.225), transparent 75%) center
       bottom,
-    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.15), transparent 75%) center
+    radial-gradient(ellipse at center bottom, rgb(255, 255, 255, 0.15), transparent 75%) center
       bottom,
     repeating-linear-gradient(
         to bottom right,

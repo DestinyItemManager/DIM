@@ -10,7 +10,7 @@
 }
 
 .nodeXp {
-  fill: rgba(255, 255, 255, 0.1);
+  fill: rgb(255, 255, 255, 0.1);
   stroke: none;
   .showXp & {
     stroke: $xp;
@@ -19,7 +19,7 @@
     fill: #4887ba;
   }
   .default & {
-    fill: rgba(255, 255, 255, 0.4);
+    fill: rgb(255, 255, 255, 0.4);
   }
 }
 

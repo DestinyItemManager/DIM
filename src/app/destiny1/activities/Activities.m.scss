@@ -75,7 +75,7 @@
 
 .stepIcon {
   border-radius: 50%;
-  background-color: rgba(245, 245, 245, 0.1);
+  background-color: rgb(245, 245, 245, 0.1);
   width: 8px;
   height: 8px;
   display: inline-block;
@@ -83,7 +83,7 @@
   margin: 2px;
   &.complete {
     border-color: #ffce1f;
-    background-color: rgba(255, 206, 31, 0.4);
+    background-color: rgb(255, 206, 31, 0.4);
   }
 }
 

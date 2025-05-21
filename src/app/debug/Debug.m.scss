@@ -8,7 +8,7 @@
   gap: 1em;
 
   section {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgb(0, 0, 0, 0.1);
     padding: 1em;
   }
 
@@ -23,12 +23,12 @@
 }
 
 .error {
-  background-color: rgba(100, 0, 0, 0.2);
+  background-color: rgb(100, 0, 0, 0.2);
   padding: 0.2em;
 }
 
 .token {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgb(0, 0, 0, 0.1);
   margin-top: 0.5em;
   padding: 0.5em;
 }
