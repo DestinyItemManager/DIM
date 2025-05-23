@@ -35,7 +35,7 @@
   position: relative;
 
   @include interactive($hover: true) {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgb(255, 255, 255, 0.1);
   }
   &:focus-visible {
     border-color: var(--theme-accent-secondary);

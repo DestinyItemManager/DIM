@@ -12,7 +12,7 @@
     font-size: 12px;
     line-height: calc(16 / 12);
     font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+    text-shadow: 1px 1px 3px rgb(0, 0, 0, 0.25);
     border: 1px solid transparent;
     transition: all 150ms ease-out;
     box-sizing: border-box;
@@ -116,7 +116,7 @@
   }
 
   .dim-button-primary {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgb(255, 255, 255, 0.3);
     font-weight: bold;
   }
 }

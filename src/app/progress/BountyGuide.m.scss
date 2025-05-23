@@ -29,7 +29,7 @@
 
 .selected {
   border-color: var(--theme-accent-primary);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgb(0, 0, 0, 0.6);
 }
 
 .pullItem {
@@ -37,7 +37,7 @@
   margin-left: 6px;
   margin-right: -2px;
   padding-left: 6px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgb(255, 255, 255, 0.2);
 
   @include interactive($hover: true) {
     :global(.app-icon) {

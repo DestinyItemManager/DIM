@@ -13,7 +13,7 @@
   flex-wrap: wrap;
 
   @include interactive($hover: true) {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgb(255, 255, 255, 0.05);
   }
 
   &:first-child {

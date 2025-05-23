@@ -3,7 +3,7 @@
 .loadout {
   composes: flexColumn from '../dim-ui/common.m.scss';
   padding: 15px;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgb(0, 0, 0, 0.25);
 
   @include phone-portrait {
     padding: 10px;

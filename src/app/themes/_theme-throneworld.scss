@@ -14,7 +14,7 @@
   --theme-text-secondary: #eee;
 
   // Buttons
-  --theme-button-bg: rgba(255, 255, 255, 0.2);
+  --theme-button-bg: rgb(255, 255, 255, 0.2);
   --theme-button-text: white;
 
   // Input field (text boxes and text areas)
@@ -51,16 +51,16 @@
   --theme-header-nav-bg: #1b422c;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
   --theme-header-characters-bg: #265c42;
-  --theme-header-characters-txt: rgba(255, 255, 255, 0.8);
+  --theme-header-characters-txt: rgb(255, 255, 255, 0.8);
 
   // Dropdown menu
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
   // Background color for the search bar. Distinguishes it from theme-header-nav-bg.
-  --theme-search-bg: rgba(0, 0, 0, 0.4);
+  --theme-search-bg: rgb(0, 0, 0, 0.4);
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
-  --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);
+  --theme-search-dropdown-border: rgb(255, 255, 255, 0.2);
 
   // Items
   --theme-item-polaroid: #e3f9db;

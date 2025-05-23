@@ -12,10 +12,10 @@
 
   // Set the text off from the background
   text-shadow:
-    1px 1px 1px rgba(0, 0, 0, 0.5),
-    0 0 10px rgba(0, 0, 0, 0.5);
+    1px 1px 1px rgb(0, 0, 0, 0.5),
+    0 0 10px rgb(0, 0, 0, 0.5);
   :global(.app-icon) {
-    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(1px 1px 1px rgb(0, 0, 0, 0.5)) drop-shadow(0 0 10px rgb(0, 0, 0, 0.5));
   }
 }
 
@@ -53,7 +53,7 @@
   gap: 0 6px;
   padding: 0 6px;
   // The vault needs a little border to stand out against some backgrounds
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 1px solid rgb(0, 0, 0, 0.3);
   border-right: none;
   background-size: cover;
   background-repeat: no-repeat;
@@ -188,8 +188,8 @@
   font-style: italic;
   color: $sealtitle;
   text-shadow:
-    1px 1px 1px rgba(0, 0, 0, 0.5),
-    0 0 10px rgba(0, 0, 0, 0.5);
+    1px 1px 1px rgb(0, 0, 0, 0.5),
+    0 0 10px rgb(0, 0, 0, 0.5);
   width: 100%;
 
   > *:first-child {
@@ -203,8 +203,8 @@
 .gildedCurrentSeason {
   color: $gildedtitle;
   text-shadow:
-    1px 1px 1px rgba(0, 0, 0, 0.5),
-    0 0 10px rgba(0, 0, 0, 0.5);
+    1px 1px 1px rgb(0, 0, 0, 0.5),
+    0 0 10px rgb(0, 0, 0, 0.5);
 }
 
 .gildedIcon {

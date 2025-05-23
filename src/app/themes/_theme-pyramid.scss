@@ -14,7 +14,7 @@
   --theme-text-secondary: #777;
 
   // Buttons
-  --theme-button-bg: rgba(255, 255, 255, 0.2);
+  --theme-button-bg: rgb(255, 255, 255, 0.2);
   --theme-button-text: white;
 
   // Input field (text boxes and text areas)
@@ -50,16 +50,16 @@
   --theme-header-nav-bg: black;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
   --theme-header-characters-bg: #101010;
-  --theme-header-characters-txt: rgba(255, 255, 255, 0.625);
+  --theme-header-characters-txt: rgb(255, 255, 255, 0.625);
 
   // Dropdown menu
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
   // Background color for the search bar. Distinguishes it from theme-header-nav-bg.
-  --theme-search-bg: rgba(255, 255, 255, 0.15);
+  --theme-search-bg: rgb(255, 255, 255, 0.15);
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
-  --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);
+  --theme-search-dropdown-border: rgb(255, 255, 255, 0.2);
 
   // Items 'polaroid' framed icons
   --theme-item-polaroid: #456;
@@ -76,13 +76,13 @@
   --theme-item-popup-border: #333;
   --theme-item-popup-arrow: #333;
   --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
-  --theme-item-popup-panel-bg: rgba(
+  --theme-item-popup-panel-bg: rgb(
     255,
     255,
     255,
     0.06
   ); // Panels for progress (masterwork, crafted, catalyst) and archetype
-  --theme-item-popup-progress-bar-bg: rgba(0, 0, 0, 0.3);
+  --theme-item-popup-progress-bar-bg: rgb(0, 0, 0, 0.3);
 
   // Item feed
   --theme-item-feed-bg: var(--theme-fill-modal);

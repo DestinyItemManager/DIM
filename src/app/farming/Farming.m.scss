@@ -36,7 +36,7 @@
 
   button {
     color: var(--theme-text);
-    background-color: rgba(128, 128, 128, 0.4);
+    background-color: rgb(128, 128, 128, 0.4);
     border: none;
     padding: 0.5rem 1rem;
     text-align: center;
@@ -45,7 +45,7 @@
     transition: 0.3s background-color;
 
     @include interactive($hover: true, $active: true) {
-      background-color: rgba(232, 165, 52, 0.8);
+      background-color: rgb(232, 165, 52, 0.8);
     }
   }
 

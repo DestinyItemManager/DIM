@@ -20,22 +20,22 @@
 }
 
 .movePopupDialog {
-  --background-color: rgba(0, 0, 0, 1); // Fallback background
+  --background-color: rgb(0, 0, 0, 1); // Fallback background
 
   &.exotic {
-    --background-color: rgba(22, 18, 4, 1);
+    --background-color: rgb(22, 18, 4, 1);
   }
   &.legendary {
-    --background-color: rgba(14, 8, 17, 1);
+    --background-color: rgb(14, 8, 17, 1);
   }
   &.rare {
-    --background-color: rgba(10, 15, 21, 1);
+    --background-color: rgb(10, 15, 21, 1);
   }
   &.uncommon {
-    --background-color: rgba(8, 17, 9, 1);
+    --background-color: rgb(8, 17, 9, 1);
   }
   &.common {
-    --background-color: rgba(18, 18, 18, 1);
+    --background-color: rgb(18, 18, 18, 1);
   }
 
   &[data-popper-placement^='top'] .arrow {

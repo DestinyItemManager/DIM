@@ -14,7 +14,7 @@
   --theme-text-secondary: #aaa;
 
   // Buttons
-  --theme-button-bg: rgba(255, 255, 255, 0.1);
+  --theme-button-bg: rgb(255, 255, 255, 0.1);
   --theme-button-text: var(--theme-text);
 
   // Input field (text boxes and text areas)
@@ -57,7 +57,7 @@
 
   // Search
   // Background color for the search bar. Distinguishes it from theme-header-nav-bg.
-  --theme-search-bg: rgba(0, 0, 0, 0.4);
+  --theme-search-bg: rgb(0, 0, 0, 0.4);
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
 
   // Items

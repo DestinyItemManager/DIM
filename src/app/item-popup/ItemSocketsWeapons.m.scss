@@ -25,9 +25,9 @@
   width: 24px;
   height: 24px;
   z-index: 1;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgb(255, 255, 255, 0.2);
   color: var(--theme-text);
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  text-shadow: 1px 1px 3px rgb(0, 0, 0, 0.25);
 
   @include interactive($hover: true, $active: true) {
     background-color: var(--theme-accent-primary) !important;

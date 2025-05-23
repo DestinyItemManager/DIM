@@ -16,7 +16,7 @@
   --theme-text-secondary: #aaa;
 
   // Buttons
-  --theme-button-bg: rgba(255, 255, 255, 0.2);
+  --theme-button-bg: rgb(255, 255, 255, 0.2);
   --theme-button-text: white;
 
   // Input field (text boxes and text areas)
@@ -53,14 +53,14 @@
   --theme-header-nav-bg: var(--theme-app-bg-gradient);
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
   --theme-header-characters-bg: var(--theme-app-bg-gradient);
-  --theme-header-characters-txt: rgba(255, 255, 255, 0.8);
+  --theme-header-characters-txt: rgb(255, 255, 255, 0.8);
 
   // Dropdown menu
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
   // Background color for the search bar. Distinguishes it from theme-header-nav-bg.
-  --theme-search-bg: rgba(0, 0, 0, 0.4);
+  --theme-search-bg: rgb(0, 0, 0, 0.4);
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
   --theme-search-dropdown-border: transparent;
 
@@ -90,7 +90,7 @@
 
   // Item sheet (compare, armory)
   --theme-item-sheet-bg: var(--theme-fill-modal);
-  --theme-sheet-search-bg: rgba(255, 255, 255, 0.15);
+  --theme-sheet-search-bg: rgb(255, 255, 255, 0.15);
 
   // Organizer
   --theme-organizer-row-odd-bg: #27263a;

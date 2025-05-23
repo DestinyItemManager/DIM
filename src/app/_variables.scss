@@ -124,8 +124,8 @@ $tempContainerZindex: 1000;
 //   border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
 // produces
 //   --my-base-color-rgb: 255, 128, 0;
-//   background-color: rgba(255, 128, 0, 1);
-//   border-color: rgba(255, 128, 0, 0.75);
+//   background-color: rgb(255, 128, 0, 1);
+//   border-color: rgb(255, 128, 0, 0.75);
 
 // Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
 @function dim-hex-to-rgb-values($hex) {

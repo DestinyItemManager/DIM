@@ -255,7 +255,7 @@
     font-size: 12px;
     line-height: calc(16 / 12);
     color: var(--theme-text);
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+    text-shadow: 1px 1px 3px rgb(0, 0, 0, 0.25);
     border: 1px solid transparent;
 
     @include phone-portrait {
@@ -288,8 +288,8 @@
 
   code {
     position: relative;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgb(255, 255, 255, 0.05);
+    border: 1px solid rgb(255, 255, 255, 0.1);
     border-radius: 3px;
     padding: 0 4px;
     bottom: 1px;
