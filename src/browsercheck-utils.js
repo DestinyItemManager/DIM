@@ -28,14 +28,14 @@ export const unsupported = {
   'pt-br':
     'A equipe do DIM não oferece suporte a este navegador. Alguns recursos do DIM podem não funcionar.',
   ru: 'Команда DIM не поддерживает использование этого браузера. Некоторые или все функции DIM могут не работать.',
-  'zh-chs': 'DIM 团队不支持使用此浏览器。DIM 可能部分或完全不可用。',
+  'zh-chs': 'DIM 团队未对当前浏览器作出支持。DIM 可能部分或完全不可用。',
   'zh-cht': 'DIM團隊不支持使用此瀏覽器。 DIM可能部分或完全不可用。',
 };
 
 export const steamBrowser = {
   en: 'The Steam overlay browser is very old and some or all DIM features may not work. We cannot provide support for it.',
   de: 'Der Steam-Overlay-Browser ist sehr alt und einige oder alle DIM-Funktionen funktionieren möglicherweise nicht. Wir können dies nicht unterstützen.',
-  es: 'El navegador de Steam es muy antiguo y podría hacer que algunas o todas las características de DIM no funcionen. No podemos proveer de soporte para ello.',
+  es: 'El navegador de la interfaz de Steam es muy antiguo y podría hacer que algunas o todas las características de DIM no funcionen. No podemos proveer de soporte para ello.',
   'es-mx':
     'El navegador de Steam es muy antiguo y podría hacer que algunas o todas las características de DIM no funcionen. No podemos proveer de soporte para ello.',
   fr: "Le navigateur de l'overlay Steam est très vieux et certaines des fonctionnalitées de DIM peuvent ne pas fonctionner. Nous ne pouvons pas fournir de support pour ce navigateur.",
@@ -54,7 +54,7 @@ export const steamBrowser = {
 export const samsungInternet = {
   en: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
   de: 'Samsung Internet kann Websites zu dunkel erscheinen lassen, wenn der dunkle Modus eingeschaltet ist. Einstellungen > Labs > Webseite dunkles Theme verwenden oder wechsle zu einem anderen Browser.',
-  es: 'El Internet de Samsung puede hacer que los sitios parezcan demasiado oscuros cuando el modo oscuro está activo. Activa Opciones > Laboratorios > Usar tema oscuro o cambia a otro navegador.',
+  es: 'Internet de Samsung puede hacer que los sitios parezcan demasiado oscuros cuando el modo oscuro está activo. Habilita Opciones > Laboratorios > Usar tema oscuro o cambia a otro navegador.',
   'es-mx':
     'El Internet de Samsung puede hacer que los sitios parezcan demasiado oscuros cuando el modo oscuro está activo. Activa Opciones > Laboratorios > Usar tema oscuro o cambia a otro navegador.',
   fr: 'Samsung Internet peut rendre les sites trop sombre quand le mode sombre est activé. Activez Paramètres > Labs > Utiliser le mode sombre du site web ou utilisez un autre navigateur.',

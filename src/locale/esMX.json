@@ -107,7 +107,7 @@
     },
     "InitialItem": "Este es el objeto desde el que se inició la herramienta Comparar",
     "IsVendorItem": "Este objeto no está en tu inventario, pero {{vendorName}} lo vende.",
-    "NoModArmor": "Sin-mods"
+    "NoModArmor": "Pre-mods"
   },
   "Cooldown": {
     "Grenade": "Tiempo de recarga de Granada: {{cooldown}}",
