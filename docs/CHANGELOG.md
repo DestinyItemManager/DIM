@@ -1,5 +1,7 @@
 ## Next
 
+## 8.73.0 <span class="changelog-date">(2025-05-25)</span>
+
 ## 8.72.1 <span class="changelog-date">(2025-05-19)</span>
 
 * Updated season number filter for some items.
