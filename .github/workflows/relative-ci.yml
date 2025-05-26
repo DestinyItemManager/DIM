@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send bundle stats and build information to RelativeCI
-        uses: relative-ci/agent-action@v2.2.0
+        uses: relative-ci/agent-action@v3.0.0
         with:
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
