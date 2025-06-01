@@ -1,32 +1,38 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
-import { DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
+import { DimStat } from 'app/inventory/item-types';
+import { PlugClickedHandler } from 'app/inventory/store/override-sockets';
 import ArchetypeSocket from 'app/item-popup/ArchetypeSocket';
-import ItemSockets from 'app/item-popup/ItemSockets';
-import { ItemModSockets } from 'app/item-popup/ItemSocketsWeapons';
-import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
 import {
+  d1QualityColumn,
   getIntrinsicSockets,
   getStatColumns,
+  modsColumn,
+  perksGridColumn,
   perkString,
   perkStringSort,
 } from 'app/organizer/Columns';
 import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
-import { getCompareColor } from 'app/shell/formatters';
 import { compact } from 'app/utils/collections';
-import { isD1Item } from 'app/utils/item-utils';
-import {
-  getSocketsByType,
-  getWeaponArchetype,
-  getWeaponArchetypeSocket,
-} from 'app/utils/socket-utils';
+import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
+
+/**
+ * This helper allows TypeScript to perform type inference to determine the
+ * type of V based on its arguments. This allows us to automatically type the
+ * various column methods like `cell` and `filter` automatically based on the
+ * return type of `value`.
+ */
+/*@__INLINE__*/
+function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
+  return columnDef;
+}
 
 /**
  * This function generates the columns.
@@ -41,7 +47,7 @@ export function getColumns(
   compareBaseStats: boolean,
   primaryStatDescription: DestinyDisplayPropertiesDefinition | undefined,
   initialItemId: string | undefined,
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
+  onPlugClicked: PlugClickedHandler,
 ): ColumnDefinition[] {
   const isArmor = itemsType === 'armor';
   const isWeapon = itemsType === 'weapon';
@@ -58,17 +64,6 @@ export function getColumns(
     styles.stat,
   );
   const customStats = createCustomStatColumns(customStatDefs, styles.stat, undefined, true);
-
-  /**
-   * This helper allows TypeScript to perform type inference to determine the
-   * type of V based on its arguments. This allows us to automatically type the
-   * various column methods like `cell` and `filter` automatically based on the
-   * return type of `value`.
-   */
-  /*@__INLINE__*/
-  function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
-    return columnDef;
-  }
 
   // TODO: maybe add destinyVersion / usecase to the ColumnDefinition type??
   const columns: ColumnDefinition[] = compact([
@@ -139,16 +134,7 @@ export function getColumns(
       }),
     ...(compareBaseStats && isArmor ? baseStatColumns : statColumns),
     ...d1ArmorQualityByStat,
-    destinyVersion === 1 &&
-      isArmor &&
-      c({
-        id: 'quality',
-        header: t('Organizer.Columns.Quality'),
-        csv: '% Quality',
-        value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
-        cell: (value) => <span style={{ color: getCompareColor(value) }}>{value}%</span>,
-        filter: (value) => `quality:>=${value}`,
-      }),
+    destinyVersion === 1 && isArmor && d1QualityColumn,
     ...(destinyVersion === 2 && isArmor ? customStats : []),
     destinyVersion === 2 &&
       isWeapon &&
@@ -171,52 +157,19 @@ export function getColumns(
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
     (isWeapon || ((isArmor || isGeneral) && destinyVersion === 1)) &&
-      c({
-        id: 'perks',
-        className: styles.perks,
-        headerClassName: clsx(styles.perks, { [styles.weaponPerksHeader]: isWeapon }),
-        header: t('Organizer.Columns.Perks'),
-        value: (item) => perkString(getSocketsByType(item, 'perks')),
-        cell: (_val, item) => (
-          <>
-            {isD1Item(item) && item.talentGrid && (
-              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-            )}
-            {item.missingSockets && item.id === initialItemId && (
-              <div className="item-details warning">
-                {item.missingSockets === 'missing'
-                  ? t('MovePopup.MissingSockets')
-                  : t('MovePopup.LoadingSockets')}
-              </div>
-            )}
-            {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
-          </>
-        ),
-        sort: perkStringSort,
-      }),
+      perksGridColumn(
+        styles.perks,
+        clsx(styles.perks, { [styles.weaponPerksHeader]: isWeapon }),
+        onPlugClicked,
+        initialItemId,
+      ),
     destinyVersion === 2 &&
-      c({
-        id: 'mods',
-        className: clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
-        headerClassName: styles.perks,
-        header: t('Organizer.Columns.Mods'),
-        // TODO: for ghosts this should return ghost mods, not cosmetics
-        value: (item) => perkString(getSocketsByType(item, 'mods')),
-        cell: (_val, item) => (
-          <>
-            {isD1Item(item) && item.talentGrid && (
-              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-            )}
-            {item.sockets &&
-              (isWeapon ? (
-                <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
-              ) : (
-                <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
-              ))}
-          </>
-        ),
-        sort: perkStringSort,
-      }),
+      modsColumn(
+        clsx(styles.perks, { [styles.imageRoom]: isGeneral }),
+        styles.perks,
+        isWeapon,
+        onPlugClicked,
+      ),
     // Armor intrinsic perks
     destinyVersion === 2 &&
       isArmor &&
