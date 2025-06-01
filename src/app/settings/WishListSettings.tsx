@@ -117,6 +117,9 @@ export default function WishListSettings() {
     (list) => !activeWishlistUrls.includes(list.url),
   );
 
+  const hasRemoteWishList = activeWishlistUrls.length > 0;
+  const hasLocalWishList = !hasRemoteWishList && wishList.infos.length > 0;
+
   return (
     <section id="wishlist">
       <h2>
@@ -134,9 +137,11 @@ export default function WishListSettings() {
             <button type="button" className="dim-button" onClick={clearWishListEvent}>
               <AppIcon icon={banIcon} /> {t('WishListRoll.Clear')}
             </button>
-            <button type="button" className="dim-button" onClick={handleReloadWishlists}>
-              <AppIcon icon={refreshIcon} /> {t('WishListRoll.Refresh')}
-            </button>
+            {hasRemoteWishList && (
+              <button type="button" className="dim-button" onClick={handleReloadWishlists}>
+                <AppIcon icon={refreshIcon} /> {t('WishListRoll.Refresh')}
+              </button>
+            )}
           </div>
           {wishListLastUpdated && (
             <div className={fineprintClass}>
@@ -149,56 +154,60 @@ export default function WishListSettings() {
         </div>
       )}
 
-      {activeWishlistUrls.map((url) => {
-        const loadedData = wishList.infos.find((info) => info.url === url);
-        const builtinEntry = builtInWishlists.find((list) => list.url === url);
-        if (builtinEntry) {
-          return (
-            <BuiltinWishlist
-              key={url}
-              url={url}
-              name={builtinEntry.name}
-              title={loadedData?.title}
-              description={loadedData?.description}
-              rollsCount={loadedData?.numRolls}
-              dupeRollsCount={loadedData?.dupeRolls}
-              checked={true}
-              onChange={(checked) => changeUrl(url, checked)}
-            />
-          );
-        } else {
-          return (
-            <UrlWishlist
-              key={url}
-              url={url}
-              title={loadedData?.title}
-              description={loadedData?.description}
-              rollsCount={loadedData?.numRolls}
-              dupeRollsCount={loadedData?.dupeRolls}
-              onRemove={() => changeUrl(url, false)}
-            />
-          );
-        }
-      })}
+      {!hasLocalWishList &&
+        activeWishlistUrls.map((url) => {
+          const loadedData = wishList.infos.find((info) => info.url === url);
+          const builtinEntry = builtInWishlists.find((list) => list.url === url);
+          if (builtinEntry) {
+            return (
+              <BuiltinWishlist
+                key={url}
+                url={url}
+                name={builtinEntry.name}
+                title={loadedData?.title}
+                description={loadedData?.description}
+                rollsCount={loadedData?.numRolls}
+                dupeRollsCount={loadedData?.dupeRolls}
+                checked={true}
+                onChange={(checked) => changeUrl(url, checked)}
+              />
+            );
+          } else {
+            return (
+              <UrlWishlist
+                key={url}
+                url={url}
+                title={loadedData?.title}
+                description={loadedData?.description}
+                rollsCount={loadedData?.numRolls}
+                dupeRollsCount={loadedData?.dupeRolls}
+                onRemove={() => changeUrl(url, false)}
+              />
+            );
+          }
+        })}
 
-      {disabledBuiltinLists.map((list) => (
-        <BuiltinWishlist
-          key={list.url}
-          url={list.url}
-          name={list.name}
-          title={undefined}
-          description={undefined}
-          checked={false}
-          rollsCount={undefined}
-          dupeRollsCount={undefined}
-          onChange={(checked) => changeUrl(list.url, checked)}
+      {!hasLocalWishList &&
+        disabledBuiltinLists.map((list) => (
+          <BuiltinWishlist
+            key={list.url}
+            url={list.url}
+            name={list.name}
+            title={undefined}
+            description={undefined}
+            checked={false}
+            rollsCount={undefined}
+            dupeRollsCount={undefined}
+            onChange={(checked) => changeUrl(list.url, checked)}
+          />
+        ))}
+
+      {!hasLocalWishList && (
+        <NewUrlWishlist
+          addWishlistDisabled={addUrlDisabled}
+          onAddWishlist={(url) => changeUrl(url, true)}
         />
-      ))}
-
-      <NewUrlWishlist
-        addWishlistDisabled={addUrlDisabled}
-        onAddWishlist={(url) => changeUrl(url, true)}
-      />
+      )}
 
       <div className={settingClass}>
         <FileUpload onDrop={loadWishList} title={t('WishListRoll.Import')} />
