@@ -1,6 +1,6 @@
 ## Next
 
-## 8.74.0 <span class="changelog-date">(2025-06-01)</span>
+* Removed the "Refresh Wishlist" button and the suggested remote wishlists when using a local wishlist.
 
 ## 8.73.0 <span class="changelog-date">(2025-05-25)</span>
 
