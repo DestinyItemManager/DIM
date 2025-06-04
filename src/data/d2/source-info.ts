@@ -773,7 +773,7 @@ const D2Sources: {
       2982006965, // Wilderflight
       3185151619, // New Pacific Epitaph (Adept)
       3210739171, // Greasy Luck (Adept)
-      3329218848, // Judgement (Adept)
+      3329218848, // Judgment (Adept)
       3421639790, // Liminal Vigil (Adept)
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)
@@ -1744,7 +1744,7 @@ const D2Sources: {
       2764074355, // A Sudden Death (Adept)
       2982006965, // Wilderflight
       3185151619, // New Pacific Epitaph (Adept)
-      3329218848, // Judgement (Adept)
+      3329218848, // Judgment (Adept)
       3421639790, // Liminal Vigil (Adept)
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)
@@ -1830,7 +1830,7 @@ const D2Sources: {
       2764074355, // A Sudden Death (Adept)
       2982006965, // Wilderflight
       3185151619, // New Pacific Epitaph (Adept)
-      3329218848, // Judgement (Adept)
+      3329218848, // Judgment (Adept)
       3421639790, // Liminal Vigil (Adept)
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)

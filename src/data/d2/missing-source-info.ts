@@ -2669,7 +2669,7 @@ const missingSources: { [key: string]: number[] } = {
     2730671571, // Terminus Horizon
     2764074355, // A Sudden Death (Adept)
     3185151619, // New Pacific Epitaph (Adept)
-    3329218848, // Judgement (Adept)
+    3329218848, // Judgment (Adept)
     3421639790, // Liminal Vigil (Adept)
     3598944128, // Foretold
     3598944129, // Seer
@@ -2694,7 +2694,7 @@ const missingSources: { [key: string]: number[] } = {
     2730671571, // Terminus Horizon
     2764074355, // A Sudden Death (Adept)
     3185151619, // New Pacific Epitaph (Adept)
-    3329218848, // Judgement (Adept)
+    3329218848, // Judgment (Adept)
     3421639790, // Liminal Vigil (Adept)
     3598944128, // Foretold
     3598944129, // Seer
