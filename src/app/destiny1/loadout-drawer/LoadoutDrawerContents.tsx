@@ -41,7 +41,7 @@ const loadoutTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Materials,
   BucketHashes.Emblems,
   D1BucketHashes.Shader,
-  BucketHashes.Emotes,
+  D1BucketHashes.D1Emotes,
   BucketHashes.Ships,
   BucketHashes.Vehicle,
   D1BucketHashes.Horn,

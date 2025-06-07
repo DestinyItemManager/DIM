@@ -49,6 +49,7 @@ export const enum D1BucketHashes {
   Bounties = 2197472680,
   Shader = 2973005342,
   Horn = 3796357825,
+  D1Emotes = 3054419239,
 }
 
 //
