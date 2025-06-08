@@ -172,6 +172,7 @@ const d1BucketToType: LookupTable<BucketHashes | D1BucketHashes, string> = {
   [D1BucketHashes.Bounties]: 'bounties',
   [D1BucketHashes.Quests]: 'quests',
   [D1BucketHashes.Missions]: 'missions',
+  [D1BucketHashes.D1Emotes]: 'emotes',
 };
 
 export const itemTypeFilter = {
