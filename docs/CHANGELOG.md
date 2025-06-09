@@ -1,5 +1,7 @@
 ## Next
 
+## 8.75.0 <span class="changelog-date">(2025-06-08)</span>
+
 * Removed the "Refresh Wishlist" button and the suggested remote wishlists when using a local wishlist.
 y
 * D1 inventory now shows emotes, and you can add emotes to D1 loadouts.
