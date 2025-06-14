@@ -170,7 +170,7 @@
       "Desc_female": "DIM esta moviendo solo Engramas y Lúmen desde {{store}} al Depósito o a otros personajes para prevenir que se vayan a la Administración.",
       "Desc_male": "DIM esta moviendo solo Engramas y Lúmen desde {{store}} al Depósito o a otros personajes para prevenir que se vayan a la Administración.",
       "MakeRoom": "Haz espacio para recolectar objetos moviendo el equipamiento",
-      "Tooltip": "Si esta marcado, DIM moverá armas y armadura para hacer espacio en la bóveda para engramas."
+      "Tooltip": "Si esta marcado, DIM moverá armas y armadura para hacer espacio en el Depósito para engramas."
     },
     "OutOfRoom": "Estás sin espacio para mover objetos fuera de {{character}}. ¡Es hora de tirar la basura!",
     "OutOfRoomTitle": "Sin espacio",
@@ -196,10 +196,10 @@
     "UseEquipped": "Usar cosméticos equipados"
   },
   "FileUpload": {
-    "Instructions": "Haga click o arrastre archivos"
+    "Instructions": "Haz click o arrastra archivos"
   },
   "Filter": {
-    "Adept": "\\(adepto\\)",
+    "Adept": "\\(Adept\\)",
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que son armaduras.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
