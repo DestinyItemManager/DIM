@@ -61,7 +61,7 @@ jobs:
 
       - name: Commit files
         if: steps.filter.outputs.changed
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: i18n
           commit_user_name: DIM i18n Bot
