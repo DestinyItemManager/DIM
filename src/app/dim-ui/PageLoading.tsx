@@ -1,6 +1,6 @@
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { Orchestration, Tween, Variants, motion } from 'motion/react';
+import { Transition, Variants, motion } from 'motion/react';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Loading } from './Loading';
@@ -12,7 +12,7 @@ const animateVariants: Variants = {
   initial: { opacity: 0 },
   open: { opacity: 1 },
 };
-const animateTransition: Tween & Orchestration = {
+const animateTransition: Transition<number> = {
   duration: 0.1,
   delay: 0.5,
   ease: 'easeIn',

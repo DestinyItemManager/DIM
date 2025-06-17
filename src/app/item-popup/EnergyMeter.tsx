@@ -12,7 +12,7 @@ import { errorMessage } from 'app/utils/errors';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import Cost from 'app/vendors/Cost';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import { AnimatePresence, Tween, Variants, motion } from 'motion/react';
+import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
 import { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
 import { SocketCategoryHeader } from './ItemSocketsGeneral';
@@ -21,7 +21,7 @@ const upgradeAnimateVariants: Variants = {
   shown: { height: 'auto', opacity: 1 },
   hidden: { height: 0, opacity: 0 },
 };
-const upgradeAnimateTransition: Tween = { duration: 0.3 };
+const upgradeAnimateTransition: Transition<number> = { duration: 0.3 };
 
 export default function EnergyMeter({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;

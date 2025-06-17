@@ -562,9 +562,8 @@ export default (env: Env) => {
 
       new SondaWebpackPlugin({
         format: 'html',
-        filename: 'sonda-report.html',
+        outputDir: 'sonda-report',
         open: false,
-        detailed: true,
         sources: true,
         gzip: false,
         brotli: true,
