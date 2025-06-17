@@ -2,7 +2,7 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { AnimatePresence, Spring, Variants, motion } from 'motion/react';
+import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { stopFarming } from './actions';
@@ -13,7 +13,7 @@ const animateVariants: Variants = {
   shown: { y: 0, x: '-50%' },
   hidden: { y: 60, x: '-50%' },
 };
-const animateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
+const animateTransition: Transition<number> = { type: 'spring', duration: 0.3, bounce: 0 };
 
 export default function Farming() {
   const dispatch = useThunkDispatch();

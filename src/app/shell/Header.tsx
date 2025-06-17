@@ -19,7 +19,7 @@ import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
-import { AnimatePresence, Spring, Variants, motion } from 'motion/react';
+import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router';
@@ -53,7 +53,7 @@ const menuAnimateVariants: Variants = {
   open: { x: 0 },
   collapsed: { x: -250 },
 };
-const menuAnimateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
+const menuAnimateTransition: Transition<number> = { type: 'spring', duration: 0.3, bounce: 0 };
 
 // TODO: finally time to hack apart the header styles!
 

@@ -1,11 +1,11 @@
-import { AnimatePresence, Orchestration, Tween, Variants, motion } from 'motion/react';
+import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
 import styles from './Loading.m.scss';
 
 const containerAnimateVariants: Variants = {
   initial: { opacity: 0 },
   open: { opacity: 1 },
 };
-const containerAnimateTransition: Tween & Orchestration = {
+const containerAnimateTransition: Transition<number> = {
   duration: 0.5,
   delay: 1,
 };
@@ -15,7 +15,10 @@ const messageAnimateVariants: Variants = {
   open: { y: 0, opacity: 1 },
   leave: { y: 16, opacity: 0 },
 };
-const messageAnimateTransition: Tween = { duration: 0.2, ease: 'easeOut' };
+const messageAnimateTransition: Transition<number> = {
+  duration: 0.2,
+  ease: 'easeOut',
+};
 
 export function Loading({ message }: { message?: string }) {
   return (

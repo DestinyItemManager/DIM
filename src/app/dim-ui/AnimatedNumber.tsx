@@ -1,7 +1,7 @@
-import { animate, motion, Tween, useMotionValue, useTransform } from 'motion/react';
+import { animate, motion, Transition, useMotionValue, useTransform } from 'motion/react';
 import { useEffect } from 'react';
 
-const spring: Tween = {
+const spring: Transition<number> = {
   type: 'tween',
   duration: 0.3,
   ease: 'easeOut',

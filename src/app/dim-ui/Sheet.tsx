@@ -6,7 +6,7 @@ import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSh
 import clsx from 'clsx';
 import {
   PanInfo,
-  Spring,
+  Transition,
   motion,
   useAnimation,
   useDragControls,
@@ -50,7 +50,7 @@ const dismissVelocity = 120; // px/ms
 const dismissByVelocityMinOffset = 16; // px
 const dismissAmount = 0.5;
 
-const spring: Spring = {
+const spring: Transition<number> = {
   type: 'spring',
   stiffness: 280,
   damping: 20,
