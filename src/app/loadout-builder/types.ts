@@ -12,11 +12,12 @@ export interface MinMaxTier {
 /**
  * Resolved stat constraints take the compact form of the API stat constraints
  * and expand them so that each stat has a corresponding constraint, the min and
- * max are defined, and the ignored flag is set. In the API version, stat
- * constraints are simply missing if ignored, and min-0/max-10 is omitted as
- * implied.
+ * max are defined, and the ignored flag is set. Tiers are replaces with exact
+ * stat values. In the API version, stat constraints are simply missing if
+ * ignored, and min-0/max-10 is omitted as implied.
  */
-export interface ResolvedStatConstraint extends Required<StatConstraint> {
+export interface ResolvedStatConstraint
+  extends Required<Omit<StatConstraint, 'minTier' | 'maxTier'>> {
   /**
    * An ignored stat has an effective maximum tier of 0, so that any
    * stat tiers in excess of T0 are deemed worthless.
@@ -26,11 +27,10 @@ export interface ResolvedStatConstraint extends Required<StatConstraint> {
 
 /**
  * When a stat is ignored, we treat it as if it were effectively a constraint
- * with a max desired tier of 0. ResolvedStatContraintRange is the same as
- * DesiredStatRange, but with the ignored flag removed, and maxTier set to
- * 0 for ignored sets.
+ * with a max desired tier of 0. DesiredStatRange is the same as StatConstraint,
+ * but with the ignored flag removed, and maxStat set to 0 for ignored sets.
  */
-export type DesiredStatRange = Required<StatConstraint>;
+export type DesiredStatRange = Required<Omit<StatConstraint, 'minTier' | 'maxTier'>>;
 
 /** A map from bucketHash to the pinned item if there is one. */
 export interface PinnedItems {

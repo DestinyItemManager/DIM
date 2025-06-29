@@ -1,6 +1,7 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
 import { ArmorStatHashes, DesiredStatRange, MinMaxTier } from '../types';
+import { statTier } from '../utils';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
@@ -117,17 +118,17 @@ export function updateMaxTiers(
     const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    if (minMax.maxTier < filter.minTier) {
+    if (minMax.maxTier < statTier(filter.minStat)) {
       // This is only called with sets that satisfy stat constraints,
       // so optimistically bump these up
-      minMax.maxTier = filter.minTier;
+      minMax.maxTier = statTier(filter.minStat);
     }
     const tier = setTiers[statIndex];
     if (tier > minMax.maxTier) {
-      foundAnyImprovement ||= filter.minTier < filter.maxTier;
+      foundAnyImprovement ||= filter.minStat < filter.maxStat;
       minMax.maxTier = tier;
     }
-    const neededValue = filter.minTier * 10 - value;
+    const neededValue = filter.minStat - value;
     if (neededValue > 0) {
       // All sets need at least these extra stats to hit minimums
       requiredMinimumExtraStats[statIndex] = neededValue;
@@ -164,7 +165,7 @@ export function updateMaxTiers(
         // An improvement is only actually an improvement if the tier wouldn't end up
         // ignored due to max.
         foundAnyImprovement ||=
-          tierVal > statFilter.minTier && statFilter.minTier < statFilter.maxTier;
+          statFilter.minStat < statFilter.maxStat && tierVal > statTier(statFilter.minStat);
         minMax.maxTier = tierVal;
       } else {
         break;
@@ -306,16 +307,16 @@ export function pickOptimalStatMods(
 
   for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
     const filter = desiredStatRanges[statIndex];
-    if (filter.maxTier > 0) {
+    if (filter.maxStat > 0) {
       const value = setStats[statIndex];
-      if (filter.minTier > 0) {
-        const neededValue = filter.minTier * 10 - value;
+      if (filter.minStat > 0) {
+        const neededValue = filter.minStat - value;
         if (neededValue > 0) {
           // All sets need at least these extra stats to hit minimums
           explorationStats[statIndex] = neededValue;
         }
       }
-      maxAddedStats[statIndex] = filter.maxTier * 10 - value;
+      maxAddedStats[statIndex] = filter.maxStat - value;
     }
   }
 

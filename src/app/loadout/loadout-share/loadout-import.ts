@@ -5,6 +5,8 @@ import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { convertDimApiLoadoutToLoadout } from 'app/loadout/loadout-type-converters';
 import { Loadout } from 'app/loadout/loadout-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { clamp } from 'es-toolkit';
+import { MAX_STAT, MAX_TIER } from '../known-values';
 // A very permissive regex that allows directly pasted URLs, but also various ways in which
 // people might type it manually (such as a URL-like string with a missing protocol or just the share ID)
 // Hardcoding the lower limit of 7 characters so that a user typing the characters manually doesn't call
@@ -89,7 +91,8 @@ async function getDimSharedLoadout(shareId: string) {
 }
 
 /**
- * Ensure received loadouts and their items have a unique ID.
+ * Ensure received loadouts and their items have a unique ID, and that stat
+ * constraints are in the correct range.
  */
 function preprocessReceivedLoadout(loadout: Loadout): Loadout {
   loadout.id = globalThis.crypto.randomUUID();
@@ -99,11 +102,24 @@ function preprocessReceivedLoadout(loadout: Loadout): Loadout {
     hash: Number(item.hash),
   }));
   for (const constraint of loadout.parameters?.statConstraints ?? []) {
-    if (constraint.minTier) {
-      constraint.minTier = Math.min(10, Math.floor(constraint.minTier));
+    // min/maxTier are deprecated as of Edge of Fate, but we still support them
+    // for backwards compatibility.
+    if (constraint.maxTier !== undefined) {
+      constraint.maxTier = clamp(constraint.maxTier, 0, MAX_TIER);
     }
-    if (constraint.maxTier) {
-      constraint.maxTier = Math.min(10, Math.ceil(constraint.maxTier));
+    if (constraint.minTier !== undefined) {
+      // For min tier, make sure it is not greater than the max tier.
+      constraint.minTier = clamp(constraint.minTier, 0, constraint.maxTier ?? MAX_TIER);
+    }
+
+    // max/minStat replace min/maxTier in Edge of Fate to allow expressing exact
+    // stat goals.
+    if (constraint.maxStat !== undefined) {
+      constraint.maxStat = clamp(constraint.maxStat, 0, MAX_STAT);
+    }
+    if (constraint.minStat !== undefined) {
+      // For min tier, make sure it is not greater than the max tier.
+      constraint.minStat = clamp(constraint.minStat, 0, constraint.maxStat ?? MAX_STAT);
     }
   }
 

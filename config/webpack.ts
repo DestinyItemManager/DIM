@@ -566,7 +566,7 @@ export default (env: Env) => {
         open: false,
         sources: true,
         gzip: false,
-        brotli: true,
+        brotli: false,
       }),
 
       new CopyWebpackPlugin({

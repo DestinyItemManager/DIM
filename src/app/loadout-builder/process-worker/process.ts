@@ -10,6 +10,7 @@ import {
   artificeStatBoost,
   majorStatBoost,
 } from '../types';
+import { statTier } from '../utils';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
@@ -56,7 +57,7 @@ export function process(
   const pstart = performance.now();
 
   const statOrder = desiredStatRanges.map(({ statHash }) => statHash as ArmorStatHashes);
-  const maxTierConstraints = desiredStatRanges.map(({ maxTier }) => maxTier);
+  const maxTierConstraints = desiredStatRanges.map(({ maxStat }) => statTier(maxStat));
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
 
   // This stores the computed min and max value for each stat as we process all sets, so we
@@ -248,15 +249,15 @@ export function process(
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
               const filter = desiredStatRanges[index];
-              if (filter.maxTier > 0) {
+              if (filter.maxStat > 0) {
                 const statRange = statRangesFilteredInStatOrder[index];
                 if (tier < statRange.minTier) {
                   statRange.minTier = tier;
                 }
                 totalTier += tier;
-                if (filter.minTier > 0) {
+                if (filter.minStat > 0) {
                   const value = stats[index];
-                  const neededValue = filter.minTier * 10 - value;
+                  const neededValue = filter.minStat - value;
                   if (neededValue > 0) {
                     totalNeededStats += neededValue;
                     neededStats[index] = neededValue;
@@ -336,7 +337,7 @@ export function process(
 
             for (let index = 0; index < 6; index++) {
               const filter = desiredStatRanges[index];
-              if (stats[index] < filter.maxTier * 10) {
+              if (stats[index] < filter.maxStat) {
                 statPointsNeededForTiers.push({
                   index,
                   pointsToNext: 10 - (stats[index] % 10),
@@ -346,6 +347,11 @@ export function process(
 
             // Starting from here, we end up mutating our tiers array a bit
             // to make sorting more accurate.
+
+            // TODO: This is where we'd want to calculate "tuning mods"
+            // contributions, but I'm not sure how to make that fast. Maybe we
+            // can finally redo this as an integer programming problem, and
+            // duplicate each item with each of its various tuning mod options?
 
             // Then spend artifice mods to boost tiers, from cheapest to most-expensive.
             // TODO: It'd be neat to also spend small (+5) general mods, right now we
@@ -380,9 +386,9 @@ export function process(
               let tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
               const filter = desiredStatRanges[index];
-              if (filter.maxTier > 0) {
+              if (filter.maxStat > 0) {
                 // Predict the tier boost from general mods.
-                const boostAmount = Math.min(filter.maxTier - tier, numGeneralMods);
+                const boostAmount = Math.min(statTier(filter.maxStat) - tier, numGeneralMods);
                 if (boostAmount > 0) {
                   tier += boostAmount;
                   numGeneralMods -= boostAmount;
@@ -435,13 +441,13 @@ export function process(
 
       const statFilter = desiredStatRanges[i];
       if (
-        statFilter.maxTier > 0 &&
+        statFilter.maxStat > 0 &&
         strictUpgrades &&
-        statFilter.minTier < statFilter.maxTier &&
+        statFilter.minStat < statFilter.maxStat &&
         !hasStrictUpgrade
       ) {
         const tier = Math.min(Math.max(Math.floor(value / 10), 0), 10);
-        hasStrictUpgrade ||= tier > statFilter.minTier;
+        hasStrictUpgrade ||= tier > statTier(statFilter.minStat);
       }
 
       armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];

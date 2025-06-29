@@ -203,7 +203,7 @@ export default function NoBuildsFoundExplainer({
   // two non-solar combat mods, mod assignment is trivially infeasible and we
   // can point that out directly?
 
-  const anyStatMinimums = params.statConstraints!.some((f) => Boolean(f.minTier));
+  const anyStatMinimums = params.statConstraints!.some((f) => Boolean(f.minTier || f.minStat));
 
   const bucketIndependentMods = [...lockedModMap.generalMods, ...lockedModMap.activityMods];
 
