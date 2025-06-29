@@ -316,12 +316,14 @@ describe('basic loadout analysis finding tests', () => {
     for (const c of args) {
       if (c.statHash === StatHashes.Recovery) {
         // The loadout has no constraint for recovery, so it gets the existing loadout stats as the minimum
-        expect(c.minTier).toBe(
-          baseArmorStatConstraints.find((base) => base.statHash === c.statHash)!.minTier,
+        expect(c.minStat).toBe(
+          baseArmorStatConstraints.find((base) => base.statHash === c.statHash)!.minTier! * 10,
         );
       } else if (c.statHash !== StatHashes.Mobility) {
         // The loadout does not satisfy stat constraints, but LO gets called with the constraints as minimum
-        expect(c.minTier).toBe(newConstraints.find((n) => n.statHash === c.statHash)!.minTier);
+        expect(c.minStat).toBe(
+          newConstraints.find((n) => n.statHash === c.statHash)!.minTier! * 10,
+        );
       }
     }
 

@@ -24,6 +24,7 @@ import {
   resolveLoadoutModHashes,
 } from 'app/loadout-drawer/loadout-utils';
 import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
+import { MAX_STAT, edgeOfFateReleased } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
@@ -298,8 +299,10 @@ export async function analyzeLoadout(
           existingLoadoutStatsAsStatConstraints = statConstraints.map((c) => ({
             statHash: c.statHash,
             ignored: c.ignored,
-            maxTier: 10,
-            minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
+            maxStat: MAX_STAT,
+            minStat: edgeOfFateReleased
+              ? assumedLoadoutStats[c.statHash]!.value
+              : statTier(assumedLoadoutStats[c.statHash]!.value) * 10,
           }));
           const { mergedDesiredStatRanges, mergedConstraintsImplyStrictUpgrade } =
             mergeStrictUpgradeStatConstraints(
@@ -478,7 +481,7 @@ function getStatProblems(
     return {
       stats,
       canHitStats: resolvedStatConstraints.every(
-        (c) => c.ignored || statTier(stats[c.statHash].value ?? 0) >= c.minTier,
+        (c) => c.ignored || (stats[c.statHash].value ?? 0) >= c.minStat,
       ),
     };
   };

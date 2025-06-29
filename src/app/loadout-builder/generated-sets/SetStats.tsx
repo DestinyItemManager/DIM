@@ -1,6 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { edgeOfFateReleased, EFFECTIVE_MAX_STAT } from 'app/loadout/known-values';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
@@ -14,7 +15,7 @@ import {
   ModStatChanges,
   ResolvedStatConstraint,
 } from '../types';
-import { remEuclid, statTierWithHalf } from '../utils';
+import { remEuclid, statTier, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
@@ -47,6 +48,10 @@ export function SetStats({
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, desiredStatRanges);
 
+  // TODO: Lots of changes needed here once we drop tiers. Maybe we just show a
+  // total stat sum? Doesn't seem that useful...
+  // TODO: Highlight enhanced stats?
+
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
@@ -72,11 +77,11 @@ export function SetStats({
             )}
           >
             <Stat
-              isActive={c.maxTier > 0}
+              isActive={c.maxStat > 0}
               isBoosted={boostedStats.has(statHash)}
               stat={statDef}
               value={value}
-              effectiveValue={Math.min(value, c.maxTier * 10)}
+              effectiveValue={Math.min(value, c.maxStat)}
               showHalfStat={!autoStatMods}
             />
           </PressTip>
@@ -114,7 +119,7 @@ function Stat({
   let shownValue: number;
   let ignoredExcess: number | undefined;
   if (effectiveValue !== value) {
-    if (effectiveValue === 0 || effectiveValue >= 100) {
+    if (effectiveValue === 0 || effectiveValue >= EFFECTIVE_MAX_STAT) {
       shownValue = value;
     } else {
       shownValue = effectiveValue;
@@ -124,7 +129,7 @@ function Stat({
     shownValue = value;
   }
   const showIgnoredExcess = ignoredExcess !== undefined && ignoredExcess >= 5;
-  const isHalfTier = showHalfStat && isActive && remEuclid(value, 10) >= 5;
+  const isHalfTier = !edgeOfFateReleased && showHalfStat && isActive && remEuclid(value, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {
@@ -174,8 +179,8 @@ export function ReferenceTiers({
   resolvedStatConstraints: ResolvedStatConstraint[];
 }) {
   const defs = useD2Definitions()!;
-  const totalTier = sumBy(resolvedStatConstraints, (c) => c.minTier);
-  const enabledTier = sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : c.minTier));
+  const totalTier = sumBy(resolvedStatConstraints, (c) => statTier(c.minStat));
+  const enabledTier = sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : statTier(c.minStat)));
 
   return (
     <div className={styles.container}>
@@ -183,7 +188,7 @@ export function ReferenceTiers({
       {resolvedStatConstraints.map((c) => {
         const statHash = c.statHash as ArmorStatHashes;
         const statDef = defs.Stat.get(statHash);
-        const tier = c.minTier;
+        const tier = statTier(c.minStat);
         return (
           <span
             key={statHash}
