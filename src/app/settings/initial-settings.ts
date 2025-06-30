@@ -1,8 +1,4 @@
-import {
-  defaultSettings,
-  Settings as DimApiSettings,
-  VaultWeaponGroupingStyle,
-} from '@destinyitemmanager/dim-api-types';
+import { defaultSettings, Settings as DimApiSettings } from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage, DimLanguage } from 'app/i18n';
 
 /**
@@ -10,13 +6,11 @@ import { defaultLanguage, DimLanguage } from 'app/i18n';
  */
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
-  vaultArmorGroupingStyle: VaultWeaponGroupingStyle;
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
-  vaultArmorGroupingStyle: VaultWeaponGroupingStyle.Inline,
   organizerColumnsWeapons: [
     'icon',
     'name',

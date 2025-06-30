@@ -1,5 +1,6 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -495,8 +496,8 @@ describe('process-utils optimal mods', () => {
     resolvedStatConstraints = armorStats.map((statHash) => ({
       statHash,
       ignored: false,
-      maxTier: 8,
-      minTier: 3,
+      maxStat: 80,
+      minStat: 30,
     }));
   });
 
@@ -637,12 +638,14 @@ test('process-utils activity mods', async () => {
     statOrder,
   );
 
-  const resolvedStatConstraints = statOrder.map((statHash) => ({
-    statHash,
-    ignored: false,
-    maxTier: 10,
-    minTier: 0,
-  }));
+  const resolvedStatConstraints = statOrder.map(
+    (statHash): ResolvedStatConstraint => ({
+      statHash,
+      ignored: false,
+      maxStat: MAX_STAT,
+      minStat: 0,
+    }),
+  );
 
   const setStats = [55, 55, 55, 50, 50, 50];
 

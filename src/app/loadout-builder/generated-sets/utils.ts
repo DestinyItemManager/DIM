@@ -12,7 +12,10 @@ function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[
     comparators.push(
       compareBy(
         (s) =>
-          -Math.min(statTier(s.stats[constraint.statHash as ArmorStatHashes]), constraint.maxTier),
+          -Math.min(
+            statTier(s.stats[constraint.statHash as ArmorStatHashes]),
+            statTier(constraint.maxStat),
+          ),
       ),
     );
   }
@@ -41,6 +44,6 @@ export function calculateTotalTier(stats: ArmorStats) {
 
 export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
   return sumBy(desiredStatRanges, (constraint) =>
-    Math.min(statTier(stats[constraint.statHash as ArmorStatHashes]), constraint.maxTier),
+    Math.min(statTier(stats[constraint.statHash as ArmorStatHashes]), statTier(constraint.maxStat)),
   );
 }

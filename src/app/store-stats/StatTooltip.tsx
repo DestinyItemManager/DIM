@@ -3,6 +3,7 @@ import { Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
+import { edgeOfFateReleased, EFFECTIVE_MAX_STAT } from 'app/loadout/known-values';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import ClarityCharacterStat from './ClarityCharacterStat';
@@ -24,14 +25,14 @@ export default function StatTooltip({
 }) {
   const tier = statTier(stat.value);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const useClarityInfo = descriptionsToDisplay !== 'bungie';
+  const useClarityInfo = descriptionsToDisplay !== 'bungie' && !edgeOfFateReleased;
 
   return (
     <div>
       <Tooltip.Header text={stat.displayProperties.name} />
       <div className={styles.values}>
         <div className={styles.label}>{t('Stats.Tier', { tier })}</div>
-        <div>{`${stat.value}/100`}</div>
+        <div>{`${stat.value}/${EFFECTIVE_MAX_STAT}`}</div>
       </div>
       <hr />
       <div>{stat.displayProperties.description}</div>

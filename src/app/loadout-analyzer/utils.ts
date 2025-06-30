@@ -2,7 +2,7 @@ import { DesiredStatRange, ResolvedStatConstraint } from 'app/loadout-builder/ty
 
 /**
  * Loadout Analysis (and the corresponding LO mode) sometimes are interested in
- * strictly better tiers. This takes (assumed) loadout stats and the
+ * strictly better stats/tiers. This takes (assumed) loadout stats and the
  * user-selected stat constraints and merges them so that a set satisfying the
  * merged constraints always satisfies both the input constraint sets.
  *
@@ -26,23 +26,25 @@ export function mergeStrictUpgradeStatConstraints(
   // the existing tier, satisfying the definition of "strict upgrade").
   let mergedConstraintsImplyStrictUpgrade = false;
   const mergedDesiredStatRanges = parameterStatConstraints.map((constraint) => {
-    const existingLoadoutTier = existingLoadoutStatsAsStatConstraints?.find(
+    const existingStatConstraint = existingLoadoutStatsAsStatConstraints?.find(
       (c) => c.statHash === constraint.statHash,
     );
-    if (existingLoadoutTier && !constraint.ignored) {
-      const existingTierValue = existingLoadoutTier.ignored ? 0 : existingLoadoutTier.minTier;
-      const effectiveLoadoutTier = Math.min(constraint.maxTier, existingTierValue);
-      mergedConstraintsImplyStrictUpgrade ||= constraint.minTier > effectiveLoadoutTier;
+    const minStat = constraint.ignored ? 0 : constraint.minStat;
+    const maxStat = constraint.ignored ? 0 : constraint.maxStat;
+    if (existingStatConstraint && !constraint.ignored) {
+      const existingMinStat = existingStatConstraint.ignored ? 0 : existingStatConstraint.minStat;
+      const effectiveMinStat = Math.min(maxStat, existingMinStat);
+      mergedConstraintsImplyStrictUpgrade ||= minStat > effectiveMinStat;
       return {
         statHash: constraint.statHash,
-        minTier: Math.max(constraint.minTier, effectiveLoadoutTier),
-        maxTier: constraint.ignored ? 0 : constraint.maxTier,
+        minStat: Math.max(minStat, effectiveMinStat),
+        maxStat,
       };
     }
     return {
       statHash: constraint.statHash,
-      minTier: constraint.minTier,
-      maxTier: constraint.ignored ? 0 : constraint.maxTier,
+      minStat,
+      maxStat,
     };
   });
   return { mergedDesiredStatRanges, mergedConstraintsImplyStrictUpgrade };
