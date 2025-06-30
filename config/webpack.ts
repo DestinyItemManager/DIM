@@ -21,23 +21,24 @@ import 'webpack-dev-server';
 import WebpackNotifierPlugin from 'webpack-notifier';
 import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
-import csp from './content-security-policy';
-import { makeFeatureFlags } from './feature-flags';
+import csp from './content-security-policy.ts';
+import { makeFeatureFlags } from './feature-flags.ts';
 
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
-import NotifyPlugin from './notify-webpack-plugin';
+import NotifyPlugin from './notify-webpack-plugin.ts';
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
-import packageJson from '../package.json';
-import createWebAppManifest from './manifest-webapp';
+import packageJson from '../package.json' with { type: 'json' };
+import createWebAppManifest from './manifest-webapp.ts';
 
 import cssnano from 'cssnano';
 import sortMediaQueries from 'postcss-sort-media-queries';
 
-import splash from '../icons/splash.json';
+import { fileURLToPath } from 'url';
+import splash from '../icons/splash.json' with { type: 'json' };
 
 // https://stackoverflow.com/questions/69584268/what-is-the-type-of-the-webpack-config-function-when-it-comes-to-typescript
 type CLIValues = boolean | string;
@@ -524,6 +525,7 @@ export default (env: Env) => {
     if (process.env.SNORETOAST_DISABLE) {
       console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");
     } else {
+      const __dirname = path.dirname(fileURLToPath(import.meta.url));
       plugins.push(
         new WebpackNotifierPlugin({
           title: 'DIM',
@@ -564,6 +566,7 @@ export default (env: Env) => {
         format: 'html',
         outputDir: 'sonda-report',
         open: false,
+        deep: true,
         sources: true,
         gzip: false,
         brotli: true,
