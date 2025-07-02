@@ -97,18 +97,33 @@ const simpleFilters: ItemFilterDefinition[] = [
   },
   {
     keywords: 'owned',
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    description: 'Filter.Owned' as any,
+    description: tl('Filter.Owned'),
     filter:
-      ({ ownedItemsInfo, currentStore }) =>
+      ({ allItems, currentStore }) =>
       (item) => {
+        // Build ownership info from allItems, similar to ownedItemsSelector
+        const storeSpecificBuckets = [BucketHashes.Emblems, BucketHashes.Quests];
+        const accountWideOwned = new Set<number>();
+        const storeSpecificOwned: { [owner: string]: Set<number> } = {};
+        
+        for (const ownedItem of allItems) {
+          if (storeSpecificBuckets.includes(ownedItem.bucket.hash)) {
+            if (!storeSpecificOwned[ownedItem.owner]) {
+              storeSpecificOwned[ownedItem.owner] = new Set();
+            }
+            storeSpecificOwned[ownedItem.owner].add(ownedItem.hash);
+          } else {
+            accountWideOwned.add(ownedItem.hash);
+          }
+        }
+
         // Check if item is owned globally (account-wide)
-        if (ownedItemsInfo.accountWideOwned.has(item.hash)) {
+        if (accountWideOwned.has(item.hash)) {
           return true;
         }
         // Check if item is owned by the current store (for store-specific items like emblems/quests)
-        if (currentStore && ownedItemsInfo.storeSpecificOwned[currentStore.id]) {
-          return ownedItemsInfo.storeSpecificOwned[currentStore.id].has(item.hash);
+        if (currentStore && storeSpecificOwned[currentStore.id]) {
+          return storeSpecificOwned[currentStore.id].has(item.hash);
         }
         return false;
       },

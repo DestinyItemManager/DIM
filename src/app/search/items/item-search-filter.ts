@@ -13,7 +13,6 @@ import {
   getNotesSelector,
   getTagSelector,
   newItemsSelector,
-  ownedItemsSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -141,7 +140,6 @@ const filterContextSelector = createSelector(
   languageSelector,
   customStatsSelector,
   d2ManifestSelector,
-  ownedItemsSelector,
   makeFilterContext,
 );
 
@@ -158,7 +156,6 @@ function makeFilterContext(
   language: DimLanguage,
   customStats: Settings['customStats'],
   d2Definitions: D2ManifestDefinitions | undefined,
-  ownedItemsInfo: import('app/inventory/selectors').OwnedItemsInfo,
 ): FilterContext {
   return {
     stores,
@@ -173,7 +170,6 @@ function makeFilterContext(
     customStats,
     wishListsByHash,
     d2Definitions,
-    ownedItemsInfo,
   };
 }
 
