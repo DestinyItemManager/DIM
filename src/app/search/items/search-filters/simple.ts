@@ -95,6 +95,24 @@ const simpleFilters: ItemFilterDefinition[] = [
     description: tl('Filter.VendorItem'),
     filter: () => (item) => Boolean(item.vendor),
   },
+  {
+    keywords: 'owned',
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    description: 'Filter.Owned' as any,
+    filter:
+      ({ ownedItemsInfo, currentStore }) =>
+      (item) => {
+        // Check if item is owned globally (account-wide)
+        if (ownedItemsInfo.accountWideOwned.has(item.hash)) {
+          return true;
+        }
+        // Check if item is owned by the current store (for store-specific items like emblems/quests)
+        if (currentStore && ownedItemsInfo.storeSpecificOwned[currentStore.id]) {
+          return ownedItemsInfo.storeSpecificOwned[currentStore.id].has(item.hash);
+        }
+        return false;
+      },
+  },
 ];
 
 export default simpleFilters;
