@@ -98,35 +98,11 @@ const simpleFilters: ItemFilterDefinition[] = [
   {
     keywords: 'owned',
     description: tl('Filter.Owned'),
-    filter:
-      ({ allItems, currentStore }) =>
-      (item) => {
-        // Build ownership info from allItems, similar to ownedItemsSelector
-        const storeSpecificBuckets = [BucketHashes.Emblems, BucketHashes.Quests];
-        const accountWideOwned = new Set<number>();
-        const storeSpecificOwned: { [owner: string]: Set<number> } = {};
-        
-        for (const ownedItem of allItems) {
-          if (storeSpecificBuckets.includes(ownedItem.bucket.hash)) {
-            if (!storeSpecificOwned[ownedItem.owner]) {
-              storeSpecificOwned[ownedItem.owner] = new Set();
-            }
-            storeSpecificOwned[ownedItem.owner].add(ownedItem.hash);
-          } else {
-            accountWideOwned.add(ownedItem.hash);
-          }
-        }
-
-        // Check if item is owned globally (account-wide)
-        if (accountWideOwned.has(item.hash)) {
-          return true;
-        }
-        // Check if item is owned by the current store (for store-specific items like emblems/quests)
-        if (currentStore && storeSpecificOwned[currentStore.id]) {
-          return storeSpecificOwned[currentStore.id].has(item.hash);
-        }
-        return false;
-      },
+    filter: ({ allItems }) => {
+      // Build set of owned item hashes once, outside the predicate
+      const ownedHashes = new Set(allItems.map((item) => item.hash));
+      return (item) => ownedHashes.has(item.hash);
+    },
   },
 ];
 
