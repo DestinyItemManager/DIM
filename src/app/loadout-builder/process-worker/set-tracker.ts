@@ -1,6 +1,8 @@
 import { getPower } from '../utils';
 import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
+// TODO: Replace Tier with Stat
+
 interface TierSet {
   tier: number;
   /** Stat mixes ordered by decreasing lexical order of the statMix string */

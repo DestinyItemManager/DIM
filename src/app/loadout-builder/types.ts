@@ -19,7 +19,7 @@ export interface MinMaxStat {
 export interface ResolvedStatConstraint
   extends Required<Omit<StatConstraint, 'minTier' | 'maxTier'>> {
   /**
-   * An ignored stat has an effective maximum tier of 0, so that any
+   * An ignored stat has an effective maximum stat of 0, so that any
    * stat tiers in excess of T0 are deemed worthless.
    */
   ignored: boolean;
@@ -27,7 +27,7 @@ export interface ResolvedStatConstraint
 
 /**
  * When a stat is ignored, we treat it as if it were effectively a constraint
- * with a max desired tier of 0. DesiredStatRange is the same as StatConstraint,
+ * with a max desired stat of 0. DesiredStatRange is the same as StatConstraint,
  * but with the ignored flag removed, and maxStat set to 0 for ignored sets.
  */
 export type DesiredStatRange = Required<Omit<StatConstraint, 'minTier' | 'maxTier'>>;
@@ -139,6 +139,7 @@ export const minorStatBoost = 5;
  * The fact that a major mod gives exactly 1 tier without changing the number of remainder points
  * is fairly engrained in some of the algorithms, so it wouldn't be quite trivial to change this.
  */
+// TODO: Handle Edge of Fate changes that don't care about Tiers
 export const majorStatBoost = 10;
 
 /**

@@ -123,6 +123,7 @@ export function updateMaxTiers(
       // so optimistically bump these up
       minMax.maxStat = filter.minStat;
     }
+    // TODO: Replace Tier with Stat
     const tier = setTiers[statIndex];
     if (tier > statTier(minMax.maxStat)) {
       foundAnyImprovement ||= filter.minStat < filter.maxStat;

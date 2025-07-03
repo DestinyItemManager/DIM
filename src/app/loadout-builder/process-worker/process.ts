@@ -246,6 +246,7 @@ export function process(
             let totalNeededStats = 0;
 
             // Check in which stats we're lacking
+            // TODO: Replace Tier with Stat
             let totalTier = 0;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];

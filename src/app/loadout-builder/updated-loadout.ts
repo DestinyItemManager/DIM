@@ -21,6 +21,7 @@ export function updateLoadoutWithArmorSet(
   lockedMods: PluggableInventoryItemDefinition[],
   loadoutParameters = loadout.parameters,
 ): Loadout {
+  // TODO: Replace Tier with Stat
   const data = {
     tier: sumBy(Object.values(set.stats), statTier),
   };
