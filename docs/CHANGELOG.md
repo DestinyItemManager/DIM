@@ -1,6 +1,6 @@
 ## Next
 
-* Added an `is:owned` filter that will highlight items that you have at least one copy of. This is meant to be used in the Records and Vendors tabs.
+* Added an `is:ininventory` filter that will highlight items that you have at least one copy of. This is meant to be used in the Records and Vendors tabs.
 
 ## 8.78.0 <span class="changelog-date">(2025-06-29)</span>
 
