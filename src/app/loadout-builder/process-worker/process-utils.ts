@@ -1,6 +1,6 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import { ArmorStatHashes, DesiredStatRange, MinMaxTier } from '../types';
+import { ArmorStatHashes, DesiredStatRange, MinMaxStat } from '../types';
 import { statTier } from '../utils';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
@@ -102,7 +102,7 @@ export function updateMaxTiers(
   setTiers: number[],
   numArtificeMods: number,
   statFiltersInStatOrder: DesiredStatRange[],
-  minMaxesInStatOrder: MinMaxTier[], // mutated
+  minMaxesInStatOrder: MinMaxStat[], // mutated
 ): boolean {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info,
@@ -118,15 +118,15 @@ export function updateMaxTiers(
     const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    if (minMax.maxTier < statTier(filter.minStat)) {
+    if (minMax.maxStat < filter.minStat) {
       // This is only called with sets that satisfy stat constraints,
       // so optimistically bump these up
-      minMax.maxTier = statTier(filter.minStat);
+      minMax.maxStat = filter.minStat;
     }
     const tier = setTiers[statIndex];
-    if (tier > minMax.maxTier) {
+    if (tier > statTier(minMax.maxStat)) {
       foundAnyImprovement ||= filter.minStat < filter.maxStat;
-      minMax.maxTier = tier;
+      minMax.maxStat = tier * 10;
     }
     const neededValue = filter.minStat - value;
     if (neededValue > 0) {
@@ -140,7 +140,7 @@ export function updateMaxTiers(
     const setStat = setStats[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
     const statFilter = statFiltersInStatOrder[statIndex];
-    if (minMax.maxTier >= 10) {
+    if (minMax.maxStat >= 100) {
       continue;
     }
 
@@ -148,9 +148,9 @@ export function updateMaxTiers(
     // require all other stats to hit their constrained minimums, but for this
     // stat we start from the highest tier we've observed.
     const explorationStats = requiredMinimumExtraStats.slice();
-    explorationStats[statIndex] = minMax.maxTier * 10 - setStat;
+    explorationStats[statIndex] = minMax.maxStat - setStat;
 
-    while (minMax.maxTier < 10) {
+    while (minMax.maxStat < 100) {
       const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 - (setStat % 10) : 10;
       explorationStats[statIndex] += pointsToNextTier;
       const picks = chooseAutoMods(
@@ -166,7 +166,7 @@ export function updateMaxTiers(
         // ignored due to max.
         foundAnyImprovement ||=
           statFilter.minStat < statFilter.maxStat && tierVal > statTier(statFilter.minStat);
-        minMax.maxTier = tierVal;
+        minMax.maxStat = tierVal * 10;
       } else {
         break;
       }

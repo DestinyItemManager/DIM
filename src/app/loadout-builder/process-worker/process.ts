@@ -1,3 +1,4 @@
+import { MAX_STAT } from 'app/loadout/known-values';
 import { filterMap } from 'app/utils/collections';
 import { infoLog } from '../../utils/log';
 import {
@@ -66,8 +67,8 @@ export function process(
     statOrder.map((h) => [
       h,
       {
-        minTier: 10,
-        maxTier: 0,
+        minStat: MAX_STAT,
+        maxStat: 0,
       },
     ]),
   ) as StatRanges;
@@ -251,8 +252,8 @@ export function process(
               const filter = desiredStatRanges[index];
               if (filter.maxStat > 0) {
                 const statRange = statRangesFilteredInStatOrder[index];
-                if (tier < statRange.minTier) {
-                  statRange.minTier = tier;
+                if (tier * 10 < statRange.minStat) {
+                  statRange.minStat = tier * 10;
                 }
                 totalTier += tier;
                 if (filter.minStat > 0) {

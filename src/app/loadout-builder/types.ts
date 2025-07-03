@@ -4,9 +4,9 @@ import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
 
-export interface MinMaxTier {
-  minTier: number;
-  maxTier: number;
+export interface MinMaxStat {
+  minStat: number; // 0 to 200, rounded to the nearest 10 if using tiers
+  maxStat: number; // 0 to 200, rounded to the nearest 10 if using tiers
 }
 
 /**
@@ -115,7 +115,7 @@ export type ArmorStatHashes =
   | StatHashes.Intellect
   | StatHashes.Strength;
 
-export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxTier };
+export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxStat };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
