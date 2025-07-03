@@ -300,6 +300,7 @@
     "Notes": "Search for items that you have tagged with custom notes.",
     "OriginTrait": "Shows weapons that have an origin trait perk.",
     "Ornament": "Shows items with ornaments and filters for their status.",
+    "Owned": "Shows items that you own at least one copy of. Only really useful in the Vendors and Records screens.",
     "PartialMatch": "Shows items where their name, description, any perk, or any mod has a partial match to the filter text. Search for entire phrases using quotes.",
     "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
