@@ -54,6 +54,7 @@ import {
   LoadoutOptimizerPinnedItems,
 } from './filter/LoadoutOptimizerMenuItems';
 import StatConstraintEditor from './filter/StatConstraintEditor';
+import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { ReferenceTiers } from './generated-sets/SetStats';
@@ -312,14 +313,25 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
-      <StatConstraintEditor
-        resolvedStatConstraints={resolvedStatConstraints}
-        statRangesFiltered={result?.statRangesFiltered}
-        lbDispatch={lbDispatch}
-        equippedHashes={equippedHashes}
-        store={selectedStore}
-        className={styles.loadoutEditSection}
-      />
+      {$featureFlags.tierLessStatConstraints ? (
+        <TierlessStatConstraintEditor
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+          equippedHashes={equippedHashes}
+          store={selectedStore}
+          className={styles.loadoutEditSection}
+        />
+      ) : (
+        <StatConstraintEditor
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+          equippedHashes={equippedHashes}
+          store={selectedStore}
+          className={styles.loadoutEditSection}
+        />
+      )}
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}
         lbDispatch={lbDispatch}
