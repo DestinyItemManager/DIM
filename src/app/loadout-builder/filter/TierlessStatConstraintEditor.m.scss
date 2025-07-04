@@ -158,25 +158,32 @@
   background-color: #333;
   height: 12px;
   position: relative;
+  cursor: pointer;
 }
 
 .statBarFill {
   position: absolute;
   background-color: white;
   height: 100%;
+  transition: all 0.2s ease-in-out;
 }
 
-// TODO: put little brackets on the min/max?
 .statBarMin,
 .statBarMax {
   position: absolute;
   top: 0;
-  height: 16px;
-  width: 2px;
-  background-color: $xp;
-  transform: translateY(-2px);
+  box-sizing: border-box;
+  height: 20px;
+  width: 4px;
+  transform: translateY(-4px);
+  border: 2px solid var(--theme-accent-primary);
 }
 
 .statBarMax {
-  transform: translateY(-2px) translateX(-2px);
+  transform: translateY(-4px) translateX(-2px);
+  border-left: none;
+}
+
+.statBarMin {
+  border-right: none;
 }

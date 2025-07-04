@@ -24,7 +24,7 @@ import {
 } from 'app/shell/icons';
 import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
-import { Dispatch, useEffect, useState } from 'react';
+import { Dispatch, useEffect, useRef, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMaxStat, ResolvedStatConstraint, StatRanges } from '../types';
 import styles from './TierlessStatConstraintEditor.m.scss';
@@ -135,18 +135,24 @@ function StatRow({
   const statHash = statConstraint.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
   const handleIgnore = () => onStatChange({ ...statConstraint, ignored: !statConstraint.ignored });
-  const handleSelectStat = (statValue: number, setMax: boolean) =>
-    setMax
-      ? onStatChange({
-          ...statConstraint,
-          minStat: Math.min(statConstraint.minStat, statValue),
-          maxStat: statValue,
-        })
-      : onStatChange({
-          ...statConstraint,
-          minStat: statValue,
-          maxStat: Math.max(statConstraint.maxStat, statValue),
-        });
+
+  const [min, setRawMin] = useState(statConstraint.minStat);
+  const [max, setRawMax] = useState(statConstraint.maxStat);
+  const setMin = (value: number) => {
+    setRawMin(value);
+    setRawMax((max) => Math.max(value, max));
+  };
+  const setMax = (value: number) => {
+    setRawMin((min) => Math.min(value, min));
+    setRawMax(value);
+  };
+  const commitStatChanges = () => {
+    onStatChange({
+      ...statConstraint,
+      minStat: min,
+      maxStat: max,
+    });
+  };
 
   return (
     <Draggable draggableId={statHash.toString()} index={index}>
@@ -214,11 +220,21 @@ function StatRow({
             </button>
           </div>
           {!statConstraint.ignored && (
-            <StatEditBar statConstraint={statConstraint} onSelected={handleSelectStat}>
+            <StatEditBar
+              min={min}
+              max={max}
+              setMin={setMin}
+              setMax={setMax}
+              onChange={commitStatChanges}
+            >
               <StatBar
-                statConstraint={statConstraint}
                 range={statRange}
                 equippedHashes={equippedHashes}
+                min={min}
+                max={max}
+                setMin={setMin}
+                setMax={setMax}
+                onChange={commitStatChanges}
               />
             </StatEditBar>
           )}
@@ -229,27 +245,28 @@ function StatRow({
 }
 
 function StatEditBar({
-  statConstraint,
-  onSelected,
+  min,
+  max,
+  setMin,
+  setMax,
+  onChange,
   children,
 }: {
-  statConstraint: ResolvedStatConstraint;
-  onSelected: (statValue: number, setMax: boolean) => void;
+  min: number;
+  max: number;
+  setMin: (value: number) => void;
+  setMax: (value: number) => void;
+  onChange: () => void;
   children: React.ReactNode;
 }) {
-  const [min, setMin] = useState(statConstraint.minStat);
-  const [max, setMax] = useState(statConstraint.maxStat);
-
-  useEffect(() => {
-    // If the stat range changes, update the min/max values
-    if (statConstraint) {
-      setMin(statConstraint.minStat);
-      setMax(statConstraint.maxStat);
-    }
-  }, [statConstraint]);
-
   // TODO: enhance the tooltip w/ info about what the LO settings mean (locked, min/max, etc)
   // TODO: enhance the tooltip w/ info about why the numbers are greyed
+
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onChange();
+    }
+  };
 
   return (
     <div className={styles.statBar}>
@@ -263,14 +280,8 @@ function StatEditBar({
           const value = parseInt(e.target.value, 10);
           setMin(value);
         }}
-        onBlur={() => {
-          onSelected(min, false);
-        }}
-        onKeyUp={(e) => {
-          if (e.key === 'Enter') {
-            onSelected(min, false);
-          }
-        }}
+        onBlur={onChange}
+        onKeyUp={handleKeyUp}
       />
       {children}
       <input
@@ -283,30 +294,59 @@ function StatEditBar({
           const value = parseInt(e.target.value, 10);
           setMax(value);
         }}
-        onBlur={() => {
-          onSelected(max, true);
-        }}
-        onKeyUp={(e) => {
-          if (e.key === 'Enter') {
-            onSelected(max, true);
-          }
-        }}
+        onBlur={onChange}
+        onKeyUp={handleKeyUp}
       />
     </div>
   );
 }
 
 function StatBar({
-  statConstraint,
+  min,
+  max,
   range,
+  setMin,
+  setMax,
+  onChange,
 }: {
-  statConstraint: ResolvedStatConstraint;
   range?: MinMaxStat;
   equippedHashes: Set<number>;
+  min: number;
+  max: number;
+  setMin: (value: number) => void;
+  setMax: (value: number) => void;
+  onChange: () => void;
 }) {
   // TODO: tooltip? Or just show the numbers. Maybe show the effective max/min if it's not different from the statConstraint?
+  const [dragging, setDragging] = useState(false);
+  const draggingMax = useRef(false);
 
-  // TODO: click to set minimum/maximum? drag?
+  const setValue = (e: React.PointerEvent<HTMLDivElement>) => {
+    const bar = e.currentTarget;
+    const rect = bar.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+    const value = Math.round(ratio * MAX_STAT);
+    draggingMax.current ? setMax(value) : setMin(value);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    setValue(e);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const bar = e.currentTarget;
+    bar.releasePointerCapture(e.pointerId);
+    onChange();
+    setDragging(false);
+  };
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const bar = e.currentTarget;
+    bar.setPointerCapture(e.pointerId);
+    draggingMax.current = e.shiftKey || (e.target as Element).classList.contains(styles.statBarMax);
+    setValue(e);
+    setDragging(true);
+  };
 
   return (
     <div
@@ -318,29 +358,24 @@ function StatBar({
           max: range.maxStat,
         })
       }
+      onPointerDown={handlePointerDown}
+      onPointerUp={dragging ? handlePointerUp : undefined}
+      onPointerMove={dragging ? handlePointerMove : undefined}
     >
       {range && (
         <div
-          className={clsx(styles.statBarFill)}
+          className={styles.statBarFill}
           style={{
             left: percent(range.minStat / MAX_STAT),
             width: percent((range.maxStat - range.minStat) / MAX_STAT),
           }}
         />
       )}
-      {(!range || range.minStat !== statConstraint.minStat) && (
-        <div
-          key="min"
-          className={styles.statBarMin}
-          style={{ left: percent(statConstraint.minStat / MAX_STAT) }}
-        />
+      {(!range || range.minStat !== max) && (
+        <div key="min" className={styles.statBarMin} style={{ left: percent(min / MAX_STAT) }} />
       )}
-      {(!range || range.maxStat !== statConstraint.maxStat) && (
-        <div
-          key="max"
-          className={styles.statBarMax}
-          style={{ left: percent(statConstraint.maxStat / MAX_STAT) }}
-        />
+      {(!range || range.maxStat !== max) && (
+        <div key="max" className={styles.statBarMax} style={{ left: percent(max / MAX_STAT) }} />
       )}
     </div>
   );
