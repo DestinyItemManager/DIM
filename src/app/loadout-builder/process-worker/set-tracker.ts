@@ -3,9 +3,14 @@ import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
 // TODO: Replace Tier with Stat
 
+/**
+ * Each tier set contains a total tier and a list of stat mixes that all sum to
+ * that tier.
+ */
 interface TierSet {
+  /** A total tier, the sum the tiers of each stat. */
   tier: number;
-  /** Stat mixes ordered by decreasing lexical order of the statMix string */
+  /** Stat mixes that all produce the same total tier, ordered by decreasing lexical order of the statMix string */
   statMixes: {
     statMix: string;
     // TODO: Maybe only keep one set with the same stat mix?
@@ -15,15 +20,19 @@ interface TierSet {
 }
 
 /**
- * A list of stat mixes by total tier. We can keep this list up to date
- * as we process new sets with an insertion sort algorithm.
+ * A list of stat mixes by total tier. We can keep this list up to date as we
+ * process new sets with an insertion sort algorithm. Its purpose is to maintain
+ * a list of the top N sets by total tier. With sets within each tier sorted by
+ * their stat preference as represented by the `statMix` string.
  *
  * The `statMix` string is what actually matters for sorting, the `stats` array
  * is simply an output used for set display.
  */
+// TODO: Could/should this just be a max-heap with a comparison function based on [total,statMix]?
 export class SetTracker {
-  // Tiers ordered by decreasing tier
+  /** Tiers ordered by decreasing tier. There will be a maximum of 10 entries. */
   tiers: TierSet[] = [];
+  /** The total number of sets in this tracker. */
   totalSets = 0;
   readonly capacity: number;
 
@@ -40,13 +49,18 @@ export class SetTracker {
   }
 
   /**
-   * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
+   * Insert this set into the tracker. If the tracker is at capacity the
+   * lowest-value set (which may be this one) may be dropped.
+   * @param statMix A lexographically ordered string that represents the stat
+   * mix of this set. Each stat tier is one hexadecimal character. For example,
+   * if the stat tiers of a set are [4,6,2,10,1,0], the stat mix string would be
+   * "462a10". This string is used to sort the sets within a tier.
    */
   insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]) {
     if (this.tiers.length === 0) {
       this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
     } else {
-      // We have very few tiers at one time, so insertion sort is fine
+      // We have max 10 tiers at one time, so insertion sort is fine
       outer: for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
         const currentTier = this.tiers[tierIndex];
 
@@ -91,6 +105,7 @@ export class SetTracker {
     return this.trimWorstSet();
   }
 
+  /** Remove the lowest-value set in the tracker. */
   private trimWorstSet(): boolean {
     if (this.totalSets <= this.capacity) {
       return true;
