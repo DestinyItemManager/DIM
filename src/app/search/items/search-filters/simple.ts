@@ -95,6 +95,14 @@ const simpleFilters: ItemFilterDefinition[] = [
     description: tl('Filter.VendorItem'),
     filter: () => (item) => Boolean(item.vendor),
   },
+  {
+    keywords: 'ininventory',
+    description: tl('Filter.InInventory'),
+    filter: ({ allItems }) => {
+      const ownedHashes = new Set(allItems.map((item) => item.hash));
+      return (item) => ownedHashes.has(item.hash);
+    },
+  },
 ];
 
 export default simpleFilters;
