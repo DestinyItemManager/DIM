@@ -27,7 +27,7 @@ import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { SetStats } from './SetStats';
+import { SetStats, TierlessSetStats } from './SetStats';
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
@@ -47,6 +47,7 @@ export default memo(function GeneratedSet({
   armorEnergyRules,
   equippedHashes,
   autoStatMods,
+  tierless,
 }: {
   originalLoadout: Loadout;
   set: ArmorSet;
@@ -61,6 +62,7 @@ export default memo(function GeneratedSet({
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
   autoStatMods: boolean;
+  tierless: boolean;
 }) {
   const defs = useD2Definitions()!;
 
@@ -154,16 +156,28 @@ export default memo(function GeneratedSet({
 
   return (
     <>
-      <SetStats
-        stats={set.stats}
-        getStatsBreakdown={getStatsBreakdownOnce}
-        maxPower={getPower(displayedItems)}
-        desiredStatRanges={desiredStatRanges}
-        boostedStats={boostedStats}
-        existingLoadoutName={overlappingLoadout?.name}
-        equippedHashes={equippedHashes}
-        autoStatMods={autoStatMods}
-      />
+      {tierless ? (
+        <TierlessSetStats
+          stats={set.stats}
+          getStatsBreakdown={getStatsBreakdownOnce}
+          maxPower={getPower(displayedItems)}
+          desiredStatRanges={desiredStatRanges}
+          boostedStats={boostedStats}
+          existingLoadoutName={overlappingLoadout?.name}
+          equippedHashes={equippedHashes}
+        />
+      ) : (
+        <SetStats
+          stats={set.stats}
+          getStatsBreakdown={getStatsBreakdownOnce}
+          maxPower={getPower(displayedItems)}
+          desiredStatRanges={desiredStatRanges}
+          boostedStats={boostedStats}
+          existingLoadoutName={overlappingLoadout?.name}
+          equippedHashes={equippedHashes}
+          autoStatMods={autoStatMods}
+        />
+      )}
       <div className={styles.build}>
         <div className={styles.items}>
           {displayedItems.map((item, i) => (

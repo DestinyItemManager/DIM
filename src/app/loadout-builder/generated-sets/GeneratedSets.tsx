@@ -35,6 +35,7 @@ export default function GeneratedSets({
   armorEnergyRules,
   loadout,
   autoStatMods,
+  tierless,
 }: {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
@@ -48,6 +49,7 @@ export default function GeneratedSets({
   armorEnergyRules: ArmorEnergyRules;
   loadout: Loadout;
   autoStatMods: boolean;
+  tierless: boolean;
 }) {
   const params = loadout.parameters!;
   const halfTierMods = useHalfTierMods(
@@ -78,6 +80,7 @@ export default function GeneratedSets({
           originalLoadout={loadout}
           equippedHashes={equippedHashes}
           autoStatMods={autoStatMods}
+          tierless={tierless}
         />
       )}
     </WindowVirtualList>

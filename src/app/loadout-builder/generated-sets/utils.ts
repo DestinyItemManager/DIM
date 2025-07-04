@@ -5,7 +5,7 @@ import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[]) {
   const comparators: Comparator<ArmorSet>[] = [
-    compareBy((s) => -sumEnabledStats(s.stats, desiredStatRanges)),
+    compareBy((s) => -sumEnabledStatTiers(s.stats, desiredStatRanges)),
   ];
 
   for (const constraint of desiredStatRanges) {
@@ -42,8 +42,14 @@ export function calculateTotalTier(stats: ArmorStats) {
   return sumBy(Object.values(stats), statTier);
 }
 
-export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
+export function sumEnabledStatTiers(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
   return sumBy(desiredStatRanges, (constraint) =>
     Math.min(statTier(stats[constraint.statHash as ArmorStatHashes]), statTier(constraint.maxStat)),
+  );
+}
+
+export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
+  return sumBy(desiredStatRanges, (constraint) =>
+    Math.min(stats[constraint.statHash as ArmorStatHashes], constraint.maxStat),
   );
 }

@@ -4,6 +4,7 @@ import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import Switch from 'app/dim-ui/Switch';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -14,6 +15,7 @@ import { mergeStrictUpgradeStatConstraints } from 'app/loadout-analyzer/utils';
 import { LoadoutUpdateFunction } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
+import { edgeOfFateReleased } from 'app/loadout/known-values';
 import {
   LoadoutEditModsSection,
   LoadoutEditSubclassSection,
@@ -34,7 +36,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
-import { Dispatch, memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Dispatch, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
@@ -99,6 +101,8 @@ export default memo(function LoadoutBuilder({
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
   const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
+
+  const [tierless, setTierLess] = useState(edgeOfFateReleased);
 
   // All Loadout Optimizer state is managed via this hook/reducer
   const [
@@ -313,7 +317,14 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
-      {$featureFlags.tierLessStatConstraints ? (
+      {!edgeOfFateReleased && (
+        <div className={styles.loadoutEditSection}>
+          Tierless (Edge of Fate) Stats{' '}
+          <Switch checked={tierless} onChange={() => setTierLess((t) => !t)} name="tierless" />
+        </div>
+      )}
+      {/* TODO: Have a toggle until EoF releases? */}
+      {tierless ? (
         <TierlessStatConstraintEditor
           resolvedStatConstraints={resolvedStatConstraints}
           statRangesFiltered={result?.statRangesFiltered}
@@ -473,6 +484,7 @@ export default memo(function LoadoutBuilder({
             armorEnergyRules={result.armorEnergyRules}
             autoStatMods={autoStatMods}
             equippedHashes={equippedHashes}
+            tierless={tierless}
           />
         ) : (
           !processing && (
