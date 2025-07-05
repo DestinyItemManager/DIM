@@ -3,7 +3,7 @@ version: '3'
 services:
   webpack:
     container_name: dim-webpack
-    image: node:18
+    image: node:24
     ports:
       - 8080:8080
     working_dir: /usr/src/app
