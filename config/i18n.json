@@ -99,6 +99,7 @@
   "Compare": {
     "NoModArmor": "Pre-mods",
     "Button": "Compare",
+    "New": "New Compare",
     "Archetype": "Archetype",
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",

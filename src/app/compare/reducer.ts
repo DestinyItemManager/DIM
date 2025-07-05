@@ -25,7 +25,7 @@ export interface CompareSession {
   /**
    * The instance ID of the first item added to compare, so we can highlight it.
    */
-  readonly initialItemId?: string;
+  initialItemId?: string;
 
   /**
    * The ID of the character (if any) whose vendor response we should intermingle with owned items
