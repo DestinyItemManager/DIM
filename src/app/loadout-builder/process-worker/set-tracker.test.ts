@@ -42,7 +42,7 @@ for (const { name, ctor } of trackerImplementations) {
       expect(tracker.totalSets).toBe(3);
 
       // Verify ordering: tier desc, then statMix desc, then power desc
-      const sets = tracker.getArmorSets(10);
+      const sets = tracker.getArmorSets();
       expect(sets[0].armor[0].id).toBe('b'); // tier 12
       expect(sets[1].armor[0].id).toBe('a'); // tier 10, mix 550000
       expect(sets[2].armor[0].id).toBe('c'); // tier 10, mix 460000
@@ -84,7 +84,7 @@ for (const { name, ctor } of trackerImplementations) {
       expect(tracker.totalSets).toBe(3);
 
       // Verify worst item was removed
-      const sets = tracker.getArmorSets(5);
+      const sets = tracker.getArmorSets();
       expect(sets.find((s) => s.armor[0].id === 'c')).toBe(undefined); // tier 8 removed
       expect(sets.find((s) => s.armor[0].id === 'e')).not.toBe(undefined); // tier 14 kept
     });

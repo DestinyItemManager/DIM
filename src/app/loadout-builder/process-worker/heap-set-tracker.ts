@@ -13,6 +13,21 @@ interface HeapEntry {
 }
 
 /**
+ * Comparison: true if a is worse than b (lower priority in min-heap).
+ * This creates a min-heap where the root is the worst item.
+ * Ordering: tier asc, statMix asc, power asc (opposite of SetTracker for min-heap)
+ */
+function isWorse(a: HeapEntry, b: HeapEntry): boolean {
+  if (a.tier !== b.tier) {
+    return a.tier < b.tier;
+  }
+  if (a.statMix !== b.statMix) {
+    return a.statMix < b.statMix;
+  }
+  return a.power < b.power;
+}
+
+/**
  * Min-heap based SetTracker that maintains the top N armor sets.
  * Uses a min-heap where the root is the worst of the top N sets.
  * This allows O(1) access to worst element and O(log n) operations.
@@ -23,21 +38,6 @@ export class HeapSetTracker {
 
   constructor(capacity: number) {
     this.capacity = capacity;
-  }
-
-  /**
-   * Comparison: true if a is worse than b (lower priority in min-heap).
-   * This creates a min-heap where the root is the worst item.
-   * Ordering: tier asc, statMix asc, power asc (opposite of SetTracker for min-heap)
-   */
-  private static isWorse(a: HeapEntry, b: HeapEntry): boolean {
-    if (a.tier !== b.tier) {
-      return a.tier < b.tier;
-    }
-    if (a.statMix !== b.statMix) {
-      return a.statMix < b.statMix;
-    }
-    return a.power < b.power;
   }
 
   /**
@@ -57,6 +57,9 @@ export class HeapSetTracker {
    * Matches SetTracker behavior: allows duplicates, returns true unless trimming.
    */
   insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]): boolean {
+    const power = getPower(armor);
+    const entry: HeapEntry = { tier, statMix, power, armor, stats };
+
     if (this.heap.length < this.capacity) {
       // Not at capacity - create entry and add it
       const power = getPower(armor);
@@ -66,17 +69,8 @@ export class HeapSetTracker {
       return true;
     }
 
-    // At capacity - do quick tier check first to avoid wasteful object creation
-    if (!this.couldInsert(tier)) {
-      return false; // Quick rejection, no HeapEntry created
-    }
-
-    // Tier looks promising - create full entry for detailed comparison
-    const power = getPower(armor);
-    const entry: HeapEntry = { tier, statMix, power, armor, stats };
-
-    // Final check with full comparison
-    if (!HeapSetTracker.isWorse(this.heap[0], entry)) {
+    // Check with full comparison
+    if (isWorse(entry, this.heap[0])) {
       return false; // Not good enough after full comparison
     }
 
@@ -91,18 +85,9 @@ export class HeapSetTracker {
    * Get the top N armor sets in order (best first).
    * Since we have a min-heap, we sort a copy and take the best items.
    */
-  getArmorSets(max: number): IntermediateProcessArmorSet[] {
-    if (max <= 0) {
-      return [];
-    }
-
-    if (this.heap.length === 0) {
-      return [];
-    }
-
+  getArmorSets(): IntermediateProcessArmorSet[] {
     // Copy heap and sort in SetTracker order (best first)
-    const sorted = [...this.heap];
-    sorted.sort((a, b) => {
+    return this.heap.toSorted((a, b) => {
       // Sort by tier desc, statMix desc, power desc (opposite of min-heap order)
       if (a.tier !== b.tier) {
         return b.tier - a.tier;
@@ -112,16 +97,6 @@ export class HeapSetTracker {
       }
       return b.power - a.power;
     });
-
-    // Take the first N items (best items after sorting)
-    const result: IntermediateProcessArmorSet[] = [];
-    const count = Math.min(max, sorted.length);
-
-    for (let i = 0; i < count; i++) {
-      result.push({ armor: sorted[i].armor, stats: sorted[i].stats });
-    }
-
-    return result;
   }
 
   get totalSets(): number {
@@ -133,7 +108,7 @@ export class HeapSetTracker {
   private bubbleUp(index: number): void {
     while (index > 0) {
       const parentIndex = Math.floor((index - 1) / 2);
-      if (HeapSetTracker.isWorse(this.heap[index], this.heap[parentIndex])) {
+      if (isWorse(this.heap[index], this.heap[parentIndex])) {
         [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
         index = parentIndex;
       } else {
@@ -149,14 +124,11 @@ export class HeapSetTracker {
       const leftChild = 2 * index + 1;
       const rightChild = 2 * index + 2;
 
-      if (leftChild < length && HeapSetTracker.isWorse(this.heap[leftChild], this.heap[smallest])) {
+      if (leftChild < length && isWorse(this.heap[leftChild], this.heap[smallest])) {
         smallest = leftChild;
       }
 
-      if (
-        rightChild < length &&
-        HeapSetTracker.isWorse(this.heap[rightChild], this.heap[smallest])
-      ) {
+      if (rightChild < length && isWorse(this.heap[rightChild], this.heap[smallest])) {
         smallest = rightChild;
       }
 

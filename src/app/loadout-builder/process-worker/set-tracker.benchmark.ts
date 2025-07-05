@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { HeapSetTracker } from './heap-set-tracker';
 import { SetTracker } from './set-tracker';
 import { ProcessItem } from './types';
@@ -11,37 +12,8 @@ function randomInt(min: number, max: number) {
  * Higher tier combinations are less common, matching real armor stat patterns.
  */
 function generateRealisticStatMix(): [number, string, number[]] {
-  // Bias towards lower tiers to match real patterns where most combinations
-  // don't make it past couldInsert() checks
-  const tierBias = Math.random();
-  let targetTier: number;
-
-  if (tierBias < 0.6) {
-    // 60% of sets have low tiers (15-25) - will be rejected
-    targetTier = randomInt(15, 25);
-  } else if (tierBias < 0.9) {
-    // 30% medium tiers (26-35) - some accepted
-    targetTier = randomInt(26, 35);
-  } else {
-    // 10% high tiers (36-50) - most accepted
-    targetTier = randomInt(36, 50);
-  }
-
   // Generate stats that sum approximately to target tier
-  const stats = Array.from({ length: 6 }, () =>
-    randomInt(0, Math.min(10, Math.floor(targetTier / 3))),
-  );
-
-  // Adjust to hit target tier more closely
-  let currentTier = stats.reduce((a, b) => a + b, 0);
-  while (currentTier < targetTier && stats.some((s) => s < 10)) {
-    const index = randomInt(0, 5);
-    if (stats[index] < 10) {
-      stats[index]++;
-      currentTier++;
-    }
-  }
-
+  const stats = Array.from({ length: 6 }, () => randomInt(55, 67));
   const tier = stats.reduce((a, b) => a + b, 0);
   const statMix = stats.map((n) => n.toString(16)).join('');
   return [tier, statMix, stats];
@@ -69,18 +41,11 @@ function createMockArmor(id: string, power: number): ProcessItem {
  */
 function benchmarkRealisticUsage(
   name: string,
-  TrackerClass: any,
+  TrackerClass: typeof SetTracker | typeof HeapSetTracker,
+  testData: [number, string, number[], ProcessItem[]][],
   totalAttempts: number,
   capacity: number,
 ) {
-  // Pre-generate all test data to avoid measuring data generation
-  const testData: Array<[number, string, number[], ProcessItem[]]> = [];
-  for (let i = 0; i < totalAttempts; i++) {
-    const [tier, statMix, stats] = generateRealisticStatMix();
-    const armor = [createMockArmor(`id${i}`, randomInt(1000, 2000))];
-    testData.push([tier, statMix, stats, armor]);
-  }
-
   console.log(
     `\n=== ${name} - ${totalAttempts.toLocaleString()} attempts, capacity ${capacity} ===`,
   );
@@ -107,7 +72,7 @@ function benchmarkRealisticUsage(
 
   // Benchmark getArmorSets (called once at end)
   const getStartTime = performance.now();
-  const results = tracker.getArmorSets(200); // Match RETURNED_ARMOR_SETS from process.ts
+  const results = tracker.getArmorSets(); // Match RETURNED_ARMOR_SETS from process.ts
   const getTime = performance.now() - getStartTime;
 
   const totalTime = insertPhaseTime + getTime;
@@ -148,12 +113,10 @@ function runRealisticBenchmarks() {
   console.log('Realistic usage patterns based on process.ts analysis');
   console.log('='.repeat(80));
 
-  const capacity = 10000; // Match process.ts SetTracker capacity
+  const capacity = 200; // Match process.ts SetTracker capacity
   const testSizes = [
     100_000, // Small test
-    500_000, // Medium test
-    1_000_000, // Large test - realistic for complex builds
-    2_000_000, // Stress test - very complex builds
+    5_000_000, // Normal complexity
   ];
 
   for (const testSize of testSizes) {
@@ -161,10 +124,25 @@ function runRealisticBenchmarks() {
     console.log(`TEST SIZE: ${testSize.toLocaleString()} combinations`);
     console.log(`${'='.repeat(60)}`);
 
-    const setTrackerResults = benchmarkRealisticUsage('SetTracker', SetTracker, testSize, capacity);
+    // Pre-generate all test data to avoid measuring data generation
+    const testData: [number, string, number[], ProcessItem[]][] = [];
+    for (let i = 0; i < testSize; i++) {
+      const [tier, statMix, stats] = generateRealisticStatMix();
+      const armor = [createMockArmor(`id${i}`, randomInt(1000, 2000))];
+      testData.push([tier, statMix, stats, armor]);
+    }
+
+    const setTrackerResults = benchmarkRealisticUsage(
+      'SetTracker',
+      SetTracker,
+      testData,
+      testSize,
+      capacity,
+    );
     const heapTrackerResults = benchmarkRealisticUsage(
       'HeapSetTracker',
       HeapSetTracker,
+      testData,
       testSize,
       capacity,
     );

@@ -138,15 +138,12 @@ export class SetTracker {
    * ordered by tier, then by stat mix, then by power of the armor set. The
    * behavior is undefined if `max` is less than 1.
    */
-  getArmorSets(max: number) {
+  getArmorSets() {
     const result: IntermediateProcessArmorSet[] = [];
     for (const tier of this.tiers) {
       for (const statMix of tier.statMixes) {
         for (const armorSet of statMix.armorSets) {
           result.push(armorSet);
-          if (result.length >= max) {
-            return result;
-          }
         }
       }
     }
