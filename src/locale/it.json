@@ -254,6 +254,7 @@
     "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica stagionale.",
     "InDimLoadout": "is:indimloadout mostra gli oggetti che sono inclusi in qualsiasi dotazione su DIM.",
     "InInGameLoadout": "is:iningameloadout mostra gli oggetti che sono in qualsiasi dotazione in gioco.",
+    "InInventory": "Mostra gli oggetti di cui hai almeno una copia nel tuo inventario. Utile soltanto nelle schermate dei mercanti e record.",
     "InLoadout": "is:inloadout mostra gli oggetti che sono inclusi in qualsiasi dotazione. Cercare con inloadout: mostra gli oggetti che sono inclusi in dotazioni con titoli corrispondenti. Quando usato con un hashtag, inloadout: mostra gli oggetti le quali dotazioni hanno l'hashtag nel titolo o nelle note. Quando usato con un intervallo, mostra gli oggetti che sono compresi entro quel dato numero di dotazioni.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
     "InfusionFodder": "Mostra gli oggetti che potrebbero essere infusi in versioni con Potere più basso dello stesso oggetto usando solo lumen.",

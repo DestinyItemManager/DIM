@@ -254,6 +254,7 @@
     "HoldsMod": "Zeigt Rüstung, die kompatibel mit einem bestimmten saisonalem Mod Typen ist.",
     "InDimLoadout": "is:iningameloadout zeigt Gegenstände an, die in einem DIM-Loadout enthalten sind.",
     "InInGameLoadout": "is:iningameloadout zeigt Gegenstände an, die in einem In-Game-Loadout enthalten sind.",
+    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
     "InLoadout": "is:inloadout zeigt Gegenstände, die in einem beliebigen Loadout enthalten sind. Eine Suche mit inloadout: zeigt Gegenstände, die in Loadouts mit passenden Titeln enthalten sind. Bei Verwendung eines Hashtags zeigt inloadout: Gegenstände an, deren Loadouts den Hashtag im Titel oder Notizen haben. Bei Verwendung mit einem Bereich werden Gegenstände angezeigt, die in entsprechend vielen Loadouts enthalten sind.",
     "Infusable": "Zeigt Gegenstände, die infundiert werden können.",
     "InfusionFodder": "Zeigt Gegenstände, die für Glimmer, in einen gleichen Gegenstand, mit nicht so viel Power, infundiert werden können.",

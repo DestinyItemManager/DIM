@@ -254,6 +254,7 @@
     "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
     "InDimLoadout": "is:indimloadout muestra objetos que están incluidos en cualquier equipación en DIM.",
     "InInGameLoadout": "is:iningameloadout muestra objetos que están incluidos en cualquier equipación en el juego.",
+    "InInventory": "Muestra objetos en los que tengas al menos una copia en tu inventario. Solo son realmente útiles en los Vendedores y en las pantallas de Hazañas.",
     "InLoadout": "is:inloadout muestra objetos que estén incluidos en cualquier equipación. Buscando con inloadout: muestra objetos que estén incluidos en equipaciones con títulos coincidentes. Cuando es usado con un hashtag, inloadout: muestra objetos cuyas equipaciones tengan el hashtag en el título o en las notas. Cuando se usa con un rango, muestra objetos que están en esa cantidad de equipaciones.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "InfusionFodder": "Muestra objetos que podrían ser infundidos en versiones más bajas de poder del mismo objeto sólo por lumen.",

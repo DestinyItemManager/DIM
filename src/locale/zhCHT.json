@@ -239,6 +239,7 @@
     "HoldsMod": "顯示與某種賽季模組相兼容的護甲。",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout 顯示任何游戲内配裝包含的物品。",
+    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
     "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes. When used with a range, it shows items that are in that many loadouts.",
     "Infusable": "顯示可以灌注的物品.",
     "InfusionFodder": "顯示可用於灌注同類物品且只消耗微光的物品。",

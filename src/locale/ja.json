@@ -239,6 +239,7 @@
     "HoldsMod": "特定のタイプの季節MODに対応した防具が表示されます。",
     "InDimLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用しているアイテムを強調表示します。",
     "InInGameLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用するアイテムを表示します。",
+    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
     "InLoadout": "is:inloadout は、任意のロードアウトに含まれるアイテムを表示します。inloadout: で検索すると、タイトルが一致するロードアウトに含まれるアイテムが表示されます。ハッシュタグと一緒に使うと、inloadout: はタイトルやノートにハッシュタグが含まれるロードアウトを持つアイテムを表示します。",
     "Infusable": "融合可能なアイテムを表示",
     "InfusionFodder": "高パワーの同じアイテムとグリマーだけで融合できる、低パワーのアイテムを表示します。",

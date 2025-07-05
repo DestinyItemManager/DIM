@@ -254,6 +254,7 @@
     "HoldsMod": "Exibe armaduras compatíveis com um tipo específico de Mod de Temporada.",
     "InDimLoadout": "is:indimloadout mostra itens que estão incluídos em qualquer set do DIM.",
     "InInGameLoadout": "is:iningameloadout mostra itens que estão incluídos em qualquer set no jogo.",
+    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
     "InLoadout": "is:inloadout mostra os itens que estão incluídos em qualquer set. Buscando com inloadout: mostra os itens que estão inclusos nos sets com títulos correspondentes. Quando usado com uma hashtag, inloadout: mostrará itens cujos sets possuem a hashtag no título ou nas anotações. Quando usado com um intervalo, mostrará itens que estão naqueles tantos sets.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "InfusionFodder": "Exibe itens que podem ser infundidos em versões de menor poder do mesmo item usando apenas lúmen.",

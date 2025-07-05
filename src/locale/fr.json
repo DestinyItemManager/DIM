@@ -254,6 +254,7 @@
     "HoldsMod": "Affiche les armures compatible avec un type de Mod Saisonnier spécifique.",
     "InDimLoadout": "is:indimloadout affiche les objets présents dans un équipement DIM.",
     "InInGameLoadout": "is:ingameloadout affiche les objets qui sont inclus dans l'un de vos équipement en jeu.",
+    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
     "InLoadout": "is:inloadout affiche les objets inclus dans un équipement. Rechercher avec inloadout: affiche les objets inclus dans les équipements au titre correspondant. Lorsque utilisé avec un hashtag, inloadout: affiche les objets dont les équipements ont le hashtag dans leur titre ou notes. Lorsque utilisé avec un chiffre, cela affiche les objets qui sont dans ce nombre d'équipements.",
     "Infusable": "Affiche les objets qui peuvent être infusés.",
     "InfusionFodder": "Affiche les objets qui pourraient être infusés dans une version plus faible du même objet en utilisant uniquement des lumens.",

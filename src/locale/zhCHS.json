@@ -239,6 +239,7 @@
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
     "InDimLoadout": "is:indimgameloadout 指令会显示全部DIM配装中的物品。",
     "InInGameLoadout": "is:iningameloadout 指令会显示任何游戏内配装系统保存的物品。",
+    "InInventory": "显示在物品栏中至少存在一件的物品。仅在商贩和记录页面中有效。",
     "InLoadout": "is:inloadout 指令显示在全部配装中包含的物品。在 inloadout: 指令下搜索可显示所有配装中的与搜索名称相符的物品。在 inloadout: 指令后使用#标签可显示配装中有含有该标签的物品或注释。若指定范围，则显示在多个配装中的物品。",
     "Infusable": "显示可以灌注的物品.",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",

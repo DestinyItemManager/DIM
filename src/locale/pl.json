@@ -284,6 +284,7 @@
     "HoldsMod": "Pokazuje zbroję kompatybilną z określonym typem Modyfikacji Sezonowej.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
+    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
     "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes. When used with a range, it shows items that are in that many loadouts.",
     "Infusable": "Pokazuje przedmioty, które można nasycić.",
     "InfusionFodder": "Pokazuje przedmioty, które mogą być użyte do nasycenia przedmiotu tego samego typu o niższej mocy tylko za migot.",
