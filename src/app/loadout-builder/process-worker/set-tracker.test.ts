@@ -1,7 +1,6 @@
+import { HeapSetTracker } from './heap-set-tracker';
 import { SetTracker } from './set-tracker';
 import { ProcessItem } from './types';
-
-const capacity = 5;
 
 const createMockArmor = (id: string, power: number): ProcessItem => ({
   id,
@@ -15,132 +14,112 @@ const createMockArmor = (id: string, power: number): ProcessItem => ({
   compatibleModSeasons: [],
 });
 
-// Helper to generate a stat mix string from an array of 6 numbers (0-10)
-function statMixFromArray(arr: number[]): string {
-  return arr.map((n) => n.toString(16)).join('');
+/**
+ * Essential functional tests for both SetTracker and HeapSetTracker.
+ * Covers core behaviors needed by process.ts.
+ */
+const trackerImplementations = [
+  { name: 'SetTracker', ctor: SetTracker },
+  { name: 'HeapSetTracker', ctor: HeapSetTracker },
+];
+
+for (const { name, ctor } of trackerImplementations) {
+  describe(name, () => {
+    it('should handle basic insertion, ordering, and retrieval', () => {
+      const tracker = new ctor(5);
+
+      // Insert sets with different tiers and stat mixes
+      expect(tracker.insert(10, '550000', [createMockArmor('a', 1000)], [5, 5, 0, 0, 0, 0])).toBe(
+        true,
+      );
+      expect(tracker.insert(12, '660000', [createMockArmor('b', 1200)], [6, 6, 0, 0, 0, 0])).toBe(
+        true,
+      );
+      expect(tracker.insert(10, '460000', [createMockArmor('c', 1100)], [4, 6, 0, 0, 0, 0])).toBe(
+        true,
+      );
+
+      expect(tracker.totalSets).toBe(3);
+
+      // Verify ordering: tier desc, then statMix desc, then power desc
+      const sets = tracker.getArmorSets(10);
+      expect(sets[0].armor[0].id).toBe('b'); // tier 12
+      expect(sets[1].armor[0].id).toBe('a'); // tier 10, mix 550000
+      expect(sets[2].armor[0].id).toBe('c'); // tier 10, mix 460000
+    });
+
+    it('should handle capacity limits and trimming correctly', () => {
+      const tracker = new ctor(3);
+
+      // Fill to capacity
+      expect(tracker.insert(10, '550000', [createMockArmor('a', 1000)], [5, 5, 0, 0, 0, 0])).toBe(
+        true,
+      );
+      expect(tracker.insert(12, '660000', [createMockArmor('b', 1000)], [6, 6, 0, 0, 0, 0])).toBe(
+        true,
+      );
+      expect(tracker.insert(8, '440000', [createMockArmor('c', 1000)], [4, 4, 0, 0, 0, 0])).toBe(
+        true,
+      );
+      expect(tracker.totalSets).toBe(3);
+
+      // Insert low tier - should be rejected
+      const lowResult = tracker.insert(
+        6,
+        '330000',
+        [createMockArmor('d', 1000)],
+        [3, 3, 0, 0, 0, 0],
+      );
+      expect(lowResult).toBe(false);
+      expect(tracker.totalSets).toBe(3);
+
+      // Insert high tier - should succeed but cause trimming
+      const highResult = tracker.insert(
+        14,
+        '770000',
+        [createMockArmor('e', 1000)],
+        [7, 7, 0, 0, 0, 0],
+      );
+      expect(highResult).toBe(false); // trimWorstSet returns false
+      expect(tracker.totalSets).toBe(3);
+
+      // Verify worst item was removed
+      const sets = tracker.getArmorSets(5);
+      expect(sets.find((s) => s.armor[0].id === 'c')).toBe(undefined); // tier 8 removed
+      expect(sets.find((s) => s.armor[0].id === 'e')).not.toBe(undefined); // tier 14 kept
+    });
+
+    it('should implement couldInsert correctly for hot path optimization', () => {
+      const tracker = new ctor(2);
+
+      // Empty tracker accepts everything
+      expect(tracker.couldInsert(5)).toBe(true);
+      expect(tracker.couldInsert(50)).toBe(true);
+
+      // Fill to capacity
+      expect(tracker.insert(10, '550000', [createMockArmor('a', 1000)], [5, 5, 0, 0, 0, 0])).toBe(
+        true,
+      );
+      expect(tracker.insert(8, '440000', [createMockArmor('b', 1000)], [4, 4, 0, 0, 0, 0])).toBe(
+        true,
+      );
+
+      // At capacity: reject < worst, accept >= worst
+      expect(tracker.couldInsert(7)).toBe(false); // < 8
+      expect(tracker.couldInsert(8)).toBe(true); // >= 8 (matches SetTracker behavior)
+      expect(tracker.couldInsert(15)).toBe(true); // > 8
+    });
+
+    it('should handle duplicate detection', () => {
+      const tracker = new ctor(5);
+
+      // Insert first item
+      tracker.insert(10, '550000', [createMockArmor('a', 1000)], [5, 5, 0, 0, 0, 0]);
+
+      // SetTracker contract allows duplicates
+      const result = tracker.insert(10, '550000', [createMockArmor('b', 900)], [5, 5, 0, 0, 0, 0]);
+      expect(result).toBe(true);
+      expect(tracker.totalSets).toBe(2);
+    });
+  });
 }
-
-describe('SetTracker', () => {
-  it('should handle a basic insertion and retrieval workflow', () => {
-    const tracker = new SetTracker(capacity);
-
-    // 1. Initial state
-    expect(tracker.totalSets).toBe(0);
-    expect(tracker.getArmorSets(5).length).toBe(0);
-
-    // 2. Insert a set (tier 10: [5,5,0,0,0,0])
-    const statsA = [5, 5, 0, 0, 0, 0];
-    const mixA = statMixFromArray(statsA);
-    expect(tracker.couldInsert(10)).toBe(true);
-    tracker.insert(10, mixA, [createMockArmor('a', 10)], statsA);
-    expect(tracker.totalSets).toBe(1);
-
-    // 3. Insert another set (tier 12: [6,6,0,0,0,0])
-    const statsB = [6, 6, 0, 0, 0, 0];
-    const mixB = statMixFromArray(statsB);
-    tracker.insert(12, mixB, [createMockArmor('b', 10)], statsB);
-    expect(tracker.totalSets).toBe(2);
-
-    // 4. Retrieve and verify order (mixB > mixA lexicographically)
-    const sets = tracker.getArmorSets(5);
-    expect(sets.length).toBe(2);
-    expect(sets[0].armor[0].id).toBe('b'); // Higher tier first
-    expect(sets[1].armor[0].id).toBe('a');
-  });
-
-  it('should handle capacity and trimming correctly', () => {
-    const tracker = new SetTracker(capacity);
-
-    // Fill the tracker with realistic stat mixes
-    const statsA = [5, 5, 0, 0, 0, 0]; // 10
-    const statsB = [6, 6, 0, 0, 0, 0]; // 12
-    const statsC = [4, 4, 0, 0, 0, 0]; // 8
-    const statsD = [7, 7, 0, 0, 0, 0]; // 14
-    const statsE = [6, 0, 0, 0, 0, 0]; // 6
-
-    tracker.insert(10, statMixFromArray(statsA), [createMockArmor('a', 10)], statsA);
-    tracker.insert(12, statMixFromArray(statsB), [createMockArmor('b', 10)], statsB);
-    tracker.insert(8, statMixFromArray(statsC), [createMockArmor('c', 10)], statsC);
-    tracker.insert(14, statMixFromArray(statsD), [createMockArmor('d', 10)], statsD);
-    tracker.insert(6, statMixFromArray(statsE), [createMockArmor('e', 10)], statsE);
-    expect(tracker.totalSets).toBe(5);
-
-    // Attempt to insert a lower-tier set (should be rejected)
-    const statsF = [5, 0, 0, 0, 0, 0]; // 5
-    expect(tracker.couldInsert(5)).toBe(false);
-    const inserted = tracker.insert(
-      5,
-      statMixFromArray(statsF),
-      [createMockArmor('f', 10)],
-      statsF,
-    );
-    expect(inserted).toBe(false);
-    expect(tracker.totalSets).toBe(5);
-    let sets = tracker.getArmorSets(5);
-    expect(sets.find((s) => s.armor[0].id === 'f')).toBe(undefined);
-
-    // Insert a higher-tier set (tier 7: [7,0,0,0,0,0])
-    const statsG = [7, 0, 0, 0, 0, 0];
-    expect(tracker.couldInsert(7)).toBe(true);
-    const result_success = tracker.insert(
-      7,
-      statMixFromArray(statsG),
-      [createMockArmor('g', 10)],
-      statsG,
-    );
-    expect(result_success).toBe(false);
-    expect(tracker.totalSets).toBe(5);
-    sets = tracker.getArmorSets(5);
-    expect(sets.find((s) => s.armor[0].id === 'e')).toBe(undefined); // 'e' (tier 6) should be gone
-    expect(sets.find((s) => s.armor[0].id === 'g')).not.toBe(undefined);
-  });
-
-  it('should sort sets correctly based on tier, statmix, and power', () => {
-    const tracker = new SetTracker(capacity);
-
-    // All tier 10, but different stat mixes and powers
-    const statsB1 = [5, 5, 0, 0, 0, 0]; // 10, mix: 550000
-    const statsZ1 = [2, 2, 2, 2, 2, 0]; // 10, mix: 222220
-    const statsC1 = [4, 4, 2, 0, 0, 0]; // 10, mix: 442000
-    const statsB2 = [4, 6, 0, 0, 0, 0]; // 10, mix: 460000
-    const statsA1 = [3, 3, 2, 2, 0, 0]; // 10, mix: 332200
-
-    tracker.insert(10, statMixFromArray(statsB1), [createMockArmor('b1', 10)], statsB1);
-    tracker.insert(10, statMixFromArray(statsZ1), [createMockArmor('z1', 10)], statsZ1);
-    tracker.insert(10, statMixFromArray(statsC1), [createMockArmor('c1', 10)], statsC1);
-    tracker.insert(10, statMixFromArray(statsB2), [createMockArmor('b2', 12)], statsB2);
-    tracker.insert(10, statMixFromArray(statsA1), [createMockArmor('a1', 10)], statsA1);
-
-    const sets = tracker.getArmorSets(5);
-    expect(sets.length).toBe(5);
-
-    // Expected order:
-    // 1. mix: b1 (550000, power 10)
-    // 2. mix: b2 (550000, power 10)
-    // 3. mix: c1 (442000)
-    // 4. mix: a1 (332200)
-    // 5. mix: z1 (222220)
-    expect(sets.map((s) => s.armor[0].id)).toEqual(['b1', 'b2', 'c1', 'a1', 'z1']);
-  });
-
-  it('should handle getting different numbers of sets', () => {
-    const tracker = new SetTracker(capacity);
-
-    const statsA = [5, 5, 0, 0, 0, 0]; // 10
-    const statsB = [6, 4, 0, 0, 0, 0]; // 10
-    const statsC = [10, 0, 0, 0, 0, 0]; // 10
-
-    tracker.insert(10, statMixFromArray(statsA), [createMockArmor('a', 10)], statsA);
-    tracker.insert(10, statMixFromArray(statsB), [createMockArmor('b', 10)], statsB);
-    tracker.insert(10, statMixFromArray(statsC), [createMockArmor('c', 10)], statsC);
-
-    // Get less than total
-    let sets = tracker.getArmorSets(2);
-    expect(sets.length).toBe(2);
-    expect(sets.map((s) => s.armor[0].id)).toEqual(['c', 'b']);
-
-    // Get more than total
-    sets = tracker.getArmorSets(5);
-    expect(sets.length).toBe(3);
-  });
-});

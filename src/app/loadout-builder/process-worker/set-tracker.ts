@@ -42,6 +42,7 @@ export class SetTracker {
 
   /**
    * A short-circuit helper to check if inserting a set at this total tier could possibly be accepted.
+   * @returns true if the set could maybe be inserted, false if it definitely cannot
    */
   couldInsert(totalTier: number) {
     const lowestKnownTier = this.tiers.length ? this.tiers.at(-1)!.tier : 0;
@@ -50,11 +51,13 @@ export class SetTracker {
 
   /**
    * Insert this set into the tracker. If the tracker is at capacity the
-   * lowest-value set (which may be this one) may be dropped.
+   * lowest-value set (which may be this one) may be dropped. It is possible to
+   * add sets with duplicate stat mixes here!
    * @param statMix A lexographically ordered string that represents the stat
    * mix of this set. Each stat tier is one hexadecimal character. For example,
    * if the stat tiers of a set are [4,6,2,10,1,0], the stat mix string would be
    * "462a10". This string is used to sort the sets within a tier.
+   * @returns true if the set was inserted, false if it was not inserted
    */
   insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]) {
     if (this.tiers.length === 0) {
@@ -105,7 +108,10 @@ export class SetTracker {
     return this.trimWorstSet();
   }
 
-  /** Remove the lowest-value set in the tracker. */
+  /**
+   * Remove the lowest-value set in the tracker.
+   * @returns true if a set was removed, false if it was not removed
+   */
   private trimWorstSet(): boolean {
     if (this.totalSets <= this.capacity) {
       return true;
@@ -128,7 +134,9 @@ export class SetTracker {
   }
 
   /**
-   * Get the top N tracked armor sets in order.
+   * Get the top N tracked armor sets in order. This will return the top sets
+   * ordered by tier, then by stat mix, then by power of the armor set. The
+   * behavior is undefined if `max` is less than 1.
    */
   getArmorSets(max: number) {
     const result: IntermediateProcessArmorSet[] = [];
