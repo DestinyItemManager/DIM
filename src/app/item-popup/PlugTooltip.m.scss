@@ -48,6 +48,11 @@
   }
   .communityInsightSection {
     @include tooltip-section-color($communityBlue);
+
+    @include phone-portrait {
+      max-height: 25vh;
+      overflow: hidden;
+    }
     h3 {
       opacity: 0.6;
     }
