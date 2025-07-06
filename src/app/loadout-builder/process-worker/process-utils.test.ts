@@ -15,22 +15,22 @@ import {
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
+  getAutoMods,
+  mapArmor2ModToProcessMod,
+  mapAutoMods,
+  mapDimItemToProcessItem,
+} from '../process/mappers';
+import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxStat, ResolvedStatConstraint } from '../types';
+import { statTier } from '../utils';
+import {
   LoSessionInfo,
   generateProcessModPermutations,
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
   updateMaxTiers,
-} from './process-worker/process-utils';
-import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
-import {
-  getAutoMods,
-  mapArmor2ModToProcessMod,
-  mapAutoMods,
-  mapDimItemToProcessItem,
-} from './process/mappers';
-import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxStat, ResolvedStatConstraint } from './types';
-import { statTier } from './utils';
+} from './process-utils';
+import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 // We don't really pay attention to this in the tests but the parameter is needed
 const modStatistics: ModAssignmentStatistics = {

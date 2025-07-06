@@ -138,7 +138,7 @@ export function updateMaxTiers(
     // TODO: Replace Tier with Stat
     const tier = setTiers[statIndex];
     if (tier > statTier(minMax.maxStat)) {
-      // TODO: I don't understand why this check is here. Did we mean to check if tier is less than statTier(minMax.maxStat)?
+      // TODO: I don't understand why this check is here. Did the original author mean to check if the updated max tier (e.g. `statTier(minMax.maxStat)` was already at the `filter.maxStat` value?
       foundAnyImprovement ||= filter.minStat < filter.maxStat;
       minMax.maxStat = tier * 10;
     }
