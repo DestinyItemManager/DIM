@@ -5,39 +5,32 @@
   min-height: calc(var(--item-size) + 20px);
   display: grid;
   grid-template-columns: var(--item-size) 1fr;
-  grid-template-areas:
-    'mod desc button'
-    'mod clarityDesc button'
-    'mod source button';
-
+  grid-template-areas: 'mod name button' 'mod desc button';
   gap: 0 8px;
+  height: min(25vh, 15em);
 
   @include phone-portrait {
     grid-template-columns: var(--item-size) 1fr;
     grid-template-areas:
+      'mod name'
       'mod desc'
-      'mod clarityDesc'
-      'mod source'
       'mod button';
     gap: 8px 8px;
+    height: auto;
     &.hasStats {
       grid-template-columns: var(--item-size) 1fr;
       grid-template-areas:
+        'mod name'
         'mod desc'
-        'mod modstat'
         'mod stat'
-        'mod clarityDesc'
-        'mod source'
         'mod button';
     }
   }
   &.hasStats {
     grid-template-columns: var(--item-size) 1fr 1fr;
     grid-template-areas:
-      'mod desc stat button'
-      'mod modstat stat button'
-      'mod clarityDesc stat button'
-      'mod source stat button';
+      'mod name stat button'
+      'mod desc stat button';
   }
 }
 
@@ -51,28 +44,29 @@
   }
 }
 
+.modName {
+  grid-area: name;
+  font-weight: bold;
+  margin: 0;
+}
+
 .modDescription {
   composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 8px 8px;
   grid-area: desc;
-  h3 {
-    font-weight: bold;
-    margin: 0;
+  overflow: auto;
+
+  @include phone-portrait {
+    max-height: 25vh;
   }
 }
 .modRequirement {
-  margin-top: 8px;
   font-style: italic;
 }
 
 .modClarityDescription {
-  grid-area: clarityDesc;
-  margin-top: 2px;
   border-left: 2px solid $communityBlue;
   padding-left: 6px;
-}
-
-.modStats {
-  grid-area: modstat;
 }
 
 .itemStats {
@@ -82,8 +76,6 @@
 }
 
 .source {
-  grid-area: source;
-  margin-top: 2px;
   font-style: italic;
   opacity: 0.7;
 }
