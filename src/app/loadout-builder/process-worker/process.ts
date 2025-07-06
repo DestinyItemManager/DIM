@@ -51,7 +51,7 @@ export function process(
   autoModOptions: AutoModData,
   /** Use stat mods to hit stat minimums */
   autoStatMods: boolean,
-  /** If set, only sets where at least one stat **exceeds** `resolvedStatConstraints` minimums will be returned */
+  /** If set, only sets where at least one stat **exceeds** `desiredStatRanges` minimums will be returned */
   strictUpgrades: boolean,
   /** If set, LO will exit after finding at least one set that fits all constraints (and is a strict upgrade if `strictUpgrades` is set) */
   stopOnFirstSet: boolean,

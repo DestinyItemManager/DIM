@@ -138,7 +138,6 @@ export function updateMaxTiers(
     // TODO: Replace Tier with Stat
     const tier = setTiers[statIndex];
     if (tier > statTier(minMax.maxStat)) {
-      // TODO: I don't understand why this check is here. Did the original author mean to check if the updated max tier (e.g. `statTier(minMax.maxStat)` was already at the `filter.maxStat` value?
       foundAnyImprovement ||= filter.minStat < filter.maxStat;
       minMax.maxStat = tier * 10;
     }
@@ -184,7 +183,6 @@ export function updateMaxTiers(
         const tierVal = statTier(value + explorationStats[statIndex]);
         // An improvement is only actually an improvement if the tier wouldn't end up
         // ignored due to max.
-        // TODO: Given the comment above, why does this check the filter.minStat against filter.maxStat instead of tierVal against filter.maxStat?
         foundAnyImprovement ||=
           filter.minStat < filter.maxStat && tierVal > statTier(filter.minStat);
         minMax.maxStat = tierVal * 10;
