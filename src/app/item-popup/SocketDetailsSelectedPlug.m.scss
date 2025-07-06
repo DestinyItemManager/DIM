@@ -28,7 +28,7 @@
   }
   &.hasStats {
     grid-template-columns: var(--item-size) 1fr 1fr;
-    grid-template-areas: 
+    grid-template-areas:
       'mod name stat button'
       'mod desc stat button';
   }
