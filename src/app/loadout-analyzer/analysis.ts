@@ -322,6 +322,7 @@ export async function analyzeLoadout(
               desiredStatRanges: mergedDesiredStatRanges,
               stopOnFirstSet: true,
               strictUpgrades: !mergedConstraintsImplyStrictUpgrade,
+              tieredStats: !edgeOfFateReleased,
             });
 
             hasStrictUpgrade = Boolean((await resultPromise).sets.length);

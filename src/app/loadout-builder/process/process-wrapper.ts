@@ -8,13 +8,13 @@ import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ProcessItem, ProcessItemsByBucket, ProcessResult } from '../process-worker/types';
 import {
+  ArmorBucketHash,
   ArmorEnergyRules,
   ArmorSet,
   AutoModDefs,
   DesiredStatRange,
   ItemGroup,
   ItemsByBucket,
-  LockableBucketHash,
   ModStatChanges,
 } from '../types';
 import {
@@ -24,7 +24,7 @@ import {
   mapDimItemToProcessItem,
 } from './mappers';
 
-function createWorker() {
+function createWorker(instanceID: number) {
   const instance = new Worker(
     /* webpackChunkName: "lo-worker" */ new URL('../process-worker/ProcessWorker', import.meta.url),
   );
@@ -34,10 +34,13 @@ function createWorker() {
   const cleanup = () => {
     worker[releaseProxy]();
     instance.terminate();
+    console.log('Process worker terminated', instanceID);
   };
 
   return { worker, cleanup };
 }
+
+let instanceNum = 0;
 
 export function runProcess({
   autoModDefs,
@@ -51,6 +54,7 @@ export function runProcess({
   getUserItemTag,
   strictUpgrades,
   stopOnFirstSet,
+  tieredStats,
 }: {
   autoModDefs: AutoModDefs;
   filteredItems: ItemsByBucket;
@@ -63,12 +67,15 @@ export function runProcess({
   getUserItemTag?: (item: DimItem) => TagValue | undefined;
   strictUpgrades: boolean;
   stopOnFirstSet: boolean;
+  tieredStats: boolean;
 }): {
   cleanup: () => void;
   resultPromise: Promise<Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number }>;
 } {
+  instanceNum += 1;
+  const instanceID = instanceNum;
   const processStart = performance.now();
-  const { worker, cleanup: cleanupWorker } = createWorker();
+  const { worker, cleanup: cleanupWorker } = createWorker(instanceID);
   let cleanupRef: (() => void) | undefined = cleanupWorker;
   const cleanup = () => {
     cleanupRef?.();
@@ -94,7 +101,7 @@ export function runProcess({
   const itemsById = new Map<string, ItemGroup>();
 
   for (const [bucketHashStr, items] of Object.entries(filteredItems)) {
-    const bucketHash = parseInt(bucketHashStr, 10) as LockableBucketHash;
+    const bucketHash = parseInt(bucketHashStr, 10) as ArmorBucketHash;
     processItems[bucketHash] = [];
 
     const groupedItems = mapItemsToGroups(
@@ -117,6 +124,8 @@ export function runProcess({
   return {
     cleanup,
     resultPromise: new Promise((resolve) => {
+      console.log(`Process worker started for instance ${instanceID}`);
+      // Start the worker and pass the items to
       worker
         .process(
           processItems,
@@ -128,8 +137,10 @@ export function runProcess({
           autoStatMods,
           strictUpgrades,
           stopOnFirstSet,
+          tieredStats,
         )
         .then((result) => {
+          console.log(`Process worker finished for instance ${instanceID}`);
           const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
           const processTime = performance.now() - processStart;
           resolve({ ...result, sets: hydratedSets, processTime });

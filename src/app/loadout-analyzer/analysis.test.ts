@@ -6,7 +6,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { ProcessResult } from 'app/loadout-builder/process-worker/types';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import type { runProcess } from 'app/loadout-builder/process/process-wrapper';
-import { ArmorSet, LockableBucketHashes, StatRanges } from 'app/loadout-builder/types';
+import { ArmorBucketHashes, ArmorSet, StatRanges } from 'app/loadout-builder/types';
 import { statTier } from 'app/loadout-builder/utils';
 import { randomSubclassConfiguration } from 'app/loadout-drawer/auto-loadouts';
 import { addItem, setLoadoutParameters } from 'app/loadout-drawer/loadout-drawer-reducer';
@@ -170,7 +170,7 @@ describe('basic loadout analysis finding tests', () => {
   });
 
   it('finds UsesSeasonalMods/ModsDontFit', async () => {
-    const items = LockableBucketHashes.map(
+    const items = ArmorBucketHashes.map(
       (hash) =>
         allItems.find(
           (i) =>
@@ -251,7 +251,7 @@ describe('basic loadout analysis finding tests', () => {
   });
 
   it('finds DoesNotSatisfyStatConstraints', async () => {
-    const nonMasterworkedArmor = LockableBucketHashes.map(
+    const nonMasterworkedArmor = ArmorBucketHashes.map(
       (hash) =>
         allItems.find(
           (i) =>

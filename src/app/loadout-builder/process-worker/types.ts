@@ -1,4 +1,4 @@
-import { ArmorStatHashes, ArmorStats, LockableBucketHash, StatRanges } from '../types';
+import { ArmorBucketHash, ArmorStatHashes, ArmorStats, StatRanges } from '../types';
 
 export interface ProcessResult {
   /** A small number of the best sets, depending on operation mode. */
@@ -25,7 +25,7 @@ export interface ProcessItem {
 }
 
 export type ProcessItemsByBucket = {
-  [bucketHash in LockableBucketHash]: ProcessItem[];
+  [bucketHash in ArmorBucketHash]: ProcessItem[];
 };
 
 export interface ProcessArmorSet {

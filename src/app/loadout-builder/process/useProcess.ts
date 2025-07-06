@@ -54,6 +54,7 @@ export function useProcess({
   anyExotic,
   autoStatMods,
   strictUpgrades,
+  tieredStats,
 }: {
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
@@ -64,6 +65,7 @@ export function useProcess({
   anyExotic: boolean;
   autoStatMods: boolean;
   strictUpgrades: boolean;
+  tieredStats: boolean;
 }) {
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
@@ -104,6 +106,7 @@ export function useProcess({
       getUserItemTag,
       stopOnFirstSet: false,
       strictUpgrades,
+      tieredStats,
     });
 
     cleanupRef.current = cleanup;
@@ -148,6 +151,7 @@ export function useProcess({
     modStatChanges,
     autoModDefs,
     strictUpgrades,
+    tieredStats,
   ]);
 
   return { result, processing };

@@ -1,4 +1,5 @@
 import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
@@ -57,7 +58,7 @@ export interface ArmorSet {
 }
 
 export type ItemsByBucket = Readonly<{
-  [bucketHash in LockableBucketHash]: readonly DimItem[];
+  [bucketHash in ArmorBucketHash]: readonly DimItem[];
 }>;
 
 /**
@@ -83,25 +84,15 @@ export type ItemGroup = Readonly<{
   items: DimItem[];
 }>;
 
-/**
- * Bucket lookup, also used for ordering of the buckets.
- */
-export const LockableBuckets = {
-  helmet: BucketHashes.Helmet as LockableBucketHash,
-  gauntlets: BucketHashes.Gauntlets as LockableBucketHash,
-  chest: BucketHashes.ChestArmor as LockableBucketHash,
-  leg: BucketHashes.LegArmor as LockableBucketHash,
-  classitem: BucketHashes.ClassArmor as LockableBucketHash,
-};
-
-export type LockableBucketHash =
+/** A restricted set of bucket hashes for armor. */
+export type ArmorBucketHash =
   | BucketHashes.Helmet
   | BucketHashes.Gauntlets
   | BucketHashes.ChestArmor
   | BucketHashes.LegArmor
   | BucketHashes.ClassArmor;
 
-export const LockableBucketHashes = Object.values(LockableBuckets);
+export const ArmorBucketHashes = D2Categories.Armor as ArmorBucketHash[];
 
 export type ModStatChanges = {
   [statHash in ArmorStatHashes]: Pick<DimCharacterStat, 'value' | 'breakdown'>;

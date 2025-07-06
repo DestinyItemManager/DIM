@@ -6,13 +6,13 @@ import { warnLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { Draft } from 'immer';
 import {
+  ArmorBucketHash,
+  ArmorBucketHashes,
   ArmorEnergyRules,
   ExcludedItems,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
   LOCKED_EXOTIC_NO_EXOTIC,
-  LockableBucketHash,
-  LockableBucketHashes,
   PinnedItems,
 } from './types';
 
@@ -23,7 +23,7 @@ export interface FilterInfo {
   /** Did the search query limit items for any bucket? */
   searchQueryEffective: boolean;
   perBucketStats: {
-    [key in LockableBucketHash]: {
+    [key in ArmorBucketHash]: {
       totalConsidered: number;
       cantFitMods: number;
       finalValid: number;
@@ -100,9 +100,9 @@ export function filterItems({
       );
 
   // Group by bucket
-  const itemsByBucket = Map.groupBy(items, (item) => item.bucket.hash as LockableBucketHash);
+  const itemsByBucket = Map.groupBy(items, (item) => item.bucket.hash as ArmorBucketHash);
 
-  for (const bucket of LockableBucketHashes) {
+  for (const bucket of ArmorBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
     // There can only be one pinned item as we hide items from the item picker once

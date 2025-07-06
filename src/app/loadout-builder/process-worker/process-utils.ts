@@ -52,9 +52,14 @@ export function precalculateStructures(
 }
 
 function getRemainingEnergiesPerAssignment(
-  info: LoSessionInfo,
-  items: ProcessItem[],
-): { setEnergy: number; remainingEnergiesPerAssignment: number[][] } {
+  activityModPermutations: (ProcessMod | null)[][],
+  items: readonly ProcessItem[],
+): {
+  /** Total remaining energy capacity across the set */
+  setEnergy: number;
+  /** For each  */
+  remainingEnergiesPerAssignment: number[][];
+} {
   const remainingEnergiesPerAssignment: number[][] = [];
 
   let setEnergy = 0;
@@ -62,27 +67,32 @@ function getRemainingEnergiesPerAssignment(
     setEnergy += item.remainingEnergyCapacity;
   }
 
-  activityModLoop: for (const activityPermutation of info.activityModPermutations) {
-    activityItemLoop: for (let i = 0; i < items.length; i++) {
-      const activityMod = activityPermutation[i];
-      if (!activityMod) {
-        continue activityItemLoop;
-      }
-
-      const item = items[i];
-      const tag = activityMod.tag!;
-      const energyCost = activityMod.energyCost;
-
-      // The activity mods won't fit in the item set so move on to the next set of mods
-      if (energyCost > item.remainingEnergyCapacity || !item.compatibleModSeasons?.includes(tag)) {
-        continue activityModLoop;
-      }
-    }
-
+  activityModLoop: for (const activityPermutation of activityModPermutations) {
+    // It's worth it to do another loop here, just to save the allocation of
+    // this list when the permutation is skipped.
     const remainingEnergyCapacities = [0, 0, 0, 0, 0];
+
+    // Check each item to see if it's possible to slot the activity mods in this
+    // permutation.
     for (let i = 0; i < items.length; i++) {
-      remainingEnergyCapacities[i] =
-        items[i].remainingEnergyCapacity - (activityPermutation[i]?.energyCost || 0);
+      const activityMod = activityPermutation[i];
+      const item = items[i];
+      remainingEnergyCapacities[i] = item.remainingEnergyCapacity;
+      if (activityMod) {
+        const tag = activityMod.tag!;
+        const energyCost = activityMod.energyCost;
+
+        // The activity mod for this slot won't fit in the item so move on to
+        // the next permutation.
+        if (
+          energyCost > item.remainingEnergyCapacity ||
+          !item.compatibleModSeasons?.includes(tag)
+        ) {
+          continue activityModLoop;
+        }
+
+        remainingEnergyCapacities[i] -= activityMod.energyCost;
+      }
     }
     remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
@@ -92,25 +102,27 @@ function getRemainingEnergiesPerAssignment(
 }
 
 /**
- * Optimizes stats individually and updates max tiers.
+ * Optimizes stats individually and updates max stats.
  * Returns true if it's possible to bump at least one stat to higher than the stat's `min`.
  */
 export function updateMaxTiers(
   info: LoSessionInfo,
-  items: ProcessItem[],
-  setStats: number[],
-  setTiers: number[],
+  items: readonly ProcessItem[],
+  setStats: readonly number[],
+  setTiers: readonly number[],
+  /** Total number of available artifice mods, */
   numArtificeMods: number,
-  statFiltersInStatOrder: DesiredStatRange[],
+  statFiltersInStatOrder: readonly DesiredStatRange[],
   minMaxesInStatOrder: MinMaxStat[], // mutated
 ): boolean {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
-    info,
+    info.activityModPermutations,
     items,
   );
 
   let foundAnyImprovement = false;
 
+  // How many extra points we need to add to each stat to hit the minimums.
   const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
 
   // First, track absolutely required stats (and update existing maxes)
@@ -126,6 +138,7 @@ export function updateMaxTiers(
     // TODO: Replace Tier with Stat
     const tier = setTiers[statIndex];
     if (tier > statTier(minMax.maxStat)) {
+      // TODO: I don't understand why this check is here. Did we mean to check if tier is less than statTier(minMax.maxStat)?
       foundAnyImprovement ||= filter.minStat < filter.maxStat;
       minMax.maxStat = tier * 10;
     }
@@ -136,12 +149,16 @@ export function updateMaxTiers(
     }
   }
 
-  // Then, for every stat where we haven't shown that we can hit T10...
+  // TODO: skip if there aren't any general mods available
+
+  // Then, for every stat where we haven't shown that we can hit T10 with any
+  // set, try to see if we can exceed the previous max by adding auto stat mods.
   for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
-    const setStat = setStats[statIndex];
+    const value = setStats[statIndex];
+    const filter = statFiltersInStatOrder[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    const statFilter = statFiltersInStatOrder[statIndex];
     if (minMax.maxStat >= 100) {
+      // We can already hit T10 for this stat, so skip it.
       continue;
     }
 
@@ -149,10 +166,12 @@ export function updateMaxTiers(
     // require all other stats to hit their constrained minimums, but for this
     // stat we start from the highest tier we've observed.
     const explorationStats = requiredMinimumExtraStats.slice();
-    explorationStats[statIndex] = minMax.maxStat - setStat;
+    explorationStats[statIndex] = minMax.maxStat - value;
 
     while (minMax.maxStat < 100) {
-      const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 - (setStat % 10) : 10;
+      // This calculates how many *more* points we need to add to the stat to get to the next tier.
+      // TODO: Should this use regular modulo or remEuclid?
+      const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 - (value % 10) : 10;
       explorationStats[statIndex] += pointsToNextTier;
       const picks = chooseAutoMods(
         info,
@@ -162,11 +181,12 @@ export function updateMaxTiers(
         setEnergy - info.totalModEnergyCost,
       );
       if (picks) {
-        const tierVal = Math.floor((setStat + explorationStats[statIndex]) / 10);
+        const tierVal = statTier(value + explorationStats[statIndex]);
         // An improvement is only actually an improvement if the tier wouldn't end up
         // ignored due to max.
+        // TODO: Given the comment above, why does this check the filter.minStat against filter.maxStat instead of tierVal against filter.maxStat?
         foundAnyImprovement ||=
-          statFilter.minStat < statFilter.maxStat && tierVal > statTier(statFilter.minStat);
+          filter.minStat < filter.maxStat && tierVal > statTier(filter.minStat);
         minMax.maxStat = tierVal * 10;
       } else {
         break;
@@ -191,7 +211,7 @@ export function updateMaxTiers(
 export function pickAndAssignSlotIndependentMods(
   info: LoSessionInfo,
   modStatistics: ModAssignmentStatistics,
-  items: ProcessItem[],
+  items: readonly ProcessItem[],
   neededStats: number[] | undefined,
   numArtifice: number,
 ): ModsPick[] | undefined {
@@ -298,7 +318,7 @@ export function pickOptimalStatMods(
   desiredStatRanges: DesiredStatRange[],
 ): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
-    info,
+    info.activityModPermutations,
     items,
   );
 
