@@ -1,5 +1,7 @@
 ## Next
 
+## 8.79.0 <span class="changelog-date">(2025-07-06)</span>
+
 * Added an `is:ininventory` filter that will highlight items that you have at least one copy of. This is meant to be used in the Records and Vendors tabs.
 * Fixed an issue where community insights on mods are so long that you could not select mods on mobile.
 
