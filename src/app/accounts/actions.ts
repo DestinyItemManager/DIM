@@ -21,9 +21,15 @@ export const needsDeveloper = createAction('accounts/DEV_INFO_NEEDED')();
 export function handleAuthErrors(e: unknown): ThunkResult {
   return async (dispatch) => {
     // This means we don't have an API key or the API key is wrong
-    if ($DIM_FLAVOR === 'dev' && e instanceof DimError && e.code === 'BungieService.DevVersion') {
+    if (
+      $DIM_FLAVOR === 'dev' &&
+      !$featureFlags.e2eMode &&
+      e instanceof DimError &&
+      e.code === 'BungieService.DevVersion'
+    ) {
       dispatch(needsDeveloper());
     } else if (
+      !$featureFlags.e2eMode &&
       e instanceof Error &&
       (e instanceof FatalTokenError ||
         (e instanceof DimError &&

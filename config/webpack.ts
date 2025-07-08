@@ -488,6 +488,8 @@ export default (env: Env) => {
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },
         { from: './src/robots.txt' },
+        // Copy manifest cache for E2E tests
+        ...(env.dev ? [{ from: './manifest-cache', to: 'manifest-cache' }] : []),
       ],
     }),
 

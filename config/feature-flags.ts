@@ -55,6 +55,8 @@ export function makeFeatureFlags(env: {
     editInGameLoadoutIdentifiers: false,
     // Whether to sync DIM API data instead of loading everything
     dimApiSync: true,
+    // Enable E2E test mode with mock data
+    e2eMode: process.env.E2E_MOCK_DATA === 'true',
   };
 }
 

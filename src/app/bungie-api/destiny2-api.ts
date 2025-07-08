@@ -33,6 +33,7 @@ import {
   transferItem,
   updateLoadoutIdentifiers,
 } from 'bungie-api-ts/destiny2';
+import mockProfileData from '../../testing/data/profile-2024-06-13.json';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -53,6 +54,36 @@ import {
  * Get the information about the current manifest.
  */
 export async function getManifest(): Promise<DestinyManifest> {
+  if ($featureFlags.e2eMode) {
+    // Return mock manifest for E2E tests
+    return {
+      version: 'mock-manifest-version',
+      mobileAssetContentPath: '/common/destiny2_content/sqlite/en/world_sql_content_mock.content',
+      mobileGearAssetDataBases: [],
+      mobileWorldContentPaths: {
+        en: '/common/destiny2_content/sqlite/en/world_sql_content_mock.content',
+      },
+      jsonWorldContentPaths: {
+        en: '/common/destiny2_content/json/en/DestinyManifest_mock.json',
+      },
+      jsonWorldComponentContentPaths: {
+        en: {
+          DestinyInventoryItemDefinition:
+            '/common/destiny2_content/json/en/DestinyInventoryItemDefinition_mock.json',
+        },
+      },
+      mobileClanBannerDatabasePath: '/common/destiny2_content/clanbanner/clanbanner_mock.content',
+      mobileGearCDN: {
+        Geometry: '/common/destiny2_content/geometry/platform/mobile/geometry',
+        Texture: '/common/destiny2_content/geometry/platform/mobile/textures',
+        PlateRegion: '/common/destiny2_content/geometry/platform/mobile/plated_textures',
+        Gear: '/common/destiny2_content/geometry/gear',
+        Shader: '/common/destiny2_content/geometry/platform/mobile/shaders',
+      },
+      iconImagePyramidInfo: [],
+    } as any;
+  }
+
   const response = await getDestinyManifest(unauthenticatedHttpClient);
   return response.Response;
 }
@@ -60,6 +91,43 @@ export async function getManifest(): Promise<DestinyManifest> {
 export async function getLinkedAccounts(
   bungieMembershipId: string,
 ): Promise<DestinyLinkedProfilesResponse> {
+  if ($featureFlags.e2eMode) {
+    // Return mock linked accounts for E2E tests
+    return {
+      profiles: [
+        {
+          dateLastPlayed: '2024-01-01T00:00:00Z',
+          isOverridden: false,
+          isCrossSavePrimary: true,
+          crossSaveOverride: 3, // Steam
+          applicableMembershipTypes: [3],
+          isPublic: true,
+          membershipType: 3, // Steam
+          membershipId: 'mock-membership-id',
+          displayName: 'MockPlayer#1234',
+          bungieGlobalDisplayName: 'MockPlayer',
+          bungieGlobalDisplayNameCode: 1234,
+          platformSilver: {},
+          supplementalDisplayName: '',
+          iconPath: '/img/misc/missing_icon_d2.png',
+        },
+      ],
+      bnetMembership: {
+        membershipType: 254,
+        membershipId: bungieMembershipId,
+        displayName: 'MockPlayer#1234',
+        bungieGlobalDisplayName: 'MockPlayer',
+        bungieGlobalDisplayNameCode: 1234,
+        supplementalDisplayName: '',
+        iconPath: '/img/misc/missing_icon_d2.png',
+        crossSaveOverride: 254,
+        applicableMembershipTypes: [254],
+        isPublic: true,
+      },
+      profilesWithErrors: [],
+    } as any; // Type assertion to avoid complex typing issues
+  }
+
   const response = await getLinkedProfiles(authenticatedHttpClient, {
     membershipId: bungieMembershipId,
     membershipType: BungieMembershipType.BungieNext,
@@ -121,6 +189,10 @@ async function getProfile(
   platform: DestinyAccount,
   ...components: DestinyComponentType[]
 ): Promise<DestinyProfileResponse> {
+  if ($featureFlags.e2eMode) {
+    return mockProfileData.Response as unknown as DestinyProfileResponse;
+  }
+
   const response = await getProfileApi(authenticatedHttpClient, {
     destinyMembershipId: platform.membershipId,
     membershipType: platform.originalPlatformType,
