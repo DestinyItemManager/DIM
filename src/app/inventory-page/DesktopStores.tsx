@@ -99,7 +99,6 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
 
         <StoresInventory
           stores={headerStores}
-          vault={vault}
           currentStore={currentStore}
           buckets={buckets}
           singleCharacter={singleCharacter}
@@ -134,7 +133,6 @@ interface InventoryContainerProps {
   buckets: InventoryBuckets;
   stores: DimStore[];
   currentStore: DimStore;
-  vault: DimStore;
   singleCharacter: boolean;
 }
 
@@ -144,7 +142,6 @@ function CollapsibleContainer({
   stores,
   currentStore,
   inventoryBucket,
-  vault,
   singleCharacter,
 }: {
   category: string;
@@ -165,7 +162,6 @@ function CollapsibleContainer({
           key={bucket.hash}
           bucket={bucket}
           stores={stores}
-          vault={vault}
           currentStore={currentStore}
           singleCharacter={singleCharacter}
         />
@@ -178,7 +174,6 @@ function StoresInventory({
   buckets,
   stores,
   currentStore,
-  vault,
   singleCharacter,
 }: InventoryContainerProps) {
   return (
@@ -189,7 +184,6 @@ function StoresInventory({
           buckets={buckets}
           stores={stores}
           currentStore={currentStore}
-          vault={vault}
           singleCharacter={singleCharacter}
           category={category}
           inventoryBucket={inventoryBucket}

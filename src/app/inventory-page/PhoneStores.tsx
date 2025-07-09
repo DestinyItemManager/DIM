@@ -10,6 +10,7 @@ import { useCallback, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers';
 import CategoryStrip from './CategoryStrip';
+import D1ReputationSection from './D1ReputationSection';
 import HeaderShadowDiv from './HeaderShadowDiv';
 import styles from './PhoneStores.m.scss';
 import PhoneStoresHeader from './PhoneStoresHeader';
@@ -123,9 +124,8 @@ export default function PhoneStores({
 
       <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
         <StoresInventory
-          stores={[selectedStore]}
+          store={selectedStore}
           selectedCategoryId={selectedCategoryId}
-          vault={vault}
           currentStore={currentStore}
           buckets={buckets}
           singleCharacter={singleCharacter}
@@ -144,16 +144,14 @@ export default function PhoneStores({
 function StoresInventory({
   selectedCategoryId,
   buckets,
-  stores,
+  store,
   currentStore,
-  vault,
   singleCharacter,
 }: {
   selectedCategoryId: string;
   buckets: InventoryBuckets;
-  stores: DimStore[];
+  store: DimStore;
   currentStore: DimStore;
-  vault: DimStore;
   singleCharacter: boolean;
 }) {
   const showPostmaster =
@@ -164,15 +162,12 @@ function StoresInventory({
     <StoreBuckets
       key={bucket.hash}
       bucket={bucket}
-      stores={stores}
-      vault={vault}
+      stores={[store]}
       currentStore={currentStore}
       labels={true}
       singleCharacter={singleCharacter}
     />
   );
-
-  const store = stores[0];
 
   return (
     <>
@@ -184,6 +179,9 @@ function StoresInventory({
       )}
       {showPostmaster && buckets.byCategory.Postmaster.map(renderBucket)}
       {buckets.byCategory[selectedCategoryId].map(renderBucket)}
+      {store.destinyVersion === 1 && !store.isVault && selectedCategoryId === 'Progress' && (
+        <D1ReputationSection stores={[store]} />
+      )}
     </>
   );
 }
