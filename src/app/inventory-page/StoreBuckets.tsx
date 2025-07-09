@@ -17,12 +17,14 @@ import styles from './StoreBuckets.m.scss';
 export function StoreBuckets({
   bucket,
   stores,
+  vault,
   currentStore,
   labels,
   singleCharacter,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
+  vault: DimStore;
   currentStore: DimStore;
   labels?: boolean;
   singleCharacter: boolean;
@@ -40,17 +42,16 @@ export function StoreBuckets({
   if (bucket.accountWide) {
     // If we're in mobile view, we only render one store
     const allStoresView = stores.length > 1;
-    const store = stores[0];
     content = (
       <>
-        {(allStoresView || !store.isVault) && (
+        {(allStoresView || stores[0] !== vault) && (
           <div className={clsx('store-cell', styles.accountWideCell)}>
             <StoreBucket bucket={bucket} store={currentStore} singleCharacter={false} />
           </div>
         )}
-        {(allStoresView || store.isVault) && (
+        {(allStoresView || stores[0] === vault) && (
           <div className="store-cell">
-            <StoreBucket bucket={bucket} store={store} singleCharacter={false} />
+            <StoreBucket bucket={bucket} store={vault} singleCharacter={false} />
           </div>
         )}
       </>
