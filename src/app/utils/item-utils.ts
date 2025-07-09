@@ -387,6 +387,14 @@ export function itemTypeName(item: DimItem) {
       item.bucket.hash !== D1BucketHashes.Artifact &&
       item.bucket.hash !== BucketHashes.Subclass &&
       !item.classified &&
+      !(
+        item.isExotic &&
+        [
+          ItemCategoryHashes.ArmorModsOrnamentsWarlock,
+          ItemCategoryHashes.ArmorModsOrnamentsHunter,
+          ItemCategoryHashes.ArmorModsOrnamentsTitan,
+        ].some((h) => item.itemCategoryHashes.includes(h))
+      ) &&
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
     '';
 
