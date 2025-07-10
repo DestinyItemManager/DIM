@@ -49,7 +49,11 @@ export function EnergyMeterIncrements({
   variant: 'medium' | 'small';
 }) {
   // layer in possible total slots, then earned slots, then currently used slots
-  const meterIncrements = Array<string | undefined>(MAX_ARMOR_ENERGY_CAPACITY)
+  // TODO: Maybe in the future, items will say how much energy they *can* have -
+  // or we can just decide this based on if it's Tier 5 armor.
+  const meterIncrements = Array<string | undefined>(
+    Math.max(MAX_ARMOR_ENERGY_CAPACITY, energyCapacity),
+  )
     .fill(styles.unavailable)
     .fill(undefined, 0, energyCapacity)
     .fill(styles.used, 0, energyUsed);

@@ -361,6 +361,8 @@ function isModSelectable(
       : 0;
     const modCost = energyCost?.energyCost || 0;
 
+    // TODO: Edge of Fate: Tier 5 armor can have 11 energy. We'd need to pass
+    // that in here somehow.
     return lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY;
   }
 

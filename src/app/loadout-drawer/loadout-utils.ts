@@ -313,8 +313,10 @@ export function getLoadoutStats(
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
     for (const hash of armorStats) {
       armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
+      // TODO: Edge of Fate: Tier 5 armor can have 11 energy - would be great if
+      // we could read this from the item's energy info.
       armorPiecesStats[hash] +=
-        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY && item.energy
+        itemEnergy !== undefined && itemEnergy >= MAX_ARMOR_ENERGY_CAPACITY && item.energy
           ? MASTERWORK_ARMOR_STAT_BONUS
           : (energySocket?.plugged?.stats?.[hash]?.value ?? 0);
     }
