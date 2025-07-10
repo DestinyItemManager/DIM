@@ -24,7 +24,7 @@ import {
   mapDimItemToProcessItem,
 } from './mappers';
 
-function createWorker(instanceID: number) {
+function createWorker() {
   const instance = new Worker(
     /* webpackChunkName: "lo-worker" */ new URL('../process-worker/ProcessWorker', import.meta.url),
   );
@@ -34,13 +34,10 @@ function createWorker(instanceID: number) {
   const cleanup = () => {
     worker[releaseProxy]();
     instance.terminate();
-    console.log('Process worker terminated', instanceID);
   };
 
   return { worker, cleanup };
 }
-
-let instanceNum = 0;
 
 export function runProcess({
   autoModDefs,
@@ -54,7 +51,6 @@ export function runProcess({
   getUserItemTag,
   strictUpgrades,
   stopOnFirstSet,
-  tieredStats,
 }: {
   autoModDefs: AutoModDefs;
   filteredItems: ItemsByBucket;
@@ -67,15 +63,12 @@ export function runProcess({
   getUserItemTag?: (item: DimItem) => TagValue | undefined;
   strictUpgrades: boolean;
   stopOnFirstSet: boolean;
-  tieredStats: boolean;
 }): {
   cleanup: () => void;
   resultPromise: Promise<Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number }>;
 } {
-  instanceNum += 1;
-  const instanceID = instanceNum;
   const processStart = performance.now();
-  const { worker, cleanup: cleanupWorker } = createWorker(instanceID);
+  const { worker, cleanup: cleanupWorker } = createWorker();
   let cleanupRef: (() => void) | undefined = cleanupWorker;
   const cleanup = () => {
     cleanupRef?.();
@@ -124,8 +117,6 @@ export function runProcess({
   return {
     cleanup,
     resultPromise: new Promise((resolve) => {
-      console.log(`Process worker started for instance ${instanceID}`);
-      // Start the worker and pass the items to
       worker
         .process(
           processItems,
@@ -137,10 +128,8 @@ export function runProcess({
           autoStatMods,
           strictUpgrades,
           stopOnFirstSet,
-          tieredStats,
         )
         .then((result) => {
-          console.log(`Process worker finished for instance ${instanceID}`);
           const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
           const processTime = performance.now() - processStart;
           resolve({ ...result, sets: hydratedSets, processTime });

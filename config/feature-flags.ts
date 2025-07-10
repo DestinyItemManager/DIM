@@ -55,8 +55,6 @@ export function makeFeatureFlags(env: {
     editInGameLoadoutIdentifiers: false,
     // Whether to sync DIM API data instead of loading everything
     dimApiSync: true,
-    // Whether to show the loadout builder stat constraints editor that allows choosing exact stat ranges.
-    tierLessStatConstraints: !env.release,
   };
 }
 
