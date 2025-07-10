@@ -8,13 +8,13 @@ import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ProcessItem, ProcessItemsByBucket, ProcessResult } from '../process-worker/types';
 import {
+  ArmorBucketHash,
   ArmorEnergyRules,
   ArmorSet,
   AutoModDefs,
   DesiredStatRange,
   ItemGroup,
   ItemsByBucket,
-  LockableBucketHash,
   ModStatChanges,
 } from '../types';
 import {
@@ -94,7 +94,7 @@ export function runProcess({
   const itemsById = new Map<string, ItemGroup>();
 
   for (const [bucketHashStr, items] of Object.entries(filteredItems)) {
-    const bucketHash = parseInt(bucketHashStr, 10) as LockableBucketHash;
+    const bucketHash = parseInt(bucketHashStr, 10) as ArmorBucketHash;
     processItems[bucketHash] = [];
 
     const groupedItems = mapItemsToGroups(

@@ -38,9 +38,9 @@ import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
 import {
+  ArmorBucketHashes,
   ArmorSet,
   ExcludedItems,
-  LockableBucketHashes,
   PinnedItems,
   ResolvedStatConstraint,
 } from './types';
@@ -197,7 +197,7 @@ const lbConfigInit = ({
         .find(
           (i) =>
             Boolean(i?.equippingBlock?.uniqueLabel) &&
-            LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0),
+            ArmorBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0),
         );
 
       if (equippedExotic) {

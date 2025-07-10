@@ -5,7 +5,7 @@ import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { sumBy } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { ArmorSet, LockableBucketHashes } from './types';
+import { ArmorBucketHashes, ArmorSet } from './types';
 import { statTier } from './utils';
 
 /**
@@ -32,9 +32,7 @@ export function updateLoadoutWithArmorSet(
       // Remove equipped armor items
       !(
         li.equip &&
-        LockableBucketHashes.includes(
-          defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0,
-        )
+        ArmorBucketHashes.includes(defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0)
       ),
   );
   const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
