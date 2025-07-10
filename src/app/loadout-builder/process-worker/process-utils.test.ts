@@ -683,3 +683,97 @@ test('process-utils activity mods', async () => {
   );
   expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([5, 5, 6, 6, 5, 6]);
 });
+
+describe('process-utils general mod assignment', () => {
+  let items: ProcessItem[];
+  let loSessionInfo: LoSessionInfo;
+  let generalMod: ProcessMod;
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    generalMod = mapArmor2ModToProcessMod(
+      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
+    );
+
+    items = Array(5)
+      .fill(null)
+      .map((_, i) => ({
+        hash: i,
+        id: i.toString(),
+        isArtifice: false,
+        isExotic: false,
+        name: `Item ${i}`,
+        power: 1500,
+        stats: [0, 0, 0, 0, 0, 0],
+        compatibleModSeasons: [],
+        remainingEnergyCapacity: 10,
+      }));
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(autoModData, [generalMod], [], true, armorStats);
+  });
+
+  it('returns empty array when no required stats and all general mods fit', () => {
+    const result = pickAndAssignSlotIndependentMods(
+      loSessionInfo,
+      modStatistics,
+      items,
+      undefined, // No needed stats
+      0,
+    );
+
+    expect(result).toEqual([]);
+  });
+
+  it('returns undefined when general mods do not fit', () => {
+    const lowEnergyItems = items.map((item) => modifyItem({ item, remainingEnergyCapacity: 1 }));
+
+    const result = pickAndAssignSlotIndependentMods(
+      loSessionInfo,
+      modStatistics,
+      lowEnergyItems,
+      undefined,
+      0,
+    );
+
+    expect(result).toBeUndefined();
+  });
+});
+
+describe('process-utils pickOptimalStatMods edge cases', () => {
+  let items: ProcessItem[];
+  let loSessionInfo: LoSessionInfo;
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    items = Array(5)
+      .fill(null)
+      .map((_, i) => ({
+        hash: i,
+        id: i.toString(),
+        isArtifice: false,
+        isExotic: false,
+        name: `Item ${i}`,
+        power: 1500,
+        stats: [0, 0, 0, 0, 0, 0],
+        compatibleModSeasons: [],
+        remainingEnergyCapacity: 0, // No energy available
+      }));
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+  });
+
+  it('returns undefined when no mods can be picked', () => {
+    const setStats = [0, 0, 0, 0, 0, 0];
+    const desiredStatRanges = armorStats.map((statHash) => ({
+      statHash,
+      minStat: 100, // Impossible to achieve with no energy
+      maxStat: 100,
+    }));
+
+    const result = pickOptimalStatMods(loSessionInfo, items, setStats, desiredStatRanges);
+
+    expect(result).toBeUndefined();
+  });
+});
