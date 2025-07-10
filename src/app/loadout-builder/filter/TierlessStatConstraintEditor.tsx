@@ -42,6 +42,7 @@ export default function TierlessStatConstraintEditor({
   equippedHashes,
   className,
   lbDispatch,
+  processing,
 }: {
   store: DimStore;
   resolvedStatConstraints: ResolvedStatConstraint[];
@@ -50,6 +51,7 @@ export default function TierlessStatConstraintEditor({
   equippedHashes: Set<number>;
   className?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  processing: boolean;
 }) {
   const handleStatChange = (constraint: ResolvedStatConstraint) =>
     lbDispatch({ type: 'statConstraintChanged', constraint });
@@ -105,6 +107,7 @@ export default function TierlessStatConstraintEditor({
                     statRange={statRangesFiltered?.[statHash]}
                     onStatChange={handleStatChange}
                     equippedHashes={equippedHashes}
+                    processing={processing}
                   />
                 );
               })}
@@ -124,12 +127,14 @@ function StatRow({
   index,
   onStatChange,
   equippedHashes,
+  processing,
 }: {
   statConstraint: ResolvedStatConstraint;
   statRange?: MinMaxStat;
   index: number;
   onStatChange: (constraint: ResolvedStatConstraint) => void;
   equippedHashes: Set<number>;
+  processing: boolean;
 }) {
   const defs = useD2Definitions()!;
   const statHash = statConstraint.statHash as ArmorStatHashes;
@@ -153,6 +158,13 @@ function StatRow({
       maxStat: max,
     });
   };
+
+  useEffect(() => {
+    setRawMin(statConstraint.minStat);
+  }, [statConstraint.minStat]);
+  useEffect(() => {
+    setRawMax(statConstraint.maxStat);
+  }, [statConstraint.maxStat]);
 
   return (
     <Draggable draggableId={statHash.toString()} index={index}>
@@ -235,6 +247,7 @@ function StatRow({
                 setMin={setMin}
                 setMax={setMax}
                 onChange={commitStatChanges}
+                processing={processing}
               />
             </StatEditBar>
           )}
@@ -259,9 +272,6 @@ function StatEditBar({
   onChange: () => void;
   children: React.ReactNode;
 }) {
-  // TODO: enhance the tooltip w/ info about what the LO settings mean (locked, min/max, etc)
-  // TODO: enhance the tooltip w/ info about why the numbers are greyed
-
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onChange();
@@ -308,6 +318,7 @@ function StatBar({
   setMin,
   setMax,
   onChange,
+  processing,
 }: {
   range?: MinMaxStat;
   equippedHashes: Set<number>;
@@ -316,10 +327,11 @@ function StatBar({
   setMin: (value: number) => void;
   setMax: (value: number) => void;
   onChange: () => void;
+  processing: boolean;
 }) {
-  // TODO: tooltip? Or just show the numbers. Maybe show the effective max/min if it's not different from the statConstraint?
   const [dragging, setDragging] = useState(false);
   const draggingMax = useRef(false);
+  const lastClickTime = useRef(0);
 
   const setValue = (e: React.PointerEvent<HTMLDivElement>) => {
     const bar = e.currentTarget;
@@ -341,11 +353,17 @@ function StatBar({
     setDragging(false);
   };
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingMax.current = e.shiftKey || (e.target as Element).classList.contains(styles.statBarMax);
+    // double-click
+    if (performance.now() - lastClickTime.current < 200 && !draggingMax.current && range) {
+      setMin(range.maxStat);
+      return;
+    }
     const bar = e.currentTarget;
     bar.setPointerCapture(e.pointerId);
-    draggingMax.current = e.shiftKey || (e.target as Element).classList.contains(styles.statBarMax);
     setValue(e);
     setDragging(true);
+    lastClickTime.current = performance.now();
   };
 
   return (
@@ -362,9 +380,9 @@ function StatBar({
       onPointerUp={dragging ? handlePointerUp : undefined}
       onPointerMove={dragging ? handlePointerMove : undefined}
     >
-      {range && (
+      {range && range.minStat < range.maxStat && (
         <div
-          className={styles.statBarFill}
+          className={clsx(styles.statBarFill, { [styles.processing]: processing })}
           style={{
             left: percent(range.minStat / MAX_STAT),
             width: percent((range.maxStat - range.minStat) / MAX_STAT),

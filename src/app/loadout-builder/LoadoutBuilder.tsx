@@ -319,6 +319,7 @@ export default memo(function LoadoutBuilder({
         equippedHashes={equippedHashes}
         store={selectedStore}
         className={styles.loadoutEditSection}
+        processing={processing}
       />
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}

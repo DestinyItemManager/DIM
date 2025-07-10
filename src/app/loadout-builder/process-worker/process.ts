@@ -14,13 +14,13 @@ import {
   minorStatBoost,
 } from '../types';
 import { statTier } from '../utils';
+import { HeapSetTracker } from './heap-set-tracker';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
   updateMaxStats,
 } from './process-utils';
-import { SetTracker } from './set-tracker';
 import {
   AutoModData,
   LockedProcessMods,
@@ -106,7 +106,7 @@ export function process(
     return { sets: [], combos: 0 };
   }
 
-  const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
+  const setTracker = new HeapSetTracker(RETURNED_ARMOR_SETS);
 
   const { activityMods, generalMods } = lockedMods;
 
