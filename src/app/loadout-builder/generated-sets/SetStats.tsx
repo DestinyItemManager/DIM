@@ -103,10 +103,9 @@ export function SetStats({
 }
 
 /**
- * Displays the overall tier and per-stat tier of a generated loadout set.
+ * Displays the overall stats and per-stat stat of a generated loadout set.
  */
 // TODO: would be a lot easier if this was just passed a Loadout or FullyResolvedLoadout...
-// TODO: Replace Tier with Stat
 export function TierlessSetStats({
   stats,
   getStatsBreakdown,

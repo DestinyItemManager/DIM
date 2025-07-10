@@ -113,7 +113,6 @@ function getRemainingEnergiesPerAssignment(
  * than the desired range's minStat for that stat.
  */
 export function updateMaxStats(
-  // TODO: can we pass just what we need here?
   info: LoSessionInfo,
   armor: readonly ProcessItem[],
   /** Stats for the current set. */
@@ -187,11 +186,13 @@ export function updateMaxStats(
 
     // TODO: Rather than iterating one point at a time, we could run our greedy
     // assignment search that maximizes stats but with stat ranges that prevent
-    // us from going over our minimum?
+    // us from going over our minimum? Or maybe do a binary search for the
+    // maximum we can reach?
     while (statRange.maxStat < MAX_STAT) {
-      // TODO: Try something greedier here? Technically we should just try to
-      // max this one out - it's an optional optimization, while the others are
-      // required.
+      // Now that tiers no longer matter (since Edge of Fate), we consider any
+      // stat point increase a "tier". This should be a short-term change -
+      // ideally we'd reconsider all these algorithms to see if they could be
+      // simplified now that the tier concept is gone.
       const pointsToNextTier = 1;
       explorationStats[statIndex] += pointsToNextTier;
 
@@ -376,8 +377,6 @@ export function pickOptimalStatMods(
     }
   }
 
-  // TODO: replicate the greedy logic from the main process loop, and maybe just
-  // call this function there?
   const numArtificeMods = count(items, (i) => i.isArtifice);
   const bestBoosts = exploreAutoModsSearchTree(
     info,
