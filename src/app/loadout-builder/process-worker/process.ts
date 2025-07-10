@@ -109,7 +109,7 @@ export function process(
     return { sets: [], combos: 0 };
   }
 
-  const setTracker = new SetTracker(10_000);
+  const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
 
   const { activityMods, generalMods } = lockedMods;
 
@@ -417,7 +417,7 @@ export function process(
     }
   }
 
-  const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
+  const finalSets = setTracker.getArmorSets();
 
   const sets = filterMap(finalSets, ({ armor, stats }) => {
     // This only fails if minimum tier requirements cannot be hit, but we know they can because
