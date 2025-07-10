@@ -780,7 +780,7 @@ export function process(
       armor,
       stats,
       desiredStatRanges,
-      tierlessStats,
+      // tierlessStats,
     )!;
 
     const armorOnlyStats: Partial<ArmorStats> = {};

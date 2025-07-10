@@ -3,10 +3,10 @@ import { armorStats } from 'app/search/d2-known-values';
 import { mapValues } from 'app/utils/collections';
 import { emptySet } from 'app/utils/empty';
 import { getTestDefinitions } from 'testing/test-utils';
-import { precalculateStructures } from './process-worker/process-utils';
-import { ProcessMod } from './process-worker/types';
-import { getAutoMods, mapAutoMods } from './process/mappers';
-import { generalSocketReusablePlugSetHash } from './types';
+import { precalculateStructures } from '../process-worker/process-utils';
+import { ProcessMod } from '../process-worker/types';
+import { getAutoMods, mapAutoMods } from '../process/mappers';
+import { generalSocketReusablePlugSetHash } from '../types';
 
 // The tsconfig in the process worker folder messes with tests so they live outside of it.
 describe('process-utils auto mod structure', () => {
@@ -63,7 +63,7 @@ describe('process-utils auto mod structure', () => {
         armorStats,
       );
       const waysOfHittingStat = mapValues(
-        sessionInfo.autoModOptions.statCaches[3].statMap,
+        sessionInfo.autoModOptions.statCaches[3],
         (y) => y?.length,
       );
       // Things to watch out for in the snapshot: Keys are contiguous, values first ascend
