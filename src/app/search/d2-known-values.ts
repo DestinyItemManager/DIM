@@ -20,6 +20,7 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 // GAME MECHANICS KNOWN VALUES
 //
 
+// TODO: Edge of Fate - Tier 5 armor can have 11 energy
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 export const MASTERWORK_ARMOR_STAT_BONUS = 2;
 

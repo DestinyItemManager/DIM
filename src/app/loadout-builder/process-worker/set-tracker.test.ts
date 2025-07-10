@@ -4,8 +4,6 @@ import { ProcessItem } from './types';
 
 const createMockArmor = (id: string, power: number): ProcessItem => ({
   id,
-  hash: 123,
-  name: `Item ${id}`,
   isExotic: false,
   isArtifice: false,
   remainingEnergyCapacity: 10,
