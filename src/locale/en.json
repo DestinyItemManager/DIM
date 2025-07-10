@@ -528,7 +528,7 @@
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
     "ExistingBuildStats": "Existing Build Stats",
-    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stats.",
     "FilterSets": "Filter sets",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
@@ -595,17 +595,17 @@
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stats. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Better Stats Available"
     },
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat to exceed 200. DIM may identify better stats by reducing the amount of excess stats. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
       "Name": "Wrong Exotic"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
-      "Name": "Wrong Stat Tiers"
+      "Description": "Loadout Optimizer settings for this Loadout specify stat minimums, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Minimums"
     },
     "EmptyFragmentSlots": {
       "Description": "There are empty fragment slots in this subclass.",
@@ -628,7 +628,7 @@
       "Name": "Unassigned Mods"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stats.",
       "Name": "Needs Armor Upgrades"
     },
     "NotAFullArmorSet": {
@@ -645,7 +645,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Add +5 Mods",
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
@@ -691,15 +690,15 @@
       "AssumptionsRestricted": "DIM cannot recommend armor energy changes:",
       "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
       "Header": "No builds were found. Here are possible reasons DIM couldn't find any builds:",
-      "LowerBoundsFailed": "Many sets did not meet minimum stat tier requirements",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Consider allowing other items:",
-      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat tier requirements",
-      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat tier requirements",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "MaybeRemoveMods": "Consider removing some mods:",
       "MaybeRemoveSearchQuery": "Consider clearing or changing the filter in the search bar",
       "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
       "RemoveMods": "Remove these mods",
-      "UpperBoundsFailed": "Many sets did not meet maximum stat tier requirements"
+      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements"
     },
     "NoExotic": "No Exotic",
     "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
@@ -713,10 +712,10 @@
     "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Optimizer Set",
     "PinnedItems": "Pinned Items",
-    "ProcessingSets": "Finding highest tier sets...",
+    "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
-    "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
     "StatMin": "Min",
     "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat.",
@@ -792,7 +791,7 @@
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
-    "Generated": "T{{tier}} Loadout",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
     "Import": {
       "BadURL": "Not a valid loadout share URL.",
@@ -812,7 +811,7 @@
     "LoadoutParameters": "Loadout Optimizer settings",
     "LoadoutParametersExotic": "Loadout must include this exotic: {{exoticName}}",
     "LoadoutParametersQuery": "Items must match this search filter",
-    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat tiers",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "Loadouts": "Loadouts",
     "MakeRoom": "Make Room for Postmaster",
     "MakeRoomDone_female_one": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",

@@ -56,7 +56,7 @@ import {
 import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { ReferenceTiers } from './generated-sets/SetStats';
+import { ReferenceConstraints } from './generated-sets/SetStats';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
@@ -692,7 +692,7 @@ function ExistingLoadoutStats({
     <div className={styles.referenceTiersInfo}>
       <div className={styles.header}>
         {t('LB.ExistingBuildStats')}
-        <ReferenceTiers resolvedStatConstraints={statConstraints} />
+        <ReferenceConstraints resolvedStatConstraints={statConstraints} />
       </div>
       {t('LB.ExistingBuildStatsNote')}
       <button

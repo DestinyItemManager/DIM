@@ -43,7 +43,6 @@ export default memo(function GeneratedSet({
   modStatChanges,
   loadouts,
   lbDispatch,
-  halfTierMods,
   armorEnergyRules,
   equippedHashes,
   autoStatMods,
@@ -57,7 +56,6 @@ export default memo(function GeneratedSet({
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
   autoStatMods: boolean;
@@ -186,7 +184,6 @@ export default memo(function GeneratedSet({
           lockedMods={lockedMods}
           store={selectedStore}
           canCompareLoadouts={canCompareLoadouts}
-          halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}
         />
       </div>

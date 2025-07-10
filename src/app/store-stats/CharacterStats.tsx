@@ -9,7 +9,6 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { profileResponseSelector } from 'app/inventory/selectors';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
-import { statTier } from 'app/loadout-builder/utils';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { getSubclassPlugHashes } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
@@ -146,7 +145,7 @@ export function PowerFormula({ storeId }: { storeId: string }) {
  */
 export function CharacterStats({
   stats,
-  showTier,
+  showTotal,
   equippedHashes,
 }: {
   /**
@@ -157,8 +156,8 @@ export function CharacterStats({
   stats: {
     [hash: number]: DimCharacterStat;
   };
-  /** Whether to show the total tier of the set. */
-  showTier?: boolean;
+  /** Whether to show the total stat sum of the set. */
+  showTotal?: boolean;
   /**
    * Item hashes for equipped exotics, used to show more accurate cooldown
    * tooltips.
@@ -170,11 +169,9 @@ export function CharacterStats({
 
   return (
     <div className="stat-row">
-      {showTier && (
+      {showTotal && (
         <div className={clsx(styles.tier, 'stat')}>
-          {t('LoadoutBuilder.TierNumber', {
-            tier: sumBy(statInfos, (s) => statTier(s.value)),
-          })}
+          {t('LoadoutBuilder.StatTotal', { total: sumBy(statInfos, (s) => s.value) })}
         </div>
       )}
       {statInfos.map((stat) => (
@@ -258,5 +255,5 @@ export function LoadoutCharacterStats({
     loadout.parameters?.includeRuntimeStatBenefits ?? true,
   );
 
-  return <CharacterStats showTier stats={stats} equippedHashes={equippedHashes} />;
+  return <CharacterStats showTotal stats={stats} equippedHashes={equippedHashes} />;
 }

@@ -3,10 +3,9 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
-import { sumBy } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { sum } from 'es-toolkit';
 import { ArmorBucketHashes, ArmorSet } from './types';
-import { statTier } from './utils';
 
 /**
  * Create a new loadout from the original prototype loadout, but with the armor
@@ -21,9 +20,8 @@ export function updateLoadoutWithArmorSet(
   lockedMods: PluggableInventoryItemDefinition[],
   loadoutParameters = loadout.parameters,
 ): Loadout {
-  // TODO: Replace Tier with Stat
   const data = {
-    tier: sumBy(Object.values(set.stats), statTier),
+    statTotal: sum(Object.values(set.stats)),
   };
 
   const existingItemsWithoutArmor = loadout.items.filter(

@@ -16,7 +16,7 @@ import {
   ModStatChanges,
   ResolvedStatConstraint,
 } from '../types';
-import { remEuclid, statTier, statTierWithHalf } from '../utils';
+import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats, sumEnabledStatTiers } from './utils';
 
@@ -310,23 +310,22 @@ function TotalStats({ totalStats, enabledStats }: { totalStats: number; enabledS
   );
 }
 
-// TODO: Tierless
-export function ReferenceTiers({
+export function ReferenceConstraints({
   resolvedStatConstraints,
 }: {
   resolvedStatConstraints: ResolvedStatConstraint[];
 }) {
   const defs = useD2Definitions()!;
-  const totalTier = sumBy(resolvedStatConstraints, (c) => statTier(c.minStat));
-  const enabledTier = sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : statTier(c.minStat)));
+  const totalStats = sumBy(resolvedStatConstraints, (c) => c.minStat);
+  const enabledStats = sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : c.minStat));
 
   return (
     <div className={styles.container}>
-      <TotalTier enabledTier={enabledTier} totalTier={totalTier} />
+      <TotalStats enabledStats={enabledStats} totalStats={totalStats} />
       {resolvedStatConstraints.map((c) => {
         const statHash = c.statHash as ArmorStatHashes;
         const statDef = defs.Stat.get(statHash);
-        const tier = statTier(c.minStat);
+        const value = c.minStat;
         return (
           <span
             key={statHash}
@@ -335,11 +334,7 @@ export function ReferenceTiers({
             })}
           >
             <BungieImage className={styles.statIcon} src={statDef.displayProperties.icon} />
-            <span className={styles.tier}>
-              {t('LoadoutBuilder.TierNumber', {
-                tier,
-              })}
-            </span>
+            <span className={styles.tier}>{value}</span>
           </span>
         );
       })}

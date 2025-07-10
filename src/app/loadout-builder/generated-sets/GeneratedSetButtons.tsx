@@ -24,7 +24,6 @@ export default function GeneratedSetButtons({
   items,
   lockedMods,
   canCompareLoadouts,
-  halfTierMods,
   lbDispatch,
 }: {
   originalLoadout: Loadout;
@@ -34,7 +33,6 @@ export default function GeneratedSetButtons({
   items: DimItem[];
   lockedMods: PluggableInventoryItemDefinition[];
   canCompareLoadouts: boolean;
-  halfTierMods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const defs = useD2Definitions()!;
@@ -50,23 +48,6 @@ export default function GeneratedSetButtons({
 
   // Automatically equip items for this generated set to the active store
   const equipItems = () => dispatch(applyLoadout(store, loadout(), { allowUndo: true }));
-
-  const statsWithPlus5: number[] = [];
-
-  for (const [statHash, value] of Object.entries(set.stats)) {
-    if (value % 10 > 4) {
-      statsWithPlus5.push(parseInt(statHash, 10));
-    }
-  }
-
-  const onQuickAddHalfTierMods = () => {
-    // Note that half tier mods are already sorted in our desired stat order so we just keep their ordering.
-    const mods = halfTierMods.filter((mod) =>
-      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash)),
-    );
-
-    lbDispatch({ type: 'addGeneralMods', mods });
-  };
 
   return (
     <div className={styles.buttons}>
@@ -85,11 +66,6 @@ export default function GeneratedSetButtons({
       <button type="button" className="dim-button" onClick={equipItems}>
         {t('LoadoutBuilder.EquipItems', { name: store.name })}
       </button>
-      {Boolean(statsWithPlus5.length) && Boolean(halfTierMods.length) && (
-        <button type="button" className="dim-button" onClick={onQuickAddHalfTierMods}>
-          {t('LoadoutBuilder.AddHalfTierMods')}
-        </button>
-      )}
     </div>
   );
 }

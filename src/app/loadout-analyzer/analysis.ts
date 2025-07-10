@@ -215,11 +215,13 @@ export async function analyzeLoadout(
         includeRuntimeStatBenefits,
       );
       const assumedLoadoutStats = statProblems.stats;
-      // If Font mods cause a loadout stats to exceed T10, note this for later
+      // If Font mods cause a loadout stats to exceed MAX_STAT, note this for later
       if (
         Object.values(assumedLoadoutStats).some(
           (stat) =>
-            stat && stat.value >= 110 && stat.breakdown!.some((c) => c.source === 'runtimeEffect'),
+            stat &&
+            stat.value >= MAX_STAT &&
+            stat.breakdown!.some((c) => c.source === 'runtimeEffect'),
         )
       ) {
         betterStatsAvailableFontNote = true;
