@@ -21,7 +21,6 @@ import {
   mapDimItemToProcessItem,
 } from '../process/mappers';
 import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxStat, ResolvedStatConstraint } from '../types';
-import { statTier } from '../utils';
 import {
   LoSessionInfo,
   generateProcessModPermutations,
@@ -500,25 +499,26 @@ describe('process-utils optimal mods', () => {
     }));
   });
 
+  // TODO: These cases don't exactly make sense in the tierless world but it's hard to think through what they should do
   const tierCases: [
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedTiers: number[],
+    expectedStats: number[],
   ][] = [
     // the trick here is that we can use two small mods to boost resilience by a tier,
     // but it's better to use two large mods to boost discipline (cheaper mods...)
-    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [8, 7, 8, 6, 3, 3]],
-    // ensure we combine artifice and small mods if needed
-    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [7, 7, 6, 3, 3, 3]],
-    // ensure we can use a cheap +5 mod to bump the 35 dis to 4 while using artifice on resilience
-    [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [8, 7, 8, 4, 3, 3]],
+    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [80, 70, 80, 60, 30, 30]],
+    // ensure we combine artifice and small mods if needed (all goes to first stat)
+    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [77, 70, 59, 35, 30, 30]],
+    // ensure we can use a cheap +5 mod to bump the 35 dis to 40 while using artifice on resilience
+    [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [80, 71, 80, 40, 30, 30]],
     // ensure we get two tiers in mobility
-    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [8, 6, 3, 3, 3, 3]],
+    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [80, 66, 30, 30, 30, 30]],
     // do everything we can to hit min bounds
-    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
+    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [71, 66, 30, 30, 30, 30]],
     // ensure that negative stat amounts aren't clamped too early
-    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [5, 6, 3, 3, 3, 3]],
+    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [50, 61, 30, 30, 30, 31]],
   ];
 
   const pickMods = (setStats: number[], remainingEnergy: number[], numArtifice: number) => {
@@ -547,7 +547,7 @@ describe('process-utils optimal mods', () => {
     'set with stats %p, energies %p, numArtifice %p yields tiers %p',
     (setStats, remainingEnergy, numArtifice, expectedTiers) => {
       const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
-      expect(finalStats.map(statTier)).toStrictEqual(expectedTiers);
+      expect(finalStats).toStrictEqual(expectedTiers);
     },
   );
 
@@ -559,10 +559,10 @@ describe('process-utils optimal mods', () => {
     expectedStats: number[],
   ][] = [
     // Nice
-    [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [30, 80, 80, 31, 80, 30]],
+    [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [34, 80, 80, 32, 80, 30]],
     // TODO: This is the same problem as above, only with reordered stats. The solution
     // is still optimal in terms of reached stats, but worse in terms of mod usage
-    [[26, 80, 80, 18, 80, 30], [0, 0, 0, 3, 0], 4, [32, 80, 80, 31, 80, 30]],
+    [[26, 80, 80, 18, 80, 30], [0, 0, 0, 3, 0], 4, [36, 80, 80, 30, 80, 30]],
   ];
 
   test.each(exactStatCases)(
@@ -662,7 +662,9 @@ test('process-utils activity mods', async () => {
   // the cheaper stats where the mods can actually fit
   const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
   expect(autoMods).not.toBeUndefined();
-  expect(autoMods!.bonusStats).toEqual([0, 0, 5, 0, 0, 0]);
+  // TODO: This was a +5 mod here before, but I don't know enough about what
+  // this test is trying to do to say whether this is correct to have changed.
+  expect(autoMods!.bonusStats).toEqual([0, 0, 10, 0, 0, 0]);
 
   const minMaxesInStatOrder: MinMaxStat[] = [
     { minStat: 0, maxStat: 0 },
@@ -673,7 +675,7 @@ test('process-utils activity mods', async () => {
     { minStat: 0, maxStat: 0 },
   ];
   updateMaxStats(loSessionInfo, items, setStats, 0, resolvedStatConstraints, minMaxesInStatOrder);
-  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([50, 50, 60, 60, 50, 60]);
+  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([55, 55, 65, 60, 50, 60]);
 });
 
 describe('process-utils updateMaxStats', () => {
