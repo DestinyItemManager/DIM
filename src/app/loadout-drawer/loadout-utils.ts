@@ -7,7 +7,7 @@ import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { ArmorEnergyRules, LockableBucketHashes } from 'app/loadout-builder/types';
+import { ArmorBucketHashes, ArmorEnergyRules } from 'app/loadout-builder/types';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
@@ -749,7 +749,7 @@ export function isFashionOnly(defs: D2ManifestDefinitions, loadout: Loadout): bo
 
   for (const bucketHash in loadout.parameters.modsByBucket) {
     // if this is mods for a non-armor bucket
-    if (!LockableBucketHashes.includes(Number(bucketHash))) {
+    if (!ArmorBucketHashes.includes(Number(bucketHash))) {
       return false;
     }
     const modsForThisArmorSlot = loadout.parameters.modsByBucket[bucketHash];
@@ -778,7 +778,7 @@ export function isArmorModsOnly(defs: D2ManifestDefinitions, loadout: Loadout): 
   if (loadout.parameters?.modsByBucket) {
     for (const bucketHash in loadout.parameters.modsByBucket) {
       // if this is mods for a non-armor bucket
-      if (!LockableBucketHashes.includes(Number(bucketHash))) {
+      if (!ArmorBucketHashes.includes(Number(bucketHash))) {
         return false;
       }
       const modsForThisArmorSlot = loadout.parameters.modsByBucket[bucketHash];

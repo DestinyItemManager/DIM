@@ -63,9 +63,9 @@ import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
 import { useProcess } from './process/useProcess';
 import {
+  ArmorBucketHashes,
   ArmorEnergyRules,
   LOCKED_EXOTIC_ANY_EXOTIC,
-  LockableBucketHashes,
   ResolvedStatConstraint,
   loDefaultArmorEnergyRules,
 } from './types';
@@ -282,7 +282,7 @@ export default memo(function LoadoutBuilder({
             isLoadoutBuilderItem(item) &&
             itemCanBeEquippedBy(item, selectedStore, true) &&
             (!filter || filter(item)),
-          sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
+          sortBy: (item) => ArmorBucketHashes.indexOf(item.bucket.hash),
         });
 
         if (item) {

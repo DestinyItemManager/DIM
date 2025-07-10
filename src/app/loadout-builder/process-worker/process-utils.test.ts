@@ -21,16 +21,16 @@ import {
   pickOptimalStatMods,
   precalculateStructures,
   updateMaxTiers,
-} from './process-worker/process-utils';
-import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
+} from '../process-worker/process-utils';
+import { ModAssignmentStatistics, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
   getAutoMods,
   mapArmor2ModToProcessMod,
   mapAutoMods,
   mapDimItemToProcessItem,
-} from './process/mappers';
-import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxTier, ResolvedStatConstraint } from './types';
-import { statTier } from './utils';
+} from '../process/mappers';
+import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxTier, ResolvedStatConstraint } from '../types';
+import { statTier } from '../utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
 const modStatistics: ModAssignmentStatistics = {
@@ -93,7 +93,6 @@ function modifyItem({
   return newItem;
 }
 
-// The tsconfig in the process worker folder messes with tests so they live outside of it.
 describe('process-utils mod assignment', () => {
   let generalMod: ProcessMod;
   let activityMod: ProcessMod;

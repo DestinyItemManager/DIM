@@ -11,7 +11,7 @@ import { objectValues } from 'app/utils/util-types';
 import React, { Dispatch, memo, useCallback } from 'react';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
+import { ArmorBucketHashes, ExcludedItems, PinnedItems } from '../types';
 import styles from './LoadoutOptimizerMenuItems.m.scss';
 import LockedItem from './LockedItem';
 
@@ -63,7 +63,7 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
   );
 
   const allPinnedItems = compact(objectValues(pinnedItems)).sort(
-    compareByIndex(LockableBucketHashes, (i) => i.bucket.hash),
+    compareByIndex(ArmorBucketHashes, (i) => i.bucket.hash),
   );
 
   return (
@@ -108,7 +108,7 @@ export const LoadoutOptimizerExcludedItems = memo(function LoadoutOptimizerExclu
 
   const allExcludedItems = compact(objectValues(excludedItems))
     .flat()
-    .sort(compareByIndex(LockableBucketHashes, (i) => i.bucket.hash));
+    .sort(compareByIndex(ArmorBucketHashes, (i) => i.bucket.hash));
 
   const clear = () => lbDispatch({ type: 'clearExcludedItems' });
   return (

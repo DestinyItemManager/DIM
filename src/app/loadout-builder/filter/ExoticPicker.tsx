@@ -23,7 +23,7 @@ import noExoticIcon from 'images/noExotic.svg';
 import noExoticPreferenceIcon from 'images/noExoticPreference.svg';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC, LockableBucketHashes } from '../types';
+import { ArmorBucketHashes, LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
@@ -40,7 +40,7 @@ export function findLockableExotics(
   const exotics = uniqBy(
     [...allItems, ...vendorItems]
       .filter((item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item))
-      .sort(compareByIndex(LockableBucketHashes, (item) => item.bucket.hash)),
+      .sort(compareByIndex(ArmorBucketHashes, (item) => item.bucket.hash)),
     (item) => item.hash,
   );
 

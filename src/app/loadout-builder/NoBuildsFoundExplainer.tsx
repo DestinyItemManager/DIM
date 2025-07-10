@@ -16,7 +16,7 @@ import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
 import { ProcessStatistics, RejectionRate } from './process-worker/types';
-import { ArmorEnergyRules, LockableBucketHashes, PinnedItems } from './types';
+import { ArmorBucketHashes, ArmorEnergyRules, PinnedItems } from './types';
 
 interface ActionableSuggestion {
   id: string;
@@ -136,7 +136,7 @@ export default function NoBuildsFoundExplainer({
       lockedExoticHash !== undefined &&
       lockedExoticHash > 0 &&
       defs.InventoryItem.get(lockedExoticHash).inventory!.bucketTypeHash;
-    for (const bucketHash of LockableBucketHashes) {
+    for (const bucketHash of ArmorBucketHashes) {
       const bucketInfo = filterInfo.perBucketStats[bucketHash];
       const bucketMods = lockedModMap.bucketSpecificMods[bucketHash];
       if (bucketInfo.totalConsidered > 0 && bucketInfo.finalValid === 0 && bucketMods?.length) {
@@ -260,7 +260,7 @@ export default function NoBuildsFoundExplainer({
       });
     }
 
-    const allPinnedItems = filterMap(LockableBucketHashes, (hash) => pinnedItems[hash]);
+    const allPinnedItems = filterMap(ArmorBucketHashes, (hash) => pinnedItems[hash]);
     let usedUnpinSuggestion = false;
     const unpinItemsSuggestion = () => {
       if (usedUnpinSuggestion) {

@@ -14,12 +14,12 @@ import { elementalChargeModHash, stacksOnStacksModHash } from 'testing/test-item
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { FilterInfo, filterItems } from './item-filter';
 import {
+  ArmorBucketHash,
+  ArmorBucketHashes,
   ArmorEnergyRules,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
   LOCKED_EXOTIC_NO_EXOTIC,
-  LockableBucketHash,
-  LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
 
@@ -67,7 +67,7 @@ describe('loadout-builder item-filter', () => {
 
   function noPinInvariants(filteredItems: ItemsByBucket, filterInfo: FilterInfo) {
     let numItems = 0;
-    for (const bucketHash of LockableBucketHashes) {
+    for (const bucketHash of ArmorBucketHashes) {
       const originalItems = items.filter((i) => i.bucket.hash === bucketHash);
       const originalNum = originalItems.length;
       const filteredNum = filteredItems[bucketHash].length;
@@ -84,7 +84,7 @@ describe('loadout-builder item-filter', () => {
   }
 
   function pinInvariants(filteredItems: ItemsByBucket, filterInfo: FilterInfo) {
-    for (const bucketHash of LockableBucketHashes) {
+    for (const bucketHash of ArmorBucketHashes) {
       const filteredNum = filteredItems[bucketHash].length;
       const removedNum =
         filterInfo.perBucketStats[bucketHash].cantFitMods +
@@ -137,7 +137,7 @@ describe('loadout-builder item-filter', () => {
         armorEnergyRules: rules,
       });
       noPinInvariants(filteredItems, filterInfo);
-      for (const bucketHash of LockableBucketHashes) {
+      for (const bucketHash of ArmorBucketHashes) {
         const removedNum = filterInfo.perBucketStats[bucketHash].cantFitMods;
 
         if (bucketHash === BucketHashes.LegArmor) {
@@ -245,7 +245,7 @@ describe('loadout-builder item-filter', () => {
     });
 
     pinInvariants(filteredItems, filterInfo);
-    for (const bucketHash of LockableBucketHashes) {
+    for (const bucketHash of ArmorBucketHashes) {
       if (bucketHash === targetExotic.bucket.hash) {
         for (const item of filteredItems[bucketHash]) {
           expect(item.hash).toBe(targetExotic.hash);
@@ -322,6 +322,6 @@ describe('loadout-builder item-filter', () => {
     });
 
     pinInvariants(filteredItems, filterInfo);
-    expect(filteredItems[exotic.bucket.hash as LockableBucketHash].length).toBe(0);
+    expect(filteredItems[exotic.bucket.hash as ArmorBucketHash].length).toBe(0);
   });
 });

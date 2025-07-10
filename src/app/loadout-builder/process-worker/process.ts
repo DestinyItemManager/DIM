@@ -1,11 +1,11 @@
 import { filterMap } from 'app/utils/collections';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { infoLog } from '../../utils/log';
 import {
+  ArmorBucketHashes,
   ArmorStatHashes,
   ArmorStats,
   DesiredStatRange,
-  LockableBucketHashes,
-  LockableBuckets,
   StatRanges,
   artificeStatBoost,
   majorStatBoost,
@@ -77,7 +77,7 @@ export function process(
   const statsCacheInStatOrder = new Map<ProcessItem, number[]>();
 
   // Precompute the stats of each item in stat order
-  for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
+  for (const item of ArmorBucketHashes.flatMap((h) => filteredItems[h])) {
     statsCacheInStatOrder.set(
       item,
       statOrder.map((statHash) => Math.max(item.stats[statHash], 0)),
@@ -86,11 +86,11 @@ export function process(
 
   // Each of these groups has already been reduced (in useProcess.ts) to the
   // minimum number of examples that are worth considering.
-  const helms = filteredItems[LockableBuckets.helmet];
-  const gauntlets = filteredItems[LockableBuckets.gauntlets];
-  const chests = filteredItems[LockableBuckets.chest];
-  const legs = filteredItems[LockableBuckets.leg];
-  const classItems = filteredItems[LockableBuckets.classitem];
+  const helms = filteredItems[BucketHashes.Helmet];
+  const gauntlets = filteredItems[BucketHashes.Gauntlets];
+  const chests = filteredItems[BucketHashes.ChestArmor];
+  const legs = filteredItems[BucketHashes.LegArmor];
+  const classItems = filteredItems[BucketHashes.ClassArmor];
 
   // The maximum possible combos we could have
   const combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
@@ -109,7 +109,7 @@ export function process(
     return { sets: [], combos: 0 };
   }
 
-  const setTracker = new SetTracker(10_000);
+  const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
 
   const { activityMods, generalMods } = lockedMods;
 
@@ -417,7 +417,7 @@ export function process(
     }
   }
 
-  const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
+  const finalSets = setTracker.getArmorSets();
 
   const sets = filterMap(finalSets, ({ armor, stats }) => {
     // This only fails if minimum tier requirements cannot be hit, but we know they can because

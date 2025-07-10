@@ -7,7 +7,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
-import { LockableBucketHashes, ResolvedStatConstraint } from 'app/loadout-builder/types';
+import { ArmorBucketHashes, ResolvedStatConstraint } from 'app/loadout-builder/types';
 import {
   clearBucketCategory,
   setLoadoutParameters,
@@ -160,7 +160,7 @@ function ItemBucket({
 }) {
   const [equipped, unequipped] = partition(items, (li) => li.loadoutItem.equip);
 
-  const showFashion = LockableBucketHashes.includes(bucketHash);
+  const showFashion = ArmorBucketHashes.includes(bucketHash);
 
   // TODO: should these be draggable? so you can drag them into other loadouts?
 

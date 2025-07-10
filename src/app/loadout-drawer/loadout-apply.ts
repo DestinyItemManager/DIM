@@ -32,7 +32,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { LockableBucketHashes, inGameArmorEnergyRules } from 'app/loadout-builder/types';
+import { ArmorBucketHashes, inGameArmorEnergyRules } from 'app/loadout-builder/types';
 import { updateAfterInGameLoadoutApply } from 'app/loadout/ingame/ingame-loadout-apply';
 import {
   createPluggingStrategy,
@@ -1140,7 +1140,7 @@ function applyLoadoutMods(
       }
     }
     const armor = filterMap(
-      LockableBucketHashes,
+      ArmorBucketHashes,
       (bucketHash) =>
         loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
         currentEquippedArmor.find((item) => item.bucket.hash === bucketHash),

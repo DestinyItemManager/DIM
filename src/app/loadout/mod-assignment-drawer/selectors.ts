@@ -7,7 +7,7 @@ import {
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
+import { ArmorBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
@@ -70,7 +70,7 @@ export function useEquippedLoadoutArmorAndSubclass(
 
           const subclass = loadoutItemsByBucket[BucketHashes.Subclass];
           const armor = filterMap(
-            LockableBucketHashes,
+            ArmorBucketHashes,
             (bucketHash) =>
               loadoutItemsByBucket[bucketHash]?.item ??
               currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash),

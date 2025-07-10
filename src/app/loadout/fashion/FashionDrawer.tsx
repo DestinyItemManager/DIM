@@ -9,7 +9,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
+import { ArmorBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
@@ -57,7 +57,7 @@ export default function FashionDrawer({
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
   const allItems = useSelector(allItemsSelector);
   const armor = items.filter(
-    (li) => li.loadoutItem.equip && LockableBucketHashes.includes(li.item.bucket.hash),
+    (li) => li.loadoutItem.equip && ArmorBucketHashes.includes(li.item.bucket.hash),
   );
 
   const classType = loadout.classType;
@@ -70,7 +70,7 @@ export default function FashionDrawer({
   // The items we'll use to determine what sockets are available on each item. Either the equipped item from
   // the loadout, or a suitable "example" item from inventory.
   const exampleItemsByBucketHash = Object.fromEntries(
-    LockableBucketHashes.map((bucketHash) => {
+    ArmorBucketHashes.map((bucketHash) => {
       const looksFashionable = (i: DimItem) =>
         i.bucket.hash === bucketHash && i.power && i.energy && i.classType === classType;
       const getFashionSockets = (i: DimItem) =>
@@ -152,7 +152,7 @@ export default function FashionDrawer({
 
   const handleUseEquipped = () => {
     const newModsByBucket = Object.fromEntries(
-      LockableBucketHashes.map((bucketHash) => {
+      ArmorBucketHashes.map((bucketHash) => {
         // Either the item that's in the loadout, or whatever's equipped
         const item =
           armorItemsByBucketHash[bucketHash]?.item ??
@@ -186,7 +186,7 @@ export default function FashionDrawer({
 
     setModsByBucket((modsByBucket) =>
       Object.fromEntries(
-        LockableBucketHashes.map((bucketHash) => [
+        ArmorBucketHashes.map((bucketHash) => [
           bucketHash,
           [...(modsByBucket[bucketHash] ?? []).filter((h) => !isShader(h)), mostCommonShaders[0]],
         ]),
@@ -205,7 +205,7 @@ export default function FashionDrawer({
     if (ornaments.every((h) => DEFAULT_ORNAMENTS.includes(h))) {
       setModsByBucket((modsByBucket) =>
         Object.fromEntries(
-          LockableBucketHashes.map((bucketHash) => [
+          ArmorBucketHashes.map((bucketHash) => [
             bucketHash,
             [...(modsByBucket[bucketHash] ?? []).filter((h) => isShader(h)), ornaments[0]],
           ]),
@@ -245,7 +245,7 @@ export default function FashionDrawer({
 
     setModsByBucket((modsByBucket) =>
       Object.fromEntries(
-        LockableBucketHashes.map((bucketHash, i) => {
+        ArmorBucketHashes.map((bucketHash, i) => {
           let ornamentHash = set[i];
 
           // if we picked a parent node that doesn't point to ornaments,
@@ -367,7 +367,7 @@ export default function FashionDrawer({
     <Sheet onClose={onClose} header={header} footer={footer} sheetClassName={styles.sheet}>
       <div className={styles.items}>
         {!isPhonePortrait && <div className={styles.verticalButtons}>{leftButtons}</div>}
-        {LockableBucketHashes.map((bucketHash) => (
+        {ArmorBucketHashes.map((bucketHash) => (
           <FashionItem
             key={bucketHash}
             bucketHash={bucketHash}
