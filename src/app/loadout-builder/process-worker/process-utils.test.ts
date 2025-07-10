@@ -29,7 +29,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from '../process/mappers';
-import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxTier, ResolvedStatConstraint } from '../types';
+import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxStat, ResolvedStatConstraint } from '../types';
 import { statTier } from '../utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
@@ -664,13 +664,13 @@ test('process-utils activity mods', async () => {
   expect(autoMods).not.toBeUndefined();
   expect(autoMods!.bonusStats).toEqual([0, 0, 5, 0, 0, 0]);
 
-  const minMaxesInStatOrder: MinMaxTier[] = [
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
+  const minMaxesInStatOrder: MinMaxStat[] = [
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
   ];
   updateMaxTiers(
     loSessionInfo,
@@ -681,7 +681,7 @@ test('process-utils activity mods', async () => {
     resolvedStatConstraints,
     minMaxesInStatOrder,
   );
-  expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([5, 5, 6, 6, 5, 6]);
+  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([50, 50, 60, 60, 50, 60]);
 });
 
 describe('process-utils general mod assignment', () => {

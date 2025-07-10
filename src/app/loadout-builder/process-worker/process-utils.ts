@@ -1,6 +1,6 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import { ArmorStatHashes, DesiredStatRange, MinMaxTier } from '../types';
+import { ArmorStatHashes, DesiredStatRange, MinMaxStat } from '../types';
 import { statTier } from '../utils';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
@@ -118,7 +118,7 @@ export function updateMaxTiers(
   /** Total number of available artifice mods, */
   numArtificeMods: number,
   statFiltersInStatOrder: readonly DesiredStatRange[],
-  minMaxesInStatOrder: MinMaxTier[], // mutated
+  minMaxesInStatOrder: MinMaxStat[], // mutated
 ): boolean {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info.activityModPermutations,
@@ -135,15 +135,15 @@ export function updateMaxTiers(
     const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    if (minMax.maxTier < statTier(filter.minStat)) {
+    if (minMax.maxStat < filter.minStat) {
       // This is only called with sets that satisfy stat constraints,
       // so optimistically bump these up
-      minMax.maxTier = statTier(filter.minStat);
+      minMax.maxStat = filter.minStat;
     }
     const tier = setTiers[statIndex];
-    if (tier > minMax.maxTier) {
+    if (tier > statTier(minMax.maxStat)) {
       foundAnyImprovement ||= filter.minStat < filter.maxStat;
-      minMax.maxTier = tier;
+      minMax.maxStat = tier * 10;
     }
     const neededValue = filter.minStat - value;
     if (neededValue > 0) {
@@ -158,7 +158,7 @@ export function updateMaxTiers(
     const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    if (minMax.maxTier >= 10) {
+    if (minMax.maxStat >= 100) {
       // We can already hit T10 for this stat, so skip it.
       continue;
     }
@@ -168,9 +168,9 @@ export function updateMaxTiers(
     // stat we start from the highest tier we've observed.
     const explorationStats = requiredMinimumExtraStats.slice();
     // Since we've updated maxStat above, this cannot be negative.
-    explorationStats[statIndex] = minMax.maxTier * 10 - value;
+    explorationStats[statIndex] = minMax.maxStat - value;
 
-    while (minMax.maxTier < 10) {
+    while (minMax.maxStat < 100) {
       // This calculates how many *more* points we need to add to the stat to
       // get to the next tier.
       const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 : 10 - (value % 10);
@@ -188,7 +188,7 @@ export function updateMaxTiers(
         // ignored due to max.
         foundAnyImprovement ||=
           filter.minStat < filter.maxStat && tierVal > statTier(filter.minStat);
-        minMax.maxTier = tierVal;
+        minMax.maxStat = tierVal * 10;
       } else {
         break;
       }
