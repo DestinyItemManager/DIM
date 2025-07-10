@@ -29,7 +29,6 @@ import {
   pickOptimalStatMods,
   precalculateStructures,
   updateMaxStats,
-  updateMaxTiers,
 } from './process-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
@@ -673,15 +672,7 @@ test('process-utils activity mods', async () => {
     { minStat: 0, maxStat: 0 },
     { minStat: 0, maxStat: 0 },
   ];
-  updateMaxTiers(
-    loSessionInfo,
-    items,
-    setStats,
-    setStats.map(statTier),
-    0,
-    resolvedStatConstraints,
-    minMaxesInStatOrder,
-  );
+  updateMaxStats(loSessionInfo, items, setStats, 0, resolvedStatConstraints, minMaxesInStatOrder);
   expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([50, 50, 60, 60, 50, 60]);
 });
 
@@ -778,106 +769,6 @@ describe('process-utils updateMaxStats', () => {
       );
 
       expect(foundAnyImprovement).toBe(expectedResult);
-      expect(minMaxes[0].maxStat).toBe(expectedFirstMaxStat);
-    },
-  );
-});
-
-describe('process-utils updateMaxTiers', () => {
-  let items: ProcessItem[];
-  let loSessionInfo: LoSessionInfo;
-
-  beforeAll(async () => {
-    const defs = await getTestDefinitions();
-    items = Array(5)
-      .fill(null)
-      .map((_, i) => ({
-        hash: i,
-        id: i.toString(),
-        isArtifice: false,
-        isExotic: false,
-        name: `Item ${i}`,
-        power: 1500,
-        stats: [0, 0, 0, 0, 0, 0],
-        compatibleModSeasons: [],
-        remainingEnergyCapacity: 10,
-      }));
-
-    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
-    loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
-  });
-
-  const updateMaxTiersCases: [
-    description: string,
-    setStats: number[],
-    initialMinMaxes: { minStat: number; maxStat: number }[],
-    filterMinStat: number,
-    filterMaxStat: number | ((i: number) => number),
-    expectedResult: boolean,
-    expectedFirstMaxStat: number,
-  ][] = [
-    [
-      'updates maxStat when minMax.maxStat < filter.minStat',
-      [50, 50, 50, 50, 50, 50],
-      Array(6).fill({ minStat: 0, maxStat: 55 }), // Lower than minStat
-      60, // Higher than current maxStat
-      100,
-      false, // foundAnyImprovement is false when only updating to minStat requirement
-      60,
-    ],
-    [
-      'handles tier > statTier(minMax.maxStat) condition',
-      [85, 50, 50, 50, 50, 50], // 85 = tier 8
-      Array(6)
-        .fill(null)
-        .map((_, i) => ({ minStat: 0, maxStat: i === 0 ? 70 : 50 })), // First stat maxStat is 70 (tier 7)
-      30,
-      (i: number) => (i === 0 ? 100 : 70), // First stat allows improvement
-      true,
-      100, // Can reach T10 with available mods
-    ],
-    [
-      'skips stat max already at T10',
-      [50, 50, 50, 50, 50, 50],
-      Array(6)
-        .fill(null)
-        .map((_, i) => ({ minStat: 0, maxStat: i === 0 ? 100 : 50 })), // First stat already at T10
-      30,
-      100,
-      true,
-      100, // Should remain unchanged
-    ],
-  ];
-
-  test.each(updateMaxTiersCases)(
-    '%s',
-    (
-      _description,
-      setStats,
-      minMaxes,
-      filterMinStat,
-      filterMaxStat,
-      expectedResult,
-      expectedFirstMaxStat,
-    ) => {
-      const setTiers = setStats.map(statTier);
-      const statFilters = armorStats.map((statHash, i) => ({
-        statHash,
-        minStat: filterMinStat,
-        maxStat: typeof filterMaxStat === 'function' ? filterMaxStat(i) : filterMaxStat,
-      }));
-
-      const result = updateMaxTiers(
-        loSessionInfo,
-        items,
-        setStats,
-        setTiers,
-        0,
-        statFilters,
-        minMaxes,
-      );
-
-      expect(result).toBe(expectedResult);
       expect(minMaxes[0].maxStat).toBe(expectedFirstMaxStat);
     },
   );
