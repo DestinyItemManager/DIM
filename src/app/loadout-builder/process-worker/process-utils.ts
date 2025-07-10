@@ -177,11 +177,6 @@ export function updateMaxTiers(
     while (minMax.maxStat < 100) {
       // This calculates how many *more* points we need to add to the stat to
       // get to the next tier.
-      //
-      // TODO: This feels backwards to me - if you're already at the max, which
-      // is what it would mean if explorationStats[statIndex] === 0, then the
-      // next tier is 10 points away, while if you're some amount below the max,
-      // then the next tier is 10 - (value % 10) points away.
       const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 : 10 - (value % 10);
       explorationStats[statIndex] += pointsToNextTier;
       const picks = chooseAutoMods(

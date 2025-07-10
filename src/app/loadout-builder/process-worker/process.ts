@@ -60,13 +60,6 @@ export function process(
 ): ProcessResult {
   const pstart = performance.now();
 
-  if (tierlessStats) {
-    infoLog(
-      'loadout optimizer',
-      'Tierless stats are not supported in the worker, falling back to tiered stats',
-    );
-  }
-
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.
   const statOrder = desiredStatRanges.map(({ statHash }) => statHash as ArmorStatHashes);
   // The maximum stat constraints for each stat
@@ -159,19 +152,19 @@ export function process(
     const helmStats = statsCache.get(helm)!;
     for (const gaunt of gauntlets) {
       const gauntletExotic = Number(gaunt.isExotic);
-      const gauntArtifice = Number(helm.isArtifice);
+      const gauntArtifice = Number(gaunt.isArtifice);
       const gauntStats = statsCache.get(gaunt)!;
       for (const chest of chests) {
         const chestExotic = Number(chest.isExotic);
-        const chestArtifice = Number(helm.isArtifice);
+        const chestArtifice = Number(chest.isArtifice);
         const chestStats = statsCache.get(chest)!;
         for (const leg of legs) {
           const legExotic = Number(leg.isExotic);
-          const legArtifice = Number(helm.isArtifice);
+          const legArtifice = Number(leg.isArtifice);
           const legStats = statsCache.get(leg)!;
           for (const classItem of classItems) {
             const classItemExotic = Number(classItem.isExotic);
-            const classItemArtifice = Number(helm.isArtifice);
+            const classItemArtifice = Number(classItem.isArtifice);
             const classItemStats = statsCache.get(classItem)!;
 
             const exoticSum =
@@ -188,9 +181,11 @@ export function process(
             processStatistics.numProcessed++;
 
             // Sum up the stats of each piece to form the overall set stats.
-            // Note that mod stats can take these negative. Note: JavaScript
-            // engines apparently don't unroll loops automatically and this
-            // makes a big difference in speed.
+            // Note that mod stats could theoretically take these negative, but
+            // none do in practice.
+            //
+            // Note: JavaScript engines apparently don't unroll loops
+            // automatically and this makes a big difference in speed.
             const stats = [
               modStatsInStatOrder[0] +
                 helmStats[0] +
@@ -364,7 +359,6 @@ export function process(
               if (numArtificeModsUsed <= artificeModsAvailable) {
                 // Bump up the tier for this stat
                 tiers[stat.index] += 1;
-                // TODO: why not just bump totalTier here too?
                 artificeModsAvailable -= numArtificeModsUsed;
                 return numTiers + 1;
               }
@@ -434,11 +428,11 @@ export function process(
     // This only fails if minimum tier requirements cannot be hit, but we know
     // they can because we ensured it internally.
     //
-    // TODO: OK so this is maybe where we exhaustively search for the *best*
-    // stat mods, not just the minimum required to hit the stat minimums. But
-    // this also means that our optimistic prediction that we used to add to the
-    // set tracker could end up smaller than what we predicted? That also makes
-    // me think this could be out of order...
+    // TODO: This is where we exhaustively search for the *best* stat mods, not
+    // just the minimum required to hit the stat minimums. But this also means
+    // that our optimistic prediction that we used when adding to the set
+    // tracker could end up smaller than what we predicted? That also makes me
+    // think this could be out of order...
     const { mods, bonusStats } = pickOptimalStatMods(
       precalculatedInfo,
       armor,
