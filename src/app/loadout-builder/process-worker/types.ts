@@ -11,13 +11,21 @@ export interface ProcessResult {
   processInfo?: ProcessStatistics;
 }
 
+/**
+ * The minimum information about an item that is needed to consider it when
+ * processing optimal sets. This is calculated from the full item before being
+ * passed into the process worker.
+ */
 export interface ProcessItem {
   id: string;
-  hash: number;
-  name: string;
+  hash?: number; // Included for debugging purposes, not used in processing
+  name?: string; // Included for debugging purposes, not used in processing
   isExotic: boolean;
   isArtifice: boolean;
-  /** The remaining assumed energy capacity for this item, after assigning slot-specific mods */
+  /**
+   * The remaining energy capacity for this item, after assuming energy upgrades
+   * and assigning slot-specific mods. This can be spent on stat mods.
+   */
   remainingEnergyCapacity: number;
   power: number;
   stats: { [statHash: number]: number };
@@ -55,7 +63,10 @@ export interface ProcessMod {
 }
 
 /**
- * Data describing the mods that can be automatically picked.
+ * Data describing the mods that can be automatically picked. This takes into
+ * account the fact that stat mods for different stats cost different amounts of
+ * energy - and sometimes there are even discounted versions that can be
+ * unlocked.
  */
 export interface AutoModData {
   generalMods: {
