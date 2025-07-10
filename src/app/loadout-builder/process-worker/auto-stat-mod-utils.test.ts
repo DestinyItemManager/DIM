@@ -63,7 +63,7 @@ describe('process-utils auto mod structure', () => {
         armorStats,
       );
       const waysOfHittingStat = mapValues(
-        sessionInfo.autoModOptions.statCaches[3].statMap,
+        sessionInfo.autoModOptions.statCaches[3],
         (y) => y?.length,
       );
       // Things to watch out for in the snapshot: Keys are contiguous, values first ascend

@@ -1,4 +1,5 @@
 import { compareBy } from 'app/utils/comparators';
+import { objectValues } from 'app/utils/util-types';
 import { ArmorStatHashes, artificeStatBoost, majorStatBoost, minorStatBoost } from '../types';
 import { LoSessionInfo } from './process-utils';
 import { AutoModData } from './types';
@@ -12,8 +13,10 @@ export interface ModsPick {
   /** The number of general mods this pick contains. */
   numGeneralMods: number;
   /** The cost of the general mods this pick contains, sorted descending. */
+  // TODO: Could be left out and calculated on-demand from AutoModData.generalMods
   generalModsCosts: number[];
   /** General + artifice mod hashes */
+  // TODO: Could be left out and calculated on-demand from AutoModData.generalMods
   modHashes: number[];
   /** Sum of generalModCosts */
   modEnergyCost: number;
@@ -24,12 +27,10 @@ export interface ModsPick {
 }
 
 /**
- * Precalculated ways of hitting all possible stat values for a single stat.
+ * Precalculated ways of hitting all possible stat boost values for a single stat.
  */
 interface CacheForStat {
-  statMap: {
-    [targetStat: number]: ModsPick[] | undefined;
-  };
+  [targetStatValue: number]: ModsPick[] | undefined;
 }
 
 /**
@@ -48,8 +49,8 @@ export interface AutoModsMap {
 }
 
 /**
- * Pick auto mods (general mods and artifice mods)
- * that satisfy the given `neededStats` in `statOrder`.
+ * Pick auto mods (general mods and artifice mods) that provide at least the
+ * given `neededStats` in `statOrder`.
  */
 export function chooseAutoMods(
   info: LoSessionInfo,
@@ -57,9 +58,10 @@ export function chooseAutoMods(
   numArtificeMods: number,
   remainingEnergyCapacities: number[][],
   remainingTotalEnergy: number,
-) {
+): ModsPick[] | undefined {
   return recursivelyChooseMods(
-    info,
+    info.autoModOptions,
+    info.generalModCosts,
     neededStats,
     0,
     info.numAvailableGeneralMods,
@@ -70,14 +72,17 @@ export function chooseAutoMods(
   );
 }
 
+/**
+ * Given a set of general mods we want to slot, and a list of remaining-energy possibilities,
+ * check if the general mods fit into any of the remaining energy possibilities.
+ */
 function doGeneralModsFit(
-  info: LoSessionInfo,
+  /** The cost of user-picked general mods, sorted descending. */
+  generalModCosts: number[],
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[] | undefined,
 ) {
-  // These are already sorted
-  let generalModCosts = info.generalModCosts;
   // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (pickedMods !== undefined && pickedMods.length) {
     generalModCosts = generalModCosts.slice();
@@ -101,7 +106,10 @@ function doGeneralModsFit(
  * `pickedMods` contains the mods chosen for earlier stats.
  */
 function recursivelyChooseMods(
-  info: LoSessionInfo,
+  autoModOptions: AutoModsMap,
+  /** The cost of user-picked general mods, sorted descending. */
+  generalModCosts: number[],
+  /** Incremental stat increases we need to hit. */
   neededStats: number[],
   statIndex: number,
   remainingGeneralSlots: number,
@@ -111,20 +119,22 @@ function recursivelyChooseMods(
   remainingTotalEnergy: number,
   pickedMods: ModsPick[] | undefined,
 ): ModsPick[] | undefined {
+  // Skip over stats that we don't need to increase.
   while (statIndex < neededStats.length && neededStats[statIndex] === 0) {
     statIndex++;
   }
 
   if (statIndex === neededStats.length) {
     // We've hit the end of our needed stats, check if this is possible
-    if (doGeneralModsFit(info, remainingEnergyCapacities, pickedMods)) {
+    if (doGeneralModsFit(generalModCosts, remainingEnergyCapacities, pickedMods)) {
       return pickedMods ?? [];
     } else {
       return undefined;
     }
   }
 
-  const possiblePicks = info.autoModOptions.statCaches[statIndex].statMap[neededStats[statIndex]];
+  // Get a list of different mod combinations that could hit the needed stat boost for this stat.
+  const possiblePicks = autoModOptions.statCaches[statIndex][neededStats[statIndex]];
   if (!possiblePicks) {
     // we can't possibly hit our target stats
     return undefined;
@@ -145,7 +155,8 @@ function recursivelyChooseMods(
     }
     subArray[subArray.length - 1] = pick;
     const solution = recursivelyChooseMods(
-      info,
+      autoModOptions,
+      generalModCosts,
       neededStats,
       statIndex + 1,
       remainingGeneralSlots - pick.numGeneralMods,
@@ -182,13 +193,14 @@ function buildCacheForStat(
   statIndex: number,
   availableGeneralStatMods: number,
 ) {
-  const cache: CacheForStat = { statMap: {} };
+  const cache: CacheForStat = {};
   // Note: All of these could be undefined for whatever reason.
   // In that case, the loop bounds are 0 <= numMods <= 0.
   // Major and minor mod always exist together or not at all.
   const artificeMod = autoModOptions.artificeMods[statHash];
   const minorMod = autoModOptions.generalMods[statHash]?.minorMod;
   const majorMod = autoModOptions.generalMods[statHash]?.majorMod;
+  // TODO: Pull up the costs here
 
   for (let numArtificeMods = 0; numArtificeMods <= (artificeMod ? 5 : 0); numArtificeMods++) {
     for (
@@ -238,13 +250,14 @@ function buildCacheForStat(
           exactStatPoints: statValue,
         };
         for (let achievableValue = lowerRange; achievableValue <= statValue; achievableValue++) {
-          (cache.statMap[achievableValue] ??= []).push(obj);
+          (cache[achievableValue] ??= []).push(obj);
         }
       }
     }
   }
 
-  for (const pickArray of Object.values(cache.statMap)) {
+  // Prefer picks that use artifice mods, since they are free.
+  for (const pickArray of objectValues(cache)) {
     pickArray!.sort(compareBy((pick) => -pick.numArtificeMods));
   }
 
@@ -298,7 +311,7 @@ function buildLessCostlyRelations(
 
       return [statIndex1, betterStatIndices];
     }),
-  ) as AutoModsMap['cheaperStatRelations'];
+  );
 }
 
 export function buildAutoModsMap(
@@ -312,7 +325,7 @@ export function buildAutoModsMap(
         statIndex,
         buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
       ]),
-    ) as AutoModsMap['statCaches'],
+    ),
     cheaperStatRelations: buildLessCostlyRelations(
       autoModOptions,
       availableGeneralStatMods,
