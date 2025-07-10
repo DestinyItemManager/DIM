@@ -20,10 +20,10 @@ export function mergeStrictUpgradeStatConstraints(
   mergedDesiredStatRanges: DesiredStatRange[];
   mergedConstraintsImplyStrictUpgrade: boolean;
 } {
-  // If a user-selected stat tier ends up higher than the corresponding existing loadout tier,
+  // If a user-selected stat ends up higher than the corresponding existing loadout stat,
   // then every valid process set already is a strict upgrade (since effective stat constraints
   // are always >= existing constraints and there's one constraint that's higher than
-  // the existing tier, satisfying the definition of "strict upgrade").
+  // the existing stat, satisfying the definition of "strict upgrade").
   let mergedConstraintsImplyStrictUpgrade = false;
   const mergedDesiredStatRanges = parameterStatConstraints.map((constraint) => {
     const existingStatConstraint = existingLoadoutStatsAsStatConstraints?.find(

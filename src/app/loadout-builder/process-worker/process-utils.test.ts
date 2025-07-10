@@ -29,7 +29,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from '../process/mappers';
-import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxTier, ResolvedStatConstraint } from '../types';
+import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxStat, ResolvedStatConstraint } from '../types';
 import { statTier } from '../utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
@@ -664,13 +664,13 @@ test('process-utils activity mods', async () => {
   expect(autoMods).not.toBeUndefined();
   expect(autoMods!.bonusStats).toEqual([0, 0, 5, 0, 0, 0]);
 
-  const minMaxesInStatOrder: MinMaxTier[] = [
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
-    { minTier: 0, maxTier: 0 },
+  const minMaxesInStatOrder: MinMaxStat[] = [
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
+    { minStat: 0, maxStat: 0 },
   ];
   updateMaxTiers(
     loSessionInfo,
@@ -681,5 +681,99 @@ test('process-utils activity mods', async () => {
     resolvedStatConstraints,
     minMaxesInStatOrder,
   );
-  expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([5, 5, 6, 6, 5, 6]);
+  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([50, 50, 60, 60, 50, 60]);
+});
+
+describe('process-utils general mod assignment', () => {
+  let items: ProcessItem[];
+  let loSessionInfo: LoSessionInfo;
+  let generalMod: ProcessMod;
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    generalMod = mapArmor2ModToProcessMod(
+      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
+    );
+
+    items = Array(5)
+      .fill(null)
+      .map((_, i) => ({
+        hash: i,
+        id: i.toString(),
+        isArtifice: false,
+        isExotic: false,
+        name: `Item ${i}`,
+        power: 1500,
+        stats: [0, 0, 0, 0, 0, 0],
+        compatibleModSeasons: [],
+        remainingEnergyCapacity: 10,
+      }));
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(autoModData, [generalMod], [], true, armorStats);
+  });
+
+  it('returns empty array when no required stats and all general mods fit', () => {
+    const result = pickAndAssignSlotIndependentMods(
+      loSessionInfo,
+      modStatistics,
+      items,
+      undefined, // No needed stats
+      0,
+    );
+
+    expect(result).toEqual([]);
+  });
+
+  it('returns undefined when general mods do not fit', () => {
+    const lowEnergyItems = items.map((item) => modifyItem({ item, remainingEnergyCapacity: 1 }));
+
+    const result = pickAndAssignSlotIndependentMods(
+      loSessionInfo,
+      modStatistics,
+      lowEnergyItems,
+      undefined,
+      0,
+    );
+
+    expect(result).toBeUndefined();
+  });
+});
+
+describe('process-utils pickOptimalStatMods edge cases', () => {
+  let items: ProcessItem[];
+  let loSessionInfo: LoSessionInfo;
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    items = Array(5)
+      .fill(null)
+      .map((_, i) => ({
+        hash: i,
+        id: i.toString(),
+        isArtifice: false,
+        isExotic: false,
+        name: `Item ${i}`,
+        power: 1500,
+        stats: [0, 0, 0, 0, 0, 0],
+        compatibleModSeasons: [],
+        remainingEnergyCapacity: 0, // No energy available
+      }));
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+  });
+
+  it('returns undefined when no mods can be picked', () => {
+    const setStats = [0, 0, 0, 0, 0, 0];
+    const desiredStatRanges = armorStats.map((statHash) => ({
+      statHash,
+      minStat: 100, // Impossible to achieve with no energy
+      maxStat: 100,
+    }));
+
+    const result = pickOptimalStatMods(loSessionInfo, items, setStats, desiredStatRanges);
+
+    expect(result).toBeUndefined();
+  });
 });

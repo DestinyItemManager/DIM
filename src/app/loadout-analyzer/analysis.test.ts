@@ -15,6 +15,7 @@ import {
   newLoadout,
   newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { Loadout } from 'app/loadout/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { maxOf, sumBy } from 'app/utils/collections';
@@ -58,8 +59,8 @@ function noopProcessWorkerMock(..._args: Parameters<typeof runProcess>): {
         armorStats.map((h) => [
           h,
           {
-            minTier: 10,
-            maxTier: 0,
+            minStat: MAX_STAT,
+            maxStat: 0,
           },
         ]),
       ) as StatRanges,

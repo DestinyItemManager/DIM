@@ -28,7 +28,7 @@ import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
 import React, { Dispatch, useEffect, useRef } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorStatHashes, MinMaxTier, ResolvedStatConstraint, StatRanges } from '../types';
+import { ArmorStatHashes, MinMaxStat, ResolvedStatConstraint, StatRanges } from '../types';
 import { statTier } from '../utils';
 import styles from './StatConstraintEditor.m.scss';
 
@@ -130,7 +130,7 @@ function StatRow({
   equippedHashes,
 }: {
   statConstraint: ResolvedStatConstraint;
-  statRange?: MinMaxTier;
+  statRange?: MinMaxStat;
   index: number;
   onTierChange: (constraint: ResolvedStatConstraint) => void;
   equippedHashes: Set<number>;
@@ -238,7 +238,7 @@ function StatTierBar({
   equippedHashes,
 }: {
   statConstraint: ResolvedStatConstraint;
-  statRange?: MinMaxTier;
+  statRange?: MinMaxStat;
   onSelected: (tierNum: number, shift: boolean) => void;
   equippedHashes: Set<number>;
 }) {
@@ -325,7 +325,7 @@ function StatTierBar({
           className={clsx(styles.statBarSegment, {
             [styles.selectedStatBar]: statTier(statConstraint.minStat) >= tierNum,
             [styles.maxRestricted]: tierNum > statTier(statConstraint.maxStat),
-            [styles.maxed]: tierNum > (statRange?.maxTier ?? 10),
+            [styles.maxed]: tierNum > statTier(statRange?.maxStat ?? 100),
           })}
           onClick={(e) => onSelected(tierNum, e.shiftKey)}
           onKeyDown={handleKeyDown}

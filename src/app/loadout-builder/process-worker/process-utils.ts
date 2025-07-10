@@ -1,6 +1,6 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import { ArmorStatHashes, DesiredStatRange, MinMaxTier } from '../types';
+import { ArmorStatHashes, DesiredStatRange, MinMaxStat } from '../types';
 import { statTier } from '../utils';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
@@ -51,10 +51,22 @@ export function precalculateStructures(
   };
 }
 
+/**
+ * For each possible permutation of activity mods, see which ones can fit on
+ * this item set, and how much energy you'd have remaining in each piece if you
+ * do.
+ */
 function getRemainingEnergiesPerAssignment(
-  info: LoSessionInfo,
-  items: ProcessItem[],
-): { setEnergy: number; remainingEnergiesPerAssignment: number[][] } {
+  activityModPermutations: (ProcessMod | null)[][],
+  items: readonly ProcessItem[],
+): {
+  /** Total remaining energy capacity across the set */
+  setEnergy: number;
+  /**
+   * For each valid permutation, how much energy is left on per item? These lists are sorted by remaining energy so they do not correspond to the input items.
+   */
+  remainingEnergiesPerAssignment: number[][];
+} {
   const remainingEnergiesPerAssignment: number[][] = [];
 
   let setEnergy = 0;
@@ -62,27 +74,30 @@ function getRemainingEnergiesPerAssignment(
     setEnergy += item.remainingEnergyCapacity;
   }
 
-  activityModLoop: for (const activityPermutation of info.activityModPermutations) {
-    activityItemLoop: for (let i = 0; i < items.length; i++) {
-      const activityMod = activityPermutation[i];
-      if (!activityMod) {
-        continue activityItemLoop;
-      }
-
-      const item = items[i];
-      const tag = activityMod.tag!;
-      const energyCost = activityMod.energyCost;
-
-      // The activity mods won't fit in the item set so move on to the next set of mods
-      if (energyCost > item.remainingEnergyCapacity || !item.compatibleModSeasons?.includes(tag)) {
-        continue activityModLoop;
-      }
-    }
-
+  activityModLoop: for (const activityPermutation of activityModPermutations) {
     const remainingEnergyCapacities = [0, 0, 0, 0, 0];
+
+    // Check each item to see if it's possible to slot the activity mods in this
+    // permutation.
     for (let i = 0; i < items.length; i++) {
-      remainingEnergyCapacities[i] =
-        items[i].remainingEnergyCapacity - (activityPermutation[i]?.energyCost || 0);
+      const activityMod = activityPermutation[i];
+      const item = items[i];
+      remainingEnergyCapacities[i] = item.remainingEnergyCapacity;
+      if (activityMod) {
+        const tag = activityMod.tag!;
+        const energyCost = activityMod.energyCost;
+
+        // The activity mod for this slot won't fit in the item so move on to
+        // the next permutation.
+        if (
+          energyCost > item.remainingEnergyCapacity ||
+          !item.compatibleModSeasons?.includes(tag)
+        ) {
+          continue activityModLoop;
+        }
+
+        remainingEnergyCapacities[i] -= activityMod.energyCost;
+      }
     }
     remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
@@ -97,20 +112,22 @@ function getRemainingEnergiesPerAssignment(
  */
 export function updateMaxTiers(
   info: LoSessionInfo,
-  items: ProcessItem[],
-  setStats: number[],
-  setTiers: number[],
+  items: readonly ProcessItem[],
+  setStats: readonly number[],
+  setTiers: readonly number[],
+  /** Total number of available artifice mods, */
   numArtificeMods: number,
-  statFiltersInStatOrder: DesiredStatRange[],
-  minMaxesInStatOrder: MinMaxTier[], // mutated
+  statFiltersInStatOrder: readonly DesiredStatRange[],
+  minMaxesInStatOrder: MinMaxStat[], // mutated
 ): boolean {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
-    info,
+    info.activityModPermutations,
     items,
   );
 
   let foundAnyImprovement = false;
 
+  // How many extra points we need to add to each stat to hit the minimums.
   const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
 
   // First, track absolutely required stats (and update existing maxes)
@@ -118,15 +135,15 @@ export function updateMaxTiers(
     const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    if (minMax.maxTier < statTier(filter.minStat)) {
+    if (minMax.maxStat < filter.minStat) {
       // This is only called with sets that satisfy stat constraints,
       // so optimistically bump these up
-      minMax.maxTier = statTier(filter.minStat);
+      minMax.maxStat = filter.minStat;
     }
     const tier = setTiers[statIndex];
-    if (tier > minMax.maxTier) {
+    if (tier > statTier(minMax.maxStat)) {
       foundAnyImprovement ||= filter.minStat < filter.maxStat;
-      minMax.maxTier = tier;
+      minMax.maxStat = tier * 10;
     }
     const neededValue = filter.minStat - value;
     if (neededValue > 0) {
@@ -135,12 +152,14 @@ export function updateMaxTiers(
     }
   }
 
-  // Then, for every stat where we haven't shown that we can hit T10...
+  // Then, for every stat where we haven't shown that we can hit T10 with any
+  // set, try to see if we can exceed the previous max by adding auto stat mods.
   for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
-    const setStat = setStats[statIndex];
+    const value = setStats[statIndex];
+    const filter = statFiltersInStatOrder[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    const statFilter = statFiltersInStatOrder[statIndex];
-    if (minMax.maxTier >= 10) {
+    if (minMax.maxStat >= 100) {
+      // We can already hit T10 for this stat, so skip it.
       continue;
     }
 
@@ -148,10 +167,13 @@ export function updateMaxTiers(
     // require all other stats to hit their constrained minimums, but for this
     // stat we start from the highest tier we've observed.
     const explorationStats = requiredMinimumExtraStats.slice();
-    explorationStats[statIndex] = minMax.maxTier * 10 - setStat;
+    // Since we've updated maxStat above, this cannot be negative.
+    explorationStats[statIndex] = minMax.maxStat - value;
 
-    while (minMax.maxTier < 10) {
-      const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 - (setStat % 10) : 10;
+    while (minMax.maxStat < 100) {
+      // This calculates how many *more* points we need to add to the stat to
+      // get to the next tier.
+      const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 : 10 - (value % 10);
       explorationStats[statIndex] += pointsToNextTier;
       const picks = chooseAutoMods(
         info,
@@ -161,12 +183,12 @@ export function updateMaxTiers(
         setEnergy - info.totalModEnergyCost,
       );
       if (picks) {
-        const tierVal = Math.floor((setStat + explorationStats[statIndex]) / 10);
+        const tierVal = statTier(value + explorationStats[statIndex]);
         // An improvement is only actually an improvement if the tier wouldn't end up
         // ignored due to max.
         foundAnyImprovement ||=
-          statFilter.minStat < statFilter.maxStat && tierVal > statTier(statFilter.minStat);
-        minMax.maxTier = tierVal;
+          filter.minStat < filter.maxStat && tierVal > statTier(filter.minStat);
+        minMax.maxStat = tierVal * 10;
       } else {
         break;
       }
@@ -177,20 +199,27 @@ export function updateMaxTiers(
 }
 
 /**
- * This figures out if all general, combat and activity mods can be assigned to an armour set and auto stat mods
- * can be picked to provide the neededStats.
+ * This figures out if all user-chosen general, combat and activity mods can be
+ * assigned to an armour set and auto stat mods can be picked to provide the
+ * neededStats. This is a version of pickOptimalStatMods that only cares about
+ * hitting the neededStats (minimum stat targets) and not finding the optimal
+ * stat mods for the highest tier.
  *
- * The param activityModPermutations is assumed to be the result
- * from processUtils.ts#generateModPermutations, i.e. all permutations of activity mods.
- * By preprocessing all the assignments we skip a lot of work in the middle of the big process algorithm.
+ * The param info.activityModPermutations is assumed to be the result from
+ * processUtils.ts#generateModPermutations, i.e. all permutations of activity
+ * mods. By preprocessing all the assignments we skip a lot of work in the
+ * middle of the big process algorithm.
  *
- * Returns a ModsPick representing the automatically picked stat mods in the success case, even
- * if no auto stat mods were requested/needed, in which case the arrays will be empty.
+ * Returns a ModsPick representing the automatically picked stat mods in the
+ * success case, even if no auto stat mods were requested/needed, in which case
+ * the arrays will be empty.
+ *
+ * TODO: Doesn't need to return anything in its current usage
  */
 export function pickAndAssignSlotIndependentMods(
   info: LoSessionInfo,
-  modStatistics: ModAssignmentStatistics,
-  items: ProcessItem[],
+  modStatistics: ModAssignmentStatistics, // mutated
+  items: readonly ProcessItem[],
   neededStats: number[] | undefined,
   numArtifice: number,
 ): ModsPick[] | undefined {
@@ -288,16 +317,20 @@ export function pickAndAssignSlotIndependentMods(
 }
 
 /**
- * Optimizes the auto stat mod picks to maximize total tier, prioritizing stats earlier in the stat order.
+ * Optimizes the auto stat mod picks to maximize total stats, prioritizing stats
+ * earlier in the stat order. This differs from
+ * `pickAndAssignSlotIndependentMods` in that it assumes that the stat minimums
+ * can definitely be hit, and instead tries to maximize the total stats by
+ * picking the best auto stat mods.
  */
 export function pickOptimalStatMods(
   info: LoSessionInfo,
   items: ProcessItem[],
   setStats: number[],
   desiredStatRanges: DesiredStatRange[],
-): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
+): { mods: number[]; bonusStats: number[] } | undefined {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
-    info,
+    info.activityModPermutations,
     items,
   );
 
@@ -341,7 +374,6 @@ export function pickOptimalStatMods(
     }
     return {
       mods: bestBoosts.picks.flatMap((pick) => pick.modHashes),
-      numBonusTiers: bestBoosts.depth,
       bonusStats,
     };
   } else {
