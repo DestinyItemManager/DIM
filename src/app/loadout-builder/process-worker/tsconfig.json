@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "app/*": ["../../*"],
-      "data/*": ["../../../data/*"]
+      "data/*": ["../../../data/*"],
+      "testing/*": ["../../../testing/*"]
     }
   },
   "include": ["./*", "../../../global.d.ts"]
