@@ -1,9 +1,16 @@
 import { getPower } from '../utils';
 import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
+// TODO: Replace Tier with Stat
+
+/**
+ * Each tier set contains a total tier and a list of stat mixes that all sum to
+ * that tier.
+ */
 interface TierSet {
+  /** A total tier, the sum the tiers of each stat. */
   tier: number;
-  /** Stat mixes ordered by decreasing lexical order of the statMix string */
+  /** Stat mixes that all produce the same total tier, ordered by decreasing lexical order of the statMix string */
   statMixes: {
     statMix: string;
     // TODO: Maybe only keep one set with the same stat mix?
@@ -13,15 +20,19 @@ interface TierSet {
 }
 
 /**
- * A list of stat mixes by total tier. We can keep this list up to date
- * as we process new sets with an insertion sort algorithm.
+ * A list of stat mixes by total tier. We can keep this list up to date as we
+ * process new sets with an insertion sort algorithm. Its purpose is to maintain
+ * a list of the top N sets by total tier. With sets within each tier sorted by
+ * their stat preference as represented by the `statMix` string.
  *
  * The `statMix` string is what actually matters for sorting, the `stats` array
  * is simply an output used for set display.
  */
+// TODO: Could/should this just be a max-heap with a comparison function based on [total,statMix]?
 export class SetTracker {
-  // Tiers ordered by decreasing tier
+  /** Tiers ordered by decreasing tier. There will be a maximum of 10 entries. */
   tiers: TierSet[] = [];
+  /** The total number of sets in this tracker. */
   totalSets = 0;
   readonly capacity: number;
 
@@ -31,6 +42,7 @@ export class SetTracker {
 
   /**
    * A short-circuit helper to check if inserting a set at this total tier could possibly be accepted.
+   * @returns true if the set could maybe be inserted, false if it definitely cannot
    */
   couldInsert(totalTier: number) {
     const lowestKnownTier = this.tiers.length ? this.tiers.at(-1)!.tier : 0;
@@ -38,13 +50,20 @@ export class SetTracker {
   }
 
   /**
-   * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
+   * Insert this set into the tracker. If the tracker is at capacity the
+   * lowest-value set (which may be this one) may be dropped. It is possible to
+   * add sets with duplicate stat mixes here!
+   * @param statMix A lexographically ordered string that represents the stat
+   * mix of this set. Each stat tier is one hexadecimal character. For example,
+   * if the stat tiers of a set are [4,6,2,10,1,0], the stat mix string would be
+   * "462a10". This string is used to sort the sets within a tier.
+   * @returns true if the set was inserted, false if it was not inserted
    */
   insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]) {
     if (this.tiers.length === 0) {
       this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
     } else {
-      // We have very few tiers at one time, so insertion sort is fine
+      // We have max 10 tiers at one time, so insertion sort is fine
       outer: for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
         const currentTier = this.tiers[tierIndex];
 
@@ -89,6 +108,10 @@ export class SetTracker {
     return this.trimWorstSet();
   }
 
+  /**
+   * Remove the lowest-value set in the tracker.
+   * @returns true if a set was removed, false if it was not removed
+   */
   private trimWorstSet(): boolean {
     if (this.totalSets <= this.capacity) {
       return true;
@@ -111,17 +134,16 @@ export class SetTracker {
   }
 
   /**
-   * Get the top N tracked armor sets in order.
+   * Get the top N tracked armor sets in order. This will return the top sets
+   * ordered by tier, then by stat mix, then by power of the armor set. The
+   * behavior is undefined if `max` is less than 1.
    */
-  getArmorSets(max: number) {
+  getArmorSets() {
     const result: IntermediateProcessArmorSet[] = [];
     for (const tier of this.tiers) {
       for (const statMix of tier.statMixes) {
         for (const armorSet of statMix.armorSets) {
           result.push(armorSet);
-          if (result.length >= max) {
-            return result;
-          }
         }
       }
     }
