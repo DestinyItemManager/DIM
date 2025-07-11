@@ -68,7 +68,8 @@ export function mapDimItemToProcessItem({
   if (dimItemStats) {
     for (const { statHash, base } of dimItemStats) {
       let value = base;
-      if (capacity === MAX_ARMOR_ENERGY_CAPACITY) {
+      if (capacity >= MAX_ARMOR_ENERGY_CAPACITY) {
+        // TODO: Edge of Fate: This is likely to be different with new masterwork rules.
         value += MASTERWORK_ARMOR_STAT_BONUS;
       }
       statMap[statHash] = value;

@@ -26,7 +26,7 @@ export function EnergySwap({ energy }: { energy: { energyCapacity: number; energ
       <div className={styles.energyValue}>
         <div
           className={clsx({
-            [styles.masterworked]: armorEnergyCapacity === MAX_ARMOR_ENERGY_CAPACITY,
+            [styles.masterworked]: armorEnergyCapacity >= MAX_ARMOR_ENERGY_CAPACITY,
           })}
         >
           {armorEnergyCapacity}
@@ -36,7 +36,7 @@ export function EnergySwap({ energy }: { energy: { energyCapacity: number; energ
       <div className={styles.energyValue}>
         <div
           className={clsx({
-            [styles.masterworked]: resultingEnergyCapacity === MAX_ARMOR_ENERGY_CAPACITY,
+            [styles.masterworked]: resultingEnergyCapacity >= MAX_ARMOR_ENERGY_CAPACITY,
           })}
         >
           {resultingEnergyCapacity}
