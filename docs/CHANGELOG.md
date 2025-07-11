@@ -1,5 +1,9 @@
 ## Next
 
+* The Loadout Optimizer has been updated to target exact stats (up to 200) instead of tiers. There are lots more changes to Loadout Optimizer after Edge of Fate has released and we are able to adapt to the new way armor and stats works.
+* Fixed the D1 Reputation display not showing up on mobile.
+* Exotic armor ornaments no longer repeat the class name.
+
 ## 8.79.0 <span class="changelog-date">(2025-07-06)</span>
 
 * Added an `is:ininventory` filter that will highlight items that you have at least one copy of. This is meant to be used in the Records and Vendors tabs.
