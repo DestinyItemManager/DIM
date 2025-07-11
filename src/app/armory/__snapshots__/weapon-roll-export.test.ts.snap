@@ -1,12 +1,26 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`formatWeaponRollForExport should format a basic weapon roll correctly 1`] = `
-"[Test Weapon]
+exports[`formatWeaponRollForExport should format a weapon roll correctly 1`] = `
+"Quicksilver Storm
 
-* Aggressive Frame
-* Arrowhead Brake
-* Outlaw
-* Rampage
+* Rocket Tracers
+* Corkscrew Rifling
+* High-Caliber Rounds
+* Grenade Chaser
+* Hand-Laid Stock
+* Kill Tracker / Crucible Tracker"
+`;
 
-* Masterwork Stat"
+exports[`formatWeaponRollForExport should include masterwork stat when available 1`] = `
+"Pizzicato-22
+
+* Adaptive Frame
+* Corkscrew Rifling / Full Bore
+* Alloy Magazine / Ricochet Rounds
+* Ambitious Assassin
+* Multikill Clip
+* Suros Synergy
+* Kill Tracker / Crucible Tracker
+
+* Reload Speed"
 `;

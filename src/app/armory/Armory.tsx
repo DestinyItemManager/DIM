@@ -54,7 +54,11 @@ import styles from './Armory.m.scss';
 import ArmorySheet from './ArmorySheet';
 import Links from './Links';
 import WishListEntry from './WishListEntry';
-import { copyToClipboard, formatWeaponRollForExport } from './weapon-roll-export';
+import {
+  copyToClipboard,
+  formatWeaponRollForExport,
+  isClipboardAvailable,
+} from './weapon-roll-export';
 
 export default function Armory({
   itemHash,
@@ -141,7 +145,7 @@ export default function Armory({
       }
     >
       <Links item={item} />
-      {item.bucket.inWeapons && (
+      {item.bucket.inWeapons && isClipboardAvailable() && (
         <div className={styles.exportButton}>
           <button
             type="button"

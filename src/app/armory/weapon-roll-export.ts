@@ -1,10 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
-import {
-  getSocketsWithStyle,
-  getWeaponArchetypeSocket,
-  isWeaponMasterworkSocket,
-} from 'app/utils/socket-utils';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
+import { getMasterworkStatNames } from 'app/utils/item-utils';
+import { getWeaponArchetypeSocket, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 
 /**
@@ -19,7 +15,7 @@ export function formatWeaponRollForExport(item: DimItem): string {
   const lines: string[] = [];
 
   // Weapon name
-  lines.push(`[${item.name}]`);
+  lines.push(item.name);
   lines.push('');
 
   // Intrinsic Perk / Frame (Archetype)
@@ -28,44 +24,38 @@ export function formatWeaponRollForExport(item: DimItem): string {
     lines.push(`* ${archetypeSocket.plugged.plugDef.displayProperties.name}`);
   }
 
-  // Sights/Barrels - these are typically large perks
-  const largePerks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.LargePerk).filter(
-    (socket) => socket.plugged?.plugDef.displayProperties.name,
-  );
+  // Iterate through all perk sockets in order
+  if (item.sockets) {
+    for (const socket of item.sockets.allSockets) {
+      // Only include perk sockets, excluding weapon mods, masterwork, and archetype
+      if (
+        socket.isPerk &&
+        socket.plugOptions.length > 0 &&
+        !isWeaponMasterworkSocket(socket) &&
+        socket !== archetypeSocket
+      ) {
+        // Get all plug options for this socket, excluding weapon mod damage
+        const plugNames = socket.plugOptions
+          .filter(
+            (plug) =>
+              plug.plugDef.displayProperties.name &&
+              !plug.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
+          )
+          .map((plug) => plug.plugDef.displayProperties.name)
+          .filter(Boolean);
 
-  if (largePerks.length > 0) {
-    for (const socket of largePerks) {
-      lines.push(`* ${socket.plugged!.plugDef.displayProperties.name}`);
+        if (plugNames.length > 0) {
+          lines.push(`* ${plugNames.join(' / ')}`);
+        }
+      }
     }
-  }
-
-  // Trait columns (reusable perks) - excluding weapon mods and masterwork
-  const reusablePerks = getSocketsWithStyle(
-    item.sockets,
-    DestinySocketCategoryStyle.Reusable,
-  ).filter((socket) => {
-    if (!socket.plugged?.plugDef.displayProperties.name) {
-      return false;
-    }
-
-    // Skip weapon mods
-    if (socket.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)) {
-      return false;
-    }
-
-    // Skip masterwork sockets
-    return !isWeaponMasterworkSocket(socket);
-  });
-
-  for (const socket of reusablePerks) {
-    lines.push(`* ${socket.plugged!.plugDef.displayProperties.name}`);
   }
 
   // Masterwork (if applicable)
-  const masterworkSocket = item.sockets.allSockets.find(isWeaponMasterworkSocket);
-  if (masterworkSocket?.plugged?.plugDef.displayProperties.name) {
+  const masterworkStatName = getMasterworkStatNames(item.masterworkInfo);
+  if (masterworkStatName) {
     lines.push('');
-    lines.push(`* ${masterworkSocket.plugged.plugDef.displayProperties.name}`);
+    lines.push(`* ${masterworkStatName}`);
   }
 
   return lines.join('\n');
@@ -79,23 +69,18 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text);
       return true;
-    } else {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      const success = document.execCommand('copy');
-      document.body.removeChild(textArea);
-      return success;
     }
+    return false;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to copy to clipboard:', error);
     return false;
   }
+}
+
+/**
+ * Check if clipboard functionality is available
+ */
+export function isClipboardAvailable(): boolean {
+  return Boolean(navigator.clipboard && window.isSecureContext);
 }

@@ -21,7 +21,3 @@ junit.xml
 eslint.results.json
 .pnpm-store
 /sonda-report.html
-
-# Build artifacts and temporary files
-sonda-report/
-webpack-stats.json.br
