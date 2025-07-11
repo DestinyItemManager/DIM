@@ -28,7 +28,14 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
-import { AppIcon, compareIcon, faMinusSquare, faPlusSquare, thumbsUpIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  compareIcon,
+  copyIcon,
+  faMinusSquare,
+  faPlusSquare,
+  thumbsUpIcon,
+} from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
@@ -47,6 +54,7 @@ import styles from './Armory.m.scss';
 import ArmorySheet from './ArmorySheet';
 import Links from './Links';
 import WishListEntry from './WishListEntry';
+import { copyToClipboard, formatWeaponRollForExport } from './weapon-roll-export';
 
 export default function Armory({
   itemHash,
@@ -69,6 +77,7 @@ export default function Armory({
   const [socketOverrides, onPlugClicked] = useSocketOverrides();
   const itemCreationContext = useSelector(createItemContextSelector);
   const [armoryItemHash, setArmoryItemHash] = useState<number | undefined>(undefined);
+  const [exportCopied, setExportCopied] = useState(false);
   const wishlistsByHash = useSelector(wishListsByHashSelector);
   const itemDef = defs.InventoryItem.get(itemHash);
 
@@ -88,6 +97,21 @@ export default function Armory({
     // Then apply whatever the user chose in the Armory UI
     ...socketOverrides,
   });
+
+  const handleExportWeaponRoll = async () => {
+    if (!item.bucket.inWeapons) {
+      return;
+    }
+
+    const exportText = formatWeaponRollForExport(item);
+    const success = await copyToClipboard(exportText);
+
+    if (success) {
+      setExportCopied(true);
+      // Reset the "copied" state after 2 seconds
+      setTimeout(() => setExportCopied(false), 2000);
+    }
+  };
 
   const storeItems = allItems.filter((i) => i.hash === itemHash);
 
@@ -117,6 +141,18 @@ export default function Armory({
       }
     >
       <Links item={item} />
+      {item.bucket.inWeapons && (
+        <div className={styles.exportButton}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={handleExportWeaponRoll}
+            title={t('Armory.ExportWeaponRoll')}
+          >
+            <AppIcon icon={copyIcon} /> {exportCopied ? t('Armory.Copied') : t('Armory.ExportRoll')}
+          </button>
+        </div>
+      )}
       <div className={styles.header}>
         <div className="item">
           <ItemIcon item={item} />

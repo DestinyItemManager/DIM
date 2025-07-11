@@ -6,6 +6,7 @@ interface CssExports {
   'alternateWishlist': string;
   'armory': string;
   'element': string;
+  'exportButton': string;
   'flavor': string;
   'header': string;
   'headerContent': string;

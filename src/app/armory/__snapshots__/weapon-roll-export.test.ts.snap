@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`formatWeaponRollForExport should format a basic weapon roll correctly 1`] = `
+"[Test Weapon]
+
+* Aggressive Frame
+* Arrowhead Brake
+* Outlaw
+* Rampage
+
+* Masterwork Stat"
+`;

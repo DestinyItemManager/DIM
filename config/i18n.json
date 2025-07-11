@@ -40,7 +40,10 @@
     "NoNotes": "No Notes",
     "YourItems": "Your Items",
     "Unknown": "Unknown Item",
-    "Season": "Season {{season}}, Year {{year}}"
+    "Season": "Season {{season}}, Year {{year}}",
+    "ExportRoll": "Export Roll",
+    "ExportWeaponRoll": "Export weapon roll as text",
+    "Copied": "Copied!"
   },
   "Browsercheck": {
     "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work.",

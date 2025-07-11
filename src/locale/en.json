@@ -30,7 +30,10 @@
   "Armory": {
     "AlternateItems": "Alternate Versions",
     "Armory": "Armory",
+    "Copied": "Copied!",
     "DifferentSeason": "Reissue from a different season",
+    "ExportRoll": "Export Roll",
+    "ExportWeaponRoll": "Export weapon roll as text",
     "NoNotes": "No Notes",
     "OpenInArmory": "view in Armory",
     "Season": "Season {{season}}, Year {{year}}",

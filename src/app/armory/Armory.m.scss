@@ -27,6 +27,15 @@
   }
 }
 
+.exportButton {
+  margin-bottom: 8px;
+
+  &.exportButton > button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
+
 .season {
   display: flex;
   align-items: center;
