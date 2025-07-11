@@ -5,7 +5,7 @@ import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[]) {
   const comparators: Comparator<ArmorSet>[] = [
-    compareBy((s) => -sumEnabledStatTiers(s.stats, desiredStatRanges)),
+    compareBy((s) => -sumEnabledStats(s.stats, desiredStatRanges)),
   ];
 
   for (const constraint of desiredStatRanges) {

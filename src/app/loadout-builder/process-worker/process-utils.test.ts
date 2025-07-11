@@ -662,8 +662,6 @@ test('process-utils activity mods', async () => {
   // the cheaper stats where the mods can actually fit
   const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
   expect(autoMods).not.toBeUndefined();
-  // TODO: This was a +5 mod here before, but I don't know enough about what
-  // this test is trying to do to say whether this is correct to have changed.
   expect(autoMods!.bonusStats).toEqual([0, 0, 10, 0, 0, 0]);
 
   const minMaxesInStatOrder: MinMaxStat[] = [

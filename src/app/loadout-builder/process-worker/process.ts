@@ -224,16 +224,15 @@ export function process(
                 classItemStats[5],
             ];
 
-            // A version of the set stats that have been clamped to the max
-            // stat constraint (and zero, because mod effects could make them
-            // negative).
+            // A version of the set stats that have been clamped to the max stat
+            // constraint.
             const effectiveStats = [
-              Math.min(Math.max(stats[0], 0), maxTierConstraints[0]),
-              Math.min(Math.max(stats[1], 0), maxTierConstraints[1]),
-              Math.min(Math.max(stats[2], 0), maxTierConstraints[2]),
-              Math.min(Math.max(stats[3], 0), maxTierConstraints[3]),
-              Math.min(Math.max(stats[4], 0), maxTierConstraints[4]),
-              Math.min(Math.max(stats[5], 0), maxTierConstraints[5]),
+              Math.min(stats[0], maxTierConstraints[0]),
+              Math.min(stats[1], maxTierConstraints[1]),
+              Math.min(stats[2], maxTierConstraints[2]),
+              Math.min(stats[3], maxTierConstraints[3]),
+              Math.min(stats[4], maxTierConstraints[4]),
+              Math.min(stats[5], maxTierConstraints[5]),
             ];
 
             // neededStats is the extra stats we'd need in each stat in order to

@@ -193,8 +193,7 @@ export function updateMaxStats(
       // stat point increase a "tier". This should be a short-term change -
       // ideally we'd reconsider all these algorithms to see if they could be
       // simplified now that the tier concept is gone.
-      const pointsToNextTier = 1;
-      explorationStats[statIndex] += pointsToNextTier;
+      explorationStats[statIndex] += 1;
 
       // Now see if there's any way to hit that stat with mods.
       if (
@@ -622,40 +621,32 @@ function exploreAutoModsSearchTree(
     picks,
   };
 
-  // The cost to get to the next tier has two dimensions:
+  // The cost to get to the next tier has one dimension:
   // * the cost of individual mods (via cheaperStatRelations)
-  // * number of stat points missing to go to the next tier (`pointsMissing`)
-  const previousCosts: {
-    statIndex: number;
-    pointsMissing: number;
-  }[] = [];
+  const previousStatHashes: number[] = [];
 
   for (; statIndex < setStats.length; statIndex++) {
     if (explorationStats[statIndex] >= maxAddedStats[statIndex]) {
       continue;
     }
 
-    // Now that tiers no longer matter (since Edge of Fate), we consider any
-    // stat point increase a "tier". This should be a short-term change -
-    // ideally we'd reconsider all these algorithms to see if they could be
-    // simplified now that the tier concept is gone.
-    const pointsMissing = 1;
-
     // Dominance check: If an earlier-explored (=higher-priority) branch needs fewer stat points
     // to the next tier AND doesn't have more expensive mods than this current one, we don't even need to
     // look at this branch.
     if (
-      previousCosts.some(
-        (previousSubtree) =>
-          info.autoModOptions.cheaperStatRelations[statIndex].includes(previousSubtree.statIndex) &&
-          previousSubtree.pointsMissing <= pointsMissing,
+      previousStatHashes.some((previousSubtree) =>
+        info.autoModOptions.cheaperStatRelations[statIndex].includes(previousSubtree),
       )
     ) {
       continue;
     }
 
     const subTreeStats = explorationStats.slice();
-    subTreeStats[statIndex] += pointsMissing;
+    // Now that tiers no longer matter (since Edge of Fate), we consider any
+    // stat point increase a "tier". This should be a short-term change -
+    // ideally we'd reconsider all these algorithms to see if they could be
+    // simplified now that the tier concept is gone.
+    subTreeStats[statIndex] += 1;
 
     const explorationResult = exploreAutoModsSearchTree(
       info,
@@ -674,10 +665,7 @@ function exploreAutoModsSearchTree(
       bestResult = explorationResult;
     }
     // Remember that we checked a stat like this so we can skip dominated branches in later iterations.
-    previousCosts.push({
-      pointsMissing,
-      statIndex,
-    });
+    previousStatHashes.push(statIndex);
   }
   return bestResult;
 }
