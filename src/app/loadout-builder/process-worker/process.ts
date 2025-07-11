@@ -11,15 +11,16 @@ import {
   StatRanges,
   artificeStatBoost,
   majorStatBoost,
+  minorStatBoost,
 } from '../types';
 import { statTier } from '../utils';
+import { HeapSetTracker } from './heap-set-tracker';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
-  updateMaxTiers,
+  updateMaxStats,
 } from './process-utils';
-import { SetTracker } from './set-tracker';
 import {
   AutoModData,
   LockedProcessMods,
@@ -105,7 +106,7 @@ export function process(
     return { sets: [], combos: 0 };
   }
 
-  const setTracker = new SetTracker(RETURNED_ARMOR_SETS);
+  const setTracker = new HeapSetTracker(RETURNED_ARMOR_SETS);
 
   const { activityMods, generalMods } = lockedMods;
 
@@ -142,7 +143,7 @@ export function process(
     statistics: setStatistics,
   };
 
-  // Legacy Tiered stats processing. Remove after Edge of Fate releases.
+  const majorMinorRatio = majorStatBoost / minorStatBoost;
 
   itemLoop: for (const helm of helms) {
     const helmExotic = Number(helm.isExotic);
@@ -223,14 +224,15 @@ export function process(
                 classItemStats[5],
             ];
 
-            // Calculate the tier of each stat, capped by the max tier constraint
-            const tiers = [
-              Math.min(Math.max(Math.floor(stats[0] / 10), 0), maxTierConstraints[0]),
-              Math.min(Math.max(Math.floor(stats[1] / 10), 0), maxTierConstraints[1]),
-              Math.min(Math.max(Math.floor(stats[2] / 10), 0), maxTierConstraints[2]),
-              Math.min(Math.max(Math.floor(stats[3] / 10), 0), maxTierConstraints[3]),
-              Math.min(Math.max(Math.floor(stats[4] / 10), 0), maxTierConstraints[4]),
-              Math.min(Math.max(Math.floor(stats[5] / 10), 0), maxTierConstraints[5]),
+            // A version of the set stats that have been clamped to the max stat
+            // constraint.
+            const effectiveStats = [
+              Math.min(stats[0], maxTierConstraints[0]),
+              Math.min(stats[1], maxTierConstraints[1]),
+              Math.min(stats[2], maxTierConstraints[2]),
+              Math.min(stats[3], maxTierConstraints[3]),
+              Math.min(stats[4], maxTierConstraints[4]),
+              Math.min(stats[5], maxTierConstraints[5]),
             ];
 
             // neededStats is the extra stats we'd need in each stat in order to
@@ -240,17 +242,17 @@ export function process(
             let totalNeededStats = 0;
 
             // Check which stats we're under the stat minimums on.
-            let totalTier = 0;
+            let totalStats = 0;
             for (let index = 0; index < 6; index++) {
-              const tier = tiers[index];
+              const value = effectiveStats[index];
               const filter = desiredStatRanges[index];
-              if (filter.maxStat > 0) {
+              if (filter.maxStat > 0 /* non-ignored stat */) {
                 // Update the minimum stat range while we're here
                 const statRange = statRanges[index];
-                if (tier * 10 < statRange.minStat) {
-                  statRange.minStat = tier * 10;
+                if (value < statRange.minStat) {
+                  statRange.minStat = value;
                 }
-                totalTier += tier;
+                totalStats += value;
                 if (filter.minStat > 0) {
                   const value = stats[index];
                   const neededValue = filter.minStat - value;
@@ -280,34 +282,36 @@ export function process(
 
             const armor = [helm, gaunt, chest, leg, classItem];
 
-            // Items that individually can't fit their slot-specific mods
-            // were filtered out before even passing them to the worker,
-            // so we only do this combined mods + auto-stats check if we
-            // need to check whether the set can fit the mods and hit target stats.
-            if (hasMods || totalNeededStats > 0) {
-              const modsPick = pickAndAssignSlotIndependentMods(
+            // Items that individually can't fit their slot-specific mods were
+            // filtered out before even passing them to the worker, so we only
+            // do this combined mods + auto-stats check if we need to check
+            // whether the set can fit the mods and hit target stats. This is a
+            // fast check to see if enough mods can fit to hit needed stat
+            // minimums.
+            if (
+              (hasMods || totalNeededStats > 0) &&
+              !pickAndAssignSlotIndependentMods(
                 precalculatedInfo,
                 setStatistics.modsStatistics,
                 armor,
                 totalNeededStats > 0 ? neededStats : undefined,
                 numArtifice,
-              );
-
-              if (!modsPick) {
-                // There's no way for this set to fit all requested mods while
-                // satisfying tier lower bounds, so continue on. setStatistics
-                // have been updated in pickAndAssignSlotIndependentMods.
-                continue;
-              }
+              )
+            ) {
+              // There's no way for this set to fit all requested mods while
+              // satisfying tier lower bounds, so continue on. setStatistics
+              // have been updated in pickAndAssignSlotIndependentMods.
+              continue;
             }
 
-            // At this point we know this set satisfies all constraints. Update
-            // the max stat ranges.
-            const foundAnyImprovement = updateMaxTiers(
+            // At this point we know this set satisfies all constraints.
+            // Update the max stat ranges. We need to do this before we short
+            // circuit anything so that the stat ranges are accurate.
+            // TODO: Then updateMaxStats assigns auto mods AGAIN, potentially many times, to figure out the max possible stats in each stat individually.
+            const foundAnyImprovement = updateMaxStats(
               precalculatedInfo,
               armor,
               stats,
-              tiers,
               numArtifice,
               desiredStatRanges,
               statRanges,
@@ -316,92 +320,110 @@ export function process(
             // Drop this set if it could never make it into our top
             // RETURNED_ARMOR_SETS sets. We do this only after confirming that
             // any required stat mods fit and updating our max tiers so that the
-            // max available tier info stays accurate. For this calculation
-            // we'll assume each artifice mod bumps the stat up a whole tier.
+            // max available tier info stays accurate.
             if (
               !setTracker.couldInsert(
-                totalTier + numArtifice + precalculatedInfo.numAvailableGeneralMods,
+                totalStats +
+                  numArtifice * artificeStatBoost +
+                  precalculatedInfo.numAvailableGeneralMods * majorStatBoost,
               )
             ) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
 
-            // We want to figure out the best tiers for this set. We can't do that for every
-            // set because it'd be too expensive, but realistically, artifice mods are
-            // where sets can really get some more tiers compared to other sets.
-            const statPointsNeededForTiers: { index: number; pointsToNext: number }[] = [];
+            // Starting from here, we end up mutating our effectiveStats array
+            // a bit. We want to figure out the best stats for this set. We
+            // can't do that for every set because it'd be too expensive.
 
-            for (let index = 0; index < 6; index++) {
+            // TODO: This is maybe where we'd want to calculate "tuning mods"
+            // contributions, but it might be better to just create different
+            // variants of each item with each tuning mod slotted. Maybe we
+            // can finally redo this as an integer programming problem?
+
+            // TODO: These calculations do not take into account the
+            // energy cost of the mods, so we can only use them to predict the
+            // best possible stats that could theoretically be achieved.
+
+            // Then spend artifice mods to boost stats greedily in stat priority
+            // order. This also allows "wasted stats" in order to hit stat
+            // maximums (e.g. adding +3 stats to a stat that is already at 199).
+            let artificeModsAvailable = numArtifice;
+            let statsFromArtificeMods = 0;
+            for (let index = 0; index < 6 && artificeModsAvailable > 0; index++) {
+              const value = effectiveStats[index];
               const filter = desiredStatRanges[index];
-              if (stats[index] < filter.maxStat) {
-                statPointsNeededForTiers.push({
-                  index,
-                  pointsToNext: 10 - (stats[index] % 10),
-                });
+              if (value < filter.maxStat) {
+                const pointsToMax = filter.maxStat - value;
+                // How many artifice mods would that be?
+                const numArtificeModsUsed = Math.min(
+                  Math.ceil(pointsToMax / artificeStatBoost),
+                  artificeModsAvailable,
+                );
+                const statBoost = numArtificeModsUsed * artificeStatBoost;
+                effectiveStats[index] += statBoost;
+                statsFromArtificeMods += statBoost;
+                artificeModsAvailable -= numArtificeModsUsed;
               }
             }
 
-            // Starting from here, we end up mutating our tiers array a bit
-            // to make sorting more accurate.
+            // Also check how many +10 and +5 general mods we can use to boost stats.
+            let generalModsAvailable = precalculatedInfo.numAvailableGeneralMods;
+            let statsFromGeneralMods = 0;
+            for (let index = 0; index < 6; index++) {
+              const value = effectiveStats[index];
+              const filter = desiredStatRanges[index];
+              if (value < filter.maxStat) {
+                const pointsToMax = filter.maxStat - value;
+                // How many +5 mods would that be?
+                let minorStatMods = Math.ceil(pointsToMax / minorStatBoost);
+                // Use +10 mods in place of two +5 mods
+                const majorStatMods = Math.floor(minorStatMods / majorMinorRatio);
+                minorStatMods -= majorStatMods * majorMinorRatio;
 
-            // Then spend artifice mods to boost tiers, from cheapest to most-expensive.
-            // TODO: If we still have 3 or 4 artifice mods left, we can
-            // probably make up another tier.
-            let artificeModsAvailable = numArtifice;
-            statPointsNeededForTiers.sort((a, b) => a.pointsToNext - b.pointsToNext);
-            const tiersFromArtifice = statPointsNeededForTiers.reduce((numTiers, stat) => {
-              const numArtificeModsUsed = Math.ceil(stat.pointsToNext / artificeStatBoost);
-              if (numArtificeModsUsed <= artificeModsAvailable) {
-                // Bump up the tier for this stat
-                tiers[stat.index] += 1;
-                artificeModsAvailable -= numArtificeModsUsed;
-                return numTiers + 1;
+                const numGeneralModsUsed = Math.min(
+                  majorStatMods + minorStatMods,
+                  generalModsAvailable,
+                );
+                const numMajorModsUsed = Math.min(majorStatMods, generalModsAvailable);
+                const numMinorModsUsed = Math.min(
+                  minorStatMods,
+                  generalModsAvailable - numMajorModsUsed,
+                );
+                const statBoost =
+                  numMajorModsUsed * majorStatBoost + numMinorModsUsed * minorStatBoost;
+                effectiveStats[index] += statBoost;
+                statsFromGeneralMods += statBoost;
+                generalModsAvailable -= numGeneralModsUsed;
               }
-              return numTiers;
-            }, 0);
+            }
 
-            const tiersFromGeneralMods = precalculatedInfo.numAvailableGeneralMods;
-
-            // TODO: It'd be neat to also spend small (+5) general mods, right now we
-            // add `numAvailableGeneralMods` tiers (assume each item can hold a +10)
-            // mod but this isn't always true.
-            // TODO: This seems like a bad assumption (that we have energy left for all the stat mods)
-            const tiersFromMods = tiersFromArtifice + tiersFromGeneralMods;
+            const statsFromMods = statsFromArtificeMods + statsFromGeneralMods;
 
             // Now use our more accurate extra tiers prediction
-            if (!setTracker.couldInsert(totalTier + tiersFromMods)) {
+            if (!setTracker.couldInsert(totalStats + statsFromMods)) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
 
-            // Calculate the "tiers string" here, since most sets don't make it this far
-            // A string version of the tier-level of each stat, must be lexically comparable
-            // It seems like constructing and comparing tiersString would be expensive but it's less so
-            // than comparing stat arrays element by element
-            let tiersString = '';
-            let numGeneralMods = precalculatedInfo.numAvailableGeneralMods;
+            // Calculate the "stats string" here, since most sets don't make
+            // it this far A string version of each stat, must be lexically
+            // comparable. It seems like constructing and comparing
+            // tiersString would be expensive but it's less so than comparing
+            // stat arrays element by element.
+            let statsString = '';
             for (let index = 0; index < 6; index++) {
-              let tier = tiers[index];
-              // Make each stat exactly one code unit so the string compares correctly
+              const value = effectiveStats[index];
               const filter = desiredStatRanges[index];
-              if (filter.maxStat > 0) {
-                // Predict the tier boost from general mods.
-                // TODO: This isn't taking into account remaining energy, and it will "waste stats" if we're near the max tier.
-                const boostAmount = Math.min(statTier(filter.maxStat) - tier, numGeneralMods);
-                if (boostAmount > 0) {
-                  tier += boostAmount;
-                  numGeneralMods -= boostAmount;
-                }
-                // using a base16 instead of 11 is faster
-                tiersString += tier.toString(16);
+              if (filter.maxStat > 0 /* non-ignored stat */) {
+                // represent each stat value as a single code unit (because they max out at 200)
+                statsString += String.fromCharCode(value);
               }
             }
 
             processStatistics.numValidSets++;
-            // And now insert our set using the predicted total tier and
-            // boosted stat tiers.
-            setTracker.insert(totalTier + tiersFromMods, tiersString, armor, stats);
+            // And now insert our set using the predicted total tier and boosted stat tiers.
+            setTracker.insert(totalStats + statsFromMods, statsString, armor, stats);
 
             if (stopOnFirstSet) {
               if (strictUpgrades) {
@@ -453,8 +475,8 @@ export function process(
         statFilter.minStat < statFilter.maxStat &&
         !hasStrictUpgrade
       ) {
-        const tier = statTier(value);
-        hasStrictUpgrade ||= tier > statTier(statFilter.minStat);
+        const statValue = Math.min(Math.max(value, 0), MAX_STAT);
+        hasStrictUpgrade ||= statValue > statFilter.minStat;
       }
 
       armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];

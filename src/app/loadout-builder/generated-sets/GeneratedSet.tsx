@@ -27,7 +27,7 @@ import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { SetStats } from './SetStats';
+import { TierlessSetStats } from './SetStats';
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
@@ -43,7 +43,6 @@ export default memo(function GeneratedSet({
   modStatChanges,
   loadouts,
   lbDispatch,
-  halfTierMods,
   armorEnergyRules,
   equippedHashes,
   autoStatMods,
@@ -57,7 +56,6 @@ export default memo(function GeneratedSet({
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
   autoStatMods: boolean;
@@ -154,7 +152,7 @@ export default memo(function GeneratedSet({
 
   return (
     <>
-      <SetStats
+      <TierlessSetStats
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
@@ -162,7 +160,6 @@ export default memo(function GeneratedSet({
         boostedStats={boostedStats}
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
-        autoStatMods={autoStatMods}
       />
       <div className={styles.build}>
         <div className={styles.items}>
@@ -187,7 +184,6 @@ export default memo(function GeneratedSet({
           lockedMods={lockedMods}
           store={selectedStore}
           canCompareLoadouts={canCompareLoadouts}
-          halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}
         />
       </div>

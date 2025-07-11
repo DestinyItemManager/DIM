@@ -6,22 +6,22 @@ import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-typ
 import { ProcessItem } from './process-worker/types';
 
 export interface MinMaxStat {
-  minStat: number; // 0 to 200, rounded to the nearest 10 if using tiers
-  maxStat: number; // 0 to 200, rounded to the nearest 10 if using tiers
+  minStat: number; // 0 to 200
+  maxStat: number; // 0 to 200
 }
 
 /**
  * Resolved stat constraints take the compact form of the API stat constraints
  * and expand them so that each stat has a corresponding constraint, the min and
- * max are defined, and the ignored flag is set. Tiers are replaces with exact
+ * max are defined, and the ignored flag is set. Tiers are replaced with exact
  * stat values. In the API version, stat constraints are simply missing if
  * ignored, and min-0/max-10 is omitted as implied.
  */
 export interface ResolvedStatConstraint
   extends Required<Omit<StatConstraint, 'minTier' | 'maxTier'>> {
   /**
-   * An ignored stat has an effective maximum stat of 0, so that any
-   * stat tiers in excess of T0 are deemed worthless.
+   * An ignored stat has an effective maximum stat of 0, so that any stats in
+   * excess of 0 are deemed worthless.
    */
   ignored: boolean;
 }

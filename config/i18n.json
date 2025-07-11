@@ -545,7 +545,7 @@
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
     "ExistingBuildStats": "Existing Build Stats",
-    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stats.",
     "FilterSets": "Filter sets",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
@@ -610,7 +610,6 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Add +5 Mods",
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
     "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "AutoStatMods": "Automatically add stat mods",
@@ -657,11 +656,11 @@
       "MaybeRemoveSearchQuery": "Consider clearing or changing the filter in the search bar",
       "MaybeAllowMoreItems": "Consider allowing other items:",
       "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
-      "LowerBoundsFailed": "Many sets did not meet minimum stat tier requirements",
-      "UpperBoundsFailed": "Many sets did not meet maximum stat tier requirements",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
+      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements",
       "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
-      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat tier requirements",
-      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat tier requirements",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods"
     },
     "NoExotic": "No Exotic",
@@ -675,11 +674,14 @@
     "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
     "OptimizerSet": "Optimizer Set",
-    "ProcessingSets": "Finding highest tier sets...",
+    "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
-    "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
+    "StatMin": "Min",
+    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
+    "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
@@ -736,7 +738,7 @@
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
-    "Generated": "T{{tier}} Loadout",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
     "ImportLoadout": "Import Loadout",
     "Import": {
@@ -755,7 +757,7 @@
     "LoadoutParameters": "Loadout Optimizer settings",
     "LoadoutParametersExotic": "Loadout must include this exotic: {{exoticName}}",
     "LoadoutParametersQuery": "Items must match this search filter",
-    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat tiers",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "MakeRoom": "Make Room for Postmaster",
     "MakeRoomDone_one": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
     "MakeRoomDone_female_one": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
@@ -889,7 +891,7 @@
   "LoadoutAnalysis": {
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat to exceed 200. DIM may identify better stats by reducing the amount of excess stats. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "MissingItems": {
       "Name": "Missing Items",
       "Description": "Some of the items in this loadout are no longer in your inventory."
@@ -908,11 +910,11 @@
     },
     "NeedsArmorUpgrades": {
       "Name": "Needs Armor Upgrades",
-      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers."
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stats."
     },
     "BetterStatsAvailable": {
       "Name": "Better Stats Available",
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds."
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stats. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds."
     },
     "NotAFullArmorSet": {
       "Name": "Not A Full Armor Set",
@@ -931,8 +933,8 @@
       "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity."
     },
     "DoesNotSatisfyStatConstraints": {
-      "Name": "Wrong Stat Tiers",
-      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them."
+      "Name": "Wrong Stat Minimums",
+      "Description": "Loadout Optimizer settings for this Loadout specify stat minimums, but the Loadout does not reach them."
     },
     "InvalidSearchQuery": {
       "Name": "Invalid Search Query",

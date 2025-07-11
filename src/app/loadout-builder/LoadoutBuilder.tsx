@@ -53,10 +53,10 @@ import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerPinnedItems,
 } from './filter/LoadoutOptimizerMenuItems';
-import StatConstraintEditor from './filter/StatConstraintEditor';
+import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { ReferenceTiers } from './generated-sets/SetStats';
+import { ReferenceConstraints } from './generated-sets/SetStats';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
@@ -312,13 +312,14 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
-      <StatConstraintEditor
+      <TierlessStatConstraintEditor
         resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}
         equippedHashes={equippedHashes}
         store={selectedStore}
         className={styles.loadoutEditSection}
+        processing={processing}
       />
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}
@@ -692,7 +693,7 @@ function ExistingLoadoutStats({
     <div className={styles.referenceTiersInfo}>
       <div className={styles.header}>
         {t('LB.ExistingBuildStats')}
-        <ReferenceTiers resolvedStatConstraints={statConstraints} />
+        <ReferenceConstraints resolvedStatConstraints={statConstraints} />
       </div>
       {t('LB.ExistingBuildStatsNote')}
       <button

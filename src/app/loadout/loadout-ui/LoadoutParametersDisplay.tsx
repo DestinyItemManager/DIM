@@ -6,7 +6,7 @@ import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/E
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, equalsIcon, greaterThanIcon, lessThanIcon, searchIcon } from 'app/shell/icons';
 import clsx from 'clsx';
-import { MAX_STAT, MAX_TIER } from '../known-values';
+import { MAX_STAT } from '../known-values';
 import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutParametersDisplay.m.scss';
 
@@ -93,85 +93,43 @@ function StatConstraintRange({
 
 /** This displays the user's chosen stat constraint as a range, e.g. T4-T9 */
 function StatConstraintRangeExpression({ statConstraint }: { statConstraint: StatConstraint }) {
-  if (statConstraint.minStat !== undefined || statConstraint.maxStat !== undefined) {
-    // Post-Edge of Fate stat constraints use minStat/maxStat instead of minTier/maxTier.
-    const min = statConstraint.minStat ?? 0;
-    const max = statConstraint.maxStat ?? MAX_STAT;
-
-    if (min === max) {
-      // =min
-      return (
-        <>
-          <AppIcon icon={equalsIcon} />
-          {min}
-        </>
-      );
-    } else if (max === MAX_STAT) {
-      // >= min
-      return (
-        <>
-          <AppIcon icon={greaterThanIcon} />
-          {min}
-        </>
-      );
-    } else if (min === 0) {
-      // <= max
-      return (
-        <>
-          <AppIcon icon={lessThanIcon} />
-          {max}
-        </>
-      );
-    } else {
-      // min-max
-      return (
-        <>
-          {min}-{max}
-        </>
-      );
-    }
-  }
-
-  const min = statConstraint.minTier ?? 0;
-  const max = statConstraint.maxTier ?? MAX_TIER;
+  // Post-Edge of Fate stat constraints use minStat/maxStat instead of minTier/maxTier.
+  const min =
+    statConstraint.minStat ??
+    (statConstraint.minTier !== undefined ? statConstraint.minTier * 10 : 0);
+  const max =
+    statConstraint.maxStat ??
+    (statConstraint.maxTier !== undefined ? statConstraint.maxTier * 10 : MAX_STAT);
 
   if (min === max) {
-    // =Tmin
+    // =min
     return (
       <>
         <AppIcon icon={equalsIcon} />
-        {t('LoadoutBuilder.TierNumber', {
-          tier: min,
-        })}
+        {min}
       </>
     );
-  } else if (max === MAX_TIER) {
-    // >= Tmin
+  } else if (max === MAX_STAT) {
+    // >= min
     return (
       <>
         <AppIcon icon={greaterThanIcon} />
-        {t('LoadoutBuilder.TierNumber', {
-          tier: min,
-        })}
+        {min}
       </>
     );
   } else if (min === 0) {
-    // <= Tmax
+    // <= max
     return (
       <>
         <AppIcon icon={lessThanIcon} />
-        {t('LoadoutBuilder.TierNumber', {
-          tier: max,
-        })}
+        {max}
       </>
     );
   } else {
-    // Tmin-Tmax
+    // min-max
     return (
       <>
-        {`${t('LoadoutBuilder.TierNumber', {
-          tier: min,
-        })}-${max}`}
+        {min}-{max}
       </>
     );
   }

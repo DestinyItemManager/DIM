@@ -1,0 +1,448 @@
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+  PreDragActions,
+  SensorAPI,
+  SnapDragActions,
+} from '@hello-pangea/dnd';
+import BungieImage from 'app/dim-ui/BungieImage';
+import { t } from 'app/i18next-t';
+import { DimStore } from 'app/inventory/store-types';
+import { MAX_STAT } from 'app/loadout/known-values';
+import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
+import { useD2Definitions } from 'app/manifest/selectors';
+import { percent } from 'app/shell/formatters';
+import {
+  AppIcon,
+  dragHandleIcon,
+  faCheckSquare,
+  faSquare,
+  moveDownIcon,
+  moveUpIcon,
+} from 'app/shell/icons';
+import { delay } from 'app/utils/promises';
+import clsx from 'clsx';
+import { Dispatch, useEffect, useRef, useState } from 'react';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { ArmorStatHashes, MinMaxStat, ResolvedStatConstraint, StatRanges } from '../types';
+import styles from './TierlessStatConstraintEditor.m.scss';
+
+/**
+ * A selector that allows for choosing minimum and maximum stat ranges, plus
+ * reordering the stat priority. This does not use tiers, it allows selecting
+ * exact stat values and is mean to be used after Edge of Fate releases and
+ * makes all stats have an incremental effect.
+ */
+export default function TierlessStatConstraintEditor({
+  store,
+  resolvedStatConstraints,
+  statRangesFiltered,
+  equippedHashes,
+  className,
+  lbDispatch,
+  processing,
+}: {
+  store: DimStore;
+  resolvedStatConstraints: ResolvedStatConstraint[];
+  /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
+  statRangesFiltered?: Readonly<StatRanges>;
+  equippedHashes: Set<number>;
+  className?: string;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
+  processing: boolean;
+}) {
+  const handleStatChange = (constraint: ResolvedStatConstraint) =>
+    lbDispatch({ type: 'statConstraintChanged', constraint });
+
+  const handleClear = () => lbDispatch({ type: 'statConstraintReset' });
+
+  const handleRandomize = () => lbDispatch({ type: 'statConstraintRandomize' });
+
+  const handleSyncFromEquipped = () => {
+    const constraints = Object.values(store.stats).map(
+      (s): ResolvedStatConstraint => ({
+        statHash: s.hash,
+        ignored: false,
+        maxStat: MAX_STAT,
+        minStat: s.value,
+      }),
+    );
+    lbDispatch({ type: 'setStatConstraints', constraints });
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+    const sourceIndex = result.source.index;
+    lbDispatch({
+      type: 'statOrderChanged',
+      sourceIndex,
+      destinationIndex: result.destination.index,
+    });
+  };
+
+  return (
+    <LoadoutEditSection
+      title={t('LoadoutBuilder.StatConstraints')}
+      className={className}
+      onClear={handleClear}
+      onSyncFromEquipped={handleSyncFromEquipped}
+      onRandomize={handleRandomize}
+    >
+      <DragDropContext onDragEnd={onDragEnd} sensors={[useButtonSensor]}>
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <div ref={provided.innerRef} className={styles.editor}>
+              {resolvedStatConstraints.map((c, index) => {
+                const statHash = c.statHash as ArmorStatHashes;
+                return (
+                  <StatRow
+                    key={statHash}
+                    statConstraint={c}
+                    index={index}
+                    statRange={statRangesFiltered?.[statHash]}
+                    onStatChange={handleStatChange}
+                    equippedHashes={equippedHashes}
+                    processing={processing}
+                  />
+                );
+              })}
+
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </LoadoutEditSection>
+  );
+}
+
+function StatRow({
+  statConstraint,
+  statRange,
+  index,
+  onStatChange,
+  equippedHashes,
+  processing,
+}: {
+  statConstraint: ResolvedStatConstraint;
+  statRange?: MinMaxStat;
+  index: number;
+  onStatChange: (constraint: ResolvedStatConstraint) => void;
+  equippedHashes: Set<number>;
+  processing: boolean;
+}) {
+  const defs = useD2Definitions()!;
+  const statHash = statConstraint.statHash as ArmorStatHashes;
+  const statDef = defs.Stat.get(statHash);
+  const handleIgnore = () => onStatChange({ ...statConstraint, ignored: !statConstraint.ignored });
+
+  const [min, setRawMin] = useState(statConstraint.minStat);
+  const [max, setRawMax] = useState(statConstraint.maxStat);
+  const setMin = (value: number) => {
+    setRawMin(value);
+    setRawMax((max) => Math.max(value, max));
+  };
+  const setMax = (value: number) => {
+    setRawMin((min) => Math.min(value, min));
+    setRawMax(value);
+  };
+  const commitStatChanges = () => {
+    onStatChange({
+      ...statConstraint,
+      minStat: min,
+      maxStat: max,
+    });
+  };
+
+  useEffect(() => {
+    setRawMin(statConstraint.minStat);
+  }, [statConstraint.minStat]);
+  useEffect(() => {
+    setRawMax(statConstraint.maxStat);
+  }, [statConstraint.maxStat]);
+
+  return (
+    <Draggable draggableId={statHash.toString()} index={index}>
+      {(provided, snapshot) => (
+        <div
+          className={clsx(styles.row, {
+            [styles.dragging]: snapshot.isDragging,
+            [styles.ignored]: statConstraint.ignored,
+          })}
+          data-index={index}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <span
+            className={styles.grip}
+            {...provided.dragHandleProps}
+            tabIndex={-1}
+            aria-hidden={true}
+          >
+            <AppIcon icon={dragHandleIcon} />
+          </span>
+          <div className={styles.name}>
+            <button
+              type="button"
+              role="checkbox"
+              aria-checked={!statConstraint.ignored}
+              className={styles.rowControl}
+              onClick={handleIgnore}
+              title={t('LoadoutBuilder.IgnoreStat')}
+            >
+              <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
+            </button>
+            <div className={styles.label} {...provided.dragHandleProps}>
+              <BungieImage
+                className={styles.iconStat}
+                src={statDef.displayProperties.icon}
+                aria-hidden={true}
+                alt=""
+              />
+              {statDef.displayProperties.name}
+            </div>
+          </div>
+          <div className={styles.buttons}>
+            <button
+              type="button"
+              className={styles.rowControl}
+              title={t('LoadoutBuilder.IncreaseStatPriority')}
+              disabled={index === 0}
+              tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
+              data-direction="up"
+              data-draggable-id={statHash.toString()}
+            >
+              <AppIcon icon={moveUpIcon} />
+            </button>
+            <button
+              type="button"
+              className={styles.rowControl}
+              title={t('LoadoutBuilder.DecreaseStatPriority')}
+              disabled={index === 5}
+              tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
+              data-direction="down"
+              data-draggable-id={statHash.toString()}
+            >
+              <AppIcon icon={moveDownIcon} />
+            </button>
+          </div>
+          {!statConstraint.ignored && (
+            <StatEditBar
+              min={min}
+              max={max}
+              setMin={setMin}
+              setMax={setMax}
+              onChange={commitStatChanges}
+            >
+              <StatBar
+                range={statRange}
+                equippedHashes={equippedHashes}
+                min={min}
+                max={max}
+                setMin={setMin}
+                setMax={setMax}
+                onChange={commitStatChanges}
+                processing={processing}
+              />
+            </StatEditBar>
+          )}
+        </div>
+      )}
+    </Draggable>
+  );
+}
+
+function StatEditBar({
+  min,
+  max,
+  setMin,
+  setMax,
+  onChange,
+  children,
+}: {
+  min: number;
+  max: number;
+  setMin: (value: number) => void;
+  setMax: (value: number) => void;
+  onChange: () => void;
+  children: React.ReactNode;
+}) {
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onChange();
+    }
+  };
+
+  return (
+    <div className={styles.statBar}>
+      <input
+        type="number"
+        min={0}
+        max={MAX_STAT}
+        value={min}
+        aria-label={t('LoadoutBuilder.StatMin')}
+        onChange={(e) => {
+          const value = parseInt(e.target.value, 10);
+          setMin(value);
+        }}
+        onBlur={onChange}
+        onKeyUp={handleKeyUp}
+      />
+      {children}
+      <input
+        type="number"
+        min={0}
+        max={MAX_STAT}
+        value={max}
+        aria-label={t('LoadoutBuilder.StatMax')}
+        onChange={(e) => {
+          const value = parseInt(e.target.value, 10);
+          setMax(value);
+        }}
+        onBlur={onChange}
+        onKeyUp={handleKeyUp}
+      />
+    </div>
+  );
+}
+
+function StatBar({
+  min,
+  max,
+  range,
+  setMin,
+  setMax,
+  onChange,
+  processing,
+}: {
+  range?: MinMaxStat;
+  equippedHashes: Set<number>;
+  min: number;
+  max: number;
+  setMin: (value: number) => void;
+  setMax: (value: number) => void;
+  onChange: () => void;
+  processing: boolean;
+}) {
+  const [dragging, setDragging] = useState(false);
+  const draggingMax = useRef(false);
+  const lastClickTime = useRef(0);
+
+  const setValue = (e: React.PointerEvent<HTMLDivElement>) => {
+    const bar = e.currentTarget;
+    const rect = bar.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+    const value = Math.round(ratio * MAX_STAT);
+    draggingMax.current ? setMax(value) : setMin(value);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    setValue(e);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const bar = e.currentTarget;
+    bar.releasePointerCapture(e.pointerId);
+    onChange();
+    setDragging(false);
+  };
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingMax.current = e.shiftKey || (e.target as Element).classList.contains(styles.statBarMax);
+    // double-click
+    if (performance.now() - lastClickTime.current < 200 && !draggingMax.current && range) {
+      setMin(range.maxStat);
+      return;
+    }
+    const bar = e.currentTarget;
+    bar.setPointerCapture(e.pointerId);
+    setValue(e);
+    setDragging(true);
+    lastClickTime.current = performance.now();
+  };
+
+  return (
+    <div
+      className={styles.statRange}
+      title={
+        range &&
+        t('LoadoutBuilder.StatRangeTooltip', {
+          min: range.minStat,
+          max: range.maxStat,
+        })
+      }
+      onPointerDown={handlePointerDown}
+      onPointerUp={dragging ? handlePointerUp : undefined}
+      onPointerMove={dragging ? handlePointerMove : undefined}
+    >
+      {range && range.minStat < range.maxStat && (
+        <div
+          className={clsx(styles.statBarFill, { [styles.processing]: processing })}
+          style={{
+            left: percent(range.minStat / MAX_STAT),
+            width: percent((range.maxStat - range.minStat) / MAX_STAT),
+          }}
+        />
+      )}
+      {(!range || range.minStat !== max) && (
+        <div key="min" className={styles.statBarMin} style={{ left: percent(min / MAX_STAT) }} />
+      )}
+      {(!range || range.maxStat !== max) && (
+        <div key="max" className={styles.statBarMax} style={{ left: percent(max / MAX_STAT) }} />
+      )}
+    </div>
+  );
+}
+
+// Listen for button presses on the up and down buttons and turn it into lift+move+drop actions.
+function useButtonSensor(api: SensorAPI) {
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      // Event already used
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      const target = event.target as HTMLButtonElement;
+      if (
+        target.tagName !== 'BUTTON' ||
+        target.disabled ||
+        !target.dataset.direction ||
+        !target.dataset.draggableId
+      ) {
+        return;
+      }
+
+      const draggableId = target.dataset.draggableId;
+      if (!draggableId) {
+        return;
+      }
+
+      const preDrag: PreDragActions | null = api.tryGetLock(draggableId);
+      if (!preDrag) {
+        return;
+      }
+
+      // we are consuming the event
+      event.preventDefault();
+
+      (async () => {
+        const actions: SnapDragActions = preDrag.snapLift();
+        if (target.dataset.direction === 'down') {
+          actions.moveDown();
+        } else if (target.dataset.direction === 'up') {
+          actions.moveUp();
+        }
+        await delay(300);
+        actions.drop();
+      })();
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, [api]);
+}

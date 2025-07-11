@@ -52,6 +52,14 @@ export interface AutoModsMap {
  * Pick auto mods (general mods and artifice mods) that provide at least the
  * given `neededStats` in `statOrder`.
  */
+// TODO: This will be complicated by tuning mods, maybe?
+//
+// TODO: In the tierless world, I think we can just greedily pick mods (or use a
+// knapsack algorithm/constraint solver) because we don't need to worry about
+// stats not counting because they don't hit a tier. And even then we're really
+// just talking about whether to slot a +5 or +10 mod into each empty space. In
+// fact, we can probably just figure out the maximum number of +5 and +10 mods
+// we can slot in anywhere, and then assign those to stats in order of priority.
 export function chooseAutoMods(
   info: LoSessionInfo,
   neededStats: number[],

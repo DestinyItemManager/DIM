@@ -15,22 +15,21 @@ import {
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
-  LoSessionInfo,
-  generateProcessModPermutations,
-  pickAndAssignSlotIndependentMods,
-  pickOptimalStatMods,
-  precalculateStructures,
-  updateMaxTiers,
-} from '../process-worker/process-utils';
-import { ModAssignmentStatistics, ProcessItem, ProcessMod } from '../process-worker/types';
-import {
   getAutoMods,
   mapArmor2ModToProcessMod,
   mapAutoMods,
   mapDimItemToProcessItem,
 } from '../process/mappers';
 import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxStat, ResolvedStatConstraint } from '../types';
-import { statTier } from '../utils';
+import {
+  LoSessionInfo,
+  generateProcessModPermutations,
+  pickAndAssignSlotIndependentMods,
+  pickOptimalStatMods,
+  precalculateStructures,
+  updateMaxStats,
+} from './process-utils';
+import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 // We don't really pay attention to this in the tests but the parameter is needed
 const modStatistics: ModAssignmentStatistics = {
@@ -500,25 +499,26 @@ describe('process-utils optimal mods', () => {
     }));
   });
 
+  // TODO: These cases don't exactly make sense in the tierless world but it's hard to think through what they should do
   const tierCases: [
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedTiers: number[],
+    expectedStats: number[],
   ][] = [
     // the trick here is that we can use two small mods to boost resilience by a tier,
     // but it's better to use two large mods to boost discipline (cheaper mods...)
-    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [8, 7, 8, 6, 3, 3]],
-    // ensure we combine artifice and small mods if needed
-    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [7, 7, 6, 3, 3, 3]],
-    // ensure we can use a cheap +5 mod to bump the 35 dis to 4 while using artifice on resilience
-    [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [8, 7, 8, 4, 3, 3]],
+    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [80, 70, 80, 60, 30, 30]],
+    // ensure we combine artifice and small mods if needed (all goes to first stat)
+    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [77, 70, 59, 35, 30, 30]],
+    // ensure we can use a cheap +5 mod to bump the 35 dis to 40 while using artifice on resilience
+    [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [80, 71, 80, 40, 30, 30]],
     // ensure we get two tiers in mobility
-    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [8, 6, 3, 3, 3, 3]],
+    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [80, 66, 30, 30, 30, 30]],
     // do everything we can to hit min bounds
-    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
+    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [71, 66, 30, 30, 30, 30]],
     // ensure that negative stat amounts aren't clamped too early
-    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [5, 6, 3, 3, 3, 3]],
+    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [50, 61, 30, 30, 30, 31]],
   ];
 
   const pickMods = (setStats: number[], remainingEnergy: number[], numArtifice: number) => {
@@ -547,7 +547,7 @@ describe('process-utils optimal mods', () => {
     'set with stats %p, energies %p, numArtifice %p yields tiers %p',
     (setStats, remainingEnergy, numArtifice, expectedTiers) => {
       const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
-      expect(finalStats.map(statTier)).toStrictEqual(expectedTiers);
+      expect(finalStats).toStrictEqual(expectedTiers);
     },
   );
 
@@ -559,10 +559,10 @@ describe('process-utils optimal mods', () => {
     expectedStats: number[],
   ][] = [
     // Nice
-    [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [30, 80, 80, 31, 80, 30]],
+    [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [34, 80, 80, 32, 80, 30]],
     // TODO: This is the same problem as above, only with reordered stats. The solution
     // is still optimal in terms of reached stats, but worse in terms of mod usage
-    [[26, 80, 80, 18, 80, 30], [0, 0, 0, 3, 0], 4, [32, 80, 80, 31, 80, 30]],
+    [[26, 80, 80, 18, 80, 30], [0, 0, 0, 3, 0], 4, [36, 80, 80, 30, 80, 30]],
   ];
 
   test.each(exactStatCases)(
@@ -662,7 +662,7 @@ test('process-utils activity mods', async () => {
   // the cheaper stats where the mods can actually fit
   const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
   expect(autoMods).not.toBeUndefined();
-  expect(autoMods!.bonusStats).toEqual([0, 0, 5, 0, 0, 0]);
+  expect(autoMods!.bonusStats).toEqual([0, 0, 10, 0, 0, 0]);
 
   const minMaxesInStatOrder: MinMaxStat[] = [
     { minStat: 0, maxStat: 0 },
@@ -672,16 +672,106 @@ test('process-utils activity mods', async () => {
     { minStat: 0, maxStat: 0 },
     { minStat: 0, maxStat: 0 },
   ];
-  updateMaxTiers(
-    loSessionInfo,
-    items,
-    setStats,
-    setStats.map(statTier),
-    0,
-    resolvedStatConstraints,
-    minMaxesInStatOrder,
+  updateMaxStats(loSessionInfo, items, setStats, 0, resolvedStatConstraints, minMaxesInStatOrder);
+  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([55, 55, 65, 60, 50, 60]);
+});
+
+describe('process-utils updateMaxStats', () => {
+  let items: ProcessItem[];
+  let loSessionInfo: LoSessionInfo;
+
+  beforeAll(async () => {
+    const defs = await getTestDefinitions();
+    items = Array(5)
+      .fill(null)
+      .map((_, i) => ({
+        hash: i,
+        id: i.toString(),
+        isArtifice: false,
+        isExotic: false,
+        name: `Item ${i}`,
+        power: 1500,
+        stats: [0, 0, 0, 0, 0, 0],
+        compatibleModSeasons: [],
+        remainingEnergyCapacity: 10,
+      }));
+
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+  });
+
+  const testCases: [
+    description: string,
+    setStats: number[],
+    initialMinMaxes: { minStat: number; maxStat: number }[],
+    filterMinStat: number,
+    filterMaxStat: number | ((i: number) => number),
+    foundAnyImprovement: boolean,
+    expectedFirstMaxStat: number,
+  ][] = [
+    [
+      'updates maxStat when minMax.maxStat < filter.minStat',
+      [50, 50, 50, 50, 50, 50],
+      Array(6).fill({ minStat: 0, maxStat: 55 }), // Lower than minStat
+      60, // Higher than current maxStat
+      100,
+      false, // foundAnyImprovement is false when only updating to minStat requirement
+      60,
+    ],
+    [
+      'handles stat > minMax.maxStat condition',
+      [85, 50, 50, 50, 50, 50],
+      Array(6)
+        .fill(null)
+        .map((_, i) => ({ minStat: 0, maxStat: i === 0 ? 70 : 50 })), // First stat maxStat is 70
+      30,
+      (i: number) => (i === 0 ? 100 : 70), // First stat allows improvement
+      true,
+      135, // Can reach 135 with 5 large stat mods
+    ],
+    [
+      'skips stat max already at MAX_STAT',
+      [180, 50, 50, 50, 50, 50],
+      Array(6)
+        .fill(null)
+        .map((_, i) => ({ minStat: 0, maxStat: i === 0 ? MAX_STAT : 50 })), // First stat already at MAX_STAT
+      30,
+      MAX_STAT,
+      true,
+      MAX_STAT, // Should remain unchanged
+    ],
+  ];
+
+  test.each(testCases)(
+    '%s',
+    (
+      _description,
+      setStats,
+      minMaxes,
+      filterMinStat,
+      filterMaxStat,
+      expectedResult,
+      expectedFirstMaxStat,
+    ) => {
+      const statFilters = armorStats.map((statHash, i) => ({
+        statHash,
+        minStat: filterMinStat,
+        maxStat: typeof filterMaxStat === 'function' ? filterMaxStat(i) : filterMaxStat,
+      }));
+
+      const foundAnyImprovement = updateMaxStats(
+        loSessionInfo,
+        items,
+        setStats,
+        0,
+        statFilters,
+        minMaxes,
+      );
+
+      expect(foundAnyImprovement).toBe(expectedResult);
+      expect(minMaxes[0].maxStat).toBe(expectedFirstMaxStat);
+    },
   );
-  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([50, 50, 60, 60, 50, 60]);
 });
 
 describe('process-utils general mod assignment', () => {
