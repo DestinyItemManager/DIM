@@ -440,7 +440,7 @@ export default tseslint.config(
   },
   {
     name: 'tests',
-    files: ['**/*.test.ts'],
+    files: ['**/*.test.ts', 'destiny2-api.ts'],
     rules: {
       // We don't want to allow importing test modules in app modules, but of course you can do it in other test modules.
       'no-restricted-imports': 'off',

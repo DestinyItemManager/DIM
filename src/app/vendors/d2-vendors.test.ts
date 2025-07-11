@@ -1,5 +1,6 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
-import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
+import { getTestProfile, getTestVendors } from 'testing/test-profile';
+import { getTestDefinitions } from 'testing/test-utils';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
 async function getTestVendorGroups() {

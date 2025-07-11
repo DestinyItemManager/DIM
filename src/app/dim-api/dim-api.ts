@@ -1,4 +1,5 @@
 import {
+  defaultSettings,
   DeleteAllResponse,
   DestinyVersion,
   ExportResponse,
@@ -18,20 +19,6 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { authenticatedApi, unauthenticatedApi } from './dim-api-helper';
 
 export async function getGlobalSettings() {
-  if ($featureFlags.e2eMode) {
-    // Return mock DIM API settings for E2E tests
-    return {
-      dimApiEnabled: true,
-      destinyProfileMinimumRefreshInterval: 15,
-      destinyProfileStaleThreshold: 30,
-      autoRefresh: true,
-      autoRefreshUnpaused: true,
-      showIssueBanner: false,
-      issueBannerText: '',
-      dimSyncApiEnabled: true,
-    };
-  }
-
   const response = await unauthenticatedApi<PlatformInfoResponse>(
     {
       // This uses "app" instead of "release" because I misremembered it when implementing the server
@@ -47,13 +34,13 @@ export async function getDimApiProfile(account?: DestinyAccount, syncToken?: str
   if ($featureFlags.e2eMode) {
     // Return mock DIM API profile for E2E tests
     return {
-      settings: {},
+      settings: defaultSettings,
       loadouts: [],
       tags: [],
       hashtags: [],
       searches: [],
       triumphs: [],
-    } as any;
+    } as ProfileResponse;
   }
 
   const params: Record<string, string> = account

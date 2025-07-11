@@ -29,7 +29,8 @@ import {
   DestinyProfileResponse,
 } from 'node_modules/bungie-api-ts/destiny2/interfaces';
 import { recoveryModHash } from 'testing/test-item-utils';
-import { getTestDefinitions, getTestProfile, getTestStores } from 'testing/test-utils';
+import { getTestProfile } from 'testing/test-profile';
+import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { analyzeLoadout } from './analysis';
 import { LoadoutAnalysisContext, LoadoutFinding } from './types';
 

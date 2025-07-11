@@ -22,4 +22,6 @@ junit.xml
 eslint.results.json
 .pnpm-store
 /sonda-report.html
-sonda-report/
+/sonda-report
+/playwright-report
+/test-results

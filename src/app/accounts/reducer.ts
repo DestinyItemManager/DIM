@@ -114,7 +114,7 @@ export const accounts: Reducer<AccountsState, AccountsAction> = (
     case getType(actions.loggedOut):
       return {
         ...initialState,
-        needsLogin: $featureFlags.e2eMode ? false : true,
+        needsLogin: true,
       };
 
     case getType(actions.needsDeveloper):

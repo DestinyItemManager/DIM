@@ -55,11 +55,6 @@ export function removeToken() {
  * Returns whether or not we have a token that could be refreshed.
  */
 export function hasValidAuthTokens() {
-  // In E2E mode, always return true to bypass authentication
-  if ($featureFlags.e2eMode) {
-    return true;
-  }
-
   const token = getToken();
   if (!token) {
     return false;

@@ -184,38 +184,6 @@ function doGetManifest(
 
 function loadManifest(tableAllowList: TableShortName[]): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch, getState) => {
-    // In E2E mode, load from real cached manifest file
-    if ($featureFlags.e2eMode) {
-      try {
-        // Load the real cached manifest file
-        const response = await fetch(
-          '/manifest-cache/aggregate-c72a34d3-f297-4f5f-8da6-8767b662554d.json',
-        );
-        if (!response.ok) {
-          throw new Error(`Failed to load cached manifest: ${response.status}`);
-        }
-        const fullManifest = (await response.json()) as AllDestinyManifestComponents;
-
-        // Filter to only include the requested tables to match normal behavior
-        const filteredManifest: Partial<AllDestinyManifestComponents> = {};
-        for (const tableName of tableAllowList) {
-          const fullTableName = `Destiny${tableName}Definition` as DestinyManifestComponentName;
-          if (fullManifest[fullTableName]) {
-            (filteredManifest as any)[fullTableName] = fullManifest[fullTableName];
-          }
-        }
-
-        return filteredManifest as AllDestinyManifestComponents;
-      } catch (e) {
-        errorLog(
-          TAG,
-          'Failed to load cached manifest in E2E mode, falling back to normal loading',
-          e,
-        );
-        // Fall through to normal loading if cached file fails
-      }
-    }
-
     let components: {
       [key: string]: string;
     } | null = null;

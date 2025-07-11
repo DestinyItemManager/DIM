@@ -10,6 +10,7 @@ import {
   DestinyComponentType,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
+  DestinyPlatformSilverComponent,
   DestinyProfileResponse,
   DestinyVendorResponse,
   DestinyVendorsResponse,
@@ -33,7 +34,7 @@ import {
   transferItem,
   updateLoadoutIdentifiers,
 } from 'bungie-api-ts/destiny2';
-import mockProfileData from '../../testing/data/profile-2024-06-13.json';
+import { getTestProfile, getTestVendors } from 'testing/test-profile';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -54,36 +55,6 @@ import {
  * Get the information about the current manifest.
  */
 export async function getManifest(): Promise<DestinyManifest> {
-  if ($featureFlags.e2eMode) {
-    // Return mock manifest for E2E tests
-    return {
-      version: 'mock-manifest-version',
-      mobileAssetContentPath: '/common/destiny2_content/sqlite/en/world_sql_content_mock.content',
-      mobileGearAssetDataBases: [],
-      mobileWorldContentPaths: {
-        en: '/common/destiny2_content/sqlite/en/world_sql_content_mock.content',
-      },
-      jsonWorldContentPaths: {
-        en: '/common/destiny2_content/json/en/DestinyManifest_mock.json',
-      },
-      jsonWorldComponentContentPaths: {
-        en: {
-          DestinyInventoryItemDefinition:
-            '/common/destiny2_content/json/en/DestinyInventoryItemDefinition_mock.json',
-        },
-      },
-      mobileClanBannerDatabasePath: '/common/destiny2_content/clanbanner/clanbanner_mock.content',
-      mobileGearCDN: {
-        Geometry: '/common/destiny2_content/geometry/platform/mobile/geometry',
-        Texture: '/common/destiny2_content/geometry/platform/mobile/textures',
-        PlateRegion: '/common/destiny2_content/geometry/platform/mobile/plated_textures',
-        Gear: '/common/destiny2_content/geometry/gear',
-        Shader: '/common/destiny2_content/geometry/platform/mobile/shaders',
-      },
-      iconImagePyramidInfo: [],
-    } as any;
-  }
-
   const response = await getDestinyManifest(unauthenticatedHttpClient);
   return response.Response;
 }
@@ -107,7 +78,7 @@ export async function getLinkedAccounts(
           displayName: 'MockPlayer#1234',
           bungieGlobalDisplayName: 'MockPlayer',
           bungieGlobalDisplayNameCode: 1234,
-          platformSilver: {},
+          platformSilver: {} as DestinyPlatformSilverComponent,
           supplementalDisplayName: '',
           iconPath: '/img/misc/missing_icon_d2.png',
         },
@@ -125,7 +96,7 @@ export async function getLinkedAccounts(
         isPublic: true,
       },
       profilesWithErrors: [],
-    } as any; // Type assertion to avoid complex typing issues
+    };
   }
 
   const response = await getLinkedProfiles(authenticatedHttpClient, {
@@ -190,7 +161,7 @@ async function getProfile(
   ...components: DestinyComponentType[]
 ): Promise<DestinyProfileResponse> {
   if ($featureFlags.e2eMode) {
-    return mockProfileData.Response as unknown as DestinyProfileResponse;
+    return getTestProfile();
   }
 
   const response = await getProfileApi(authenticatedHttpClient, {
@@ -214,6 +185,9 @@ export async function getVendors(
   account: DestinyAccount,
   characterId: string,
 ): Promise<DestinyVendorsResponse> {
+  if ($featureFlags.e2eMode) {
+    return getTestVendors();
+  }
   const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,

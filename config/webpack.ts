@@ -306,7 +306,7 @@ export default (env: Env) => {
         // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
           test: /\.tsx?$/,
-          exclude: [/testing/, /\.test\.ts$/],
+          exclude: [/\.test\.ts$/],
           use: [
             {
               loader: 'babel-loader',
