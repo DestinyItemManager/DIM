@@ -92,7 +92,7 @@ export function mapDimItemToProcessItem({
     power,
     stats: statMap,
     remainingEnergyCapacity: capacity - modsCost,
-    compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
+    compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
   };
 }
 

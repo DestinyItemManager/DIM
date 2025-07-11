@@ -251,7 +251,6 @@
     "HasNotes": "Show items that have notes applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
     "HasShader": "Shows items that have a shader applied.",
-    "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -278,9 +277,8 @@
     "MaxPower": "Shows the items at the highest power per slot.",
     "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
     "Memento": "Shows weapons that have a memento socket.",
-    "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
+    "ModSlot": "Shows armor with a specific mod type slot.",
     "Mods": {
-      "Y2": "Shows items with a Year 2 mod attached.",
       "Y3": "Shows items with any Armor 2.0 mods selected."
     },
     "Name": "Shows items whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",

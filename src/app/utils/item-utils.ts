@@ -53,7 +53,6 @@ export const modMetadataByPlugCategoryHash = objectifyArray(
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);
-export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compatibleModTags))];
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
 const specialtySocketTypeHashes = modSocketMetadata.flatMap(
