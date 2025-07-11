@@ -718,7 +718,7 @@
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
     "StatMin": "Min",
-    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat.",
+    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
     "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
