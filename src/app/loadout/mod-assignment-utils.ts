@@ -893,7 +893,7 @@ function isActivityModValid(
   return (
     isModEnergyValid(itemEnergy, activityMod) &&
     modTag &&
-    itemSocketMetadata?.some((metadata) => metadata.compatibleModTags.includes(modTag))
+    itemSocketMetadata?.some((metadata) => metadata.slotTag === modTag)
   );
 }
 
