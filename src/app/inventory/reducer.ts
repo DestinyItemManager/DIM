@@ -164,9 +164,11 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
       return initialState;
 
     case getType(actions.setMockProfileResponse):
-      return produce(state, (draft) => {
-        draft.mockProfileData = action.payload;
-      });
+      return {
+        ...state,
+        mockProfileData: action.payload,
+        profileResponse: undefined,
+      };
 
     case getType(actions.clearStores):
       return {
