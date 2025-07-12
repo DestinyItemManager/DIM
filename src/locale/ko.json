@@ -512,7 +512,7 @@
     "Exclude": "제외된 아이템",
     "ExcludeHelp": "아이템을 쉬프트 + 클릭(또는 이 바구니에 끌어서 놓기)하여 특정 장비를 제외한 세트를 만듭니다.",
     "ExistingBuildStats": "기존 빌드 능력치",
-    "ExistingBuildStatsNote": "엄격하게 더 높은 능력치 등급을 가진 빌드만 표시합니다.",
+    "ExistingBuildStatsNote": "엄격하게 더 높은 능력치를 가진 빌드만 표시합니다.",
     "FilterSets": "장비 조합 필터",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
@@ -579,17 +579,17 @@
     "Analyzed": "{{numLoadouts}}개의 로드아웃 분석됨",
     "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 로드아웃 분석하는 중",
     "BetterStatsAvailable": {
-      "Description": "이 로드아웃에서 다른 방어구나 개조 부품을 선택하면 더 높은 능력치 등급에 도달할 수 있습니다. 더 나은 빌드를 보려면 \"$t(Loadouts.OpenInOptimizer)\"를 선택하세요.",
+      "Description": "이 로드아웃에서 다른 방어구나 개조 부품을 선택하면 더 높은 능력치에 도달할 수 있습니다. 더 나은 빌드를 보려면 \"$t(Loadouts.OpenInOptimizer)\"를 선택하세요.",
       "Name": "더 좋은 능력치 사용 가능"
     },
-    "BetterStatsAvailableFontNote": "메모: 이 로드아웃은 \"... 샘\" 개조 부품을 사용하며 능력치 등급이 T10을 넘길 수 있습니다. DIM이 초과되는 등급을 줄여서 더 나은 능력치를 찾을 수 있습니다. 이러한 과정을 무시하려면 로드아웃에서 \"$t(Loadouts.IncludeRuntimeStatBenefits)\"을 비활성화합니다.",
+    "BetterStatsAvailableFontNote": "메모: 이 로드아웃은 \"... 샘\" 개조 부품을 사용하며 능력치가 200을 넘길 수 있습니다. DIM이 초과되는 능력치를 줄여서 더 나은 능력치를 찾을 수 있습니다. 이러한 과정을 무시하려면 로드아웃에서 \"$t(Loadouts.IncludeRuntimeStatBenefits)\"을 비활성화합니다.",
     "DoesNotRespectExotic": {
       "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 경이 아이템을 지정하고 있지만, 로드아웃에 일치하는 경이 아이템이 없습니다.",
       "Name": "잘못된 경이 아이템"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 능력치 등급을 지정하고 있지만, 로드아웃이 그 등급을 달성하지 않습니다.",
-      "Name": "잘못된 능력치 등급"
+      "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 능력치의 최솟값을 지정하고 있지만, 로드아웃이 그 등급을 달성하지 않습니다.",
+      "Name": "잘못된 능력치 최솟값"
     },
     "EmptyFragmentSlots": {
       "Description": "하위직업에 빈 조각 슬롯이 있습니다.",
@@ -612,7 +612,7 @@
       "Name": "할당되지 않은 개조 부품"
     },
     "NeedsArmorUpgrades": {
-      "Description": "이 로드아웃의 방어구를 업그레이드해야 모든 개조 부품이나 특정 능력치 등급을 달성할 수 있습니다.",
+      "Description": "이 로드아웃의 방어구를 업그레이드해야 모든 개조 부품이나 특정 능력치를 달성할 수 있습니다.",
       "Name": "방어구 업그레이드 필요"
     },
     "NotAFullArmorSet": {
@@ -629,7 +629,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "+5 개조 부품 추가",
     "All": "전체",
     "AnyExotic": "모든 경이",
     "AnyExoticDescription": "경이 아이템이 세트에 반드시 포함되어야 하지만, 어떤 경이 아이템이라도 상관없습니다.",
@@ -675,15 +674,15 @@
       "AssumptionsRestricted": "DIM이 방어구 에너지 유형 변경을 추천할 수 없음:",
       "BadSlot": "{{bucketName}} 슬롯에서 이 모드를 장착할 수 있는 허용된 아이템이 없음:",
       "Header": "빌드를 찾을 수 없습니다. DIM에서 빌드를 찾을 수 없는 이유는 다음과 같습니다:",
-      "LowerBoundsFailed": "대부분의 조합이 요청한 능력치 단계를 만족하지 않음",
+      "LowerBoundsFailed": "대부분의 조합이 최소 능력치 요구사항을 충족하지 않음",
       "MaybeAllowMoreItems": "다른 아이템을 허용하는 것을 고려해보세요:",
-      "MaybeDecreaseLowerBounds": "최소 능력치 단계를 줄이는 것을 고려해보세요",
-      "MaybeIncreaseUpperBounds": "최대 능력치 단계를 높이는 것을 고려해보세요",
+      "MaybeDecreaseLowerBounds": "최소 능력치 요구사항을 줄이는 것을 고려해보세요",
+      "MaybeIncreaseUpperBounds": "최소 능력치 요구사항을 높이는 것을 고려해보세요",
       "MaybeRemoveMods": "일부 개조 부품을 제거해보세요:",
       "MaybeRemoveSearchQuery": "검색 창에서 필터를 지우거나 변경해 보세요",
       "ModAssignmentFailed": "대부분의 조합이 요청한 개조 부품을 장착할 수 없음",
       "RemoveMods": "이 개조 부품 제거",
-      "UpperBoundsFailed": "대부분의 조합이 최대 능력치 단계를 만족하지 않음"
+      "UpperBoundsFailed": "대부분의 조합이 최대 능력치 요구사항을 충족하지 않음"
     },
     "NoExotic": "경이 없음",
     "NoExoticDescription": "검색 창에서 \"not:exotic\"를 검색하는 것과 동일함 - 장비 조합이 경이 방어구를 사용하지 않음.",
@@ -692,16 +691,19 @@
     "NoLoadoutsToCompare": "비교할 로드아웃 없음",
     "None": "없음",
     "OptimizerExplanationGuide": "사용 설명서에서 더 자세한 정보나 비디오 튜토리얼을 찾을 수 있습니다.",
-    "OptimizerExplanationMods": "경이 아이템, 개조 부품, 하위직업을 선택하세요. 로드아웃 최적화는 선택된 개조 부품과 하위직업의 능력치 증가량만 반영하며 이미 방어구에 장착된 개조 부품은 무시합니다.",
-    "OptimizerExplanationSearch": "검색 창을 사용하여 검토할 방어구의 수를 줄이세요. 슬롯에 검색과 일치하는 방어구가 없으면 그 슬롯의 모든 방어구가 검토됩니다.",
-    "OptimizerExplanationStats": "가장 중요한 능력치를 위로 끌어서 놓고, 최적화가 필요하지 않은 능력치는 비활성화하세요.",
+    "OptimizerExplanationMods": "경이 아이템, 개조 부품, 하위직업을 선택하세요. 이들은 빌드에 능력치를 추가하며, 방어구에 이미 장착된 개조 부품은 무시됩니다.",
+    "OptimizerExplanationSearch": "검색 창을 사용하여 고려할 방어구를 좁혀보세요. 슬롯에 검색 조건과 일치하는 방어구가 없으면, 해당 슬롯에 대해서는 검색이 무시됩니다.",
+    "OptimizerExplanationStats": "가장 중요한 능력치를 위로 끌어서 놓고, 최대화하고 싶지 않은 능력치는 선택 해제하세요.",
     "OptimizerSet": "최적화 조합",
     "PinnedItems": "고정된 아이템",
-    "ProcessingSets": "가장 높은 등급의 조합 찾는 중...",
+    "ProcessingSets": "가장 높은 능력치의 조합 찾는 중...",
     "SaveAs": "다른 이름으로 저장",
     "SpeedReport": "{{time}}초 만에 {{combos, number}}개의 조합 생성됨",
-    "StatConstraints": "능력치 등급 우선도 & 범위",
+    "StatConstraints": "능력치 우선도 & 범위",
     "StatMax": "최대",
+    "StatMin": "최소",
+    "StatRangeTooltip": "현재 최소/최대 설정에서, 이 능력치가 {{min}}에서 {{max}} 사이인 로드아웃이 존재합니다. 더블 클릭하면 최솟값을 {{max}}로 설정합니다.",
+    "StatTotal": "합계: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "최소 능력치 등급 선택",
     "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
@@ -773,7 +775,7 @@
     "FilteredItems": "필터링된 아이템",
     "FindAnother": "다른 {{name}} 검색",
     "FromEquipped": "현재 장비",
-    "Generated": "T{{tier}} 로드아웃",
+    "Generated": "{{statTotal}} 능력치 로드아웃",
     "HashtagTip": "팁: 로드아웃 이름이나 메모에 #해시태그를 사용하면 이곳에 표시됩니다.",
     "Import": {
       "BadURL": "로드아웃 공유 URL이 유효하지 않음.",
@@ -792,7 +794,7 @@
     "LoadoutParameters": "로드아웃 최적화 설정",
     "LoadoutParametersExotic": "로드아웃이 이 경이 아이템을 포함해야 함: {{exoticName}}",
     "LoadoutParametersQuery": "아이템이 이 검색 필터와 일치해야 함",
-    "LoadoutParametersStats": "능력치 선호도와 최소/최대 능력치 등급",
+    "LoadoutParametersStats": "능력치 선호도와 최소/최대 능력치 범위",
     "Loadouts": "로드아웃",
     "MakeRoom": "우편 담당자를 위한 공간 생성",
     "MakeRoomDone_female_other": "{{store}}에서 {{movedNum}}개의 아이템을 옮겨서 우편 담당자 아이템 {{count}}개를 위한 공간을 만들었습니다.",

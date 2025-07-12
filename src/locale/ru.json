@@ -560,7 +560,7 @@
     "Exclude": "Исключённые Предметы",
     "ExcludeHelp": "[Shift]+[ЛКМ] по предмету (или перетащите его в этот список), добавляет его к Игнорируемым. Ни одного Игнорируемого предмета нет ни в одном сгенерированном наборе.",
     "ExistingBuildStats": "Характеристики Существующего Билда",
-    "ExistingBuildStatsNote": "Показ билдов только со строго лучшими рангами характеристик.",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stats.",
     "FilterSets": "Наборы фильтров",
     "Help": {
       "And": "Будет использована броня со всеми этими перками (\"и\")",
@@ -627,17 +627,17 @@
     "Analyzed": "Проанализировано {{numLoadouts}} Комплектов",
     "Analyzing": "Анализ {{numAnalyzed}}/{{numLoadouts}} Комплектов",
     "BetterStatsAvailable": {
-      "Description": "Выбор различной брони или модификаторов для этого Комплекта позволит достичь более высоких рангов характеристик. Выберите \"$t(Loadouts.OpenInOptimizer)\" чтобы просмотреть лучшие билды.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stats. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Доступны лучшие характеристики"
     },
-    "BetterStatsAvailableFontNote": "Примечание: Этот Комплект использует модификаторы \"Источник ...\", из-за которых ранг характеристик может превышать T10. DIM может определить лучшие характеристики за счёт уменьшения количества лишних рангов. Если это не нужно, отключите \"$t(Loadouts.IncludeRuntimeStatBenefits)\" в Комплекте.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat to exceed 200. DIM may identify better stats by reducing the amount of excess stats. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "Настройки Оптимизатора Комплекта для этого комплекта задают выбор экзота, но комплект не совпадает с этим экзотом.",
       "Name": "Неверный Экзот"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Настройки Оптимизатора Комплекта задают ранги характеристик, но комплект не достигает их.",
-      "Name": "Неверные Ранги Характеристик"
+      "Description": "Loadout Optimizer settings for this Loadout specify stat minimums, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Minimums"
     },
     "EmptyFragmentSlots": {
       "Description": "В этом подклассе есть пустые ячейки для фрагментов.",
@@ -660,7 +660,7 @@
       "Name": "Неназначенные Модификаторы"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Броня в этом комплекте должна быть улучшена, чтобы вместить все модификаторы или достичь указанных рангов характеристик.",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stats.",
       "Name": "Необходимо Улучшение Брони"
     },
     "NotAFullArmorSet": {
@@ -677,7 +677,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Добавить моды +5",
     "All": "Все",
     "AnyExotic": "Любой экзот",
     "AnyExoticDescription": "Наборы должны содержать экзоты, но любой экзот подойдёт.",
@@ -723,15 +722,15 @@
       "AssumptionsRestricted": "DIM не может рекомендовать изменения энергии брони:",
       "BadSlot": "В слоте {{bucketName}}, ни один из разрешённых предметов не может вместить эти моды:",
       "Header": "Не были найдены комплекты. Вот возможные причины почему DIM не смог найти какие-либо комплекты:",
-      "LowerBoundsFailed": "Многие наборы не отвечают минимальным требованиям по уровню характеристик",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Подумайте о том, чтобы разрешить другие предметы:",
-      "MaybeDecreaseLowerBounds": "Подумайте о понижении минимальных требований уровня характеристик",
-      "MaybeIncreaseUpperBounds": "Подумайте о повышении максимальных требований уровня характеристик",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "MaybeRemoveMods": "Подумайте об удалении некоторых модов:",
       "MaybeRemoveSearchQuery": "Подумайте об очистке или изменении фильтра в поисковой строке",
       "ModAssignmentFailed": "Многие наборы не могут вместить все запрошенные моды",
       "RemoveMods": "Убрать данные моды",
-      "UpperBoundsFailed": "Многие наборы не соответствуют максимальным требованиям по уровню характеристик"
+      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements"
     },
     "NoExotic": "Без экзота",
     "NoExoticDescription": "Эквивалентно поиску \"not:exotic\" в поисковой строке - наборы не будут использовать никакую экзотическую броню.",
@@ -740,16 +739,19 @@
     "NoLoadoutsToCompare": "Нет Наборов для сравнения",
     "None": "Отсутствует",
     "OptimizerExplanationGuide": "Прочтите руководство пользователя для получения дополнительной информации и видеоуроков.",
-    "OptimizerExplanationMods": "Выберите экзот, моды и подкласс. Конструктор Наборов учитывает только бонусы к характеристикам от выбранных модов и параметров подкласса - любые уже надетые на броню моды игнорируются.",
-    "OptimizerExplanationSearch": "Используйте строку поиска, чтобы сузить выбор брони на рассмотрение. Если никакая броня в слоте не подходит под поиск, то вся броня в этом слоте будет рассмотрена.",
-    "OptimizerExplanationStats": "Перетащите самые важные характеристики наверх, и отключите характеристики, которые вы не хотите оптимизировать.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Набор Оптимизатора",
     "PinnedItems": "Закрепленные Предметы",
-    "ProcessingSets": "Поиск набора с наивысшим рангом...",
+    "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Сохранить как",
     "SpeedReport": "Сгенерировано {{combos, number}} комбинаций за {{time}} секунд",
-    "StatConstraints": "Приоритеты Рангов Характеристик и Диапазоны",
+    "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Макс.",
+    "StatMin": "Min",
+    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
+    "StatTotal": "Total: {{total}}",
     "TierNumber": "Т{{tier}}",
     "TierSelect": "Выберите минимальный ранг характеристики",
     "UnableToAddAllMods": "Не удалось добавить все моды.",
@@ -821,7 +823,7 @@
     "FilteredItems": "Отфильтрованные предметы",
     "FindAnother": "Найти следующий {{name}}",
     "FromEquipped": "Из экипированных",
-    "Generated": "Т{{tier}} Набор",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "Совет: Используйте #хэштеги в названиях ваших комплектов или в заметках и они будут отображаться здесь.",
     "Import": {
       "BadURL": "Недопустимая ссылка на комплект.",
@@ -843,7 +845,7 @@
     "LoadoutParameters": "Настройки Конструктора Наборов",
     "LoadoutParametersExotic": "Комплект должен включать этот экзот: {{exoticName}}",
     "LoadoutParametersQuery": "Предметы должны соответствовать этому фильтру поиска",
-    "LoadoutParametersStats": "Приоритеты характеристик и минимальные/максимальные ранги характеристик",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "Loadouts": "Наборы",
     "MakeRoom": "Освободить место для Почтмейстера",
     "MakeRoomDone_female_few": "Закончено освобождение места для {{count}} предметов Почтмейстера, перемещением {{movedNum}} предметов {{store}}.",

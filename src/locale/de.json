@@ -30,7 +30,7 @@
   "Armory": {
     "AlternateItems": "Alternative Versionen",
     "Armory": "Waffenkammer",
-    "DifferentSeason": "Reissue from a different season",
+    "DifferentSeason": "Neu von einer anderen Saison",
     "NoNotes": "Keine Notizen",
     "OpenInArmory": "im Arsenal ansehen",
     "Season": "Saison {{season}}, Jahr {{year}}",
@@ -254,7 +254,7 @@
     "HoldsMod": "Zeigt Rüstung, die kompatibel mit einem bestimmten saisonalem Mod Typen ist.",
     "InDimLoadout": "is:iningameloadout zeigt Gegenstände an, die in einem DIM-Loadout enthalten sind.",
     "InInGameLoadout": "is:iningameloadout zeigt Gegenstände an, die in einem In-Game-Loadout enthalten sind.",
-    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
+    "InInventory": "Zeigt Items an, von denen du mindestens eine Kopie in deinem Inventar hast. Nur wirklich nützlich in den Bildschirmen Händler und Sammlungen.",
     "InLoadout": "is:inloadout zeigt Gegenstände, die in einem beliebigen Loadout enthalten sind. Eine Suche mit inloadout: zeigt Gegenstände, die in Loadouts mit passenden Titeln enthalten sind. Bei Verwendung eines Hashtags zeigt inloadout: Gegenstände an, deren Loadouts den Hashtag im Titel oder Notizen haben. Bei Verwendung mit einem Bereich werden Gegenstände angezeigt, die in entsprechend vielen Loadouts enthalten sind.",
     "Infusable": "Zeigt Gegenstände, die infundiert werden können.",
     "InfusionFodder": "Zeigt Gegenstände, die für Glimmer, in einen gleichen Gegenstand, mit nicht so viel Power, infundiert werden können.",
@@ -595,17 +595,17 @@
     "Analyzed": "{{numLoadouts}} Loadouts analysiert",
     "Analyzing": "Analysiere {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Das Auswählen anderer Rüstungen oder Mods für dieses Loadout, ermöglichen höhere Tier-Werte zu erreichen. Wähle \"$t(Loadouts.OpenInOptimizer)\", um bessere Builds anzuzeigen.",
+      "Description": "Die Wahl anderer Rüstungen oder Mods für dieses Loadout erlaubt es höhere Werte zu erreichen. Wähle \"$t(Loadouts.OpenInOptimizer)\", um bessere Builds zu sehen.",
       "Name": "Bessere Werte verfügbar"
     },
-    "BetterStatsAvailableFontNote": "Hinweis: Dieses Loadout benutzt \"Quelle der ...\"-Mods, welche einen Tier-Wert über T10 erzeugen. DIM kann evtl. bessere Werte identifizieren, indem die überschüssigen Werte verringert werden. Wenn dies unerwünscht ist, deaktiviere \"$t(Loadouts.IncludeRuntimeStatBenefits)\" im Loadout.",
+    "BetterStatsAvailableFontNote": "Hinweis: Dieses Loadout benutzt \"Quelle der ...\"-Mods, welche Werte über 200 erzeugen. DIM kann evtl. bessere Werte identifizieren, indem die zu hohen Werte verringert werden. Wenn dies unerwünscht ist, deaktiviere \"$t(Loadouts.IncludeRuntimeStatBenefits)\" im Loadout.",
     "DoesNotRespectExotic": {
       "Description": "Die Loadout-Optimierer-Einstellungen dieses Loadouts legen eine Exotic-Auswahl fest, aber das Loadout entspricht nicht diesem Exotic.",
       "Name": "Falsches Exotic"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Loadout-Optimierer-Einstellungen für dieses Loadout geben Tier-Werte vor, aber das Loadout erreicht sie nicht.",
-      "Name": "Falsche Tier-Werte"
+      "Description": "Loadout-Optimierer-Einstellungen für dieses Loadout geben Minimalwerte vor, aber das Loadout erreicht sie nicht.",
+      "Name": "Falsche Minimalwerte"
     },
     "EmptyFragmentSlots": {
       "Description": "Es gibt leere Fragment-Slots in diesem Fokus.",
@@ -628,7 +628,7 @@
       "Name": "Nicht zugewiesene Mods"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Rüstung in diesem Loadout muss verbessert werden, um alle Mods unterbringen zu können oder bestimmte Tier-Werte zu erreichen.",
+      "Description": "Rüstung in diesem Loadout muss verbessert werden, um alle Mods unterbringen zu können oder bestimmte Werte zu erreichen.",
       "Name": "Benötigt Rüstungsverbesserungen"
     },
     "NotAFullArmorSet": {
@@ -645,7 +645,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "+5 Mods hinzufügen",
     "All": "Alle",
     "AnyExotic": "Irgendein Exotik",
     "AnyExoticDescription": "Sets müssen einen exotischen Gegenstand beinhalten, es ist aber egal welchen.",
@@ -691,15 +690,15 @@
       "AssumptionsRestricted": "DIM kann keine Änderungen an der Rüstungs-Affinität empfehlen:",
       "BadSlot": "Im {{bucketName}}-Slot konnte keiner der erlaubten Gegenstände diese Mods aufnehmen:",
       "Header": "Es wurden keine Builds gefunden. Hier sind mögliche Gründe, warum DIM keine Builds finden konnte:",
-      "LowerBoundsFailed": "Viele Sets erfüllten nicht die Mindestanforderungen für Tier-Stufen",
+      "LowerBoundsFailed": "Viele Sets erfüllten nicht die Mindestanforderungen",
       "MaybeAllowMoreItems": "Erwäge, andere Gegenstände zu erlauben:",
-      "MaybeDecreaseLowerBounds": "Ziehe in Betracht, die Mindestanforderungen für Tier-Stufen zu reduzieren",
-      "MaybeIncreaseUpperBounds": "Ziehe die Erhöhung der Tier-Stufen in Betracht",
+      "MaybeDecreaseLowerBounds": "Ziehe in Betracht, die Mindestanforderungen zu reduzieren",
+      "MaybeIncreaseUpperBounds": "Ziehe in Betracht, die Mindestanforderungen zu erhöhen",
       "MaybeRemoveMods": "Erwäge, einige Mods zu entfernen:",
       "MaybeRemoveSearchQuery": "Ziehe in Betracht, Filter in der Suchleiste zu löschen oder zu ändern",
       "ModAssignmentFailed": "Viele Sets konnten nicht alle ausgewählten Mods unterbringen",
       "RemoveMods": "Diese Mods entfernen",
-      "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen für Tier-Stufen"
+      "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen"
     },
     "NoExotic": "Kein Exotik",
     "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - Sets werden keine exotischen Rüstungen verwenden.",
@@ -708,16 +707,19 @@
     "NoLoadoutsToCompare": "Keine Loadouts für Vergleich",
     "None": "Keine",
     "OptimizerExplanationGuide": "Lies das Benutzerhandbuch für weitere Informationen und ein Video-Tutorial.",
-    "OptimizerExplanationMods": "Wähle ein Exotik, Mods und einen Fokus. Loadout-Optimierer berücksichtigt nur Werte-Boni von Mods und Fokus-Optionen, die du wählst. Alle Mods, die bereits auf der Rüstung sind, werden ignoriert.",
-    "OptimizerExplanationSearch": "Benutze die Suchleiste, um die zu berücksichtigende Rüstung einzugrenzen. Wenn keine der Rüstungen in einem Slot der Suche entspricht, werden alle Rüstungen in diesem Slot berücksichtigt.",
+    "OptimizerExplanationMods": "Wähle ein Exotik, Mods und eine Unterklasse. Diese werden Statistiken zum Loadout beitragen, während alle Mods auf der Rüstung ignoriert werden.",
+    "OptimizerExplanationSearch": "Benutze die Suchleiste, um die zu berücksichtigende Rüstung einzugrenzen. Wenn keine Rüstung in einem Slot mit der Suche übereinstimmt, wird die Suche für diesen Slot ignoriert.",
     "OptimizerExplanationStats": "Ziehe die wichtigsten Stats nach oben und deaktiviere Stats, die du nicht optimieren möchtest.",
     "OptimizerSet": "Optimierer-Set",
     "PinnedItems": "Angepinnte Gegenstände",
-    "ProcessingSets": "Höchste Tier-Sets finden...",
+    "ProcessingSets": "Suche nach den höchsten Sets...",
     "SaveAs": "Speichern unter",
     "SpeedReport": "{{combos, number}} Kombinationen in {{time}} Sekunden erstellt",
-    "StatConstraints": "Tier-Wert Prioritäten und Bereiche",
+    "StatConstraints": "Wert Prioritäten und Bereiche",
     "StatMax": "Max",
+    "StatMin": "Min",
+    "StatRangeTooltip": "Mit der aktuellen Min/Max-Einstellung sind Loadouts vorhanden, die {{min}} zu {{max}} Punkte in diesem Wert haben. Doppelklicken, um Min auf {{max}} zu setzen.",
+    "StatTotal": "Gesamt: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Wähle minimalen Wert-Tier",
     "UnableToAddAllMods": "Nicht in der Lage, alle Mods hinzuzufügen.",
@@ -789,7 +791,7 @@
     "FilteredItems": "Gefilterte Gegenstände",
     "FindAnother": "Finde andere(s) {{name}}",
     "FromEquipped": "Ausgerüstet",
-    "Generated": "T{{tier}} Loadout",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "Tipp: Du kannst #Hashtags in deinen Loadout-Namen oder -Notizen verwenden, um sie hier angezeigt zu bekommen.",
     "Import": {
       "BadURL": "Keine gültige Loadout-Teilen-URL.",
@@ -809,7 +811,7 @@
     "LoadoutParameters": "Loadout-Optimierer-Einstellungen",
     "LoadoutParametersExotic": "Loadout muss dieses Exotische beinhalten: {{exoticName}}",
     "LoadoutParametersQuery": "Gegenstände müssen mit diesem Suchfilter übereinstimmen",
-    "LoadoutParametersStats": "Stat-Prioritäten und minimale/maximale Stat-Stufen (Tier)",
+    "LoadoutParametersStats": "Wert-Prioritäten und minimale/maximale Wertebereiche",
     "Loadouts": "Loadouts",
     "MakeRoom": "Schaffe Platz für Poststelle",
     "MakeRoomDone_female_one": "Platz für 1 Poststellen-Gegenstand durch Verschieben von 1 Gegenstand von {{store}} geschaffen.",
@@ -1030,7 +1032,7 @@
     "BulkMoveLoadoutName": "Im Organizer ausgewählt",
     "BulkTag": "Markierung",
     "Columns": {
-      "Ammo": "Ammo",
+      "Ammo": "Munition",
       "Archetype": "Archetyp",
       "BaseStats": "Grundwerte",
       "Breaker": "Brecher",
@@ -1043,7 +1045,7 @@
       "Harmonizable": "Harmonisierbar",
       "Icon": "Icon",
       "Intrinsics": "Intrinsisch",
-      "KillTracker": "Kills",
+      "KillTracker": "Eleminierungen",
       "Level": "Level",
       "Loadouts": "Loadouts",
       "Location": "Ort",
@@ -1059,7 +1061,7 @@
       "OtherPerks": "Andere Perks",
       "PercentComplete": "% Abgeschlossen",
       "Perks": "Perks",
-      "PerksGrid": "Perks Grid",
+      "PerksGrid": "Perks Raster",
       "PerksMods": "Perks & Mods",
       "Power": "Power",
       "Quality": "Qualität %",

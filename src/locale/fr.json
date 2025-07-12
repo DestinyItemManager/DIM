@@ -528,7 +528,7 @@
     "Exclude": "Objets exclus",
     "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
     "ExistingBuildStats": "Stats de l'équipement existant",
-    "ExistingBuildStatsNote": "Ne montre que les équipements avec des paliers de stats strictement supérieurs.",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stats.",
     "FilterSets": "Filtrer les sets",
     "Help": {
       "And": "L'armure avec tout ces attributs sera utilisé (\"et\")",
@@ -595,17 +595,17 @@
     "Analyzed": "{{numLoadouts}} équipements analysés",
     "Analyzing": "Analyse de {{numAnalyzed}}/{{numLoadouts}} équipements",
     "BetterStatsAvailable": {
-      "Description": "Choisir des armures ou des mods différents pour cet équipement permettra d'atteindre des paliers de stat supérieurs. Choisissez \"$t(Loadouts.OpenInOptimizer)\" pour voir de meilleurs équipements.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stats. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Amélioration de stats possibles"
     },
-    "BetterStatsAvailableFontNote": "Note : cet équipement utilise des mods \"Puit de ...\", ce qui monte une stat au dessus du pallier 10. DIM pourrait identifier des meilleurs stats en réduisant la quantité de paliers en trop. Si ce n'est pas souhaité, désactivez \"$t(Loadouts.IncludeRuntimeStatBenefits)\" dans l'équipement.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat to exceed 200. DIM may identify better stats by reducing the amount of excess stats. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "Les paramètres d'optimiseur de cet équipement spécifient un choix d'exotique, mais cet équipement ne contient pas cet exotique.",
       "Name": "Mauvais exotique"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Les paramètres d'optimiseur de cet équipement spécifient des paliers de stat, mais cet équipement ne les atteint pas.",
-      "Name": "Mauvais paliers de stat"
+      "Description": "Loadout Optimizer settings for this Loadout specify stat minimums, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Minimums"
     },
     "EmptyFragmentSlots": {
       "Description": "Il y a des emplacements de fragment vides dans cette doctrine.",
@@ -628,7 +628,7 @@
       "Name": "Mods non assignés"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Les armures de cet équipement doivent être améliorées pour pouvoir accueillir tous les mods ou atteindre les paliers de stat spécifiés.",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stats.",
       "Name": "Amélioration d'armure nécessaire"
     },
     "NotAFullArmorSet": {
@@ -645,7 +645,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Ajouter les mods +5",
     "All": "Tous",
     "AnyExotic": "N'importe quel exotique",
     "AnyExoticDescription": "Le build doit contenir un exotique, mais n'importe quel exotique fera l'affaire.",
@@ -691,15 +690,15 @@
       "AssumptionsRestricted": "DIM ne peut pas recommander des changements d'élément d'armure :",
       "BadSlot": "Dans l'emplacement {{bucketName}}, aucun des objets autorisés ne peut être adapté à ces mods :",
       "Header": "Aucun build trouver. Voici une liste des raisons possibles pour lesquelles DIM n'a pas pu trouver de builds :",
-      "LowerBoundsFailed": "De nombreux ensembles ne remplissaient pas les conditions de palier de stat minimum",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Envisagez d'autoriser d'autres objets :",
-      "MaybeDecreaseLowerBounds": "Envisagez de réduire les exigences de palier de stat minimum",
-      "MaybeIncreaseUpperBounds": "Envisager d'augmenter les exigences de palier de stat maximum",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "MaybeRemoveMods": "Envisagez de retirer certains mods :",
       "MaybeRemoveSearchQuery": "Envisagez d'effacer ou de changer le filtre dans la barre de recherche",
       "ModAssignmentFailed": "De nombreux ensembles n'étaient pas adaptés à l'ensemble des mods demandés",
       "RemoveMods": "Supprimer ces mods",
-      "UpperBoundsFailed": "De nombreux ensembles ne remplissaient pas les conditions de palier de stat maximum"
+      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements"
     },
     "NoExotic": "Pas d'exotique",
     "NoExoticDescription": "Équivalent à rechrcher \"not:exotic\" dans la barre de recherche - les ensembles n'utiliseront aucune armure exotique.",
@@ -708,16 +707,19 @@
     "NoLoadoutsToCompare": "Aucun équipement à comparer",
     "None": "Aucun",
     "OptimizerExplanationGuide": "Lisez le guide utilisateur pour plus d'informations et un tutoriel vidéo.",
-    "OptimizerExplanationMods": "Choisissez un exotique, des mods, et une doctrine. L'optimiseur n'inclus que les bonus de statistiques des mods que vous choisissez - les mods déjà présents sur l'armure sont ignorés.",
-    "OptimizerExplanationSearch": "Utilisez la barre de recherche pour choisir quelles armures envisager. Si aucune armure ne correspond à votre recherche dans un emplacement, toutes les armures de cet emplacement seront envisagées.",
-    "OptimizerExplanationStats": "Déplacez les stats les plus importantes vers le haut, et désactivez les statistiques pour lesquelles vous ne voulez pas optimiser.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Ensemble de l'optimiseur",
     "PinnedItems": "Objets épinglés",
-    "ProcessingSets": "Recherche des ensembles aux paliers les plus élevés...",
+    "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Enregistrer sous",
     "SpeedReport": "{{combos, number}} combinaisons générées en {{time}} secondes",
-    "StatConstraints": "Priorités et fourchettes des paliers de statistiques",
+    "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
+    "StatMin": "Min",
+    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
+    "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Sélectionner le pallier de stat minimum",
     "UnableToAddAllMods": "Impossible d'ajouter tous les mods.",
@@ -789,7 +791,7 @@
     "FilteredItems": "Objets filtrés",
     "FindAnother": "Trouver un autre {{name}}",
     "FromEquipped": "Équipé",
-    "Generated": "P{{tier}} Équipement",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "Astuce : Utilisez des #hashtags dans vos noms ou notes d'équipement et ils apparaîtront ici.",
     "Import": {
       "BadURL": "Ce n'est pas une URL de partage d'équipement valide.",
@@ -809,7 +811,7 @@
     "LoadoutParameters": "Paramètres de l'optimiseur d'équipement",
     "LoadoutParametersExotic": "L'équipement doit inclure cet exotique : {{exoticName}}",
     "LoadoutParametersQuery": "Les objets doivent correspondre à ce filtre de recherche",
-    "LoadoutParametersStats": "Priorités de statistiques et paliers de statistiques minimum/maximum",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "Loadouts": "Équipements",
     "MakeRoom": "Faire de la place pour le Commis des postes",
     "MakeRoomDone_female_one": "À Fini de faire de la place pour 1 objet du commis des postes en déplaçant 1 objet hors du {{store}}.",

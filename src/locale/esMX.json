@@ -254,7 +254,7 @@
     "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
     "InDimLoadout": "is:indimloadout muestra objetos que están incluidos en cualquier equipación en DIM.",
     "InInGameLoadout": "is:iningameloadout muestra objetos que están incluidos en cualquier equipación en el juego.",
-    "InInventory": "Muestra objetos en los que tengas al menos una copia en tu inventario. Solo son realmente útiles en los Vendedores y en las pantallas de Hazañas.",
+    "InInventory": "Muestra objetos en los que tengas al menos una copia en tu inventario. Solo es realmente útil en las pantallas de los Vendedores y Hazañas.",
     "InLoadout": "is:inloadout muestra objetos que estén incluidos en cualquier equipación. Buscando con inloadout: muestra objetos que estén incluidos en equipaciones con títulos coincidentes. Cuando es usado con un hashtag, inloadout: muestra objetos cuyas equipaciones tengan el hashtag en el título o en las notas. Cuando se usa con un rango, muestra objetos que están en esa cantidad de equipaciones.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "InfusionFodder": "Muestra objetos que podrían ser infundidos en versiones más bajas de poder del mismo objeto sólo por lumen.",
@@ -528,7 +528,7 @@
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "Shift + click en un objeto (o arrástralo y suéltalo en este espacio) para crear un conjunto sin equipo específico.",
     "ExistingBuildStats": "Estadísticas de Equipación Existentes",
-    "ExistingBuildStatsNote": "Mostrando sólo equipaciones con niveles de estadísticas más altas estrictamente.",
+    "ExistingBuildStatsNote": "Mostrando solo equipaciones con estadísticas estríctamente más altas.",
     "FilterSets": "Filtro de conjuntos",
     "Help": {
       "And": "Armadura con todas éstas mejoras será usada (\"y\")",
@@ -595,17 +595,17 @@
     "Analyzed": "{{numLoadouts}} Equipaciones Analizadas",
     "Analyzing": "Analizando {{numAnalyzed}}/{{numLoadouts}} Equipaciones",
     "BetterStatsAvailable": {
-      "Description": "Elegir diferentes armaduras o mods para esta equipación permitirá alcanzar niveles de estadísticas más altos. Elige \"$t(Loadouts.OpenInOptimizer)\" para ver mejores equipaciones.",
+      "Description": "Eligiendo armaduras o modificadores diferentes para esta equipación permitirá alcanzar estadísticas más altas. Elige \"$t(Loadouts.OpenInOptimizer)\" para ver mejores equipaciones.",
       "Name": "Mejores Estadísticas Disponibles"
     },
-    "BetterStatsAvailableFontNote": "Nota: Esta Equipación usa mods de \"Fontana de ...\" que causa que un nivel de estadísticas exceda el N10. DIM podría identificar mejores estadísticas reduciendo la cantidad de niveles de exceso. Si no se desea esto, desactiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" en la Equipación.",
+    "BetterStatsAvailableFontNote": "Nota: Esta Equipación usa los modificadores \"Manantial de ...\" que causan que una estadística exceda 200. DIM podría identificar mejores estadísticas reduciendo la cantidad de exceso de estadísticas. Si no se desea esto, desactiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" en la Equipación.",
     "DoesNotRespectExotic": {
       "Description": "Esta configuración de equipación del Optimizador de Equipaciones especifica una elección de exótico, pero la equipación no coincide con ese exótico.",
       "Name": "Exótico Incorrecto"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "La configuración para esta Equipación del Optimizador de Equipaciones especifica niveles de estadísticas, pero la Equipación no los alcanza.",
-      "Name": "Nivel de Estadísticas Incorrecto"
+      "Description": "La configuración del Optimizador de Equipaciones para esta Equipación especifica unos mínimos de estadísticas, pero la Equipación no las alcanza.",
+      "Name": "Mínimos de Estadísticas Incorrectos"
     },
     "EmptyFragmentSlots": {
       "Description": "Hay ranuras de fragmentos vacías en esta subclase.",
@@ -628,7 +628,7 @@
       "Name": "Mods Sin Asignar"
     },
     "NeedsArmorUpgrades": {
-      "Description": "La armadura en esta equipación necesita ser mejorada para acomodar todos los mods o alcanzar lo niveles de estadísticas especificadas.",
+      "Description": "La armadura en esta equipación necesita ser mejorada para acomodar todos los modificadores o alcanzar estadísticas especificadas.",
       "Name": "Necesita Mejoras de Armadura"
     },
     "NotAFullArmorSet": {
@@ -645,7 +645,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Añadir +5 Mods",
     "All": "Todos",
     "AnyExotic": "Cualquier Excepcional",
     "AnyExoticDescription": "Los conjuntos deben contener un excepcional, pero cualquier excepcional sirve.",
@@ -691,15 +690,15 @@
       "AssumptionsRestricted": "DIM no puede recomendar cambios de energía de armadura:",
       "BadSlot": "En la ranura {{bucketName}} ninguno de los objetos permitidos pudieron acomodar estos mods:",
       "Header": "No se encontraron equipamientos. Estas son las posibles razones por las que DIM no pudo encontrar equipamientos:",
-      "LowerBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de nivel mínimos de estadística",
+      "LowerBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de estadísticas mínimas",
       "MaybeAllowMoreItems": "Considera permitir otros objetos:",
-      "MaybeDecreaseLowerBounds": "Considera reducir los requisitos mínimos de nivel de estadística",
-      "MaybeIncreaseUpperBounds": "Considera incrementar los requisitos máximos de nivel de estadística",
+      "MaybeDecreaseLowerBounds": "Considera reducir los requisitos de estadísticas mínimas",
+      "MaybeIncreaseUpperBounds": "Considera incrementar los requisitos de estadísticas máximas",
       "MaybeRemoveMods": "Considera eliminar ciertos mods:",
       "MaybeRemoveSearchQuery": "Considera limpiar o cambiar el filtro en la barra de búsqueda",
       "ModAssignmentFailed": "Muchas equipaciones no pudieron acomodar todos los mods solicitados",
       "RemoveMods": "Elimina estos mods",
-      "UpperBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de nivel máximos de estadística"
+      "UpperBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de estadísticas máximas"
     },
     "NoExotic": "Sin Excepcional",
     "NoExoticDescription": "Equivalente a buscar \"not:exotic\" en la barra de búsqueda - los conjuntos no usarán ninguna armadura exótica.",
@@ -708,16 +707,19 @@
     "NoLoadoutsToCompare": "No hay equipamientos para comparar",
     "None": "Ninguno",
     "OptimizerExplanationGuide": "Lea la Guía de Usuario para más información y un vídeo tutorial.",
-    "OptimizerExplanationMods": "Elige un exótico, mods y una subclase. El Optimizador de Equipaciones sólo incluye bonus de estadísticas de modificadores y las opciones de subclase que elijas -todos los mods que ya estén en la armadura serán ignorados.",
-    "OptimizerExplanationSearch": "Usa la barra de búsqueda para limitar la armadura a considerar. Si ninguna armadura coincide con la búsqueda en la ranura, toda la armadura en esa ranura será considerada.",
-    "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba y desactiva las estadísticas que no quieras optimizar.",
+    "OptimizerExplanationMods": "Elige un exótico, modificadores y una subclase. Esto contribuirá a las estadísticas de la equipación, mientras que los modificadores que ya estaban en la armadura serán ignorados.",
+    "OptimizerExplanationSearch": "Usa la barra de búsqueda para reducir la búsqueda de armadura a considerar. Si no hay armadura en la ranura que coincida con la búsqueda, la búsqueda será ignorada para esa ranura.",
+    "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba y desmarca las que no quieras maximizar.",
     "OptimizerSet": "Set Optimizador",
     "PinnedItems": "Objetos Fijados",
-    "ProcessingSets": "Buscando las equipaciones de niveles más altos...",
+    "ProcessingSets": "Encontrando los conjuntos de estadísticas más altas...",
     "SaveAs": "Guardar como",
     "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
-    "StatConstraints": "Prioridad de Nivel de Estadísticas y Rangos",
+    "StatConstraints": "Prioridades & Rangos de Estadísticas",
     "StatMax": "Máx",
+    "StatMin": "Min",
+    "StatRangeTooltip": "Con la configuración actual de min/max, existen equipaciones que tienen de {{min}} a {{max}} puntos en esta estadística. Haz doble clic para configurar el min a {{max}}.",
+    "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Seleccionar nivel mínimo de la estadística",
     "UnableToAddAllMods": "No se pueden agregar todos los mods.",
@@ -789,7 +791,7 @@
     "FilteredItems": "Objetos filtrados",
     "FindAnother": "Encontrar otro {{name}}",
     "FromEquipped": "Equipado",
-    "Generated": "Equipamiento N{{tier}}",
+    "Generated": "{{statTotal}} Puntos de Estadísticas de Equipación",
     "HashtagTip": "Tip: Usa #hashtags en los nombres o notas de tu equipamiento y se mostrarán aquí.",
     "Import": {
       "BadURL": "No es un enlace válido de compartición de equipamiento.",
@@ -809,7 +811,7 @@
     "LoadoutParameters": "Configuración del Optimizador de Equipamientos",
     "LoadoutParametersExotic": "El equipamiento debe incluir este excepcional: {{exoticName}}",
     "LoadoutParametersQuery": "Los objetos deben coincidir con este filtro de búsqueda",
-    "LoadoutParametersStats": "Prioridad de estadísticas y nivel de estadísticas mínimo/máximo",
+    "LoadoutParametersStats": "Prioridad de estadísticas y rangos de estadísticas mínimos/máximos",
     "Loadouts": "Equipamientos",
     "MakeRoom": "Hacer espacio en Administración",
     "MakeRoomDone_female_one": "Se terminó de hacer espacio para 1 objeto de la Administración al mover 1 objeto fuera de {{store}}.",

@@ -239,7 +239,7 @@
     "HoldsMod": "特定のタイプの季節MODに対応した防具が表示されます。",
     "InDimLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用しているアイテムを強調表示します。",
     "InInGameLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用するアイテムを表示します。",
-    "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
+    "InInventory": "保管庫で最低1つは所有しているアイテムを表示します。このフィルターはベンダーまたはレコードの画面でのみ有効です。",
     "InLoadout": "is:inloadout は、任意のロードアウトに含まれるアイテムを表示します。inloadout: で検索すると、タイトルが一致するロードアウトに含まれるアイテムが表示されます。ハッシュタグと一緒に使うと、inloadout: はタイトルやノートにハッシュタグが含まれるロードアウトを持つアイテムを表示します。",
     "Infusable": "融合可能なアイテムを表示",
     "InfusionFodder": "高パワーの同じアイテムとグリマーだけで融合できる、低パワーのアイテムを表示します。",
@@ -579,17 +579,17 @@
     "Analyzed": "{{numLoadouts}} 個のロードアウトの分析が完了しました",
     "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 個のロードアウトを分析中",
     "BetterStatsAvailable": {
-      "Description": "別のアーマーやModを選択すれば、より高いステータスに変更できます。\"$t(Loadouts.OpenInOptimizer)\" を選択して結果を確認します。",
+      "Description": "別のアーマーやModだと、より高いステータス値に上げられます。\"$t(Loadouts.OpenInOptimizer)\" を選択して結果を確認してください。",
       "Name": "より高いステータス値のビルドが作成可能"
     },
-    "BetterStatsAvailableFontNote": "注：このロードアウトは Mod「～の泉」を使用しTier10以上になっています。DIMは不要なTier上限突破を減らすことで、より良いステータスを検索できる可能性が上がります。敢えて使用する場合は、ロードアウトの\"$t(Loadouts.IncludeRuntimeStatBenefits) \"を無効にしてください。",
+    "BetterStatsAvailableFontNote": "注：このロードアウトは Mod「～の泉」を使用しTier10以上になっています。DIMなら不要なTier上限突破を減らして、より良いステータスを検索できるかもしれません。敢えて使用する場合は、ロードアウトの\"$t(Loadouts.IncludeRuntimeStatBenefits) \"を無効にしてください。",
     "DoesNotRespectExotic": {
       "Description": "ロードアウト最適化で指定されているエキゾチックアーマーと、このロードアウトのエキゾチックアーマーが一致しません。",
       "Name": "指定したエキゾチックアーマーと違います"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "ロードアウト最適化で指定のステータスに、このロードアウトのステータスは届いていません。",
-      "Name": "指定したTierに到達不可"
+      "Description": "このロードアウトのステータス値は、指定された最小値に届いていません。",
+      "Name": "間違ったステータス最小値"
     },
     "EmptyFragmentSlots": {
       "Description": "このサブクラスには未使用のかけらスロットがあります。",
@@ -612,7 +612,7 @@
       "Name": "割り当てられていないMODがあります"
     },
     "NeedsArmorUpgrades": {
-      "Description": "このロードアウトのアーマーは、指定された全Modの装備もしくはTier到達のためにアップグレードが必要です。",
+      "Description": "このロードアウトのアーマーは、指定された全Modの装備もしくはアップグレードが必要です。",
       "Name": "アーマーのアップグレードが必要"
     },
     "NotAFullArmorSet": {
@@ -629,7 +629,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Mod を +5 追加",
     "All": "全て",
     "AnyExotic": "任意のエキゾチック",
     "AnyExoticDescription": "指定なしで何らかのエキゾチックが必ず入るようになります。",
@@ -675,15 +674,15 @@
       "AssumptionsRestricted": "DIM は防具のエネルギー変更を推奨できません :",
       "BadSlot": "{{bucketName}} スロットでは、許可されたアイテムのいずれもこれらの mod に対応できません :",
       "Header": "ビルドが見つかりませんでした。 DIM がビルドを見つけられなかった理由は次のとおりです :",
-      "LowerBoundsFailed": "どの所持アイテムを組み合わせても設定した最小ステータスTierに届きませんでした",
+      "LowerBoundsFailed": "どの組み合わせでも指定した最小ステータスTierに届きませんでした",
       "MaybeAllowMoreItems": "他のアイテムを許可することを検討してください :",
-      "MaybeDecreaseLowerBounds": "最小のステータス要件を減らすことを検討してください",
-      "MaybeIncreaseUpperBounds": "最大のステータス要件を増やすことを検討してください",
+      "MaybeDecreaseLowerBounds": "最小ステータス値を下げることをおすすめします",
+      "MaybeIncreaseUpperBounds": "最大ステータス値を更に上げることをおすすめします",
       "MaybeRemoveMods": "mod を削除することを検討してください :",
       "MaybeRemoveSearchQuery": "検索バーでフィルターをクリアまたは変更することを検討してください",
       "ModAssignmentFailed": "どの所持アイテムを組み合わせても指定したModを装着できませんでした",
       "RemoveMods": "これらの mod を削除",
-      "UpperBoundsFailed": "どの所持アイテムを組み合わせても設定した最大ステータスTierを満たせませんでした"
+      "UpperBoundsFailed": "どの組み合わせでも指定した最高Tierに届きませんでした"
     },
     "NoExotic": "エキゾチックなし",
     "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです。エキゾチックアーマーを意図的に組み合わせから排除します。",
@@ -692,16 +691,19 @@
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
     "None": "無し",
     "OptimizerExplanationGuide": "詳細については、ユーザーガイドまたはビデオチュートリアルをご覧ください。",
-    "OptimizerExplanationMods": "使用したいエキゾチックアーマーや、Mod、サブクラスを選択します。 ロードアウト最適化では、選択したModやサブクラスのオプションからのステータスボーナスだけで計算します。すでにアーマーに付けられているModはすべて無視してTierを算出します。",
-    "OptimizerExplanationSearch": "検索機能を使って最適な防具を絞り込みます。もし各防具(ヘルメットなど) が絞り込みに一致しない場合、各防具ごとに全てが候補として選出されます。",
-    "OptimizerExplanationStats": "ドラッグで上から最も優先したい順にステータスを並び替え、ビルドに不要なステータスは無効にしましょう",
+    "OptimizerExplanationMods": "エキゾチック、Mod、サブクラスを選択します。これらはビルドにステータス値を影響を与えますが、すでにアーマーにあるModは無視されます。",
+    "OptimizerExplanationSearch": "検索バーを使用して、候補となるアーマーを絞り込みます。 条件に一致するアーマーがない場合、その検索は無視されます。",
+    "OptimizerExplanationStats": "マウスドラッグで上から最も優先したい順にステータスを並び替え、ビルドに不要なステータスは無効にしましょう。",
     "OptimizerSet": "最適化セット",
     "PinnedItems": "ピン留めしたアイテム",
-    "ProcessingSets": "最上位Tierのセットを検索しています...",
+    "ProcessingSets": "最高理論値の組み合わせを検索しています…",
     "SaveAs": "名前をつけて保存",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
-    "StatConstraints": "ステータスTierの優先度と範囲",
+    "StatConstraints": "ステータス値の優先度と範囲",
     "StatMax": "最大",
+    "StatMin": "最小",
+    "StatRangeTooltip": "現在の最小/最大の設定では、ロードアウトが存在します。ロードアウトは {{min}} から {{max}} があります。ダブルクリックして最小値を {{max}}に設定します。",
+    "StatTotal": "合計: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "ステータスTier最低値を選択",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
@@ -773,7 +775,7 @@
     "FilteredItems": "フィルタ処理された項目",
     "FindAnother": "別の {{name}} を検索する",
     "FromEquipped": "装備済み",
-    "Generated": "T{{tier}} ロードアウト",
+    "Generated": "{{statTotal}} ステータス値のロードアウト",
     "HashtagTip": "ヒント: ロードアウトの名前やメモに #hashtags を使用すると、ここに表示されます。",
     "Import": {
       "BadURL": "有効なロードアウト共有 URL ではありません",
@@ -792,7 +794,7 @@
     "LoadoutParameters": "ロードアウト最適化の設定",
     "LoadoutParametersExotic": "ロードアウトにエキゾチックアイテムを選んでください： {{exoticName}}",
     "LoadoutParametersQuery": "アイテムは検索フィルタと一必ず致させてください",
-    "LoadoutParametersStats": "ステータス値の優先順位と最小/最大ステータス値Tier",
+    "LoadoutParametersStats": "ステータス値の優先順位と最小/最大ステータス値範囲",
     "Loadouts": "ロードアウト",
     "MakeRoom": "ポストマスターのための部屋を作る",
     "MakeRoomDone_female_other": "{{store}} から{{movedNum}} 個のアイテムを移動して、{{count}} 個のポストマスターアイテム用のスペースを作成しました。",
@@ -1002,7 +1004,7 @@
     "BulkMoveLoadoutName": "主催者で選択",
     "BulkTag": "タグ",
     "Columns": {
-      "Ammo": "Ammo",
+      "Ammo": "弾薬",
       "Archetype": "内在特性",
       "BaseStats": "基本ステータス値",
       "Breaker": "ブレイカー",
@@ -1015,13 +1017,13 @@
       "Harmonizable": "共振武器",
       "Icon": "アイコン",
       "Intrinsics": "内在特性",
-      "KillTracker": "Kills",
+      "KillTracker": "倒した数",
       "Level": "レベル",
       "Loadouts": "ロードアウト",
       "Location": "保管場所",
       "Locked": "ロック中",
-      "MasterworkStat": "MW Stat",
-      "MasterworkTier": "MW Tier",
+      "MasterworkStat": "MWの種類",
+      "MasterworkTier": "MWレベル",
       "ModSlot": "Modスロット",
       "Mods": "Mod",
       "Name": "名前",
@@ -1031,7 +1033,7 @@
       "OtherPerks": "他パーク",
       "PercentComplete": "% 達成",
       "Perks": "パーク",
-      "PerksGrid": "Perks Grid",
+      "PerksGrid": "パーク一覧",
       "PerksMods": "パークMod",
       "Power": "パワー",
       "Quality": "クオリティ %",

@@ -239,7 +239,7 @@
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
     "InDimLoadout": "is:indimgameloadout 指令会显示全部DIM配装中的物品。",
     "InInGameLoadout": "is:iningameloadout 指令会显示任何游戏内配装系统保存的物品。",
-    "InInventory": "显示在物品栏中至少存在一件的物品。仅在商贩和记录页面中有效。",
+    "InInventory": "显示在库存中已拥有的物品。仅在商贩和记录页面中有效。",
     "InLoadout": "is:inloadout 指令显示在全部配装中包含的物品。在 inloadout: 指令下搜索可显示所有配装中的与搜索名称相符的物品。在 inloadout: 指令后使用#标签可显示配装中有含有该标签的物品或注释。若指定范围，则显示在多个配装中的物品。",
     "Infusable": "显示可以灌注的物品.",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
@@ -512,7 +512,7 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
     "ExistingBuildStats": "现有配装属性",
-    "ExistingBuildStatsNote": "仅显示更高属性阶的配装。",
+    "ExistingBuildStatsNote": "仅显示更高属性的配装。",
     "FilterSets": "组合过滤",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
@@ -579,17 +579,17 @@
     "Analyzed": "已分析 {{numLoadouts}} 个配装",
     "Analyzing": "正在分析配装 {{numAnalyzed}}/{{numLoadouts}}",
     "BetterStatsAvailable": {
-      "Description": "为此配装选用不同的护甲或模组将能达到更高的属性阶级。选择“$t(Loadouts.OpenInOptimizer)”来查看更优的配装。",
+      "Description": "为此配装选用不同的护甲或模组将能达到更高的属性。选择“$t(Loadouts.OpenInOptimizer)”来查看更优的配装。",
       "Name": "更优属性可用"
     },
-    "BetterStatsAvailableFontNote": "提示：此配装使用了属性洗礼模组，导致属性溢出10阶。DIM 可降低多出的基础属性阶以优化。若不需要，请在配装界面中禁用“$t(Loadouts.IncludeRuntimeStatBenefits)”。",
+    "BetterStatsAvailableFontNote": "提示：此配装使用了属性洗礼模组，导致属性溢出 200。DIM 可降低多出的基础属性以优化。若不需要，请在配装界面中禁用“$t(Loadouts.IncludeRuntimeStatBenefits)”。",
     "DoesNotRespectExotic": {
       "Description": "此配装由配装优化器指定了一件异域装备，但在该配装中未找到它。",
       "Name": "异域装备错误"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "此配装由配装优化器指定了属性阶级，但在该配装中未能达到。",
-      "Name": "错误的属性阶级"
+      "Description": "此配装由配装优化器指定了属性下限，但在该配装中未能达到。",
+      "Name": "错误的属性下限"
     },
     "EmptyFragmentSlots": {
       "Description": "分支职业中有空的碎片插槽。",
@@ -612,7 +612,7 @@
       "Name": "未分配的模组"
     },
     "NeedsArmorUpgrades": {
-      "Description": "该配装中的护甲需要升级以插入全部所需模组或达到指定属性阶级。",
+      "Description": "该配装中的护甲需要升级以插入全部所需模组或达到指定属性值。",
       "Name": "需要升级护甲"
     },
     "NotAFullArmorSet": {
@@ -629,7 +629,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "添加 +5 模组",
     "All": "全部",
     "AnyExotic": "任何异域奖励",
     "AnyExoticDescription": "组合里必须有任意异域装备。",
@@ -675,15 +674,15 @@
       "AssumptionsRestricted": "DIM 无法建议更改护甲能量：",
       "BadSlot": "这些模组无法装上{{bucketName}}槽位所允许的任何物品：",
       "Header": "找不到配装。以下是 DIM 找不到配装的可能原因：",
-      "LowerBoundsFailed": "很多配装的属性等级未达到最低要求",
+      "LowerBoundsFailed": "配装组合中所能达到的属性低于选择的下限",
       "MaybeAllowMoreItems": "尝试允许其他物品：",
-      "MaybeDecreaseLowerBounds": "尝试降低属性等级下限",
-      "MaybeIncreaseUpperBounds": "尝试提高属性等级上限",
+      "MaybeDecreaseLowerBounds": "尝试降低属性下限",
+      "MaybeIncreaseUpperBounds": "尝试提高属性上限",
       "MaybeRemoveMods": "尝试移除一些模组：",
       "MaybeRemoveSearchQuery": "尝试清除搜索栏或更改过滤器条件",
       "ModAssignmentFailed": "很多配装无法装下所有请求的模组",
       "RemoveMods": "移除这些模组",
-      "UpperBoundsFailed": "很多配装的属性等级高于属性等级上限"
+      "UpperBoundsFailed": "配装组合中所能达到的属性高于选择的上限"
     },
     "NoExotic": "非异域",
     "NoExoticDescription": "等同于在搜索栏中搜索“not:exotic” ，即配装将不含任何异域护甲。",
@@ -692,16 +691,19 @@
     "NoLoadoutsToCompare": "没有要对比的配装",
     "None": "无",
     "OptimizerExplanationGuide": "用户指南里有更多信息和视频教程。",
-    "OptimizerExplanationMods": "选择你想使用的异域装备、模组和分支职业。配装优化器只会包括你选定的模组和分支职业选项带来的属性加成——护甲上其他现存的模组都会被忽略。",
-    "OptimizerExplanationSearch": "使用搜索栏来缩小护甲的考虑范围。如果未有护甲与搜索结果匹配，则该部位的所有护甲都将被考虑。",
-    "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将不需优化属性禁用。",
+    "OptimizerExplanationMods": "选择异域装备、模组和分支职业，为配装贡献属性。忽略已安装在护甲上的模组。",
+    "OptimizerExplanationSearch": "使用搜索栏缩小护甲的筛选范围。若有槽位无符合筛选的护甲，则该槽位的搜索无效。",
+    "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并取消选择没有最大化需求的属性。",
     "OptimizerSet": "优化器组合",
     "PinnedItems": "固定物品",
-    "ProcessingSets": "寻找最高阶属性配装...",
+    "ProcessingSets": "寻找最高属性配装…",
     "SaveAs": "保存为",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 个组合",
-    "StatConstraints": "属性阶级优先级和范围",
+    "StatConstraints": "属性优先级和范围",
     "StatMax": "最大值",
+    "StatMin": "最小值",
+    "StatRangeTooltip": "根据当前的上下限设置，存在所选属性值为 {{min}} 至 {{max}} 的配装。双击将下限改为 {{max}}。",
+    "StatTotal": "总计：{{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "选择最低属性阶级",
     "UnableToAddAllMods": "无法添加所有模组。",
@@ -773,7 +775,7 @@
     "FilteredItems": "已过滤的物品",
     "FindAnother": "查找另一个 {{name}}",
     "FromEquipped": "当前装备",
-    "Generated": "T{{tier}} 配装",
+    "Generated": "{{statTotal}} 属性点配装",
     "HashtagTip": "提示：在配装名称或备注中使用的#标签会显示在这里。",
     "Import": {
       "BadURL": "配装分享链接无效。",
@@ -792,7 +794,7 @@
     "LoadoutParameters": "配装优化器设置",
     "LoadoutParametersExotic": "配装必须包含此异域装备：{{exoticName}}",
     "LoadoutParametersQuery": "物品必须匹配搜索筛选结果",
-    "LoadoutParametersStats": "属性优先级和最低/最高属性阶级",
+    "LoadoutParametersStats": "属性优先级和最低/最高属性范围",
     "Loadouts": "配装",
     "MakeRoom": "为邮政官腾出空间",
     "MakeRoomDone_female_other": "通过从{{store}} 上移动了{{movedNum}} 项物品，成功为邮政官腾出了{{count}} 个物品空间。",

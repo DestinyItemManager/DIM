@@ -528,7 +528,7 @@
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
     "ExistingBuildStats": "Statistiche build esistenti",
-    "ExistingBuildStatsNote": "Mostra solo le build con valori rigorosamente più alti.",
+    "ExistingBuildStatsNote": "Mostra solo le build con statistiche rigorosamente più alte.",
     "FilterSets": "Filtra i set",
     "Help": {
       "And": "Le armature che presentano tutte queste caratteristiche verranno utilizzate (\"and)",
@@ -595,17 +595,17 @@
     "Analyzed": "Analizzate {{numLoadouts}} dotazioni",
     "Analyzing": "Analizzate {{numAnalyzed}}/{{numLoadouts}} dotazioni",
     "BetterStatsAvailable": {
-      "Description": "Scegliere diverse armature o modifiche per questa dotazione consentirà di raggiungere gradi di statistiche più alti. Scegli \"$t(Loadouts.OpenInOptimizer)\" per vedere build migliori.",
+      "Description": "Scegliere un'armatura diversa per questa dotazione consentirà di raggiungere statistiche più alte. Scegli \"$t(Loadouts.OpenInOptimizer)\" per vedere delle build migliori.",
       "Name": "Migliori statistiche ottenibili"
     },
-    "BetterStatsAvailableFontNote": "Nota: Questa dotazione utilizza modifiche \"Fonte di...\" che inducono il superamento del grado 10 di una statistica. DIM può identificare statistiche migliori riducendo il numero di gradi in eccesso. Se questo fosse indesiderato, disattiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" nella dotazione.",
+    "BetterStatsAvailableFontNote": "Nota: questa dotazione utilizza modifiche \"Fonte di...\" che inducono il superamento di 200 punti di una statistica. DIM può identificare statistiche migliori riducendo il numero di punti in eccesso. Se questo fosse indesiderato, disabilita \"$t(Loadouts.IncludeRuntimeStatBenefits)\" nella dotazione.",
     "DoesNotRespectExotic": {
       "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specifica la scelta di un'esotica, ma la dotazione non corrisponde con quell'esotica.",
       "Name": "Esotica errata"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specificano dei gradi di statistiche, ma la dotazione non le raggiunge.",
-      "Name": "Gradi statistiche errati"
+      "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specificano delle statistiche minime, ma la dotazione non le raggiunge.",
+      "Name": "Statistiche minime errate"
     },
     "EmptyFragmentSlots": {
       "Description": "Ci sono alloggiamenti vuoti per frammenti in questa sottoclasse.",
@@ -628,7 +628,7 @@
       "Name": "Modifiche non assegnate"
     },
     "NeedsArmorUpgrades": {
-      "Description": "L'armatura in questa dotazione deve essere potenziata per poter alloggiare tutte le modifiche o raggiungere dei gradi di statistiche specifici.",
+      "Description": "Le armature in questa dotazione devono essere potenziate per alloggiare tutte le modifiche o per raggiungere le statistiche specificate.",
       "Name": "Richiede potenziamento armatura"
     },
     "NotAFullArmorSet": {
@@ -645,7 +645,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Aggiungi Modifiche +5",
     "All": "Tutto",
     "AnyExotic": "Qualunque Esotica",
     "AnyExoticDescription": "I set devono contenere una esotica, ma qualunque esotica va bene.",
@@ -708,16 +707,19 @@
     "NoLoadoutsToCompare": "Nessuna dotazione da confrontare",
     "None": "Nessuno",
     "OptimizerExplanationGuide": "Leggi la Guida Utente per maggiori informazioni e un video tutorial.",
-    "OptimizerExplanationMods": "Scegli un'esotica, modifiche e una sottoclasse. L'Ottimizzatore di Loadout include solo bonus alle statistiche dalle modifiche e le opzioni di sottoclasse che scegli - tutte le modifiche già nell'armatura vengono ignorate.",
-    "OptimizerExplanationSearch": "Utilizza la barra di ricerca per restringere il campo delle armature da considerare. Se nessuna armatura corrisponde alla ricerca in un alloggiamento, verranno considerate tutte le armature per quell'alloggiamento.",
-    "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e disabilita quelle che non vuoi ottimizzare.",
+    "OptimizerExplanationMods": "Scegli un'esotica, modifiche e una sottoclasse.\nEsse contribuiranno alle statistiche della dotazione, mentre qualsiasi modifica già sulle armature verrà ignorata.",
+    "OptimizerExplanationSearch": "Utilizza la barra di ricerca per restringere l'insieme delle armature da considerare. Se nessuna armatura corrisponde alla ricerca, la ricerca verrà ignorata per quello slot.",
+    "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e disabilita quelle che non vuoi massimizzare.",
     "OptimizerSet": "Set Ottimizzatore",
     "PinnedItems": "Oggetti fissati",
-    "ProcessingSets": "Ricerca dei set con gradi più alti...",
+    "ProcessingSets": "Ricerca dei set con statistiche più alte...",
     "SaveAs": "Salva come",
     "SpeedReport": "Generate {{combos, number}} combinazioni in {{time}} secondi",
-    "StatConstraints": "Priorità e limiti gradi statistiche",
+    "StatConstraints": "Priorità e limiti statistiche",
     "StatMax": "Max",
+    "StatMin": "Min",
+    "StatRangeTooltip": "Con le attuali impostazioni min/max, esistono dotazioni che hanno da {{min}} a {{max}} punti in questa statistica. Fai doppio click per impostare il minimo a {{max}}.",
+    "StatTotal": "Totale: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Seleziona il grado minimo della statistica",
     "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
@@ -789,7 +791,7 @@
     "FilteredItems": "Oggetti Filtrati",
     "FindAnother": "Trova un altro {{name}}",
     "FromEquipped": "Equipaggiato",
-    "Generated": "Dotazione T{{tier}}",
+    "Generated": "{{statTotal}} Punti statistiche dotazione",
     "HashtagTip": "Consiglio: Usa gli #hashtag nel nome della tua dotazione e verranno mostrati qui.",
     "Import": {
       "BadURL": "URL di condivisione dotazione non valido.",
@@ -809,7 +811,7 @@
     "LoadoutParameters": "Impostazioni Ottimizzatore di Dotazioni",
     "LoadoutParametersExotic": "La dotazione deve includere questa esotica: {{exoticName}}",
     "LoadoutParametersQuery": "Gli oggetti devono corrispondere a questo filtro",
-    "LoadoutParametersStats": "Priorità statistiche e gradi minimi/massimi statistiche",
+    "LoadoutParametersStats": "Priorità statistiche e intervalli minimi/massimi",
     "Loadouts": "Dotazioni",
     "MakeRoom": "Crea spazio per gli Amministratori",
     "MakeRoomDone_female_one": "Ho terminato di creare spazio per 1 oggetto dell'Amministratore togliendo 1 oggetto dalla {{store}}.",

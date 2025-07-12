@@ -512,7 +512,7 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 按一下一個物品(或直接拖動)用以創建一個不包括特定裝備的套裝組.",
     "ExistingBuildStats": "Existing Build Stats",
-    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stats.",
     "FilterSets": "組合篩選",
     "Help": {
       "And": "裝備了所有這些特性(Perk) 的防具將被使用(\"and\")",
@@ -579,17 +579,17 @@
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stats. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Better Stats Available"
     },
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat to exceed 200. DIM may identify better stats by reducing the amount of excess stats. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
       "Name": "Wrong Exotic"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
-      "Name": "Wrong Stat Tiers"
+      "Description": "Loadout Optimizer settings for this Loadout specify stat minimums, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Minimums"
     },
     "EmptyFragmentSlots": {
       "Description": "There are empty fragment slots in this subclass.",
@@ -612,7 +612,7 @@
       "Name": "未分配的模組"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stats.",
       "Name": "Needs Armor Upgrades"
     },
     "NotAFullArmorSet": {
@@ -629,7 +629,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "添加 +5 模組",
     "All": "全部",
     "AnyExotic": "任何異域獎勵",
     "AnyExoticDescription": "組合里必須有任意異域裝備。",
@@ -675,15 +674,15 @@
       "AssumptionsRestricted": "DIM 無法建議更改防具能量：",
       "BadSlot": "在 {{bucketName}} 槽位，沒有合適的物品可以容納以下模組：",
       "Header": "找不到配裝，以下是 DIM 無法找到配裝的可能原因：",
-      "LowerBoundsFailed": "多個配裝的屬性等級低於屬性等級下限",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "允許嘗試其它物品：",
-      "MaybeDecreaseLowerBounds": "允許降低屬性等級下限",
-      "MaybeIncreaseUpperBounds": "嘗試提高屬性等級上限",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "MaybeRemoveMods": "嘗試移除一些模組：",
       "MaybeRemoveSearchQuery": "嘗試清除或修改過濾器條件",
       "ModAssignmentFailed": "多個裝配無法容納所請求的模組",
       "RemoveMods": "移除這些模組",
-      "UpperBoundsFailed": "多個配裝的屬性等級高於屬性等級上限"
+      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements"
     },
     "NoExotic": "非異域",
     "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
@@ -692,16 +691,19 @@
     "NoLoadoutsToCompare": "沒有要對比的配裝",
     "None": "無",
     "OptimizerExplanationGuide": "用戶指南里有更多信息和視頻教程。",
-    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. Loadout Optimizer only includes stat bonuses from mods and subclass options you choose - all mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "使用搜索欄來過濾配裝優化器使用的物品。如果對應位置沒有匹配搜索的防具，所有該位置的防具都將包含在考慮範圍之内。",
-    "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "優化器組合",
     "PinnedItems": "Pinned Items",
-    "ProcessingSets": "Finding highest tier sets...",
+    "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "保存為",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 個組合。",
-    "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
+    "StatMin": "Min",
+    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
+    "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "無法添加所有模組。",
@@ -773,7 +775,7 @@
     "FilteredItems": "已篩選的物品",
     "FindAnother": "查找另一個 {{name}}",
     "FromEquipped": "當前裝備",
-    "Generated": "T{{tier}} 配裝",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "提示：在配裝名稱或備註中使用的#標籤會顯示在這裡.",
     "Import": {
       "BadURL": "不是有效的配裝分享連結。",
@@ -792,7 +794,7 @@
     "LoadoutParameters": "配裝優化器設置",
     "LoadoutParametersExotic": "配裝必須包含以下異域裝備：{{exoticName}}",
     "LoadoutParametersQuery": "物品必須匹配該過濾條件",
-    "LoadoutParametersStats": "屬性優先級和最大/最小屬性等級",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "Loadouts": "配裝",
     "MakeRoom": "為郵政官騰出空間",
     "MakeRoomDone_female_other": "通過從{{store}} 上移動了{{movedNum}} 項物品，成功為郵政官騰出了{{count}} 個物品空間。",

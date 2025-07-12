@@ -560,7 +560,7 @@
     "Exclude": "Wykluczone przedmioty",
     "ExcludeHelp": "Shift + kliknij na przedmiot (lub przeciągnij i upuść do tego wiaderka) aby tworzyć zestawy bez konkretnego sprzętu.",
     "ExistingBuildStats": "Existing Build Stats",
-    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stats.",
     "FilterSets": "Zestawy filtrów",
     "Help": {
       "And": "Pancerz z każdą z tych cech będzie użyty (\"and\")",
@@ -627,17 +627,17 @@
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stats. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Dostępne lepsze statystyki"
     },
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat to exceed 200. DIM may identify better stats by reducing the amount of excess stats. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
       "Name": "Wrong Exotic"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
-      "Name": "Wrong Stat Tiers"
+      "Description": "Loadout Optimizer settings for this Loadout specify stat minimums, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Minimums"
     },
     "EmptyFragmentSlots": {
       "Description": "There are empty fragment slots in this subclass.",
@@ -660,7 +660,7 @@
       "Name": "Nieprzypisane modyfikacje"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stats.",
       "Name": "Needs Armor Upgrades"
     },
     "NotAFullArmorSet": {
@@ -677,7 +677,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Dodaj modyfikacje +5",
     "All": "Wszystkie",
     "AnyExotic": "Dowolny Egzotyk",
     "AnyExoticDescription": "Zestawy muszą zawierać egzotyk, ale każdy egzotyk będzie działać.",
@@ -723,15 +722,15 @@
       "AssumptionsRestricted": "DIM nie może zalecać zmian energii pancerza:",
       "BadSlot": "W gnieździe {{bucketName}} żaden z dozwolonych przedmiotów nie może pomieścić tych Modyfikacji:",
       "Header": "Nie znaleziono zestawów. To są możliwe powody, dla których DIM nie mógł znaleźć żadnych zestawów:",
-      "LowerBoundsFailed": "Wiele zestawów nie spełniło minimalnych wymogów dotyczących poziomu statystyk",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Rozważ dopuszczenie innych przedmiotów:",
-      "MaybeDecreaseLowerBounds": "Rozważ zmniejszenie minimalnych wymogów dotyczących poziomu statystyk",
-      "MaybeIncreaseUpperBounds": "Rozważ zwiększenie maksymalnych wymogów dotyczących poziomu statystyk",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "MaybeRemoveMods": "Rozważ usunięcie niektórych Modyfikacji:",
       "MaybeRemoveSearchQuery": "Rozważ wyczyszczenie lub zmianę filtra w pasku wyszukiwania",
       "ModAssignmentFailed": "Wiele zestawów nie mogło zmieścić wszystkich żądanych Modyfikacji",
       "RemoveMods": "Usuń te Modyfikacje",
-      "UpperBoundsFailed": "Wiele zestawów nie spełniło maksymalnych wymogów dotyczących poziomu statystyk"
+      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements"
     },
     "NoExotic": "Brak egzotyku",
     "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
@@ -740,16 +739,19 @@
     "NoLoadoutsToCompare": "Brak uzbrojeń do porównania",
     "None": "Brak",
     "OptimizerExplanationGuide": "Przeczytaj podręcznik użytkownika, aby uzyskać więcej informacji i poradnik wideo.",
-    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. Loadout Optimizer only includes stat bonuses from mods and subclass options you choose - all mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor matches the search in a slot, all armor in that slot will be considered.",
-    "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Zestaw optymalizatora",
     "PinnedItems": "Pinned Items",
-    "ProcessingSets": "Finding highest tier sets...",
+    "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Zapisz jako",
     "SpeedReport": "Wygenerowano {{combos, number}} kombinacje w {{time}} sekund",
-    "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Maks",
+    "StatMin": "Min",
+    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
+    "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
@@ -821,7 +823,7 @@
     "FilteredItems": "Filtrowane Przedmioty",
     "FindAnother": "Znajdź następny {{name}}",
     "FromEquipped": "Wyposażone",
-    "Generated": "Uzbrojenie T{{tier}}",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "Wskazówka: Używaj #hashtagów w swoich nazwach Uzbrojenia lub notatkach, a one pojawią się tutaj.",
     "Import": {
       "BadURL": "Nieprawidłowy adres URL udostępnienia Uzbrojenia.",
@@ -843,7 +845,7 @@
     "LoadoutParameters": "Ustawienia Optymalizatora Uzbrojenia",
     "LoadoutParametersExotic": "Loadout must include this exotic: {{exoticName}}",
     "LoadoutParametersQuery": "Items must match this search filter",
-    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat tiers",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "Loadouts": "Uzbrojenia",
     "MakeRoom": "Zrób miejsce dla Kuriera",
     "MakeRoomDone_female_few": "Ukończono robienie miejsca dla {{count}} przedmiotów od Kuriera przenosząc {{movedNum}} przedmiotów z {{store}}.",

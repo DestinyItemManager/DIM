@@ -528,7 +528,7 @@
     "Exclude": "Itens ignorados",
     "ExcludeHelp": "SHIFT+Clique em um item (ou arraste e solte no quadro abaixo) para construir sets ignorando itens específicos.",
     "ExistingBuildStats": "Atributos de Sets Existentes",
-    "ExistingBuildStatsNote": "Mostrando somente sets com níveis estritatemten mais altos.",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stats.",
     "FilterSets": "Filtrar atributos",
     "Help": {
       "And": "Armadura com todos esses perks será usada (\"e\")",
@@ -595,17 +595,17 @@
     "Analyzed": "{{numLoadouts}} Sets Analisados",
     "Analyzing": "Analisando {{numAnalyzed}}/{{numLoadouts}} Sets",
     "BetterStatsAvailable": {
-      "Description": "Escolher diferentes armaduras ou mods para este set permitirá alcançar maiores níveis de atributos. Escolha \"$t(Loadouts.OpenInOptimizer)\" para ver sets melhores.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stats. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Melhores Atributos Disponíveis"
     },
-    "BetterStatsAvailableFontNote": "Nota: Este Set usa mods de \"Fonte de...\" que fazem com que um nível de atributo exceda o T10. DIM pode identificar atributos melhores reduzindo a quantidade de níveis excedentes. Se isso não for desejado, desabilite \"$t(Loadouts.IncludeRuntimeStatBenefits)\" no Set.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat to exceed 200. DIM may identify better stats by reducing the amount of excess stats. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "As configurações do Otimizador de Set deste set especificam uma escolha de exótica, mas o set não corresponde a esta exótica.",
       "Name": "Exótico Errado"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "As configurações do Otimizador de Set deste set especificam níveis específicos de atributos, mas este Set não os alcança.",
-      "Name": "Níveis de Atributos Errados"
+      "Description": "Loadout Optimizer settings for this Loadout specify stat minimums, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Minimums"
     },
     "EmptyFragmentSlots": {
       "Description": "Há slots de fragmento vazios nesta subclasse.",
@@ -628,7 +628,7 @@
       "Name": "Mods não Atribuídos"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Armaduras neste set não precisam ser melhorados para acomodar todos os mods ou alcançar os niveis de atributo especificados.",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stats.",
       "Name": "Precisa de Melhorias na Armadura"
     },
     "NotAFullArmorSet": {
@@ -645,7 +645,6 @@
     }
   },
   "LoadoutBuilder": {
-    "AddHalfTierMods": "Adicionar Mods +5",
     "All": "Todos",
     "AnyExotic": "Qualquer exótico",
     "AnyExoticDescription": "O set deverá conter um exótico, mas qualquer exótico servirá.",
@@ -691,15 +690,15 @@
       "AssumptionsRestricted": "DIM não pode sugerir alterações no tipo de energia de armadura:",
       "BadSlot": "No slot {{bucketName}}, nenhum dos itens permitidos puderam acomodar estes mods:",
       "Header": "Nenhuma build encontrada. Aqui estão os possíveis motivos que impediram o DIM de encontrá-las:",
-      "LowerBoundsFailed": "Vários sets não estão de acordo com o nível de atributo mínimo exigido",
+      "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Considere permitir outros itens:",
-      "MaybeDecreaseLowerBounds": "Considere reduzir o nível de atributo mínimo exigido",
-      "MaybeIncreaseUpperBounds": "Considere aumentar o nível máximo de atributo exigido",
+      "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
+      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "MaybeRemoveMods": "Considere remover alguns mods:",
       "MaybeRemoveSearchQuery": "Considere limpar ou alterar o filtro na barra de pesquisa",
       "ModAssignmentFailed": "Vários sets não puderam acomodar todos os mods selecionados",
       "RemoveMods": "Remova estes mods",
-      "UpperBoundsFailed": "Vários sets não estão de acordo com o nível de atributo máximo exigido"
+      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements"
     },
     "NoExotic": "Nenhum exótico",
     "NoExoticDescription": "Equivalente à busca \"not:exotic\" na barra de pesquisa - sets não usarão nenhuma armadura exótica.",
@@ -708,16 +707,19 @@
     "NoLoadoutsToCompare": "Nenhum Set para comparar",
     "None": "Nenhum",
     "OptimizerExplanationGuide": "Leia o Guia de Usuário para mais informações e um vídeo tutorial.",
-    "OptimizerExplanationMods": "Escolha um exótico, mods e uma subclasse. Otimizador de Sets só inclui atributos bônus de mods e opções de subclasse escolhidos - todos os mods que já estão na armadura são ignorados.",
-    "OptimizerExplanationSearch": "Use a barra de pesquisa para restringir qual armadura deve ser considerada. Se nenhuma armadura corresponder à busca em um slot, todas as armaduras desse slot serão consideradas.",
-    "OptimizerExplanationStats": "Arraste os atributos mais importantes para o topo, e desabilite atributos que você não quer otimizar.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Set do Otimizador",
     "PinnedItems": "Itens Fixados",
-    "ProcessingSets": "Encontrando os sets de maior nível...",
+    "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Salvar como",
     "SpeedReport": "Gerou {{combos, number}} combinações em {{time}} segundos",
-    "StatConstraints": "Níveis de Prioridades e Intervalos de Atributos",
+    "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Máximo",
+    "StatMin": "Min",
+    "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
+    "StatTotal": "Total: {{total}}",
     "TierNumber": "N{{tier}}",
     "TierSelect": "Selecionar nível mínimo de atributo",
     "UnableToAddAllMods": "Não foi possível adicionar todos os mods.",
@@ -789,7 +791,7 @@
     "FilteredItems": "Itens filtrados",
     "FindAnother": "Encontrar outro {{name}}",
     "FromEquipped": "Equipado",
-    "Generated": "N{{tier}} Set",
+    "Generated": "{{statTotal}} Stat Point Loadout",
     "HashtagTip": "Dica: use #hashtags nos nomes ou anotações de seus sets e elas aparecerão aqui.",
     "Import": {
       "BadURL": "Não é uma URL de compartilhamento de set válida.",
@@ -809,7 +811,7 @@
     "LoadoutParameters": "Configurações do Otimizador de Set",
     "LoadoutParametersExotic": "Set deve incluir este exótico: {{exoticName}}",
     "LoadoutParametersQuery": "Itens devem obedecer este filtro de pesquisa",
-    "LoadoutParametersStats": "Prioridades de atributo e mínimo/máximo níveis de atributos",
+    "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "Loadouts": "Sets",
     "MakeRoom": "Abrir espaço para itens do Correio",
     "MakeRoomDone_female_one": "Finished making room for 1 Postmaster item by moving 1 item off of {{store}}.",
