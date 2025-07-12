@@ -3,7 +3,7 @@ import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/sele
 import { DimStore } from 'app/inventory/store-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ProcessStatistics } from '../process-worker/types';
 import {
@@ -71,51 +71,38 @@ export function useProcess({
     result: null,
   });
   const getUserItemTag = useSelector(getTagSelector);
-
-  const cleanupRef = useRef<() => void>(null);
-
-  // Cleanup worker on unmount
-  useEffect(
-    () => () => {
-      if (cleanupRef.current) {
-        cleanupRef.current();
-        cleanupRef.current = null;
-      }
-    },
-    [],
-  );
-
   const autoModDefs = useAutoMods(selectedStore.id);
+  const firstTime = result === null;
 
   useEffect(() => {
-    // Stop any previous worker
-    if (cleanupRef.current) {
-      cleanupRef.current();
-    }
-    const { cleanup, resultPromise } = runProcess({
-      autoModDefs,
-      filteredItems,
-      lockedModMap,
-      modStatChanges,
-      armorEnergyRules,
-      desiredStatRanges,
-      anyExotic,
-      autoStatMods,
-      getUserItemTag,
-      stopOnFirstSet: false,
-      strictUpgrades,
-    });
+    const abortController = new AbortController();
+    const { signal } = abortController;
 
-    cleanupRef.current = cleanup;
+    const doProcess = async () => {
+      const { cleanup, resultPromise } = runProcess({
+        autoModDefs,
+        filteredItems,
+        lockedModMap,
+        modStatChanges,
+        armorEnergyRules,
+        desiredStatRanges,
+        anyExotic,
+        autoStatMods,
+        getUserItemTag,
+        stopOnFirstSet: false,
+        strictUpgrades,
+      });
+      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
+      abortController.signal.addEventListener('abort', cleanup, { once: true });
 
-    setState((state) => ({
-      processing: true,
-      resultStoreId: selectedStore.id,
-      result: selectedStore.id === state.resultStoreId ? state.result : null,
-    }));
+      setState((state) => ({
+        processing: true,
+        resultStoreId: selectedStore.id,
+        result: selectedStore.id === state.resultStoreId ? state.result : null,
+      }));
 
-    resultPromise
-      .then(({ sets, combos, statRangesFiltered, processInfo, processTime }) => {
+      try {
+        const { sets, combos, statRangesFiltered, processInfo, processTime } = await resultPromise;
         setState((oldState) => ({
           ...oldState,
           processing: false,
@@ -130,12 +117,25 @@ export function useProcess({
             processInfo,
           },
         }));
-      })
-      // Cleanup the worker, we don't need it anymore.
-      .finally(() => {
+      } finally {
         cleanup();
-        cleanupRef.current = null;
-      });
+        abortController.signal.removeEventListener('abort', cleanup);
+      }
+    };
+
+    const timer = setTimeout(
+      () => {
+        if (!signal.aborted) {
+          doProcess();
+        }
+      },
+      firstTime ? 0 : 500,
+    );
+
+    return () => {
+      abortController.abort();
+      clearTimeout(timer);
+    };
   }, [
     filteredItems,
     selectedStore.id,
@@ -148,6 +148,7 @@ export function useProcess({
     modStatChanges,
     autoModDefs,
     strictUpgrades,
+    firstTime,
   ]);
 
   return { result, processing };
