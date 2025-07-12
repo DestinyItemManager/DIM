@@ -249,7 +249,6 @@ function StatRow({
               setMax={setMax}
               onChange={commitStatChanges}
             >
-              {statConstraint.minStat} - {statConstraint.maxStat}
               <StatBar
                 range={statRange}
                 equippedHashes={equippedHashes}
