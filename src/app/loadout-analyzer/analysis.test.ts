@@ -3,6 +3,7 @@ import { getBuckets } from 'app/destiny2/d2-buckets';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { ProcessInputs } from 'app/loadout-builder/process-worker/process';
 import { ProcessResult } from 'app/loadout-builder/process-worker/types';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import type { runProcess } from 'app/loadout-builder/process/process-wrapper';
@@ -47,6 +48,7 @@ const analyze = async (
 function noopProcessWorkerMock(..._args: Parameters<typeof runProcess>): {
   cleanup: () => void;
   resultPromise: Promise<Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number }>;
+  input: ProcessInputs;
 } {
   return {
     cleanup: noop,
@@ -65,6 +67,7 @@ function noopProcessWorkerMock(..._args: Parameters<typeof runProcess>): {
         ]),
       ) as StatRanges,
     }),
+    input: undefined as unknown as ProcessInputs, // TODO: this should be the input that was passed to the worker
   };
 }
 

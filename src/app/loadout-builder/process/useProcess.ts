@@ -3,8 +3,10 @@ import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/sele
 import { DimStore } from 'app/inventory/store-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { useEffect, useMemo, useState } from 'react';
+import { infoLog } from 'app/utils/log';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import type { ProcessInputs } from '../process-worker/process';
 import { ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
@@ -74,12 +76,21 @@ export function useProcess({
   const autoModDefs = useAutoMods(selectedStore.id);
   const firstTime = result === null;
 
+  // Normally we'd just use the cleanup function in the main useEffect, but we
+  // want to be able to short circuit updates without killing in-progress
+  // processes.
+  const cleanupRef = useRef<() => void>(undefined);
   useEffect(() => {
-    const abortController = new AbortController();
-    const { signal } = abortController;
+    // Cleanup the previous process if it exists
+    cleanupRef.current?.();
+    cleanupRef.current = undefined;
+  }, []);
+  // This allows for some memoization of the inputs to the worker
+  const inputsRef = useRef<ProcessInputs>(undefined);
 
+  useEffect(() => {
     const doProcess = async () => {
-      const { cleanup, resultPromise } = runProcess({
+      const processInfo = runProcess({
         autoModDefs,
         filteredItems,
         lockedModMap,
@@ -91,9 +102,17 @@ export function useProcess({
         getUserItemTag,
         stopOnFirstSet: false,
         strictUpgrades,
+        lastInput: inputsRef.current,
       });
-      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
-      abortController.signal.addEventListener('abort', cleanup, { once: true });
+      if (processInfo === undefined) {
+        infoLog('loadout optimizer', 'Inputs were equal to the previous run, not recalculating');
+        return;
+      }
+
+      const { cleanup, resultPromise, input } = processInfo;
+      cleanupRef.current?.();
+      cleanupRef.current = cleanup;
+      inputsRef.current = input;
 
       setState((state) => ({
         processing: true,
@@ -119,21 +138,18 @@ export function useProcess({
         }));
       } finally {
         cleanup();
-        abortController.signal.removeEventListener('abort', cleanup);
+        cleanupRef.current = undefined;
       }
     };
 
     const timer = setTimeout(
       () => {
-        if (!signal.aborted) {
-          doProcess();
-        }
+        doProcess();
       },
       firstTime ? 0 : 500,
     );
 
     return () => {
-      abortController.abort();
       clearTimeout(timer);
     };
   }, [

@@ -6,6 +6,8 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { deepEqual } from 'fast-equals';
+import type { ProcessInputs } from '../process-worker/process';
 import { ProcessItem, ProcessItemsByBucket, ProcessResult } from '../process-worker/types';
 import {
   ArmorBucketHash,
@@ -51,6 +53,7 @@ export function runProcess({
   getUserItemTag,
   strictUpgrades,
   stopOnFirstSet,
+  lastInput,
 }: {
   autoModDefs: AutoModDefs;
   filteredItems: ItemsByBucket;
@@ -63,10 +66,16 @@ export function runProcess({
   getUserItemTag?: (item: DimItem) => TagValue | undefined;
   strictUpgrades: boolean;
   stopOnFirstSet: boolean;
-}): {
-  cleanup: () => void;
-  resultPromise: Promise<Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number }>;
-} {
+  lastInput: ProcessInputs | undefined;
+}):
+  | {
+      cleanup: () => void;
+      resultPromise: Promise<
+        Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number }
+      >;
+      input: ProcessInputs;
+    }
+  | undefined {
   const processStart = performance.now();
   const { worker, cleanup: cleanupWorker } = createWorker();
   let cleanupRef: (() => void) | undefined = cleanupWorker;
@@ -113,22 +122,29 @@ export function runProcess({
   }
 
   // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
+  const input: ProcessInputs = {
+    filteredItems: processItems,
+    modStatTotals: mapValues(modStatChanges, (stat) => stat.value),
+    lockedMods: lockedProcessMods,
+    desiredStatRanges,
+    anyExotic,
+    autoModOptions: autoModsData,
+    autoStatMods,
+    strictUpgrades,
+    stopOnFirstSet,
+  };
+  if (deepEqual(lastInput, input)) {
+    // If the inputs are the same as last time, we can skip the worker and just
+    // return the last result.
+    return undefined;
+  }
 
   return {
     cleanup,
+    input,
     resultPromise: new Promise((resolve) => {
       worker
-        .process(
-          processItems,
-          mapValues(modStatChanges, (stat) => stat.value),
-          lockedProcessMods,
-          desiredStatRanges,
-          anyExotic,
-          autoModsData,
-          autoStatMods,
-          strictUpgrades,
-          stopOnFirstSet,
-        )
+        .process(input)
         .then((result) => {
           const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
           const processTime = performance.now() - processStart;
