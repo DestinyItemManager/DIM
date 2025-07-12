@@ -289,20 +289,26 @@ function StatEditBar({
     }
   };
 
+  const [minText, setMinText] = useState(min.toString());
+  const [maxText, setMaxText] = useState(max.toString());
+
   return (
     <div className={styles.statBar}>
       <input
         type="number"
         min={0}
         max={MAX_STAT}
-        value={min}
+        value={minText}
         aria-label={t('LoadoutBuilder.StatMin')}
         onChange={(e) => {
-          const value = parseInt(e.target.value, 10);
-          if (isNaN(value) || value < 0 || value > MAX_STAT) {
-            return;
-          }
-          setMin(value);
+          setMinText(e.target.value);
+          try {
+            const value = parseInt(e.target.value, 10);
+            if (isNaN(value) || value < 0 || value > MAX_STAT) {
+              return;
+            }
+            setMin(value);
+          } catch {}
         }}
         onBlur={() => onChange()}
         onKeyUp={handleKeyUp}
@@ -312,14 +318,17 @@ function StatEditBar({
         type="number"
         min={0}
         max={MAX_STAT}
-        value={max}
+        value={maxText}
         aria-label={t('LoadoutBuilder.StatMax')}
         onChange={(e) => {
-          const value = parseInt(e.target.value, 10);
-          if (isNaN(value) || value < 0 || value > MAX_STAT) {
-            return;
-          }
-          setMax(value);
+          setMaxText(e.target.value);
+          try {
+            const value = parseInt(e.target.value, 10);
+            if (isNaN(value) || value < 0 || value > MAX_STAT) {
+              return;
+            }
+            setMax(value);
+          } catch {}
         }}
         onBlur={() => onChange()}
         onKeyUp={handleKeyUp}
