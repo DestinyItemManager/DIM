@@ -319,13 +319,11 @@ function StatEditBar({
         aria-label={t('LoadoutBuilder.StatMax')}
         onChange={(e) => {
           setMaxText(e.target.value);
-          try {
-            const value = parseInt(e.target.value, 10);
-            if (isNaN(value) || value < 0 || value > MAX_STAT) {
-              return;
-            }
-            setMax(value);
-          } catch {}
+          const value = parseInt(e.target.value, 10);
+          if (isNaN(value) || value < 0 || value > MAX_STAT) {
+            return;
+          }
+          setMax(value);
         }}
         onBlur={() => onChange()}
         onKeyUp={handleKeyUp}

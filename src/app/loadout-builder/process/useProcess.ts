@@ -80,11 +80,14 @@ export function useProcess({
   // want to be able to short circuit updates without killing in-progress
   // processes.
   const cleanupRef = useRef<() => void>(undefined);
-  useEffect(() => {
-    // Cleanup the previous process if it exists
-    cleanupRef.current?.();
-    cleanupRef.current = undefined;
-  }, []);
+  useEffect(
+    () => () => {
+      // Cleanup the previous process if it exists
+      cleanupRef.current?.();
+      cleanupRef.current = undefined;
+    },
+    [],
+  );
   // This allows for some memoization of the inputs to the worker
   const inputsRef = useRef<ProcessInputs>(undefined);
 
