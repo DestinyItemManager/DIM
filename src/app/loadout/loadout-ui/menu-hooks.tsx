@@ -77,7 +77,8 @@ export function useLoadoutFilterPills(
     for (const loadout of savedLoadouts) {
       const hashtags = getHashtagsFromString(loadout.name, loadout.notes);
       for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag.replace('#', '').replace(/_/g, ' ')] ??= []).push(loadout);
+        const normalizedHashtag = hashtag.replace('#', '').replace(/_/g, ' ').toLowerCase();
+        (loadoutsByHashtag[normalizedHashtag] ??= []).push(loadout);
       }
     }
     return loadoutsByHashtag;
@@ -96,7 +97,7 @@ export function useLoadoutFilterPills(
         ),
       }),
     )
-    .sort(compareBy((o) => o.key));
+    .sort(compareBy((o) => o.key.toLowerCase()));
 
   const loadoutsByType = useMemo(() => {
     const loadoutsByType: Record<LoadoutSpecialization, Loadout[]> | undefined = defs && {
