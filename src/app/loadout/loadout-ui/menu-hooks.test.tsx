@@ -33,7 +33,7 @@ describe('useLoadoutFilterPills hashtag handling', () => {
     const loadoutsByHashtag: { [hashtag: string]: Partial<Loadout>[] } = {};
 
     for (const loadout of loadouts) {
-      const hashtags = getHashtagsFromString(loadout.name!, '');
+      const hashtags = getHashtagsFromString(loadout.name, '');
       for (const hashtag of hashtags) {
         const normalizedHashtag = hashtag.replace('#', '').replace(/_/g, ' ').toLowerCase();
         (loadoutsByHashtag[normalizedHashtag] ??= []).push(loadout);
@@ -41,14 +41,14 @@ describe('useLoadoutFilterPills hashtag handling', () => {
     }
 
     // All three loadouts should be grouped under the same normalized hashtag
-    expect(loadoutsByHashtag['pvp']).toHaveLength(3);
-    expect(loadoutsByHashtag['pvp']).toContain(loadouts[0]);
-    expect(loadoutsByHashtag['pvp']).toContain(loadouts[1]);
-    expect(loadoutsByHashtag['pvp']).toContain(loadouts[2]);
+    expect(loadoutsByHashtag.pvp).toHaveLength(3);
+    expect(loadoutsByHashtag.pvp).toContain(loadouts[0]);
+    expect(loadoutsByHashtag.pvp).toContain(loadouts[1]);
+    expect(loadoutsByHashtag.pvp).toContain(loadouts[2]);
 
     // Should not have separate entries for different cases
-    expect(loadoutsByHashtag['PVP']).toBeUndefined();
-    expect(loadoutsByHashtag['PvP']).toBeUndefined();
+    expect(loadoutsByHashtag.PVP).toBeUndefined();
+    expect(loadoutsByHashtag.PvP).toBeUndefined();
   });
 
   test('should handle hashtags with underscores and different cases', () => {
@@ -66,7 +66,7 @@ describe('useLoadoutFilterPills hashtag handling', () => {
     const loadoutsByHashtag: { [hashtag: string]: Partial<Loadout>[] } = {};
 
     for (const loadout of loadouts) {
-      const hashtags = getHashtagsFromString(loadout.name!, '');
+      const hashtags = getHashtagsFromString(loadout.name, '');
       for (const hashtag of hashtags) {
         const normalizedHashtag = hashtag.replace('#', '').replace(/_/g, ' ').toLowerCase();
         (loadoutsByHashtag[normalizedHashtag] ??= []).push(loadout);
