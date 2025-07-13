@@ -24,7 +24,7 @@ import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import { intersection } from 'es-toolkit/compat';
 import { useEffect, useMemo, useState } from 'react';
-import { computeLoadoutsByHashtag } from './hashtag-utils';
+
 import styles from './menu-hooks.m.scss';
 
 const loadoutSpecializations = [tl('Loadouts.FashionOnly'), tl('Loadouts.ModsOnly')] as const;
@@ -73,13 +73,17 @@ export function useLoadoutFilterPills(
     setSelectedFilters(emptyArray());
   }, [store.id]);
 
-  const loadoutsByHashtag = useMemo(
-    () =>
-      computeLoadoutsByHashtag(savedLoadouts, (loadout) =>
-        getHashtagsFromString(loadout.name, loadout.notes),
-      ),
-    [savedLoadouts],
-  );
+  const loadoutsByHashtag = useMemo(() => {
+    const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
+    for (const loadout of savedLoadouts) {
+      const hashtags = getHashtagsFromString(loadout.name, loadout.notes);
+      for (const hashtag of hashtags) {
+        const normalizedHashtag = hashtag.replace('#', '').replace(/_/g, ' ').toLowerCase();
+        (loadoutsByHashtag[normalizedHashtag] ??= []).push(loadout);
+      }
+    }
+    return loadoutsByHashtag;
+  }, [savedLoadouts]);
 
   const filterOptions = Object.entries(loadoutsByHashtag)
     .map(
