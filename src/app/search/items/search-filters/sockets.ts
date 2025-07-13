@@ -12,7 +12,6 @@ import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
   modSlotTags,
-  modTypeTags,
   riteShiny,
 } from 'app/utils/item-utils';
 import {
@@ -165,25 +164,6 @@ const socketFilters: ItemFilterDefinition[] = [
       ),
   },
   {
-    keywords: 'hasmod',
-    description: tl('Filter.Mods.Y2'),
-    destinyVersion: 2,
-    filter: () => (item) =>
-      item.sockets?.allSockets.some((socket) =>
-        Boolean(
-          socket.plugged &&
-            !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/,
-            ) &&
-            // enforce that this provides a perk (excludes empty slots)
-            socket.plugged.plugDef.perks.length &&
-            // enforce that this doesn't have an energy cost (y3 reusables)
-            !socket.plugged.plugDef.plug.energyCost,
-        ),
-      ),
-  },
-  {
     keywords: 'hasdisabledmod',
     description: tl('Filter.DisabledModSlot'),
     destinyVersion: 2,
@@ -232,24 +212,6 @@ const socketFilters: ItemFilterDefinition[] = [
         return Boolean(intrinsic && plainString(intrinsic, language).includes(filterValue));
       };
     },
-  },
-  {
-    keywords: 'holdsmod',
-    description: tl('Filter.HoldsMod'),
-    format: 'query',
-    suggestions: modTypeTags.concat(['any', 'none']),
-    destinyVersion: 2,
-    filter:
-      ({ filterValue }) =>
-      (item) => {
-        const compatibleModTags = getSpecialtySocketMetadatas(item)?.flatMap(
-          (m) => m.compatibleModTags,
-        );
-        return (
-          (filterValue === 'none' && !compatibleModTags) ||
-          (compatibleModTags && (filterValue === 'any' || compatibleModTags.includes(filterValue)))
-        );
-      },
   },
   {
     keywords: 'deepsight',
