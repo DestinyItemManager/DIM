@@ -53,6 +53,7 @@ export default function TierlessStatConstraintEditor({
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   processing: boolean;
 }) {
+  // Actually change the stat constraints in the LO state, which triggers recalculation of sets.
   const handleStatChange = (constraint: ResolvedStatConstraint) =>
     lbDispatch({ type: 'statConstraintChanged', constraint });
 
@@ -72,17 +73,21 @@ export default function TierlessStatConstraintEditor({
     lbDispatch({ type: 'setStatConstraints', constraints });
   };
 
-  const onDragEnd = (result: DropResult) => {
+  // Handle dropping the stat constraints in a new order
+  const handleDragEnd = (result: DropResult) => {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
     const sourceIndex = result.source.index;
-    lbDispatch({
-      type: 'statOrderChanged',
-      sourceIndex,
-      destinationIndex: result.destination.index,
-    });
+    const destinationIndex = result.destination.index;
+    if (sourceIndex !== destinationIndex) {
+      lbDispatch({
+        type: 'statOrderChanged',
+        sourceIndex,
+        destinationIndex: result.destination.index,
+      });
+    }
   };
 
   return (
@@ -93,7 +98,7 @@ export default function TierlessStatConstraintEditor({
       onSyncFromEquipped={handleSyncFromEquipped}
       onRandomize={handleRandomize}
     >
-      <DragDropContext onDragEnd={onDragEnd} sensors={[useButtonSensor]}>
+      <DragDropContext onDragEnd={handleDragEnd} sensors={[useButtonSensor]}>
         <Droppable droppableId="droppable">
           {(provided) => (
             <div ref={provided.innerRef} className={styles.editor}>
@@ -120,6 +125,8 @@ export default function TierlessStatConstraintEditor({
     </LoadoutEditSection>
   );
 }
+
+type OnCommitStatChanges = (overrides?: { minStat?: number; maxStat?: number }) => void;
 
 function StatRow({
   statConstraint,
@@ -151,14 +158,17 @@ function StatRow({
     setRawMin((min) => Math.min(value, min));
     setRawMax(value);
   };
-  const commitStatChanges = () => {
-    onStatChange({
-      ...statConstraint,
-      minStat: min,
-      maxStat: max,
-    });
+  const commitStatChanges: OnCommitStatChanges = ({ minStat = min, maxStat = max } = {}) => {
+    if (minStat !== statConstraint.minStat || maxStat !== statConstraint.maxStat) {
+      onStatChange({
+        ...statConstraint,
+        minStat,
+        maxStat,
+      });
+    }
   };
 
+  // Sync up the "live" state to the actual state if it changes
   useEffect(() => {
     setRawMin(statConstraint.minStat);
   }, [statConstraint.minStat]);
@@ -269,7 +279,7 @@ function StatEditBar({
   max: number;
   setMin: (value: number) => void;
   setMax: (value: number) => void;
-  onChange: () => void;
+  onChange: OnCommitStatChanges;
   children: React.ReactNode;
 }) {
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -278,19 +288,26 @@ function StatEditBar({
     }
   };
 
+  const [minText, setMinText] = useState(min.toString());
+  const [maxText, setMaxText] = useState(max.toString());
+
   return (
     <div className={styles.statBar}>
       <input
         type="number"
         min={0}
         max={MAX_STAT}
-        value={min}
+        value={minText}
         aria-label={t('LoadoutBuilder.StatMin')}
         onChange={(e) => {
+          setMinText(e.target.value);
           const value = parseInt(e.target.value, 10);
+          if (isNaN(value) || value < 0 || value > MAX_STAT) {
+            return;
+          }
           setMin(value);
         }}
-        onBlur={onChange}
+        onBlur={() => onChange()}
         onKeyUp={handleKeyUp}
       />
       {children}
@@ -298,13 +315,17 @@ function StatEditBar({
         type="number"
         min={0}
         max={MAX_STAT}
-        value={max}
+        value={maxText}
         aria-label={t('LoadoutBuilder.StatMax')}
         onChange={(e) => {
+          setMaxText(e.target.value);
           const value = parseInt(e.target.value, 10);
+          if (isNaN(value) || value < 0 || value > MAX_STAT) {
+            return;
+          }
           setMax(value);
         }}
-        onBlur={onChange}
+        onBlur={() => onChange()}
         onKeyUp={handleKeyUp}
       />
     </div>
@@ -326,14 +347,15 @@ function StatBar({
   max: number;
   setMin: (value: number) => void;
   setMax: (value: number) => void;
-  onChange: () => void;
+  onChange: OnCommitStatChanges;
   processing: boolean;
 }) {
   const [dragging, setDragging] = useState(false);
   const draggingMax = useRef(false);
   const lastClickTime = useRef(0);
 
-  const setValue = (e: React.PointerEvent<HTMLDivElement>) => {
+  // Set the live value of min or max based on where the pointer is
+  const setValueToPointer = (e: React.PointerEvent<HTMLDivElement>) => {
     const bar = e.currentTarget;
     const rect = bar.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
@@ -343,27 +365,30 @@ function StatBar({
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    setValue(e);
+    setValueToPointer(e);
   };
 
+  // Commit the value on pointer up
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     const bar = e.currentTarget;
     bar.releasePointerCapture(e.pointerId);
-    onChange();
-    setDragging(false);
-  };
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    draggingMax.current = e.shiftKey || (e.target as Element).classList.contains(styles.statBarMax);
-    // double-click
+    // Detect double-click
     if (performance.now() - lastClickTime.current < 200 && !draggingMax.current && range) {
       setMin(range.maxStat);
-      return;
+      onChange({ minStat: range.maxStat });
+    } else {
+      onChange();
     }
+    setDragging(false);
+    lastClickTime.current = performance.now();
+  };
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // If you shift-click you set max, or if you click on the max bar first.
+    draggingMax.current = e.shiftKey || (e.target as Element).classList.contains(styles.statBarMax);
     const bar = e.currentTarget;
     bar.setPointerCapture(e.pointerId);
-    setValue(e);
+    setValueToPointer(e);
     setDragging(true);
-    lastClickTime.current = performance.now();
   };
 
   return (

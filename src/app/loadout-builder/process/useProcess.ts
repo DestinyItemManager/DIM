@@ -3,8 +3,10 @@ import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/sele
 import { DimStore } from 'app/inventory/store-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { infoLog } from 'app/utils/log';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import type { ProcessInputs } from '../process-worker/process';
 import { ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
@@ -71,51 +73,58 @@ export function useProcess({
     result: null,
   });
   const getUserItemTag = useSelector(getTagSelector);
+  const autoModDefs = useAutoMods(selectedStore.id);
+  const firstTime = result === null;
 
-  const cleanupRef = useRef<() => void>(null);
-
-  // Cleanup worker on unmount
+  // Normally we'd just use the cleanup function in the main useEffect, but we
+  // want to be able to short circuit updates without killing in-progress
+  // processes.
+  const cleanupRef = useRef<() => void>(undefined);
   useEffect(
     () => () => {
-      if (cleanupRef.current) {
-        cleanupRef.current();
-        cleanupRef.current = null;
-      }
+      // Cleanup the previous process if it exists
+      cleanupRef.current?.();
+      cleanupRef.current = undefined;
     },
     [],
   );
-
-  const autoModDefs = useAutoMods(selectedStore.id);
+  // This allows for some memoization of the inputs to the worker
+  const inputsRef = useRef<ProcessInputs>(undefined);
 
   useEffect(() => {
-    // Stop any previous worker
-    if (cleanupRef.current) {
-      cleanupRef.current();
-    }
-    const { cleanup, resultPromise } = runProcess({
-      autoModDefs,
-      filteredItems,
-      lockedModMap,
-      modStatChanges,
-      armorEnergyRules,
-      desiredStatRanges,
-      anyExotic,
-      autoStatMods,
-      getUserItemTag,
-      stopOnFirstSet: false,
-      strictUpgrades,
-    });
+    const doProcess = async () => {
+      const processInfo = runProcess({
+        autoModDefs,
+        filteredItems,
+        lockedModMap,
+        modStatChanges,
+        armorEnergyRules,
+        desiredStatRanges,
+        anyExotic,
+        autoStatMods,
+        getUserItemTag,
+        stopOnFirstSet: false,
+        strictUpgrades,
+        lastInput: inputsRef.current,
+      });
+      if (processInfo === undefined) {
+        infoLog('loadout optimizer', 'Inputs were equal to the previous run, not recalculating');
+        return;
+      }
 
-    cleanupRef.current = cleanup;
+      const { cleanup, resultPromise, input } = processInfo;
+      cleanupRef.current?.();
+      cleanupRef.current = cleanup;
+      inputsRef.current = input;
 
-    setState((state) => ({
-      processing: true,
-      resultStoreId: selectedStore.id,
-      result: selectedStore.id === state.resultStoreId ? state.result : null,
-    }));
+      setState((state) => ({
+        processing: true,
+        resultStoreId: selectedStore.id,
+        result: selectedStore.id === state.resultStoreId ? state.result : null,
+      }));
 
-    resultPromise
-      .then(({ sets, combos, statRangesFiltered, processInfo, processTime }) => {
+      try {
+        const { sets, combos, statRangesFiltered, processInfo, processTime } = await resultPromise;
         setState((oldState) => ({
           ...oldState,
           processing: false,
@@ -130,12 +139,22 @@ export function useProcess({
             processInfo,
           },
         }));
-      })
-      // Cleanup the worker, we don't need it anymore.
-      .finally(() => {
+      } finally {
         cleanup();
-        cleanupRef.current = null;
-      });
+        cleanupRef.current = undefined;
+      }
+    };
+
+    const timer = setTimeout(
+      () => {
+        doProcess();
+      },
+      firstTime ? 0 : 500,
+    );
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [
     filteredItems,
     selectedStore.id,
@@ -148,6 +167,7 @@ export function useProcess({
     modStatChanges,
     autoModDefs,
     strictUpgrades,
+    firstTime,
   ]);
 
   return { result, processing };

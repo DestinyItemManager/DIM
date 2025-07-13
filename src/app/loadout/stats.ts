@@ -17,6 +17,7 @@ import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import { mapKeys, once } from 'es-toolkit';
+import { edgeOfFateReleased } from './known-values';
 
 /**
  * Font of X mods conditionally boost a single stat. This maps from
@@ -38,8 +39,10 @@ const fontModHashToStatHash = once(() => {
   };
 });
 
-/** The boost for 0, 1, 2, 3 mods equipped. From Clarity data */
-const boostForNumFontStacks = [0, 30, 50, 60];
+/** The boost for 0, 1, 2, 3 mods equipped. From Clarity data (old) and from
+ * https://www.bungie.net/7/en/News/Article/twid_07_10_2025 for Edge of Fate
+ * version. */
+const boostForNumFontStacks = edgeOfFateReleased ? [0, 20, 40, 50] : [0, 30, 50, 60];
 
 type FontModStatBoosts = {
   [statHash in ArmorStatHashes]?: {

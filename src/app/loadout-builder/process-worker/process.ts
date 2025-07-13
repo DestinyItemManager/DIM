@@ -33,30 +33,42 @@ import {
 /** Caps the maximum number of total armor sets that'll be returned */
 const RETURNED_ARMOR_SETS = 200;
 
+export interface ProcessInputs {
+  filteredItems: ProcessItemsByBucket;
+  /** Selected mods' total contribution to each stat */
+  modStatTotals: ArmorStats;
+  /** Mods to add onto the sets */
+  lockedMods: LockedProcessMods;
+  /** The user's chosen stat ranges, in priority order. */
+  desiredStatRanges: DesiredStatRange[];
+  /** Ensure every set includes one exotic */
+  anyExotic: boolean;
+  /** Which artifice mods, large, and small stat mods are available */
+  autoModOptions: AutoModData;
+  /** Use stat mods to hit stat minimums */
+  autoStatMods: boolean;
+  /** If set, only sets where at least one stat **exceeds** `desiredStatRanges` minimums will be returned */
+  strictUpgrades: boolean;
+  /** If set, LO will exit after finding at least one set that fits all constraints (and is a strict upgrade if `strictUpgrades` is set) */
+  stopOnFirstSet: boolean;
+}
+
 /**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
  */
-export function process(
-  filteredItems: ProcessItemsByBucket,
-  /** Selected mods' total contribution to each stat */
-  modStatTotals: ArmorStats,
-  /** Mods to add onto the sets */
-  lockedMods: LockedProcessMods,
-  /** The user's chosen stat ranges, in priority order. */
-  desiredStatRanges: DesiredStatRange[],
-  /** Ensure every set includes one exotic */
-  anyExotic: boolean,
-  /** Which artifice mods, large, and small stat mods are available */
-  autoModOptions: AutoModData,
-  /** Use stat mods to hit stat minimums */
-  autoStatMods: boolean,
-  /** If set, only sets where at least one stat **exceeds** `desiredStatRanges` minimums will be returned */
-  strictUpgrades: boolean,
-  /** If set, LO will exit after finding at least one set that fits all constraints (and is a strict upgrade if `strictUpgrades` is set) */
-  stopOnFirstSet: boolean,
-): ProcessResult {
+export function process({
+  filteredItems,
+  modStatTotals,
+  lockedMods,
+  desiredStatRanges,
+  anyExotic,
+  autoModOptions,
+  autoStatMods,
+  strictUpgrades,
+  stopOnFirstSet,
+}: ProcessInputs): ProcessResult {
   const pstart = performance.now();
 
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.

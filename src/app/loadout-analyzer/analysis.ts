@@ -324,7 +324,8 @@ export async function analyzeLoadout(
               desiredStatRanges: mergedDesiredStatRanges,
               stopOnFirstSet: true,
               strictUpgrades: !mergedConstraintsImplyStrictUpgrade,
-            });
+              lastInput: undefined, // TODO: it would be nice to memoize these inputs too
+            })!;
 
             hasStrictUpgrade = Boolean((await resultPromise).sets.length);
             if (hasStrictUpgrade) {
