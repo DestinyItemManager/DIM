@@ -301,13 +301,11 @@ function StatEditBar({
         aria-label={t('LoadoutBuilder.StatMin')}
         onChange={(e) => {
           setMinText(e.target.value);
-          try {
-            const value = parseInt(e.target.value, 10);
-            if (isNaN(value) || value < 0 || value > MAX_STAT) {
-              return;
-            }
-            setMin(value);
-          } catch {}
+          const value = parseInt(e.target.value, 10);
+          if (isNaN(value) || value < 0 || value > MAX_STAT) {
+            return;
+          }
+          setMin(value);
         }}
         onBlur={() => onChange()}
         onKeyUp={handleKeyUp}
