@@ -123,7 +123,7 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   /* ItemTable incursion */
 
-  const destinyVersion = compareItems[0].destinyVersion;
+  const destinyVersion = compareItems[0]?.destinyVersion ?? 2;
   const type = comparingArmor ? 'armor' : comparingWeapons ? 'weapon' : 'general';
   const hasEnergy = compareItems.some((i) => i.energy);
   const primaryStatDescription =
@@ -134,7 +134,7 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   // TODO: Rather than hardcode, check to see if any of the items have any armor stat
   const customStats =
-    compareItems[0].bucket.hash !== BucketHashes.ClassArmor
+    compareItems[0]?.bucket.hash !== BucketHashes.ClassArmor
       ? itemCreationContext.customStats
       : emptyArray<CustomStatDef>();
 
@@ -164,7 +164,7 @@ export default function Compare({ session }: { session: CompareSession }) {
     ],
   );
 
-  const classIfAny = comparingArmor ? compareItems[0].classType : undefined;
+  const classIfAny = comparingArmor ? compareItems[0]?.classType : undefined;
   const filteredColumns = useMemo(
     () =>
       // TODO: filter to enabled columns once you can select columns

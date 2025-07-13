@@ -17,7 +17,9 @@ manifest-cache
 Heap.*
 eslint_report.json
 webpack-stats.json
+webpack-stats.json.br
 junit.xml
 eslint.results.json
 .pnpm-store
 /sonda-report.html
+sonda-report/
