@@ -298,6 +298,7 @@ function makeFakePursuitItem(
     uniqueStack: false,
     trackable: false,
     energy: null,
+    featured: false,
   };
 }
 

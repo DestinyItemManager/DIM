@@ -228,6 +228,8 @@ export interface DimItem {
   foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
+  /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
+  featured: boolean;
 }
 
 /**
