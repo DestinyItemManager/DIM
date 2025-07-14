@@ -24,7 +24,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },
-  "jest.jestCommandLine": "NODE_ENV=test LOCAL_MANIFEST=true npx jest --verbose",
+  // "jest.jestCommandLine": "NODE_ENV=test LOCAL_MANIFEST=true npx jest --verbose",
   "[javascript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "never"

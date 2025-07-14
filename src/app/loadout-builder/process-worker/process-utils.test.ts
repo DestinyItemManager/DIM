@@ -20,7 +20,13 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from '../process/mappers';
-import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxStat, ResolvedStatConstraint } from '../types';
+import {
+  ArmorStatHashes,
+  DesiredStatRange,
+  MIN_LO_ITEM_ENERGY,
+  MinMaxStat,
+  ResolvedStatConstraint,
+} from '../types';
 import {
   LoSessionInfo,
   generateProcessModPermutations,
@@ -29,7 +35,7 @@ import {
   precalculateStructures,
   updateMaxStats,
 } from './process-utils';
-import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
+import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 // We don't really pay attention to this in the tests but the parameter is needed
 const modStatistics: ModAssignmentStatistics = {
@@ -464,8 +470,12 @@ describe('process-utils optimal mods', () => {
 
   // use these for testing as they are reset after each test
   let items: ProcessItem[];
-  let resolvedStatConstraints: ResolvedStatConstraint[];
-  let loSessionInfo: LoSessionInfo;
+  const defaultConstraints: DesiredStatRange[] = armorStats.map((statHash) => ({
+    statHash,
+    minStat: 30,
+    maxStat: 80,
+  }));
+  let autoModData: AutoModData;
 
   beforeAll(async () => {
     const defs = await getTestDefinitions();
@@ -488,15 +498,7 @@ describe('process-utils optimal mods', () => {
 
     items = [helmet, arms, chest, legs, classItem];
 
-    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
-    loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
-
-    resolvedStatConstraints = armorStats.map((statHash) => ({
-      statHash,
-      ignored: false,
-      maxStat: 80,
-      minStat: 30,
-    }));
+    autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
   });
 
   // TODO: These cases don't exactly make sense in the tierless world but it's hard to think through what they should do
@@ -505,23 +507,47 @@ describe('process-utils optimal mods', () => {
     remainingEnergy: number[],
     numArtifice: number,
     expectedStats: number[],
+    statMinMaxes: DesiredStatRange[],
   ][] = [
-    // the trick here is that we can use two small mods to boost resilience by a tier,
+    // the trick here is that we can use two small mods to boost resilience,
     // but it's better to use two large mods to boost discipline (cheaper mods...)
-    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [80, 70, 80, 60, 30, 30]],
+    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [80, 80, 80, 40, 30, 30], defaultConstraints],
     // ensure we combine artifice and small mods if needed (all goes to first stat)
-    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [77, 70, 59, 35, 30, 30]],
+    [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [77, 70, 59, 35, 30, 30], defaultConstraints],
     // ensure we can use a cheap +5 mod to bump the 35 dis to 40 while using artifice on resilience
-    [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [80, 71, 80, 40, 30, 30]],
+    // TODO: Broken by removing the cost-dominance distinction between different mods (which would have happened in Edge of Fate anyway)
+    // [[80, 65, 80, 35, 30, 30], [1, 0, 0, 0, 0], 2, [80, 71, 80, 40, 30, 30], defaultConstraints],
     // ensure we get two tiers in mobility
-    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [80, 66, 30, 30, 30, 30]],
+    [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [80, 66, 30, 30, 30, 30], defaultConstraints],
     // do everything we can to hit min bounds
-    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [71, 66, 30, 30, 30, 30]],
+    [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [71, 66, 30, 30, 30, 30], defaultConstraints],
     // ensure that negative stat amounts aren't clamped too early
-    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [50, 61, 30, 30, 30, 31]],
+    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [50, 61, 30, 30, 30, 31], defaultConstraints],
+    // We should assign two +10 mods to the fourth stat using remaining energy,
+    // but we had a bug where it assigned to the fifth, skipping the fourth stat
+    [
+      [82, 44, 73, 39, 40, 50],
+      [10, 10, 10, 10, 10],
+      5,
+      [82, 83, 83, 55, 40, 50],
+      // Pick specific stat constraints for this test
+      [
+        { statHash: StatHashes.Discipline, minStat: 0, maxStat: 82 },
+        { statHash: StatHashes.Strength, minStat: 0, maxStat: 82 },
+        { statHash: StatHashes.Recovery, minStat: 0, maxStat: 82 },
+        { statHash: StatHashes.Intellect, minStat: 0, maxStat: 200 },
+        { statHash: StatHashes.Mobility, minStat: 0, maxStat: 200 },
+        { statHash: StatHashes.Resilience, minStat: 0, maxStat: 200 },
+      ],
+    ],
   ];
 
-  const pickMods = (setStats: number[], remainingEnergy: number[], numArtifice: number) => {
+  const pickMods = (
+    setStats: number[],
+    remainingEnergy: number[],
+    numArtifice: number,
+    statMinMaxes: DesiredStatRange[],
+  ) => {
     const ourItems = [...items];
     for (let i = 0; i < ourItems.length; i++) {
       ourItems[i] = modifyItem({
@@ -531,10 +557,16 @@ describe('process-utils optimal mods', () => {
       });
     }
     const statMods = pickOptimalStatMods(
-      loSessionInfo,
+      precalculateStructures(
+        autoModData,
+        [],
+        [],
+        true,
+        statMinMaxes.map(({ statHash }) => statHash),
+      ),
       ourItems,
       setStats,
-      resolvedStatConstraints,
+      statMinMaxes,
     )!;
     const finalStats = [...setStats];
     for (let i = 0; i < armorStats.length; i++) {
@@ -545,8 +577,8 @@ describe('process-utils optimal mods', () => {
 
   test.each(tierCases)(
     'set with stats %p, energies %p, numArtifice %p yields tiers %p',
-    (setStats, remainingEnergy, numArtifice, expectedTiers) => {
-      const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
+    (setStats, remainingEnergy, numArtifice, expectedTiers, statMinMaxes) => {
+      const finalStats = pickMods(setStats, remainingEnergy, numArtifice, statMinMaxes);
       expect(finalStats).toStrictEqual(expectedTiers);
     },
   );
@@ -557,18 +589,19 @@ describe('process-utils optimal mods', () => {
     remainingEnergy: number[],
     numArtifice: number,
     expectedStats: number[],
+    statConstraints: DesiredStatRange[],
   ][] = [
     // Nice
-    [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [34, 80, 80, 32, 80, 30]],
+    [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [34, 80, 80, 32, 80, 30], defaultConstraints],
     // TODO: This is the same problem as above, only with reordered stats. The solution
     // is still optimal in terms of reached stats, but worse in terms of mod usage
-    [[26, 80, 80, 18, 80, 30], [0, 0, 0, 3, 0], 4, [36, 80, 80, 30, 80, 30]],
+    [[26, 80, 80, 18, 80, 30], [0, 0, 0, 3, 0], 4, [36, 80, 80, 30, 80, 30], defaultConstraints],
   ];
 
   test.each(exactStatCases)(
     'set with stats %p, energies %p, numArtifice %p produces exact stats %p',
-    (setStats, remainingEnergy, numArtifice, expectedStats) => {
-      const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
+    (setStats, remainingEnergy, numArtifice, expectedStats, statMinMaxes) => {
+      const finalStats = pickMods(setStats, remainingEnergy, numArtifice, statMinMaxes);
       expect(finalStats).toStrictEqual(expectedStats);
     },
   );
