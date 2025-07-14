@@ -1,10 +1,10 @@
 import { settingSelector } from 'app/dim-api/selectors';
-import { Tooltip } from 'app/dim-ui/PressTip';
-import { t } from 'app/i18next-t';
+import { useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
 import { edgeOfFateReleased, EFFECTIVE_MAX_STAT } from 'app/loadout/known-values';
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import ClarityCharacterStat from './ClarityCharacterStat';
 import styles from './StatTooltip.m.scss';
@@ -23,18 +23,22 @@ export default function StatTooltip({
    */
   equippedHashes: Set<number>;
 }) {
-  const tier = statTier(stat.value);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
   const useClarityInfo = descriptionsToDisplay !== 'bungie' && !edgeOfFateReleased;
+  useTooltipCustomization({
+    getHeader: useCallback(
+      () => (
+        <div className={styles.title}>
+          <div>{stat.displayProperties.name}</div>
+          <div className={styles.value}>{`${stat.value} / ${EFFECTIVE_MAX_STAT}`}</div>
+        </div>
+      ),
+      [stat.displayProperties.name, stat.value],
+    ),
+  });
 
   return (
-    <div>
-      <Tooltip.Header text={stat.displayProperties.name} />
-      <div className={styles.values}>
-        <div className={styles.label}>{t('Stats.Tier', { tier })}</div>
-        <div>{`${stat.value}/${EFFECTIVE_MAX_STAT}`}</div>
-      </div>
-      <hr />
+    <>
       <div>{stat.displayProperties.description}</div>
       {stat.breakdown?.some((contribution) => contribution.source !== 'armorStats') && (
         <>
@@ -68,8 +72,12 @@ export default function StatTooltip({
         </>
       )}
       {useClarityInfo && (
-        <ClarityCharacterStat statHash={stat.hash} tier={tier} equippedHashes={equippedHashes} />
+        <ClarityCharacterStat
+          statHash={stat.hash}
+          tier={statTier(stat.value)}
+          equippedHashes={equippedHashes}
+        />
       )}
-    </div>
+    </>
   );
 }

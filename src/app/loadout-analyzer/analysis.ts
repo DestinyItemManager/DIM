@@ -17,14 +17,13 @@ import {
   ResolvedStatConstraint,
   inGameArmorEnergyRules,
 } from 'app/loadout-builder/types';
-import { statTier } from 'app/loadout-builder/utils';
 import {
   getLoadoutStats,
   getLoadoutSubclassFragmentCapacity,
   resolveLoadoutModHashes,
 } from 'app/loadout-drawer/loadout-utils';
 import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
-import { MAX_STAT, edgeOfFateReleased } from 'app/loadout/known-values';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
@@ -302,9 +301,7 @@ export async function analyzeLoadout(
             statHash: c.statHash,
             ignored: c.ignored,
             maxStat: MAX_STAT,
-            minStat: edgeOfFateReleased
-              ? assumedLoadoutStats[c.statHash]!.value
-              : statTier(assumedLoadoutStats[c.statHash]!.value) * 10,
+            minStat: assumedLoadoutStats[c.statHash]!.value,
           }));
           const { mergedDesiredStatRanges, mergedConstraintsImplyStrictUpgrade } =
             mergeStrictUpgradeStatConstraints(

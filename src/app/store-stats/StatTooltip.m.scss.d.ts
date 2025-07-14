@@ -5,9 +5,9 @@ interface CssExports {
   'breakdown': string;
   'breakdownValue': string;
   'icon': string;
-  'label': string;
   'row': string;
-  'values': string;
+  'title': string;
+  'value': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
