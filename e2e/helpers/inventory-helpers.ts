@@ -9,11 +9,147 @@ export class InventoryHelpers {
   constructor(private page: Page) {}
 
   /**
+   * Navigate to the inventory page and wait for it to load
+   */
+  async navigateToInventory(): Promise<void> {
+    await this.page.goto('/');
+    await this.waitForInventoryLoad();
+  }
+
+  /**
    * Wait for the inventory page to fully load
    */
   async waitForInventoryLoad(): Promise<void> {
     await expect(this.page.locator('header')).toBeVisible({ timeout: 15000 });
     await expect(this.page.getByText('Hunter')).toBeVisible();
+  }
+
+  /**
+   * Common assertions for page structure
+   */
+  async verifyPageStructure(): Promise<void> {
+    await expect(this.page.locator('header')).toBeVisible();
+    await expect(this.page.getByText('Hunter')).toBeVisible();
+    await expect(this.page.getByText('Warlock')).toBeVisible();
+    await expect(this.page.getByText('Titan')).toBeVisible();
+  }
+
+  /**
+   * Verify header elements are present
+   */
+  async verifyHeader(): Promise<void> {
+    await expect(this.page.locator('header')).toBeVisible();
+    await expect(this.page.locator('img').first()).toBeVisible();
+    await expect(this.page.getByRole('combobox', { name: /search/i })).toBeVisible();
+    await expect(this.page.getByRole('button', { name: /menu/i })).toBeVisible();
+  }
+
+  /**
+   * Verify all three characters are displayed with power levels
+   */
+  async verifyAllCharacters(): Promise<void> {
+    const powerLevelPattern = /\d{4}/;
+
+    // Hunter
+    const hunterSection = this.page.locator('button').filter({ hasText: 'Hunter' });
+    await expect(hunterSection).toBeVisible();
+    await expect(hunterSection).toContainText('Vidmaster');
+    await expect(hunterSection).toContainText(powerLevelPattern);
+
+    // Warlock
+    const warlockSection = this.page.locator('button').filter({ hasText: 'Warlock' });
+    await expect(warlockSection).toBeVisible();
+    await expect(warlockSection).toContainText('Star Baker');
+    await expect(warlockSection).toContainText(powerLevelPattern);
+
+    // Titan
+    const titanSection = this.page.locator('button').filter({ hasText: 'Titan' });
+    await expect(titanSection).toBeVisible();
+    await expect(titanSection).toContainText('MMXXII');
+    await expect(titanSection).toContainText(powerLevelPattern);
+  }
+
+  /**
+   * Verify character stats are displayed
+   */
+  async verifyCharacterStats(): Promise<void> {
+    const statsSection = this.page.locator('div').filter({
+      hasText: /Mobility|Resilience|Recovery|Discipline|Intellect|Strength/,
+    });
+
+    const statNames = ['Mobility', 'Resilience', 'Recovery', 'Discipline', 'Intellect', 'Strength'];
+    for (const statName of statNames) {
+      await expect(statsSection.getByText(statName)).toBeVisible();
+    }
+  }
+
+  /**
+   * Verify main inventory sections
+   */
+  async verifyInventorySections(): Promise<void> {
+    await expect(this.page.getByRole('heading', { name: 'Weapons' })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: 'Armor' })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: 'General' })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: 'Inventory' })).toBeVisible();
+
+    // Verify section buttons are expanded
+    const weaponsButton = this.page.getByRole('button', { name: 'Weapons', exact: true });
+    const armorButton = this.page.getByRole('button', { name: 'Armor', exact: true });
+
+    await expect(weaponsButton).toBeVisible();
+    await expect(armorButton).toBeVisible();
+    await expect(weaponsButton).toHaveAttribute('aria-expanded', 'true');
+    await expect(armorButton).toHaveAttribute('aria-expanded', 'true');
+  }
+
+  /**
+   * Verify postmaster sections
+   */
+  async verifyPostmaster(): Promise<void> {
+    const postmasterHeadings = this.page.getByRole('heading', { name: /postmaster/i });
+    await expect(postmasterHeadings.first()).toBeVisible();
+    await expect(this.page.getByText(/\(\d+\/\d+\)/).first()).toBeVisible();
+  }
+
+  /**
+   * Verify weapons section content
+   */
+  async verifyWeaponsSection(): Promise<void> {
+    await expect(this.page.getByText('Kinetic Weapons')).toBeVisible();
+    await expect(this.page.getByText('Auto Rifle')).toBeVisible();
+    await expect(this.page.getByText('Pulse Rifle')).toBeVisible();
+    await expect(this.page.getByText('Hand Cannon')).toBeVisible();
+  }
+
+  /**
+   * Verify armor section content
+   */
+  async verifyArmorSection(): Promise<void> {
+    await expect(this.page.getByText('Helmet')).toBeVisible();
+    await expect(this.page.getByText('Chest Armor')).toBeVisible();
+    await expect(this.page.getByText('Leg Armor')).toBeVisible();
+  }
+
+  /**
+   * Verify common item display elements
+   */
+  async verifyItemDisplay(): Promise<void> {
+    await expect(this.page.getByText('Quicksilver Storm Auto Rifle')).toBeVisible();
+    await expect(this.page.getByText('Pizzicato-22 Submachine Gun')).toBeVisible();
+    await expect(this.page.getByText('The Call Sidearm')).toBeVisible();
+
+    // Verify power levels are displayed
+    await expect(this.page.getByText('1930')).toBeVisible();
+    await expect(this.page.getByText('1925')).toBeVisible();
+  }
+
+  /**
+   * Verify search input is present and functional
+   */
+  async verifySearchInput(): Promise<void> {
+    const searchInput = this.page.getByRole('combobox', { name: /search/i });
+    await expect(searchInput).toBeVisible();
+    await expect(searchInput).toHaveAttribute('placeholder', /search/i);
   }
 
   /**

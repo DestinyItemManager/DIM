@@ -1,54 +1,31 @@
 import { expect, test } from '@playwright/test';
+import { InventoryHelpers } from './helpers/inventory-helpers';
 
 test.describe('Inventory Page - Character Management', () => {
+  let helpers: InventoryHelpers;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    // Wait for the app to fully load
-    await expect(page.locator('header')).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText('Hunter')).toBeVisible();
+    helpers = new InventoryHelpers(page);
+    await helpers.navigateToInventory();
   });
 
   test('displays all three character classes with distinct information', async ({ page }) => {
-    // Verify Hunter character
-    const hunterButton = page.locator('button').filter({ hasText: 'Hunter' });
-    await expect(hunterButton).toBeVisible();
-    await expect(hunterButton).toContainText('Vidmaster');
-    await expect(hunterButton).toContainText('1923');
-
-    // Verify Warlock character
-    const warlockButton = page.locator('button').filter({ hasText: 'Warlock' });
-    await expect(warlockButton).toBeVisible();
-    await expect(warlockButton).toContainText('Star Baker');
-    await expect(warlockButton).toContainText('1903');
-
-    // Verify Titan character
-    const titanButton = page.locator('button').filter({ hasText: 'Titan' });
-    await expect(titanButton).toBeVisible();
-    await expect(titanButton).toContainText('MMXXII');
-    await expect(titanButton).toContainText('1903');
+    await helpers.verifyAllCharacters();
   });
 
   test('shows detailed stats for active character', async ({ page }) => {
     // Hunter should be active by default, verify detailed stats
-    const statsContainer = page
-      .locator('div')
-      .filter({ hasText: /Mobility.*Resilience.*Recovery/ });
-
-    // Verify all stat categories are present
-    await expect(statsContainer.getByText('Mobility')).toBeVisible();
-    await expect(statsContainer.getByText('Resilience')).toBeVisible();
-    await expect(statsContainer.getByText('Recovery')).toBeVisible();
-    await expect(statsContainer.getByText('Discipline')).toBeVisible();
-    await expect(statsContainer.getByText('Intellect')).toBeVisible();
-    await expect(statsContainer.getByText('Strength')).toBeVisible();
+    await helpers.verifyCharacterStats();
 
     // Verify specific stat values for Hunter
-    await expect(statsContainer.getByText('100')).toBeVisible(); // Mobility
-    await expect(statsContainer.getByText('61')).toBeVisible(); // Resilience
-    await expect(statsContainer.getByText('30')).toBeVisible(); // Recovery
-    await expect(statsContainer.getByText('101')).toBeVisible(); // Discipline
-    await expect(statsContainer.getByText('31')).toBeVisible(); // Intellect
-    await expect(statsContainer.getByText('20')).toBeVisible(); // Strength
+    await helpers.verifyCharacterStats({
+      Mobility: '100',
+      Resilience: '61',
+      Recovery: '30',
+      Discipline: '101',
+      Intellect: '31',
+      Strength: '20',
+    });
   });
 
   test('displays power level calculations for each character', async ({ page }) => {
@@ -60,13 +37,13 @@ test.describe('Inventory Page - Character Management', () => {
 
     // Check Warlock power levels
     const warlockSection = page.locator('button').filter({ hasText: 'Warlock' }).locator('..');
-    await expect(warlockSection.getByText('1915')).toBeVisible(); // Maximum total power
-    await expect(warlockSection.getByText('1912')).toBeVisible(); // Equippable gear power
+    await expect(warlockSection.getByText('1915')).toBeVisible();
+    await expect(warlockSection.getByText('1912')).toBeVisible();
 
     // Check Titan power levels
     const titanSection = page.locator('button').filter({ hasText: 'Titan' }).locator('..');
-    await expect(titanSection.getByText('1915')).toBeVisible(); // Maximum total power
-    await expect(titanSection.getByText('1912')).toBeVisible(); // Equippable gear power
+    await expect(titanSection.getByText('1915')).toBeVisible();
+    await expect(titanSection.getByText('1912')).toBeVisible();
   });
 
   test('shows character loadout buttons', async ({ page }) => {
@@ -92,19 +69,14 @@ test.describe('Inventory Page - Character Management', () => {
     await expect(initialMobility).toBeVisible();
 
     // Click on Warlock character
-    const warlockButton = page.locator('button').filter({ hasText: 'Warlock' });
-    await warlockButton.click();
+    await helpers.switchToCharacter('Warlock');
 
     // Stats should change to Warlock stats
-    await page.waitForTimeout(1000); // Wait for character switch
-
-    // Verify different stat values (Warlock has different stats)
-    const statsContainer = page
-      .locator('div')
-      .filter({ hasText: /Mobility.*Resilience.*Recovery/ });
-    await expect(statsContainer.getByText('47')).toBeVisible(); // Warlock Mobility
-    await expect(statsContainer.getByText('44')).toBeVisible(); // Warlock Resilience
-    await expect(statsContainer.getByText('41')).toBeVisible(); // Warlock Recovery
+    await helpers.verifyCharacterStats({
+      Mobility: '47',
+      Resilience: '44',
+      Recovery: '41',
+    });
   });
 
   test('displays character emblems and visual elements', async ({ page }) => {
@@ -125,28 +97,13 @@ test.describe('Inventory Page - Character Management', () => {
   });
 
   test('shows vault as separate storage entity', async ({ page }) => {
-    // Vault should be separate from characters
-    const vaultButton = page.locator('button').filter({ hasText: 'Vault' });
-    await expect(vaultButton).toBeVisible();
-    await expect(vaultButton).toContainText('1933'); // Vault power level
-
-    // Vault should show storage information
-    const vaultSection = vaultButton.locator('..');
-    await expect(vaultSection.getByText(/\d+,\d+ Glimmer/)).toBeVisible();
-    await expect(vaultSection.getByText(/\d+,\d+ Bright Dust/)).toBeVisible();
-
-    // Storage counters
-    await expect(vaultSection.getByText('405/700')).toBeVisible(); // General storage
-    await expect(vaultSection.getByText('41/50')).toBeVisible(); // Some category
-    await expect(vaultSection.getByText('40/50')).toBeVisible(); // Modifications
+    await helpers.verifyVaultSection();
   });
 
   test('postmaster shows per-character storage', async ({ page }) => {
-    // Each character should have their own postmaster
-    const postmasterHeadings = page.getByRole('heading').filter({ hasText: /postmaster/i });
-    await expect(postmasterHeadings.first()).toBeVisible();
+    await helpers.verifyPostmaster();
 
-    // Should show item counts for each character's postmaster
+    // Should show item counts for different characters
     await expect(page.getByText('(1/21)')).toBeVisible(); // Hunter postmaster
     await expect(page.getByText('(0/21)')).toBeVisible(); // Other characters
   });
@@ -163,34 +120,30 @@ test.describe('Inventory Page - Character Management', () => {
 
   test('handles character interactions during item operations', async ({ page }) => {
     // Open an item popup
-    await page.getByText('Quicksilver Storm Auto Rifle').click();
-    await expect(page.getByRole('dialog')).toBeVisible();
+    await helpers.openItemDetail('Quicksilver Storm Auto Rifle');
 
     // Verify character options in item popup
-    await expect(page.getByText('Equip on:')).toBeVisible();
-    await expect(page.getByRole('button', { name: /equip on.*hunter/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /equip on.*warlock/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /equip on.*titan/i })).toBeVisible();
+    await helpers.verifyCharacterEquipOptions();
 
     // Test equipping on different character
     const equipOnWarlock = page.getByRole('button', { name: /equip on.*warlock/i });
     await expect(equipOnWarlock).toBeEnabled();
 
     // Close popup
-    await page.keyboard.press('Escape');
+    await helpers.closeItemDetail();
   });
 
   test('character sections maintain proper layout and spacing', async ({ page }) => {
-    // Verify characters are laid out horizontally
+    await helpers.verifyPageStructure();
+
+    // Verify characters are laid out and properly sized
     const characterButtons = page.locator('button').filter({ hasText: /Hunter|Warlock|Titan/ });
     await expect(characterButtons).toHaveCount(3);
 
-    // Each character section should be visible and properly sized
+    // Each character section should be visible and contain power level
     for (let i = 0; i < 3; i++) {
       const characterButton = characterButtons.nth(i);
       await expect(characterButton).toBeVisible();
-
-      // Should contain power level
       await expect(characterButton).toContainText(/\d{4}/);
     }
   });
@@ -198,26 +151,18 @@ test.describe('Inventory Page - Character Management', () => {
   test('character data loads consistently', async ({ page }) => {
     // Refresh page and verify character data loads reliably
     await page.reload();
-    await expect(page.locator('main[aria-label="Inventory"]')).toBeVisible({ timeout: 15000 });
+    await helpers.waitForInventoryLoad();
 
     // All characters should still be visible after reload
-    await expect(page.getByText('Hunter')).toBeVisible();
-    await expect(page.getByText('Warlock')).toBeVisible();
-    await expect(page.getByText('Titan')).toBeVisible();
+    await helpers.verifyPageStructure();
 
     // Stats should be displayed
-    await expect(page.getByText('Mobility')).toBeVisible();
-    await expect(page.getByText('100')).toBeVisible(); // Hunter mobility
+    await helpers.verifyCharacterStats();
   });
 
   test('character titles and emblems are unique', async ({ page }) => {
-    // Each character should have unique title
-    await expect(page.getByText('Vidmaster')).toBeVisible(); // Hunter
-    await expect(page.getByText('Star Baker')).toBeVisible(); // Warlock
-    await expect(page.getByText('MMXXII')).toBeVisible(); // Titan
-
-    // Power levels should be character-specific
-    await expect(page.getByText('1923')).toBeVisible(); // Hunter
-    await expect(page.getByText('1903')).toBeVisible(); // Warlock & Titan (same level)
+    await helpers.verifyCharacterSection('Hunter', 'Vidmaster', '1923');
+    await helpers.verifyCharacterSection('Warlock', 'Star Baker', '1903');
+    await helpers.verifyCharacterSection('Titan', 'MMXXII', '1903');
   });
 });

@@ -1,128 +1,54 @@
 import { expect, test } from '@playwright/test';
+import { InventoryHelpers } from './helpers/inventory-helpers';
 
 test.describe('Inventory Page - Core Structure', () => {
+  let helpers: InventoryHelpers;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    // Wait for the app to fully load
-    await expect(page.locator('header')).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText('Hunter')).toBeVisible();
+    helpers = new InventoryHelpers(page);
+    await helpers.navigateToInventory();
   });
 
   test('displays header with navigation elements', async ({ page }) => {
-    // Verify main navigation elements in header
-    await expect(page.locator('header')).toBeVisible();
-    await expect(page.locator('img').first()).toBeVisible();
+    await helpers.verifyHeader();
 
-    // Search functionality
-    await expect(page.getByRole('combobox', { name: /search/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /menu/i })).toBeVisible();
-
-    // Settings link
+    // Additional header checks
     await expect(page.getByRole('link').filter({ hasText: '' }).first()).toBeVisible();
   });
 
   test('displays all three character sections', async ({ page }) => {
-    // Wait for character data to load
-    await expect(page.getByText('Hunter')).toBeVisible();
-    await expect(page.getByText('Warlock')).toBeVisible();
-    await expect(page.getByText('Titan')).toBeVisible();
-
-    // Verify each character has power level displayed
-    const powerLevelPattern = /\d{4}/; // 4-digit power level
-    const hunterSection = page.locator('button').filter({ hasText: 'Hunter' });
-    const warlockSection = page.locator('button').filter({ hasText: 'Warlock' });
-    const titanSection = page.locator('button').filter({ hasText: 'Titan' });
-
-    await expect(hunterSection).toContainText(powerLevelPattern);
-    await expect(warlockSection).toContainText(powerLevelPattern);
-    await expect(titanSection).toContainText(powerLevelPattern);
+    await helpers.verifyAllCharacters();
   });
 
   test('displays character stats for active character', async ({ page }) => {
-    // Verify stats are displayed for the active character (Hunter)
-    const statsSection = page
-      .locator('div')
-      .filter({ hasText: /Mobility|Resilience|Recovery|Discipline|Intellect|Strength/ });
+    await helpers.verifyCharacterStats();
 
-    await expect(statsSection.getByText('Mobility')).toBeVisible();
-    await expect(statsSection.getByText('Resilience')).toBeVisible();
-    await expect(statsSection.getByText('Recovery')).toBeVisible();
-    await expect(statsSection.getByText('Discipline')).toBeVisible();
-    await expect(statsSection.getByText('Intellect')).toBeVisible();
-    await expect(statsSection.getByText('Strength')).toBeVisible();
-
-    // Verify stats have numeric values
+    // Verify specific stat values for Hunter
+    const statsSection = page.locator('div').filter({
+      hasText: /Mobility|Resilience|Recovery|Discipline|Intellect|Strength/,
+    });
     await expect(statsSection.getByText('100')).toBeVisible(); // Mobility value
     await expect(statsSection.getByText('61')).toBeVisible(); // Resilience value
   });
 
   test('displays vault section with storage information', async ({ page }) => {
-    // Verify vault section exists
-    const vaultSection = page.locator('button').filter({ hasText: 'Vault' });
-    await expect(vaultSection).toBeVisible();
-
-    // Check for power level in vault
-    await expect(vaultSection).toContainText(/\d{4}/);
-
-    // Verify currency information is displayed
-    await expect(page.getByText(/Glimmer/)).toBeVisible();
-    await expect(page.getByText(/Bright Dust/)).toBeVisible();
-
-    // Check storage counters
-    await expect(page.getByText(/\d+\/\d+/)).toBeVisible(); // Storage format like "405/700"
+    await helpers.verifyVaultSection();
   });
 
   test('displays postmaster sections', async ({ page }) => {
-    // Verify postmaster sections are present
-    const postmasterHeadings = page.getByRole('heading', { name: /postmaster/i });
-    await expect(postmasterHeadings.first()).toBeVisible();
-
-    // Check postmaster item counts
-    await expect(page.getByText(/\(\d+\/\d+\)/).first()).toBeVisible(); // Format like "(1/21)"
+    await helpers.verifyPostmaster();
   });
 
   test('displays main inventory sections', async ({ page }) => {
-    // Verify main section headings exist and are clickable
-    await expect(page.getByRole('heading', { name: 'Weapons' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Armor' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'General' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Inventory' })).toBeVisible();
-
-    // Verify section toggle buttons work
-    const weaponsButton = page.getByRole('button', { name: 'Weapons', exact: true });
-    const armorButton = page.getByRole('button', { name: 'Armor', exact: true });
-
-    await expect(weaponsButton).toBeVisible();
-    await expect(armorButton).toBeVisible();
-
-    // Sections should be expanded by default
-    await expect(weaponsButton).toHaveAttribute('aria-expanded', 'true');
-    await expect(armorButton).toHaveAttribute('aria-expanded', 'true');
+    await helpers.verifyInventorySections();
   });
 
   test('displays weapons section with item categories', async ({ page }) => {
-    // Verify weapons section contains items
-    const weaponsSection = page.getByText('Weapons').locator('..');
-    await expect(weaponsSection).toBeVisible();
-
-    // Check for kinetic weapons category
-    await expect(page.getByText('Kinetic Weapons')).toBeVisible();
-
-    // Verify some weapon items are displayed
-    await expect(page.getByText('Auto Rifle')).toBeVisible();
-    await expect(page.getByText('Pulse Rifle')).toBeVisible();
-    await expect(page.getByText('Hand Cannon')).toBeVisible();
+    await helpers.verifyWeaponsSection();
   });
 
   test('displays armor section with equipment slots', async ({ page }) => {
-    // Verify armor section contains equipment
-    const armorSection = page.getByText('Armor').locator('..');
-    await expect(armorSection).toBeVisible();
-
-    // Check for armor slot categories
-    await expect(page.getByText('Helmet')).toBeVisible();
-    await expect(page.getByText('Chest Armor')).toBeVisible();
-    await expect(page.getByText('Leg Armor')).toBeVisible();
+    await helpers.verifyArmorSection();
   });
 
   test('displays item feed button', async ({ page }) => {
@@ -137,9 +63,7 @@ test.describe('Inventory Page - Core Structure', () => {
   });
 
   test('loads without critical errors', async ({ page }) => {
-    // Verify no critical error states are shown
-    await expect(page.locator('.developer-settings')).not.toBeVisible();
-    await expect(page.locator('.login-required')).not.toBeVisible();
+    await helpers.verifyNoCriticalErrors();
 
     // Verify main content is loaded
     await expect(page.getByRole('main')).toBeVisible();
