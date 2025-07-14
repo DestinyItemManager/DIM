@@ -181,8 +181,8 @@ export function updateMaxStats(
     // isolation, require all other stats to hit their constrained minimums, but
     // for this stat we start from the highest stat max we've observed. Remember
     // that this array is expressed in terms of additional stat points.
-    const explorationStats = requiredMinimumExtraStats.slice();
-    explorationStats[statIndex] = statRange.maxStat - value;
+    const previousRequiredMinimum = requiredMinimumExtraStats[statIndex];
+    requiredMinimumExtraStats[statIndex] = statRange.maxStat - value;
 
     // TODO: Rather than iterating one point at a time, we could run our greedy
     // assignment search that maximizes stats but with stat ranges that prevent
@@ -193,13 +193,13 @@ export function updateMaxStats(
       // stat point increase a "tier". This should be a short-term change -
       // ideally we'd reconsider all these algorithms to see if they could be
       // simplified now that the tier concept is gone.
-      explorationStats[statIndex] += 1;
+      requiredMinimumExtraStats[statIndex] += 1;
 
       // Now see if there's any way to hit that stat with mods.
       if (
         !chooseAutoMods(
           info,
-          explorationStats,
+          requiredMinimumExtraStats,
           numArtificeMods,
           remainingEnergiesPerAssignment,
           setEnergy - info.totalModEnergyCost,
@@ -208,7 +208,7 @@ export function updateMaxStats(
         break;
       }
 
-      const newValue = value + explorationStats[statIndex];
+      const newValue = value + requiredMinimumExtraStats[statIndex];
       // filter.minStat < filter.maxStat just checks to make sure you can
       // actually improve the stat given the user's new constraints.
       foundAnyImprovement ||= filter.minStat < filter.maxStat && newValue > filter.minStat;
@@ -216,6 +216,8 @@ export function updateMaxStats(
 
       // Keep going until we hit the max or we can no longer find mods to improve the stat.
     }
+
+    requiredMinimumExtraStats[statIndex] = previousRequiredMinimum;
   }
 
   return foundAnyImprovement;
@@ -434,7 +436,7 @@ export function greedyPickStatMods(
   explorationStats: number[],
   /**
    * The highest allowed additional stat values. we are not allowed to boost stats beyond this,
-   * otherwise we would go over the stats' tier maxes (or T10 if no max)
+   * otherwise we would go over the stats' tier maxes (or MAX_STAT if no max)
    */
   maxAddedStats: number[],
   /** How many artifice mods this set has */
@@ -465,24 +467,6 @@ export function greedyPickStatMods(
 
     let candidatePick: ModsPick[] | undefined;
     const originalExplorationStat = explorationStats[i];
-    if (i === 0) {
-      // Hail mary, try for the best stat boost we can get for this stat.
-      explorationStats[i] = maxAddedStats[i];
-      candidatePick = chooseAutoMods(
-        info,
-        explorationStats,
-        numArtificeMods,
-        remainingEnergyCapacities,
-        totalModEnergyCapacity,
-      );
-
-      if (candidatePick) {
-        // We can hit this stat with the current exploration stats, so try to
-        // increase it.
-        picks = candidatePick;
-        continue; // No need to search for this stat any further
-      }
-    }
 
     // Binary search for the best stat boost we can get for this stat.
     let lastGoodCandidatePick: ModsPick[] | undefined = undefined;
