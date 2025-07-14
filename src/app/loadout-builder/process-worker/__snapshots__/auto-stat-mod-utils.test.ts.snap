@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`process-utils auto mod structure different ways of hitting target stats with 0 remaining general mods (using artifice mods: true) 1`] = `
 {
@@ -300,13 +300,14 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
 exports[`process-utils auto mod structure snapshot of mod defs when assuming cheapgeneral for auto mods 2`] = `
 {
   "0": [
-    0,
+    1,
+    2,
     3,
+    4,
     5,
   ],
   "1": [
     0,
-    1,
     2,
     3,
     4,
@@ -315,14 +316,15 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
   "2": [
     0,
     1,
-    2,
     3,
     4,
     5,
   ],
   "3": [
     0,
-    3,
+    1,
+    2,
+    4,
     5,
   ],
   "4": [
@@ -330,13 +332,14 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
     1,
     2,
     3,
-    4,
     5,
   ],
   "5": [
     0,
+    1,
+    2,
     3,
-    5,
+    4,
   ],
 }
 `;
@@ -431,13 +434,14 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
 exports[`process-utils auto mod structure snapshot of mod defs when assuming general for auto mods 2`] = `
 {
   "0": [
-    0,
+    1,
+    2,
     3,
+    4,
     5,
   ],
   "1": [
     0,
-    1,
     2,
     3,
     4,
@@ -446,14 +450,15 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
   "2": [
     0,
     1,
-    2,
     3,
     4,
     5,
   ],
   "3": [
     0,
-    3,
+    1,
+    2,
+    4,
     5,
   ],
   "4": [
@@ -461,13 +466,14 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
     1,
     2,
     3,
-    4,
     5,
   ],
   "5": [
     0,
+    1,
+    2,
     3,
-    5,
+    4,
   ],
 }
 `;
