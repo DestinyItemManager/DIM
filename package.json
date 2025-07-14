@@ -166,7 +166,7 @@
     "react-refresh": "^0.17.0",
     "sass": "^1.89.2",
     "sass-loader": "^16.0.5",
-    "sonda": "^0.8.2",
+    "sonda": "^0.9.0",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
     "stylelint": "^16.21.0",
