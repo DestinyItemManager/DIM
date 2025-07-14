@@ -38,14 +38,6 @@ interface CacheForStat {
  */
 export interface AutoModsMap {
   statCaches: { [targetStatIndex: number]: CacheForStat };
-  /**
-   * See comments in pickOptimalStatMods. That function optimizes for total tier first,
-   * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
-   * total tier.
-   * So for each stat index, this contains a list of stats where the stat mods are better
-   * for purposes of optimizing total tier, by having cheaper or more mods available.
-   */
-  cheaperStatRelations: { [statIndex: number]: ArmorStatHashes[] };
 }
 
 /**
@@ -272,73 +264,6 @@ function buildCacheForStat(
   return cache;
 }
 
-/**
- * See comments in pickOptimalStatMods. That function optimizes for total stat
- * first, so if a less-prioritized stat has more costly (or equivalent) mods,
- * then it cannot result in a higher total stat. For each ArmorStatHash, this
- * builds a list of other stats where the stat mods are better (or equivalent)
- * by having cheaper or more mods available.
- */
-// TODO: In Edge of Fate, all stat mods have the same cost, but I don't trust
-// them not to have discounted mods in the artifact or to change their mind.
-function buildLessCostlyRelations(
-  /** A list of the unlocked mods and their costs for increasing stats. */
-  autoModOptions: AutoModData,
-  /**
-   * How many general stat mods we have to play with. If autoStatMods is false,
-   * this is zero, otherwise it's the number of general stat mod slots that are
-   * not already occupied by user-chosen mods. Remember that artifice mods are
-   * always auto-picked even if autoStatMods is false.
-   */
-  availableGeneralStatMods: number,
-  statOrder: ArmorStatHashes[],
-) {
-  return Object.fromEntries(
-    statOrder.map((armorStat1, statIndex1) => {
-      const betterStatIndices: number[] = [];
-      // For each other stat, check if it has better-value mods
-      for (const [statIndex2, armorStat2] of statOrder.entries()) {
-        if (statIndex1 === statIndex2) {
-          continue; // Don't compare the same stat
-        }
-        if (availableGeneralStatMods === 0) {
-          // No general mods means it doesn't matter how much our general mods actually cost
-          if (!autoModOptions.artificeMods[armorStat1] || autoModOptions.artificeMods[armorStat2]) {
-            // So if Stat1 has no artifice mods, or Stat2 has them, Stat2 can do equal or better
-            betterStatIndices.push(statIndex2);
-          }
-        } else {
-          const mods1 = autoModOptions.generalMods[armorStat1];
-          const mods2 = autoModOptions.generalMods[armorStat2];
-
-          if (autoModOptions.artificeMods[armorStat1] && !autoModOptions.artificeMods[armorStat2]) {
-            // Stat1 has artifice mods, Stat2 doesn't, so Stat2 is worse in that aspect
-          } else if (!mods1) {
-            // Stat1 has no mods, so Stat2 can always do equal or better
-            betterStatIndices.push(statIndex2);
-          } else if (!mods2) {
-            // Stat1 has mods, Stat2 doesn't, so Stat2 is worse in that aspect
-          } else {
-            // TODO: Unfortunately, this causes us to skip over stats that use
-            // expensive mods even if we have plenty of energy. Note that mod
-            // costs differences are going away in Edge of Fate anyway.
-
-            // const [large1Cost, large2Cost] = [mods1.majorMod.cost, mods2.majorMod.cost];
-            // const [small1Cost, small2Cost] = [mods1.minorMod.cost, mods2.minorMod.cost];
-            // mods for armorStat2 are cheaper (dominate armorStat1) if
-            // they're cheaper or same
-            // if (small1Cost >= small2Cost && large1Cost >= large2Cost) {
-            betterStatIndices.push(statIndex2);
-            // }
-          }
-        }
-      }
-
-      return [statIndex1, betterStatIndices];
-    }),
-  );
-}
-
 export function buildAutoModsMap(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
@@ -350,11 +275,6 @@ export function buildAutoModsMap(
         statIndex,
         buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
       ]),
-    ),
-    cheaperStatRelations: buildLessCostlyRelations(
-      autoModOptions,
-      availableGeneralStatMods,
-      statOrder,
     ),
   };
 }
