@@ -1,4 +1,4 @@
-import { compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { objectValues } from 'app/utils/util-types';
 import { ArmorStatHashes, artificeStatBoost, majorStatBoost, minorStatBoost } from '../types';
 import { LoSessionInfo } from './process-utils';
@@ -258,7 +258,12 @@ function buildCacheForStat(
 
   // Prefer picks that use artifice mods, since they are free.
   for (const pickArray of objectValues(cache)) {
-    pickArray!.sort(compareBy((pick) => -pick.numArtificeMods));
+    pickArray!.sort(
+      chainComparator(
+        compareBy((pick) => -pick.numArtificeMods),
+        compareBy((pick) => -pick.numGeneralMods),
+      ),
+    );
   }
 
   return cache;
