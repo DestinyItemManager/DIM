@@ -103,6 +103,11 @@ const simpleFilters: ItemFilterDefinition[] = [
       return (item) => ownedHashes.has(item.hash);
     },
   },
+  {
+    keywords: 'featured',
+    description: tl('Filter.Featured'),
+    filter: () => (item) => item.featured,
+  },
 ];
 
 export default simpleFilters;

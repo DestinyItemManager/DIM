@@ -252,6 +252,7 @@
     "Equipped": "Items that are currently equipped on a character.",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
+    "Featured": "Items that count as one of the \"Featured Items\" in the current season.",
     "Filter": "Filter",
     "FilterWith": "Filter with:",
     "Focusable": "Shows items that can be focused at a vendor",
@@ -686,8 +687,7 @@
     "UnlockItem": "Unpin Item",
     "IncreaseStatPriority": "Increase stat priority",
     "DecreaseStatPriority": "Decrease stat priority",
-    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
-    "TierSelect": "Select minimum stat tier"
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets"
   },
   "Loadouts": {
     "Abilities": "Abilities",
@@ -1295,7 +1295,6 @@
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "Quality": "Stats quality",
     "Strength": "Strength",
-    "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
