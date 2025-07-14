@@ -313,6 +313,7 @@ export default memo(function LoadoutBuilder({
         </div>
       )}
       <TierlessStatConstraintEditor
+        key={storeId}
         resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}

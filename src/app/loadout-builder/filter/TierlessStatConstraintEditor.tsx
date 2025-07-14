@@ -126,8 +126,6 @@ export default function TierlessStatConstraintEditor({
   );
 }
 
-type OnCommitStatChanges = (overrides?: { minStat?: number; maxStat?: number }) => void;
-
 function StatRow({
   statConstraint,
   statRange,
@@ -148,33 +146,27 @@ function StatRow({
   const statDef = defs.Stat.get(statHash);
   const handleIgnore = () => onStatChange({ ...statConstraint, ignored: !statConstraint.ignored });
 
-  const [min, setRawMin] = useState(statConstraint.minStat);
-  const [max, setRawMax] = useState(statConstraint.maxStat);
   const setMin = (value: number) => {
-    setRawMin(value);
-    setRawMax((max) => Math.max(value, max));
-  };
-  const setMax = (value: number) => {
-    setRawMin((min) => Math.min(value, min));
-    setRawMax(value);
-  };
-  const commitStatChanges: OnCommitStatChanges = ({ minStat = min, maxStat = max } = {}) => {
-    if (minStat !== statConstraint.minStat || maxStat !== statConstraint.maxStat) {
+    if (value !== statConstraint.minStat) {
       onStatChange({
         ...statConstraint,
-        minStat,
-        maxStat,
+        minStat: value,
+        maxStat: Math.max(value, statConstraint.maxStat),
+      });
+    }
+  };
+  const setMax = (value: number) => {
+    if (value !== statConstraint.maxStat) {
+      onStatChange({
+        ...statConstraint,
+        minStat: Math.min(value, statConstraint.minStat),
+        maxStat: value,
       });
     }
   };
 
-  // Sync up the "live" state to the actual state if it changes
-  useEffect(() => {
-    setRawMin(statConstraint.minStat);
-  }, [statConstraint.minStat]);
-  useEffect(() => {
-    setRawMax(statConstraint.maxStat);
-  }, [statConstraint.maxStat]);
+  const min = statConstraint.minStat;
+  const max = statConstraint.maxStat;
 
   return (
     <Draggable draggableId={statHash.toString()} index={index}>
@@ -242,13 +234,7 @@ function StatRow({
             </button>
           </div>
           {!statConstraint.ignored && (
-            <StatEditBar
-              min={min}
-              max={max}
-              setMin={setMin}
-              setMax={setMax}
-              onChange={commitStatChanges}
-            >
+            <StatEditBar min={min} max={max} setMin={setMin} setMax={setMax}>
               <StatBar
                 range={statRange}
                 equippedHashes={equippedHashes}
@@ -256,7 +242,6 @@ function StatRow({
                 max={max}
                 setMin={setMin}
                 setMax={setMax}
-                onChange={commitStatChanges}
                 processing={processing}
               />
             </StatEditBar>
@@ -272,24 +257,22 @@ function StatEditBar({
   max,
   setMin,
   setMax,
-  onChange,
   children,
 }: {
   min: number;
   max: number;
   setMin: (value: number) => void;
   setMax: (value: number) => void;
-  onChange: OnCommitStatChanges;
   children: React.ReactNode;
 }) {
-  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onChange();
-    }
-  };
-
   const [minText, setMinText] = useState(min.toString());
   const [maxText, setMaxText] = useState(max.toString());
+  useEffect(() => {
+    setMinText(min.toString());
+  }, [min]);
+  useEffect(() => {
+    setMaxText(max.toString());
+  }, [max]);
 
   return (
     <div className={styles.statBar}>
@@ -307,8 +290,6 @@ function StatEditBar({
           }
           setMin(value);
         }}
-        onBlur={() => onChange()}
-        onKeyUp={handleKeyUp}
       />
       {children}
       <input
@@ -325,8 +306,6 @@ function StatEditBar({
           }
           setMax(value);
         }}
-        onBlur={() => onChange()}
-        onKeyUp={handleKeyUp}
       />
     </div>
   );
@@ -338,7 +317,6 @@ function StatBar({
   range,
   setMin,
   setMax,
-  onChange,
   processing,
 }: {
   range?: MinMaxStat;
@@ -347,10 +325,11 @@ function StatBar({
   max: number;
   setMin: (value: number) => void;
   setMax: (value: number) => void;
-  onChange: OnCommitStatChanges;
   processing: boolean;
 }) {
   const [dragging, setDragging] = useState(false);
+  const [dragValue, setDragValue] = useState(0);
+  // Whether we're dragging the max or min value
   const draggingMax = useRef(false);
   const lastClickTime = useRef(0);
 
@@ -361,7 +340,7 @@ function StatBar({
     const clickX = e.clientX - rect.left;
     const ratio = Math.max(0, Math.min(1, clickX / rect.width));
     const value = Math.round(ratio * MAX_STAT);
-    draggingMax.current ? setMax(value) : setMin(value);
+    setDragValue(value);
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -375,9 +354,8 @@ function StatBar({
     // Detect double-click
     if (performance.now() - lastClickTime.current < 200 && !draggingMax.current && range) {
       setMin(range.maxStat);
-      onChange({ minStat: range.maxStat });
     } else {
-      onChange();
+      draggingMax.current ? setMax(dragValue) : setMin(dragValue);
     }
     setDragging(false);
     lastClickTime.current = performance.now();
@@ -390,6 +368,9 @@ function StatBar({
     setValueToPointer(e);
     setDragging(true);
   };
+
+  const effectiveMin = dragging && !draggingMax.current ? dragValue : min;
+  const effectiveMax = dragging && draggingMax.current ? dragValue : max;
 
   return (
     <div
@@ -415,10 +396,18 @@ function StatBar({
         />
       )}
       {(!range || range.minStat !== max) && (
-        <div key="min" className={styles.statBarMin} style={{ left: percent(min / MAX_STAT) }} />
+        <div
+          key="min"
+          className={styles.statBarMin}
+          style={{ left: percent(effectiveMin / MAX_STAT) }}
+        />
       )}
       {(!range || range.maxStat !== max) && (
-        <div key="max" className={styles.statBarMax} style={{ left: percent(max / MAX_STAT) }} />
+        <div
+          key="max"
+          className={styles.statBarMax}
+          style={{ left: percent(effectiveMax / MAX_STAT) }}
+        />
       )}
     </div>
   );
