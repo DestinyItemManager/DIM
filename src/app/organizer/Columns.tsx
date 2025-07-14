@@ -185,12 +185,13 @@ export function perksGridColumn(
   headerClassName: string,
   onPlugClicked: PlugClickedHandler | undefined,
   initialItemId?: string,
+  headerKey: I18nKey = 'Organizer.Columns.Perks',
 ) {
   return c({
-    id: 'perks',
+    id: 'perksGrid',
     className,
     headerClassName,
-    header: t('Organizer.Columns.Perks'),
+    header: t(headerKey),
     value: (item) => perkString(getSocketsByType(item, 'perks')),
     cell: (_val, item) => (
       <>
@@ -665,7 +666,13 @@ export function getColumns(
       }),
     !isSpreadsheet &&
       (isWeapon || (isArmor && destinyVersion === 1)) &&
-      perksGridColumn(styles.perksGrid, styles.perks, onPlugClicked),
+      perksGridColumn(
+        styles.perksGrid,
+        styles.perks,
+        onPlugClicked,
+        undefined,
+        tl('Organizer.Columns.PerksGrid'),
+      ),
     !isSpreadsheet &&
       destinyVersion === 2 &&
       modsColumn(styles.perksGrid, styles.perks, isWeapon, onPlugClicked),
