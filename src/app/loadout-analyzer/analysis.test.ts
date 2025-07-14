@@ -8,7 +8,6 @@ import { ProcessResult } from 'app/loadout-builder/process-worker/types';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import type { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import { ArmorBucketHashes, ArmorSet, StatRanges } from 'app/loadout-builder/types';
-import { statTier } from 'app/loadout-builder/utils';
 import { randomSubclassConfiguration } from 'app/loadout-drawer/auto-loadouts';
 import { addItem, setLoadoutParameters } from 'app/loadout-drawer/loadout-drawer-reducer';
 import {
@@ -278,12 +277,11 @@ describe('basic loadout analysis finding tests', () => {
     );
     const baseArmorStatConstraints: StatConstraint[] = armorStats.map((statHash) => ({
       statHash,
-      minTier: statTier(
+      minStat:
         sumBy(
           nonMasterworkedArmor,
           (item) => item.stats?.find((s) => s.statHash === statHash)?.base ?? 0,
         ) + (statHash === StatHashes.Recovery ? 10 : 0),
-      ),
     }));
     // The loadout as is hits stats and needs no upgrades to do that
     loadout = setLoadoutParameters({
@@ -299,10 +297,10 @@ describe('basic loadout analysis finding tests', () => {
     const newConstraints = produce(baseArmorStatConstraints, (draft) => {
       for (const c of draft) {
         if (c.statHash !== StatHashes.Recovery) {
-          c.minTier = Math.min(10, c.minTier! + 1);
+          c.minStat = Math.min(100, c.minStat! + 10);
         } else {
           // No constraint for recovery
-          c.minTier = 0;
+          c.minStat = 0;
         }
       }
       // Ignore mobility
@@ -321,13 +319,11 @@ describe('basic loadout analysis finding tests', () => {
       if (c.statHash === StatHashes.Recovery) {
         // The loadout has no constraint for recovery, so it gets the existing loadout stats as the minimum
         expect(c.minStat).toBe(
-          baseArmorStatConstraints.find((base) => base.statHash === c.statHash)!.minTier! * 10,
+          baseArmorStatConstraints.find((base) => base.statHash === c.statHash)!.minStat!,
         );
       } else if (c.statHash !== StatHashes.Mobility) {
         // The loadout does not satisfy stat constraints, but LO gets called with the constraints as minimum
-        expect(c.minStat).toBe(
-          newConstraints.find((n) => n.statHash === c.statHash)!.minTier! * 10,
-        );
+        expect(c.minStat).toBe(newConstraints.find((n) => n.statHash === c.statHash)!.minStat!);
       }
     }
 

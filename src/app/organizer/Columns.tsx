@@ -72,6 +72,7 @@ import {
   buildSocketNames,
   csvStatNamesForDestinyVersion,
 } from 'app/inventory/spreadsheets';
+import { PlugClickedHandler } from 'app/inventory/store/override-sockets';
 import { AmmoIcon } from 'app/item-popup/AmmoIcon';
 import { DeepsightHarmonizerIcon, HarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
 import ItemSockets from 'app/item-popup/ItemSockets';
@@ -130,6 +131,87 @@ const perkStringFilter = (value: string | undefined) => {
 };
 
 /**
+ * This helper allows TypeScript to perform type inference to determine the
+ * type of V based on its arguments. This allows us to automatically type the
+ * various column methods like `cell` and `filter` automatically based on the
+ * return type of `value`.
+ */
+/*@__INLINE__*/
+function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
+  return columnDef;
+}
+
+export const d1QualityColumn = c({
+  id: 'quality',
+  header: t('Organizer.Columns.Quality'),
+  csv: '% Quality',
+  value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
+  cell: (value) => <span style={getD1QualityColor(value)}>{value}%</span>,
+  filter: (value) => `quality:>=${value}`,
+});
+
+export function modsColumn(
+  className: string,
+  headerClassName: string,
+  isWeapon: boolean,
+  onPlugClicked?: PlugClickedHandler,
+) {
+  return c({
+    id: 'mods',
+    className,
+    headerClassName,
+    header: t('Organizer.Columns.Mods'),
+    // TODO: for ghosts this should return ghost mods, not cosmetics
+    value: (item) => perkString(getSocketsByType(item, 'mods')),
+    cell: (_val, item) => (
+      <>
+        {isD1Item(item) && item.talentGrid && (
+          <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+        )}
+        {item.sockets &&
+          (isWeapon ? (
+            <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
+          ) : (
+            <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
+          ))}
+      </>
+    ),
+    sort: perkStringSort,
+  });
+}
+
+export function perksGridColumn(
+  className: string,
+  headerClassName: string,
+  onPlugClicked: PlugClickedHandler | undefined,
+  initialItemId?: string,
+) {
+  return c({
+    id: 'perks',
+    className,
+    headerClassName,
+    header: t('Organizer.Columns.Perks'),
+    value: (item) => perkString(getSocketsByType(item, 'perks')),
+    cell: (_val, item) => (
+      <>
+        {isD1Item(item) && item.talentGrid && (
+          <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+        )}
+        {item.missingSockets && item.id === initialItemId && (
+          <div className="item-details warning">
+            {item.missingSockets === 'missing'
+              ? t('MovePopup.MissingSockets')
+              : t('MovePopup.LoadingSockets')}
+          </div>
+        )}
+        {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
+      </>
+    ),
+    sort: perkStringSort,
+  });
+}
+
+/**
  * This function generates the columns.
  */
 export function getColumns(
@@ -145,7 +227,7 @@ export function getColumns(
   loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
-  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
+  onPlugClicked?: PlugClickedHandler,
 ): ColumnDefinition[] {
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
@@ -166,17 +248,6 @@ export function getColumns(
   const customStats = isSpreadsheet
     ? []
     : createCustomStatColumns(customStatDefs, styles.stats, styles.statsHeader);
-
-  /**
-   * This helper allows TypeScript to perform type inference to determine the
-   * type of V based on its arguments. This allows us to automatically type the
-   * various column methods like `cell` and `filter` automatically based on the
-   * return type of `value`.
-   */
-  /*@__INLINE__*/
-  function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
-    return columnDef;
-  }
 
   const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
@@ -594,46 +665,10 @@ export function getColumns(
       }),
     !isSpreadsheet &&
       (isWeapon || (isArmor && destinyVersion === 1)) &&
-      c({
-        id: 'perksgrid',
-        className: styles.perksGrid,
-        headerClassName: styles.perks,
-        header: t('Organizer.Columns.PerksGrid'),
-        value: (item) => perkString(getSocketsByType(item, 'perks')),
-        cell: (_val, item) => (
-          <>
-            {isD1Item(item) && item.talentGrid && (
-              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-            )}
-            {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
-          </>
-        ),
-        sort: perkStringSort,
-      }),
+      perksGridColumn(styles.perksGrid, styles.perks, onPlugClicked),
     !isSpreadsheet &&
       destinyVersion === 2 &&
-      c({
-        id: 'mods',
-        className: styles.perksGrid,
-        headerClassName: styles.perks,
-        header: t('Organizer.Columns.Mods'),
-        // TODO: for ghosts this should return ghost mods, not cosmetics
-        value: (item) => perkString(getSocketsByType(item, 'mods')),
-        cell: (_val, item) => (
-          <>
-            {isD1Item(item) && item.talentGrid && (
-              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-            )}
-            {item.sockets &&
-              (isWeapon ? (
-                <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
-              ) : (
-                <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
-              ))}
-          </>
-        ),
-        sort: perkStringSort,
-      }),
+      modsColumn(styles.perksGrid, styles.perks, isWeapon, onPlugClicked),
     ...statColumns,
     ...baseStatColumns,
     ...d1ArmorQualityByStat,

@@ -41,13 +41,6 @@
   align-items: center;
 }
 
-// D1 talent grids are like sockets
-.talentGrid {
-  padding: 4px 2px 0 2px;
-  max-width: 150px;
-  height: auto;
-}
-
 .stat {
   // the goal width is 64px at normal item tile size (50px)
   // but allow the stat bars to shrink to account for bigger tiles,

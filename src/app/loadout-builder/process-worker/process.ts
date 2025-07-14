@@ -6,21 +6,20 @@ import {
   ArmorBucketHashes,
   ArmorStatHashes,
   ArmorStats,
-  DesiredStatRange,
-  MinMaxStat,
-  StatRanges,
   artificeStatBoost,
+  DesiredStatRange,
   majorStatBoost,
+  MinMaxStat,
   minorStatBoost,
+  StatRanges,
 } from '../types';
-import { statTier } from '../utils';
-import { HeapSetTracker } from './heap-set-tracker';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
   updateMaxStats,
 } from './process-utils';
+import { encodeStatMix, HeapSetTracker } from './set-tracker';
 import {
   AutoModData,
   LockedProcessMods,
@@ -75,8 +74,6 @@ export function process({
   const statOrder = desiredStatRanges.map(({ statHash }) => statHash as ArmorStatHashes);
   // The maximum stat constraints for each stat
   const maxStatConstraints = desiredStatRanges.map(({ maxStat }) => maxStat);
-  // The maximum stat constraints for each stat, as a tier value
-  const maxTierConstraints = maxStatConstraints.map(statTier);
   // Convert the list of stat bonuses from mods into a flat array in the same order as `statOrder`.
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
 
@@ -239,12 +236,12 @@ export function process({
             // A version of the set stats that have been clamped to the max stat
             // constraint.
             const effectiveStats = [
-              Math.min(stats[0], maxTierConstraints[0]),
-              Math.min(stats[1], maxTierConstraints[1]),
-              Math.min(stats[2], maxTierConstraints[2]),
-              Math.min(stats[3], maxTierConstraints[3]),
-              Math.min(stats[4], maxTierConstraints[4]),
-              Math.min(stats[5], maxTierConstraints[5]),
+              Math.min(stats[0], maxStatConstraints[0]),
+              Math.min(stats[1], maxStatConstraints[1]),
+              Math.min(stats[2], maxStatConstraints[2]),
+              Math.min(stats[3], maxStatConstraints[3]),
+              Math.min(stats[4], maxStatConstraints[4]),
+              Math.min(stats[5], maxStatConstraints[5]),
             ];
 
             // neededStats is the extra stats we'd need in each stat in order to
@@ -418,24 +415,14 @@ export function process({
               continue;
             }
 
-            // Calculate the "stats string" here, since most sets don't make
-            // it this far A string version of each stat, must be lexically
-            // comparable. It seems like constructing and comparing
-            // tiersString would be expensive but it's less so than comparing
-            // stat arrays element by element.
-            let statsString = '';
-            for (let index = 0; index < 6; index++) {
-              const value = effectiveStats[index];
-              const filter = desiredStatRanges[index];
-              if (filter.maxStat > 0 /* non-ignored stat */) {
-                // represent each stat value as a single code unit (because they max out at 200)
-                statsString += String.fromCharCode(value);
-              }
-            }
+            // Calculate the numeric stat mix for fast integer comparison.
+            // This encodes each stat value (0-200) into 8 bits, packed into a single integer.
+            // Only non-ignored stats are included, maintaining lexical ordering for priority.
+            const numericStatMix = encodeStatMix(effectiveStats, desiredStatRanges);
 
             processStatistics.numValidSets++;
-            // And now insert our set using the predicted total tier and boosted stat tiers.
-            setTracker.insert(totalStats + statsFromMods, statsString, armor, stats);
+            // And now insert our set using the predicted total tier and numeric stat mix.
+            setTracker.insert(totalStats + statsFromMods, numericStatMix, armor, stats);
 
             if (stopOnFirstSet) {
               if (strictUpgrades) {
