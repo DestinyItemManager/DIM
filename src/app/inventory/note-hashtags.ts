@@ -7,7 +7,7 @@ import { ItemInfos } from './dim-item-info';
  * Groups hashtags by their canonical (case-insensitive) form and selects the best variant to display.
  * Uses frequency as the primary criterion, with a preference for variants with more uppercase letters.
  */
-export function groupHashtagsByCanonicalForm(hashtags: string[]): Map<string, string> {
+export function groupHashtagsByCanonicalForm(hashtags: string[]): Record<string, string> {
   // {
   //   '#pve': {
   //     variants: {
@@ -17,21 +17,20 @@ export function groupHashtagsByCanonicalForm(hashtags: string[]): Map<string, st
   //     count: 6        <- structure
   //   }
   // }
-  const hashtagCollection: NodeJS.Dict<{ variants: NodeJS.Dict<number>; count: number }> = {};
+  const variantCounts: Record<string, Record<string, number>> = {};
 
-  for (const h of hashtags) {
-    const lower = h.toLowerCase();
-    hashtagCollection[lower] ??= { count: 0, variants: {} };
-    hashtagCollection[lower].count++;
-    hashtagCollection[lower].variants[h] ??= 0;
-    hashtagCollection[lower].variants[h]++;
+  // Count each variant
+  for (const hashtag of hashtags) {
+    const lower = hashtag.toLowerCase();
+    variantCounts[lower] ??= {};
+    variantCounts[lower][hashtag] = (variantCounts[lower][hashtag] ?? 0) + 1;
   }
 
-  const result = new Map<string, string>();
-  for (const [lowerKey, meta] of Object.entries(hashtagCollection)) {
-    const countsByVariant = Object.entries(meta!.variants);
-    const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
-    result.set(lowerKey, mostPopularVariant);
+  // Pick best variant for each canonical form
+  const result: Record<string, string> = {};
+  for (const [lowerKey, variants] of Object.entries(variantCounts)) {
+    const bestVariant = maxBy(Object.entries(variants), ([, count]) => count)![0];
+    result[lowerKey] = bestVariant;
   }
 
   return result;
@@ -57,10 +56,8 @@ export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
 
   const canonicalHashtags = groupHashtagsByCanonicalForm(allHashtags);
 
-  return Array.from(
-    canonicalHashtags.entries(),
-    ([lowerKey, canonicalForm]) => [canonicalForm, hashtagCounts[lowerKey]!] as const,
-  )
+  return Object.entries(canonicalHashtags)
+    .map(([lowerKey, canonicalForm]) => [canonicalForm, hashtagCounts[lowerKey]!] as const)
     .sort(compareBy((t) => -t[1]))
     .map((t) => t[0]);
 }
