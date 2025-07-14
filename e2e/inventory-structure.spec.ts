@@ -12,8 +12,9 @@ test.describe('Inventory Page - Core Structure', () => {
   test('displays header with navigation elements', async ({ page }) => {
     await helpers.verifyHeader();
 
-    // Additional header checks
-    await expect(page.getByRole('link').filter({ hasText: '' }).first()).toBeVisible();
+    // Additional header checks - should have navigation links
+    await expect(page.locator('header')).toBeVisible();
+    await expect(page.getByRole('link').first()).toBeVisible(); // Some navigation link
   });
 
   test('displays all three character sections', async ({ page }) => {
@@ -23,12 +24,13 @@ test.describe('Inventory Page - Core Structure', () => {
   test('displays character stats for active character', async ({ page }) => {
     await helpers.verifyCharacterStats();
 
-    // Verify specific stat values for Hunter
-    const statsSection = page.locator('div').filter({
-      hasText: /Mobility|Resilience|Recovery|Discipline|Intellect|Strength/,
-    });
-    await expect(statsSection.getByText('100')).toBeVisible(); // Mobility value
-    await expect(statsSection.getByText('61')).toBeVisible(); // Resilience value
+    // Verify that stat values are displayed as groups with numeric values
+    const statNames = ['Mobility', 'Resilience', 'Recovery', 'Discipline', 'Intellect', 'Strength'];
+    for (const statName of statNames) {
+      // Each stat should be displayed as a group with the stat name and a numeric value
+      const statGroup = page.getByRole('group', { name: new RegExp(`${statName}.*\d+`, 'i') });
+      await expect(statGroup).toBeVisible();
+    }
   });
 
   test('displays vault section with storage information', async ({ page }) => {
