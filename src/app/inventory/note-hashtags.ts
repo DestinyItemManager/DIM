@@ -4,11 +4,10 @@ import { maxBy } from 'es-toolkit';
 import { ItemInfos } from './dim-item-info';
 
 /**
- * Collects all hashtags from all item notes.
- *
- * Orders by use count, de-dupes case-insensitive, and picks the most popular capitalization.
+ * Groups hashtags by their canonical (case-insensitive) form and selects the best variant to display.
+ * Uses frequency as the primary criterion, with a preference for variants with more uppercase letters.
  */
-export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
+export function groupHashtagsByCanonicalForm(hashtags: string[]): Map<string, string> {
   // {
   //   '#pve': {
   //     variants: {
@@ -20,23 +19,48 @@ export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
   // }
   const hashtagCollection: NodeJS.Dict<{ variants: NodeJS.Dict<number>; count: number }> = {};
 
+  for (const h of hashtags) {
+    const lower = h.toLowerCase();
+    hashtagCollection[lower] ??= { count: 0, variants: {} };
+    hashtagCollection[lower].count++;
+    hashtagCollection[lower].variants[h] ??= 0;
+    hashtagCollection[lower].variants[h]++;
+  }
+
+  const result = new Map<string, string>();
+  for (const [lowerKey, meta] of Object.entries(hashtagCollection)) {
+    const countsByVariant = Object.entries(meta!.variants);
+    const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
+    result.set(lowerKey, mostPopularVariant);
+  }
+
+  return result;
+}
+
+/**
+ * Collects all hashtags from all item notes.
+ *
+ * Orders by use count, de-dupes case-insensitive, and picks the most popular capitalization.
+ */
+export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
+  const allHashtags: string[] = [];
+  const hashtagCounts: NodeJS.Dict<number> = {};
+
   for (const info of Object.values(itemInfos)) {
     const hashtags = getHashtagsFromString(info.notes);
     for (const h of hashtags) {
+      allHashtags.push(h);
       const lower = h.toLowerCase();
-      hashtagCollection[lower] ??= { count: 0, variants: {} };
-      hashtagCollection[lower].count++;
-      hashtagCollection[lower].variants[h] ??= 0;
-      hashtagCollection[lower].variants[h]++;
+      hashtagCounts[lower] = (hashtagCounts[lower] ?? 0) + 1;
     }
   }
 
-  return Object.values(hashtagCollection)
-    .map((normalizedMeta) => {
-      const countsByVariant = Object.entries(normalizedMeta!.variants);
-      const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
-      return [mostPopularVariant, normalizedMeta!.count] as const;
-    })
+  const canonicalHashtags = groupHashtagsByCanonicalForm(allHashtags);
+
+  return Array.from(
+    canonicalHashtags.entries(),
+    ([lowerKey, canonicalForm]) => [canonicalForm, hashtagCounts[lowerKey]!] as const,
+  )
     .sort(compareBy((t) => -t[1]))
     .map((t) => t[0]);
 }
