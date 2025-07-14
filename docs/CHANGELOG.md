@@ -1,10 +1,16 @@
 ## Next
 
+* Improved the Loadout Optimizer algorithm to correctly maximize stats now that it's tierless. Also improved its performance.
+* Fix some interactions with the Loadout Optimizer stat constraint editor.
+* Add `is:featured` search for the new Featured Items.
+
 ## 8.80.0 <span class="changelog-date">(2025-07-13)</span>
 
 * The Loadout Optimizer has been updated to target exact stats (up to 200) instead of tiers. There are lots more changes to Loadout Optimizer after Edge of Fate has released and we are able to adapt to the new way armor and stats works.
 * Fixed the D1 Reputation display not showing up on mobile.
 * Exotic armor ornaments no longer repeat the class name.
+* Fix an occasional crash in the Compare tool.
+* Removed `is:hasmod`, `modslot:legacy`, and `holdsmod:` searches as they don't have any use anymore.
 
 ## 8.79.0 <span class="changelog-date">(2025-07-06)</span>
 
