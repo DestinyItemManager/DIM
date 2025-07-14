@@ -365,6 +365,7 @@ function makeItem(
     missingSockets: false,
     energy: null,
     pursuit: null,
+    featured: false,
   };
 
   // *able

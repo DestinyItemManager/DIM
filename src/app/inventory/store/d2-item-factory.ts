@@ -398,6 +398,7 @@ export function makeItem(
 
   // null out falsy values like a blank string for a url
   const iconOverlay =
+    (itemDef.isFeaturedItem && itemDef.iconWatermarkFeatured) ||
     (item.versionNumber !== undefined &&
       itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
     itemDef.iconWatermark ||
@@ -535,6 +536,7 @@ export function makeItem(
     masterworkInfo: null,
     infusionCategoryHashes: null,
     tooltipNotifications,
+    featured: itemDef.isFeaturedItem,
   };
 
   // *able
