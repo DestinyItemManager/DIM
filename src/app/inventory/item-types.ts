@@ -1,5 +1,5 @@
 import type { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import type { ItemTierName } from 'app/search/d2-known-values';
+import type { ItemRarityName } from 'app/search/d2-known-values';
 import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
@@ -57,8 +57,8 @@ export interface DimItem {
   bucket: InventoryBucket;
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: ItemCategoryHashes[];
-  /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
-  tier: ItemTierName;
+  /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). Do not use this for display! */
+  rarity: ItemRarityName;
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** If this came from a vendor (instead of character inventory), this houses enough information to re-identify the item. */

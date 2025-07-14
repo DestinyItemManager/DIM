@@ -47,7 +47,7 @@ function getBestItem(
       let bonus = 0;
       let total = 0;
       for (const stat of stats) {
-        const scaleType = o.tier === 'Rare' ? 'base' : scaleTypeArg;
+        const scaleType = o.rarity === 'Rare' ? 'base' : scaleTypeArg;
         if (o.normalStats) {
           const normalStats = o.normalStats[stat];
           total += normalStats[scaleType];
@@ -70,7 +70,7 @@ export function calcArmorStats(
     const dis = armor.item.normalStats![StatHashes.Discipline];
     const str = armor.item.normalStats![StatHashes.Strength];
 
-    const scaleType = armor.item.tier === 'Rare' ? 'base' : scaleTypeArg;
+    const scaleType = armor.item.rarity === 'Rare' ? 'base' : scaleTypeArg;
 
     // Mark of the Sunforged, Stormcaller Bond and Nightstalker cloak have special fixed stats
     // that do not scale correctly as the scaling is currently implemented.

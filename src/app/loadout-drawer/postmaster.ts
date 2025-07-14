@@ -8,7 +8,7 @@ import {
   potentialSpaceLeftForItem,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import type { ItemTierName } from 'app/search/d2-known-values';
+import type { ItemRarityName } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { compareBy } from 'app/utils/comparators';
@@ -28,7 +28,7 @@ import { DimStore } from '../inventory/store-types';
 import { showNotification } from '../notifications/notifications';
 
 // weight "move an item aside" options, according to their rarity
-const moveAsideWeighting: Record<ItemTierName, number> = {
+const moveAsideWeighting: Record<ItemRarityName, number> = {
   Legendary: 4,
   Rare: 3,
   Uncommon: 2,
@@ -61,7 +61,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
             .filter((i) => !i.equipped && !i.notransfer)
             .sort(
               compareBy((i) => {
-                let value = moveAsideWeighting[i.tier];
+                let value = moveAsideWeighting[i.rarity];
                 // And low-stat
                 value += i.power / 1000;
                 return value;

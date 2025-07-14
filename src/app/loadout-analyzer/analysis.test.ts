@@ -179,7 +179,7 @@ describe('basic loadout analysis finding tests', () => {
             i.classType === store.classType &&
             i.bucket.hash === hash &&
             i.energy &&
-            i.tier === 'Legendary',
+            i.rarity === 'Legendary',
         )!,
     );
     const loadout = newLoadout(
@@ -261,7 +261,7 @@ describe('basic loadout analysis finding tests', () => {
             i.bucket.hash === hash &&
             i.energy &&
             (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 2) &&
-            i.tier === 'Legendary' &&
+            i.rarity === 'Legendary' &&
             !i.masterwork &&
             i.stats?.every((stat) => stat.statHash !== StatHashes.Recovery || stat.base <= 20),
         )!,

@@ -295,7 +295,7 @@ function makeItem(
     bucket: normalBucket,
     hash: item.itemHash,
     itemCategoryHashes: itemDef.itemCategoryHashes || [],
-    tier: tiers[itemDef.tierType] || 'Common',
+    rarity: tiers[itemDef.tierType] || 'Common',
     isExotic: itemDef.tierType === TierType.Exotic,
     name: itemDef.itemName,
     description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
@@ -377,7 +377,7 @@ function makeItem(
   // Moving rare masks destroys them
   if (
     createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mask) &&
-    createdItem.tier !== 'Legendary'
+    createdItem.rarity !== 'Legendary'
   ) {
     createdItem.notransfer = true;
   }

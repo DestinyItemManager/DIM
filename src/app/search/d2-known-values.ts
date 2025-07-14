@@ -280,7 +280,7 @@ export const WELL_RESTED_PERK = 1519921522; // SandboxPerk "Well-Rested"
  */
 // A manually constructed bi-directional enum,
 // because the `enum` keyword unfortunately returns type `string`.
-export const D2ItemTiers = {
+export const D2ItemRarityTiers = {
   Unknown: TierType.Unknown,
   [TierType.Unknown]: 'Unknown',
   Currency: TierType.Currency,
@@ -297,7 +297,7 @@ export const D2ItemTiers = {
   [TierType.Exotic]: 'Exotic',
 } as const;
 
-export type ItemTierName =
+export type ItemRarityName =
   | 'Unknown'
   | 'Currency'
   | 'Common'

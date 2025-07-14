@@ -24,7 +24,7 @@ export const makeDupeID = (item: DimItem) =>
     item.classType
   }${
     // Some items have the same name across different tiers, e.g. "Traveler's Chosen"
-    item.tier
+    item.rarity
   }${
     // The engram that dispenses the Taraxippos scout rifle is also called Taraxippos
     item.bucket.hash

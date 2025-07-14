@@ -607,7 +607,7 @@ function getCuratedRollForSocket(defs: D2ManifestDefinitions, socket: DimSocket)
 
 /** Determine if the item has a curated roll, and if all of its perks match that curated roll. */
 export function matchesCuratedRoll(defs: D2ManifestDefinitions, item: DimItem) {
-  const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
+  const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary';
 
   if (!legendaryWeapon) {
     return false;

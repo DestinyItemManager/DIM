@@ -5,7 +5,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import {
-  ItemTierName,
+  ItemRarityName,
   MAX_ARMOR_ENERGY_CAPACITY,
   armor2PlugCategoryHashesByName,
 } from 'app/search/d2-known-values';
@@ -186,11 +186,11 @@ function getUpgradeCost(
         }
       }
     }
-    model.byRarity[dimItem.tier] = costsPerTier;
+    model.byRarity[dimItem.rarity] = costsPerTier;
   }
   const needsEnhancing = item.rarity === 'Exotic' && needsArtifice && !isArtifice(dimItem);
   const targetEnergy = needsEnhancing ? maxEnergyCapacity : newEnergy;
-  const tierModel = model.byRarity[dimItem.tier]!;
+  const tierModel = model.byRarity[dimItem.rarity]!;
   const alreadyPaidCosts = tierModel[item.originalCapacity];
 
   const costs = tierModel[targetEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
@@ -210,7 +210,7 @@ function getUpgradeCost(
 interface EnergyUpgradeCostModel {
   defs: D2ManifestDefinitions;
   /** Cumulative costs to reach the indexed capacity. Subtract the costs for current capacity. */
-  byRarity: { [rarity in ItemTierName]?: number[][] };
+  byRarity: { [rarity in ItemRarityName]?: number[][] };
   exoticArtificeCosts?: number[];
 }
 
@@ -940,7 +940,7 @@ function buildItemEnergy({
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
     isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
-    rarity: item.tier,
+    rarity: item.rarity,
   };
 }
 
@@ -949,7 +949,7 @@ interface ItemEnergy {
   originalCapacity: number;
   derivedCapacity: number;
   isClassItem: boolean;
-  rarity: ItemTierName;
+  rarity: ItemRarityName;
 }
 /**
  * Validates whether a mod can be assigned to an item in the mod assignments algorithm.

@@ -117,7 +117,7 @@ const socketFilters: ItemFilterDefinition[] = [
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
     filter: () => (item) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary')) {
         return false;
       }
 
@@ -364,7 +364,7 @@ const socketFilters: ItemFilterDefinition[] = [
     description: tl('Filter.RetiredPerk'),
     destinyVersion: 2,
     filter: () => (item) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary')) {
         return false;
       }
 

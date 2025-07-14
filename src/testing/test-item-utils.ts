@@ -18,7 +18,7 @@ export const empoweringFinishModHash = 84503918; // InventoryItem "Empowered Fin
 export const bulwarkFinishModHash = 4004774874; // InventoryItem "Bulwark Finisher"
 
 function isArmor2Item(item: DimItem) {
-  return item.energy && item.bucket.inArmor && !item.equippingLabel && item.tier === 'Legendary';
+  return item.energy && item.bucket.inArmor && !item.equippingLabel && item.rarity === 'Legendary';
 }
 
 export function isArmor2Helmet(item: DimItem) {

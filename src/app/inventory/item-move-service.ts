@@ -3,7 +3,7 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { isInInGameLoadoutForSelector } from 'app/loadout/selectors';
-import type { ItemTierName } from 'app/search/d2-known-values';
+import type { ItemRarityName } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { count, filterMap } from 'app/utils/collections';
@@ -1108,7 +1108,7 @@ export function executeMoveItem(
 }
 
 // weight "move an item aside" options, according to their rarity
-const moveAsideWeighting: Record<ItemTierName, number> = {
+const moveAsideWeighting: Record<ItemRarityName, number> = {
   Unknown: 0,
   Currency: 0,
   Common: 0,
@@ -1186,7 +1186,7 @@ export function sortMoveAsideCandidatesForStore(
       ),
       // Prefer moving lower-tier into the vault and higher tier out
       compareBy((i) =>
-        fromStore.isVault ? moveAsideWeighting[i.tier] : -moveAsideWeighting[i.tier],
+        fromStore.isVault ? moveAsideWeighting[i.rarity] : -moveAsideWeighting[i.rarity],
       ),
       // Prefer keeping higher-stat items on characters
       compareBy(
@@ -1246,7 +1246,7 @@ function searchForSimilarItem(
       compareBy((i) => i.typeName === item.typeName),
       reverseComparator(compareByIndex(equipReplacePriority, (i) => getTag(i) ?? 'none')),
       // Prefer higher-tier items
-      compareBy((i) => moveAsideWeighting[i.tier]),
+      compareBy((i) => moveAsideWeighting[i.rarity]),
       // Prefer higher-stat items
       compareBy((i) => i.primaryStat?.value ?? 0),
     ),
