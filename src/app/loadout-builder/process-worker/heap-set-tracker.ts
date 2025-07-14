@@ -6,7 +6,7 @@ import { IntermediateProcessArmorSet, ProcessItem } from './types';
  */
 interface HeapEntry {
   tier: number;
-  statMix: string;
+  statMix: number;
   power: number;
   armor: ProcessItem[];
   stats: number[];
@@ -56,7 +56,7 @@ export class HeapSetTracker {
    * Insert a set into the heap.
    * Matches SetTracker behavior: allows duplicates, returns true unless trimming.
    */
-  insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]): boolean {
+  insert(tier: number, statMix: number, armor: ProcessItem[], stats: number[]): boolean {
     const power = getPower(armor);
     const entry: HeapEntry = { tier, statMix, power, armor, stats };
 
@@ -93,7 +93,7 @@ export class HeapSetTracker {
         return b.tier - a.tier;
       }
       if (a.statMix !== b.statMix) {
-        return b.statMix.localeCompare(a.statMix);
+        return b.statMix - a.statMix;
       }
       return b.power - a.power;
     });
