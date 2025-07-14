@@ -1,15 +1,13 @@
 @use '../variables' as *;
 @use '../dim-ui/tooltip-mixins' as *;
 
-.values {
+.title {
   display: flex;
   justify-content: space-between;
 }
 
-.label {
-  margin-right: 8px;
-  display: flex;
-  align-items: center;
+.value {
+  font-weight: normal;
 }
 
 .row {

@@ -13,7 +13,6 @@ import {
   minorStatBoost,
   StatRanges,
 } from '../types';
-import { statTier } from '../utils';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
@@ -75,8 +74,6 @@ export function process({
   const statOrder = desiredStatRanges.map(({ statHash }) => statHash as ArmorStatHashes);
   // The maximum stat constraints for each stat
   const maxStatConstraints = desiredStatRanges.map(({ maxStat }) => maxStat);
-  // The maximum stat constraints for each stat, as a tier value
-  const maxTierConstraints = maxStatConstraints.map(statTier);
   // Convert the list of stat bonuses from mods into a flat array in the same order as `statOrder`.
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
 
@@ -239,12 +236,12 @@ export function process({
             // A version of the set stats that have been clamped to the max stat
             // constraint.
             const effectiveStats = [
-              Math.min(stats[0], maxTierConstraints[0]),
-              Math.min(stats[1], maxTierConstraints[1]),
-              Math.min(stats[2], maxTierConstraints[2]),
-              Math.min(stats[3], maxTierConstraints[3]),
-              Math.min(stats[4], maxTierConstraints[4]),
-              Math.min(stats[5], maxTierConstraints[5]),
+              Math.min(stats[0], maxStatConstraints[0]),
+              Math.min(stats[1], maxStatConstraints[1]),
+              Math.min(stats[2], maxStatConstraints[2]),
+              Math.min(stats[3], maxStatConstraints[3]),
+              Math.min(stats[4], maxStatConstraints[4]),
+              Math.min(stats[5], maxStatConstraints[5]),
             ];
 
             // neededStats is the extra stats we'd need in each stat in order to
