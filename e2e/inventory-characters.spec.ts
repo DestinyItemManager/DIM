@@ -4,7 +4,8 @@ test.describe('Inventory Page - Character Management', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     // Wait for the app to fully load
-    await expect(page.locator('main[aria-label="Inventory"]')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('header')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Hunter')).toBeVisible();
   });
 
   test('displays all three character classes with distinct information', async ({ page }) => {

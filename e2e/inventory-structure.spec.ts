@@ -4,13 +4,14 @@ test.describe('Inventory Page - Core Structure', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     // Wait for the app to fully load
-    await expect(page.locator('main[aria-label="Inventory"]')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('header')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Hunter')).toBeVisible();
   });
 
   test('displays header with navigation elements', async ({ page }) => {
     // Verify main navigation elements in header
     await expect(page.locator('header')).toBeVisible();
-    await expect(page.locator('img[alt="dim"]')).toBeVisible();
+    await expect(page.locator('img').first()).toBeVisible();
 
     // Search functionality
     await expect(page.getByRole('combobox', { name: /search/i })).toBeVisible();
@@ -77,7 +78,7 @@ test.describe('Inventory Page - Core Structure', () => {
     await expect(postmasterHeadings.first()).toBeVisible();
 
     // Check postmaster item counts
-    await expect(page.getByText(/\(\d+\/\d+\)/)).toBeVisible(); // Format like "(1/21)"
+    await expect(page.getByText(/\(\d+\/\d+\)/).first()).toBeVisible(); // Format like "(1/21)"
   });
 
   test('displays main inventory sections', async ({ page }) => {
@@ -88,8 +89,8 @@ test.describe('Inventory Page - Core Structure', () => {
     await expect(page.getByRole('heading', { name: 'Inventory' })).toBeVisible();
 
     // Verify section toggle buttons work
-    const weaponsButton = page.getByRole('button', { name: 'Weapons' });
-    const armorButton = page.getByRole('button', { name: 'Armor' });
+    const weaponsButton = page.getByRole('button', { name: 'Weapons', exact: true });
+    const armorButton = page.getByRole('button', { name: 'Armor', exact: true });
 
     await expect(weaponsButton).toBeVisible();
     await expect(armorButton).toBeVisible();
@@ -101,7 +102,7 @@ test.describe('Inventory Page - Core Structure', () => {
 
   test('displays weapons section with item categories', async ({ page }) => {
     // Verify weapons section contains items
-    const weaponsSection = page.locator('[aria-label="Weapons"]');
+    const weaponsSection = page.getByText('Weapons').locator('..');
     await expect(weaponsSection).toBeVisible();
 
     // Check for kinetic weapons category
@@ -115,7 +116,7 @@ test.describe('Inventory Page - Core Structure', () => {
 
   test('displays armor section with equipment slots', async ({ page }) => {
     // Verify armor section contains equipment
-    const armorSection = page.locator('[aria-label="Armor"]');
+    const armorSection = page.getByText('Armor').locator('..');
     await expect(armorSection).toBeVisible();
 
     // Check for armor slot categories

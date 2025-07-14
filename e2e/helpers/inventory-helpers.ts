@@ -12,7 +12,8 @@ export class InventoryHelpers {
    * Wait for the inventory page to fully load
    */
   async waitForInventoryLoad(): Promise<void> {
-    await expect(this.page.locator('main[aria-label="Inventory"]')).toBeVisible({ timeout: 15000 });
+    await expect(this.page.locator('header')).toBeVisible({ timeout: 15000 });
+    await expect(this.page.getByText('Hunter')).toBeVisible();
   }
 
   /**

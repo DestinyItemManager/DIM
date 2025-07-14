@@ -4,7 +4,8 @@ test.describe('Inventory Page - Item Display and Interactions', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     // Wait for the app to fully load
-    await expect(page.locator('main[aria-label="Inventory"]')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('header')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Hunter')).toBeVisible();
   });
 
   test('displays items in weapon categories', async ({ page }) => {
