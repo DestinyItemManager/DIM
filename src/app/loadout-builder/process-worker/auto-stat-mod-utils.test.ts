@@ -36,8 +36,6 @@ describe('process-utils auto mod structure', () => {
           : emptySet<number>();
       const autoModData = mapAutoMods(getAutoMods(defs, unlockedPlugs));
       expect(autoModData).toMatchSnapshot();
-      const sessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
-      expect(sessionInfo.autoModOptions.cheaperStatRelations).toMatchSnapshot();
     },
   );
 

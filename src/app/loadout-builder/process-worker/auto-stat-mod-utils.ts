@@ -1,4 +1,4 @@
-import { compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { objectValues } from 'app/utils/util-types';
 import { ArmorStatHashes, artificeStatBoost, majorStatBoost, minorStatBoost } from '../types';
 import { LoSessionInfo } from './process-utils';
@@ -38,14 +38,6 @@ interface CacheForStat {
  */
 export interface AutoModsMap {
   statCaches: { [targetStatIndex: number]: CacheForStat };
-  /**
-   * See comments in pickOptimalStatMods. That function optimizes for total tier first,
-   * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
-   * total tier.
-   * So for each stat index, this contains a list of stats where the stat mods are better
-   * for purposes of optimizing total tier, by having cheaper or more mods available.
-   */
-  cheaperStatRelations: { [statIndex: number]: ArmorStatHashes[] };
 }
 
 /**
@@ -266,60 +258,15 @@ function buildCacheForStat(
 
   // Prefer picks that use artifice mods, since they are free.
   for (const pickArray of objectValues(cache)) {
-    pickArray!.sort(compareBy((pick) => -pick.numArtificeMods));
+    pickArray!.sort(
+      chainComparator(
+        compareBy((pick) => -pick.numArtificeMods),
+        compareBy((pick) => -pick.numGeneralMods),
+      ),
+    );
   }
 
   return cache;
-}
-
-/**
- * See comments in pickOptimalStatMods. That function optimizes for total tier first,
- * so if a less-prioritized stat also has more costly mods, then it cannot result in a higher
- * total tier.
- * So for each ArmorStatHash, this builds a list of stats where the stat mods are better
- * for purposes of optimizing total tier, by having cheaper or more mods available.
- */
-function buildLessCostlyRelations(
-  autoModOptions: AutoModData,
-  availableGeneralStatMods: number,
-  statOrder: ArmorStatHashes[],
-) {
-  return Object.fromEntries(
-    statOrder.map((armorStat1, statIndex1) => {
-      const betterStatIndices: number[] = [];
-      for (const [statIndex2, armorStat2] of statOrder.entries()) {
-        if (availableGeneralStatMods === 0) {
-          // No general mods means it doesn't matter how much our general mods actually cost
-          if (!autoModOptions.artificeMods[armorStat1] || autoModOptions.artificeMods[armorStat2]) {
-            // So if Stat1 has no artifice mods, or Stat2 has them, Stat2 can do equal or better
-            betterStatIndices.push(statIndex2);
-          }
-        } else {
-          const mods1 = autoModOptions.generalMods[armorStat1];
-          const mods2 = autoModOptions.generalMods[armorStat2];
-
-          if (autoModOptions.artificeMods[armorStat1] && !autoModOptions.artificeMods[armorStat2]) {
-            // Stat1 has artifice mods, Stat2 doesn't, so Stat2 is worse in that aspect
-          } else if (!mods1) {
-            // Stat1 has no mods, so Stat2 can always do equal or better
-            betterStatIndices.push(statIndex2);
-          } else if (!mods2) {
-            // Stat1 has mods, Stat2 doesn't, so Stat2 is worse in that aspect
-          } else {
-            const [large1Cost, large2Cost] = [mods1.majorMod.cost, mods2.majorMod.cost];
-            const [small1Cost, small2Cost] = [mods1.minorMod.cost, mods2.minorMod.cost];
-            // mods for armorStat2 are cheaper (dominate armorStat1) if
-            // they're cheaper or same
-            if (small1Cost >= small2Cost && large1Cost >= large2Cost) {
-              betterStatIndices.push(statIndex2);
-            }
-          }
-        }
-      }
-
-      return [statIndex1, betterStatIndices];
-    }),
-  );
 }
 
 export function buildAutoModsMap(
@@ -333,11 +280,6 @@ export function buildAutoModsMap(
         statIndex,
         buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
       ]),
-    ),
-    cheaperStatRelations: buildLessCostlyRelations(
-      autoModOptions,
-      availableGeneralStatMods,
-      statOrder,
     ),
   };
 }

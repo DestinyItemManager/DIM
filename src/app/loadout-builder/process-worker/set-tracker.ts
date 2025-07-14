@@ -62,9 +62,6 @@ export class HeapSetTracker {
     const entry: HeapEntry = { tier, statMix, power, armor, stats };
 
     if (this.heap.length < this.capacity) {
-      // Not at capacity - create entry and add it
-      const power = getPower(armor);
-      const entry: HeapEntry = { tier, statMix, power, armor, stats };
       this.heap.push(entry);
       this.bubbleUp(this.heap.length - 1);
       return true;
