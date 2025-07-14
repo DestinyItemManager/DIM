@@ -6,22 +6,21 @@ import {
   ArmorBucketHashes,
   ArmorStatHashes,
   ArmorStats,
-  DesiredStatRange,
-  MinMaxStat,
-  StatRanges,
   artificeStatBoost,
+  DesiredStatRange,
   majorStatBoost,
+  MinMaxStat,
   minorStatBoost,
+  StatRanges,
 } from '../types';
 import { statTier } from '../utils';
-import { HeapSetTracker } from './heap-set-tracker';
 import {
-  encodeStatMix,
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
   updateMaxStats,
 } from './process-utils';
+import { encodeStatMix, HeapSetTracker } from './set-tracker';
 import {
   AutoModData,
   LockedProcessMods,

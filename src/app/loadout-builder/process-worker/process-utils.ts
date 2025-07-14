@@ -6,49 +6,6 @@ import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
- * Encodes stat values into a 48-bit integer for fast comparison.
- * Each stat uses 8 bits (sufficient for 0-200 range), packed in priority order.
- * Only non-ignored stats (with maxStat > 0) are included in the encoding.
- *
- * @param stats Array of stat values in stat priority order
- * @param desiredStatRanges Stat ranges to determine which stats are ignored
- * @returns 48-bit integer representation that maintains lexical ordering
- */
-export function encodeStatMix(
-  stats: readonly number[],
-  desiredStatRanges: readonly DesiredStatRange[],
-): number {
-  let encoded = 0;
-  for (let i = 0; i < 6; i++) {
-    const filter = desiredStatRanges[i];
-    if (filter.maxStat > 0) {
-      // non-ignored stat
-      // Shift left by 8 bits and add the stat value (clamped to 8-bit range)
-      encoded = (encoded << 8) | Math.min(stats[i], 255);
-    }
-  }
-  return encoded;
-}
-
-/**
- * Decodes a stat mix integer back to individual stat values.
- * Useful for debugging or display purposes.
- *
- * @param encoded The encoded stat mix integer
- * @param numStats Number of stats that were encoded
- * @returns Array of decoded stat values
- */
-export function decodeStatMix(encoded: number, numStats: number): number[] {
-  const stats: number[] = [];
-  for (let i = 0; i < numStats; i++) {
-    // Extract the rightmost 8 bits, then shift right for next stat
-    stats.unshift(encoded & 0xff);
-    encoded = encoded >>> 8;
-  }
-  return stats;
-}
-
-/**
  * Data that stays the same in a given LO run.
  */
 export interface LoSessionInfo {
