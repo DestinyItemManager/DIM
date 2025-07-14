@@ -458,8 +458,6 @@ export function greedyPickStatMods(
     return undefined;
   }
 
-  // TODO: We need to hit minimums before we hit maximums, so we should
-
   for (let i = 0; i < explorationStats.length; i++) {
     if (maxAddedStats[i] <= 0) {
       continue; // No need to boost this stat
@@ -489,7 +487,7 @@ export function greedyPickStatMods(
     // Binary search for the best stat boost we can get for this stat.
     let lastGoodCandidatePick: ModsPick[] | undefined = undefined;
     let lastGoodCandidatePickExplorationStat = 0;
-    let minBoost = artificeStatBoost;
+    let minBoost = Math.max(artificeStatBoost, originalExplorationStat);
     let maxBoost = maxAddedStats[i] - 1;
     while (minBoost < maxBoost) {
       explorationStats[i] = Math.floor((minBoost + maxBoost) / 2);
