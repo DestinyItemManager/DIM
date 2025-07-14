@@ -24,7 +24,7 @@ import ItemTagHotkeys from './ItemTagHotkeys';
 import { ItemPopupExtraInfo } from './item-popup';
 import { buildItemActionsModel } from './item-popup-actions';
 
-const tierClasses: Record<ItemRarityName, string> = {
+const rarityClasses: Record<ItemRarityName, string> = {
   Exotic: styles.exotic,
   Legendary: styles.legendary,
   Rare: styles.rare,
@@ -116,7 +116,7 @@ export default function ItemPopup({
       header={header}
       headerClassName={styles.sheetHeader}
       closeButtonClassName={styles.sheetClose}
-      sheetClassName={clsx(tierClasses[item.rarity], styles.movePopupDialog)}
+      sheetClassName={clsx(rarityClasses[item.rarity], styles.movePopupDialog)}
       footer={
         itemActionsModel.hasMoveControls && (
           <div className={styles.mobileMoveLocations}>
@@ -133,7 +133,7 @@ export default function ItemPopup({
         className={clsx(
           'item-popup',
           styles.movePopupDialog,
-          tierClasses[item.rarity],
+          rarityClasses[item.rarity],
           styles.desktopPopupRoot,
         )}
         style={{ zIndex }}
@@ -157,7 +157,7 @@ export default function ItemPopup({
             </div>
           </PressTipRoot>
         </ClickOutside>
-        <div className={clsx('arrow', styles.arrow, tierClasses[item.rarity])} />
+        <div className={clsx('arrow', styles.arrow, rarityClasses[item.rarity])} />
       </div>
     </Portal>
   );

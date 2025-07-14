@@ -1,7 +1,7 @@
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
-import { D2ItemRarityTiers, d2MissingIcon, ItemRarityName } from 'app/search/d2-known-values';
+import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
 import { braveShiny, riteShiny } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { isModCostVisible } from 'app/utils/socket-utils';
@@ -137,7 +137,7 @@ export function DefItemIcon({
     },
     !borderless &&
       !itemDef.plug &&
-      itemDef.inventory && [itemTierStyles[D2ItemRarityTiers[itemDef.inventory.tierType]]],
+      itemDef.inventory && [itemTierStyles[ItemRarityMap[itemDef.inventory.tierType]]],
   );
   const energyCost = getModCostInfo(itemDef);
 

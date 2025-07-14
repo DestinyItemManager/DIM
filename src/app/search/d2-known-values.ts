@@ -275,12 +275,12 @@ export const unadvertisedResettableVendors = [
 export const WELL_RESTED_PERK = 1519921522; // SandboxPerk "Well-Rested"
 
 /**
- * Maps TierType to tierTypeName in English and vice versa.
+ * Maps TierType to ItemRarityName in English and vice versa.
  * The Bungie.net version of this enum is not representative of real game strings.
  */
 // A manually constructed bi-directional enum,
 // because the `enum` keyword unfortunately returns type `string`.
-export const D2ItemRarityTiers = {
+export const ItemRarityMap = {
   Unknown: TierType.Unknown,
   [TierType.Unknown]: 'Unknown',
   Currency: TierType.Currency,
@@ -297,6 +297,10 @@ export const D2ItemRarityTiers = {
   [TierType.Exotic]: 'Exotic',
 } as const;
 
+/**
+ * We use our own names for rarity because the API types don't match what's in
+ * game (e.g. Legendary = TierType.Superior, Uncommon = TierType.Common).
+ */
 export type ItemRarityName =
   | 'Unknown'
   | 'Currency'

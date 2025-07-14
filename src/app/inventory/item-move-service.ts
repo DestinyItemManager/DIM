@@ -3,7 +3,7 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { isInInGameLoadoutForSelector } from 'app/loadout/selectors';
-import type { ItemRarityName } from 'app/search/d2-known-values';
+import { ItemRarityMap } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
 import { count, filterMap } from 'app/utils/collections';
@@ -1107,17 +1107,6 @@ export function executeMoveItem(
   };
 }
 
-// weight "move an item aside" options, according to their rarity
-const moveAsideWeighting: Record<ItemRarityName, number> = {
-  Unknown: 0,
-  Currency: 0,
-  Common: 0,
-  Uncommon: 1,
-  Rare: 2,
-  Legendary: 4,
-  Exotic: 3,
-};
-
 /**
  * Sort a list of items to determine a prioritized order for which should be moved from fromStore
  * assuming they'll end up in targetStore.
@@ -1185,9 +1174,7 @@ export function sortMoveAsideCandidatesForStore(
         ),
       ),
       // Prefer moving lower-tier into the vault and higher tier out
-      compareBy((i) =>
-        fromStore.isVault ? moveAsideWeighting[i.rarity] : -moveAsideWeighting[i.rarity],
-      ),
+      compareBy((i) => (fromStore.isVault ? ItemRarityMap[i.rarity] : -ItemRarityMap[i.rarity])),
       // Prefer keeping higher-stat items on characters
       compareBy(
         (i) =>
@@ -1245,8 +1232,8 @@ function searchForSimilarItem(
       // try to match type (e.g. scout rifle). TODO: look into using ItemSubType instead
       compareBy((i) => i.typeName === item.typeName),
       reverseComparator(compareByIndex(equipReplacePriority, (i) => getTag(i) ?? 'none')),
-      // Prefer higher-tier items
-      compareBy((i) => moveAsideWeighting[i.rarity]),
+      // Prefer rarer items
+      compareBy((i) => ItemRarityMap[i.rarity]),
       // Prefer higher-stat items
       compareBy((i) => i.primaryStat?.value ?? 0),
     ),

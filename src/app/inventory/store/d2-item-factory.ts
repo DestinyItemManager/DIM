@@ -3,7 +3,7 @@ import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import {
-  D2ItemRarityTiers,
+  ItemRarityMap,
   SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
   d2MissingIcon,
@@ -462,7 +462,7 @@ export function makeItem(
     bucket: normalBucket,
     hash: item.itemHash,
     itemCategoryHashes,
-    rarity: D2ItemRarityTiers[itemDef.inventory!.tierType] || 'Common',
+    rarity: ItemRarityMap[itemDef.inventory!.tierType] || 'Common',
     isExotic: itemDef.inventory!.tierType === TierType.Exotic,
     name,
     description: displayProperties.description,

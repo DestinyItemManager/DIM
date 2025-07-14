@@ -14,7 +14,7 @@ import { AmmoIcon } from './AmmoIcon';
 import BreakerType from './BreakerType';
 import styles from './ItemPopupHeader.m.scss';
 
-const tierClassName: LookupTable<ItemRarityName, string> = {
+const rarityClassName: LookupTable<ItemRarityName, string> = {
   Common: styles.common,
   Uncommon: styles.uncommon,
   Rare: styles.rare,
@@ -41,7 +41,7 @@ export default function ItemPopupHeader({
     <button
       type="button"
       disabled={!linkToArmory}
-      className={clsx(styles.header, tierClassName[item.rarity], {
+      className={clsx(styles.header, rarityClassName[item.rarity], {
         [styles.masterwork]: item.masterwork,
         [styles.pursuit]: item.pursuit,
         [styles.armory]: linkToArmory,
