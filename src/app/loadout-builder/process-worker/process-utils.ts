@@ -1,7 +1,7 @@
 import { MAX_STAT } from 'app/loadout/known-values';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import { ArmorStatHashes, DesiredStatRange, MinMaxStat } from '../types';
+import { ArmorStatHashes, artificeStatBoost, DesiredStatRange, MinMaxStat } from '../types';
 import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
@@ -377,25 +377,22 @@ export function pickOptimalStatMods(
   }
 
   const numArtificeMods = count(items, (i) => i.isArtifice);
-  const bestBoosts = exploreAutoModsSearchTree(
+  const picks = greedyPickStatMods(
     info,
-    items,
     explorationStats,
     maxAddedStats,
     numArtificeMods,
     remainingEnergiesPerAssignment,
     setEnergy - info.totalModEnergyCost,
-    0,
-    0,
   );
 
-  if (bestBoosts) {
+  if (picks?.length) {
     const bonusStats = [0, 0, 0, 0, 0, 0];
-    for (const pick of bestBoosts.picks) {
+    for (const pick of picks) {
       bonusStats[pick.targetStatIndex] += pick.exactStatPoints;
     }
     return {
-      mods: bestBoosts.picks.flatMap((pick) => pick.modHashes),
+      mods: picks.flatMap((pick) => pick.modHashes),
       bonusStats,
     };
   } else {
@@ -432,16 +429,171 @@ export function pickOptimalStatMods(
 // (e.g. if the stat is at 190, it's better to give it a +10 mod than a +3 and
 // +5 or a +3 and +10). So maybe the exploration algorithm is still worthwhile
 // with a tier size of 1?
-// function greedyPickStatMods(
-//   /** The base stats from our set + fragments + ... */
-//   setStats: number[],
-//   desiredStatRanges: DesiredStatRange[],
+export function greedyPickStatMods(
+  info: LoSessionInfo,
+  explorationStats: number[],
+  /**
+   * The highest allowed additional stat values. we are not allowed to boost stats beyond this,
+   * otherwise we would go over the stats' tier maxes (or T10 if no max)
+   */
+  maxAddedStats: number[],
+  /** How many artifice mods this set has */
+  numArtificeMods: number,
+  /** The different permutations of leftover energy after assigning activity mods permutations */
+  remainingEnergyCapacities: number[][],
+  /** The total amount of energy left over in this set */
+  totalModEnergyCapacity: number,
+): ModsPick[] | undefined {
+  let picks: ModsPick[] | undefined = chooseAutoMods(
+    info,
+    explorationStats,
+    numArtificeMods,
+    remainingEnergyCapacities,
+    totalModEnergyCapacity,
+  );
+
+  if (!picks) {
+    // If we can't hit the target stats with the current exploration stats, we
+    // can't do anything.
+    return undefined;
+  }
+
+  // TODO: We need to hit minimums before we hit maximums, so we should
+
+  for (let i = 0; i < explorationStats.length; i++) {
+    if (maxAddedStats[i] <= 0) {
+      continue; // No need to boost this stat
+    }
+
+    let candidatePick: ModsPick[] | undefined;
+    const originalExplorationStat = explorationStats[i];
+    if (i === 0) {
+      // Hail mary, try for the best stat boost we can get for this stat.
+      explorationStats[i] = maxAddedStats[i];
+      candidatePick = chooseAutoMods(
+        info,
+        explorationStats,
+        numArtificeMods,
+        remainingEnergyCapacities,
+        totalModEnergyCapacity,
+      );
+
+      if (candidatePick) {
+        // We can hit this stat with the current exploration stats, so try to
+        // increase it.
+        picks = candidatePick;
+        continue; // No need to search for this stat any further
+      }
+    }
+
+    // Binary search for the best stat boost we can get for this stat.
+    let lastGoodCandidatePick: ModsPick[] | undefined = undefined;
+    let lastGoodCandidatePickExplorationStat = 0;
+    let minBoost = artificeStatBoost;
+    let maxBoost = maxAddedStats[i] - 1;
+    while (minBoost < maxBoost) {
+      explorationStats[i] = Math.floor((minBoost + maxBoost) / 2);
+      if (explorationStats[i] <= 0) {
+        break; // No need to boost this stat
+      }
+      candidatePick = chooseAutoMods(
+        info,
+        explorationStats,
+        numArtificeMods,
+        remainingEnergyCapacities,
+        totalModEnergyCapacity,
+      );
+      if (candidatePick) {
+        // We can hit this stat with the current exploration stats, so try to
+        // increase it.
+        minBoost = explorationStats[i] + 1;
+        lastGoodCandidatePick = candidatePick;
+        lastGoodCandidatePickExplorationStat = explorationStats[i];
+      } else {
+        // We can't hit this stat with the current exploration stats, so try to
+        // decrease it.
+        maxBoost = explorationStats[i];
+      }
+    }
+    if (candidatePick) {
+      picks = candidatePick;
+    } else if (lastGoodCandidatePick) {
+      picks = lastGoodCandidatePick;
+      explorationStats[i] = lastGoodCandidatePickExplorationStat;
+    } else {
+      // Reset
+      explorationStats[i] = originalExplorationStat;
+    }
+  }
+  return picks;
+}
+
+// function greedyPickStatModsForScenario(
+//   info: LoSessionInfo,
+//   items: ProcessItem[],
+//   /** The stat boosts in the current search tree node */
+//   explorationStats: number[],
+//   /**
+//    * The highest allowed additional stat values. we are not allowed to boost stats beyond this,
+//    * otherwise we would go over the stats' tier maxes (or T10 if no max)
+//    */
+//   maxAddedStats: number[],
+//   /** How many artifice mods this set has */
 //   numArtificeMods: number,
-//   numAvailableGeneralMods: number,
-//   // remainingEnergiesPerAssignment: number[][],
-// ): { mods: number[]; bonusStats: number[] } | undefined {
+//   /** The different permutations of leftover energy after assigning activity mods permutations */
+//   remainingEnergyCapacities: number[],
+//   /** The total amount of energy left over in this set */
+//   totalModEnergyCapacity: number,
+// ): SearchResult | undefined {
 //   const mods: number[] = [];
 //   const bonusStats = [0, 0, 0, 0, 0, 0];
+
+//   let generalModsAvailable = info.numAvailableGeneralMods;
+//   let majorModsAvailable = 0;
+//   let minorModsAvailable = 0;
+//   const artificeModsAvailable = numArtificeMods;
+
+//   // How many general mods we can use to boost stats.
+//   for (const capacity of remainingEnergyCapacities) {
+//     // TODO: This is hardcoding the Edge of Fate stat mod costs.
+//     if (capacity > 3) {
+//       majorModsAvailable++;
+//     } else if (capacity > 0) {
+//       minorModsAvailable++;
+//     }
+//     generalModsAvailable--;
+//     if (generalModsAvailable === 0) {
+//       break;
+//     }
+//   }
+
+//   const picks: ModsPick[] = [];
+
+//   for (let statIndex = 0; statIndex < explorationStats.length; statIndex++) {
+//     const targetStatBoost = maxAddedStats[statIndex];
+
+//     const possiblePicks = info.autoModOptions.statCaches[statIndex];
+//     for (const pick of possiblePicks) {
+//       if ()
+
+//     const currentStatBoost = 0;
+//     while (
+//       currentStatBoost < targetStatBoost &&
+//       majorModsAvailable + minorModsAvailable + artificeModsAvailable > 0
+//     ) {
+//       const gap = targetStatBoost - currentStatBoost;
+//       if (gap < minorStatBoost && artificeModsAvailable > 0) {
+//         // Use an artifice mod to boost this stat
+//         bonusStats[statIndex] += artificeStatBoost;
+//         artificeModsAvailable--;
+//       }
+//     }
+
+//     const bestWeCanDo =
+//       majorModsAvailable * majorStatBoost +
+//       minorModsAvailable * minorStatBoost +
+//       artificeModsAvailable * artificeStatBoost;
+//   }
 
 //   // Then spend artifice mods to boost stats greedily in stat
 //   // priority order.
@@ -525,6 +677,7 @@ export function pickOptimalStatMods(
 interface SearchResult {
   picks: ModsPick[];
   depth: number;
+  total: number;
 }
 
 /**
@@ -588,6 +741,7 @@ function exploreAutoModsSearchTree(
   /** How many boosts we have chosen before in explorationStats */
   depth: number,
 ): SearchResult | undefined {
+  // If we already can't fit any more auto mods, we can stop exploring this branch.
   const picks = chooseAutoMods(
     info,
     explorationStats,
@@ -602,12 +756,19 @@ function exploreAutoModsSearchTree(
   let bestResult: SearchResult = {
     depth,
     picks,
+    total: picks.reduce(
+      (acc, pick) => acc + Math.min(pick.exactStatPoints, maxAddedStats[pick.targetStatIndex]),
+      0,
+    ),
   };
+
+  // console.log(`${depth} ${' '.repeat(depth)}Exploring ${explorationStats}`);
 
   // The cost to get to the next tier has one dimension:
   // * the cost of individual mods (via cheaperStatRelations)
   const previousStatHashes: number[] = [];
 
+  const initialStatIndex = statIndex;
   for (; statIndex < explorationStats.length; statIndex++) {
     // If we have already hit the max for this stat, skip it.
     if (explorationStats[statIndex] >= maxAddedStats[statIndex]) {
@@ -616,12 +777,16 @@ function exploreAutoModsSearchTree(
 
     // Dominance check: If an earlier-explored (=higher-priority) stat doesn't have more expensive mods than this current one, we don't even need to
     // look at this branch.
+    // TODO: At least as of the tierless changes, this dominator check does not seem to work quite right - it skips stat if an earlier stat in the order has a cheaper mod, even if the current stat is not at its max yet.
     if (
       previousStatHashes.some((previousStatHash) =>
         info.autoModOptions.cheaperStatRelations[statIndex].includes(previousStatHash),
       )
     ) {
-      continue;
+      // continue;
+    }
+    if (statIndex > initialStatIndex) {
+      console.log('Exploring a non-domainated stat', statIndex, explorationStats);
     }
 
     const subTreeStats = explorationStats.slice();

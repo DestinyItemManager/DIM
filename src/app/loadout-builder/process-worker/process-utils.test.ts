@@ -529,7 +529,7 @@ describe('process-utils optimal mods', () => {
       [82, 44, 73, 39, 40, 50],
       [10, 10, 10, 10, 10],
       5,
-      [82, 83, 83, 55, 40, 50],
+      [82, 80, 82, 59, 40, 50],
       // Pick specific stat constraints for this test
       [
         { statHash: StatHashes.Discipline, minStat: 0, maxStat: 82 },
