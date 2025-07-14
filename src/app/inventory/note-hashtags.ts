@@ -4,36 +4,55 @@ import { maxBy } from 'es-toolkit';
 import { ItemInfos } from './dim-item-info';
 
 /**
- * Groups hashtags by their canonical (case-insensitive) form and selects the best variant to display.
- * Uses frequency as the primary criterion, with a preference for variants with more uppercase letters.
+ * An object that can collect usage of hashtags and return their most popular form.
  */
-export function groupHashtagsByCanonicalForm(hashtags: string[]): Record<string, string> {
+export class HashTagTracker {
   // {
   //   '#pve': {
   //     variants: {
   //       '#PVE': 4,
   //       '#pve': 2
-  //     },              <- hashtagCollection
-  //     count: 6        <- structure
+  //     },
+  //     count: 6
   //   }
   // }
-  const variantCounts: Record<string, Record<string, number>> = {};
+  hashtagCollection: NodeJS.Dict<{ variants: NodeJS.Dict<number>; count: number }> = {};
 
-  // Count each variant
-  for (const hashtag of hashtags) {
+  addHashtag(hashtag: string) {
     const lower = hashtag.toLowerCase();
-    variantCounts[lower] ??= {};
-    variantCounts[lower][hashtag] = (variantCounts[lower][hashtag] ?? 0) + 1;
+    this.hashtagCollection[lower] ??= { count: 0, variants: {} };
+    this.hashtagCollection[lower].count++;
+    this.hashtagCollection[lower].variants[hashtag] ??= 0;
+    this.hashtagCollection[lower].variants[hashtag]++;
   }
 
-  // Pick best variant for each canonical form
-  const result: Record<string, string> = {};
-  for (const [lowerKey, variants] of Object.entries(variantCounts)) {
-    const bestVariant = maxBy(Object.entries(variants), ([, count]) => count)![0];
-    result[lowerKey] = bestVariant;
+  /**
+   * Gets the best "canonical" form of a hashtag to use for display.
+   */
+  canonicalForm(hashtag: string): string {
+    const lower = hashtag.toLowerCase();
+    const normalizedMeta = this.hashtagCollection[lower];
+    if (!normalizedMeta) {
+      return hashtag; // No variants, return as is
+    }
+    return extractMostPopular(normalizedMeta)[0];
   }
 
-  return result;
+  allHashtags(): string[] {
+    return Object.values(this.hashtagCollection)
+      .map((m) => extractMostPopular(m!))
+      .sort(compareBy(([, count]) => -count))
+      .map(([variant]) => variant);
+  }
+}
+
+function extractMostPopular(normalizedMeta: {
+  variants: NodeJS.Dict<number>;
+  count: number;
+}): [canonicalForm: string, totalObserved: number] {
+  const countsByVariant = Object.entries(normalizedMeta.variants);
+  const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
+  return [mostPopularVariant, normalizedMeta.count];
 }
 
 /**
@@ -42,24 +61,16 @@ export function groupHashtagsByCanonicalForm(hashtags: string[]): Record<string,
  * Orders by use count, de-dupes case-insensitive, and picks the most popular capitalization.
  */
 export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
-  const allHashtags: string[] = [];
-  const hashtagCounts: NodeJS.Dict<number> = {};
+  const hashtagTracker = new HashTagTracker();
 
   for (const info of Object.values(itemInfos)) {
     const hashtags = getHashtagsFromString(info.notes);
     for (const h of hashtags) {
-      allHashtags.push(h);
-      const lower = h.toLowerCase();
-      hashtagCounts[lower] = (hashtagCounts[lower] ?? 0) + 1;
+      hashtagTracker.addHashtag(h);
     }
   }
 
-  const canonicalHashtags = groupHashtagsByCanonicalForm(allHashtags);
-
-  return Object.entries(canonicalHashtags)
-    .map(([lowerKey, canonicalForm]) => [canonicalForm, hashtagCounts[lowerKey]!] as const)
-    .sort(compareBy((t) => -t[1]))
-    .map((t) => t[0]);
+  return hashtagTracker.allHashtags();
 }
 
 const hashtagRegex = /(^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)/gu;

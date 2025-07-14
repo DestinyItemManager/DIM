@@ -4,7 +4,7 @@ import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t, tl } from 'app/i18next-t';
-import { getHashtagsFromString, groupHashtagsByCanonicalForm } from 'app/inventory/note-hashtags';
+import { getHashtagsFromString, HashTagTracker } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
@@ -204,30 +204,27 @@ export function useLoadoutFilterPills(
   ];
 }
 
-/**
- * Groups loadouts by hashtag, using case-insensitive grouping with uppercase preference.
- */
 function groupLoadoutsByHashtag(loadouts: Loadout[]): { [hashtag: string]: Loadout[] } {
-  const allHashtags: string[] = [];
+  const hashtagTracker = new HashTagTracker();
   const loadoutsByLowerHashtag: { [lowerHashtag: string]: Loadout[] } = {};
 
   // Collect all hashtags and group loadouts by lowercase hashtag
   for (const loadout of loadouts) {
     const hashtags = getHashtagsFromString(loadout.name, loadout.notes);
     for (const hashtag of hashtags) {
-      allHashtags.push(hashtag);
+      hashtagTracker.addHashtag(hashtag);
       const lower = hashtag.toLowerCase();
       (loadoutsByLowerHashtag[lower] ??= []).push(loadout);
     }
   }
 
   // Get canonical forms and re-key with cleaned hashtags
-  const canonicalHashtags = groupHashtagsByCanonicalForm(allHashtags);
   const result: { [hashtag: string]: Loadout[] } = {};
 
-  for (const [lowerKey, canonicalHashtag] of Object.entries(canonicalHashtags)) {
+  for (const [lowerHashtag, loadouts] of Object.entries(loadoutsByLowerHashtag)) {
+    const canonicalHashtag = hashtagTracker.canonicalForm(lowerHashtag);
     const cleanedHashtag = canonicalHashtag.replace('#', '').replace(/_/g, ' ');
-    result[cleanedHashtag] = loadoutsByLowerHashtag[lowerKey] || [];
+    result[cleanedHashtag] = loadouts;
   }
 
   return result;
