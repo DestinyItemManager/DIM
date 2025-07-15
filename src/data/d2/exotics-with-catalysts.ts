@@ -12,6 +12,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   417164956, // Jötunn
   427899681, // Red Death Reformed
   603721696, // Cryosthesia 77K
+  648595258, // Graviton Spike
   776191470, // Tommy's Matchbook
   814876685, // Trinity Ghoul
   940371471, // Wicked Implement
@@ -49,6 +50,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2350354266, // Alethonym
   2357297366, // Witherhoard
   2362471601, // Rat King
+  2581676735, // New Land Beyond
   2591746970, // Leviathan's Breath
   2603483885, // Cloudstrike
   2694576561, // Two-Tailed Fox
@@ -58,6 +60,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2907129556, // Sturm
   2907129557, // Sunshot
   2910326942, // Wish-Keeper
+  2973900274, // Third Iteration
   3089417789, // Riskrunner
   3118061005, // Vexcalibur
   3121540812, // Final Warning

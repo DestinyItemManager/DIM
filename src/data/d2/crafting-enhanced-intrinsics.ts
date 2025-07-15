@@ -4,6 +4,7 @@ const enhancedIntrinsics = new Set<number>([
   1655963600, // Adaptive Burst
   3049431773, // Adaptive Burst
   4269485650, // Adaptive Burst
+  31057037, // Adaptive Burst
   1795925907, // Adaptive Burst
   1938288214, // Adaptive Burst
   2503963990, // Adaptive Burst
@@ -226,14 +227,14 @@ const enhancedIntrinsics = new Set<number>([
   1225770249, // Rocket-Assisted Frame
   2100231191, // Rocket-Assisted Frame
   3178379945, // Rocket-Assisted Frame
-  785441979, // Support Frame
-  1926141333, // Support Frame
-  2491949917, // Support Frame
-  2707250581, // Support Frame
   156358224, // Support Frame
   840061228, // Support Frame
   1535085486, // Support Frame
   3161047604, // Support Frame
+  785441979, // Support Frame
+  1926141333, // Support Frame
+  2491949917, // Support Frame
+  2707250581, // Support Frame
   1241894699, // Together Forever
   1300107783, // Together Forever
   2826720951, // Together Forever
