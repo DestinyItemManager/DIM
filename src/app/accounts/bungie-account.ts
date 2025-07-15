@@ -17,8 +17,14 @@ export interface BungieAccount {
  * and have references to one or more Destiny accounts.
  */
 export function getBungieAccount(): BungieAccount | undefined {
-  const token = getToken();
+  // In E2E mode, return mock Bungie account to bypass authentication
+  if ($featureFlags.e2eMode) {
+    return {
+      membershipId: 'mock-bungie-membership-id',
+    };
+  }
 
+  const token = getToken();
   if (token?.bungieMembershipId) {
     return {
       membershipId: token.bungieMembershipId,

@@ -306,7 +306,7 @@ export default (env: Env) => {
         // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
           test: /\.tsx?$/,
-          exclude: [/testing/, /\.test\.ts$/],
+          exclude: [/\.test\.ts$/],
           use: [
             {
               loader: 'babel-loader',
@@ -488,6 +488,8 @@ export default (env: Env) => {
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },
         { from: './src/robots.txt' },
+        // Copy manifest cache for E2E tests
+        ...(env.dev ? [{ from: './manifest-cache', to: 'manifest-cache' }] : []),
       ],
     }),
 

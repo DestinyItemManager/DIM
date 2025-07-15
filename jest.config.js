@@ -7,6 +7,8 @@ export default {
   verbose: true,
   testTimeout: 60000,
   roots: ['<rootDir>'],
+  // Exclude Playwright e2e tests from Jest
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/e2e/', '<rootDir>/.*\\.e2e\\..*'],
   modulePaths: [tsconfig.compilerOptions.baseUrl],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':

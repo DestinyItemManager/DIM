@@ -10,6 +10,7 @@ import {
   DestinyComponentType,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
+  DestinyPlatformSilverComponent,
   DestinyProfileResponse,
   DestinyVendorResponse,
   DestinyVendorsResponse,
@@ -33,6 +34,7 @@ import {
   transferItem,
   updateLoadoutIdentifiers,
 } from 'bungie-api-ts/destiny2';
+import { getTestProfile, getTestVendors } from 'testing/test-profile';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -60,6 +62,43 @@ export async function getManifest(): Promise<DestinyManifest> {
 export async function getLinkedAccounts(
   bungieMembershipId: string,
 ): Promise<DestinyLinkedProfilesResponse> {
+  if ($featureFlags.e2eMode) {
+    // Return mock linked accounts for E2E tests
+    return {
+      profiles: [
+        {
+          dateLastPlayed: '2024-01-01T00:00:00Z',
+          isOverridden: false,
+          isCrossSavePrimary: true,
+          crossSaveOverride: 3, // Steam
+          applicableMembershipTypes: [3],
+          isPublic: true,
+          membershipType: 3, // Steam
+          membershipId: 'mock-membership-id',
+          displayName: 'MockPlayer#1234',
+          bungieGlobalDisplayName: 'MockPlayer',
+          bungieGlobalDisplayNameCode: 1234,
+          platformSilver: {} as DestinyPlatformSilverComponent,
+          supplementalDisplayName: '',
+          iconPath: '/img/misc/missing_icon_d2.png',
+        },
+      ],
+      bnetMembership: {
+        membershipType: 254,
+        membershipId: bungieMembershipId,
+        displayName: 'MockPlayer#1234',
+        bungieGlobalDisplayName: 'MockPlayer',
+        bungieGlobalDisplayNameCode: 1234,
+        supplementalDisplayName: '',
+        iconPath: '/img/misc/missing_icon_d2.png',
+        crossSaveOverride: 254,
+        applicableMembershipTypes: [254],
+        isPublic: true,
+      },
+      profilesWithErrors: [],
+    };
+  }
+
   const response = await getLinkedProfiles(authenticatedHttpClient, {
     membershipId: bungieMembershipId,
     membershipType: BungieMembershipType.BungieNext,
@@ -121,6 +160,10 @@ async function getProfile(
   platform: DestinyAccount,
   ...components: DestinyComponentType[]
 ): Promise<DestinyProfileResponse> {
+  if ($featureFlags.e2eMode) {
+    return getTestProfile();
+  }
+
   const response = await getProfileApi(authenticatedHttpClient, {
     destinyMembershipId: platform.membershipId,
     membershipType: platform.originalPlatformType,
@@ -142,6 +185,9 @@ export async function getVendors(
   account: DestinyAccount,
   characterId: string,
 ): Promise<DestinyVendorsResponse> {
+  if ($featureFlags.e2eMode) {
+    return getTestVendors();
+  }
   const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,

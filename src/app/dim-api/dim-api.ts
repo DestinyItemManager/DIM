@@ -1,4 +1,5 @@
 import {
+  defaultSettings,
   DeleteAllResponse,
   DestinyVersion,
   ExportResponse,
@@ -30,6 +31,18 @@ export async function getGlobalSettings() {
 }
 
 export async function getDimApiProfile(account?: DestinyAccount, syncToken?: string) {
+  if ($featureFlags.e2eMode) {
+    // Return mock DIM API profile for E2E tests
+    return {
+      settings: defaultSettings,
+      loadouts: [],
+      tags: [],
+      hashtags: [],
+      searches: [],
+      triumphs: [],
+    } as ProfileResponse;
+  }
+
   const params: Record<string, string> = account
     ? {
         platformMembershipId: account.membershipId,

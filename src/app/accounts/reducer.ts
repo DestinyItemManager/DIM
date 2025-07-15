@@ -39,6 +39,14 @@ export interface AccountsState {
 export type AccountsAction = ActionType<typeof actions>;
 
 function getLastAccountFromLocalStorage() {
+  // In E2E mode, return mock account ID to auto-select the mock account
+  if ($featureFlags.e2eMode) {
+    return {
+      currentAccountMembershipId: 'mock-membership-id',
+      currentAccountDestinyVersion: 2 as DestinyVersion,
+    };
+  }
+
   const currentAccountMembershipId = localStorage.getItem('dim-last-membership-id') ?? undefined;
   const destinyVersionStr = localStorage.getItem('dim-last-destiny-version') ?? undefined;
   const currentAccountDestinyVersion = destinyVersionStr
@@ -52,12 +60,13 @@ const initialState: AccountsState = {
   ...getLastAccountFromLocalStorage(),
   loaded: false,
   loadedFromIDB: false,
-  needsLogin: !hasValidAuthTokens(),
-  needsDeveloper:
-    !DIM_API_KEY ||
-    !BUNGIE_API_KEY ||
-    ($DIM_FLAVOR === 'dev' &&
-      (!localStorage.getItem('oauthClientId') || !localStorage.getItem('oauthClientSecret'))),
+  needsLogin: $featureFlags.e2eMode ? false : !hasValidAuthTokens(),
+  needsDeveloper: $featureFlags.e2eMode
+    ? false
+    : !DIM_API_KEY ||
+      !BUNGIE_API_KEY ||
+      ($DIM_FLAVOR === 'dev' &&
+        (!localStorage.getItem('oauthClientId') || !localStorage.getItem('oauthClientSecret'))),
 };
 
 export const accounts: Reducer<AccountsState, AccountsAction> = (
