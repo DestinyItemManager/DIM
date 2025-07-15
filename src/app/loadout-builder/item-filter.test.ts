@@ -266,7 +266,8 @@ describe('loadout-builder item-filter', () => {
       lockedModMap: noMods.modMap,
       unassignedMods: noMods.unassignedMods,
       lockedExoticHash: LOCKED_EXOTIC_ANY_EXOTIC,
-      searchFilter: (item) => item.tier === 'Legendary' || item.bucket.hash === BucketHashes.Helmet,
+      searchFilter: (item) =>
+        item.rarity === 'Legendary' || item.bucket.hash === BucketHashes.Helmet,
     });
 
     noPinInvariants(filteredItems, filterInfo);
@@ -283,7 +284,7 @@ describe('loadout-builder item-filter', () => {
       lockedModMap: noMods.modMap,
       unassignedMods: noMods.unassignedMods,
       lockedExoticHash: LOCKED_EXOTIC_ANY_EXOTIC,
-      searchFilter: (item) => item.tier === 'Legendary',
+      searchFilter: (item) => item.rarity === 'Legendary',
     });
 
     noPinInvariants(filteredItems, filterInfo);

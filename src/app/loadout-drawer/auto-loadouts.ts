@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { D2ItemTiers } from 'app/search/d2-known-values';
+import { ItemRarityMap } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { mapValues, sumBy } from 'app/utils/collections';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -62,7 +62,7 @@ export function itemLevelingLoadout(allItems: DimItem[], store: DimStore): Loado
       value += 500;
     }
 
-    value += D2ItemTiers[item.tier] * 10;
+    value += ItemRarityMap[item.rarity] * 10;
 
     // Choose the item w/ the highest XP
     if (isD1Item(item) && item.talentGrid) {

@@ -81,7 +81,7 @@ export default function FashionDrawer({
         armorItemsByBucketHash[bucketHash]?.item ??
         // Try to find a legendary example
         allItems.find(
-          (i) => i.tier === 'Legendary' && looksFashionable(i) && getFashionSockets(i).length > 1,
+          (i) => i.rarity === 'Legendary' && looksFashionable(i) && getFashionSockets(i).length > 1,
         ) ??
         // Fall back to any non-exotic example
         allItems.find(

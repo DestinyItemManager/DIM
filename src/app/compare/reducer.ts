@@ -162,7 +162,7 @@ function initialCompareQuery(item: DimItem) {
     return compareNameQuery(item);
   } else {
     // For D2 armor, we match by rarity, intrinsic and interesting mod sockets
-    const factors = [`is:${item.tier.toLowerCase()}`];
+    const factors = [`is:${item.rarity.toLowerCase()}`];
     const intrinsicSocket = item.sockets?.allSockets.find(
       (socket) =>
         socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&

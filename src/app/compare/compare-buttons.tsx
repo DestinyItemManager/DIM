@@ -76,7 +76,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // above but also has to be legendary
     exampleItem.destinyVersion === 2 &&
-      exampleItem.tier === 'Legendary' && {
+      exampleItem.rarity === 'Legendary' && {
         buttonLabel: [
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -166,7 +166,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
 
     // above but also has to be legendary
     exampleItem.destinyVersion === 2 &&
-      exampleItem.tier === 'Legendary' && {
+      exampleItem.rarity === 'Legendary' && {
         buttonLabel: [
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,

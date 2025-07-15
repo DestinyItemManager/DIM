@@ -431,7 +431,7 @@ export function getColumns(
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
       csv: 'Tier',
-      value: (i) => i.tier,
+      value: (i) => i.rarity,
       filter: (value) => `is:${value}`,
     }),
     isSpreadsheet &&
