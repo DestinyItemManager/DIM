@@ -96,7 +96,10 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const menuItems = compact([
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    eventCard && { id: 'event', title: eventCard.displayProperties.name },
+    eventCard && {
+      id: 'event',
+      title: eventCard.displayProperties.name || t('Progress.SeasonalHub'),
+    },
     { id: 'milestones', title: t('Progress.Milestones') },
     paleHeartPathfinderNode && {
       id: 'paleHeartPathfinder',
@@ -153,7 +156,10 @@ export default function Progress({ account }: { account: DestinyAccount }) {
 
           {eventCard && (
             <section id="event">
-              <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
+              <CollapsibleTitle
+                title={eventCard.displayProperties.name || t('Progress.SeasonalHub')}
+                sectionId="event"
+              >
                 <div className="progress-row">
                   <Event card={eventCard} store={selectedStore} buckets={buckets} />
                 </div>
