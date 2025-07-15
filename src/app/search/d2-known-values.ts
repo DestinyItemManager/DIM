@@ -1,4 +1,5 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
+import { ArmorStatHashes } from 'app/loadout-builder/types';
 import { HashLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 
@@ -102,7 +103,7 @@ export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.P
 export const D2ArmorStatHashByName = {
   weapons: StatHashes.Weapons,
   health: StatHashes.Health,
-  class: StatHashes.ClassStat,
+  class: StatHashes.Class,
   grenade: StatHashes.Grenade,
   super: StatHashes.Super,
   melee: StatHashes.Melee,
@@ -111,14 +112,21 @@ export const D2ArmorStatHashByName = {
   // names.
   mobility: StatHashes.Weapons,
   resilience: StatHashes.Health,
-  recovery: StatHashes.ClassStat,
+  recovery: StatHashes.Class,
   discipline: StatHashes.Grenade,
   intellect: StatHashes.Super,
   strength: StatHashes.Melee,
 } as const;
 
-/** Stats that all (D2) armor should have. */
-export const armorStats = Object.values(D2ArmorStatHashByName);
+/** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
+export const armorStats: ArmorStatHashes[] = [
+  StatHashes.Health,
+  StatHashes.Melee,
+  StatHashes.Grenade,
+  StatHashes.Super,
+  StatHashes.Class,
+  StatHashes.Weapons,
+];
 
 // a set of base stat weights, all worth the same, "switched on"
 export const evenStatWeights = /* @__PURE__ */ armorStats.reduce<CustomStatWeights>(

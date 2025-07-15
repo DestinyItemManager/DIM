@@ -101,7 +101,7 @@ export type ModStatChanges = {
 export type ArmorStatHashes =
   | StatHashes.Weapons
   | StatHashes.Health
-  | StatHashes.ClassStat
+  | StatHashes.Class
   | StatHashes.Grenade
   | StatHashes.Super
   | StatHashes.Melee;

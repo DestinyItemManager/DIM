@@ -27,7 +27,7 @@ import {
   DestinyClass,
   DestinyProfileResponse,
 } from 'node_modules/bungie-api-ts/destiny2/interfaces';
-import { recoveryModHash } from 'testing/test-item-utils';
+import { classStatModHash } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestProfile, getTestStores } from 'testing/test-utils';
 import { analyzeLoadout } from './analysis';
 import { LoadoutAnalysisContext, LoadoutFinding } from './types';
@@ -195,11 +195,11 @@ describe('basic loadout analysis finding tests', () => {
           voidScavengerModHash,
           voidScavengerModHash,
           voidScavengerModHash,
-          recoveryModHash,
-          recoveryModHash,
-          recoveryModHash,
-          recoveryModHash,
-          recoveryModHash,
+          classStatModHash,
+          classStatModHash,
+          classStatModHash,
+          classStatModHash,
+          classStatModHash,
         ],
         assumeArmorMasterwork: AssumeArmorMasterwork.All,
       },
@@ -263,7 +263,7 @@ describe('basic loadout analysis finding tests', () => {
             (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 2) &&
             i.rarity === 'Legendary' &&
             !i.masterwork &&
-            i.stats?.every((stat) => stat.statHash !== StatHashes.ClassStat || stat.base <= 20),
+            i.stats?.every((stat) => stat.statHash !== StatHashes.Class || stat.base <= 20),
         )!,
     );
 
@@ -281,11 +281,11 @@ describe('basic loadout analysis finding tests', () => {
         sumBy(
           nonMasterworkedArmor,
           (item) => item.stats?.find((s) => s.statHash === statHash)?.base ?? 0,
-        ) + (statHash === StatHashes.ClassStat ? 10 : 0),
+        ) + (statHash === StatHashes.Class ? 10 : 0),
     }));
     // The loadout as is hits stats and needs no upgrades to do that
     loadout = setLoadoutParameters({
-      mods: [recoveryModHash],
+      mods: [classStatModHash],
       assumeArmorMasterwork: AssumeArmorMasterwork.None,
       statConstraints: baseArmorStatConstraints,
     })(loadout);
@@ -296,7 +296,7 @@ describe('basic loadout analysis finding tests', () => {
     // Higher tiers, but we're not allowed to upgrade armor
     const newConstraints = produce(baseArmorStatConstraints, (draft) => {
       for (const c of draft) {
-        if (c.statHash !== StatHashes.ClassStat) {
+        if (c.statHash !== StatHashes.Class) {
           c.minStat = Math.min(100, c.minStat! + 10);
         } else {
           // No constraint for recovery
@@ -316,7 +316,7 @@ describe('basic loadout analysis finding tests', () => {
     expect(mockProcess).toHaveBeenCalled();
     const args = mockProcess.mock.calls[0][0].desiredStatRanges;
     for (const c of args) {
-      if (c.statHash === StatHashes.ClassStat) {
+      if (c.statHash === StatHashes.Class) {
         // The loadout has no constraint for recovery, so it gets the existing loadout stats as the minimum
         expect(c.minStat).toBe(
           baseArmorStatConstraints.find((base) => base.statHash === c.statHash)!.minStat!,

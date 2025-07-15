@@ -1,12 +1,12 @@
 import { DimItem } from 'app/inventory/item-types';
 import { BucketHashes } from 'data/d2/generated-enums';
 
-/** a general mod, 4 energy */
-export const recoveryModHash = 4204488676; // InventoryItem "Recovery Mod"
+/** a general mod, 3 energy */
+export const classStatModHash = 4204488676; // InventoryItem "Class Mod"
 /** raid mod, dsc mod */
 export const enhancedOperatorAugmentModHash = 817361141; // InventoryItem "Enhanced Operator Augment"
 /** class item mod, 3 energy */
-export const distributionModHash = 4039026690; // InventoryItem "Distribution"
+export const reaperModHash = 40751621; // InventoryItem "Reaper"
 /** legs mod, 4 energy */
 export const stacksOnStacksModHash = 3994043492; // InventoryItem "Stacks on Stacks"
 /** legs mod, 3 energy */

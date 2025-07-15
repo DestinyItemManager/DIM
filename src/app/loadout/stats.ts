@@ -27,7 +27,7 @@ const fontModHashToStatHash = once(() => {
   const baseFontModHashToStatHash: HashLookup<ArmorStatHashes> = {
     4046357305: StatHashes.Weapons, // InventoryItem "Weapons Font"
     686455429: StatHashes.Health, // InventoryItem "Health Font"
-    1193713026: StatHashes.ClassStat, // InventoryItem "Class Font"
+    1193713026: StatHashes.Class, // InventoryItem "Class Font"
     1781551382: StatHashes.Grenade, // InventoryItem "Grenade Font"
     1130820873: StatHashes.Super, // InventoryItem "Super Font"
     633101315: StatHashes.Melee, // InventoryItem "Melee Font"
@@ -99,7 +99,7 @@ export function getTotalModStatChanges(
   const totals: ModStatChanges = {
     [StatHashes.Weapons]: { value: 0, breakdown: [] },
     [StatHashes.Health]: { value: 0, breakdown: [] },
-    [StatHashes.ClassStat]: { value: 0, breakdown: [] },
+    [StatHashes.Class]: { value: 0, breakdown: [] },
     [StatHashes.Grenade]: { value: 0, breakdown: [] },
     [StatHashes.Super]: { value: 0, breakdown: [] },
     [StatHashes.Melee]: { value: 0, breakdown: [] },

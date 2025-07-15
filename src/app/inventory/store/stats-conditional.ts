@@ -67,7 +67,7 @@ function getPlugInvestmentStatActivationRule(
   //       ? DestinyClass.Hunter
   //       : stat.statTypeHash === StatHashes.Health
   //         ? DestinyClass.Titan
-  //         : stat.statTypeHash === StatHashes.ClassStat
+  //         : stat.statTypeHash === StatHashes.Class
   //           ? DestinyClass.Warlock
   //           : undefined;
   //   if (classType === undefined) {

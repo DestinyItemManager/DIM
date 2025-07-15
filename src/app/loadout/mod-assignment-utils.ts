@@ -525,7 +525,14 @@ function getArmorSocketsAndMods(
     // If a socket is not plugged (even with an empty socket) we consider it disabled
     // This needs to be checked as the 30th anniversary armour has the Artifice socket
     // but the API considers it to be disabled.
-    .filter((socket) => socket.plugged)
+    .filter(
+      (socket) =>
+        socket.plugged &&
+        // TODO: Edge of Fate: This is a hacky fix for the masterwork socket
+        // that has appeared. We should maybe exclude it from the socket list
+        // entirely since it seems redundant with the energy track?
+        socket.socketDefinition.socketTypeHash !== 1843767421,
+    )
     // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
     // of the plugItems in the plugset so we use that first if possible. This is optional and
     // simply prefers plugging artifact mods into artifice sockets if available.

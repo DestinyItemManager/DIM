@@ -213,7 +213,7 @@ function getStatsBreakdown(
   const totals: ModStatChanges = {
     [StatHashes.Weapons]: { value: 0, breakdown: [] },
     [StatHashes.Health]: { value: 0, breakdown: [] },
-    [StatHashes.ClassStat]: { value: 0, breakdown: [] },
+    [StatHashes.Class]: { value: 0, breakdown: [] },
     [StatHashes.Grenade]: { value: 0, breakdown: [] },
     [StatHashes.Super]: { value: 0, breakdown: [] },
     [StatHashes.Melee]: { value: 0, breakdown: [] },

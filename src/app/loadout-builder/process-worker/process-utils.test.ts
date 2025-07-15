@@ -5,13 +5,13 @@ import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
 import { StatHashes } from 'data/d2/generated-enums';
 import {
+  classStatModHash,
   enhancedOperatorAugmentModHash,
   isArmor2Arms,
   isArmor2Chest,
   isArmor2ClassItem,
   isArmor2Helmet,
   isArmor2Legs,
-  recoveryModHash,
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
@@ -160,7 +160,7 @@ describe('process-utils mod assignment', () => {
     }
 
     generalMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
+      defs.InventoryItem.get(classStatModHash) as PluggableInventoryItemDefinition,
     );
     activityMod = mapArmor2ModToProcessMod(
       defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition,
@@ -388,7 +388,7 @@ describe('process-utils auto mods', () => {
     legs = makeItem(true, 4, 3, ['deepstonecrypt']);
     classItem = makeItem(true, 5, 4, []);
     generalMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
+      defs.InventoryItem.get(classStatModHash) as PluggableInventoryItemDefinition,
     );
     generalMod.energyCost = 4;
     generalModCopy = { ...generalMod, energyCost: 3 };
@@ -534,7 +534,7 @@ describe('process-utils optimal mods', () => {
       [
         { statHash: StatHashes.Grenade, minStat: 0, maxStat: 82 },
         { statHash: StatHashes.Melee, minStat: 0, maxStat: 82 },
-        { statHash: StatHashes.ClassStat, minStat: 0, maxStat: 82 },
+        { statHash: StatHashes.Class, minStat: 0, maxStat: 82 },
         { statHash: StatHashes.Super, minStat: 0, maxStat: 200 },
         { statHash: StatHashes.Weapons, minStat: 0, maxStat: 200 },
         { statHash: StatHashes.Health, minStat: 0, maxStat: 200 },
@@ -627,7 +627,7 @@ test('process-utils activity mods', async () => {
 
   const statOrder: ArmorStatHashes[] = [
     StatHashes.Health, // expensive
-    StatHashes.ClassStat, // expensive
+    StatHashes.Class, // expensive
     StatHashes.Melee, // cheap
     StatHashes.Grenade, // cheap
     StatHashes.Super, // expensive
@@ -815,7 +815,7 @@ describe('process-utils general mod assignment', () => {
   beforeAll(async () => {
     const defs = await getTestDefinitions();
     generalMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
+      defs.InventoryItem.get(classStatModHash) as PluggableInventoryItemDefinition,
     );
 
     items = Array(5)

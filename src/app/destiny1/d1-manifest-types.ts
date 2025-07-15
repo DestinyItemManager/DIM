@@ -28,7 +28,7 @@ export const enum D1StatHashes {
   Intellect = StatHashes.Super,
   Discipline = StatHashes.Grenade,
   Strength = StatHashes.Melee,
-  Recovery = StatHashes.ClassStat,
+  Recovery = StatHashes.Class,
   Resilience = StatHashes.Health,
   Mobility = StatHashes.Weapons,
 }

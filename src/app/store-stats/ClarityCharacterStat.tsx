@@ -15,7 +15,7 @@ import styles from './ClarityCharacterStat.m.scss';
 const statHashToClarityName: { [key: number]: keyof ClarityCharacterStats } = {
   [StatHashes.Weapons]: 'Mobility',
   [StatHashes.Health]: 'Resilience',
-  [StatHashes.ClassStat]: 'Recovery',
+  [StatHashes.Class]: 'Recovery',
   [StatHashes.Super]: 'Intellect',
   [StatHashes.Grenade]: 'Discipline',
   [StatHashes.Melee]: 'Strength',

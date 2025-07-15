@@ -84,10 +84,10 @@ export const csvStatNamesForDestinyVersion = (destinyVersion: DestinyVersion) =>
     [StatHashes.AirborneEffectiveness, 'Airborne Effectiveness'],
     [StatHashes.Weapons, destinyVersion === 2 ? 'Weapons' : 'Mobility'],
     [StatHashes.Health, destinyVersion === 2 ? 'Health' : 'Resilience'],
-    [StatHashes.ClassStat, destinyVersion === 2 ? 'Class' : 'Recovery'],
+    [StatHashes.Class, destinyVersion === 2 ? 'Class' : 'Recovery'],
     [StatHashes.Grenade, destinyVersion === 2 ? 'Grenade' : 'Disc'],
     [StatHashes.Super, destinyVersion === 2 ? 'Super' : 'Int'],
-    [StatHashes.Melee, destinyVersion === 2 ? 'Melee' : 'Str'],
+    [StatHashes.MeleeStat, destinyVersion === 2 ? 'Melee' : 'Str'],
     [TOTAL_STAT_HASH, 'Total'],
   ]);
 
