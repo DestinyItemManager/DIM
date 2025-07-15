@@ -72,11 +72,7 @@ function Record({
 
   const recordShouldGlow = (recordDef.forTitleGilding && acquired) || trackedInDim;
 
-  const name = obscured
-    ? recordDef.stateInfo.obscuredName
-    : recordHash === 3787307395 // Rename Immovable Refit -> Vexcalibur Catalyst
-      ? t('Records.VexcaliburCatalyst')
-      : recordDef.displayProperties.name;
+  const name = obscured ? recordDef.stateInfo.obscuredName : recordDef.displayProperties.name;
 
   const description = obscured
     ? recordDef.stateInfo.obscuredDescription
