@@ -64,6 +64,7 @@ const itemStatAllowList = [
   StatHashes.AimAssistance,
   StatHashes.AirborneEffectiveness,
   StatHashes.Zoom,
+  StatHashes.AmmoGeneration,
   StatHashes.RecoilDirection,
   StatHashes.Magazine,
   StatHashes.AmmoCapacity,

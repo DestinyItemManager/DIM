@@ -82,6 +82,7 @@ export const csvStatNamesForDestinyVersion = (destinyVersion: DestinyVersion) =>
     [StatHashes.SwingSpeed, 'Swing Speed'],
     [StatHashes.ShieldDuration, 'Shield Duration'],
     [StatHashes.AirborneEffectiveness, 'Airborne Effectiveness'],
+    [StatHashes.AmmoGeneration, 'Ammo Generation'],
     [StatHashes.Weapons, destinyVersion === 2 ? 'Weapons' : 'Mobility'],
     [StatHashes.Health, destinyVersion === 2 ? 'Health' : 'Resilience'],
     [StatHashes.Class, destinyVersion === 2 ? 'Class' : 'Recovery'],

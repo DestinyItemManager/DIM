@@ -1108,7 +1108,8 @@
       "Aim": "Aim",
       "Recoil": "Recoil",
       "Power": "Power",
-      "Airborne": "Airborne"
+      "Airborne": "Airborne",
+      "AmmoGeneration": "Ammo Gen"
     }
   },
   "Progress": {

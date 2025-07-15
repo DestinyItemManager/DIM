@@ -1090,6 +1090,7 @@
     "Stats": {
       "Aim": "Aim",
       "Airborne": "Airborne",
+      "AmmoGeneration": "Ammo Gen",
       "Power": "Power",
       "RPM": "RPM",
       "Recoil": "Recoil",
