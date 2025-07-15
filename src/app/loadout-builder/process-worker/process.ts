@@ -263,7 +263,6 @@ export function process({
                 }
                 totalStats += value;
                 if (filter.minStat > 0) {
-                  const value = stats[index];
                   const neededValue = filter.minStat - value;
                   if (neededValue > 0) {
                     totalNeededStats += neededValue;
