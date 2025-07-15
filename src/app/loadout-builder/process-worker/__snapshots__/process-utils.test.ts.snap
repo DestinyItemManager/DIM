@@ -1,26 +1,25 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`process-utils auto mods the problem is solvable 1`] = `
 [
   {
-    "exactStatPoints": 5,
-    "generalModsCosts": [
-      1,
-    ],
-    "modEnergyCost": 1,
+    "exactStatPoints": 6,
+    "generalModsCosts": [],
+    "modEnergyCost": 0,
     "modHashes": [
-      1703647492,
+      2322202118,
+      2322202118,
     ],
-    "numArtificeMods": 0,
-    "numGeneralMods": 1,
+    "numArtificeMods": 2,
+    "numGeneralMods": 0,
     "targetStatIndex": 0,
   },
   {
     "exactStatPoints": 10,
     "generalModsCosts": [
-      4,
+      3,
     ],
-    "modEnergyCost": 4,
+    "modEnergyCost": 3,
     "modHashes": [
       4204488676,
     ],
@@ -29,25 +28,25 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     "targetStatIndex": 2,
   },
   {
-    "exactStatPoints": 12,
-    "generalModsCosts": [],
-    "modEnergyCost": 0,
+    "exactStatPoints": 13,
+    "generalModsCosts": [
+      3,
+    ],
+    "modEnergyCost": 3,
     "modHashes": [
-      617569843,
-      617569843,
-      617569843,
+      1435557120,
       617569843,
     ],
-    "numArtificeMods": 4,
-    "numGeneralMods": 0,
+    "numArtificeMods": 1,
+    "numGeneralMods": 1,
     "targetStatIndex": 3,
   },
   {
     "exactStatPoints": 5,
     "generalModsCosts": [
-      2,
+      1,
     ],
-    "modEnergyCost": 2,
+    "modEnergyCost": 1,
     "modHashes": [
       350061697,
     ],
