@@ -24,7 +24,7 @@ import {
 } from 'app/shell/icons';
 import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
-import { Dispatch, useEffect, useRef, useState } from 'react';
+import { Dispatch, useEffect, useId, useRef, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMaxStat, ResolvedStatConstraint, StatRanges } from '../types';
 import styles from './TierlessStatConstraintEditor.m.scss';
@@ -265,6 +265,7 @@ function StatEditBar({
   setMax: (value: number) => void;
   children: React.ReactNode;
 }) {
+  const id = useId();
   const [minText, setMinText] = useState(min.toString());
   const [maxText, setMaxText] = useState(max.toString());
   useEffect(() => {
@@ -274,9 +275,26 @@ function StatEditBar({
     setMaxText(max.toString());
   }, [max]);
 
+  const setMinMaxFromText = (text: string, setter: (s: number) => void) => {
+    const value = parseInt(text, 10);
+    if (isNaN(value) || value < 0 || value > MAX_STAT) {
+      return;
+    }
+    setter(value);
+  };
+  const setMinFromText = setMinMaxFromText.bind(null, minText, setMin);
+  const setMaxFromText = setMinMaxFromText.bind(null, maxText, setMax);
+
+  const handleEnter = (setter: () => void) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setter();
+    }
+  };
+
   return (
     <div className={styles.statBar}>
       <input
+        id={`${id}-min`}
         type="number"
         min={0}
         max={MAX_STAT}
@@ -284,15 +302,13 @@ function StatEditBar({
         aria-label={t('LoadoutBuilder.StatMin')}
         onChange={(e) => {
           setMinText(e.target.value);
-          const value = parseInt(e.target.value, 10);
-          if (isNaN(value) || value < 0 || value > MAX_STAT) {
-            return;
-          }
-          setMin(value);
         }}
+        onBlur={setMinFromText}
+        onKeyDown={handleEnter(setMinFromText)}
       />
       {children}
       <input
+        id={`${id}-max`}
         type="number"
         min={0}
         max={MAX_STAT}
@@ -300,12 +316,9 @@ function StatEditBar({
         aria-label={t('LoadoutBuilder.StatMax')}
         onChange={(e) => {
           setMaxText(e.target.value);
-          const value = parseInt(e.target.value, 10);
-          if (isNaN(value) || value < 0 || value > MAX_STAT) {
-            return;
-          }
-          setMax(value);
         }}
+        onBlur={setMaxFromText}
+        onKeyDown={handleEnter(setMaxFromText)}
       />
     </div>
   );
