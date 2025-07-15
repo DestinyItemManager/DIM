@@ -1,7 +1,7 @@
 import { MAX_STAT } from 'app/loadout/known-values';
 import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { infoLog } from '../../utils/log';
+import { infoLog, warnLog } from '../../utils/log';
 import {
   ArmorBucketHashes,
   ArmorStatHashes,
@@ -450,12 +450,19 @@ export function process({
     // that our optimistic prediction that we used when adding to the set
     // tracker could end up smaller than what we predicted? That also makes me
     // think this could be out of order...
-    const { mods, bonusStats } = pickOptimalStatMods(
-      precalculatedInfo,
-      armor,
-      stats,
-      desiredStatRanges,
-    )!;
+    const modPicks = pickOptimalStatMods(precalculatedInfo, armor, stats, desiredStatRanges);
+    if (!modPicks) {
+      // This can only happen if we added a set that can't actually reach the desired stats. This should never happen.
+      // TODO: Edge of Fate: This is not supposed to be possible, and it's a bug.
+      warnLog(
+        'loadout optimizer',
+        "Can't pick optimal stat mods for set",
+        stats,
+        precalculatedInfo.numAvailableGeneralMods,
+      );
+      return undefined;
+    }
+    const { mods, bonusStats } = modPicks;
 
     const armorOnlyStats: Partial<ArmorStats> = {};
     const fullStats: Partial<ArmorStats> = {};
