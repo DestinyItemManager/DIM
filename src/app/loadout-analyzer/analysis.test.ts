@@ -263,7 +263,7 @@ describe('basic loadout analysis finding tests', () => {
             (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 2) &&
             i.rarity === 'Legendary' &&
             !i.masterwork &&
-            i.stats?.every((stat) => stat.statHash !== StatHashes.Recovery || stat.base <= 20),
+            i.stats?.every((stat) => stat.statHash !== StatHashes.ClassStat || stat.base <= 20),
         )!,
     );
 
@@ -281,7 +281,7 @@ describe('basic loadout analysis finding tests', () => {
         sumBy(
           nonMasterworkedArmor,
           (item) => item.stats?.find((s) => s.statHash === statHash)?.base ?? 0,
-        ) + (statHash === StatHashes.Recovery ? 10 : 0),
+        ) + (statHash === StatHashes.ClassStat ? 10 : 0),
     }));
     // The loadout as is hits stats and needs no upgrades to do that
     loadout = setLoadoutParameters({
@@ -296,7 +296,7 @@ describe('basic loadout analysis finding tests', () => {
     // Higher tiers, but we're not allowed to upgrade armor
     const newConstraints = produce(baseArmorStatConstraints, (draft) => {
       for (const c of draft) {
-        if (c.statHash !== StatHashes.Recovery) {
+        if (c.statHash !== StatHashes.ClassStat) {
           c.minStat = Math.min(100, c.minStat! + 10);
         } else {
           // No constraint for recovery
@@ -304,7 +304,7 @@ describe('basic loadout analysis finding tests', () => {
         }
       }
       // Ignore mobility
-      const mobilityIndex = draft.findIndex((stat) => stat.statHash === StatHashes.Mobility);
+      const mobilityIndex = draft.findIndex((stat) => stat.statHash === StatHashes.Weapons);
       draft.splice(mobilityIndex, 1);
     });
     // Also assert that the background auto-optimizer gets called with the correct stat constraints
@@ -316,12 +316,12 @@ describe('basic loadout analysis finding tests', () => {
     expect(mockProcess).toHaveBeenCalled();
     const args = mockProcess.mock.calls[0][0].desiredStatRanges;
     for (const c of args) {
-      if (c.statHash === StatHashes.Recovery) {
+      if (c.statHash === StatHashes.ClassStat) {
         // The loadout has no constraint for recovery, so it gets the existing loadout stats as the minimum
         expect(c.minStat).toBe(
           baseArmorStatConstraints.find((base) => base.statHash === c.statHash)!.minStat!,
         );
-      } else if (c.statHash !== StatHashes.Mobility) {
+      } else if (c.statHash !== StatHashes.Weapons) {
         // The loadout does not satisfy stat constraints, but LO gets called with the constraints as minimum
         expect(c.minStat).toBe(newConstraints.find((n) => n.statHash === c.statHash)!.minStat!);
       }

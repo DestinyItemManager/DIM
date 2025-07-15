@@ -532,12 +532,12 @@ describe('process-utils optimal mods', () => {
       [82, 80, 82, 59, 40, 50],
       // Pick specific stat constraints for this test
       [
-        { statHash: StatHashes.Discipline, minStat: 0, maxStat: 82 },
-        { statHash: StatHashes.Strength, minStat: 0, maxStat: 82 },
-        { statHash: StatHashes.Recovery, minStat: 0, maxStat: 82 },
-        { statHash: StatHashes.Intellect, minStat: 0, maxStat: 200 },
-        { statHash: StatHashes.Mobility, minStat: 0, maxStat: 200 },
-        { statHash: StatHashes.Resilience, minStat: 0, maxStat: 200 },
+        { statHash: StatHashes.Grenade, minStat: 0, maxStat: 82 },
+        { statHash: StatHashes.Melee, minStat: 0, maxStat: 82 },
+        { statHash: StatHashes.ClassStat, minStat: 0, maxStat: 82 },
+        { statHash: StatHashes.Super, minStat: 0, maxStat: 200 },
+        { statHash: StatHashes.Weapons, minStat: 0, maxStat: 200 },
+        { statHash: StatHashes.Health, minStat: 0, maxStat: 200 },
       ],
     ],
   ];
@@ -626,12 +626,12 @@ test('process-utils activity mods', async () => {
   });
 
   const statOrder: ArmorStatHashes[] = [
-    StatHashes.Resilience, // expensive
-    StatHashes.Recovery, // expensive
-    StatHashes.Strength, // cheap
-    StatHashes.Discipline, // cheap
-    StatHashes.Intellect, // expensive
-    StatHashes.Mobility, // cheap
+    StatHashes.Health, // expensive
+    StatHashes.ClassStat, // expensive
+    StatHashes.Melee, // cheap
+    StatHashes.Grenade, // cheap
+    StatHashes.Super, // expensive
+    StatHashes.Weapons, // cheap
   ];
 
   // The setup here is the following: All items have one or two energy

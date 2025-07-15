@@ -22,7 +22,16 @@ import {
   TierType,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+
+export const enum D1StatHashes {
+  Intellect = StatHashes.Super,
+  Discipline = StatHashes.Grenade,
+  Strength = StatHashes.Melee,
+  Recovery = StatHashes.ClassStat,
+  Resilience = StatHashes.Health,
+  Mobility = StatHashes.Weapons,
+}
 
 export interface AllD1DestinyManifestComponents {
   DestinyRecordDefinition: { [hash: number]: D1RecordDefinition };

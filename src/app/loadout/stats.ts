@@ -25,12 +25,12 @@ import { edgeOfFateReleased } from './known-values';
  */
 const fontModHashToStatHash = once(() => {
   const baseFontModHashToStatHash: HashLookup<ArmorStatHashes> = {
-    4046357305: StatHashes.Mobility, // InventoryItem "Font of Agility"
-    686455429: StatHashes.Resilience, // InventoryItem "Font of Endurance"
-    1193713026: StatHashes.Recovery, // InventoryItem "Font of Restoration"
-    1781551382: StatHashes.Discipline, // InventoryItem "Font of Focus"
-    1130820873: StatHashes.Intellect, // InventoryItem "Font of Wisdom"
-    633101315: StatHashes.Strength, // InventoryItem "Font of Vigor"
+    4046357305: StatHashes.Weapons, // InventoryItem "Weapons Font"
+    686455429: StatHashes.Health, // InventoryItem "Health Font"
+    1193713026: StatHashes.ClassStat, // InventoryItem "Class Font"
+    1781551382: StatHashes.Grenade, // InventoryItem "Grenade Font"
+    1130820873: StatHashes.Super, // InventoryItem "Super Font"
+    633101315: StatHashes.Melee, // InventoryItem "Melee Font"
   };
 
   return {
@@ -97,12 +97,12 @@ export function getTotalModStatChanges(
     : emptyArray<PluggableInventoryItemDefinition>();
 
   const totals: ModStatChanges = {
-    [StatHashes.Mobility]: { value: 0, breakdown: [] },
-    [StatHashes.Resilience]: { value: 0, breakdown: [] },
-    [StatHashes.Recovery]: { value: 0, breakdown: [] },
-    [StatHashes.Discipline]: { value: 0, breakdown: [] },
-    [StatHashes.Intellect]: { value: 0, breakdown: [] },
-    [StatHashes.Strength]: { value: 0, breakdown: [] },
+    [StatHashes.Weapons]: { value: 0, breakdown: [] },
+    [StatHashes.Health]: { value: 0, breakdown: [] },
+    [StatHashes.ClassStat]: { value: 0, breakdown: [] },
+    [StatHashes.Grenade]: { value: 0, breakdown: [] },
+    [StatHashes.Super]: { value: 0, breakdown: [] },
+    [StatHashes.Melee]: { value: 0, breakdown: [] },
   };
 
   const processPlugs = (

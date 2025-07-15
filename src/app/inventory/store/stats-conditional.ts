@@ -9,7 +9,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import {
   DimItem,
@@ -56,25 +56,26 @@ function getPlugInvestmentStatActivationRule(
     return { rule: 'never' };
   }
 
-  if (
-    defHash === ModsWithConditionalStats.EchoOfPersistence ||
-    defHash === ModsWithConditionalStats.SparkOfFocus
-  ) {
-    // "-10 to the stat that governs your class ability recharge"
-    const classType =
-      stat.statTypeHash === StatHashes.Mobility
-        ? DestinyClass.Hunter
-        : stat.statTypeHash === StatHashes.Resilience
-          ? DestinyClass.Titan
-          : stat.statTypeHash === StatHashes.Recovery
-            ? DestinyClass.Warlock
-            : undefined;
-    if (classType === undefined) {
-      warnLog('plug stats', 'unknown stat effect in', defHash, itemDef.displayProperties?.name);
-      return undefined;
-    }
-    return { rule: 'classType', classType };
-  }
+  // TODO: Edge of Fate - I think these perks are probably not conditional anymore
+  // if (
+  //   defHash === ModsWithConditionalStats.EchoOfPersistence ||
+  //   defHash === ModsWithConditionalStats.SparkOfFocus
+  // ) {
+  //   // "-10 to the stat that governs your class ability recharge"
+  //   const classType =
+  //     stat.statTypeHash === StatHashes.Weapons
+  //       ? DestinyClass.Hunter
+  //       : stat.statTypeHash === StatHashes.Health
+  //         ? DestinyClass.Titan
+  //         : stat.statTypeHash === StatHashes.ClassStat
+  //           ? DestinyClass.Warlock
+  //           : undefined;
+  //   if (classType === undefined) {
+  //     warnLog('plug stats', 'unknown stat effect in', defHash, itemDef.displayProperties?.name);
+  //     return undefined;
+  //   }
+  //   return { rule: 'classType', classType };
+  // }
 
   if (masterworksWithCondStats.includes(defHash)) {
     return { rule: 'adeptWeapon' };
