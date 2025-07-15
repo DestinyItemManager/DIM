@@ -1,5 +1,7 @@
 ## Next
 
+## 8.81.0 <span class="changelog-date">(2025-07-15)</span>
+
 * Improved the Loadout Optimizer algorithm to correctly maximize stats now that it's tierless. Also improved its performance.
 * Fix some interactions with the Loadout Optimizer stat constraint editor.
 * Add `is:featured` search for the new Featured Items.
