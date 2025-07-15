@@ -175,7 +175,10 @@ export function socketContainsIntrinsicPlug(
   socket: DimSocket,
 ): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
-  return socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics);
+  return (
+    socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics) ||
+    socketContainsPlugWithCategory(socket, PlugCategoryHashes.ArmorStats)
+  );
 }
 
 /**
