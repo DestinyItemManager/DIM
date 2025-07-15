@@ -35,9 +35,6 @@ import { getCharacterProgressions } from './selectors';
 // );
 
 const rankProgressionToStreakProgression: LookupTable<ProgressionHashes, number> = {
-  [ProgressionHashes.CrucibleRank]: 2203850209,
-  [ProgressionHashes.GambitRank]: 2939151659,
-  [ProgressionHashes.VanguardRank]: 600547406,
   [ProgressionHashes.StrangeFavor]: 1999336308,
 };
 

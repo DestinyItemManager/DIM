@@ -1,3 +1,4 @@
+import { D1StatHashes } from 'app/destiny1/d1-manifest-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
@@ -5,7 +6,7 @@ import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import styles from './D1CharacterStats.m.scss';
 
 export function D1StoreCharacterStats({ store }: { store: DimStore }) {
@@ -35,11 +36,11 @@ export function D1CharacterStats({
     const cooldown = subclassHash ? getAbilityCooldown(subclassHash, stat.hash, tier) : undefined;
     if (cooldown) {
       switch (stat.hash) {
-        case StatHashes.Intellect:
+        case D1StatHashes.Intellect:
           return next + t('Cooldown.Super', { cooldown });
-        case StatHashes.Discipline:
+        case D1StatHashes.Discipline:
           return next + t('Cooldown.Grenade', { cooldown });
-        case StatHashes.Strength:
+        case D1StatHashes.Strength:
           return next + t('Cooldown.Melee', { cooldown });
       }
     }
@@ -85,9 +86,9 @@ const cooldownsGrenade = ['1:00', '0:55', '0:49', '0:42', '0:34', '0:25'];
 const cooldownsMelee = ['1:10', '1:04', '0:57', '0:49', '0:40', '0:29'];
 
 // following code is from https://github.com/DestinyTrialsReport
-function getAbilityCooldown(subclass: number, statHash: StatHashes, tier: number) {
+function getAbilityCooldown(subclass: number, statHash: D1StatHashes, tier: number) {
   switch (statHash) {
-    case StatHashes.Intellect:
+    case D1StatHashes.Intellect:
       switch (subclass) {
         case 2007186000: // Defender
         case 4143670656: // Nightstalker
@@ -97,9 +98,9 @@ function getAbilityCooldown(subclass: number, statHash: StatHashes, tier: number
         default:
           return cooldownsSuperB[tier];
       }
-    case StatHashes.Discipline:
+    case D1StatHashes.Discipline:
       return cooldownsGrenade[tier];
-    case StatHashes.Strength:
+    case D1StatHashes.Strength:
       switch (subclass) {
         case 4143670656: // Nightstalker
         case 1716862031: // Gunslinger

@@ -13,12 +13,12 @@ import { useSelector } from 'react-redux';
 import styles from './ClarityCharacterStat.m.scss';
 
 const statHashToClarityName: { [key: number]: keyof ClarityCharacterStats } = {
-  [StatHashes.Mobility]: 'Mobility',
-  [StatHashes.Resilience]: 'Resilience',
-  [StatHashes.Recovery]: 'Recovery',
-  [StatHashes.Intellect]: 'Intellect',
-  [StatHashes.Discipline]: 'Discipline',
-  [StatHashes.Strength]: 'Strength',
+  [StatHashes.Weapons]: 'Mobility',
+  [StatHashes.Health]: 'Resilience',
+  [StatHashes.Class]: 'Recovery',
+  [StatHashes.Super]: 'Intellect',
+  [StatHashes.Grenade]: 'Discipline',
+  [StatHashes.Melee]: 'Strength',
 };
 
 /**

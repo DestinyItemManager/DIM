@@ -235,11 +235,11 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
   "generalMods": {
     "144602215": {
       "majorMod": {
-        "cost": 4,
+        "cost": 3,
         "hash": 2724608735,
       },
       "minorMod": {
-        "cost": 2,
+        "cost": 1,
         "hash": 350061697,
       },
     },
@@ -255,11 +255,11 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
     },
     "1943323491": {
       "majorMod": {
-        "cost": 4,
+        "cost": 3,
         "hash": 4204488676,
       },
       "minorMod": {
-        "cost": 2,
+        "cost": 1,
         "hash": 1237786518,
       },
     },
@@ -275,11 +275,11 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
     },
     "392767087": {
       "majorMod": {
-        "cost": 4,
+        "cost": 3,
         "hash": 1180408010,
       },
       "minorMod": {
-        "cost": 2,
+        "cost": 1,
         "hash": 2532323436,
       },
     },
@@ -322,11 +322,11 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
   "generalMods": {
     "144602215": {
       "majorMod": {
-        "cost": 4,
+        "cost": 3,
         "hash": 2724608735,
       },
       "minorMod": {
-        "cost": 2,
+        "cost": 1,
         "hash": 350061697,
       },
     },
@@ -342,11 +342,11 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
     },
     "1943323491": {
       "majorMod": {
-        "cost": 4,
+        "cost": 3,
         "hash": 4204488676,
       },
       "minorMod": {
-        "cost": 2,
+        "cost": 1,
         "hash": 1237786518,
       },
     },
@@ -362,11 +362,11 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
     },
     "392767087": {
       "majorMod": {
-        "cost": 4,
+        "cost": 3,
         "hash": 1180408010,
       },
       "minorMod": {
-        "cost": 2,
+        "cost": 1,
         "hash": 2532323436,
       },
     },

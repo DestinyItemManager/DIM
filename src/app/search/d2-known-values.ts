@@ -1,4 +1,5 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
+import { ArmorStatHashes } from 'app/loadout-builder/types';
 import { HashLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 
@@ -100,16 +101,32 @@ export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.P
 
 /** these stats canonically exist on D2 armor */
 export const D2ArmorStatHashByName = {
-  mobility: StatHashes.Mobility,
-  resilience: StatHashes.Resilience,
-  recovery: StatHashes.Recovery,
-  discipline: StatHashes.Discipline,
-  intellect: StatHashes.Intellect,
-  strength: StatHashes.Strength,
+  weapons: StatHashes.Weapons,
+  health: StatHashes.Health,
+  class: StatHashes.Class,
+  grenade: StatHashes.Grenade,
+  super: StatHashes.Super,
+  melee: StatHashes.Melee,
+  // We keep the old names for now, both for D1 compatibility and for existing saved
+  // searches. In the future we could have a different map for D1 names and D2
+  // names.
+  mobility: StatHashes.Weapons,
+  resilience: StatHashes.Health,
+  recovery: StatHashes.Class,
+  discipline: StatHashes.Grenade,
+  intellect: StatHashes.Super,
+  strength: StatHashes.Melee,
 } as const;
 
-/** Stats that all (D2) armor should have. */
-export const armorStats = Object.values(D2ArmorStatHashByName);
+/** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
+export const armorStats: ArmorStatHashes[] = [
+  StatHashes.Health,
+  StatHashes.Melee,
+  StatHashes.Grenade,
+  StatHashes.Super,
+  StatHashes.Class,
+  StatHashes.Weapons,
+];
 
 // a set of base stat weights, all worth the same, "switched on"
 export const evenStatWeights = /* @__PURE__ */ armorStats.reduce<CustomStatWeights>(
@@ -330,9 +347,10 @@ export const breakerTypeNames = Object.entries(breakerTypes)
 
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
-  EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
   EnhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
-  SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
+  // TODO: Edge of Fate: I don't think these are conditional anymore now that there's a Class stat
+  // EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
+  // SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"

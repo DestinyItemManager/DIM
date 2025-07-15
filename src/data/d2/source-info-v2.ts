@@ -150,9 +150,12 @@ const D2Sources: {
       100617404, // Requires Titan Class
       286427063, // Source: Fallen Empire Campaign
       409652252, // Source: The Witch Queen Campaign
+      431243768, // Source: The Edge of Fate Campaign
       460742691, // Requires Guardian Rank 6: Masterwork Weapons
       569214265, // Source: Red War Campaign
+      633667627, // Requires Tier 4 or 5 Weapon
       677167936, // Source: Complete the campaign as a Warlock.
+      712662541, // Requires Season 27 Tier 5 Weapon
       736336644, // Source: "A Spark of Hope" Quest
       901482731, // Source: Lightfall Campaign
       918840100, // Source: Shadowkeep Campaign
@@ -380,32 +383,27 @@ const D2Sources: {
     ],
     itemHashes: [
       14929251, // Long Arm
-      32287609, // Boondoggle Mk. 55
       185321778, // The Eternal Return
       189194532, // No Survivors (Adept)
       233402416, // New Pacific Epitaph (Adept)
       291447487, // Cold Comfort
       492673102, // New Pacific Epitaph
-      559523765, // Wilderflight (Adept)
       749483159, // Prosecutor (Adept)
       814876684, // Wish-Ender
       1050582210, // Greasy Luck (Adept)
       1066598837, // Relentless (Adept)
       1157220231, // No Survivors (Adept)
-      1206729100, // Wilderflight
       1303313141, // Unsworn
       1460079227, // Liminal Vigil
       1685406703, // Greasy Luck
       1773934241, // Judgment
       1817605554, // Cold Comfort (Adept)
       1904170910, // A Sudden Death
-      1905934655, // Liminal Vigil (Adept)
+      1987644603, // Judgment (Adept)
       2059741649, // New Pacific Epitaph
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
-      2210806903, // Terminus Horizon (Adept)
       2477408004, // Wilderflight (Adept)
-      2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2760833884, // Cold Comfort
       2764074355, // A Sudden Death (Adept)
@@ -418,11 +416,8 @@ const D2Sources: {
       3421639790, // Liminal Vigil (Adept)
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)
-      3984556130, // Terminus Horizon
       4193602194, // No Survivors
       4228149269, // No Survivors
-      4239378215, // Long Arm (Adept)
-      4249949938, // Long Arm
       4267192886, // Terminus Horizon (Adept)
     ],
   },
@@ -432,6 +427,12 @@ const D2Sources: {
       2306801178, // Source: Episode: Echoes Activities
       2514060836, // Source: Episode: Echoes Enigma Protocol Activity
       2631398023, // Source: Radiolite Bay Deposits
+    ],
+  },
+  edgeoffate: {
+    sourceHashes: [
+      431243768, // Source: The Edge of Fate Campaign
+      4034415948, // Source: The Edge of Fate Activities
     ],
   },
   edz: {
@@ -487,7 +488,6 @@ const D2Sources: {
       2812100428, // Stay Frosty
       2814093983, // Cold Front
       2869466318, // BrayTech Werewolf
-      3240434620, // Something New
       3400256755, // Zephyr
       3558681245, // BrayTech Werewolf
       3559361670, // The Title
@@ -517,6 +517,7 @@ const D2Sources: {
       1919933822, // Source: Festival of the Lost 2020
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
+      2045032171, // Source: Arms Week Event
       2050870152, // Source: Solstice
       2187511136, // Source: Earned during the seasonal Revelry event.
       2364515524, // Source: Dawning 2022
@@ -1106,6 +1107,7 @@ const D2Sources: {
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
       557146120, // Source: Complete a Guided Game as a guide or seeker.
+      596084342, // Source: "The Desert Perpetual" Raid
       654652973, // Guide 25 Last Wish encounters
       707740602, // Guide 10 Last Wish encounters
       866530798, // Source: "Not a Scratch" Triumph
@@ -1190,6 +1192,7 @@ const D2Sources: {
       1685406703, // Greasy Luck
       1773934241, // Judgment
       1904170910, // A Sudden Death
+      1987644603, // Judgment (Adept)
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
       2477408004, // Wilderflight (Adept)
@@ -1350,25 +1353,6 @@ const D2Sources: {
     enteredDCV: 20,
   },
   spireofthewatcher: {
-    itemHashes: [
-      14929251, // Long Arm
-      32287609, // Boondoggle Mk. 55
-      559523765, // Wilderflight (Adept)
-      1206729100, // Wilderflight
-      1460079227, // Liminal Vigil
-      1905934655, // Liminal Vigil (Adept)
-      2210806903, // Terminus Horizon (Adept)
-      2477408004, // Wilderflight (Adept)
-      2575844666, // Liminal Vigil
-      2730671571, // Terminus Horizon
-      2982006965, // Wilderflight
-      3421639790, // Liminal Vigil (Adept)
-      3692140710, // Long Arm (Adept)
-      3984556130, // Terminus Horizon
-      4239378215, // Long Arm (Adept)
-      4249949938, // Long Arm
-      4267192886, // Terminus Horizon (Adept)
-    ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
@@ -1492,23 +1476,9 @@ const D2Sources: {
   },
   trials: {
     itemHashes: [
-      2307365, // The Inquisitor (Adept)
-      711889599, // Whistler's Whim (Adept)
-      825554997, // The Inquisitor (Adept)
-      1401300690, // Eye of Sol
-      1574601402, // Whistler's Whim
       1983519830, // Hardened by Trial
-      2059255495, // Eye of Sol (Adept)
       2071635914, // Light for the Lost
       2071635915, // Flawless Empyrean
-      2185327324, // The Inquisitor
-      2421180981, // Incisor (Adept)
-      2653171212, // The Inquisitor
-      2759251821, // Unwavering Duty (Adept)
-      3102421004, // Exalted Truth
-      3624844116, // Unwavering Duty
-      3920882229, // Exalted Truth (Adept)
-      4248997900, // Incisor
     ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.

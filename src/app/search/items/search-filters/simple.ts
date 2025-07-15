@@ -106,6 +106,7 @@ const simpleFilters: ItemFilterDefinition[] = [
   {
     keywords: 'featured',
     description: tl('Filter.Featured'),
+    destinyVersion: 2,
     filter: () => (item) => item.featured,
   },
 ];
