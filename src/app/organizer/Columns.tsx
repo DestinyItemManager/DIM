@@ -100,6 +100,7 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.Attack]: tl('Organizer.Stats.Power'),
   [StatHashes.Defense]: tl('Organizer.Stats.Power'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
+  [StatHashes.AmmoGeneration]: tl('Organizer.Stats.AmmoGeneration'),
 };
 
 export const perkStringSort: Comparator<string | undefined> = (a, b) => {

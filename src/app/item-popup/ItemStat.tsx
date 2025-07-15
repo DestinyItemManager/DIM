@@ -52,6 +52,7 @@ const weaponParts = new Set([
 const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
+  [StatHashes.AmmoGeneration]: tl('Organizer.Stats.AmmoGeneration'),
 };
 
 type StatSegmentType = 'base' | 'parts' | 'mod' | 'masterwork';
