@@ -131,7 +131,6 @@ describe('mod-assignment-utils plugging strategy', () => {
 
   it('reset assignments are present and required', () => {
     // The item has no specialty sockets, so it should have 4 armor mod sockets
-    // TODO: Edge of Fate: Plus a masterwork socket that has appeared. Doesn't seem like we should include that.
     expect(resetAssignments).toHaveLength(4);
     for (const assignment of resetAssignments) {
       expect(assignment.requested).toBe(true);

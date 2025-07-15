@@ -348,9 +348,6 @@ export const breakerTypeNames = Object.entries(breakerTypes)
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
   EnhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
-  // TODO: Edge of Fate: I don't think these are conditional anymore now that there's a Class stat
-  // EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
-  // SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"

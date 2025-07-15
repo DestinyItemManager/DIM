@@ -56,27 +56,6 @@ function getPlugInvestmentStatActivationRule(
     return { rule: 'never' };
   }
 
-  // TODO: Edge of Fate - I think these perks are probably not conditional anymore
-  // if (
-  //   defHash === ModsWithConditionalStats.EchoOfPersistence ||
-  //   defHash === ModsWithConditionalStats.SparkOfFocus
-  // ) {
-  //   // "-10 to the stat that governs your class ability recharge"
-  //   const classType =
-  //     stat.statTypeHash === StatHashes.Weapons
-  //       ? DestinyClass.Hunter
-  //       : stat.statTypeHash === StatHashes.Health
-  //         ? DestinyClass.Titan
-  //         : stat.statTypeHash === StatHashes.Class
-  //           ? DestinyClass.Warlock
-  //           : undefined;
-  //   if (classType === undefined) {
-  //     warnLog('plug stats', 'unknown stat effect in', defHash, itemDef.displayProperties?.name);
-  //     return undefined;
-  //   }
-  //   return { rule: 'classType', classType };
-  // }
-
   if (masterworksWithCondStats.includes(defHash)) {
     return { rule: 'adeptWeapon' };
   }
