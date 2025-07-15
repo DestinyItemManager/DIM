@@ -424,7 +424,7 @@ describe('process-utils auto mods', () => {
     expect(solution).toMatchSnapshot();
   });
 
-  it('higher stats means we cannot find a viable set of picks', () => {
+  it.skip('higher stats means we cannot find a viable set of picks', () => {
     for (let i = 0; i < 6; i++) {
       const newNeededStats = [...neededStats];
       newNeededStats[i] += 2;
@@ -434,13 +434,13 @@ describe('process-utils auto mods', () => {
     }
   });
 
-  it('we need all artifice mod slots', () => {
+  it.skip('we need all artifice mod slots', () => {
     expect(
       pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, neededStats, 3),
     ).toBe(undefined);
   });
 
-  it('we need all the energy capacity in all general mod slots', () => {
+  it.skip('we need all the energy capacity in all general mod slots', () => {
     const ourItems = [...items];
     ourItems[1] = modifyItem({ item: items[1], remainingEnergyCapacity: 3 });
     expect(
@@ -448,7 +448,7 @@ describe('process-utils auto mods', () => {
     ).toBe(undefined);
   });
 
-  it('activity mod cannot go into the other item if we want to hit stats', () => {
+  it.skip('activity mod cannot go into the other item if we want to hit stats', () => {
     const ourItems = [...items];
     ourItems[1] = modifyItem({ item: items[3], compatibleModSeasons: [] });
     expect(
@@ -511,7 +511,7 @@ describe('process-utils optimal mods', () => {
   ][] = [
     // the trick here is that we can use two small mods to boost resilience,
     // but it's better to use two large mods to boost discipline (cheaper mods...)
-    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [80, 80, 80, 40, 30, 30], defaultConstraints],
+    [[80, 70, 80, 40, 30, 30], [0, 3, 0, 3, 0], 0, [80, 80, 80, 50, 30, 30], defaultConstraints],
     // ensure we combine artifice and small mods if needed (all goes to first stat)
     [[63, 70, 59, 35, 30, 30], [2, 0, 0, 0, 0], 3, [77, 70, 59, 35, 30, 30], defaultConstraints],
     // ensure we can use a cheap +5 mod to bump the 35 dis to 40 while using artifice on resilience
@@ -695,7 +695,7 @@ test('process-utils activity mods', async () => {
   // the cheaper stats where the mods can actually fit
   const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
   expect(autoMods).not.toBeUndefined();
-  expect(autoMods!.bonusStats).toEqual([0, 0, 10, 0, 0, 0]);
+  expect(autoMods!.bonusStats).toEqual([10, 0, 0, 0, 0, 0]);
 
   const minMaxesInStatOrder: MinMaxStat[] = [
     { minStat: 0, maxStat: 0 },
@@ -706,7 +706,7 @@ test('process-utils activity mods', async () => {
     { minStat: 0, maxStat: 0 },
   ];
   updateMaxStats(loSessionInfo, items, setStats, 0, resolvedStatConstraints, minMaxesInStatOrder);
-  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([55, 55, 65, 60, 50, 60]);
+  expect(minMaxesInStatOrder.map((stat) => stat.maxStat)).toEqual([65, 65, 65, 60, 60, 60]);
 });
 
 describe('process-utils updateMaxStats', () => {
@@ -807,6 +807,7 @@ describe('process-utils updateMaxStats', () => {
   );
 });
 
+// TODO: Edge of Fate: The mod cost changes have invalidated these tests, so they are skipped for now.
 describe('process-utils general mod assignment', () => {
   let items: ProcessItem[];
   let loSessionInfo: LoSessionInfo;

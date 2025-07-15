@@ -7,8 +7,8 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     "generalModsCosts": [],
     "modEnergyCost": 0,
     "modHashes": [
-      2322202118,
-      2322202118,
+      199176566,
+      199176566,
     ],
     "numArtificeMods": 2,
     "numGeneralMods": 0,
@@ -21,7 +21,7 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     ],
     "modEnergyCost": 3,
     "modHashes": [
-      4204488676,
+      1435557120,
     ],
     "numArtificeMods": 0,
     "numGeneralMods": 1,
@@ -34,8 +34,8 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     ],
     "modEnergyCost": 3,
     "modHashes": [
-      1435557120,
-      617569843,
+      2724608735,
+      3160845295,
     ],
     "numArtificeMods": 1,
     "numGeneralMods": 1,
@@ -48,7 +48,7 @@ exports[`process-utils auto mods the problem is solvable 1`] = `
     ],
     "modEnergyCost": 1,
     "modHashes": [
-      350061697,
+      1237786518,
     ],
     "numArtificeMods": 0,
     "numGeneralMods": 1,

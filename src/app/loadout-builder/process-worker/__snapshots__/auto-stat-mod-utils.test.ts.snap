@@ -228,6 +228,9 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
     "392767087": {
       "hash": 199176566,
     },
+    "4244567218": {
+      "hash": 2507624050,
+    },
   },
   "generalMods": {
     "144602215": {
@@ -278,6 +281,16 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
       "minorMod": {
         "cost": 1,
         "hash": 2532323436,
+      },
+    },
+    "4244567218": {
+      "majorMod": {
+        "cost": 3,
+        "hash": 4287799666,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 2639422088,
       },
     },
   },
@@ -302,6 +315,9 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
     "392767087": {
       "hash": 199176566,
     },
+    "4244567218": {
+      "hash": 2507624050,
+    },
   },
   "generalMods": {
     "144602215": {
@@ -352,6 +368,16 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming gen
       "minorMod": {
         "cost": 1,
         "hash": 2532323436,
+      },
+    },
+    "4244567218": {
+      "majorMod": {
+        "cost": 3,
+        "hash": 4287799666,
+      },
+      "minorMod": {
+        "cost": 1,
+        "hash": 2639422088,
       },
     },
   },
