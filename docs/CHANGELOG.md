@@ -1,5 +1,34 @@
 ## Next
 
+* Added tier-level pips to item icons.
+* Fixed an issue in Loadout Optimizer that could exclude some valid sets when auto stat mods are off.
+* On the Loadouts page, hashtags are now combined if they only differ by case, and are sorted case-insensitively.
+* Fixed masterwork bonuses not showing up in orange in the stat bars for new armor.
+* Fixed some engrams not looking like engrams.
+* Fixed a number of places where class items did not display stats.
+
+## 8.81.1 <span class="changelog-date">(2025-07-15)</span>
+
+* Fixed new Armor 3.0 items not showing any stat bars.
+* Fixed Armor 3.0 masterworks applying points to all stats instead of the lowest 3 stats.
+* Add an explanatory tooltip to the Anti-Champion icon in the item tooltip, since folks have been confused by it.
+* Reposition the season badge on the item tile a bit, to better match in-game.
+* Add the stat icon to stat tooltips to help folks learn them.
+* Add the season icon to the item popup header.
+* Add the item tier as a number under the season icon.
+* Add an inventory sort property for "featured". Waiting on "tier" sorting until we show it on the tile somewhere.
+* Add Organizer/spreadsheet columns for "featured" and "tier".
+* Add `tier:` search to find items by tier.
+* Fixed the missing title for "Seasonal Hub" in the Progress page.
+* Fixed a crash when using the Stream Deck integration.
+* Fixed the display of the power icon in the character power calculation.
+* Show the Ammo Generation stat on weapons.
+* Prevent a crash in the Loadout Optimizer when auto stat mods is disabled.
+* Fixed cramped stat min/max fields in the Loadout Optimizer.
+* Changed the Loadout Optimizer min/max stat fields to not update other numbers until you hit Enter or blur the field.
+
+## 8.81.0 <span class="changelog-date">(2025-07-15)</span>
+
 * Improved the Loadout Optimizer algorithm to correctly maximize stats now that it's tierless. Also improved its performance.
 * Fix some interactions with the Loadout Optimizer stat constraint editor.
 * Add `is:featured` search for the new Featured Items.

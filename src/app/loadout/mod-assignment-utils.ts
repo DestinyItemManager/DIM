@@ -5,9 +5,9 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import {
-  ItemTierName,
-  MAX_ARMOR_ENERGY_CAPACITY,
+  ItemRarityName,
   armor2PlugCategoryHashesByName,
+  maxEnergyCapacity,
 } from 'app/search/d2-known-values';
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { count, mapValues, sumBy } from 'app/utils/collections';
@@ -24,7 +24,7 @@ import {
   getSocketsByCategoryHash,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
-import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy } from 'es-toolkit';
 import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from './armor-upgrade-utils';
@@ -160,14 +160,11 @@ function getUpgradeCost(
   newEnergy: number,
   needsArtifice: boolean,
 ) {
-  const maxEnergyCapacity = Math.max(
-    dimItem.energy?.energyCapacity ?? 0,
-    MAX_ARMOR_ENERGY_CAPACITY,
-  );
+  const maxEnergy = maxEnergyCapacity(dimItem);
   if (!model.byRarity[item.rarity]) {
     const plugs = getEnergyUpgradePlugs(dimItem);
-    const costsPerTier = Array<number[]>(maxEnergyCapacity);
-    for (let i = 0; i <= maxEnergyCapacity; i++) {
+    const costsPerTier = Array<number[]>(maxEnergy);
+    for (let i = 0; i <= maxEnergy; i++) {
       const previousTierCosts = costsPerTier[i - 1];
       costsPerTier[i] = previousTierCosts
         ? [...previousTierCosts]
@@ -186,14 +183,14 @@ function getUpgradeCost(
         }
       }
     }
-    model.byRarity[dimItem.tier] = costsPerTier;
+    model.byRarity[dimItem.rarity] = costsPerTier;
   }
   const needsEnhancing = item.rarity === 'Exotic' && needsArtifice && !isArtifice(dimItem);
-  const targetEnergy = needsEnhancing ? maxEnergyCapacity : newEnergy;
-  const tierModel = model.byRarity[dimItem.tier]!;
-  const alreadyPaidCosts = tierModel[item.originalCapacity];
+  const targetEnergy = needsEnhancing ? maxEnergy : newEnergy;
+  const rarityModel = model.byRarity[dimItem.rarity]!;
+  const alreadyPaidCosts = rarityModel[item.originalCapacity];
 
-  const costs = tierModel[targetEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
+  const costs = rarityModel[targetEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
   if (needsEnhancing && model.exoticArtificeCosts) {
     for (let i = 0; i < costs.length; i++) {
       costs[i] += model.exoticArtificeCosts[i];
@@ -210,7 +207,7 @@ function getUpgradeCost(
 interface EnergyUpgradeCostModel {
   defs: D2ManifestDefinitions;
   /** Cumulative costs to reach the indexed capacity. Subtract the costs for current capacity. */
-  byRarity: { [rarity in ItemTierName]?: number[][] };
+  byRarity: { [rarity in ItemRarityName]?: number[][] };
   exoticArtificeCosts?: number[];
 }
 
@@ -494,7 +491,7 @@ export function fitMostMods({
       resultingItemEnergies[item.id] = {
         energyCapacity: itemEnergies[item.id].originalCapacity,
         energyUsed: requiresArtificeEnhancement
-          ? Math.max(item.energy.energyCapacity, MAX_ARMOR_ENERGY_CAPACITY)
+          ? maxEnergyCapacity(item)
           : sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
       };
     }
@@ -525,7 +522,14 @@ function getArmorSocketsAndMods(
     // If a socket is not plugged (even with an empty socket) we consider it disabled
     // This needs to be checked as the 30th anniversary armour has the Artifice socket
     // but the API considers it to be disabled.
-    .filter((socket) => socket.plugged)
+    .filter(
+      (socket) =>
+        socket.plugged &&
+        // TODO: Edge of Fate: This is a hacky fix for the masterwork socket
+        // that has appeared. We should maybe exclude it from the socket list
+        // entirely since it seems redundant with the energy track?
+        socket.socketDefinition.socketTypeHash !== 1843767421,
+    )
     // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
     // of the plugItems in the plugset so we use that first if possible. This is optional and
     // simply prefers plugging artifact mods into artifice sockets if available.
@@ -939,8 +943,7 @@ function buildItemEnergy({
     used: sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
-    isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
-    rarity: item.tier,
+    rarity: item.rarity,
   };
 }
 
@@ -948,8 +951,7 @@ interface ItemEnergy {
   used: number;
   originalCapacity: number;
   derivedCapacity: number;
-  isClassItem: boolean;
-  rarity: ItemTierName;
+  rarity: ItemRarityName;
 }
 /**
  * Validates whether a mod can be assigned to an item in the mod assignments algorithm.

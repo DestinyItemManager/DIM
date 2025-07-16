@@ -211,12 +211,12 @@ function getStatsBreakdown(
   modStatChanges: ModStatChanges,
 ) {
   const totals: ModStatChanges = {
-    [StatHashes.Mobility]: { value: 0, breakdown: [] },
-    [StatHashes.Resilience]: { value: 0, breakdown: [] },
-    [StatHashes.Recovery]: { value: 0, breakdown: [] },
-    [StatHashes.Discipline]: { value: 0, breakdown: [] },
-    [StatHashes.Intellect]: { value: 0, breakdown: [] },
-    [StatHashes.Strength]: { value: 0, breakdown: [] },
+    [StatHashes.Weapons]: { value: 0, breakdown: [] },
+    [StatHashes.Health]: { value: 0, breakdown: [] },
+    [StatHashes.Class]: { value: 0, breakdown: [] },
+    [StatHashes.Grenade]: { value: 0, breakdown: [] },
+    [StatHashes.Super]: { value: 0, breakdown: [] },
+    [StatHashes.Melee]: { value: 0, breakdown: [] },
   };
 
   const autoModStats = getTotalModStatChanges(

@@ -1,9 +1,10 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
+import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import type { ItemTierName } from 'app/search/d2-known-values';
+import type { ItemRarityName } from 'app/search/d2-known-values';
 import { itemTypeName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
@@ -14,7 +15,7 @@ import { AmmoIcon } from './AmmoIcon';
 import BreakerType from './BreakerType';
 import styles from './ItemPopupHeader.m.scss';
 
-const tierClassName: LookupTable<ItemTierName, string> = {
+const rarityClassName: LookupTable<ItemRarityName, string> = {
   Common: styles.common,
   Uncommon: styles.uncommon,
   Rare: styles.rare,
@@ -41,7 +42,7 @@ export default function ItemPopupHeader({
     <button
       type="button"
       disabled={!linkToArmory}
-      className={clsx(styles.header, tierClassName[item.tier], {
+      className={clsx(styles.header, rarityClassName[item.rarity], {
         [styles.masterwork]: item.masterwork,
         [styles.pursuit]: item.pursuit,
         [styles.armory]: linkToArmory,
@@ -83,6 +84,11 @@ export default function ItemPopupHeader({
           )}
         </div>
       </div>
+      {item.iconOverlay && (
+        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)}>
+          {item.tier !== 0 ? item.tier : null}
+        </div>
+      )}
       {showArmory && linkToArmory && (
         <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
       )}

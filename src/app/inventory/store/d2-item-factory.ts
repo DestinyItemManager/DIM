@@ -3,7 +3,7 @@ import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import {
-  D2ItemTiers,
+  ItemRarityMap,
   SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
   d2MissingIcon,
@@ -345,6 +345,7 @@ export function makeItem(
   const isEngram =
     normalBucket.hash === BucketHashes.Engrams ||
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
+    itemDef.traitHashes?.includes(TraitHashes.ItemEngram) ||
     false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
@@ -462,7 +463,7 @@ export function makeItem(
     bucket: normalBucket,
     hash: item.itemHash,
     itemCategoryHashes,
-    tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
+    rarity: ItemRarityMap[itemDef.inventory!.tierType] || 'Common',
     isExotic: itemDef.inventory!.tierType === TierType.Exotic,
     name,
     description: displayProperties.description,
@@ -537,6 +538,7 @@ export function makeItem(
     infusionCategoryHashes: null,
     tooltipNotifications,
     featured: itemDef.isFeaturedItem,
+    tier: itemInstanceData.gearTier ?? 0,
   };
 
   // *able
@@ -574,6 +576,7 @@ export function makeItem(
   createdItem.wishListEnabled = Boolean(
     createdItem.sockets &&
       (createdItem.bucket.inWeapons ||
+        // Exotic class items can be wishlisted
         (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
   );
 
@@ -759,7 +762,7 @@ export function makeItem(
 }
 
 function isLegendaryOrBetter(item: DimItem) {
-  return item.tier === 'Legendary' || item.tier === 'Exotic';
+  return item.rarity === 'Legendary' || item.rarity === 'Exotic';
 }
 
 function getQuestLineInfo(itemDef: DestinyInventoryItemDefinition): DimQuestLine | undefined {

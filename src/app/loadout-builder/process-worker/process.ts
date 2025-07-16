@@ -263,7 +263,6 @@ export function process({
                 }
                 totalStats += value;
                 if (filter.minStat > 0) {
-                  const value = stats[index];
                   const neededValue = filter.minStat - value;
                   if (neededValue > 0) {
                     totalNeededStats += neededValue;
@@ -450,12 +449,8 @@ export function process({
     // that our optimistic prediction that we used when adding to the set
     // tracker could end up smaller than what we predicted? That also makes me
     // think this could be out of order...
-    const { mods, bonusStats } = pickOptimalStatMods(
-      precalculatedInfo,
-      armor,
-      stats,
-      desiredStatRanges,
-    )!;
+    const modPicks = pickOptimalStatMods(precalculatedInfo, armor, stats, desiredStatRanges);
+    const { mods, bonusStats } = modPicks;
 
     const armorOnlyStats: Partial<ArmorStats> = {};
     const fullStats: Partial<ArmorStats> = {};

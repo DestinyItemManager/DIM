@@ -225,8 +225,10 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 }
 
 .iconOverlay {
-  top: $item-border-width;
-  left: $item-border-width;
+  // TODO: In Edge of Fate this overlay changed, but it's actually rendered at
+  // the incorrect size vs. in-game.
+  top: 0;
+  left: 0;
   height: calc(var(--item-size) - #{2 * $item-border-width});
   width: calc(var(--item-size) - #{2 * $item-border-width});
   background-size: contain;
@@ -270,4 +272,23 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 
 .strandColorFix {
   filter: hue-rotate(265deg) brightness(1.3);
+}
+
+.tierPipContainer {
+  position: absolute;
+  top: calc(var(--item-size) * 0.29);
+  left: calc(var(--item-size) * 0.11);
+  height: calc(var(--item-size) * 0.42);
+  display: flex;
+  flex-direction: column;
+  gap: 7%;
+}
+
+.tierPip {
+  display: block;
+  height: 14%;
+  aspect-ratio: 1;
+  background: #fffd;
+  rotate: 45deg;
+  outline: black solid 0.1px;
 }

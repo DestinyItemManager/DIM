@@ -1,5 +1,5 @@
 import type { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import type { ItemTierName } from 'app/search/d2-known-values';
+import type { ItemRarityName } from 'app/search/d2-known-values';
 import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
@@ -57,8 +57,8 @@ export interface DimItem {
   bucket: InventoryBucket;
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: ItemCategoryHashes[];
-  /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
-  tier: ItemTierName;
+  /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). Do not use this for display! */
+  rarity: ItemRarityName;
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** If this came from a vendor (instead of character inventory), this houses enough information to re-identify the item. */
@@ -230,6 +230,8 @@ export interface DimItem {
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
   featured: boolean;
+  /** In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which identifies  */
+  tier: number;
 }
 
 /**
@@ -409,6 +411,10 @@ export type PlugStatActivationRule =
   | {
       /** Only active if the weapon is crafted and either adept or at level 20 */
       rule: 'enhancedIntrinsic';
+    }
+  | {
+      /** New Armor 3.0 archetypes grant stats only to secondary stats when masterworked. */
+      rule: 'archetypeArmorMasterwork';
     };
 
 /**

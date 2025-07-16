@@ -24,7 +24,7 @@ export const makeDupeID = (item: DimItem) =>
     item.classType
   }${
     // Some items have the same name across different tiers, e.g. "Traveler's Chosen"
-    item.tier
+    item.rarity
   }${
     // The engram that dispenses the Taraxippos scout rifle is also called Taraxippos
     item.bucket.hash
@@ -266,7 +266,7 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
   // recalculating it.
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
-    if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
+    if (item.stats && item.power) {
       const statValues = item.stats
         .filter((s) => relevantStatHashes.includes(s.statHash))
         .sort((a, b) => a.statHash - b.statHash)

@@ -383,6 +383,21 @@ export const D2SeasonInfo: Record<
     numWeeks: 23,
     episode: 3,
   },
+  27: {
+    DLCName: 'Edge of Fate',
+    seasonName: 'Reclamation',
+    seasonTag: 'reclamation',
+    season: 27,
+    maxLevel: 50,
+    powerFloor: 10,
+    softCap: 200,
+    powerfulCap: 440,
+    pinnacleCap: 450,
+    releaseDate: '2025-07-15',
+    resetTime: '17:00:00Z',
+    numWeeks: 20,
+    episode: 4,
+  },
 };
 
-export const D2CalculatedSeason = 26;
+export const D2CalculatedSeason = 27;

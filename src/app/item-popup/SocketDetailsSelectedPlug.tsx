@@ -238,13 +238,11 @@ export default function SocketDetailsSelectedPlug({
   const hideRequirements =
     plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
-  const showPerks = [
-    PlugCategoryHashes.Season25PotionsLoot,
-    PlugCategoryHashes.Season25PotionsCombat,
-    PlugCategoryHashes.Season25PotionsPlaceholder,
-    PlugCategoryHashes.Season25PotionsReagents,
-    PlugCategoryHashes.Season25PotionsFormula,
-  ].includes(plug.plug.plugCategoryHash);
+  const showPerks = (
+    [
+      // Include plug hashes here that should show their perks in the socket details.
+    ] as PlugCategoryHashes[]
+  ).includes(plug.plug.plugCategoryHash);
 
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>

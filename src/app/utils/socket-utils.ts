@@ -175,7 +175,10 @@ export function socketContainsIntrinsicPlug(
   socket: DimSocket,
 ): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
-  return socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics);
+  return (
+    socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics) ||
+    socketContainsPlugWithCategory(socket, PlugCategoryHashes.ArmorStats)
+  );
 }
 
 /**
@@ -607,7 +610,7 @@ function getCuratedRollForSocket(defs: D2ManifestDefinitions, socket: DimSocket)
 
 /** Determine if the item has a curated roll, and if all of its perks match that curated roll. */
 export function matchesCuratedRoll(defs: D2ManifestDefinitions, item: DimItem) {
-  const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.tier === 'Legendary';
+  const legendaryWeapon = item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary';
 
   if (!legendaryWeapon) {
     return false;

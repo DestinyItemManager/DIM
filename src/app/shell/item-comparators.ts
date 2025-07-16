@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { D2ItemTiers } from 'app/search/d2-known-values';
+import { ItemRarityMap } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
@@ -207,7 +207,7 @@ const GROUP_BY_GETTERS_AND_COMPARATORS: {
   // exotic -> common
   rarity: {
     comparator: undefinedVaultGroupLast(reverseComparator(compareBy(groupingValueProperty))),
-    getValue: (item) => D2ItemTiers[item.tier],
+    getValue: (item) => ItemRarityMap[item.rarity],
     getIcon: () => ({ type: 'none' }),
   },
   // None -> Primary -> Special -> Heavy -> Unknown
@@ -246,7 +246,7 @@ const ITEM_COMPARATORS: {
   // A -> Z
   typeName: compareBy((item) => item.typeName),
   // exotic -> common
-  rarity: reverseComparator(compareBy((item) => D2ItemTiers[item.tier])),
+  rarity: reverseComparator(compareBy((item) => ItemRarityMap[item.rarity])),
   // high -> low
   primStat: reverseComparator(compareBy((item) => item.primaryStat?.value ?? 0)),
   // high -> low
@@ -282,6 +282,8 @@ const ITEM_COMPARATORS: {
   crafted: compareBy((item) => (item.crafted ? 0 : 1)),
   // deepsight -> no deepsight
   deepsight: compareBy((item) => (item.deepsightInfo ? 1 : 2)),
+  // featured -> not featured
+  featured: compareBy((item) => (item.featured ? 0 : 1)),
   default: () => 0,
 };
 

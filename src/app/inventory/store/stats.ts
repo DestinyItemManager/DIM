@@ -14,7 +14,7 @@ import {
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { once, partition } from 'es-toolkit';
 import { Draft } from 'immer';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
@@ -64,6 +64,7 @@ const itemStatAllowList = [
   StatHashes.AimAssistance,
   StatHashes.AirborneEffectiveness,
   StatHashes.Zoom,
+  StatHashes.AmmoGeneration,
   StatHashes.RecoilDirection,
   StatHashes.Magazine,
   StatHashes.AmmoCapacity,
@@ -157,20 +158,18 @@ export function buildStats(
     investmentStats.push(tStat!);
 
     // synthesize custom stats for meaningfully stat-bearing items
-    if (createdItem.bucket.hash !== BucketHashes.ClassArmor) {
-      for (const customStat of customStats) {
-        if (isClassCompatible(customStat.class, createdItem.classType)) {
-          const cStat = makeCustomStat(
-            investmentStats,
-            customStat.weights,
-            customStat.statHash,
-            customStat.label,
-            memoCustomDesc(),
-            true,
-          );
-          if (cStat) {
-            investmentStats.push(cStat);
-          }
+    for (const customStat of customStats) {
+      if (isClassCompatible(customStat.class, createdItem.classType)) {
+        const cStat = makeCustomStat(
+          investmentStats,
+          customStat.weights,
+          customStat.statHash,
+          customStat.label,
+          memoCustomDesc(),
+          true,
+        );
+        if (cStat) {
+          investmentStats.push(cStat);
         }
       }
     }
@@ -345,7 +344,14 @@ function applyPlugsToStats(
         }
 
         // check special conditionals
-        if (!isPlugStatActive(pluggedInvestmentStat.activationRule, createdItem)) {
+        if (
+          !isPlugStatActive(
+            pluggedInvestmentStat.activationRule,
+            createdItem,
+            undefined,
+            existingStat,
+          )
+        ) {
           continue;
         }
 
@@ -421,7 +427,10 @@ function attachPlugStats(
     const activePlugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(activePlug.plugDef)) {
-      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+      const existingStat = statsByHash[plugInvestmentStat.statTypeHash];
+      if (
+        !isPlugStatActive(plugInvestmentStat.activationRule, createdItem, undefined, existingStat)
+      ) {
         continue;
       }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);

@@ -1,4 +1,6 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
+import { DimItem } from 'app/inventory/item-types';
+import { ArmorStatHashes } from 'app/loadout-builder/types';
 import { HashLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 
@@ -20,6 +22,11 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 // GAME MECHANICS KNOWN VALUES
 //
 
+// In Edge of Fate, Tier 5 armor was introduced that has 11 energy instead of 10.
+export const maxEnergyCapacity = (item: DimItem): number => (item.tier === 5 ? 11 : 10);
+/**
+ * @deprecated: use `maxEnergyCapacity` instead
+ */
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 export const MASTERWORK_ARMOR_STAT_BONUS = 2;
 
@@ -100,16 +107,32 @@ export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.P
 
 /** these stats canonically exist on D2 armor */
 export const D2ArmorStatHashByName = {
-  mobility: StatHashes.Mobility,
-  resilience: StatHashes.Resilience,
-  recovery: StatHashes.Recovery,
-  discipline: StatHashes.Discipline,
-  intellect: StatHashes.Intellect,
-  strength: StatHashes.Strength,
+  weapons: StatHashes.Weapons,
+  health: StatHashes.Health,
+  class: StatHashes.Class,
+  grenade: StatHashes.Grenade,
+  super: StatHashes.Super,
+  melee: StatHashes.Melee,
+  // We keep the old names for now, both for D1 compatibility and for existing saved
+  // searches. In the future we could have a different map for D1 names and D2
+  // names.
+  mobility: StatHashes.Weapons,
+  resilience: StatHashes.Health,
+  recovery: StatHashes.Class,
+  discipline: StatHashes.Grenade,
+  intellect: StatHashes.Super,
+  strength: StatHashes.Melee,
 } as const;
 
-/** Stats that all (D2) armor should have. */
-export const armorStats = Object.values(D2ArmorStatHashByName);
+/** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
+export const armorStats: ArmorStatHashes[] = [
+  StatHashes.Health,
+  StatHashes.Melee,
+  StatHashes.Grenade,
+  StatHashes.Super,
+  StatHashes.Class,
+  StatHashes.Weapons,
+];
 
 // a set of base stat weights, all worth the same, "switched on"
 export const evenStatWeights = /* @__PURE__ */ armorStats.reduce<CustomStatWeights>(
@@ -275,12 +298,12 @@ export const unadvertisedResettableVendors = [
 export const WELL_RESTED_PERK = 1519921522; // SandboxPerk "Well-Rested"
 
 /**
- * Maps TierType to tierTypeName in English and vice versa.
+ * Maps TierType to ItemRarityName in English and vice versa.
  * The Bungie.net version of this enum is not representative of real game strings.
  */
 // A manually constructed bi-directional enum,
 // because the `enum` keyword unfortunately returns type `string`.
-export const D2ItemTiers = {
+export const ItemRarityMap = {
   Unknown: TierType.Unknown,
   [TierType.Unknown]: 'Unknown',
   Currency: TierType.Currency,
@@ -297,7 +320,11 @@ export const D2ItemTiers = {
   [TierType.Exotic]: 'Exotic',
 } as const;
 
-export type ItemTierName =
+/**
+ * We use our own names for rarity because the API types don't match what's in
+ * game (e.g. Legendary = TierType.Superior, Uncommon = TierType.Common).
+ */
+export type ItemRarityName =
   | 'Unknown'
   | 'Currency'
   | 'Common'
@@ -326,9 +353,7 @@ export const breakerTypeNames = Object.entries(breakerTypes)
 
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
-  EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
   EnhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
-  SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"

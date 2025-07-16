@@ -4,11 +4,13 @@ import {
   D1ItemComponent,
   D1ProgressionDefinition,
   D1StatDefinition,
+  D1StatHashes,
   D1TalentGridDefinition,
 } from 'app/destiny1/d1-manifest-types';
 import { ArmorTypes } from 'app/destiny1/loadout-builder/types';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
+import { ItemRarityMap } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { filterMap, maxOf, minOf, sumBy, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
@@ -42,9 +44,6 @@ import { getBonus } from './character-utils';
 import { createItemIndex } from './item-index';
 
 const TAG = 'd1-stores';
-
-// Maps tierType to tierTypeName in English
-const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
 /**
  * Process an entire list of items into DIM items.
@@ -226,11 +225,13 @@ function makeItem(
   // fix itemDef for defense items with missing nodes
   if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
     const defaultMinMax = Object.values(itemDef.stats).find((stat) =>
-      [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength].includes(stat.statHash),
+      [D1StatHashes.Intellect, D1StatHashes.Discipline, D1StatHashes.Strength].includes(
+        stat.statHash,
+      ),
     );
 
     if (defaultMinMax) {
-      for (const val of [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength]) {
+      for (const val of [D1StatHashes.Intellect, D1StatHashes.Discipline, D1StatHashes.Strength]) {
         if (!itemDef.stats[val]) {
           itemDef.stats[val] = {
             maximum: defaultMinMax.maximum,
@@ -295,7 +296,7 @@ function makeItem(
     bucket: normalBucket,
     hash: item.itemHash,
     itemCategoryHashes: itemDef.itemCategoryHashes || [],
-    tier: tiers[itemDef.tierType] || 'Common',
+    rarity: ItemRarityMap[itemDef.tierType] || 'Common',
     isExotic: itemDef.tierType === TierType.Exotic,
     name: itemDef.itemName,
     description: itemDef.itemDescription || '', // Added description for Bounties for now JFLAY2015
@@ -312,7 +313,7 @@ function makeItem(
     equipped: item.isEquipped,
     equipment: item.isEquipment,
     equippingLabel:
-      item.isEquipment && tiers[itemDef.tierType] === 'Exotic' ? normalBucket.sort : undefined,
+      item.isEquipment && itemDef.tierType === TierType.Exotic ? normalBucket.sort : undefined,
     complete: item.isGridComplete,
     amount: item.stackSize || 1,
     primaryStat: null,
@@ -366,6 +367,7 @@ function makeItem(
     energy: null,
     pursuit: null,
     featured: false,
+    tier: 0,
   };
 
   // *able
@@ -377,7 +379,7 @@ function makeItem(
   // Moving rare masks destroys them
   if (
     createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mask) &&
-    createdItem.tier !== 'Legendary'
+    createdItem.rarity !== 'Legendary'
   ) {
     createdItem.notransfer = true;
   }

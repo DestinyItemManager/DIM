@@ -247,7 +247,7 @@ function makeFakePursuitItem(
     bucket: bucket,
     hash,
     itemCategoryHashes: [], // see defs.ItemCategory
-    tier: 'Rare',
+    rarity: 'Rare',
     isExotic: false,
     name: displayProperties.name,
     description: displayProperties.description,
@@ -299,6 +299,7 @@ function makeFakePursuitItem(
     trackable: false,
     energy: null,
     featured: false,
+    tier: 0,
   };
 }
 

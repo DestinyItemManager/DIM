@@ -8,10 +8,10 @@ import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { produce } from 'immer';
 import {
   bulwarkFinishModHash,
-  distributionModHash,
+  classStatModHash,
   empoweringFinishModHash,
   isArmor2ClassItem,
-  recoveryModHash,
+  reaperModHash,
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { createPluggingStrategy, pickPlugPositions } from './mod-assignment-utils';
@@ -85,10 +85,10 @@ function processActions(
 describe('mod-assignment-utils plugging strategy', () => {
   let defs: D2ManifestDefinitions;
   let classItem: DimItem;
-  let recoveryMod: PluggableInventoryItemDefinition;
+  let classStatMod: PluggableInventoryItemDefinition;
   let empoweringFinishMod: PluggableInventoryItemDefinition;
   let bulwarkFinishMod: PluggableInventoryItemDefinition;
-  let distributionMod: PluggableInventoryItemDefinition;
+  let reaperMod: PluggableInventoryItemDefinition;
 
   let resetAssignments: Assignment[];
 
@@ -111,10 +111,8 @@ describe('mod-assignment-utils plugging strategy', () => {
     bulwarkFinishMod = defs.InventoryItem.get(
       bulwarkFinishModHash,
     ) as PluggableInventoryItemDefinition;
-    recoveryMod = defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition;
-    distributionMod = defs.InventoryItem.get(
-      distributionModHash,
-    ) as PluggableInventoryItemDefinition;
+    classStatMod = defs.InventoryItem.get(classStatModHash) as PluggableInventoryItemDefinition;
+    reaperMod = defs.InventoryItem.get(reaperModHash) as PluggableInventoryItemDefinition;
 
     const exclusionGroup1 = getModExclusionGroup(empoweringFinishMod);
     const exclusionGroup2 = getModExclusionGroup(bulwarkFinishMod);
@@ -158,26 +156,26 @@ describe('mod-assignment-utils plugging strategy', () => {
   }
 
   it('keeps existing mod in place if removal optional', () => {
-    // Now has 4 used, 1 left.
-    const ourItem = applyMods(classItem, [recoveryMod]);
-    expect(ourItem.energy?.energyUsed).toBe(4);
+    // Now has 3 used, 2 left.
+    const ourItem = applyMods(classItem, [classStatMod]);
+    expect(ourItem.energy?.energyUsed).toBe(3);
     expect(empoweringFinishMod.plug.energyCost!.energyCost).toBe(1);
     // Apply a 1-cost mod
     const newItem = applyMods(ourItem, [empoweringFinishMod], 1);
-    expect(newItem.energy?.energyUsed).toBe(5);
+    expect(newItem.energy?.energyUsed).toBe(4);
   });
 
   it('removes existing mod if needed', () => {
-    // Now has 4 used, 1 left.
-    const ourItem = applyMods(classItem, [recoveryMod]);
+    // Now has 3 used, 2 left.
+    const ourItem = applyMods(classItem, [classStatMod]);
     // Apply a 3-cost mod
-    const newItem = applyMods(ourItem, [distributionMod], 2);
+    const newItem = applyMods(ourItem, [reaperMod], 2);
     expect(newItem.energy?.energyUsed).toBe(3);
   });
 
   it('prefers replacing mutual exclusion mod', () => {
     // 4 used, 1 left (w/ mutex)
-    const ourItem = applyMods(classItem, [distributionMod, empoweringFinishMod]);
+    const ourItem = applyMods(classItem, [reaperMod, empoweringFinishMod]);
     const empoweringIndex = ourItem.sockets!.allSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === empoweringFinishMod.hash,
     );
@@ -193,7 +191,7 @@ describe('mod-assignment-utils plugging strategy', () => {
 
   it('succeeds even if we choose not to replace in same slot', () => {
     // 4 used, 1 left (w/ mutex)
-    const ourItem = applyMods(classItem, [distributionMod, empoweringFinishMod]);
+    const ourItem = applyMods(classItem, [reaperMod, empoweringFinishMod]);
     expect(ourItem.energy?.energyUsed).toBe(4);
 
     // hack: since original mods are assigned left-to-right, find the adjacent socket optionally to be reset,

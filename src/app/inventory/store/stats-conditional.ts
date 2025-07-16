@@ -9,11 +9,12 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import {
   DimItem,
   DimPlugInvestmentStat,
+  DimStat,
   PlugStatActivationRule,
   PluggableInventoryItemDefinition,
 } from '../item-types';
@@ -48,32 +49,17 @@ function getPlugInvestmentStatActivationRule(
     return { rule: 'never' };
   }
 
+  // New Armor 3.0 archetypes grant stats only to secondary stats when masterworked.
+  if (itemDef.plug?.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks) {
+    return { rule: 'archetypeArmorMasterwork' };
+  }
+
   const defHash = itemDef.hash;
   if (
     defHash === ModsWithConditionalStats.ElementalCapacitor ||
     defHash === ModsWithConditionalStats.EnhancedElementalCapacitor
   ) {
     return { rule: 'never' };
-  }
-
-  if (
-    defHash === ModsWithConditionalStats.EchoOfPersistence ||
-    defHash === ModsWithConditionalStats.SparkOfFocus
-  ) {
-    // "-10 to the stat that governs your class ability recharge"
-    const classType =
-      stat.statTypeHash === StatHashes.Mobility
-        ? DestinyClass.Hunter
-        : stat.statTypeHash === StatHashes.Resilience
-          ? DestinyClass.Titan
-          : stat.statTypeHash === StatHashes.Recovery
-            ? DestinyClass.Warlock
-            : undefined;
-    if (classType === undefined) {
-      warnLog('plug stats', 'unknown stat effect in', defHash, itemDef.displayProperties?.name);
-      return undefined;
-    }
-    return { rule: 'classType', classType };
   }
 
   if (masterworksWithCondStats.includes(defHash)) {
@@ -96,6 +82,7 @@ export function isPlugStatActive(
   rule: PlugStatActivationRule,
   item: DimItem | undefined,
   classType?: DestinyClass,
+  existingStat?: DimStat, // The stat as it existed before deciding whether to apply this plug
 ): boolean {
   if (!rule) {
     return true;
@@ -108,6 +95,11 @@ export function isPlugStatActive(
   switch (rule.rule) {
     case 'never':
       return false;
+
+    case 'archetypeArmorMasterwork':
+      // New Armor 3.0 archetypes grant stats only to secondary stats (base 0) when masterworked,
+      // so if there's already some base stat value, MW will not apply its investmentValue to this stat.
+      return !existingStat?.base;
     case 'classType':
       classType ??= item?.classType;
       if (classType === undefined) {

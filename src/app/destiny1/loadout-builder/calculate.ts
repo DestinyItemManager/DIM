@@ -3,9 +3,10 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { sumBy } from 'app/utils/collections';
 import { infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { D1Item } from '../../inventory/item-types';
 import { D1ManifestDefinitions } from '../d1-definitions';
+import { D1StatHashes } from '../d1-manifest-types';
 import {
   ArmorSet,
   ArmorTypes,
@@ -94,9 +95,9 @@ export async function getSetBucketsStep(
   }
 
   let processedCount = 0;
-  const intellect = characterStatFromStatDef(defs.Stat.get(StatHashes.Intellect), 0);
-  const strength = characterStatFromStatDef(defs.Stat.get(StatHashes.Strength), 0);
-  const discipline = characterStatFromStatDef(defs.Stat.get(StatHashes.Discipline), 0);
+  const intellect = characterStatFromStatDef(defs.Stat.get(D1StatHashes.Intellect), 0);
+  const strength = characterStatFromStatDef(defs.Stat.get(D1StatHashes.Strength), 0);
+  const discipline = characterStatFromStatDef(defs.Stat.get(D1StatHashes.Discipline), 0);
 
   for (const helm of helms) {
     for (const gauntlet of gauntlets) {
@@ -124,9 +125,9 @@ export async function getSetBucketsStep(
                       [BucketHashes.Ghost]: ghost,
                     },
                     stats: {
-                      [StatHashes.Intellect]: { ...intellect },
-                      [StatHashes.Discipline]: { ...discipline },
-                      [StatHashes.Strength]: { ...strength },
+                      [D1StatHashes.Intellect]: { ...intellect },
+                      [D1StatHashes.Discipline]: { ...discipline },
+                      [D1StatHashes.Strength]: { ...strength },
                     },
                     setHash: '',
                     includesVendorItems: false,
@@ -135,9 +136,9 @@ export async function getSetBucketsStep(
                   const pieces = Object.values(set.armor);
                   set.setHash = genSetHash(pieces);
                   calcArmorStats(pieces, set.stats, scaleType);
-                  const tiersString = `${tierValue(set.stats[StatHashes.Intellect].value)}/${tierValue(
-                    set.stats[StatHashes.Discipline].value,
-                  )}/${tierValue(set.stats[StatHashes.Strength].value)}`;
+                  const tiersString = `${tierValue(set.stats[D1StatHashes.Intellect].value)}/${tierValue(
+                    set.stats[D1StatHashes.Discipline].value,
+                  )}/${tierValue(set.stats[D1StatHashes.Strength].value)}`;
 
                   tiersSet.add(tiersString);
 

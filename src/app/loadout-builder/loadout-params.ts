@@ -1,6 +1,6 @@
 /* Functions for dealing with the LoadoutParameters structure we save with loadouts and use to save and share LO settings. */
 
-import { StatConstraint, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
@@ -27,9 +27,8 @@ export function resolveStatConstraints(
       const index = statConstraints.findIndex((c) => c.statHash === h.statHash);
       return index >= 0
         ? index
-        : // Fall back to hardcoded defaults
-          100 +
-            defaultLoadoutParameters.statConstraints!.findIndex((c) => c.statHash === h.statHash);
+        : // Fall back to the in-game order
+          100 + armorStats.findIndex((c) => c === h.statHash);
     }),
   );
 }

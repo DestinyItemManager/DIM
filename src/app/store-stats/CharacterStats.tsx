@@ -1,4 +1,4 @@
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
@@ -15,10 +15,12 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { dimPowerIcon } from 'app/shell/icons/custom/Power';
 import { RootState } from 'app/store/types';
 import { filterMap, sumBy } from 'app/utils/collections';
 import clsx from 'clsx';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
@@ -51,7 +53,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
             role={stat.onClick ? 'button' : 'group'}
             onClick={stat.onClick}
           >
-            <img src={stat.icon} alt={stat.name} />
+            {typeof stat.icon === 'string' ? <img src={stat.icon} alt={stat.name} /> : stat.icon}
             <div>
               <span className={styles.powerStat}>
                 <FractionalPowerLevel power={stat.value} />
@@ -67,7 +69,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
 
 interface PowerStat {
   value: number;
-  icon: string;
+  icon: string | React.ReactNode;
   name: string;
   richTooltipContent?: () => React.ReactNode;
   onClick?: () => void;
@@ -87,7 +89,7 @@ export function PowerFormula({ storeId }: { storeId: string }) {
 
   const maxTotalPower: PowerStat = {
     value: powerLevel.maxTotalPower,
-    icon: bungieNetPath(defs.Stat.get(StatHashes.Power).displayProperties.icon),
+    icon: <AppIcon icon={dimPowerIcon} />,
     name: t('Stats.MaxTotalPower'),
     problems: { ...powerLevel.problems, notOnStore: false },
   };

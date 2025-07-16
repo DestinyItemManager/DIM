@@ -336,6 +336,7 @@
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
     },
+    "Tier": "Shows items based on their tier from 0-5.",
     "Timelost": "\\(Timelost\\)",
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
@@ -1025,7 +1026,9 @@
     "TriageTab": "Triage",
     "Vault": "Vault",
     "WeaponLevel": "Weapon Level {{level}}",
-    "CatalystProgress": "Catalyst Progress"
+    "CatalystProgress": "Catalyst Progress",
+    "ArtifactBreaker": "This weapon has {{breaker}} because of an unlocked artifact perk.",
+    "IntrinsicBreaker": "This weapon intrinsically has {{breaker}}."
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
@@ -1064,6 +1067,7 @@
       "Damage": "Damage",
       "Ammo": "Ammo",
       "Foundry": "Foundry",
+      "Featured": "Featured",
       "Intrinsics": "Intrinsic",
       "OriginTraits": "Origin Trait",
       "Shaders": "Cosmetics",
@@ -1079,7 +1083,8 @@
       "PerksGrid": "Perks Grid",
       "Mods": "Mods",
       "Quality": "Quality %",
-      "Tier": "Tier",
+      "ItemTier": "Tier",
+      "Tier": "Rarity",
       "Source": "Source",
       "Year": "Year",
       "Season": "Season",
@@ -1108,7 +1113,8 @@
       "Aim": "Aim",
       "Recoil": "Recoil",
       "Power": "Power",
-      "Airborne": "Airborne"
+      "Airborne": "Airborne",
+      "AmmoGeneration": "Ammo Gen"
     }
   },
   "Progress": {
@@ -1134,6 +1140,7 @@
     "GambitPathfinder": "Gambit Pathfinder",
     "CruciblePathfinder": "Crucible Pathfinder",
     "VanguardPathfinder": "Vanguard Pathfinder",
+    "SeasonalHub": "Seasonal Hub",
     "SecretTriumph": "Secret Triumph",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs",
@@ -1147,7 +1154,8 @@
   },
   "Records": {
     "Title": "Records",
-    "UniversalOrnamentSetOther": "Other"
+    "UniversalOrnamentSetOther": "Other",
+    "VexcaliburCatalyst": "Vexcalibur Catalyst"
   },
   "SearchHistory": {
     "Description": "These are all your past and saved searches. You can delete them from here.",
@@ -1227,6 +1235,7 @@
     "SortByClassType": "Required Class",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
+    "SortByFeatured": "Featured (D2)",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",

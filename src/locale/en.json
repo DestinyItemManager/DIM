@@ -322,6 +322,7 @@
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
     },
+    "Tier": "Shows items based on their tier from 0-5.",
     "Timelost": "\\(Timelost\\)",
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
@@ -957,6 +958,7 @@
     "AddToLoadout": "Loadout",
     "AddToLoadoutTitle": "Add this to a loadout",
     "All": "All",
+    "ArtifactBreaker": "This weapon has {{breaker}} because of an unlocked artifact perk.",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CatalystProgress": "Catalyst Progress",
@@ -974,6 +976,7 @@
     },
     "Infuse": "Infuse",
     "InfuseTitle": "Open the infusion fuel finder",
+    "IntrinsicBreaker": "This weapon intrinsically has {{breaker}}.",
     "LoadingSockets": "Perk and stat details have not loaded yet for this item.",
     "LockUnlock": {
       "AutoLock": "Lock state is synced to this item's tag",
@@ -1039,10 +1042,12 @@
       "Damage": "Damage",
       "Energy": "Energy",
       "Event": "Event",
+      "Featured": "Featured",
       "Foundry": "Foundry",
       "Harmonizable": "Harmonizable",
       "Icon": "Icon",
       "Intrinsics": "Intrinsic",
+      "ItemTier": "Tier",
       "KillTracker": "Kills",
       "Level": "Level",
       "Loadouts": "Loadouts",
@@ -1071,7 +1076,7 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Stats",
       "Tag": "Tag",
-      "Tier": "Tier",
+      "Tier": "Rarity",
       "Traits": "Weapon Traits",
       "WishList": "Wish List",
       "WishListNotes": "Wish List Notes",
@@ -1090,6 +1095,7 @@
     "Stats": {
       "Aim": "Aim",
       "Airborne": "Airborne",
+      "AmmoGeneration": "Ammo Gen",
       "Power": "Power",
       "RPM": "RPM",
       "Recoil": "Recoil",
@@ -1103,9 +1109,7 @@
   },
   "Progress": {
     "Bounties": "Bounties",
-    "CruciblePathfinder": "Crucible Pathfinder",
     "CrucibleRank": "Ranks",
-    "GambitPathfinder": "Gambit Pathfinder",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "NoEventChallenges": "You have completed all event challenges",
@@ -1126,9 +1130,9 @@
     "RecordValue": "{{value}}pts",
     "Resets_one": "1 reset",
     "Resets_other": "{{count}} resets",
+    "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Stat Trackers",
-    "TrackedTriumphs": "Tracked Triumphs",
-    "VanguardPathfinder": "Vanguard Pathfinder"
+    "TrackedTriumphs": "Tracked Triumphs"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
@@ -1136,7 +1140,8 @@
   },
   "Records": {
     "Title": "Records",
-    "UniversalOrnamentSetOther": "Other"
+    "UniversalOrnamentSetOther": "Other",
+    "VexcaliburCatalyst": "Vexcalibur Catalyst"
   },
   "SearchHistory": {
     "Date": "Last Used",
@@ -1212,6 +1217,7 @@
     "SortByClassType": "Required Class",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
+    "SortByFeatured": "Featured (D2)",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",

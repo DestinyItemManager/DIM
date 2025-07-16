@@ -99,12 +99,12 @@ export type ModStatChanges = {
 };
 
 export type ArmorStatHashes =
-  | StatHashes.Mobility
-  | StatHashes.Resilience
-  | StatHashes.Recovery
-  | StatHashes.Discipline
-  | StatHashes.Intellect
-  | StatHashes.Strength;
+  | StatHashes.Weapons
+  | StatHashes.Health
+  | StatHashes.Class
+  | StatHashes.Grenade
+  | StatHashes.Super
+  | StatHashes.Melee;
 
 export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxStat };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
