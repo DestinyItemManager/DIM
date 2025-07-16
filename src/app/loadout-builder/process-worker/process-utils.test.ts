@@ -567,7 +567,7 @@ describe('process-utils optimal mods', () => {
       ourItems,
       setStats,
       statMinMaxes,
-    )!;
+    );
     const finalStats = [...setStats];
     for (let i = 0; i < armorStats.length; i++) {
       finalStats[i] += statMods.bonusStats[i];
@@ -695,7 +695,7 @@ test('process-utils activity mods', async () => {
   // the cheaper stats where the mods can actually fit
   const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
   expect(autoMods).not.toBeUndefined();
-  expect(autoMods!.bonusStats).toEqual([10, 0, 0, 0, 0, 0]);
+  expect(autoMods.bonusStats).toEqual([10, 0, 0, 0, 0, 0]);
 
   const minMaxesInStatOrder: MinMaxStat[] = [
     { minStat: 0, maxStat: 0 },
@@ -900,7 +900,7 @@ describe('process-utils pickOptimalStatMods edge cases', () => {
     loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
   });
 
-  it('returns undefined when no mods can be picked', () => {
+  it('returns empty when no mods can be picked', () => {
     const setStats = [0, 0, 0, 0, 0, 0];
     const desiredStatRanges = armorStats.map((statHash) => ({
       statHash,
@@ -910,7 +910,9 @@ describe('process-utils pickOptimalStatMods edge cases', () => {
 
     const result = pickOptimalStatMods(loSessionInfo, items, setStats, desiredStatRanges);
 
-    expect(result).toBeUndefined();
+    expect(result).toBeDefined();
+    expect(result.bonusStats).toEqual([0, 0, 0, 0, 0, 0]);
+    expect(result.mods).toEqual([]);
   });
 
   it('returns empty result when auto stat mods are off', () => {
@@ -926,7 +928,7 @@ describe('process-utils pickOptimalStatMods edge cases', () => {
     const result = pickOptimalStatMods(loSessionInfo, items, setStats, desiredStatRanges);
 
     expect(result).toBeDefined();
-    expect(result!.bonusStats).toEqual([0, 0, 0, 0, 0, 0]);
-    expect(result!.mods).toEqual([]);
+    expect(result.bonusStats).toEqual([0, 0, 0, 0, 0, 0]);
+    expect(result.mods).toEqual([]);
   });
 });

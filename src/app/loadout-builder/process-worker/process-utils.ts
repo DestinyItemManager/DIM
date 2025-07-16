@@ -353,7 +353,7 @@ export function pickOptimalStatMods(
   items: ProcessItem[],
   setStats: number[],
   desiredStatRanges: DesiredStatRange[],
-): { mods: number[]; bonusStats: number[] } | undefined {
+): { mods: number[]; bonusStats: number[] } {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info.activityModPermutations,
     items,
@@ -388,18 +388,14 @@ export function pickOptimalStatMods(
     setEnergy - info.totalModEnergyCost,
   );
 
-  if (picks) {
-    const bonusStats = [0, 0, 0, 0, 0, 0];
-    for (const pick of picks) {
-      bonusStats[pick.targetStatIndex] += pick.exactStatPoints;
-    }
-    return {
-      mods: picks.flatMap((pick) => pick.modHashes),
-      bonusStats,
-    };
-  } else {
-    return undefined;
+  const bonusStats = [0, 0, 0, 0, 0, 0];
+  for (const pick of picks) {
+    bonusStats[pick.targetStatIndex] += pick.exactStatPoints;
   }
+  return {
+    mods: picks.flatMap((pick) => pick.modHashes),
+    bonusStats,
+  };
 }
 
 // const majorMinorRatio = majorStatBoost / minorStatBoost;
@@ -445,7 +441,7 @@ export function greedyPickStatMods(
   remainingEnergyCapacities: number[][],
   /** The total amount of energy left over in this set */
   totalModEnergyCapacity: number,
-): ModsPick[] | undefined {
+): ModsPick[] {
   if (remainingEnergyCapacities[0].every((e) => e === 0) && numArtificeMods === 0) {
     return [];
   }
@@ -460,7 +456,7 @@ export function greedyPickStatMods(
   if (!picks) {
     // If we can't hit the target stats with the current exploration stats, we
     // can't do anything.
-    return undefined;
+    return [];
   }
 
   for (let i = 0; i < explorationStats.length; i++) {
