@@ -42,7 +42,7 @@ export default function Milestones({
   const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassList[0].seasonPassHash
+  const seasonPass = season?.seasonPassList[0]?.seasonPassHash
     ? defs.SeasonPass.get(season.seasonPassList[0].seasonPassHash)
     : undefined;
 
