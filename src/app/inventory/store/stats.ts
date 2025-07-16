@@ -1,7 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { ArmorBucketHashes } from 'app/loadout-builder/types';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { isClassCompatible } from 'app/utils/item-utils';
@@ -159,20 +158,18 @@ export function buildStats(
     investmentStats.push(tStat!);
 
     // synthesize custom stats for meaningfully stat-bearing items
-    if (ArmorBucketHashes.includes(createdItem.bucket.hash)) {
-      for (const customStat of customStats) {
-        if (isClassCompatible(customStat.class, createdItem.classType)) {
-          const cStat = makeCustomStat(
-            investmentStats,
-            customStat.weights,
-            customStat.statHash,
-            customStat.label,
-            memoCustomDesc(),
-            true,
-          );
-          if (cStat) {
-            investmentStats.push(cStat);
-          }
+    for (const customStat of customStats) {
+      if (isClassCompatible(customStat.class, createdItem.classType)) {
+        const cStat = makeCustomStat(
+          investmentStats,
+          customStat.weights,
+          customStat.statHash,
+          customStat.label,
+          memoCustomDesc(),
+          true,
+        );
+        if (cStat) {
+          investmentStats.push(cStat);
         }
       }
     }
