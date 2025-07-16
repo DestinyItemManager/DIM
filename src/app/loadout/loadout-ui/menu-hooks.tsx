@@ -4,7 +4,7 @@ import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t, tl } from 'app/i18next-t';
-import { getHashtagsFromString } from 'app/inventory/note-hashtags';
+import { getHashtagsFromString, HashTagTracker } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
@@ -72,16 +72,7 @@ export function useLoadoutFilterPills(
     setSelectedFilters(emptyArray());
   }, [store.id]);
 
-  const loadoutsByHashtag = useMemo(() => {
-    const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
-    for (const loadout of savedLoadouts) {
-      const hashtags = getHashtagsFromString(loadout.name, loadout.notes);
-      for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag.replace('#', '').replace(/_/g, ' ')] ??= []).push(loadout);
-      }
-    }
-    return loadoutsByHashtag;
-  }, [savedLoadouts]);
+  const loadoutsByHashtag = useMemo(() => groupLoadoutsByHashtag(savedLoadouts), [savedLoadouts]);
 
   const filterOptions = Object.entries(loadoutsByHashtag)
     .map(
@@ -211,6 +202,32 @@ export function useLoadoutFilterPills(
     </>,
     selectedFilters.length > 0,
   ];
+}
+
+function groupLoadoutsByHashtag(loadouts: Loadout[]): { [hashtag: string]: Loadout[] } {
+  const hashtagTracker = new HashTagTracker();
+  const loadoutsByLowerHashtag: { [lowerHashtag: string]: Loadout[] } = {};
+
+  // Collect all hashtags and group loadouts by lowercase hashtag
+  for (const loadout of loadouts) {
+    const hashtags = getHashtagsFromString(loadout.name, loadout.notes);
+    for (const hashtag of hashtags) {
+      hashtagTracker.addHashtag(hashtag);
+      const lower = hashtag.toLowerCase();
+      (loadoutsByLowerHashtag[lower] ??= []).push(loadout);
+    }
+  }
+
+  // Get canonical forms and re-key with cleaned hashtags
+  const result: { [hashtag: string]: Loadout[] } = {};
+
+  for (const [lowerHashtag, loadouts] of Object.entries(loadoutsByLowerHashtag)) {
+    const canonicalHashtag = hashtagTracker.canonicalForm(lowerHashtag);
+    const cleanedHashtag = canonicalHashtag.replace('#', '').replace(/_/g, ' ');
+    result[cleanedHashtag] = loadouts;
+  }
+
+  return result;
 }
 
 function AnalysisProgress({

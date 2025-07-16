@@ -4,41 +4,73 @@ import { maxBy } from 'es-toolkit';
 import { ItemInfos } from './dim-item-info';
 
 /**
- * Collects all hashtags from all item notes.
- *
- * Orders by use count, de-dupes case-insensitive, and picks the most popular capitalization.
+ * An object that can collect usage of hashtags and return their most popular form.
  */
-export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
+export class HashTagTracker {
   // {
   //   '#pve': {
   //     variants: {
   //       '#PVE': 4,
   //       '#pve': 2
-  //     },              <- hashtagCollection
-  //     count: 6        <- structure
+  //     },
+  //     count: 6
   //   }
   // }
-  const hashtagCollection: NodeJS.Dict<{ variants: NodeJS.Dict<number>; count: number }> = {};
+  hashtagCollection: NodeJS.Dict<{ variants: NodeJS.Dict<number>; count: number }> = {};
+
+  addHashtag(hashtag: string) {
+    const lower = hashtag.toLowerCase();
+    this.hashtagCollection[lower] ??= { count: 0, variants: {} };
+    this.hashtagCollection[lower].count++;
+    this.hashtagCollection[lower].variants[hashtag] ??= 0;
+    this.hashtagCollection[lower].variants[hashtag]++;
+  }
+
+  /**
+   * Gets the best "canonical" form of a hashtag to use for display.
+   */
+  canonicalForm(hashtag: string): string {
+    const lower = hashtag.toLowerCase();
+    const normalizedMeta = this.hashtagCollection[lower];
+    if (!normalizedMeta) {
+      return hashtag; // No variants, return as is
+    }
+    return extractMostPopular(normalizedMeta)[0];
+  }
+
+  allHashtags(): string[] {
+    return Object.values(this.hashtagCollection)
+      .map((m) => extractMostPopular(m!))
+      .sort(compareBy(([, count]) => -count))
+      .map(([variant]) => variant);
+  }
+}
+
+function extractMostPopular(normalizedMeta: {
+  variants: NodeJS.Dict<number>;
+  count: number;
+}): [canonicalForm: string, totalObserved: number] {
+  const countsByVariant = Object.entries(normalizedMeta.variants);
+  const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
+  return [mostPopularVariant, normalizedMeta.count];
+}
+
+/**
+ * Collects all hashtags from all item notes.
+ *
+ * Orders by use count, de-dupes case-insensitive, and picks the most popular capitalization.
+ */
+export function collectHashtagsFromInfos(itemInfos: ItemInfos) {
+  const hashtagTracker = new HashTagTracker();
 
   for (const info of Object.values(itemInfos)) {
     const hashtags = getHashtagsFromString(info.notes);
     for (const h of hashtags) {
-      const lower = h.toLowerCase();
-      hashtagCollection[lower] ??= { count: 0, variants: {} };
-      hashtagCollection[lower].count++;
-      hashtagCollection[lower].variants[h] ??= 0;
-      hashtagCollection[lower].variants[h]++;
+      hashtagTracker.addHashtag(h);
     }
   }
 
-  return Object.values(hashtagCollection)
-    .map((normalizedMeta) => {
-      const countsByVariant = Object.entries(normalizedMeta!.variants);
-      const mostPopularVariant = maxBy(countsByVariant, (v) => v[1]!)![0];
-      return [mostPopularVariant, normalizedMeta!.count] as const;
-    })
-    .sort(compareBy((t) => -t[1]))
-    .map((t) => t[0]);
+  return hashtagTracker.allHashtags();
 }
 
 const hashtagRegex = /(^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)/gu;
