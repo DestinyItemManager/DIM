@@ -6,8 +6,8 @@ import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import {
   ItemRarityName,
-  MAX_ARMOR_ENERGY_CAPACITY,
   armor2PlugCategoryHashesByName,
+  maxEnergyCapacity,
 } from 'app/search/d2-known-values';
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { count, mapValues, sumBy } from 'app/utils/collections';
@@ -160,14 +160,11 @@ function getUpgradeCost(
   newEnergy: number,
   needsArtifice: boolean,
 ) {
-  const maxEnergyCapacity = Math.max(
-    dimItem.energy?.energyCapacity ?? 0,
-    MAX_ARMOR_ENERGY_CAPACITY,
-  );
+  const maxEnergy = maxEnergyCapacity(dimItem);
   if (!model.byRarity[item.rarity]) {
     const plugs = getEnergyUpgradePlugs(dimItem);
-    const costsPerTier = Array<number[]>(maxEnergyCapacity);
-    for (let i = 0; i <= maxEnergyCapacity; i++) {
+    const costsPerTier = Array<number[]>(maxEnergy);
+    for (let i = 0; i <= maxEnergy; i++) {
       const previousTierCosts = costsPerTier[i - 1];
       costsPerTier[i] = previousTierCosts
         ? [...previousTierCosts]
@@ -189,7 +186,7 @@ function getUpgradeCost(
     model.byRarity[dimItem.rarity] = costsPerTier;
   }
   const needsEnhancing = item.rarity === 'Exotic' && needsArtifice && !isArtifice(dimItem);
-  const targetEnergy = needsEnhancing ? maxEnergyCapacity : newEnergy;
+  const targetEnergy = needsEnhancing ? maxEnergy : newEnergy;
   const rarityModel = model.byRarity[dimItem.rarity]!;
   const alreadyPaidCosts = rarityModel[item.originalCapacity];
 
@@ -494,7 +491,7 @@ export function fitMostMods({
       resultingItemEnergies[item.id] = {
         energyCapacity: itemEnergies[item.id].originalCapacity,
         energyUsed: requiresArtificeEnhancement
-          ? Math.max(item.energy.energyCapacity, MAX_ARMOR_ENERGY_CAPACITY)
+          ? maxEnergyCapacity(item)
           : sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
       };
     }

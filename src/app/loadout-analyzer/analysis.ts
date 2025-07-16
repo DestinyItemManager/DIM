@@ -28,7 +28,6 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
-import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/collections';
 import { stubTrue } from 'app/utils/functions';
@@ -146,7 +145,7 @@ export async function analyzeLoadout(
     let allLegendariesMasterworked = true;
     let exoticNotMasterworked = false;
     for (const armorItem of loadoutArmor) {
-      if (armorItem.energy && armorItem.energy.energyCapacity < MAX_ARMOR_ENERGY_CAPACITY) {
+      if (armorItem.energy && armorItem.energy.energyCapacity < 10) {
         if (armorItem.isExotic) {
           exoticNotMasterworked = true;
         } else {

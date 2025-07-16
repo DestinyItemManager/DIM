@@ -1,4 +1,5 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
+import { DimItem } from 'app/inventory/item-types';
 import { ArmorStatHashes } from 'app/loadout-builder/types';
 import { HashLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
@@ -21,6 +22,11 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 // GAME MECHANICS KNOWN VALUES
 //
 
+// In Edge of Fate, Tier 5 armor was introduced that has 11 energy instead of 10.
+export const maxEnergyCapacity = (item: DimItem): number => (item.tier === 5 ? 11 : 10);
+/**
+ * @deprecated: use `maxEnergyCapacity` instead
+ */
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 export const MASTERWORK_ARMOR_STAT_BONUS = 2;
 

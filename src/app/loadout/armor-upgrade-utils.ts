@@ -1,7 +1,7 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
-import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import { maxEnergyCapacity } from 'app/search/d2-known-values';
 import { isArtifice } from 'app/utils/item-utils';
 
 /**
@@ -21,9 +21,7 @@ export function calculateAssumedItemEnergy(
     assumeArmorMasterwork === AssumeArmorMasterwork.All ||
     assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic ||
     (assumeArmorMasterwork === AssumeArmorMasterwork.Legendary && !item.isExotic)
-      ? // TODO: Edge of Fate: Tier 5 armor can have 11 energy - would be great if
-        // we could read this from the item's energy info.
-        MAX_ARMOR_ENERGY_CAPACITY
+      ? maxEnergyCapacity(item)
       : minItemEnergy;
   return Math.max(itemEnergy, assumedEnergy);
 }

@@ -7,7 +7,6 @@ interface CssExports {
   'energySwapContainer': string;
   'energyValue': string;
   'item': string;
-  'masterworked': string;
   'swapButton': string;
   'swapButtonContainer': string;
 }
