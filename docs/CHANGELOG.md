@@ -1,5 +1,7 @@
 ## Next
 
+## 8.81.1 <span class="changelog-date">(2025-07-15)</span>
+
 * Fixed new Armor 3.0 items not showing any stat bars.
 * Fixed Armor 3.0 masterworks applying points to all stats instead of the lowest 3 stats.
 * Add an explanatory tooltip to the Anti-Champion icon in the item tooltip, since folks have been confused by it.
