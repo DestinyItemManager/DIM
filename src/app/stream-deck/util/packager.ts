@@ -95,19 +95,19 @@ function metrics(state: RootState) {
   const seasonProgress = progression[battlePassHash!];
   const prestigeProgress = progression[prestigeLevel!];
 
-  const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
+  const prestigeMode = seasonProgress?.level === seasonProgress?.levelCap;
 
   const seasonalRank = prestigeMode
-    ? prestigeProgress.level + seasonProgress.levelCap
-    : seasonProgress.level;
+    ? prestigeProgress?.level + seasonProgress?.levelCap
+    : seasonProgress?.level;
 
   return {
-    gambit: progression[3008065600].currentProgress,
-    vanguard: progression[457612306].currentProgress,
-    crucible: progression[2083746873].currentProgress,
-    trials: progression[2755675426].currentProgress,
+    gambit: 0, // progression[3008065600].currentProgress,
+    vanguard: 0, // progression[457612306].currentProgress,
+    crucible: 0, // progression[2083746873].currentProgress,
+    trials: 0, // progression[2755675426].currentProgress,
     gunsmith: progression[1471185389].currentProgress,
-    ironBanner: progression[599071390].currentProgress,
+    ironBanner: 0, // progression[599071390].currentProgress,
     triumphs: lifetimeScore ?? 0,
     triumphsActive: activeScore ?? 0,
     battlePass: battlePassHash ? seasonalRank : 0,
