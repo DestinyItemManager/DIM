@@ -86,6 +86,15 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           })}
         />
       )}
+      {item.tier > 1 ? (
+        <div className={styles.tierPipContainer}>
+          {Array(item.tier)
+            .fill(0)
+            .map((_, i) => (
+              <div key={i} className={styles.tierPip} />
+            ))}
+        </div>
+      ) : null}
       {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
         <>
           <div className={styles.energyCostOverlay} />
