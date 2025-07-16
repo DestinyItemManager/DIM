@@ -1,5 +1,22 @@
 ## Next
 
+* Fixed new Armor 3.0 items not showing any stats.
+* Add an explanatory tooltip to the breaker icon in the item tooltip, since folks have been confused by it.
+* Reposition the season badge on the item tile a bit to better match in-game.
+* Add the stat icon to stat tooltips to help folks learn them.
+* Add the season icon to the item popup header.
+* Add the item tier as a number under the season icon.
+* Add an inventory sort property for "featured". Waiting on "tier" until we show it on the tile somewhere.
+* Add Organizer/spreadsheet columns for "featured" and "tier".
+* Add `tier:` search to find items by tier.
+* Fixed the missing title for "Seasonal Hub" in the Progress page.
+* Fixed a crash when using the Stream Deck integration.
+* Fixed the display of the power icon in the character power calculation.
+* Show the Ammo Generation stat on weapons.
+* Prevent a crash in the Loadout Optimizer when auto stat mods is disabled.
+* Fixed cramped stat min/max fields in the Loadout Optimizer.
+* Changed the min/max fields to not update the range until you hit Enter or blur the field.
+
 ## 8.81.0 <span class="changelog-date">(2025-07-15)</span>
 
 * Improved the Loadout Optimizer algorithm to correctly maximize stats now that it's tierless. Also improved its performance.
