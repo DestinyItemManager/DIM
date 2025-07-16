@@ -3,7 +3,15 @@
 
 .title {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  > img {
+    height: 24px;
+    width: 24px;
+  }
+  > *:last-child {
+    margin-left: auto;
+  }
 }
 
 .value {
