@@ -1064,7 +1064,6 @@
       "OtherPerks": "Other Perks",
       "PercentComplete": "% Complete",
       "Perks": "Perks",
-      "PerksGrid": "Perks Grid",
       "PerksMods": "Perks & Mods",
       "Power": "Power",
       "Quality": "Quality %",
@@ -1140,7 +1139,8 @@
   },
   "Records": {
     "Title": "Records",
-    "UniversalOrnamentSetOther": "Other"
+    "UniversalOrnamentSetOther": "Other",
+    "VexcaliburCatalyst": "Vexcalibur Catalyst"
   },
   "SearchHistory": {
     "Date": "Last Used",
