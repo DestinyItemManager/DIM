@@ -1,5 +1,5 @@
 import { MAX_STAT } from 'app/loadout/known-values';
-import { filterMap } from 'app/utils/collections';
+import { count, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { infoLog, warnLog } from '../../utils/log';
 import {
@@ -458,6 +458,9 @@ export function process({
         "Can't pick optimal stat mods for set",
         stats,
         precalculatedInfo.numAvailableGeneralMods,
+        count(armor, (i) => i.isArtifice),
+        desiredStatRanges.map((s) => s.minStat),
+        desiredStatRanges.map((s) => s.maxStat),
       );
       return undefined;
     }

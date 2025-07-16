@@ -388,7 +388,7 @@ export function pickOptimalStatMods(
     setEnergy - info.totalModEnergyCost,
   );
 
-  if (picks?.length) {
+  if (picks) {
     const bonusStats = [0, 0, 0, 0, 0, 0];
     for (const pick of picks) {
       bonusStats[pick.targetStatIndex] += pick.exactStatPoints;
@@ -446,6 +446,9 @@ export function greedyPickStatMods(
   /** The total amount of energy left over in this set */
   totalModEnergyCapacity: number,
 ): ModsPick[] | undefined {
+  if (remainingEnergyCapacities[0].every((e) => e === 0) && numArtificeMods === 0) {
+    return [];
+  }
   let picks: ModsPick[] | undefined = chooseAutoMods(
     info,
     explorationStats,
