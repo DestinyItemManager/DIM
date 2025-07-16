@@ -266,7 +266,7 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
   // recalculating it.
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
-    if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
+    if (item.stats && item.power) {
       const statValues = item.stats
         .filter((s) => relevantStatHashes.includes(s.statHash))
         .sort((a, b) => a.statHash - b.statHash)
