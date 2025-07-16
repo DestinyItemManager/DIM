@@ -567,7 +567,7 @@ describe('process-utils optimal mods', () => {
       ourItems,
       setStats,
       statMinMaxes,
-    )!;
+    );
     const finalStats = [...setStats];
     for (let i = 0; i < armorStats.length; i++) {
       finalStats[i] += statMods.bonusStats[i];
@@ -695,7 +695,7 @@ test('process-utils activity mods', async () => {
   // the cheaper stats where the mods can actually fit
   const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
   expect(autoMods).not.toBeUndefined();
-  expect(autoMods!.bonusStats).toEqual([10, 0, 0, 0, 0, 0]);
+  expect(autoMods.bonusStats).toEqual([10, 0, 0, 0, 0, 0]);
 
   const minMaxesInStatOrder: MinMaxStat[] = [
     { minStat: 0, maxStat: 0 },
@@ -812,6 +812,7 @@ describe('process-utils general mod assignment', () => {
   let items: ProcessItem[];
   let loSessionInfo: LoSessionInfo;
   let generalMod: ProcessMod;
+  let autoModData: AutoModData;
 
   beforeAll(async () => {
     const defs = await getTestDefinitions();
@@ -832,8 +833,7 @@ describe('process-utils general mod assignment', () => {
         compatibleModSeasons: [],
         remainingEnergyCapacity: 10,
       }));
-
-    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
     loSessionInfo = precalculateStructures(autoModData, [generalMod], [], true, armorStats);
   });
 
@@ -862,11 +862,24 @@ describe('process-utils general mod assignment', () => {
 
     expect(result).toBeUndefined();
   });
+
+  it('handles auto mods off', () => {
+    const result = pickAndAssignSlotIndependentMods(
+      loSessionInfo,
+      modStatistics,
+      items,
+      undefined, // No needed stats
+      0,
+    );
+
+    expect(result).toEqual([]);
+  });
 });
 
 describe('process-utils pickOptimalStatMods edge cases', () => {
   let items: ProcessItem[];
   let loSessionInfo: LoSessionInfo;
+  let autoModData: AutoModData;
 
   beforeAll(async () => {
     const defs = await getTestDefinitions();
@@ -883,12 +896,11 @@ describe('process-utils pickOptimalStatMods edge cases', () => {
         compatibleModSeasons: [],
         remainingEnergyCapacity: 0, // No energy available
       }));
-
-    const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+    autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
     loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
   });
 
-  it('returns undefined when no mods can be picked', () => {
+  it('returns empty when no mods can be picked', () => {
     const setStats = [0, 0, 0, 0, 0, 0];
     const desiredStatRanges = armorStats.map((statHash) => ({
       statHash,
@@ -898,6 +910,25 @@ describe('process-utils pickOptimalStatMods edge cases', () => {
 
     const result = pickOptimalStatMods(loSessionInfo, items, setStats, desiredStatRanges);
 
-    expect(result).toBeUndefined();
+    expect(result).toBeDefined();
+    expect(result.bonusStats).toEqual([0, 0, 0, 0, 0, 0]);
+    expect(result.mods).toEqual([]);
+  });
+
+  it('returns empty result when auto stat mods are off', () => {
+    loSessionInfo = precalculateStructures(autoModData, [], [], false, armorStats);
+    const setStats = [65, 42, 60, 76, 60, 87];
+    // No constraint
+    const desiredStatRanges = armorStats.map((statHash) => ({
+      statHash,
+      minStat: 0,
+      maxStat: 200,
+    }));
+
+    const result = pickOptimalStatMods(loSessionInfo, items, setStats, desiredStatRanges);
+
+    expect(result).toBeDefined();
+    expect(result.bonusStats).toEqual([0, 0, 0, 0, 0, 0]);
+    expect(result.mods).toEqual([]);
   });
 });
