@@ -322,6 +322,7 @@
       "Tag": "Shows items that have a specific tag.",
       "Tagged": "Shows items that have any tag."
     },
+    "Tier": "Shows items based on their tier from 0-5.",
     "Timelost": "\\(Timelost\\)",
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
