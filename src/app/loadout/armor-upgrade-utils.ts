@@ -16,6 +16,7 @@ export function calculateAssumedItemEnergy(
   if (!item.energy) {
     return 0;
   }
+  // Note: Since Edge of Fate, all new armor drops at max energy.
   const itemEnergy = item.energy.energyCapacity;
   const assumedEnergy =
     assumeArmorMasterwork === AssumeArmorMasterwork.All ||
