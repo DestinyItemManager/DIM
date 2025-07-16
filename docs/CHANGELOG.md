@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed new Armor 3.0 items not showing any stats.
+* Fixed masterworks on Armor 3.0 not using the correct rules for adding stats to the lowest 3 stats.
 * Add an explanatory tooltip to the breaker icon in the item tooltip, since folks have been confused by it.
 * Reposition the season badge on the item tile a bit to better match in-game.
 * Add the stat icon to stat tooltips to help folks learn them.
