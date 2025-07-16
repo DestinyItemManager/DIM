@@ -3,7 +3,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { getEnergyUpgradeHashes, sumModCosts } from 'app/inventory/store/energy';
 import { EnergySwap } from 'app/loadout-builder/generated-sets/GeneratedSetItem';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
@@ -48,12 +47,10 @@ export function EnergyMeterIncrements({
   previewUpgrade?: (i: number) => void;
   variant: 'medium' | 'small';
 }) {
+  // This works because Tier 5 armor with 11 energy drops with all energy unlocked.
+  const maxEnergyCapacity = Math.max(10, energyCapacity);
   // layer in possible total slots, then earned slots, then currently used slots
-  // TODO: Maybe in the future, items will say how much energy they *can* have -
-  // or we can just decide this based on if it's Tier 5 armor.
-  const meterIncrements = Array<string | undefined>(
-    Math.max(MAX_ARMOR_ENERGY_CAPACITY, energyCapacity),
-  )
+  const meterIncrements = Array<string | undefined>(maxEnergyCapacity)
     .fill(styles.unavailable)
     .fill(undefined, 0, energyCapacity)
     .fill(styles.used, 0, energyUsed);
@@ -112,13 +109,17 @@ export function EnergyIncrementsWithPresstip({
               {t('EnergyMeter.UpgradeNeeded', energy)}
             </>
           )}
-          <hr />
-          <div className={styles.costs}>
-            <span>{t('Loadouts.ModPlacement.UpgradeCosts')}</span>
-            {costs.map((cost) => (
-              <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
-            ))}
-          </div>
+          {costs.length > 0 && (
+            <>
+              <hr />
+              <div className={styles.costs}>
+                <span>{t('Loadouts.ModPlacement.UpgradeCosts')}</span>
+                {costs.map((cost) => (
+                  <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
+                ))}
+              </div>
+            </>
+          )}
         </>
       }
       className={wrapperClass}

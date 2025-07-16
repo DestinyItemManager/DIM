@@ -315,6 +315,7 @@ export function getLoadoutStats(
       armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
       // TODO: Edge of Fate: Tier 5 armor can have 11 energy - would be great if
       // we could read this from the item's energy info.
+      // TODO: See mappers.ts - we need a utility that figures out the correct masterwork level and then conditionally applies its stats
       armorPiecesStats[hash] +=
         itemEnergy !== undefined && itemEnergy >= MAX_ARMOR_ENERGY_CAPACITY && item.energy
           ? MASTERWORK_ARMOR_STAT_BONUS

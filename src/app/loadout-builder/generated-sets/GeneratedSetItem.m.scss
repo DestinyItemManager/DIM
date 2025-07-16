@@ -34,10 +34,6 @@
   align-items: center;
 }
 
-.masterworked {
-  color: $masterwork-border-color;
-}
-
 .swapButton {
   composes: dim-button from global;
   justify-self: center;

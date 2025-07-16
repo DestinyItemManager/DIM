@@ -274,22 +274,27 @@ function mapItemsToGroups(
     ].toString()}`;
   };
 
-  const energyGroups = Object.groupBy(mappedItems, ({ processItem }) =>
+  const firstPassGroups = Object.groupBy(mappedItems, ({ processItem }) =>
     firstPassGroupingFn(processItem),
   );
 
   // Final grouping by everything relevant
   const groups: ItemGroup[] = [];
 
+  // Checks if test is a superset of existing, i.e. every value of existing is contained in test
+  const isSuperset = <T>(test: Set<T>, existing: Set<T>) =>
+    [...existing.values()].every((v) => test.has(v));
+
   // Go through each grouping-by-energy-type, throw out any items with strictly worse properties than
   // another item in that group, then use what's left to build groups by their properties.
-  for (const group of Object.values(energyGroups)) {
+  for (const group of Object.values(firstPassGroups)) {
     const keepSet: MappedItem[] = [];
 
-    // Checks if test is a superset of existing, i.e. every value of existing is contained in test
-    const isSuperset = <T>(test: Set<T>, existing: Set<T>) =>
-      [...existing.values()].every((v) => test.has(v));
-
+    // TODO: Converge this is-better-stats logic with the one in
+    // search-filter/dupes.ts and the one in triage-utils.ts to create a single
+    // utility for figuring out if an item is strictly better than another. This
+    // will be important when considering Tuning mods and would involve
+    // correctly accounting for artifice mods in this function.
     const isStrictlyBetter = (testItem: MappedItem, existingItem: MappedItem) => {
       const testInfo = cache.get(testItem.dimItem)!;
       const existingInfo = cache.get(existingItem.dimItem)!;

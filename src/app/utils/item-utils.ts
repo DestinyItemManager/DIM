@@ -317,6 +317,20 @@ export function isArtificeSocket(socket: DimSocket) {
 }
 
 /**
+ * Is this the new-style armor masterwork in Edge of Fate that grants +1 to the three lower stats per tier?
+ */
+// TODO: May want to switch this to isLegacyArmorMasterwork eventually
+export function isEdgeOfFateArmorMasterwork(item: DimItem) {
+  return Boolean(item.sockets?.allSockets.some(isEdgeOfFateArmorMasterworkSocket));
+}
+
+export function isEdgeOfFateArmorMasterworkSocket(socket: DimSocket) {
+  return (
+    socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks
+  );
+}
+
+/**
  * Are two Destiny classes compatible? e.g. can an item (firstClass) be equipped
  * by a character (secondClass)? True if they're the same class or one is the
  * wildcard class.

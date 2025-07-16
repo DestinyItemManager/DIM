@@ -8,7 +8,6 @@ import {
 import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
-import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { count, sumBy, uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
@@ -363,7 +362,7 @@ function isModSelectable(
 
     // TODO: Edge of Fate: Tier 5 armor can have 11 energy. We'd need to pass
     // that in here somehow.
-    return lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY;
+    return lockedModCost + modCost <= 10;
   }
 
   return true;
