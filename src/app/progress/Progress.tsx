@@ -92,22 +92,19 @@ export default function Progress({ account }: { account: DestinyAccount }) {
     defs.PresentationNode.get(coreSettings.seasonalChallengesPresentationNodeHash);
 
   const paleHeartPathfinderNode = defs.PresentationNode.get(1062988660);
-  const gambitPathfinderNode = defs.PresentationNode.get(1190294990);
-  const cruciblePathfinderNode = defs.PresentationNode.get(1289679000);
-  const vanguardPathfinderNode = defs.PresentationNode.get(2968370335);
 
   const menuItems = compact([
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    eventCard && { id: 'event', title: eventCard.displayProperties.name },
+    eventCard && {
+      id: 'event',
+      title: eventCard.displayProperties.name || t('Progress.SeasonalHub'),
+    },
     { id: 'milestones', title: t('Progress.Milestones') },
     paleHeartPathfinderNode && {
       id: 'paleHeartPathfinder',
       title: t('Progress.PaleHeartPathfinder'),
     },
-    gambitPathfinderNode && { id: 'gambitPathfinder', title: t('Progress.GambitPathfinder') },
-    cruciblePathfinderNode && { id: 'cruciblePathfinder', title: t('Progress.CruciblePathfinder') },
-    vanguardPathfinderNode && { id: 'vanguardPathfinder', title: t('Progress.VanguardPathfinder') },
     seasonalChallengesPresentationNode && {
       id: 'seasonal-challenges',
       title: seasonalChallengesPresentationNode.displayProperties.name,
@@ -159,7 +156,10 @@ export default function Progress({ account }: { account: DestinyAccount }) {
 
           {eventCard && (
             <section id="event">
-              <CollapsibleTitle title={eventCard.displayProperties.name} sectionId="event">
+              <CollapsibleTitle
+                title={eventCard.displayProperties.name || t('Progress.SeasonalHub')}
+                sectionId="event"
+              >
                 <div className="progress-row">
                   <Event card={eventCard} store={selectedStore} buckets={buckets} />
                 </div>
@@ -181,38 +181,6 @@ export default function Progress({ account }: { account: DestinyAccount }) {
                 id="paleHeartPathfinder"
                 name={t('Progress.PaleHeartPathfinder')}
                 presentationNode={paleHeartPathfinderNode}
-                store={selectedStore}
-              />
-            </ErrorBoundary>
-          )}
-
-          {gambitPathfinderNode && (
-            <ErrorBoundary name={t('Progress.GambitPathfinder')}>
-              <Pathfinder
-                id="gambitPathfinder"
-                name={t('Progress.GambitPathfinder')}
-                presentationNode={gambitPathfinderNode}
-                store={selectedStore}
-              />
-            </ErrorBoundary>
-          )}
-
-          {cruciblePathfinderNode && (
-            <ErrorBoundary name={t('Progress.CruciblePathfinder')}>
-              <Pathfinder
-                id="cruciblePathfinder"
-                name={t('Progress.CruciblePathfinder')}
-                presentationNode={cruciblePathfinderNode}
-                store={selectedStore}
-              />
-            </ErrorBoundary>
-          )}
-          {vanguardPathfinderNode && (
-            <ErrorBoundary name={t('Progress.VanguardPathfinder')}>
-              <Pathfinder
-                id="vanguardPathfinder"
-                name={t('Progress.VanguardPathfinder')}
-                presentationNode={vanguardPathfinderNode}
                 store={selectedStore}
               />
             </ErrorBoundary>
