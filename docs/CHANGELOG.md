@@ -1,5 +1,12 @@
 ## Next
 
+* Added tier-level pips to item icons.
+* Fixed an issue in Loadout Optimizer that could exclude some valid sets when auto stat mods are off.
+* On the Loadouts page, hashtags are now combined if they only differ by case, and are sorted case-insensitively.
+* Fixed masterwork bonuses not showing up in orange in the stat bars for new armor.
+* Fixed some engrams not looking like engrams.
+* Fixed a number of places where class items did not display stats.
+
 ## 8.81.1 <span class="changelog-date">(2025-07-15)</span>
 
 * Fixed new Armor 3.0 items not showing any stat bars.
