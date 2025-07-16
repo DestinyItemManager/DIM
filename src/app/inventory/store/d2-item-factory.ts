@@ -345,6 +345,7 @@ export function makeItem(
   const isEngram =
     normalBucket.hash === BucketHashes.Engrams ||
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
+    itemDef.traitHashes?.includes(TraitHashes.ItemEngram) ||
     false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
