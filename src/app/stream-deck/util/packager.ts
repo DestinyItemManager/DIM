@@ -69,7 +69,7 @@ function getCurrentSeason(
   const season = profile?.profile?.data?.currentSeasonHash
     ? defs?.Season.get(profile.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassList[0].seasonPassHash
+  const seasonPass = season?.seasonPassList[0]?.seasonPassHash
     ? defs?.SeasonPass.get(season.seasonPassList[0].seasonPassHash)
     : undefined;
   if (!season) {
