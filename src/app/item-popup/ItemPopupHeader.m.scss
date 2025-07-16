@@ -1,4 +1,5 @@
 @use '../variables.scss' as *;
+@use 'sass:math';
 
 .header {
   composes: resetButton from 'app/dim-ui/common.m.scss';
@@ -9,6 +10,7 @@
   line-height: 17px;
   letter-spacing: -0.02em;
   padding: 10px;
+  padding-right: 20px;
 
   background-color: #555;
   color: #eee;
@@ -126,4 +128,17 @@
   .itemType {
     opacity: 0.9;
   }
+}
+
+.iconOverlay {
+  $scale: math.div(65, 92);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px * $scale;
+  height: 96px * $scale;
+  background-size: cover;
+  background-position: -2px * $scale -2px * $scale;
+  background-repeat: no-repeat;
+  pointer-events: none;
 }

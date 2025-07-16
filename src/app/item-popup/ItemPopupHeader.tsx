@@ -1,4 +1,5 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
+import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useHotkey } from 'app/hotkeys/useHotkey';
@@ -83,6 +84,9 @@ export default function ItemPopupHeader({
           )}
         </div>
       </div>
+      {item.iconOverlay && (
+        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
+      )}
       {showArmory && linkToArmory && (
         <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
       )}
