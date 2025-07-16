@@ -1,13 +1,13 @@
 ## Next
 
-* Fixed new Armor 3.0 items not showing any stats.
-* Fixed masterworks on Armor 3.0 not using the correct rules for adding stats to the lowest 3 stats.
-* Add an explanatory tooltip to the breaker icon in the item tooltip, since folks have been confused by it.
-* Reposition the season badge on the item tile a bit to better match in-game.
+* Fixed new Armor 3.0 items not showing any stat bars.
+* Fixed Armor 3.0 masterworks applying points to all stats instead of the lowest 3 stats.
+* Add an explanatory tooltip to the Anti-Champion icon in the item tooltip, since folks have been confused by it.
+* Reposition the season badge on the item tile a bit, to better match in-game.
 * Add the stat icon to stat tooltips to help folks learn them.
 * Add the season icon to the item popup header.
 * Add the item tier as a number under the season icon.
-* Add an inventory sort property for "featured". Waiting on "tier" until we show it on the tile somewhere.
+* Add an inventory sort property for "featured". Waiting on "tier" sorting until we show it on the tile somewhere.
 * Add Organizer/spreadsheet columns for "featured" and "tier".
 * Add `tier:` search to find items by tier.
 * Fixed the missing title for "Seasonal Hub" in the Progress page.
@@ -16,7 +16,7 @@
 * Show the Ammo Generation stat on weapons.
 * Prevent a crash in the Loadout Optimizer when auto stat mods is disabled.
 * Fixed cramped stat min/max fields in the Loadout Optimizer.
-* Changed the min/max fields to not update the range until you hit Enter or blur the field.
+* Changed the Loadout Optimizer min/max stat fields to not update other numbers until you hit Enter or blur the field.
 
 ## 8.81.0 <span class="changelog-date">(2025-07-15)</span>
 
