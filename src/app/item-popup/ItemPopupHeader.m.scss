@@ -10,10 +10,13 @@
   line-height: 17px;
   letter-spacing: -0.02em;
   padding: 10px;
-  padding-right: 20px;
 
   background-color: #555;
   color: #eee;
+
+  &:has(.iconOverlay) {
+    padding-right: 20px;
+  }
 }
 
 .armory {
