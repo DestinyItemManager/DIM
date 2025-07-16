@@ -230,6 +230,8 @@ export interface DimItem {
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
   featured: boolean;
+  /** In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which identifies  */
+  tier: number;
 }
 
 /**

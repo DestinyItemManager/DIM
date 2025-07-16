@@ -537,6 +537,7 @@ export function makeItem(
     infusionCategoryHashes: null,
     tooltipNotifications,
     featured: itemDef.isFeaturedItem,
+    tier: itemInstanceData.gearTier ?? 0,
   };
 
   // *able

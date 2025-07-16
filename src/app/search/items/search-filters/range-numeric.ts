@@ -59,6 +59,16 @@ const simpleRangeFilters: ItemFilterDefinition[] = [
       (item) =>
         Boolean(item.craftedInfo) && compare!(item.craftedInfo?.level || 0),
   },
+  {
+    keywords: 'tier',
+    description: tl('Filter.Tier'),
+    format: 'range',
+    destinyVersion: 2,
+    filter:
+      ({ compare }) =>
+      (item) =>
+        compare!(item.tier),
+  },
 ];
 
 export default simpleRangeFilters;

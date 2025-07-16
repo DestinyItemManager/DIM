@@ -282,6 +282,8 @@ const ITEM_COMPARATORS: {
   crafted: compareBy((item) => (item.crafted ? 0 : 1)),
   // deepsight -> no deepsight
   deepsight: compareBy((item) => (item.deepsightInfo ? 1 : 2)),
+  // featured -> not featured
+  featured: compareBy((item) => (item.featured ? 0 : 1)),
   default: () => 0,
 };
 
