@@ -411,6 +411,10 @@ export type PlugStatActivationRule =
   | {
       /** Only active if the weapon is crafted and either adept or at level 20 */
       rule: 'enhancedIntrinsic';
+    }
+  | {
+      /** New Armor 3.0 archetypes grant stats only to secondary stats when masterworked. */
+      rule: 'archetypeArmorMasterwork';
     };
 
 /**
