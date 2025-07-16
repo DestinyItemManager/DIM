@@ -85,7 +85,9 @@ export default function ItemPopupHeader({
         </div>
       </div>
       {item.iconOverlay && (
-        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
+        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)}>
+          {item.tier !== 0 ? item.tier : null}
+        </div>
       )}
       {showArmory && linkToArmory && (
         <ArmorySheet onClose={() => setShowArmory(false)} item={item} />

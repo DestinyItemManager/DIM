@@ -132,7 +132,10 @@
 
 .iconOverlay {
   $scale: math.div(65, 92);
+  composes: flexColumn from '../dim-ui/common.m.scss';
   position: absolute;
+  box-sizing: border-box;
+  align-items: center;
   top: 0;
   right: 0;
   width: 24px * $scale;
@@ -141,4 +144,6 @@
   background-position: -2px * $scale -2px * $scale;
   background-repeat: no-repeat;
   pointer-events: none;
+  padding-top: 28px * $scale;
+  font-size: 12px;
 }
