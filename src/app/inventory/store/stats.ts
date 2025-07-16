@@ -346,7 +346,14 @@ function applyPlugsToStats(
         }
 
         // check special conditionals
-        if (!isPlugStatActive(pluggedInvestmentStat.activationRule, createdItem)) {
+        if (
+          !isPlugStatActive(
+            pluggedInvestmentStat.activationRule,
+            createdItem,
+            undefined,
+            existingStat,
+          )
+        ) {
           continue;
         }
 
@@ -422,7 +429,10 @@ function attachPlugStats(
     const activePlugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(activePlug.plugDef)) {
-      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+      const existingStat = statsByHash[plugInvestmentStat.statTypeHash];
+      if (
+        !isPlugStatActive(plugInvestmentStat.activationRule, createdItem, undefined, existingStat)
+      ) {
         continue;
       }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
