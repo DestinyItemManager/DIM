@@ -1025,7 +1025,9 @@
     "TriageTab": "Triage",
     "Vault": "Vault",
     "WeaponLevel": "Weapon Level {{level}}",
-    "CatalystProgress": "Catalyst Progress"
+    "CatalystProgress": "Catalyst Progress",
+    "ArtifactBreaker": "This weapon has {{breaker}} because of an unlocked artifact perk.",
+    "IntrinsicBreaker": "This weapon intrinsically has {{breaker}}."
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
