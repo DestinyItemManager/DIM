@@ -443,9 +443,19 @@ export function getColumns(
     c({
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
-      csv: 'Tier',
+      csv: 'Rarity',
       value: (i) => i.rarity,
       filter: (value) => `is:${value}`,
+    }),
+    c({
+      id: 'itemTier',
+      header: t('Organizer.Columns.ItemTier'),
+      className: styles.centered,
+      headerClassName: styles.centered,
+      defaultSort: SortDirection.DESC,
+      value: (item) => item.tier,
+      filter: (value) => `tier:${value}`,
+      csv: 'Tier',
     }),
     isSpreadsheet &&
       !isGhost &&

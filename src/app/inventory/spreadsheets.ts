@@ -154,7 +154,8 @@ export function generateCSVExportData(
     'hash',
     'id',
     'tag',
-    'tier',
+    'tier', // rarity
+    'itemTier',
     'Type',
     'source',
     'Equippable',
@@ -168,6 +169,7 @@ export function generateCSVExportData(
     'location',
     'locked',
     'Equipped',
+    'featured',
     'year',
     'season',
     'event',
