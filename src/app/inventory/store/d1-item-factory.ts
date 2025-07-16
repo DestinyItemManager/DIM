@@ -367,6 +367,7 @@ function makeItem(
     energy: null,
     pursuit: null,
     featured: false,
+    tier: 0,
   };
 
   // *able

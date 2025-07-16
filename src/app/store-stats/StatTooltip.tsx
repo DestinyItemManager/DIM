@@ -1,4 +1,5 @@
 import { settingSelector } from 'app/dim-api/selectors';
+import BungieImage from 'app/dim-ui/BungieImage';
 import { useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
@@ -29,11 +30,12 @@ export default function StatTooltip({
     getHeader: useCallback(
       () => (
         <div className={styles.title}>
+          {stat.displayProperties.icon && <BungieImage src={stat.displayProperties.icon} />}
           <div>{stat.displayProperties.name}</div>
           <div className={styles.value}>{`${stat.value} / ${EFFECTIVE_MAX_STAT}`}</div>
         </div>
       ),
-      [stat.displayProperties.name, stat.value],
+      [stat.displayProperties.name, stat.value, stat.displayProperties.icon],
     ),
   });
 

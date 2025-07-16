@@ -299,6 +299,7 @@ function makeFakePursuitItem(
     trackable: false,
     energy: null,
     featured: false,
+    tier: 0,
   };
 }
 

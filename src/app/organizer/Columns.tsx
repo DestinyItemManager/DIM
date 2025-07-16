@@ -31,6 +31,7 @@ import { statHashByName } from 'app/search/search-filter-values';
 import { getD1QualityColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
+  faCheck,
   lockIcon,
   powerIndicatorIcon,
   thumbsDownIcon,
@@ -384,6 +385,17 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `${value ? '' : '-'}is:new`,
       }),
+    c({
+      id: 'featured',
+      header: t('Organizer.Columns.Featured'),
+      className: styles.centered,
+      headerClassName: styles.centered,
+      defaultSort: SortDirection.DESC,
+      value: (item) => item.featured,
+      cell: (value) => value && <AppIcon icon={faCheck} />,
+      filter: (value) => `${value ? '' : '-'}is:featured`,
+      csv: 'Featured',
+    }),
     destinyVersion === 2 &&
       isWeapon &&
       c({
@@ -431,9 +443,19 @@ export function getColumns(
     c({
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
-      csv: 'Tier',
+      csv: 'Rarity',
       value: (i) => i.rarity,
       filter: (value) => `is:${value}`,
+    }),
+    c({
+      id: 'itemTier',
+      header: t('Organizer.Columns.ItemTier'),
+      className: styles.centered,
+      headerClassName: styles.centered,
+      defaultSort: SortDirection.DESC,
+      value: (item) => item.tier,
+      filter: (value) => `tier:${value}`,
+      csv: 'Tier',
     }),
     isSpreadsheet &&
       !isGhost &&

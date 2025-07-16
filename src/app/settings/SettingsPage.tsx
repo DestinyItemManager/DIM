@@ -178,7 +178,7 @@ export default function SettingsPage() {
     masterworked: t('Settings.Masterworked'),
     crafted: t('Settings.SortByCrafted'),
     deepsight: t('Settings.SortByDeepsight'),
-    // archetype: 'Archetype'
+    featured: t('Settings.SortByFeatured'),
   };
 
   const vaultWeaponGroupingOptions = mapToOptions({
