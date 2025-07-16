@@ -63,17 +63,19 @@ export class StatsSet<T> {
    * stat be better or equal to the input, without being equal to the input stats. For example,
    * if the stat set contains:
    *
+   * ```
    * {
    *   [1, 2, 3],
    *   [1, 1, 2],
    *   [1, 1, 1]
    * }
+   * ```
    *
    * Then:
    *
-   * doBetterStatsExist([1, 2, 3]) === false
-   * doBetterStatsExist([1, 2, 2]) === true
-   * doBetterStatsExist([2, 1, 1]) === false
+   *   * `doBetterStatsExist([1, 2, 3]) === false`
+   *   * `doBetterStatsExist([1, 2, 2]) === true`
+   *   * `doBetterStatsExist([2, 1, 1]) === false`
    *
    * See tests for more examples.
    */
