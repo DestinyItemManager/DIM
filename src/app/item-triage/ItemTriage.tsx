@@ -87,7 +87,7 @@ export function ItemTriage({ item, id }: { item: DimItem; id: string }) {
       {item.wishListEnabled && <WishlistTriageSection item={item} />}
       <LoadoutsTriageSection item={item} />
       <SimilarItemsTriageSection item={item} />
-      {item.bucket.inArmor && item.bucket.hash !== BucketHashes.ClassArmor && (
+      {item.bucket.inArmor && (
         <>
           <ArmorStatsTriageSection item={item} />
           <BetterItemsTriageSection item={item} />

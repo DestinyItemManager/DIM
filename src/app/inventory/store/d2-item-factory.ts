@@ -575,6 +575,7 @@ export function makeItem(
   createdItem.wishListEnabled = Boolean(
     createdItem.sockets &&
       (createdItem.bucket.inWeapons ||
+        // Exotic class items can be wishlisted
         (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
   );
 

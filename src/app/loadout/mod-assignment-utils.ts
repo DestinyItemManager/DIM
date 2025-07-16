@@ -24,7 +24,7 @@ import {
   getSocketsByCategoryHash,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
-import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy } from 'es-toolkit';
 import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from './armor-upgrade-utils';
@@ -946,7 +946,6 @@ function buildItemEnergy({
     used: sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
-    isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
     rarity: item.rarity,
   };
 }
@@ -955,7 +954,6 @@ interface ItemEnergy {
   used: number;
   originalCapacity: number;
   derivedCapacity: number;
-  isClassItem: boolean;
   rarity: ItemRarityName;
 }
 /**

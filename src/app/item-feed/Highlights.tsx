@@ -11,7 +11,7 @@ import {
   socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import '../store-stats/CharacterStats.m.scss';
 import styles from './Highlights.m.scss';
 
@@ -73,16 +73,14 @@ export default function Highlights({ item }: { item: DimItem }) {
     const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
     return (
       <>
-        {item.bucket.hash !== BucketHashes.ClassArmor && (
-          <div className={clsx(styles.stats, 'stat-bars')}>
-            <div className={clsx('stat-row', styles.armorStats)}>
-              {item.stats?.filter((s) => s.statHash > 0).map(renderStat)}
-            </div>
-            <div className={clsx('stat-row', styles.customTotals)}>
-              {item.stats?.filter((s) => s.statHash < 0).map(renderStat)}
-            </div>
+        <div className={clsx(styles.stats, 'stat-bars')}>
+          <div className={clsx('stat-row', styles.armorStats)}>
+            {item.stats?.filter((s) => s.statHash > 0).map(renderStat)}
           </div>
-        )}
+          <div className={clsx('stat-row', styles.customTotals)}>
+            {item.stats?.filter((s) => s.statHash < 0).map(renderStat)}
+          </div>
+        </div>
         {extraIntrinsicSockets.length > 0 && (
           <div className={styles.perks}>
             {extraIntrinsicSockets.map((s) => (

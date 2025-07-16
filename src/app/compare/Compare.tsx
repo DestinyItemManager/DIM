@@ -22,7 +22,6 @@ import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -132,11 +131,9 @@ export default function Compare({ session }: { session: CompareSession }) {
       compareItems.find((i) => i.primaryStat)?.primaryStatDisplayProperties) ||
     undefined;
 
-  // TODO: Rather than hardcode, check to see if any of the items have any armor stat
-  const customStats =
-    compareItems[0]?.bucket.hash !== BucketHashes.ClassArmor
-      ? itemCreationContext.customStats
-      : emptyArray<CustomStatDef>();
+  const customStats = comparingArmor
+    ? itemCreationContext.customStats
+    : emptyArray<CustomStatDef>();
 
   const columns: ColumnDefinition[] = useMemo(
     () =>
@@ -195,20 +192,13 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   /* End ItemTable incursion */
 
-  // TODO: once we stop displaying CompareItems at all, we can drop this
-  const sortedComparisonItems = useMemo(
-    () => compareItems.toSorted(compareBy((i) => rows.findIndex((r) => r.item === i))),
-    [compareItems, rows],
-  );
-
-  const firstCompareItem = sortedComparisonItems[0];
+  const firstCompareItem = rows[0]?.item;
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
 
   const items = useMemo(
     () => (
       <CompareItems
-        items={sortedComparisonItems}
         rows={rows}
         tableCtx={tableCtx}
         filteredColumns={filteredColumns}
@@ -217,7 +207,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         onPlugClicked={onPlugClicked}
       />
     ),
-    [sortedComparisonItems, rows, tableCtx, filteredColumns, remove, onPlugClicked],
+    [rows, tableCtx, filteredColumns, remove, onPlugClicked],
   );
 
   const header = (
@@ -274,7 +264,6 @@ export default function Compare({ session }: { session: CompareSession }) {
 }
 
 function CompareItems({
-  items,
   rows,
   tableCtx,
   filteredColumns,
@@ -285,18 +274,17 @@ function CompareItems({
   rows: Row[];
   tableCtx: TableContext;
   filteredColumns: ColumnDefinition[];
-  items: DimItem[];
   remove: (item: DimItem) => void;
   setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
-  return items.map((item) => (
+  return rows.map((row) => (
     <CompareItem
-      item={item}
-      row={rows.find((r) => r.item === item)!}
+      item={row.item}
+      row={row}
       tableCtx={tableCtx}
       filteredColumns={filteredColumns}
-      key={item.id}
+      key={row.item.id}
       itemClick={locateItem}
       remove={remove}
       setHighlight={setHighlight}

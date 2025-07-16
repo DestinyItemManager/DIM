@@ -260,7 +260,7 @@ describe('basic loadout analysis finding tests', () => {
             i.classType === store.classType &&
             i.bucket.hash === hash &&
             i.energy &&
-            (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 2) &&
+            i.energy.energyCapacity >= 2 &&
             i.rarity === 'Legendary' &&
             !i.masterwork &&
             i.stats?.every((stat) => stat.statHash !== StatHashes.Class || stat.base <= 20),
