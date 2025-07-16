@@ -273,3 +273,22 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 .strandColorFix {
   filter: hue-rotate(265deg) brightness(1.3);
 }
+
+.tierPipContainer {
+  position: absolute;
+  top: calc(var(--item-size) * 0.29);
+  left: calc(var(--item-size) * 0.11);
+  height: calc(var(--item-size) * 0.42);
+  display: flex;
+  flex-direction: column;
+  gap: 7%;
+}
+
+.tierPip {
+  display: block;
+  height: 14%;
+  aspect-ratio: 1;
+  background: #fffd;
+  rotate: 45deg;
+  outline: black solid 0.1px;
+}
