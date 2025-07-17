@@ -131,6 +131,7 @@ export function DefItemIcon({
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
     itemDef.plug?.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
+    itemDef.plug?.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes ||
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
 

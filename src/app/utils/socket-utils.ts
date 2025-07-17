@@ -128,10 +128,13 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
       (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk,
     );
     if (largePerkCategory) {
-      const largePerkSocket = getSocketByIndex(
-        item.sockets,
-        largePerkCategory.socketIndexes.at(-1)!,
-      );
+      const largePerkSocket =
+        // This finds new Archetype sockets (information about stat distribution tendencies)
+        item.sockets.allSockets.find(
+          (s) => s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes,
+        ) ??
+        // This assumption worked for old armor intrinsics (Artifice/Seasonal/Event)
+        getSocketByIndex(item.sockets, largePerkCategory.socketIndexes.at(-1)!);
       if (largePerkSocket?.plugged?.plugDef.displayProperties.name) {
         return largePerkSocket;
       }
@@ -560,6 +563,9 @@ export function getGeneralSockets(
     // never include the "pay for artifice upgrade" slot on exotic armor
     socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
       PlugCategoryHashes.EnhancementsArtificeExotic &&
+    // Hide armor masterwork payment socket. We display masterworked status other ways.
+    socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
+      PlugCategoryHashes.V460PlugsArmorMasterworks &&
     // exclude artifice slots the game has marked as not visible (on un-upgraded exotics)
     !(
       socketInfo.plugged?.plugDef.plug.plugCategoryHash ===
