@@ -1,5 +1,11 @@
 ## Next
 
+* Fixed a crash in Loadout Optimizer when using the "+Artifice" Assume Masterwork option.
+* Restore season pass info in Progress.
+* Manually renamed "Immovable Refit" to "Vexcalibur Catalyst".
+
+## 8.81.2 <span class="changelog-date">(2025-07-16)</span>
+
 * Added tier-level pips to item icons.
 * Fixed an issue in Loadout Optimizer that could exclude some valid sets when auto stat mods are off.
 * On the Loadouts page, hashtags are now combined if they only differ by case, and are sorted case-insensitively.
