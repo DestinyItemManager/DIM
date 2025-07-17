@@ -1,5 +1,7 @@
 ## Next
 
+## 8.81.3 <span class="changelog-date">(2025-07-16)</span>
+
 * Fixed a crash in Loadout Optimizer when using the "+Artifice" Assume Masterwork option.
 * Restore season pass info in Progress.
 * Manually renamed "Immovable Refit" to "Vexcalibur Catalyst".
