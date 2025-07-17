@@ -107,8 +107,7 @@ export default memo(function GeneratedSet({
       errorLog(
         'loadout optimizer',
         'internal error: set rendering was unable to fit some mods that the worker thought were possible',
-        unassignedMods,
-        invalidMods,
+        { unassignedMods, invalidMods },
       );
     }
 
