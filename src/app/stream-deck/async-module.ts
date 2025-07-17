@@ -36,6 +36,7 @@ function refreshStreamDeck(state: RootState) {
           postmaster: packager.postmaster(store),
           metrics: packager.metrics(state),
           vault: packager.vault(state),
+          inventory: packager.inventoryCounters(state),
           maxPower: packager.maxPower(store, state),
           equippedItems: packager.equippedItems(store),
         },

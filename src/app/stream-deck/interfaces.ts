@@ -138,7 +138,11 @@ interface SendStateArgs {
     maxPower?: MaxPowerArgs;
     equippedItems?: string[];
     metrics?: MetricsArgs;
+    /**
+     * @deprecated replaced by`inventory`.
+     */
     vault?: VaultArgs;
+    inventory?: Record<string, number>;
   };
 }
 

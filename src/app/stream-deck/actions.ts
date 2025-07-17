@@ -1,6 +1,6 @@
 import { createAction } from 'typesafe-actions';
 
-export type SelectionType = 'item' | 'loadout' | 'postmaster' | undefined;
+export type SelectionType = 'item' | 'loadout' | 'inventory-item' | 'postmaster' | undefined;
 
 export interface StreamDeckAuth {
   instance: string;

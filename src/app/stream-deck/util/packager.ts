@@ -123,6 +123,24 @@ function equippedItems(store?: DimStore) {
   return store?.items.filter((it) => it.equipment).map((it) => streamDeckClearId(it.index)) ?? [];
 }
 
+function inventoryCounters(state?: RootState) {
+  return state?.inventory.stores
+    .flatMap((it) => it.items)
+    .filter((it) => it.bucket.inInventory)
+    .reduce(
+      (acc, it) => {
+        const key = streamDeckClearId(it.index);
+        if (acc[key]) {
+          acc[key] += it.amount;
+        } else {
+          acc[key] = it.amount;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+}
+
 function character(store: DimStore) {
   return {
     class: store.classType,
@@ -193,4 +211,5 @@ export default {
   maxPower,
   postmaster,
   equippedItems,
+  inventoryCounters,
 };

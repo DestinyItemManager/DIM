@@ -51,7 +51,7 @@ export default function ItemAccessoryButtons({
       {actionsModel.infusable && (
         <InfuseActionButton item={item} label={showLabel} actionModel={actionsModel} />
       )}
-      {streamDeckEnabled && <OpenOnStreamDeckButton label={showLabel} item={item} />}
+      {streamDeckEnabled && <OpenOnStreamDeckButton type="item" label={showLabel} item={item} />}
     </>
   );
 }

@@ -25,6 +25,10 @@ export type StreamDeckSelectionOptions = (
       type: 'item';
       item: DimItem;
     }
+  | {
+      type: 'inventory-item';
+      item: DimItem;
+    }
 ) & { isSubClass?: boolean };
 
 function findSubClassIcon(items: LoadoutItem[], state: RootState) {
@@ -81,6 +85,17 @@ const toSelection = (data: StreamDeckSelectionOptions) => (state: RootState) => 
             : item.element?.displayProperties?.icon,
       };
     }
+    case 'inventory-item': {
+      const { item } = data;
+      return {
+        type: 'inventory-item',
+        label: item.name,
+        subtitle: item.typeName,
+        item: streamDeckClearId(item.index),
+        icon: item.icon,
+        isExotic: item.isExotic,
+      };
+    }
   }
 };
 
@@ -101,13 +116,22 @@ const toSelectionHref =
 
 export interface UseStreamDeckSelectionArgs {
   options: StreamDeckSelectionOptions;
-  equippable: boolean;
+  equippable: boolean | undefined;
 }
 
+const types = {
+  item: 'item',
+  loadout: 'loadout',
+  'in-game-loadout': 'in-game-loadout',
+  'inventory-item': 'inventory-item',
+};
+
 function useSelection({ equippable, options }: UseStreamDeckSelectionArgs): string | undefined {
-  const type = options.type === 'item' ? 'item' : 'loadout';
+  const type = types[options.type];
   const selection = useSelector(streamDeckSelectionSelector);
-  const canSelect = Boolean((equippable || options.isSubClass) && selection === type);
+  const canSelect = Boolean(
+    (equippable || options.isSubClass || type === 'inventory-item') && selection === type,
+  );
   return useSelector(toSelectionHref(canSelect, options));
 }
 

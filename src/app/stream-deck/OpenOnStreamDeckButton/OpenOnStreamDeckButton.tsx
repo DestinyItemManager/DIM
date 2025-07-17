@@ -1,25 +1,31 @@
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import ActionButton from 'app/item-actions/ActionButton';
-import { BucketHashes } from 'data/d2/generated-enums';
 import streamDeckIcon from 'images/streamDeck.svg';
 import { useMemo } from 'react';
 import { useStreamDeckSelection } from '../stream-deck';
 import styles from './OpenOnStreamDeckButton.m.scss';
 
-export default function OpenOnStreamDeckButton({ item, label }: { item: DimItem; label: boolean }) {
+export default function OpenOnStreamDeckButton({
+  item,
+  label,
+  type,
+}: {
+  item: DimItem;
+  label: boolean;
+  type: 'inventory-item' | 'item';
+}) {
   const options = useMemo(
     () => ({
-      type: 'item' as const,
+      type,
       item,
-      isSubClass: item.bucket.hash === BucketHashes.Subclass,
     }),
-    [item],
+    [item, type],
   );
 
   const deepLink = useStreamDeckSelection({
     options,
-    equippable: !item.notransfer,
+    equippable: type === 'inventory-item' ? undefined : !item.notransfer,
   });
 
   if (!deepLink) {
