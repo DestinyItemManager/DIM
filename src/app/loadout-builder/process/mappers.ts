@@ -1,18 +1,18 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { MASTERWORK_ARMOR_STAT_BONUS, armorStats } from 'app/search/d2-known-values';
+import { armorStats } from 'app/search/d2-known-values';
 import { filterMap, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
-  isEdgeOfFateArmorMasterwork,
 } from '../../utils/item-utils';
 import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
@@ -57,33 +57,10 @@ export function mapDimItemToProcessItem({
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
-  const { id, hash, name, isExotic, power, stats: dimItemStats } = dimItem;
+  const { id, hash, name, isExotic, power } = dimItem;
 
-  const newMasterworkType = isEdgeOfFateArmorMasterwork(dimItem);
-
-  const statMap: { [statHash: number]: number } = {};
+  const stats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
   const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
-
-  if (dimItemStats) {
-    // TODO: Rather than patch this directly, figure out what mod we'd insert
-    // for the given assume-masterwork level, and apply its stats
-    //   1. Find the correct masterwork socket on the item
-    //   2. Look through the plugset attached to that socket for the correct masterwork level
-    //   3. Evaluate conditional stats
-    //   4. Apply the stats to the item
-    // Alternatively, once we pick the right masterwork mod, we could use socketOverrides to get a resolved item with stats
-    for (const { statHash, base } of dimItemStats) {
-      let value = base;
-      if (!newMasterworkType && capacity >= 10) {
-        // Legacy masterwork armor gives +2 in each stat once you hit max energy
-        value += MASTERWORK_ARMOR_STAT_BONUS;
-      } else {
-        // TODO: Apply the new masterwork bonus to the three lower stats
-      }
-      statMap[statHash] = value;
-    }
-  }
-
   const modMetadatas = getSpecialtySocketMetadatas(dimItem);
   const modsCost = modsForSlot
     ? sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost ?? 0)
@@ -98,7 +75,7 @@ export function mapDimItemToProcessItem({
     isExotic,
     isArtifice: assumeArtifice,
     power,
-    stats: statMap,
+    stats,
     remainingEnergyCapacity: capacity - modsCost,
     compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
   };
