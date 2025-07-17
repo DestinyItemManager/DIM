@@ -7,6 +7,7 @@
   padding: 0.85em;
   background: color.scale($red, $lightness: -90%);
   border-top: 4px solid $red;
+  user-select: text;
 
   h2 {
     margin: 0 0 8px 0 !important;

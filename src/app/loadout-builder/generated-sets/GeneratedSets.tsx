@@ -1,3 +1,4 @@
+import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -52,20 +53,22 @@ export default function GeneratedSets({
       getItemKey={identity}
     >
       {(index) => (
-        <GeneratedSet
-          set={sets[index]}
-          selectedStore={selectedStore}
-          lockedMods={lockedMods}
-          pinnedItems={pinnedItems}
-          lbDispatch={lbDispatch}
-          desiredStatRanges={desiredStatRanges}
-          modStatChanges={modStatChanges}
-          loadouts={loadouts}
-          armorEnergyRules={armorEnergyRules}
-          originalLoadout={loadout}
-          equippedHashes={equippedHashes}
-          autoStatMods={autoStatMods}
-        />
+        <ErrorBoundary key={index} name="GeneratedSet">
+          <GeneratedSet
+            set={sets[index]}
+            selectedStore={selectedStore}
+            lockedMods={lockedMods}
+            pinnedItems={pinnedItems}
+            lbDispatch={lbDispatch}
+            desiredStatRanges={desiredStatRanges}
+            modStatChanges={modStatChanges}
+            loadouts={loadouts}
+            armorEnergyRules={armorEnergyRules}
+            originalLoadout={loadout}
+            equippedHashes={equippedHashes}
+            autoStatMods={autoStatMods}
+          />
+        </ErrorBoundary>
       )}
     </WindowVirtualList>
   );
