@@ -14,15 +14,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [
-  'weapons',   'health',
-  'class',     'grenade',
-  'super',     'melee',
-  'mobility',  'resilience',
-  'recovery',  'discipline',
-  'intellect', 'strength',
-  'total',     'any'
-], overload undefined 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [\\n  'weapons',   'health',\\n  'class',     'grenade',\\n  'super',     'melee',\\n  'mobility',  'resilience',\\n  'recovery',  'discipline',\\n  'intellect', 'strength',\\n  'total',     'any'\\n], overload undefined 1`] = `
 [
   "maxstatvalue:",
   "maxstatvalue:weapons",
@@ -42,15 +34,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [
-  'weapons',   'health',
-  'class',     'grenade',
-  'super',     'melee',
-  'mobility',  'resilience',
-  'recovery',  'discipline',
-  'intellect', 'strength',
-  'total',     'any'
-], overload undefined 2`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [\\n  'weapons',   'health',\\n  'class',     'grenade',\\n  'super',     'melee',\\n  'mobility',  'resilience',\\n  'recovery',  'discipline',\\n  'intellect', 'strength',\\n  'total',     'any'\\n], overload undefined 2`] = `
 [
   "maxstatvalue:",
   "maxstatvalue:weapons",
@@ -126,21 +110,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [
-  'rpm',             'rof',         'charge',
-  'impact',          'handling',    'range',
-  'stability',       'reload',      'magazine',
-  'aimassist',       'equipspeed',  'shieldduration',
-  'velocity',        'blastradius', 'recoildirection',
-  'drawtime',        'zoom',        'airborne',
-  'accuracy',        'swingspeed',  'guardefficiency',
-  'guardresistance', 'chargerate',  'guardendurance',
-  'ammocapacity',    'weapons',     'health',
-  'class',           'grenade',     'super',
-  'melee',           'mobility',    'resilience',
-  'recovery',        'discipline',  'intellect',
-  'strength',        'total',       'any'
-], overload undefined 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',             'rof',         'charge',\\n  'impact',          'handling',    'range',\\n  'stability',       'reload',      'magazine',\\n  'aimassist',       'equipspeed',  'shieldduration',\\n  'velocity',        'blastradius', 'recoildirection',\\n  'drawtime',        'zoom',        'airborne',\\n  'accuracy',        'swingspeed',  'guardefficiency',\\n  'guardresistance', 'chargerate',  'guardendurance',\\n  'ammocapacity',    'weapons',     'health',\\n  'class',           'grenade',     'super',\\n  'melee',           'mobility',    'resilience',\\n  'recovery',        'discipline',  'intellect',\\n  'strength',        'total',       'any'\\n], overload undefined 1`] = `
 [
   "stat:",
   "stat:rpm:",
