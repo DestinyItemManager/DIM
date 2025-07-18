@@ -3,6 +3,7 @@
 interface CssExports {
   'armorStats': string;
   'customTotals': string;
+  'enhancedArrow': string;
   'multiPerk': string;
   'perk': string;
   'perks': string;

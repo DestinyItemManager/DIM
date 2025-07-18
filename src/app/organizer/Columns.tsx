@@ -1135,7 +1135,6 @@ function PerksCell({
                   [styles.perkSelected]:
                     socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
                   [styles.perkSelectable]: socket.plugOptions.length > 1,
-                  [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
                 })}
                 data-filter-value={p.plugDef.displayProperties.name}
                 onClick={
@@ -1152,7 +1151,13 @@ function PerksCell({
                 <div className={styles.miniPerkContainer}>
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />
                 </div>
-                {p.plugDef.displayProperties.name}
+                <span
+                  className={clsx({
+                    [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
+                  })}
+                >
+                  {p.plugDef.displayProperties.name}
+                </span>
               </div>
             </PressTip>
           ))}

@@ -35,6 +35,17 @@
     margin-left: -1px;
   }
 }
+.enhancedArrow {
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 11px;
+    mask-image: url('images/enhancedArrow.svg');
+    background-color: $enhancedYellow;
+    margin-right: 3px;
+  }
+}
 
 .stats {
   margin: 4px 0 0 0;
