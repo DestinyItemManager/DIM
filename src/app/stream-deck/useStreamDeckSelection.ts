@@ -11,7 +11,7 @@ import { streamDeckSelectionSelector } from './selectors';
 import { STREAM_DECK_DEEP_LINK } from './util/authorization';
 import { streamDeckClearId } from './util/packager';
 
-export type StreamDeckSelectionOptions = (
+export type StreamDeckSelectionOptions =
   | {
       type: 'in-game-loadout';
       loadout: InGameLoadout;
@@ -28,8 +28,7 @@ export type StreamDeckSelectionOptions = (
   | {
       type: 'inventory-item';
       item: DimItem;
-    }
-) & { isSubClass?: boolean };
+    };
 
 function findSubClassIcon(items: LoadoutItem[], state: RootState) {
   const defs = d2ManifestSelector(state);
@@ -74,10 +73,11 @@ const toSelection = (data: StreamDeckSelectionOptions) => (state: RootState) => 
         label: item.name,
         subtitle: item.typeName,
         item: streamDeckClearId(item.index),
+        tier: item.tier,
         icon: item.icon,
         overlay: item.iconOverlay,
         isExotic: item.isExotic,
-        isSubClass: data.isSubClass,
+        isSubClass: item.bucket.hash === BucketHashes.Subclass,
         isCrafted: Boolean(item.crafted),
         element:
           item.element?.enumValue === DamageType.Kinetic
@@ -129,9 +129,7 @@ const types = {
 function useSelection({ equippable, options }: UseStreamDeckSelectionArgs): string | undefined {
   const type = types[options.type];
   const selection = useSelector(streamDeckSelectionSelector);
-  const canSelect = Boolean(
-    (equippable || options.isSubClass || type === 'inventory-item') && selection === type,
-  );
+  const canSelect = Boolean((equippable || type === 'inventory-item') && selection === type);
   return useSelector(toSelectionHref(canSelect, options));
 }
 
