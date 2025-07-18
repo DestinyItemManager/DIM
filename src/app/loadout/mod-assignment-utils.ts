@@ -190,7 +190,7 @@ function getUpgradeCost(
   const rarityModel = model.byRarity[dimItem.rarity]!;
   const alreadyPaidCosts = rarityModel[item.originalCapacity];
 
-  const costs = rarityModel[targetEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
+  const costs = rarityModel[targetEnergy]?.map((val, idx) => val - alreadyPaidCosts[idx]) ?? [];
   if (needsEnhancing && model.exoticArtificeCosts) {
     for (let i = 0; i < costs.length; i++) {
       costs[i] += model.exoticArtificeCosts[i];
