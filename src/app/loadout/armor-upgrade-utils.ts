@@ -9,21 +9,15 @@ import { isArtifice, isEdgeOfFateArmorMasterwork } from 'app/utils/item-utils';
  * level and the passed in ArmorEnergyRules that allow us to pretend the item
  * has more energy.
  */
-export function calculateAssumedItemEnergy(
-  item: DimItem,
-  { assumeArmorMasterwork, minItemEnergy }: ArmorEnergyRules,
-) {
+export function calculateAssumedItemEnergy(item: DimItem, armorEnergyRules: ArmorEnergyRules) {
   if (!item.energy) {
     return 0;
   }
   // Note: Since Edge of Fate, all new armor drops at max energy.
   const itemEnergy = item.energy.energyCapacity;
-  const assumedEnergy =
-    assumeArmorMasterwork === AssumeArmorMasterwork.All ||
-    assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic ||
-    (assumeArmorMasterwork === AssumeArmorMasterwork.Legendary && !item.isExotic)
-      ? maxEnergyCapacity(item)
-      : minItemEnergy;
+  const assumedEnergy = isAssumedMasterworked(item, armorEnergyRules)
+    ? maxEnergyCapacity(item)
+    : armorEnergyRules.minItemEnergy;
   return Math.max(itemEnergy, assumedEnergy);
 }
 
@@ -40,5 +34,16 @@ export function isAssumedArtifice(item: DimItem, { assumeArmorMasterwork }: Armo
       assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic &&
       !isEdgeOfFateArmorMasterwork(item)) ||
     isArtifice(item)
+  );
+}
+
+/**
+ * Does the armor energy rules mean that this item is assumed to be masterworked?
+ */
+export function isAssumedMasterworked(item: DimItem, { assumeArmorMasterwork }: ArmorEnergyRules) {
+  return (
+    assumeArmorMasterwork === AssumeArmorMasterwork.All ||
+    assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic ||
+    (assumeArmorMasterwork === AssumeArmorMasterwork.Legendary && !item.isExotic)
   );
 }

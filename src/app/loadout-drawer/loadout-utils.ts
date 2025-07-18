@@ -8,7 +8,7 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { ArmorBucketHashes, ArmorEnergyRules } from 'app/loadout-builder/types';
-import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
+import { calculateAssumedItemEnergy, isAssumedMasterworked } from 'app/loadout/armor-upgrade-utils';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import {
@@ -26,8 +26,11 @@ import {
 } from 'app/search/d2-known-values';
 import { filterMap, isEmpty, mapValues, sumBy } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
+import { emptyObject } from 'app/utils/empty';
 import {
   isClassCompatible,
+  isEdgeOfFateArmorMasterwork,
+  isEdgeOfFateArmorMasterworkSocket,
   isItemLoadoutCompatible,
   itemCanBeEquippedBy,
   itemCanBeInLoadout,
@@ -36,7 +39,6 @@ import { weakMemoize } from 'app/utils/memoize';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
-  getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
   getSocketsByIndexes,
@@ -307,19 +309,10 @@ export function getLoadoutStats(
   // Sum the items stats into the stats
   const armorPiecesStats = mapValues(stats, () => 0);
   for (const item of armor) {
-    const itemEnergy = armorEnergyRules && calculateAssumedItemEnergy(item, armorEnergyRules);
-    const itemStats = Object.groupBy(item.stats ?? [], (stat) => stat.statHash);
-    const energySocket =
-      item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
-    for (const hash of armorStats) {
-      armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
-      // TODO: Edge of Fate: Tier 5 armor can have 11 energy - would be great if
-      // we could read this from the item's energy info.
-      // TODO: See mappers.ts - we need a utility that figures out the correct masterwork level and then conditionally applies its stats
-      armorPiecesStats[hash] +=
-        itemEnergy !== undefined && itemEnergy >= MAX_ARMOR_ENERGY_CAPACITY && item.energy
-          ? MASTERWORK_ARMOR_STAT_BONUS
-          : (energySocket?.plugged?.stats?.[hash]?.value ?? 0);
+    for (const [statHash, value] of Object.entries(
+      calculateAssumedMasterworkStats(item, armorEnergyRules),
+    )) {
+      armorPiecesStats[statHash] += value;
     }
   }
 
@@ -351,6 +344,64 @@ export function getLoadoutStats(
   }
 
   return stats;
+}
+
+/**
+ * Calculate an item's stats, assuming masterwork bonuses either if they
+ * actually are masterworked or if we assume they are.
+ */
+export function calculateAssumedMasterworkStats(
+  dimItem: DimItem,
+  armorEnergyRules: ArmorEnergyRules | undefined,
+): { [statHash: number]: number } {
+  if (!dimItem.stats) {
+    return emptyObject();
+  }
+
+  const statMap: { [statHash: number]: number } = {};
+  const capacity = armorEnergyRules
+    ? calculateAssumedItemEnergy(dimItem, armorEnergyRules)
+    : (dimItem.energy?.energyCapacity ?? 0);
+
+  // TODO: Rather than patch this directly, figure out what mod we'd insert
+  // for the given assume-masterwork level, and apply its stats
+  //   1. Find the correct masterwork socket on the item
+  //   2. Look through the plugset attached to that socket for the correct masterwork level
+  //   3. Evaluate conditional stats
+  //   4. Apply the stats to the item
+  // Alternatively, once we pick the right masterwork mod, we could use socketOverrides to get a resolved item with stats
+
+  const assumeMasterworked = armorEnergyRules
+    ? isAssumedMasterworked(dimItem, armorEnergyRules)
+    : false;
+  const newMasterworkType = isEdgeOfFateArmorMasterwork(dimItem);
+  const mwPlug =
+    newMasterworkType &&
+    dimItem.sockets?.allSockets.find(isEdgeOfFateArmorMasterworkSocket)?.plugged;
+
+  for (const { statHash, base } of dimItem.stats) {
+    let value = base;
+    // For now, manually apply the masterwork stats:
+    if (!newMasterworkType && capacity >= MAX_ARMOR_ENERGY_CAPACITY) {
+      // 1. If this is an armor 2.0 item, and it has max energy (whether
+      //    assumed or just normally), apply the legacy masterwork bonus (+2
+      //    to each stat)
+      value += MASTERWORK_ARMOR_STAT_BONUS;
+    } else if (newMasterworkType && assumeMasterworked && value === 0) {
+      // 2. If this is an armor 3.0 item, AND we're assuming it should be
+      //    masterworked, apply +5 to the three lowest stats (they will have a
+      //    base value of 0)
+      value = 5;
+    } else if (newMasterworkType && !assumeMasterworked && value === 0 && mwPlug) {
+      // 3. If this is an armor 3.0 item, and we're NOT assuming it should be
+      //    masterworked, apply the current bonus from the item's masterwork
+      //    plug.
+      value += mwPlug.stats?.[statHash]?.value ?? 0;
+    }
+    statMap[statHash] = value;
+  }
+
+  return statMap;
 }
 
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function
