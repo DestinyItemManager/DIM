@@ -96,5 +96,5 @@ jobs:
           SENTRY_PROJECT: dim
         with:
           environment: beta
-          version: ${{ env.VERSION }}
+          release: ${{ env.VERSION }}
           ignore_missing: true

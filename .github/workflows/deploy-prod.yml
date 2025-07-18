@@ -81,5 +81,5 @@ jobs:
           SENTRY_PROJECT: dim
         with:
           environment: release
-          version: ${{ steps.package-version.outputs.current-version }}
+          release: ${{ steps.package-version.outputs.current-version }}
           ignore_missing: true
