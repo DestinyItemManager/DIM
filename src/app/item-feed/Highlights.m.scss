@@ -35,6 +35,19 @@
     margin-left: -1px;
   }
 }
+// copy pasted from src/app/item-popup/PlugTooltip.m.scss
+.enhancedArrow {
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 9px;
+    height: 16px;
+    vertical-align: text-bottom;
+    mask-image: url('images/enhancedArrow.svg');
+    background-color: $enhancedYellow;
+    margin-right: 3px;
+  }
+}
 
 .stats {
   margin: 4px 0 0 0;

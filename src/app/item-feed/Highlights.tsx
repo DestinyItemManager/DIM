@@ -7,6 +7,7 @@ import { itemTypeName } from 'app/utils/item-utils';
 import {
   getExtraIntrinsicPerkSockets,
   getWeaponArchetype,
+  isEnhancedPerk,
   socketContainsIntrinsicPlug,
   socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
@@ -49,7 +50,13 @@ export default function Highlights({ item }: { item: DimItem }) {
                   className={styles.perk}
                 >
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />
-                  {p.plugDef.displayProperties.name}
+                  <span
+                    className={clsx({
+                      [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
+                    })}
+                  >
+                    {p.plugDef.displayProperties.name}
+                  </span>
                 </PressTip>
               ))}
             </div>
