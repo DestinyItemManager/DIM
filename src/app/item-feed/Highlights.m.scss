@@ -35,12 +35,14 @@
     margin-left: -1px;
   }
 }
+// copy pasted from src/app/item-popup/PlugTooltip.m.scss
 .enhancedArrow {
   &::before {
     content: '';
     display: inline-block;
-    width: 6px;
-    height: 11px;
+    width: 9px;
+    height: 16px;
+    vertical-align: text-bottom;
     mask-image: url('images/enhancedArrow.svg');
     background-color: $enhancedYellow;
     margin-right: 3px;
