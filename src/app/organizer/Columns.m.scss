@@ -127,8 +127,11 @@
   }
 }
 .isPerk {
-  border-left: 2px solid #888;
-  padding-left: 3px;
+  margin-left: 0;
+  padding-left: 1px;
+  box-shadow:
+    -5px 0 0 -3px var(--org-row-bg),
+    -5px 0 0 -1px #888;
 }
 
 // Perks in the perk/mod columns
