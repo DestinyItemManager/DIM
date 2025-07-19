@@ -539,6 +539,7 @@ export function makeItem(
     tooltipNotifications,
     featured: itemDef.isFeaturedItem,
     tier: itemInstanceData.gearTier ?? 0,
+    traitHashes: itemDef.traitHashes,
   };
 
   // *able
