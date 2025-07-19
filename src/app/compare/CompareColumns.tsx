@@ -177,7 +177,15 @@ export function getColumns(
         id: 'intrinsics',
         className: styles.perks,
         header: t('Organizer.Columns.Intrinsics'),
-        value: (item) => perkString(getIntrinsicSockets(item)),
+        value: (item) => {
+          const intrinsics = getIntrinsicSockets(item);
+          return (
+            // Sort by PCI first so that similar intrinsics land near each other before sub-alphabetizing
+            (intrinsics[0]?.plugged?.plugDef.plug.plugCategoryIdentifier ?? '') +
+            ',' +
+            perkString(intrinsics)
+          );
+        },
         cell: (_val, item) => {
           const sockets = getIntrinsicSockets(item);
           return (

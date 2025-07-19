@@ -117,7 +117,9 @@ export const perkStringSort: Comparator<string | undefined> = (a, b) => {
       bi++;
       continue;
     }
-    return aPart.localeCompare(bPart) as 1 | 0 | -1;
+    // Disrupt normal alphabetization by making empty string (no interesting information) sort to last.
+    // (the "both are blank" condition is already ruled out above)
+    return !aPart ? 1 : !bPart ? -1 : (aPart.localeCompare(bPart) as 1 | 0 | -1);
   }
   return 0;
 };
