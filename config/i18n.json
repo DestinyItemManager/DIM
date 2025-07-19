@@ -1241,6 +1241,7 @@
     "SortByRating": "Armor Quality (D1)",
     "SortByRecent": "Recently Acquired (D2)",
     "SortByTag": "Tag ({{taglist}})",
+    "SortByTier": "Tier (D2)",
     "SortByType": "Type",
     "SortBySeason": "Season (D2)",
     "SortByWeaponElement": "Damage Type",

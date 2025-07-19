@@ -1224,6 +1224,7 @@
     "SortByRecent": "Recently Acquired (D2)",
     "SortBySeason": "Season (D2)",
     "SortByTag": "Tag ({{taglist}})",
+    "SortByTier": "Tier (D2)",
     "SortByType": "Type",
     "SortByWeaponElement": "Damage Type",
     "SortCustom": "Custom Sort",
