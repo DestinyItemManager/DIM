@@ -1,5 +1,20 @@
 ## Next
 
+* Added Enhanced arrows to show Enhanced perks in the Item Feed.
+* Updated armor intrinsic detection to identify Armor 3.0 Archetypes. It should appear now in Organizer/Item Popup/Compare.
+* Improved cramped spacing of stats display in Loadouts.
+* Updated Echo of Persistence and other class-conditional fragments to lower the right stat.
+* Added archetypes in the Item Feed and adjusted multiple-perk display.
+* Added inventory sorting by item Tier.
+* Fix masterwork stat numbers in Loadouts/Optimizer.
+* Fixed a crash in Loadout Optimizer result sets rendering.
+* Stream Deck updates
+  * Removed progress metrics (no more available)
+  * Added new "append only" mode to append filters to search query from plugin (search action)
+  * Now the state sent to the plugin includes also the counters of inventory items grouped by element id (vault action)
+  * Restored subclass item pick
+  * Added tier to selection/picker action
+
 ## 8.81.3 <span class="changelog-date">(2025-07-16)</span>
 
 * Fixed a crash in Loadout Optimizer when using the "+Artifice" Assume Masterwork option.
