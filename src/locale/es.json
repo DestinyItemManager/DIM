@@ -242,6 +242,7 @@
     "Equipped": "Objetos que actualmente están equipados en un personaje.",
     "Event": "Muestra objetos según el evento de Destiny 2 en que aparecieron.",
     "ExtraPerk": "Muestra tiradas aleatorias de armas legendarias con una ventaja adicional seleccionable.",
+    "Featured": "Objetos que cuentan como uno de los \"Objetos Destacados\" de la temporada actual.",
     "Filter": "Filtro",
     "FilterWith": "Filtrar con:",
     "Focusable": "Muestra objetos que pueden ser concentrados en un comerciante",
@@ -251,7 +252,6 @@
     "HasNotes": "Muestra objetos que contengan notas aplicadas.",
     "HasOrnament": "Muestra objetos que tengan un diseño aplicado.",
     "HasShader": "Muestra objetos que tengan un shader aplicado.",
-    "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
     "InDimLoadout": "is:indimloadout muestra objetos que están incluidos en cualquier equipación en DIM.",
     "InInGameLoadout": "is:iningameloadout muestra objetos que están incluidos en cualquier equipación en el juego.",
     "InInventory": "Muestra objetos en los que tengas al menos una copia en tu inventario. Solo son realmente útiles en los Vendedores y en las pantallas de Hazañas.",
@@ -278,9 +278,8 @@
     "MaxPower": "Muestra los objetos en el nivel más alto de poder por ranura.",
     "MaxPowerLoadout": "Muestra los objetos en la equipación que podrían maximizar tu Poder de Luz para cada clase de personaje.",
     "Memento": "Muestra armas que tengan una ranura para recuerdo.",
-    "ModSlot": "Muestra armadura con una ranura específica de Modificador de Temporada.",
+    "ModSlot": "Muestra armadura con un tipo de modificador específico.",
     "Mods": {
-      "Y2": "Muestra objetos con un modificador de Año 2 aplicado.",
       "Y3": "Muestra objetos con cualquier modificador de Armadura 2.0 seleccionados."
     },
     "Name": "Muestra objetos cuyo nombre coincida exactamente (exactname:) o parcialmente (name:) con el texto filtrado. Busca frases enteras usando comillas.",
@@ -323,6 +322,7 @@
       "Tag": "Muestra objetos que tengan una etiqueta específica.",
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
     },
+    "Tier": "Muestra objetos basados en su nivel del 0-5.",
     "Timelost": "\\(Perdido en el Tiempo\\)",
     "Tracked": "Muestra misiones/contratos basados en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",
@@ -651,8 +651,8 @@
     "Artifice": "Artificiosa",
     "AssumeMasterwork": "Asumir Obra Maestra",
     "AssumeMasterworkOptions": {
-      "All": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "Armadura 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Armadura 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticos de Armadura 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Mejorada para aceptar modificadores de estadísticas Artificiosas.",
       "Current": "Estadísticas actuales, asumiendo nivel de energía de al menos {{minLoItemEnergy}}.",
       "Legendary": "Legendarias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
@@ -721,7 +721,6 @@
     "StatRangeTooltip": "Con la configuración actual de min/max, existen equipaciones que tienen de {{min}} a {{max}} puntos en esta estadística. Haz doble clic para configurar el min a {{max}}.",
     "StatTotal": "Total: {{total}}",
     "TierNumber": "N{{tier}}",
-    "TierSelect": "Seleccionar nivel mínimo de las estadísticas",
     "UnableToAddAllMods": "No se pudieron añadir todos los modificadores.",
     "UnableToAddAllModsBody": "No había suficientes ranuras disponibles para modificadores que encajaran {{mods}}.",
     "UnlockItem": "Desanclar objeto"
@@ -959,6 +958,7 @@
     "AddToLoadout": "Equipación",
     "AddToLoadoutTitle": "Añadir esto a la equipación",
     "All": "Todo",
+    "ArtifactBreaker": "Esta arma tiene {{breaker}} debido a una ventaja de artefacto desbloqueada.",
     "CannotCurrentlyRoll": "Esta ventaja no se puede obtener en la versión actual de este objeto.",
     "CantPullFromPostmaster": "Debes visitar Administración en el juego para recuperar este objeto.",
     "CatalystProgress": "Progreso del Catalizador",
@@ -976,6 +976,7 @@
     },
     "Infuse": "Infundir",
     "InfuseTitle": "Abrir el buscador de infusión de objetos",
+    "IntrinsicBreaker": "Esta arma tiene intrínsicamente {{breaker}}.",
     "LoadingSockets": "Las ventajas y los detalles de estadísticas no han cargado todavía para este objeto.",
     "LockUnlock": {
       "AutoLock": "El estado de bloqueo se sincronizó con la etiqueta de este objeto",
@@ -1041,10 +1042,12 @@
       "Damage": "Daño",
       "Energy": "Energía",
       "Event": "Evento",
+      "Featured": "Destacado",
       "Foundry": "Fundición",
       "Harmonizable": "Armonizable",
       "Icon": "Icono",
       "Intrinsics": "Intrínseco",
+      "ItemTier": "Nivel",
       "KillTracker": "Bajas",
       "Level": "Nivel",
       "Loadouts": "Equipaciones",
@@ -1073,7 +1076,7 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Estadísticas",
       "Tag": "Etiqueta",
-      "Tier": "Nivel",
+      "Tier": "Rareza",
       "Traits": "Rasgos de Armas",
       "WishList": "Lista de Deseos",
       "WishListNotes": "Notas de la Lista de Deseos",
@@ -1092,6 +1095,7 @@
     "Stats": {
       "Aim": "Puntería",
       "Airborne": "Aéreo",
+      "AmmoGeneration": "Munición generada",
       "Power": "Poder",
       "RPM": "DPM",
       "Recoil": "Retroceso",
@@ -1105,9 +1109,7 @@
   },
   "Progress": {
     "Bounties": "Contratos",
-    "CruciblePathfinder": "Pionero del Crisol",
     "CrucibleRank": "NIveles",
-    "GambitPathfinder": "Pionero de Gambito",
     "Items": "Objetos de Aventuras",
     "Milestones": "Hazañas & Desafíos",
     "NoEventChallenges": "Has completado todos los desafíos del evento",
@@ -1128,9 +1130,9 @@
     "RecordValue": "{{value}}pts",
     "Resets_one": "1 reinicio",
     "Resets_other": "{{count}} reinicios",
+    "SeasonalHub": "Centro de Operaciones de la Temporada",
     "StatTrackers": "Analizadores Estadísticos",
-    "TrackedTriumphs": "Triunfos Seguidos",
-    "VanguardPathfinder": "Pionero de Vanguardia"
+    "TrackedTriumphs": "Triunfos Seguidos"
   },
   "RecordBooks": {
     "HideCompleted": "Ocultar hazañas completadas",
@@ -1138,7 +1140,8 @@
   },
   "Records": {
     "Title": "Hazañas",
-    "UniversalOrnamentSetOther": "Otro"
+    "UniversalOrnamentSetOther": "Otro",
+    "VexcaliburCatalyst": "Catalizador Vexcalibur"
   },
   "SearchHistory": {
     "Date": "Último Usado",
@@ -1214,12 +1217,14 @@
     "SortByClassType": "Clase Requerida",
     "SortByCrafted": "Fabricadas (D2)",
     "SortByDeepsight": "Visión Profunda (D2)",
+    "SortByFeatured": "Destacado (D2)",
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
     "SortByRating": "Calidad de la Armadura (D1)",
     "SortByRecent": "Recientemente Adquiridos (D2)",
     "SortBySeason": "Temporada (D2)",
     "SortByTag": "Etiqueta ({{taglist}})",
+    "SortByTier": "Nivel (D2)",
     "SortByType": "Tipo",
     "SortByWeaponElement": "Tipo de Daño",
     "SortCustom": "Orden Personalizado",
@@ -1292,7 +1297,6 @@
     "ShieldHP": "PV Escudo",
     "StrafingSpeed": "Movimiento lateral",
     "Strength": "Fuerza",
-    "Tier": "Nivel {{tier}}",
     "TierProgress": "N{{tier}} {{statName}} ({{progress}}/60 para N{{nextTier}})\n",
     "TierProgress_Max": "N{{tier}} {{statName}} ({{progress}}/300)\n",
     "TimeToFullHP": "Tiempo hasta PV Completos",

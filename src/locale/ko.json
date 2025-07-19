@@ -227,6 +227,7 @@
     "Equipped": "캐릭터가 착용하고 있는 아이템",
     "Event": "데스티니 2의 특정 이벤트에서 나온 아이템을 표시합니다.",
     "ExtraPerk": "추가로 선택 가능한 특성이 있는 무작위 특성의 전설 무기를 표시합니다.",
+    "Featured": "현재 시즌에서 \"추천 아이템\"에 해당되는 아이템",
     "Filter": "필터",
     "FilterWith": "필터 조건:",
     "Focusable": "상인에게서 집중 가능한 아이템을 표시합니다.",
@@ -236,7 +237,6 @@
     "HasNotes": "메모가 추가된 아이템 표시",
     "HasOrnament": "장식이 적용된 아이템을 표시합니다.",
     "HasShader": "안료가 적용된 아이템을 표시합니다.",
-    "HoldsMod": "특정 시즌의 개조 부품과 호환되는 방어구를 표시합니다.",
     "InDimLoadout": "is:indimloadout은 DIM 로드아웃에 포함된 아이템을 표시합니다.",
     "InInGameLoadout": "is:iningameloadout은 게임 내 로드아웃에 포함된 아이템을 표시합니다.",
     "InInventory": "소지품에 한 개 이상 보유 중인 아이템을 표시합니다. 상점이나 기록 화면에서만 유용합니다.",
@@ -263,9 +263,8 @@
     "MaxPower": "각 슬롯에서 가장 높은 전투력의 아이템을 표시합니다.",
     "MaxPowerLoadout": "로드아웃에서 각 직업의 전투력을 최대화할 수 있는 아이템을 표시합니다.",
     "Memento": "유품 소켓이 있는 무기를 표시합니다.",
-    "ModSlot": "특정 시즌의 개조 부품 슬롯이 있는 방어구를 표시합니다.",
+    "ModSlot": "특정 개조 부품 슬롯이 있는 방어구를 표시합니다.",
     "Mods": {
-      "Y2": "2년 차 개조 부품이 장착된 아이템을 표시합니다.",
       "Y3": "방어구 2.0 개조 부품이 선택된 아이템을 표시합니다."
     },
     "Name": "필터와 일치(exactname:)하거나 부분적으로 일치(name:)하는 아이템을 표시합니다. 따옴표를 사용하여 전체 문구를 검색합니다.",
@@ -308,6 +307,7 @@
       "Tag": "특정 태그가 있는 아이템을 표시합니다.",
       "Tagged": "태그가 있는 아이템을 표시합니다."
     },
+    "Tier": "0~5 등급에 따라 아이템을 표시합니다.",
     "Timelost": "\\(잃어버린 시간\\)",
     "Tracked": "퀘스트/현상금을 추적 여부에 따라 표시합니다.",
     "Transferable": "캐릭터 간 이동 가능한 아이템",
@@ -635,8 +635,8 @@
     "Artifice": "계략",
     "AssumeMasterwork": "걸작 가정",
     "AssumeMasterworkOptions": {
-      "All": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n경이: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "방어구 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "방어구 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n방어구 2.0 경이: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "계략 능력치 개조 부품을 수용할 수 있도록 강화되었습니다.",
       "Current": "현재 능력치, 최소 에너지 레벨 {{minLoItemEnergy}} 가정",
       "Legendary": "전설: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n경이: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
@@ -705,7 +705,6 @@
     "StatRangeTooltip": "현재 최소/최대 설정에서, 이 능력치가 {{min}}에서 {{max}} 사이인 로드아웃이 존재합니다. 더블 클릭하면 최솟값을 {{max}}로 설정합니다.",
     "StatTotal": "합계: {{total}}",
     "TierNumber": "T{{tier}}",
-    "TierSelect": "최소 능력치 등급 선택",
     "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
     "UnableToAddAllModsBody": "{{mods}}개의 개조 부품을 장착할 수 있는 공간이 없습니다.",
     "UnlockItem": "아이템 고정 해제"
@@ -931,6 +930,7 @@
     "AddToLoadout": "로드아웃",
     "AddToLoadoutTitle": "로드아웃에 추가",
     "All": "전체",
+    "ArtifactBreaker": "이 무기는 잠금 해제된 유물 특성으로 인해 {{breaker}}을(를) 가지고 있습니다.",
     "CannotCurrentlyRoll": "이 특성은 현재 버전의 아이템에서 얻을 수 없습니다.",
     "CantPullFromPostmaster": "이 아이템을 수령하려면 게임 내에서 우편 담당자를 방문해야 합니다.",
     "CatalystProgress": "촉매제 진척도",
@@ -948,6 +948,7 @@
     },
     "Infuse": "주입",
     "InfuseTitle": "주입 재료 탐색기 열기",
+    "IntrinsicBreaker": "이 무기는 본질적으로 {{breaker}}을(를) 가지고 있습니다.",
     "LoadingSockets": "이 아이템의 특성과 능력치 정보가 아직 로드되지 않았습니다.",
     "LockUnlock": {
       "AutoLock": "잠금 상태가 아이템의 태그와 동기화됨",
@@ -1013,10 +1014,12 @@
       "Damage": "피해 유형",
       "Energy": "에너지",
       "Event": "이벤트",
+      "Featured": "추천",
       "Foundry": "제조사",
       "Harmonizable": "조율 가능",
       "Icon": "아이콘",
       "Intrinsics": "본질",
+      "ItemTier": "등급",
       "KillTracker": "킬 수",
       "Level": "레벨",
       "Loadouts": "로드아웃",
@@ -1045,7 +1048,7 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "능력치",
       "Tag": "태그",
-      "Tier": "등급",
+      "Tier": "희귀도",
       "Traits": "무기 특성",
       "WishList": "희망 아이템 목록",
       "WishListNotes": "희망 아이템 목록 메모",
@@ -1064,6 +1067,7 @@
     "Stats": {
       "Aim": "조준",
       "Airborne": "공중 효율",
+      "AmmoGeneration": "탄약 생성",
       "Power": "전투력",
       "RPM": "RPM",
       "Recoil": "반동",
@@ -1077,9 +1081,7 @@
   },
   "Progress": {
     "Bounties": "현상금",
-    "CruciblePathfinder": "시련의 장 길잡이",
     "CrucibleRank": "등급",
-    "GambitPathfinder": "갬빗 길잡이",
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
     "NoEventChallenges": "모든 이벤트 도전 완료",
@@ -1098,9 +1100,9 @@
     "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}점",
     "Resets_other": "초기화 {{count}}회",
+    "SeasonalHub": "시즌 허브",
     "StatTrackers": "통계 추적기",
-    "TrackedTriumphs": "추적 중인 업적",
-    "VanguardPathfinder": "선봉대 길잡이"
+    "TrackedTriumphs": "추적 중인 업적"
   },
   "RecordBooks": {
     "HideCompleted": "완료한 기록 숨기기",
@@ -1108,7 +1110,8 @@
   },
   "Records": {
     "Title": "기록",
-    "UniversalOrnamentSetOther": "기타"
+    "UniversalOrnamentSetOther": "기타",
+    "VexcaliburCatalyst": "벡스칼리버 촉매제"
   },
   "SearchHistory": {
     "Date": "최근 사용",
@@ -1184,12 +1187,14 @@
     "SortByClassType": "필요한 직업",
     "SortByCrafted": "제작됨 (D2)",
     "SortByDeepsight": "심안 (D2)",
+    "SortByFeatured": "추천 (D2)",
     "SortByPrimary": "전투력",
     "SortByRarity": "희귀도",
     "SortByRating": "방어구 품질 (D1)",
     "SortByRecent": "최근 획득 (D2)",
     "SortBySeason": "시즌 (D2)",
     "SortByTag": "태그 ({{taglist}})",
+    "SortByTier": "등급 (D2)",
     "SortByType": "유형",
     "SortByWeaponElement": "피해 유형",
     "SortCustom": "사용자 지정 정렬",
@@ -1261,7 +1266,6 @@
     "ShieldHP": "보호막 체력",
     "StrafingSpeed": "횡이동",
     "Strength": "힘",
-    "Tier": "{{tier}}등급",
     "TierProgress": "{{tier}}등급 {{statName}} ({{nextTier}}등급 까지 {{progress}}/60)",
     "TierProgress_Max": "{{tier}}등급 {{statName}} ({{progress}}/300)\n",
     "TimeToFullHP": "체력 완전 회복 시간",
