@@ -71,6 +71,7 @@ function requestPickerItemsHandler({
           label: item.name,
           item: streamDeckClearId(item.index),
           icon: item.icon,
+          tier: item.tier,
           overlay: item.iconOverlay,
           isExotic: item.isExotic,
           isCrafted: Boolean(item.crafted),
@@ -101,8 +102,19 @@ function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkR
         // delay a bit to trigger the search
         await delay(250);
       }
+
+      let query = state.shell.searchQuery;
+
+      if (msg.append) {
+        query += ` ${msg.query}`;
+      } else if (query !== msg.query) {
+        query = msg.query;
+      } else {
+        query = '';
+      }
+
       // update the search query
-      dispatch(setSearchQuery(state.shell.searchQuery === msg.query ? '' : msg.query));
+      dispatch(setSearchQuery(query));
     } else if (msg.query) {
       // reset any previous search
       dispatch(setSearchQuery(''));

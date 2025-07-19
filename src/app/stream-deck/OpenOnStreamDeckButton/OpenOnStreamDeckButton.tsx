@@ -7,19 +7,26 @@ import { useMemo } from 'react';
 import { useStreamDeckSelection } from '../stream-deck';
 import styles from './OpenOnStreamDeckButton.m.scss';
 
-export default function OpenOnStreamDeckButton({ item, label }: { item: DimItem; label: boolean }) {
+export default function OpenOnStreamDeckButton({
+  item,
+  label,
+  type,
+}: {
+  item: DimItem;
+  label: boolean;
+  type: 'inventory-item' | 'item';
+}) {
   const options = useMemo(
     () => ({
-      type: 'item' as const,
+      type,
       item,
-      isSubClass: item.bucket.hash === BucketHashes.Subclass,
     }),
-    [item],
+    [item, type],
   );
 
   const deepLink = useStreamDeckSelection({
     options,
-    equippable: !item.notransfer,
+    equippable: !item.notransfer || item.bucket.hash === BucketHashes.Subclass,
   });
 
   if (!deepLink) {

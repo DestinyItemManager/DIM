@@ -11,6 +11,8 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemRarityName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import OpenOnStreamDeckButton from 'app/stream-deck/OpenOnStreamDeckButton/OpenOnStreamDeckButton';
+import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
 import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
@@ -76,6 +78,11 @@ export default function ItemPopup({
     () => item && buildItemActionsModel(item, stores),
     [item, stores],
   );
+
+  const streamDeckEnabled = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useSelector(streamDeckEnabledSelector)
+    : false;
 
   const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
 
@@ -148,6 +155,9 @@ export default function ItemPopup({
               <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
                 {header}
                 {content}
+                {streamDeckEnabled && item.bucket.inInventory && (
+                  <OpenOnStreamDeckButton type="inventory-item" label item={item} />
+                )}
               </div>
               {itemActionsModel.hasControls && (
                 <div className={styles.desktopActions}>

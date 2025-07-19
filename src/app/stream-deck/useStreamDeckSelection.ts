@@ -11,7 +11,7 @@ import { streamDeckSelectionSelector } from './selectors';
 import { STREAM_DECK_DEEP_LINK } from './util/authorization';
 import { streamDeckClearId } from './util/packager';
 
-export type StreamDeckSelectionOptions = (
+export type StreamDeckSelectionOptions =
   | {
       type: 'in-game-loadout';
       loadout: InGameLoadout;
@@ -25,7 +25,10 @@ export type StreamDeckSelectionOptions = (
       type: 'item';
       item: DimItem;
     }
-) & { isSubClass?: boolean };
+  | {
+      type: 'inventory-item';
+      item: DimItem;
+    };
 
 function findSubClassIcon(items: LoadoutItem[], state: RootState) {
   const defs = d2ManifestSelector(state);
@@ -70,15 +73,27 @@ const toSelection = (data: StreamDeckSelectionOptions) => (state: RootState) => 
         label: item.name,
         subtitle: item.typeName,
         item: streamDeckClearId(item.index),
+        tier: item.tier,
         icon: item.icon,
         overlay: item.iconOverlay,
         isExotic: item.isExotic,
-        isSubClass: data.isSubClass,
+        isSubClass: item.bucket.hash === BucketHashes.Subclass,
         isCrafted: Boolean(item.crafted),
         element:
           item.element?.enumValue === DamageType.Kinetic
             ? undefined
             : item.element?.displayProperties?.icon,
+      };
+    }
+    case 'inventory-item': {
+      const { item } = data;
+      return {
+        type: 'inventory-item',
+        label: item.name,
+        subtitle: item.typeName,
+        item: streamDeckClearId(item.index),
+        icon: item.icon,
+        isExotic: item.isExotic,
       };
     }
   }
@@ -101,13 +116,20 @@ const toSelectionHref =
 
 export interface UseStreamDeckSelectionArgs {
   options: StreamDeckSelectionOptions;
-  equippable: boolean;
+  equippable: boolean | undefined;
 }
 
+const types = {
+  item: 'item',
+  loadout: 'loadout',
+  'in-game-loadout': 'in-game-loadout',
+  'inventory-item': 'inventory-item',
+};
+
 function useSelection({ equippable, options }: UseStreamDeckSelectionArgs): string | undefined {
-  const type = options.type === 'item' ? 'item' : 'loadout';
+  const type = types[options.type];
   const selection = useSelector(streamDeckSelectionSelector);
-  const canSelect = Boolean((equippable || options.isSubClass) && selection === type);
+  const canSelect = Boolean((equippable || type === 'inventory-item') && selection === type);
   return useSelector(toSelectionHref(canSelect, options));
 }
 

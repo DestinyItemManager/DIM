@@ -102,12 +102,7 @@ function metrics(state: RootState) {
     : seasonProgress?.level;
 
   return {
-    gambit: 0, // progression[3008065600].currentProgress,
-    vanguard: 0, // progression[457612306].currentProgress,
-    crucible: 0, // progression[2083746873].currentProgress,
-    trials: 0, // progression[2755675426].currentProgress,
     gunsmith: progression[1471185389].currentProgress,
-    ironBanner: 0, // progression[599071390].currentProgress,
     triumphs: lifetimeScore ?? 0,
     triumphsActive: activeScore ?? 0,
     battlePass: battlePassHash ? seasonalRank : 0,
@@ -121,6 +116,24 @@ export function streamDeckClearId(id: string) {
 
 function equippedItems(store?: DimStore) {
   return store?.items.filter((it) => it.equipment).map((it) => streamDeckClearId(it.index)) ?? [];
+}
+
+function inventoryCounters(state?: RootState) {
+  return state?.inventory.stores
+    .flatMap((it) => it.items)
+    .filter((it) => it.bucket.inInventory)
+    .reduce(
+      (acc, it) => {
+        const key = streamDeckClearId(it.index);
+        if (acc[key]) {
+          acc[key] += it.amount;
+        } else {
+          acc[key] = it.amount;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 }
 
 function character(store: DimStore) {
@@ -193,4 +206,5 @@ export default {
   maxPower,
   postmaster,
   equippedItems,
+  inventoryCounters,
 };
