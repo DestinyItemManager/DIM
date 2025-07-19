@@ -26,6 +26,16 @@
   }
 }
 
+.setBonus {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  img {
+    height: 1.3em;
+    vertical-align: bottom;
+  }
+}
+
 // Uppercased title for socket categories
 .socketCategoryHeader {
   text-transform: uppercase;

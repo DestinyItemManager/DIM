@@ -758,6 +758,10 @@ export function makeItem(
 
   createdItem.index = createItemIndex(createdItem);
 
+  if (itemDef.equippingBlock?.equipableItemSetHash) {
+    createdItem.setBonus = defs.EquipableItemSet.get(itemDef.equippingBlock.equipableItemSetHash);
+  }
+
   return createdItem;
 }
 

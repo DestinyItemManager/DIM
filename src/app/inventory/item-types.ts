@@ -6,6 +6,7 @@ import {
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
+  DestinyEquipableItemSetDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemInvestmentStatDefinition,
@@ -230,8 +231,10 @@ export interface DimItem {
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
   featured: boolean;
-  /** In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which identifies  */
+  /** In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which provides increasing benefits. */
   tier: number;
+  /** In D2 since Edge of Fate, items can have a set bonus with other items */
+  setBonus?: DestinyEquipableItemSetDefinition;
 }
 
 /**

@@ -1,4 +1,5 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
+import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { filterMap, uniqBy } from 'app/utils/collections';
@@ -75,6 +76,19 @@ export default function ItemSocketsGeneral({
   return (
     <>
       {intrinsicRows}
+      {item.setBonus && (
+        <div className={styles.setBonus}>
+          {item.setBonus?.setPerks.map((p) => {
+            const perkDisp = defs.SandboxPerk.get(p.sandboxPerkHash).displayProperties;
+            return (
+              <span>
+                <BungieImage src={perkDisp.icon} />
+                {perkDisp.name}
+              </span>
+            );
+          })}
+        </div>
+      )}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets
