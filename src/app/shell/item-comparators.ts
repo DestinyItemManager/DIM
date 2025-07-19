@@ -284,6 +284,8 @@ const ITEM_COMPARATORS: {
   deepsight: compareBy((item) => (item.deepsightInfo ? 1 : 2)),
   // featured -> not featured
   featured: compareBy((item) => (item.featured ? 0 : 1)),
+  // high -> low
+  tier: reverseComparator(compareBy((item) => item.tier)),
   default: () => 0,
 };
 

@@ -179,6 +179,7 @@ export default function SettingsPage() {
     crafted: t('Settings.SortByCrafted'),
     deepsight: t('Settings.SortByDeepsight'),
     featured: t('Settings.SortByFeatured'),
+    tier: t('Settings.SortByTier'),
   };
 
   const vaultWeaponGroupingOptions = mapToOptions({
