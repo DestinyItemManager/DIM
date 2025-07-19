@@ -14,9 +14,33 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './MaterialCounts.m.scss';
 
-const goodMats = [800069450, 2569113415, 3702027555];
-const upgradeMats = [2979281381, 4257549984, 3853748946, 4257549985, 353704689, 3467984096];
-const seasonal = [1289622079, 1471199156];
+const goodMats = [
+  800069450, // Strange Coins
+  2569113415, // Strange Coin (Exotic)
+  3702027555, // Spoils of Conquest
+];
+const upgradeMats = [
+  2979281381, // Upgrade Module
+  4257549984, // Enhancement Prism
+  3853748946, // Enhancement Core
+  2718300701, // Unstable Cores
+  4257549985, // Ascendant Shard
+  353704689, // Ascendant Alloy
+  3467984096, // Exotic Cipher
+];
+
+// Deprecated or otherwise uninteresting materials
+const hiddenMats = [
+  529424730, // Upgrade Points
+  1624697519, // Engram Tracker
+  592227263, // Baryon Bough
+  950899352, // Dusklight Shard
+  1485756901, // Glacial Starwort
+  3592324052, // Helium Filaments
+  4046539562, // Mod Components
+  4114204995, // Ghost Fragments
+  1289622079, // Strand Meditations
+];
 
 export function MaterialCounts({
   wide,
@@ -27,6 +51,9 @@ export function MaterialCounts({
 }) {
   const allMats = useSelector(materialsSelector);
   const materials = Map.groupBy(allMats, (m) => m.hash);
+  for (const h of hiddenMats) {
+    materials.delete(h);
+  }
 
   const currencies = useSelector(currenciesSelector);
   const transmogCurrencies = useSelector(transmogCurrenciesSelector);
@@ -39,7 +66,7 @@ export function MaterialCounts({
     vendorCurrencyEngrams.length > 0 && (
       <CurrencyGroup key="engrams" currencies={vendorCurrencyEngrams} />
     ),
-    ...[goodMats, upgradeMats, glimmerMats, seasonal].map((matgroup) => (
+    ...[goodMats, upgradeMats, glimmerMats, [...materials.keys()]].map((matgroup) => (
       <React.Fragment key={matgroup[0]}>
         {matgroup.map((h) => {
           const items = materials.get(h);
