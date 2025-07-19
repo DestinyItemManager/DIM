@@ -1,5 +1,7 @@
 ## Next
 
+## 8.81.4 <span class="changelog-date">(2025-07-18)</span>
+
 * Added Enhanced arrows to show Enhanced perks in the Item Feed.
 * Updated armor intrinsic detection to identify Armor 3.0 Archetypes. It should appear now in Organizer/Item Popup/Compare.
 * Improved cramped spacing of stats display in Loadouts.
