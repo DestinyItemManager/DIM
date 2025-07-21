@@ -3,10 +3,11 @@ import {
   currenciesSelector,
   materialsSelector,
   transmogCurrenciesSelector,
+  upgradeCurrenciesSelector,
   vendorCurrencyEngramsSelector,
 } from 'app/inventory/selectors';
 import { AccountCurrency } from 'app/inventory/store-types';
-import { compact } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import glimmerMats from 'data/d2/spider-mats.json';
@@ -57,7 +58,11 @@ export function MaterialCounts({
 
   const currencies = useSelector(currenciesSelector);
   const transmogCurrencies = useSelector(transmogCurrenciesSelector);
+  const upgradeCurrencies = useSelector(upgradeCurrenciesSelector);
   const vendorCurrencyEngrams = useSelector(vendorCurrencyEngramsSelector);
+
+  // TODO: This bucket hash doesn't have a name in the manifest, so I'm not sure if it's "Seasonal" or "Kepler".
+  const seasonalMats = allMats.filter((m) => m.bucket.hash === 2207872501).map((m) => m.hash);
 
   // Track materials which have already appeared, in case these categories overlap
   const shownMats = new Set<number>();
@@ -66,33 +71,43 @@ export function MaterialCounts({
     vendorCurrencyEngrams.length > 0 && (
       <CurrencyGroup key="engrams" currencies={vendorCurrencyEngrams} />
     ),
-    ...[goodMats, upgradeMats, glimmerMats, [...materials.keys()]].map((matgroup) => (
-      <React.Fragment key={matgroup[0]}>
-        {matgroup.map((h) => {
-          const items = materials.get(h);
-          if (!items || shownMats.has(h)) {
-            return null;
-          }
-          shownMats.add(h);
-          const amount = items.reduce((total, i) => total + i.amount, 0);
-          const item = items[0];
-          const materialName = item.name;
-          const icon = item.icon;
+    ...[goodMats, seasonalMats, upgradeMats, glimmerMats, [...materials.keys()]].map((matgroup) => {
+      const matItems = filterMap(matgroup, (h) => {
+        const items = materials.get(h);
+        if (!items || shownMats.has(h)) {
+          return undefined;
+        }
+        shownMats.add(h);
+        const amount = items.reduce((total, i) => total + i.amount, 0);
+        if (amount === undefined) {
+          return undefined;
+        }
+        const item = items[0];
+        return [item, amount] as const;
+      });
+      if (matItems.length === 0 && !(matgroup === upgradeMats && upgradeCurrencies.length > 0)) {
+        return undefined;
+      }
+      return (
+        <React.Fragment key={matgroup[0]}>
+          {matItems.map(([item, amount]) => {
+            const materialName = item.name;
+            const icon = item.icon;
 
-          if (amount === undefined) {
-            return null;
-          }
-
-          return (
-            <div className={styles.material} key={h}>
-              <span className={styles.amount}>{amount.toLocaleString()}</span>
-              <BungieImage src={icon} />
-              <span>{materialName}</span>
-            </div>
-          );
-        })}
-      </React.Fragment>
-    )),
+            return (
+              <div className={styles.material} key={item.hash}>
+                <span className={styles.amount}>{amount.toLocaleString()}</span>
+                <BungieImage src={icon} />
+                <span>{materialName}</span>
+              </div>
+            );
+          })}
+          {matgroup === upgradeMats && upgradeCurrencies.length > 0 && (
+            <CurrencyGroup currencies={upgradeCurrencies} />
+          )}
+        </React.Fragment>
+      );
+    }),
     transmogCurrencies.length > 0 && (
       <CurrencyGroup key="transmog" currencies={transmogCurrencies} />
     ),

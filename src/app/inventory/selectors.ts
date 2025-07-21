@@ -115,6 +115,15 @@ export const transmogCurrenciesSelector = createSelector(
   (currencies) => currencies.filter((c) => transmogCurrencies.includes(c.itemHash)),
 );
 
+const upgradeCurrencies = [
+  2718300701, // Unstable Cores
+];
+/** Mostly just unstable cores right now */
+export const upgradeCurrenciesSelector = createSelector(
+  (state: RootState) => state.inventory.currencies,
+  (currencies) => currencies.filter((c) => upgradeCurrencies.includes(c.itemHash)),
+);
+
 /** Vendor engrams you can decrypt at a vendor or use for item focusing */
 export const vendorCurrencyEngramsSelector = createSelector(
   d2ManifestSelector,
