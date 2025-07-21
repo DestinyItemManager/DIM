@@ -1,5 +1,7 @@
 ## Next
 
+## 8.82.0 <span class="changelog-date">(2025-07-20)</span>
+
 ## 8.81.4 <span class="changelog-date">(2025-07-18)</span>
 
 * Added Enhanced arrows to show Enhanced perks in the Item Feed.
