@@ -14,13 +14,12 @@ import { userGuideUrl } from 'app/shell/links';
 import { sumBy } from 'app/utils/collections';
 import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { LookupTable } from 'app/utils/util-types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getSocketsWithStyle, socketContainsIntrinsicPlug } from '../utils/socket-utils';
+import { socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
 
@@ -82,16 +81,17 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     getPartEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
   const partEffectsTotal = partEffects ? sumBy(partEffects, ([value]) => value) : 0;
 
-  const armor2MasterworkSockets =
-    item?.sockets && getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.EnergyMeter);
-  const armor2MasterworkValue =
-    armor2MasterworkSockets && getTotalPlugEffects(armor2MasterworkSockets, [stat.statHash]);
+  const armorMasterworkSockets = item!.sockets!.allSockets.filter((s) =>
+    s.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith('v460.plugs.armor.masterworks'),
+  );
+  const armorMasterworkValue =
+    armorMasterworkSockets && getTotalPlugEffects(armorMasterworkSockets, [stat.statHash]);
 
   const masterworkValue =
     item?.masterworkInfo?.stats?.find((s) => s.hash === stat.statHash)?.value ?? 0;
   // This bool controls the stat name being gold
   const isMasterworkedStat = masterworkValue !== 0;
-  const masterworkDisplayValue = masterworkValue || armor2MasterworkValue;
+  const masterworkDisplayValue = masterworkValue || armorMasterworkValue;
   let masterworkDisplayWidth = masterworkDisplayValue || 0;
   // baseBar here is the leftmost segment of the stat bar.
   // For armor, this is the "roll," the sum of its invisible stat plugs.
@@ -128,7 +128,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
   const totalDetails =
     item &&
     stat.statHash === TOTAL_STAT_HASH &&
-    breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
+    breakDownTotalValue(stat.base, item, armorMasterworkSockets || []);
 
   const modSign =
     (stat.value !== stat.base ? modEffectsTotal : 0) * (stat.smallerIsBetter ? -1 : 1);
@@ -190,7 +190,6 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       {stat.bar && <StatBar stat={stat} segments={segments} />}
 
       {totalDetails &&
-        Boolean(totalDetails.baseTotalValue) &&
         Boolean(totalDetails.totalModsValue || totalDetails.totalMasterworkValue) && (
           <StatTotal totalDetails={totalDetails} optionalClasses={optionalClasses} stat={stat} />
         )}
