@@ -110,7 +110,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',             'rof',         'charge',\\n  'impact',          'handling',    'range',\\n  'stability',       'reload',      'magazine',\\n  'aimassist',       'equipspeed',  'shieldduration',\\n  'velocity',        'blastradius', 'recoildirection',\\n  'drawtime',        'zoom',        'airborne',\\n  'accuracy',        'swingspeed',  'guardefficiency',\\n  'guardresistance', 'chargerate',  'guardendurance',\\n  'ammocapacity',    'weapons',     'health',\\n  'class',           'grenade',     'super',\\n  'melee',           'mobility',    'resilience',\\n  'recovery',        'discipline',  'intellect',\\n  'strength',        'total',       'any'\\n], overload undefined 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',             'rof',             'charge',\\n  'impact',          'handling',        'range',\\n  'stability',       'reload',          'magazine',\\n  'aimassist',       'equipspeed',      'shieldduration',\\n  'velocity',        'blastradius',     'recoildirection',\\n  'drawtime',        'zoom',            'airborne',\\n  'accuracy',        'ammogen',         'swingspeed',\\n  'guardefficiency', 'guardresistance', 'chargerate',\\n  'guardendurance',  'ammocapacity',    'weapons',\\n  'health',          'class',           'grenade',\\n  'super',           'melee',           'mobility',\\n  'resilience',      'recovery',        'discipline',\\n  'intellect',       'strength',        'total',\\n  'any'\\n], overload undefined 1`] = `
 [
   "stat:",
   "stat:rpm:",
@@ -208,6 +208,11 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   "stat:accuracy:>",
   "stat:accuracy:<=",
   "stat:accuracy:>=",
+  "stat:ammogen:",
+  "stat:ammogen:<",
+  "stat:ammogen:>",
+  "stat:ammogen:<=",
+  "stat:ammogen:>=",
   "stat:swingspeed:",
   "stat:swingspeed:<",
   "stat:swingspeed:>",
