@@ -47,10 +47,17 @@ const itemsByBucket = weakMemoize((store: DimStore) =>
 export const findItemsByBucket = (store: DimStore, bucketId: number): DimItem[] =>
   itemsByBucket(store)[bucketId] ?? emptyArray();
 
-/** Get the bonus power from the Seasonal Artifact */
+/**
+ * Get the bonus power from the Seasonal Artifact.
+ * Destiny 2 is not currently using the artifact to provide power.
+ * Bungie.net is currently reporting 1 instead of 0 thus this fix.
+ * Leaving this code in place for any future power modifier would be nice.
+ */
 export function getArtifactBonus(store: DimStore) {
+  // @ts-ignore
   const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
-  return artifact?.primaryStat?.value || 0;
+  // return artifact?.primaryStat?.value || 0;
+  return 0;
 }
 
 /**
