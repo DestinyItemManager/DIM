@@ -11,7 +11,6 @@ import { compact, filterMap } from 'app/utils/collections';
 import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import glimmerMats from 'data/d2/spider-mats.json';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './MaterialCounts.m.scss';
 
@@ -43,6 +42,13 @@ const hiddenMats = [
   1289622079, // Strand Meditations
 ];
 
+// Synthcord is a material, Synthweave is a currency
+const transmogMats = [
+  3855200273, // InventoryItem "Rigid Synthcord"
+  3552107018, // InventoryItem "Plush Synthcord"
+  3107195131, // InventoryItem "Sleek Synthcord"
+];
+
 export function MaterialCounts({
   wide,
   includeCurrencies,
@@ -66,50 +72,66 @@ export function MaterialCounts({
 
   // Track materials which have already appeared, in case these categories overlap
   const shownMats = new Set<number>();
-  const content = [
-    includeCurrencies && <CurrencyGroup key="currencies" currencies={currencies} />,
-    vendorCurrencyEngrams.length > 0 && (
-      <CurrencyGroup key="engrams" currencies={vendorCurrencyEngrams} />
-    ),
-    ...[goodMats, seasonalMats, upgradeMats, glimmerMats, [...materials.keys()]].map((matgroup) => {
-      const matItems = filterMap(matgroup, (h) => {
-        const items = materials.get(h);
-        if (!items || shownMats.has(h)) {
-          return undefined;
-        }
-        shownMats.add(h);
-        const amount = items.reduce((total, i) => total + i.amount, 0);
-        if (amount === undefined) {
-          return undefined;
-        }
-        const item = items[0];
-        return [item, amount] as const;
-      });
-      if (matItems.length === 0 && !(matgroup === upgradeMats && upgradeCurrencies.length > 0)) {
+  const matsToCurrencies = (matgroup: number[]) =>
+    filterMap(matgroup, (h): AccountCurrency | undefined => {
+      const items = materials.get(h);
+      if (!items || shownMats.has(h)) {
         return undefined;
       }
-      return (
-        <React.Fragment key={matgroup[0]}>
-          {matItems.map(([item, amount]) => {
-            const materialName = item.name;
-            const icon = item.icon;
+      shownMats.add(h);
+      const amount = items.reduce((total, i) => total + i.amount, 0);
+      if (amount === undefined) {
+        return undefined;
+      }
+      const item = items[0];
+      return {
+        itemHash: item.hash,
+        displayProperties: {
+          icon: item.icon,
+          name: item.name,
+          description: item.description,
+          hasIcon: Boolean(item.icon),
+          iconSequences: [],
+          highResIcon: '',
+        },
+        quantity: amount,
+      };
+    });
 
-            return (
-              <div className={styles.material} key={item.hash}>
-                <span className={styles.amount}>{amount.toLocaleString()}</span>
-                <BungieImage src={icon} />
-                <span>{materialName}</span>
-              </div>
-            );
-          })}
-          {matgroup === upgradeMats && upgradeCurrencies.length > 0 && (
-            <CurrencyGroup currencies={upgradeCurrencies} />
-          )}
-        </React.Fragment>
-      );
-    }),
-    transmogCurrencies.length > 0 && (
-      <CurrencyGroup key="transmog" currencies={transmogCurrencies} />
+  const [
+    goodMatsAsCurrencies,
+    seasonalMatsAsCurrencies,
+    upgradeMatsAsCurrencies,
+    glimmerMatsAsCurrencies,
+    transmogMatsAsCurrencies,
+    remainingMatsAsCurrencies,
+  ]: AccountCurrency[][] = [
+    goodMats,
+    seasonalMats,
+    upgradeMats,
+    glimmerMats,
+    transmogMats,
+    [...materials.keys()],
+  ].map(matsToCurrencies);
+
+  upgradeMatsAsCurrencies.push(...upgradeCurrencies);
+  transmogCurrencies.push(...transmogMatsAsCurrencies);
+
+  const content = [
+    ...[
+      includeCurrencies ? currencies : [],
+      vendorCurrencyEngrams,
+      goodMatsAsCurrencies,
+      seasonalMatsAsCurrencies,
+      upgradeMatsAsCurrencies,
+      glimmerMatsAsCurrencies,
+      remainingMatsAsCurrencies,
+      transmogCurrencies,
+    ].map(
+      (currencies) =>
+        currencies.length > 0 && (
+          <CurrencyGroup key={currencies[0].itemHash} currencies={currencies} />
+        ),
     ),
   ];
 
