@@ -1,5 +1,7 @@
 ## Next
 
+* DIMmit is back, for all your changelog notifications.
+
 ## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
 
 * Fix an item inspection crash in D1.
