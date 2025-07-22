@@ -1,5 +1,7 @@
 ## Next
 
+## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
+
 * Fix an item inspection crash in D1.
 
 ## 8.82.1 <span class="changelog-date">(2025-07-21)</span>
