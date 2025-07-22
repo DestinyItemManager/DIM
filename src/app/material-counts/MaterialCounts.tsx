@@ -115,7 +115,7 @@ export function MaterialCounts({
   ].map(matsToCurrencies);
 
   upgradeMatsAsCurrencies.push(...upgradeCurrencies);
-  transmogCurrencies.push(...transmogMatsAsCurrencies);
+  transmogCurrencies = [...transmogCurrencies, ...transmogMatsAsCurrencies];
 
   const content = [
     ...[
