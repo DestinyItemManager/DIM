@@ -1,5 +1,7 @@
 ## Next
 
+## 8.82.1 <span class="changelog-date">(2025-07-21)</span>
+
 * Bungie.net still shows characters as having one point of Artifact Power. This has been removed.
 * Fixed the armor stat total "equation" shown in the Item Popup.
 * Fixed Armor 3.0 Exotics displaying their Archetype instead of their Intrinsic power.
