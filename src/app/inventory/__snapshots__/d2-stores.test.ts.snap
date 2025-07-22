@@ -9734,7 +9734,6 @@ exports[`process stores generates a correct armor CSV export 1`] = `
     "Notes": undefined,
     "Owner": "Hunter(10)",
     "Perks": [
-      "Specialist*",
       "Spirit of the Dragon*",
       "Spirit of Verity*",
     ],
