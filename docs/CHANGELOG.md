@@ -1,5 +1,7 @@
 ## Next
 
+* Fix an item inspection crash in D1.
+
 ## 8.82.1 <span class="changelog-date">(2025-07-21)</span>
 
 * Bungie.net still shows characters as having one point of Artifact Power. This has been removed.
