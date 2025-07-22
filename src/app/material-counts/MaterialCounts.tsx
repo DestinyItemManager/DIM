@@ -63,7 +63,7 @@ export function MaterialCounts({
   }
 
   const currencies = useSelector(currenciesSelector);
-  const transmogCurrencies = useSelector(transmogCurrenciesSelector);
+  let transmogCurrencies = useSelector(transmogCurrenciesSelector);
   const upgradeCurrencies = useSelector(upgradeCurrenciesSelector);
   const vendorCurrencyEngrams = useSelector(vendorCurrencyEngramsSelector);
 
