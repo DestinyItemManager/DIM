@@ -128,18 +128,24 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
       (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk,
     );
     if (largePerkCategory) {
-      const largePerkSocket =
-        // This finds new Archetype sockets (information about stat distribution tendencies)
-        item.sockets.allSockets.find(
-          (s) => s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes,
-        ) ??
-        // This assumption worked for old armor intrinsics (Artifice/Seasonal/Event)
-        getSocketByIndex(item.sockets, largePerkCategory.socketIndexes.at(-1)!);
+      const largePerkSocket = getSocketByIndex(
+        item.sockets,
+        largePerkCategory.socketIndexes.at(-1)!,
+      );
       if (largePerkSocket?.plugged?.plugDef.displayProperties.name) {
         return largePerkSocket;
       }
     }
     return getSocketsByPlugCategoryIdentifier(item.sockets, 'enhancements.exotic');
+  }
+}
+
+export function getArmorArchetypeSocket(item: DimItem): DimSocket | undefined {
+  const archetype = item.sockets?.allSockets.find(
+    (s) => s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes,
+  );
+  if (archetype?.plugged?.plugDef.displayProperties.name) {
+    return archetype;
   }
 }
 
@@ -151,12 +157,18 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
  * normal intrinsic.
  */
 export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
-  return item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
-    ? item.sockets.allSockets
-        .filter((s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))
-        // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
-        .map((s) => ({ ...s, isReusable: false }))
-    : [];
+  if (!item.sockets) return [];
+  return [
+    ...(item.isExotic && item.bucket.hash === BucketHashes.ClassArmor
+      ? item.sockets.allSockets
+          .filter((s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))
+          // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
+          .map((s) => ({ ...s, isReusable: false }))
+      : []),
+    ...item.sockets.allSockets.filter(
+      (s) => s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes,
+    ),
+  ];
 }
 
 export function socketContainsPlugWithCategory(
