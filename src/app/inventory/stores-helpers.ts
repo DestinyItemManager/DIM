@@ -1,6 +1,5 @@
 import { count, sumBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { BucketHashes } from 'data/d2/generated-enums';
 /**
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
@@ -53,9 +52,8 @@ export const findItemsByBucket = (store: DimStore, bucketId: number): DimItem[] 
  * Bungie.net is currently reporting 1 instead of 0 thus this fix.
  * Leaving this code in place for any future power modifier would be nice.
  */
-export function getArtifactBonus(store: DimStore) {
-  // @ts-ignore
-  const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
+export function getArtifactBonus(_store: DimStore) {
+  // const artifact = findItemsByBucket(store, BucketHashes.SeasonalArtifact).find((i) => i.equipped);
   // return artifact?.primaryStat?.value || 0;
   return 0;
 }
