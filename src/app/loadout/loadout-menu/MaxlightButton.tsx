@@ -53,9 +53,13 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified }: Pr
             <>
               <img className={styles.yellowInlineSvg} src={helmetIcon} />
               {Math.floor(maxLight)}
-              {' + '}
-              <img className={styles.yellowInlineSvg} src={xpIcon} />
-              {artifactLight}
+              {Boolean(artifactLight) && (
+                <>
+                  {' + '}
+                  <img className={styles.yellowInlineSvg} src={xpIcon} />
+                  {artifactLight}
+                </>
+              )}
             </>
           )}
 

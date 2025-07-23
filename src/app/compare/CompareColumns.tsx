@@ -181,9 +181,9 @@ export function getColumns(
           const intrinsics = getIntrinsicSockets(item);
           return (
             // Sort by PCI first so that similar intrinsics land near each other before sub-alphabetizing
-            (intrinsics[0]?.plugged?.plugDef.plug.plugCategoryIdentifier ?? '') +
-            ',' +
-            perkString(intrinsics)
+            `${intrinsics[0]?.plugged?.plugDef.plug.plugCategoryIdentifier ?? ''},${perkString(
+              intrinsics,
+            )}`
           );
         },
         cell: (_val, item) => {
