@@ -12,7 +12,12 @@ import {
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+  TraitHashes,
+} from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { useSelector } from 'react-redux';
 import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
@@ -115,7 +120,15 @@ export function usePlugDescriptions(
   // if we don't have a community description, fall back to the Bungie description (if we aren't already
   // displaying it)
   if (showBungieDescription || (showCommunityDescriptionOnly && !result.communityInsight)) {
-    result.perks.push(...perks);
+    result.perks.push(
+      ...perks.map((p) => {
+        if (plug.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes) {
+          // Remove the unnecesary prose in Armor 3.0 Archetype descriptions
+          return { ...p, description: p.description?.split('\n\n')[1] || p.description };
+        }
+        return p;
+      }),
+    );
   }
 
   return result;

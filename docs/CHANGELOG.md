@@ -1,5 +1,20 @@
 ## Next
 
+* DIMmit is back, for all your changelog notifications.
+
+## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
+
+* Fix an item inspection crash in D1.
+
+## 8.82.1 <span class="changelog-date">(2025-07-21)</span>
+
+* Bungie.net still shows characters as having one point of Artifact Power. This has been removed.
+* Fixed the armor stat total "equation" shown in the Item Popup.
+* Fixed Armor 3.0 Exotics displaying their Archetype instead of their Intrinsic power.
+* Added `stat:ammogen:` search.
+
+## 8.82.0 <span class="changelog-date">(2025-07-20)</span>
+
 ## 8.81.4 <span class="changelog-date">(2025-07-18)</span>
 
 * Added Enhanced arrows to show Enhanced perks in the Item Feed.

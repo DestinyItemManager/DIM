@@ -160,6 +160,7 @@ export const D2WeaponStatHashByName = {
   zoom: StatHashes.Zoom,
   airborne: StatHashes.AirborneEffectiveness,
   accuracy: StatHashes.Accuracy,
+  ammogen: StatHashes.AmmoGeneration,
 };
 
 export const D2PlugCategoryByStatHash = new Map<StatHashes, PlugCategoryHashes>([

@@ -227,6 +227,7 @@
     "Equipped": "現在装備中のアイテム",
     "Event": "任意のイベントから登場したアイテムを絞り込めます。",
     "ExtraPerk": "選択可能なパークが追加されたレジェンダリーウェポンをランダムに表示",
+    "Featured": "今シーズンの「おすすめアイテム」として扱われているアイテムを表示します。",
     "Filter": "フィルター",
     "FilterWith": "フィルター絞込:",
     "Focusable": "現時点でベンダーから入手できるアイテムを表示",
@@ -236,7 +237,6 @@
     "HasNotes": "メモが適用されているアイテムを表示します。",
     "HasOrnament": "装飾品が施されているアイテムが表示されます。",
     "HasShader": "シェーダが適用されている項目を表示します。",
-    "HoldsMod": "特定のタイプの季節MODに対応した防具が表示されます。",
     "InDimLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用しているアイテムを強調表示します。",
     "InInGameLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用するアイテムを表示します。",
     "InInventory": "保管庫で最低1つは所有しているアイテムを表示します。このフィルターはベンダーまたはレコードの画面でのみ有効です。",
@@ -263,9 +263,8 @@
     "MaxPower": "スロット毎の最大出力でアイテムを表示します。",
     "MaxPowerLoadout": "各キャラクタークラスのパワーレベルを最大化するアイテムのロードアウトを表示します。",
     "Memento": "記憶を装着したクラフト武器を表示",
-    "ModSlot": "特定のシーズンMODスロットを持つ防具を表示します。",
+    "ModSlot": "特定の mod タイプスロットを持つ防具を表示する。",
     "Mods": {
-      "Y2": "2年目のMODが装備されたアイテムを表示します。",
       "Y3": "アーマー2.0のMODが選択されたアイテムを表示します。"
     },
     "Name": "名前がフィルターテキストと一致する (exactname:)、または部分的に一致する (name:) 項目を表示します。 引用符を使用してフレーズ全体を検索します。",
@@ -308,6 +307,7 @@
       "Tag": "特定のタグがあるアイテムを表示。",
       "Tagged": "タグ付けされたアイテムだけを表示します。"
     },
+    "Tier": "レベルに応じたアイテムを表示",
     "Timelost": "\\(時間超越\\)",
     "Tracked": "クエスト、バウンティのステータスを基に表示",
     "Transferable": "キャラ間で移動可能なアイテムを表示",
@@ -635,9 +635,9 @@
     "Artifice": "戦略的アーマー",
     "AssumeMasterwork": "マスターワーク済みと仮定",
     "AssumeMasterworkOptions": {
-      "All": "全アーマー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "全アーマー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nエキゾチック: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
-      "ArtificeExotic": "改造パーツが装着できるよう戦略的アーマーに強化しました。",
+      "All": "アーマー 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "アーマー 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nアーマー 2.0 エキゾチック: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "ArtificeExotic": "戦略的ステータスMODが装着できるよう強化を想定。",
       "Current": "現在のステータスで、エネルギーは少なくとも {{minLoItemEnergy}} を想定。",
       "Legendary": "レジェンダリー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nエキゾチック: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Masterworked": "各ステータス +2、エネルギー 10 を想定。",
@@ -705,7 +705,6 @@
     "StatRangeTooltip": "現在の最小/最大の設定では、ロードアウトが存在します。ロードアウトは {{min}} から {{max}} があります。ダブルクリックして最小値を {{max}}に設定します。",
     "StatTotal": "合計: {{total}}",
     "TierNumber": "T{{tier}}",
-    "TierSelect": "ステータスTier最低値を選択",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
     "UnableToAddAllModsBody": "{{mods}} を適用するのに十分なModスロットがありませんでした。",
     "UnlockItem": "アイテムのピン留めを解除"
@@ -931,6 +930,7 @@
     "AddToLoadout": "ロードアウト",
     "AddToLoadoutTitle": "このアイテムで新規ロードアウトを作成する",
     "All": "全て",
+    "ArtifactBreaker": "アーティファクトパークにより、 {{breaker}} 効果が付与されています。",
     "CannotCurrentlyRoll": "このアイテムの現在のバージョンでは、このパークをロールできません。",
     "CantPullFromPostmaster": "このアイテムを取得するには、ゲーム内のポストマスターにアクセスする必要があります。",
     "CatalystProgress": "媒体の進行",
@@ -948,6 +948,7 @@
     },
     "Infuse": "融合する",
     "InfuseTitle": "融合ファインダーを開く",
+    "IntrinsicBreaker": "{{breaker}} 内在効果を持っています。",
     "LoadingSockets": "このアイテムのパークとステータス値の詳細はまだ調査中です。",
     "LockUnlock": {
       "AutoLock": "ロック状態はこのアイテムのタグに同期されます",
@@ -1013,10 +1014,12 @@
       "Damage": "ダメージ",
       "Energy": "エネルギー",
       "Event": "イベント",
+      "Featured": "注目の装備",
       "Foundry": "武器メーカー",
       "Harmonizable": "共振武器",
       "Icon": "アイコン",
       "Intrinsics": "内在特性",
+      "ItemTier": "レベル",
       "KillTracker": "倒した数",
       "Level": "レベル",
       "Loadouts": "ロードアウト",
@@ -1064,6 +1067,7 @@
     "Stats": {
       "Aim": "照準補佐",
       "Airborne": "空中性能",
+      "AmmoGeneration": "弾薬生成",
       "Power": "パワー",
       "RPM": "毎分発射数",
       "Recoil": "リコイル",
@@ -1077,9 +1081,7 @@
   },
   "Progress": {
     "Bounties": "バウンティ",
-    "CruciblePathfinder": "クルーシブルパスファインダー",
     "CrucibleRank": "ランク",
-    "GambitPathfinder": "ギャンビットパスファインダー",
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
     "NoEventChallenges": "すべてのイベントの挑戦を完了しました。",
@@ -1098,9 +1100,9 @@
     "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
     "Resets_other": "{{count}} リセット",
+    "SeasonalHub": "シーズンハブ",
     "StatTrackers": "追跡中ステータス",
-    "TrackedTriumphs": "追跡中の勝利の道のり",
-    "VanguardPathfinder": "バンガードパスファインダー"
+    "TrackedTriumphs": "追跡中の勝利の道のり"
   },
   "RecordBooks": {
     "HideCompleted": "完了した記録を非表示にする",
@@ -1108,7 +1110,8 @@
   },
   "Records": {
     "Title": "レコード",
-    "UniversalOrnamentSetOther": "その他"
+    "UniversalOrnamentSetOther": "その他",
+    "VexcaliburCatalyst": "ベックスカリバーの媒体"
   },
   "SearchHistory": {
     "Date": "最後に使用した日付",
@@ -1184,12 +1187,14 @@
     "SortByClassType": "クラス専用武器",
     "SortByCrafted": "クラフト済 (D2)",
     "SortByDeepsight": "ディープサイト (D2)",
+    "SortByFeatured": "注目の装備(D2)",
     "SortByPrimary": "パワーレベル",
     "SortByRarity": "レア度",
     "SortByRating": "防具の品質 (D1)",
     "SortByRecent": "最近獲得したもの (D2)",
     "SortBySeason": "シーズン (D2)",
     "SortByTag": "タグ ({{taglist}})",
+    "SortByTier": "武器レベル(D2)",
     "SortByType": "種類",
     "SortByWeaponElement": "ダメージタイプ",
     "SortCustom": "カスタムソート",
@@ -1261,7 +1266,6 @@
     "ShieldHP": "シールドHP",
     "StrafingSpeed": "左右後方歩行速度",
     "Strength": "腕力",
-    "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "TimeToFullHP": "HP 全回復までの時間",

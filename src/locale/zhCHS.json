@@ -30,7 +30,7 @@
   "Armory": {
     "AlternateItems": "其他版本",
     "Armory": "军械库",
-    "DifferentSeason": "其他赛季的复刻版",
+    "DifferentSeason": "其他赛季的版本",
     "NoNotes": "无注释",
     "OpenInArmory": "查看武器详情",
     "Season": "年 {{year}}，第 {{season}} 赛季",
@@ -227,6 +227,7 @@
     "Equipped": "目前已装备的物品。",
     "Event": "显示命运2特定活动中的物品。",
     "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
+    "Featured": "显示在当前赛季被列入“新装备”的物品。",
     "Filter": "过滤器",
     "FilterWith": "筛选：",
     "Focusable": "显示可在商人处聚焦的物品",
@@ -236,7 +237,6 @@
     "HasNotes": "显示已有备注的物品",
     "HasOrnament": "显示已应用皮肤的物品。",
     "HasShader": "显示已应用着色器的物品",
-    "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
     "InDimLoadout": "is:indimgameloadout 指令会显示全部DIM配装中的物品。",
     "InInGameLoadout": "is:iningameloadout 指令会显示任何游戏内配装系统保存的物品。",
     "InInventory": "显示在库存中已拥有的物品。仅在商贩和记录页面中有效。",
@@ -263,9 +263,8 @@
     "MaxPower": "显示每个槽位最高光等的物品。",
     "MaxPowerLoadout": "显示每个职业中能最大化光等的配装物品。",
     "Memento": "显示包含纪念物插槽的武器。",
-    "ModSlot": "显示有某种赛季模组插槽的护甲。",
+    "ModSlot": "显示带有特定类型模组插槽的护甲。",
     "Mods": {
-      "Y2": "显示带有年2模组的物品",
       "Y3": "显示启用防具2.0模组的物品"
     },
     "Name": "使用 (exactname:) 精确搜索某名称的物品，或使用 (name:) 搜索部分匹配某名称的物品。使用引号搜索整个词条。",
@@ -308,6 +307,7 @@
       "Tag": "显示具有特定标签的物品。",
       "Tagged": "显示具有任何标签的物品。"
     },
+    "Tier": "根据从 0 到 5 的阶级显示装备。",
     "Timelost": "（失时）",
     "Tracked": "根据追踪状态显示任务/悬赏。",
     "Transferable": "可在角色间移动的物品。",
@@ -635,8 +635,8 @@
     "Artifice": "诡计",
     "AssumeMasterwork": "假定大师之作",
     "AssumeMasterworkOptions": {
-      "All": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "传说：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域：$t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "护甲 2.0：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "传说护甲 2.0：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域护甲 2.0：$t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "强化以激活诡计护甲属性模组。",
       "Current": "当前属性，假定能量等级至少为 {{minLoItemEnergy}}。",
       "Legendary": "传说：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
@@ -705,7 +705,6 @@
     "StatRangeTooltip": "根据当前的上下限设置，存在所选属性值为 {{min}} 至 {{max}} 的配装。双击将下限改为 {{max}}。",
     "StatTotal": "总计：{{total}}",
     "TierNumber": "T{{tier}}",
-    "TierSelect": "选择最低属性阶级",
     "UnableToAddAllMods": "无法添加所有模组。",
     "UnableToAddAllModsBody": "模组插槽不足，无法装下 {{mods}}。",
     "UnlockItem": "取消固定物品"
@@ -931,6 +930,7 @@
     "AddToLoadout": "配装",
     "AddToLoadoutTitle": "添加此物品到配装",
     "All": "全部",
+    "ArtifactBreaker": "此武器由已解锁的神器特性获得了 {{breaker}}。",
     "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
     "CantPullFromPostmaster": "你必须去邮政官处取回此物品。",
     "CatalystProgress": "催化剂进度",
@@ -948,6 +948,7 @@
     },
     "Infuse": "灌注",
     "InfuseTitle": "打开灌注材料查找器",
+    "IntrinsicBreaker": "此武器固有 {{breaker}}。",
     "LoadingSockets": "尚未加载此物品的特性和属性详情。",
     "LockUnlock": {
       "AutoLock": "该物品的锁定状态已与其标签同步",
@@ -1013,10 +1014,12 @@
       "Damage": "伤害",
       "Energy": "能量",
       "Event": "活动",
+      "Featured": "特色",
       "Foundry": "铸造厂",
       "Harmonizable": "可协调",
       "Icon": "图标",
       "Intrinsics": "框架",
+      "ItemTier": "阶级",
       "KillTracker": "击杀数",
       "Level": "等级",
       "Loadouts": "配装",
@@ -1045,7 +1048,7 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "属性",
       "Tag": "标签",
-      "Tier": "等级",
+      "Tier": "稀有度",
       "Traits": "武器特性",
       "WishList": "愿望清单",
       "WishListNotes": "愿望清单备注",
@@ -1064,6 +1067,7 @@
     "Stats": {
       "Aim": "瞄准",
       "Airborne": "空中效率",
+      "AmmoGeneration": "弹药生成",
       "Power": "光等",
       "RPM": "弹夹数每分钟",
       "Recoil": "后坐力",
@@ -1077,9 +1081,7 @@
   },
   "Progress": {
     "Bounties": "赏金",
-    "CruciblePathfinder": "熔炉竞技场寻路者",
     "CrucibleRank": "排名",
-    "GambitPathfinder": "智谋寻路者",
     "Items": "任务物品",
     "Milestones": "里程碑和挑战",
     "NoEventChallenges": "你已经完成了所有活动挑战",
@@ -1098,9 +1100,9 @@
     "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}点",
     "Resets_other": "{{count}} 次重置",
+    "SeasonalHub": "赛季中心",
     "StatTrackers": "数据追踪器",
-    "TrackedTriumphs": "跟踪的成就",
-    "VanguardPathfinder": "先锋寻路者"
+    "TrackedTriumphs": "跟踪的成就"
   },
   "RecordBooks": {
     "HideCompleted": "隐藏完成事件",
@@ -1108,7 +1110,8 @@
   },
   "Records": {
     "Title": "记录",
-    "UniversalOrnamentSetOther": "其他"
+    "UniversalOrnamentSetOther": "其他",
+    "VexcaliburCatalyst": "维王者之剑催化"
   },
   "SearchHistory": {
     "Date": "最近使用",
@@ -1184,12 +1187,14 @@
     "SortByClassType": "职业要求",
     "SortByCrafted": "已制造（D2）",
     "SortByDeepsight": "深视共振（D2）",
+    "SortByFeatured": "特色 (D2)",
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "护甲质量（D1）",
     "SortByRecent": "最近获得（D2）",
     "SortBySeason": "赛季（D2）",
     "SortByTag": "标签{{taglist}}",
+    "SortByTier": "阶级（D2）",
     "SortByType": "类型",
     "SortByWeaponElement": "伤害类型",
     "SortCustom": "自定义排序",
@@ -1261,7 +1266,6 @@
     "ShieldHP": "护盾容量",
     "StrafingSpeed": "侧向移动速度",
     "Strength": "力量",
-    "Tier": "{{tier}} 阶",
     "TierProgress": "{{tier}} 阶{{statName}} (距 {{nextTier}} 阶 {{progress}}/60)",
     "TierProgress_Max": "{{tier}} 阶{{statName}} ({{progress}}/300)",
     "TimeToFullHP": "恢复满生命值耗时",
