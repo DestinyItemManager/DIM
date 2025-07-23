@@ -2,8 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const typescript = require('typescript');
 
-// Dynamic Keys Regexen
-// Split up for legibility
+// Dynamic Translation Key Patterns
+//
+// This configuration helps i18next-parser find translation keys that are built dynamically at runtime.
+//
+// Problem: When translation keys are constructed using variables or templates (like `Activities.${type}`
+// or `Filter.${category}.${subcategory}`), the i18next-parser tool cannot automatically detect them
+// during static analysis of your code.
+//
+// Solution: Add regex patterns here that match the expected key formats in dot notation.
+// The parser will use these patterns to extract the keys from your translation files,
+// ensuring they don't get marked as unused and removed during cleanup.
+//
+// Example: If your code generates keys like "Activities.Raid", "Activities.Strike", etc.,
+// the pattern /Activities.*/ will capture all keys starting with "Activities."
 
 const regexConstants = [
   { name: 'Accounts', pattern: /Accounts.NoCharactersTitle/ },
