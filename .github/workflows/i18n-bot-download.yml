@@ -40,13 +40,6 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: sort locale json
-        run: |
-          allLocales=("en" "de" "es" "esMX" "fr" "it" "ja" "ko" "pl" "ptBR" "ru" "zhCHS" "zhCHT")
-          for lang in ${allLocales[@]}; do
-            jq -S . src/locale/$lang.json > src/locale/sorted_$lang.json && mv src/locale/sorted_$lang.json src/locale/$lang.json
-          done
-
       - name: build browsercheck utils
         run: pnpm bcu
 
