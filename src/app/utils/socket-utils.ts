@@ -157,7 +157,9 @@ export function getArmorArchetypeSocket(item: DimItem): DimSocket | undefined {
  * normal intrinsic.
  */
 export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
-  if (!item.sockets) return [];
+  if (!item.sockets) {
+    return [];
+  }
   return [
     ...(item.isExotic && item.bucket.hash === BucketHashes.ClassArmor
       ? item.sockets.allSockets
