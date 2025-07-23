@@ -13,7 +13,7 @@ import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import { BucketHashes, TraitHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -141,9 +141,18 @@ export const vendorCurrencyEngramsSelector = createSelector(
   },
 );
 
+const materialsWithMissingICH = [
+  3702027555, // InventoryItem "Spoils of Conquest"
+];
+
 /** materials/currencies that aren't top level stuff */
 export const materialsSelector = createSelector(allItemsSelector, (allItems) =>
-  allItems.filter((i) => i.traitHashes?.includes(TraitHashes.ItemCurrency)),
+  allItems.filter(
+    (i) =>
+      i.traitHashes?.includes(TraitHashes.ItemCurrency) ||
+      i.itemCategoryHashes?.includes(ItemCategoryHashes.Materials) ||
+      materialsWithMissingICH.includes(i.hash),
+  ),
 );
 
 /** The actual raw profile response from the Bungie.net profile API */
