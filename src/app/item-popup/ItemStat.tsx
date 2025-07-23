@@ -81,7 +81,7 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     getPartEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
   const partEffectsTotal = partEffects ? sumBy(partEffects, ([value]) => value) : 0;
 
-  const armorMasterworkSockets = item!.sockets?.allSockets.filter((s) =>
+  const armorMasterworkSockets = item?.sockets?.allSockets.filter((s) =>
     s.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith('v460.plugs.armor.masterworks'),
   );
   const armorMasterworkValue =
