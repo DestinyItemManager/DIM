@@ -43,6 +43,9 @@ jobs:
       - name: build browsercheck utils
         run: pnpm bcu
 
+      - name: i18n utils
+        run: pnpm i18n
+
       - name: porcelain check
         uses: dorny/paths-filter@v3
         id: filter

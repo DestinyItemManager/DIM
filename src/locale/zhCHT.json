@@ -26,10 +26,8 @@
     "NoNotes": "無注釋",
     "OpenInArmory": "查看武器詳情",
     "Season": "年 {{year}}，第 {{season}} 賽季",
-    "TrashlistedRolls_one": "",
     "TrashlistedRolls_other": "{{count, number}} 個垃圾列表特性組合",
     "Unknown": "未知物品",
-    "WishlistedRolls_one": "",
     "WishlistedRolls_other": "{{count, number}} 個願望清單特性組合",
     "YourItems": "你的物品"
   },
@@ -64,7 +62,6 @@
     "Confirm": "更新説明",
     "Remove": "從備注中移除 / 移除 #標簽",
     "Replace": "替換備注",
-    "Title_one": "",
     "Title_other": "更改 {{count}} 個物品的備注"
   },
   "BungieAlert": {
@@ -115,7 +112,6 @@
     "Super": "超能冷卻：{{cooldown}}"
   },
   "Countdown": {
-    "Days_one": "",
     "Days_other": "{{count}} 天",
     "Days_compact_other": "{{count}}天"
   },
@@ -123,7 +119,6 @@
     "EmptyFile": "檔案中沒有行",
     "ImportConfirm": "您確定要從CSV導入標籤/筆記？這將覆蓋您試算表中所包含的所有項目/標記。",
     "ImportFailed": "從CSV導入標籤/注釋失敗：{{error}}",
-    "ImportSuccess_one": "",
     "ImportSuccess_other": "為{{count}} 個物品加載的標籤/注釋。",
     "ImportWrongFileType": "此檔案不是一個CSV檔案。",
     "WrongFields": "CSV檔案中必須有'Id'，'Notes'，'Tag'，'Hash'列（編號，注釋，標籤，雜湊）"
@@ -150,11 +145,9 @@
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
-    "D2Desc_one": "",
     "D2Desc_other": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有 {{count}} 個空位。",
     "D2Desc_female_other": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有 {{count}} 個空位。",
     "D2Desc_male_other": "為防止有物品被寄送到郵政官處，DIM 正確保 {{store}} 上的每個物品種類都留有 {{count}} 個空位。",
-    "Desc_one": "",
     "Desc_other": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
     "Desc_female_other": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
     "Desc_male_other": "為防止有物品被寄送到郵政官處，DIM 正將 {{store}} 上的記憶水晶和微光物品移動到保險庫，並確保每個物品種類都留有 {{count}} 個空位。",
@@ -201,11 +194,8 @@
     "ArmorIntrinsic": "顯示帶有固有特性的傳説防具，例如詭計護甲。",
     "Ascended": "顯示可提升光等且已提升的物品。",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
-    "BulkClear_one": "",
     "BulkClear_other": "移除 {{count}} 物品標籤",
-    "BulkRevert_one": "",
     "BulkRevert_other": "恢復 {{count}} 件物品標籤",
-    "BulkTag_one": "",
     "BulkTag_other": "將 {{count}} 件選擇物品標記為 {{tag}}.",
     "Catalyst": "按狀態顯示催化。catalyst:complete 顯示已解鎖并已套用的催化， catalyst:incomplete 顯示已解鎖但尚未完成目標或套用的催化，而 catalyst:missing 顯示你尚未解鎖催化的物品。",
     "Class": "按照職業類別顯示.",
@@ -377,7 +367,6 @@
     "FilterHelpOptimizer": "搜索防具：{{example}}",
     "FilterHelpProgress": "搜索里程碑和懸賞",
     "FilterHelpRecords": "搜索成就和收藏品",
-    "FilterMatchCount_one": "",
     "FilterMatchCount_other": "{{count}} 個物品",
     "Filters": "篩檢程式",
     "InstallDIM": "安裝為 App",
@@ -798,7 +787,6 @@
     "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "InGameActions": "In-Game Loadout Actions",
     "InGameLoadouts": "游戲内配裝",
-    "ItemErrorSummary_one": "",
     "ItemErrorSummary_other": "{{count}} 個物品出錯：",
     "ItemLeveling": "物品等級",
     "LoadoutName": "配裝名稱",
@@ -808,7 +796,6 @@
     "LoadoutParametersStats": "Stat priorities and minimum/maximum stat ranges",
     "Loadouts": "配裝",
     "MakeRoom": "為郵政官騰出空間",
-    "MakeRoomDone_one": "",
     "MakeRoomDone_other": "通過從{{store}} 上移動了{{movedNum}} 項物品，成功為郵政官騰出了{{count}} 個物品空間。",
     "MakeRoomDone_female_other": "通過從{{store}} 上移動了{{movedNum}} 項物品，成功為郵政官騰出了{{count}} 個物品空間。",
     "MakeRoomDone_male_other": "通過從{{store}} 上移動了{{movedNum}} 項物品，成功為郵政官騰出了{{count}} 個物品空間。",
@@ -819,16 +806,13 @@
     "MaximizeStat": "最高屬性",
     "MaxSlots": "一個配裝中只能有 {{slots}} 個 {{bucketName}}",
     "MissingItemsWarning": "此配裝中的某些項目不再在您的庫存中。",
-    "ModErrorSummary_one": "",
     "ModErrorSummary_other": "{{count}} 個模組出錯：",
     "ModPlacement": {
       "InvalidMods": "無效模組",
-      "InvalidModsDesc_one": "",
       "InvalidModsDesc_other": "{{count}} 個模組不能插入任何防具。",
       "ModPlacement": "模組位置",
       "StackableMod": "Stackable",
       "UnassignedMods": "未分配的模組",
-      "UnassignedModsDesc_one": "",
       "UnassignedModsDesc_other": "由於容量或插槽不足，{{count}} 個模組無法安裝。即使為所選護甲升級容量也是如此。",
       "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "升級消耗",
@@ -858,7 +842,6 @@
     "PullFromPostmaster": "從郵政官處取回物品",
     "PullFromPostmasterError": "無法從郵政官處取回物品:{{error}}.",
     "PullFromPostmasterGeneralError": "無法從郵政官拉取所有物品。",
-    "PullFromPostmasterNotification_one": "",
     "PullFromPostmasterNotification_other": "正在從郵政官處取回{{count}} 項物品至{{store}}.",
     "PullFromPostmasterNotification_female_other": "正在從郵政官處取回{{count}} 項物品至{{store}}.",
     "PullFromPostmasterNotification_male_other": "正在從郵政官處取回{{count}} 項物品至{{store}}.",
@@ -891,9 +874,7 @@
       "LoadoutOptimizer": "配裝優化器設置",
       "NativeShare": "分享連結",
       "Notes": "備注",
-      "NumItems_one": "",
       "NumItems_other": "{{count}} 個項目 - 將提示被分享者從他們的庫存中選擇可比較的項目",
-      "NumMods_one": "",
       "NumMods_other": "{{count}} 個模組",
       "Placeholder": "正在載入分享連結",
       "Subclass": "自定義子職業",
@@ -1093,7 +1074,7 @@
       "Reload": "重新裝彈",
       "RPM": "彈夾數每分鐘"
     },
-    "Unlock": "解鎖\u200b\u200b\u200b\u200b"
+    "Unlock": "解鎖​​​​"
   },
   "PostmasterWarningBanner": {
     "PostmasterAlmostFull": "郵政官快滿了！({{number}}/{{postmasterSize}}）",
@@ -1109,7 +1090,6 @@
     "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentMax": "{{pct}}% to maximum",
     "PercentPrestige": "重置百分比{{pct}}%",
-    "PointsUsed_one": "",
     "PointsUsed_other": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} 光等獎勵",
     "PowerBonusHeaderUndefined": "其他獎勵",
@@ -1120,7 +1100,6 @@
     "Quests": "任務",
     "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}點",
-    "Resets_one": "",
     "Resets_other": "{{count}} 次重置",
     "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "數據追蹤器",
@@ -1142,7 +1121,7 @@
     "Item": "Item Searches",
     "Link": "查看和編輯搜索歷史",
     "Loadout": "Loadout Searches",
-    "Query": "搜索\u200b\u200b\u200b\u200b",
+    "Query": "搜索​​​​",
     "Title": "搜索歷史",
     "UsageCount": "使用次數"
   },
@@ -1221,7 +1200,6 @@
     "SortByWeaponElement": "傷害類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱",
-    "SpacesSize_one": "",
     "SpacesSize_other": "{{count}} 個空位",
     "Theme": "主題",
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
@@ -1347,7 +1325,6 @@
     "UpdateInvalid": "Failed to save data to DIM Sync",
     "UpdateInvalidBody": "Data sent to DIM Sync was invalid and will not be saved.",
     "UpdateInvalidBodyLoadout": "The loadout \"{{name}}\" is invalid and will not be saved. If you imported it from another site, please let them know that they are exporting invalid loadouts.",
-    "UpdateQueueLength_one": "",
     "UpdateQueueLength_other": "我們將在能重新連接時保存 {{count}} 個新更改。",
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
   },
@@ -1484,7 +1461,6 @@
     }
   },
   "WishListRoll": {
-    "BestRatedTip_one": "",
     "BestRatedTip_other": "這些特性與您願望清單上的某個武器完全匹配。",
     "Clear": "清除愿望清单",
     "CopiedLine": "已複製願望清單特性組合到剪貼板",
@@ -1507,7 +1483,6 @@
     "UpdateExternalSource": "Add Wish List",
     "Voltron": "voltron（默認）",
     "WishListNotes": "願望清單備註：",
-    "WorstRatedTip_one": "",
     "WorstRatedTip_other": "這些特性與您垃圾清單上的某個武器完全匹配。"
   },
   "wrong-level": "等級錯誤"
