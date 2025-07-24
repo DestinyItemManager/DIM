@@ -10,7 +10,85 @@ exports[`parse |   |: ast 1`] = `
 
 exports[`parse |   |: lexer 1`] = `[]`;
 
-exports[`parse |  (\\n    (\\n    (is:weapon -is:maxpower powerlimit:1060 or tag:junk or is:blue)\\n    or\\n    (\\n    (is:armor -is:exotic -is:classitem)\\n  \\n    -(is:titan (basestat:recovery:>=18 or basestat:total:>=63))\\n    -(is:hunter ((basestat:recovery:>=13 basestat:mobility:>=18) or basestat:recovery:>15 or basestat:total:>=63))\\n    -(is:warlock ((basestat:recovery:>=18 discipline:>=17) or basestat:total:>=63))\\n  \\n    -(\\n    ((basestat:mobility:>=18 basestat:resilience:>=13) or\\n    (basestat:mobility:>=18 basestat:recovery:>=13) or\\n    (basestat:mobility:>=18 basestat:discipline:>=13) or\\n    (basestat:mobility:>=18 basestat:intellect:>=13) or\\n    (basestat:mobility:>=18 basestat:strength:>=13) or\\n    (basestat:resilience:>=18 basestat:mobility:>=13) or\\n    (basestat:resilience:>=18 basestat:recovery:>=13) or\\n    (basestat:resilience:>=18 basestat:discipline:>=13) or\\n    (basestat:resilience:>=18 basestat:intellect:>=13) or\\n    (basestat:resilience:>=18 basestat:strength:>=13) or\\n    (basestat:recovery:>=18 basestat:mobility:>=13) or\\n    (basestat:recovery:>=18 basestat:resilience:>=13) or\\n    (basestat:recovery:>=18 basestat:discipline:>=13) or\\n    (basestat:recovery:>=18 basestat:intellect:>=13) or\\n    (basestat:recovery:>=18 basestat:strength:>=13) or\\n    (basestat:discipline:>=18 basestat:mobility:>=13) or\\n    (basestat:discipline:>=18 basestat:resilience:>=13) or\\n    (basestat:discipline:>=18 basestat:recovery:>=13) or\\n    (basestat:discipline:>=18 basestat:intellect:>=13) or\\n    (basestat:discipline:>=18 basestat:strength:>=13) or\\n    (basestat:intellect:>=18 basestat:mobility:>=13) or\\n    (basestat:intellect:>=18 basestat:resilience:>=13) or\\n    (basestat:intellect:>=18 basestat:recovery:>=13) or\\n    (basestat:intellect:>=18 basestat:discipline:>=13) or\\n    (basestat:intellect:>=18 basestat:strength:>=13) or\\n    (basestat:strength:>=18 basestat:mobility:>=13) or\\n    (basestat:strength:>=18 basestat:resilience:>=13) or\\n    (basestat:strength:>=18 basestat:recovery:>=13) or\\n    (basestat:strength:>=18 basestat:discipline:>=13) or\\n    (basestat:strength:>=18 basestat:intellect:>=13))\\n    )\\n  \\n    -(\\n    ((basestat:mobility:>=13 basestat:resilience:>=13 basestat:recovery:>=13) or\\n    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:discipline:>=13) or\\n    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:intellect:>=13) or\\n    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:strength:>=13) or\\n    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or\\n    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or\\n    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:strength:>=13) or\\n    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or\\n    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:strength:>=13) or\\n    (basestat:mobility:>=13 basestat:intellect:>=13 basestat:strength:>=13) or\\n    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or\\n    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or\\n    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:strength:>=13) or\\n    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or\\n    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:strength:>=13) or\\n    (basestat:resilience:>=13 basestat:intellect:>=13 basestat:strength:>=13) or\\n    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or\\n    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:strength:>=13) or\\n    (basestat:recovery:>=13 basestat:intellect:>=13 basestat:strength:>=13) or\\n    (basestat:discipline:>=13 basestat:intellect:>=13 basestat:strength:>=13))\\n    )\\n  \\n    -(basestat:mobility:>=8 basestat:resilience:>=8 basestat:recovery:>=8 basestat:discipline:>=8 basestat:intellect:>=8 basestat:strength:>=8)\\n    )\\n  \\n    or\\n    (is:classitem ((is:dupelower -is:modded) or (is:sunset))) \\n    or\\n    (is:armor -powerlimit:>1060) \\n    or\\n    (is:armor is:blue)\\n    )\\n    -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork\\n    )|: ast 1`] = `
+exports[`parse |  (
+    (
+    (is:weapon -is:maxpower powerlimit:1060 or tag:junk or is:blue)
+    or
+    (
+    (is:armor -is:exotic -is:classitem)
+  
+    -(is:titan (basestat:recovery:>=18 or basestat:total:>=63))
+    -(is:hunter ((basestat:recovery:>=13 basestat:mobility:>=18) or basestat:recovery:>15 or basestat:total:>=63))
+    -(is:warlock ((basestat:recovery:>=18 discipline:>=17) or basestat:total:>=63))
+  
+    -(
+    ((basestat:mobility:>=18 basestat:resilience:>=13) or
+    (basestat:mobility:>=18 basestat:recovery:>=13) or
+    (basestat:mobility:>=18 basestat:discipline:>=13) or
+    (basestat:mobility:>=18 basestat:intellect:>=13) or
+    (basestat:mobility:>=18 basestat:strength:>=13) or
+    (basestat:resilience:>=18 basestat:mobility:>=13) or
+    (basestat:resilience:>=18 basestat:recovery:>=13) or
+    (basestat:resilience:>=18 basestat:discipline:>=13) or
+    (basestat:resilience:>=18 basestat:intellect:>=13) or
+    (basestat:resilience:>=18 basestat:strength:>=13) or
+    (basestat:recovery:>=18 basestat:mobility:>=13) or
+    (basestat:recovery:>=18 basestat:resilience:>=13) or
+    (basestat:recovery:>=18 basestat:discipline:>=13) or
+    (basestat:recovery:>=18 basestat:intellect:>=13) or
+    (basestat:recovery:>=18 basestat:strength:>=13) or
+    (basestat:discipline:>=18 basestat:mobility:>=13) or
+    (basestat:discipline:>=18 basestat:resilience:>=13) or
+    (basestat:discipline:>=18 basestat:recovery:>=13) or
+    (basestat:discipline:>=18 basestat:intellect:>=13) or
+    (basestat:discipline:>=18 basestat:strength:>=13) or
+    (basestat:intellect:>=18 basestat:mobility:>=13) or
+    (basestat:intellect:>=18 basestat:resilience:>=13) or
+    (basestat:intellect:>=18 basestat:recovery:>=13) or
+    (basestat:intellect:>=18 basestat:discipline:>=13) or
+    (basestat:intellect:>=18 basestat:strength:>=13) or
+    (basestat:strength:>=18 basestat:mobility:>=13) or
+    (basestat:strength:>=18 basestat:resilience:>=13) or
+    (basestat:strength:>=18 basestat:recovery:>=13) or
+    (basestat:strength:>=18 basestat:discipline:>=13) or
+    (basestat:strength:>=18 basestat:intellect:>=13))
+    )
+  
+    -(
+    ((basestat:mobility:>=13 basestat:resilience:>=13 basestat:recovery:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:discipline:>=13 basestat:intellect:>=13 basestat:strength:>=13))
+    )
+  
+    -(basestat:mobility:>=8 basestat:resilience:>=8 basestat:recovery:>=8 basestat:discipline:>=8 basestat:intellect:>=8 basestat:strength:>=8)
+    )
+  
+    or
+    (is:classitem ((is:dupelower -is:modded) or (is:sunset))) 
+    or
+    (is:armor -powerlimit:>1060) 
+    or
+    (is:armor is:blue)
+    )
+    -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork
+    )|: ast 1`] = `
 {
   "length": 3660,
   "op": "and",
@@ -1739,7 +1817,85 @@ exports[`parse |  (\\n    (\\n    (is:weapon -is:maxpower powerlimit:1060 or tag
 }
 `;
 
-exports[`parse |  (\\n    (\\n    (is:weapon -is:maxpower powerlimit:1060 or tag:junk or is:blue)\\n    or\\n    (\\n    (is:armor -is:exotic -is:classitem)\\n  \\n    -(is:titan (basestat:recovery:>=18 or basestat:total:>=63))\\n    -(is:hunter ((basestat:recovery:>=13 basestat:mobility:>=18) or basestat:recovery:>15 or basestat:total:>=63))\\n    -(is:warlock ((basestat:recovery:>=18 discipline:>=17) or basestat:total:>=63))\\n  \\n    -(\\n    ((basestat:mobility:>=18 basestat:resilience:>=13) or\\n    (basestat:mobility:>=18 basestat:recovery:>=13) or\\n    (basestat:mobility:>=18 basestat:discipline:>=13) or\\n    (basestat:mobility:>=18 basestat:intellect:>=13) or\\n    (basestat:mobility:>=18 basestat:strength:>=13) or\\n    (basestat:resilience:>=18 basestat:mobility:>=13) or\\n    (basestat:resilience:>=18 basestat:recovery:>=13) or\\n    (basestat:resilience:>=18 basestat:discipline:>=13) or\\n    (basestat:resilience:>=18 basestat:intellect:>=13) or\\n    (basestat:resilience:>=18 basestat:strength:>=13) or\\n    (basestat:recovery:>=18 basestat:mobility:>=13) or\\n    (basestat:recovery:>=18 basestat:resilience:>=13) or\\n    (basestat:recovery:>=18 basestat:discipline:>=13) or\\n    (basestat:recovery:>=18 basestat:intellect:>=13) or\\n    (basestat:recovery:>=18 basestat:strength:>=13) or\\n    (basestat:discipline:>=18 basestat:mobility:>=13) or\\n    (basestat:discipline:>=18 basestat:resilience:>=13) or\\n    (basestat:discipline:>=18 basestat:recovery:>=13) or\\n    (basestat:discipline:>=18 basestat:intellect:>=13) or\\n    (basestat:discipline:>=18 basestat:strength:>=13) or\\n    (basestat:intellect:>=18 basestat:mobility:>=13) or\\n    (basestat:intellect:>=18 basestat:resilience:>=13) or\\n    (basestat:intellect:>=18 basestat:recovery:>=13) or\\n    (basestat:intellect:>=18 basestat:discipline:>=13) or\\n    (basestat:intellect:>=18 basestat:strength:>=13) or\\n    (basestat:strength:>=18 basestat:mobility:>=13) or\\n    (basestat:strength:>=18 basestat:resilience:>=13) or\\n    (basestat:strength:>=18 basestat:recovery:>=13) or\\n    (basestat:strength:>=18 basestat:discipline:>=13) or\\n    (basestat:strength:>=18 basestat:intellect:>=13))\\n    )\\n  \\n    -(\\n    ((basestat:mobility:>=13 basestat:resilience:>=13 basestat:recovery:>=13) or\\n    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:discipline:>=13) or\\n    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:intellect:>=13) or\\n    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:strength:>=13) or\\n    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or\\n    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or\\n    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:strength:>=13) or\\n    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or\\n    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:strength:>=13) or\\n    (basestat:mobility:>=13 basestat:intellect:>=13 basestat:strength:>=13) or\\n    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or\\n    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or\\n    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:strength:>=13) or\\n    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or\\n    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:strength:>=13) or\\n    (basestat:resilience:>=13 basestat:intellect:>=13 basestat:strength:>=13) or\\n    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or\\n    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:strength:>=13) or\\n    (basestat:recovery:>=13 basestat:intellect:>=13 basestat:strength:>=13) or\\n    (basestat:discipline:>=13 basestat:intellect:>=13 basestat:strength:>=13))\\n    )\\n  \\n    -(basestat:mobility:>=8 basestat:resilience:>=8 basestat:recovery:>=8 basestat:discipline:>=8 basestat:intellect:>=8 basestat:strength:>=8)\\n    )\\n  \\n    or\\n    (is:classitem ((is:dupelower -is:modded) or (is:sunset))) \\n    or\\n    (is:armor -powerlimit:>1060) \\n    or\\n    (is:armor is:blue)\\n    )\\n    -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork\\n    )|: lexer 1`] = `
+exports[`parse |  (
+    (
+    (is:weapon -is:maxpower powerlimit:1060 or tag:junk or is:blue)
+    or
+    (
+    (is:armor -is:exotic -is:classitem)
+  
+    -(is:titan (basestat:recovery:>=18 or basestat:total:>=63))
+    -(is:hunter ((basestat:recovery:>=13 basestat:mobility:>=18) or basestat:recovery:>15 or basestat:total:>=63))
+    -(is:warlock ((basestat:recovery:>=18 discipline:>=17) or basestat:total:>=63))
+  
+    -(
+    ((basestat:mobility:>=18 basestat:resilience:>=13) or
+    (basestat:mobility:>=18 basestat:recovery:>=13) or
+    (basestat:mobility:>=18 basestat:discipline:>=13) or
+    (basestat:mobility:>=18 basestat:intellect:>=13) or
+    (basestat:mobility:>=18 basestat:strength:>=13) or
+    (basestat:resilience:>=18 basestat:mobility:>=13) or
+    (basestat:resilience:>=18 basestat:recovery:>=13) or
+    (basestat:resilience:>=18 basestat:discipline:>=13) or
+    (basestat:resilience:>=18 basestat:intellect:>=13) or
+    (basestat:resilience:>=18 basestat:strength:>=13) or
+    (basestat:recovery:>=18 basestat:mobility:>=13) or
+    (basestat:recovery:>=18 basestat:resilience:>=13) or
+    (basestat:recovery:>=18 basestat:discipline:>=13) or
+    (basestat:recovery:>=18 basestat:intellect:>=13) or
+    (basestat:recovery:>=18 basestat:strength:>=13) or
+    (basestat:discipline:>=18 basestat:mobility:>=13) or
+    (basestat:discipline:>=18 basestat:resilience:>=13) or
+    (basestat:discipline:>=18 basestat:recovery:>=13) or
+    (basestat:discipline:>=18 basestat:intellect:>=13) or
+    (basestat:discipline:>=18 basestat:strength:>=13) or
+    (basestat:intellect:>=18 basestat:mobility:>=13) or
+    (basestat:intellect:>=18 basestat:resilience:>=13) or
+    (basestat:intellect:>=18 basestat:recovery:>=13) or
+    (basestat:intellect:>=18 basestat:discipline:>=13) or
+    (basestat:intellect:>=18 basestat:strength:>=13) or
+    (basestat:strength:>=18 basestat:mobility:>=13) or
+    (basestat:strength:>=18 basestat:resilience:>=13) or
+    (basestat:strength:>=18 basestat:recovery:>=13) or
+    (basestat:strength:>=18 basestat:discipline:>=13) or
+    (basestat:strength:>=18 basestat:intellect:>=13))
+    )
+  
+    -(
+    ((basestat:mobility:>=13 basestat:resilience:>=13 basestat:recovery:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:resilience:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:mobility:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:mobility:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:discipline:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:recovery:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:resilience:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:resilience:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:intellect:>=13) or
+    (basestat:recovery:>=13 basestat:discipline:>=13 basestat:strength:>=13) or
+    (basestat:recovery:>=13 basestat:intellect:>=13 basestat:strength:>=13) or
+    (basestat:discipline:>=13 basestat:intellect:>=13 basestat:strength:>=13))
+    )
+  
+    -(basestat:mobility:>=8 basestat:resilience:>=8 basestat:recovery:>=8 basestat:discipline:>=8 basestat:intellect:>=8 basestat:strength:>=8)
+    )
+  
+    or
+    (is:classitem ((is:dupelower -is:modded) or (is:sunset))) 
+    or
+    (is:armor -powerlimit:>1060) 
+    or
+    (is:armor is:blue)
+    )
+    -tag:keep -tag:archive -tag:favorite -tag:infuse -is:maxpower -power:>=1260 -is:inloadout -is:masterwork
+    )|: lexer 1`] = `
 [
   [
     "(",
@@ -3538,7 +3694,8 @@ exports[`parse |  (\\n    (\\n    (is:weapon -is:maxpower powerlimit:1060 or tag
 ]
 `;
 
-exports[`parse |  /* My cool search */\\n is:armor|: ast 1`] = `
+exports[`parse |  /* My cool search */
+ is:armor|: ast 1`] = `
 {
   "args": "armor",
   "comment": "my cool search",
@@ -3549,7 +3706,8 @@ exports[`parse |  /* My cool search */\\n is:armor|: ast 1`] = `
 }
 `;
 
-exports[`parse |  /* My cool search */\\n is:armor|: lexer 1`] = `
+exports[`parse |  /* My cool search */
+ is:armor|: lexer 1`] = `
 [
   [
     "comment",

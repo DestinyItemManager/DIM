@@ -396,7 +396,7 @@ export function getColumns(
       value: (item) => item.featured,
       cell: (value) => value && <AppIcon icon={faCheck} />,
       filter: (value) => `${value ? '' : '-'}is:featured`,
-      csv: 'Featured',
+      csv: 'New Gear',
     }),
     destinyVersion === 2 &&
       isWeapon &&
