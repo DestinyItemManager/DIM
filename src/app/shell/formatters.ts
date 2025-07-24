@@ -21,7 +21,7 @@ export function getCompareColor(value: number) {
   if (value < 0) {
     color = '#e0e0e0';
   } else if (value < 50) {
-    color = 'hsl(0, 45.20%, 50.60%)';
+    color = 'rgb(253 98 98)';
   } else if (value < 80) {
     color = 'hsl(49, 58.60%, 56.50%)';
   } else if (value < 100) {
