@@ -1,6 +1,8 @@
 @use '../variables.scss' as *;
 @use 'sass:math';
 
+$iconOverlayScale: math.div(65, 92);
+
 .header {
   composes: resetButton from 'app/dim-ui/common.m.scss';
   display: block;
@@ -15,7 +17,7 @@
   color: #eee;
 
   &:has(.iconOverlay) {
-    padding-right: 20px;
+    padding-left: 10px + 24px * $iconOverlayScale;
   }
 }
 
@@ -134,19 +136,27 @@
 }
 
 .iconOverlay {
-  $scale: math.div(65, 92);
   composes: flexColumn from '../dim-ui/common.m.scss';
   position: absolute;
   box-sizing: border-box;
   align-items: center;
+  gap: 7%;
   top: 0;
-  right: 0;
-  width: 24px * $scale;
-  height: 96px * $scale;
+  left: 0;
+  width: 24px * $iconOverlayScale;
+  height: 96px * $iconOverlayScale;
   background-size: cover;
-  background-position: -2px * $scale -2px * $scale;
+  background-position: -2px * $iconOverlayScale -2px * $iconOverlayScale;
   background-repeat: no-repeat;
   pointer-events: none;
-  padding-top: 28px * $scale;
+  padding-top: 30px * $iconOverlayScale;
   font-size: 12px;
+}
+
+.tierPip {
+  display: block;
+  height: 4px;
+  aspect-ratio: 1;
+  background: #fffd;
+  rotate: 45deg;
 }

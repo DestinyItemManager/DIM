@@ -86,7 +86,15 @@ export default function ItemPopupHeader({
       </div>
       {item.iconOverlay && (
         <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)}>
-          {item.tier !== 0 ? item.tier : null}
+          {item.tier !== 0 ? (
+            <>
+              {Array(item.tier)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i} className={styles.tierPip} />
+                ))}
+            </>
+          ) : null}
         </div>
       )}
       {showArmory && linkToArmory && (
