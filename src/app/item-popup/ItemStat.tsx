@@ -15,7 +15,7 @@ import { sumBy } from 'app/utils/collections';
 import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -31,20 +31,23 @@ const modItemCategoryHashes = new Set([
 ]);
 
 // used in displaying the component segments on item stats
-const weaponParts = new Set([
-  ItemCategoryHashes.WeaponModsBowstring,
-  ItemCategoryHashes.WeaponModsBatteries,
-  ItemCategoryHashes.WeaponModsSwordBlades,
-  ItemCategoryHashes.WeaponModsLaunchTubes,
-  ItemCategoryHashes.WeaponModsScopes,
-  ItemCategoryHashes.WeaponModsHafts,
-  ItemCategoryHashes.WeaponModsStocks,
-  ItemCategoryHashes.WeaponModsSwordGuards,
-  ItemCategoryHashes.WeaponModsBarrels,
-  ItemCategoryHashes.WeaponModsArrows,
-  ItemCategoryHashes.WeaponModsGrips,
-  ItemCategoryHashes.WeaponModsSights,
-  ItemCategoryHashes.WeaponModsMagazines,
+const weaponParts = new Set<PlugCategoryHashes | undefined>([
+  PlugCategoryHashes.Bowstrings,
+  PlugCategoryHashes.Batteries,
+  PlugCategoryHashes.Blades,
+  PlugCategoryHashes.Tubes,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Hafts,
+  PlugCategoryHashes.Stocks,
+  PlugCategoryHashes.Guards,
+  PlugCategoryHashes.Barrels,
+  PlugCategoryHashes.Arrows,
+  PlugCategoryHashes.Grips,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Magazines,
+  PlugCategoryHashes.MagazinesGl,
+  PlugCategoryHashes.Rails,
+  PlugCategoryHashes.Bolts,
 ]);
 
 // Some stat labels are long. This lets us replace them with i18n
@@ -367,7 +370,7 @@ function getNonReusableModSockets(item: DimItem) {
  */
 function getWeaponPartSockets(item: DimItem) {
   return (item.sockets?.allSockets ?? []).filter((s) =>
-    s.plugged?.plugDef.itemCategoryHashes?.some((h) => weaponParts.has(h)),
+    weaponParts.has(s.plugged?.plugDef.plug.plugCategoryHash),
   );
 }
 

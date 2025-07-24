@@ -49,6 +49,7 @@ export const itemStatAllowList = [
   StatHashes.DrawTime,
   StatHashes.BlastRadius,
   StatHashes.Velocity,
+  StatHashes.Persistence,
   StatHashes.SwingSpeed,
   StatHashes.Impact,
   StatHashes.Range,
