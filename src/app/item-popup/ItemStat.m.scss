@@ -96,6 +96,17 @@
     }
   }
 
+  &.trait {
+    order: 3;
+    background-color: #4887ba;
+    & + &.trait {
+      opacity: 0.8;
+      & + &.trait {
+        opacity: 0.6;
+      }
+    }
+  }
+
   // Colors for the stat bars
   &.masterwork {
     order: 4;
@@ -114,6 +125,9 @@
 
   .mod {
     color: $stat-modded;
+  }
+  .trait {
+    color: #4887ba;
   }
   .masterwork {
     color: $stat-masterworked;

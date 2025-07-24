@@ -26,6 +26,7 @@ interface CssExports {
   'totalStatMasterwork': string;
   'totalStatModded': string;
   'totalStatNegativeModded': string;
+  'trait': string;
   'value': string;
 }
 export const cssExports: CssExports;

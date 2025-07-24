@@ -19,7 +19,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { socketContainsIntrinsicPlug } from '../utils/socket-utils';
+import { getSocketsByType, socketContainsIntrinsicPlug } from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
 
@@ -54,10 +54,11 @@ const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.AmmoGeneration]: tl('Organizer.Stats.AmmoGeneration'),
 };
 
-type StatSegmentType = 'base' | 'parts' | 'mod' | 'masterwork';
+type StatSegmentType = 'base' | 'parts' | 'traits' | 'mod' | 'masterwork';
 const statStyles: Record<StatSegmentType, [style: string, label: I18nKey]> = {
   base: [styles.base, tl('Organizer.Columns.BaseStats')],
   parts: [styles.parts, tl('Stats.WeaponPart')],
+  traits: [styles.trait, tl('Organizer.Columns.Traits')],
   mod: [styles.mod, tl('Loadouts.Mods')],
   masterwork: [styles.masterwork, tl('Organizer.Columns.MasterworkStat')],
 };
@@ -81,6 +82,11 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     getPartEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
   const partEffectsTotal = partEffects ? sumBy(partEffects, ([value]) => value) : 0;
 
+  const traitEffects =
+    item &&
+    getTraitEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
+  const perkEffectsTotal = traitEffects ? sumBy(traitEffects, ([value]) => value) : 0;
+
   const armorMasterworkSockets = item?.sockets?.allSockets.filter((s) =>
     s.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith('v460.plugs.armor.masterworks'),
   );
@@ -102,12 +108,15 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
       Math.max(Math.min(stat.base, stat.value), 0)
     : // otherwise, for weapons, we just subtract masterwork and
       // consider the "base" to include selected perks but not mods
-      stat.value - masterworkValue - modEffectsTotal - partEffectsTotal;
+      stat.value - masterworkValue - modEffectsTotal - partEffectsTotal - perkEffectsTotal;
 
   const segments: StatSegments = [[baseBar, 'base']];
 
   for (const [effectAmount, modName] of partEffects ?? []) {
     segments.push([effectAmount, 'parts', modName]);
+  }
+  for (const [effectAmount, modName] of traitEffects ?? []) {
+    segments.push([effectAmount, 'traits', modName]);
   }
 
   for (const [effectAmount, modName] of modEffects ?? []) {
@@ -377,6 +386,15 @@ function getModEffects(item: DimItem, statHash: number) {
 function getPartEffects(item: DimItem, statHash: number) {
   const modSockets = getWeaponPartSockets(item);
   return getPlugEffects(modSockets, [statHash]);
+}
+
+/**
+ * Looks through the item sockets to find any perks (think Outlaw/Rampage) that modify this stat.
+ * Returns the value the stat is modified by, or 0 if it is not being modified.
+ */
+function getTraitEffects(item: DimItem, statHash: number) {
+  const perkSockets = getSocketsByType(item, 'traits');
+  return getPlugEffects(perkSockets, [statHash]);
 }
 
 export function isD1Stat(item: DimItem, _stat: DimStat): _stat is D1Stat {
