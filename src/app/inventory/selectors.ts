@@ -13,7 +13,7 @@ import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -115,6 +115,15 @@ export const transmogCurrenciesSelector = createSelector(
   (currencies) => currencies.filter((c) => transmogCurrencies.includes(c.itemHash)),
 );
 
+const upgradeCurrencies = [
+  2718300701, // Unstable Cores
+];
+/** Mostly just unstable cores right now */
+export const upgradeCurrenciesSelector = createSelector(
+  (state: RootState) => state.inventory.currencies,
+  (currencies) => currencies.filter((c) => upgradeCurrencies.includes(c.itemHash)),
+);
+
 /** Vendor engrams you can decrypt at a vendor or use for item focusing */
 export const vendorCurrencyEngramsSelector = createSelector(
   d2ManifestSelector,
@@ -134,16 +143,14 @@ export const vendorCurrencyEngramsSelector = createSelector(
 
 const materialsWithMissingICH = [
   3702027555, // InventoryItem "Spoils of Conquest"
-  1289622079, // InventoryItem "Strand Meditations"
-  3467984096, // InventoryItem "Exotic Cipher"
 ];
 
 /** materials/currencies that aren't top level stuff */
 export const materialsSelector = createSelector(allItemsSelector, (allItems) =>
   allItems.filter(
     (i) =>
-      i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
-      i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
+      i.traitHashes?.includes(TraitHashes.ItemCurrency) ||
+      i.itemCategoryHashes?.includes(ItemCategoryHashes.Materials) ||
       materialsWithMissingICH.includes(i.hash),
   ),
 );

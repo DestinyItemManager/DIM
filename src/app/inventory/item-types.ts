@@ -20,7 +20,7 @@ import {
   DestinySocketCategoryDefinition,
   DestinyStat,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import { InventoryBucket } from './inventory-buckets';
 
 /**
@@ -57,6 +57,12 @@ export interface DimItem {
   bucket: InventoryBucket;
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: ItemCategoryHashes[];
+  /**
+   * There's also traitHashes which fills a similar role of tagging some aspect
+   * of an item, but is not as hierarchical as itemCategoryHashes. This seems to
+   * be favored over itemCategoryHashes in newer content.
+   */
+  traitHashes?: TraitHashes[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). Do not use this for display! */
   rarity: ItemRarityName;
   /** Is this an Exotic item? */
