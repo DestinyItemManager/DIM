@@ -5,7 +5,6 @@ import { ItemFilter } from 'app/search/filter-types';
 import { compact, count, filterMap } from 'app/utils/collections';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 
-import { t } from 'app/i18next-t';
 import { DimTitle } from 'app/inventory/store-types';
 import { getTitleInfo } from 'app/inventory/store/d2-store-factory';
 import { compareBy } from 'app/utils/comparators';
@@ -509,9 +508,10 @@ export function toRecord(
   }
 
   // Rename Immovable Refit -> Vexcalibur Catalyst
-  if (recordHash === 3787307395) {
+  const VEXCALIBUR_CATALYST_RECORD_HASH = 3787307395;
+  if (recordHash === VEXCALIBUR_CATALYST_RECORD_HASH) {
     // @ts-expect-error name is a read-only property
-    recordDef.displayProperties.name = t('Records.VexcaliburCatalyst');
+    recordDef.displayProperties.name = defs.Record.get(recordHash).stateInfo.obscuredName;
   }
 
   const trackedInGame = profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash;
