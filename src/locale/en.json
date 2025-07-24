@@ -463,7 +463,8 @@
     "TransferItems": "Transfer"
   },
   "Inventory": {
-    "ClickToExpand": "(Click to expand)"
+    "ClickToExpand": "(Click to expand)",
+    "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
     "ThumbsDown": "Thumbs Down",
