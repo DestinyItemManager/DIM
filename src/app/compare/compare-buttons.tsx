@@ -53,7 +53,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             intrinsic.name,
             <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
           ],
-          query: `is:armor2.0 perk:${quoteFilterString(intrinsic.name)}`,
+          query: `is:armor2.0 or is:armor3.0 perk:${quoteFilterString(intrinsic.name)}`,
         }))
         .reverse()) ||
     [];
@@ -68,10 +68,10 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
-    // above but also has to be armor 2.0
+    // above but also has to be modern armor (2.0 or 3.0)
     exampleItem.destinyVersion === 2 && {
       buttonLabel: [<ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />],
-      query: 'is:armor2.0',
+      query: 'is:armor2.0 or is:armor3.0',
     },
 
     // above but also has to be legendary
@@ -81,7 +81,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: 'is:armor2.0 is:legendary',
+        query: 'is:armor2.0 or is:armor3.0 is:legendary',
       },
 
     // above but also the same seasonal mod slot, if it has one
@@ -97,7 +97,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `is:armor2.0 ${exampleItemModSlotMetadatas
+        query: `is:armor2.0 or is:armor3.0 ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
       },
@@ -115,7 +115,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           </PressTip>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `is:armor2.0 perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
+        query: `is:armor2.0 or is:armor3.0 perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
 
     // exotic class items
