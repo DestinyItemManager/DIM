@@ -475,7 +475,8 @@
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Inventory": {
-    "ClickToExpand": "(Click to expand)"
+    "ClickToExpand": "(Click to expand)",
+    "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
     "ThumbsUp": "Thumbs Up",
