@@ -377,6 +377,7 @@ export function getColumns(
       csv: (value) => ['Tag', value || undefined],
     }),
     !isSpreadsheet &&
+      $featureFlags.newItems &&
       c({
         id: 'new',
         header: t('Organizer.Columns.New'),

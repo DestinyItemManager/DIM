@@ -55,6 +55,8 @@ export function makeFeatureFlags(env: {
     editInGameLoadoutIdentifiers: false,
     // Whether to sync DIM API data instead of loading everything
     dimApiSync: true,
+    // Whether to show the "New Items" dot
+    newItems: env.release,
   };
 }
 
