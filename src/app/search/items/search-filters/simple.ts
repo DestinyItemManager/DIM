@@ -1,4 +1,5 @@
 import { tl } from 'app/i18next-t';
+import { isEdgeOfFateArmorMasterwork } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 
@@ -8,7 +9,15 @@ const simpleFilters: ItemFilterDefinition[] = [
     keywords: 'armor2.0',
     description: tl('Filter.Energy'),
     destinyVersion: 2,
-    filter: () => (item) => Boolean(item.energy) && item.bucket.inArmor,
+    filter: () => (item) =>
+      Boolean(item.energy) && item.bucket.inArmor && !isEdgeOfFateArmorMasterwork(item),
+  },
+  {
+    keywords: 'armor3.0',
+    description: tl('Filter.Armor3'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      Boolean(item.energy) && item.bucket.inArmor && isEdgeOfFateArmorMasterwork(item),
   },
   {
     keywords: 'weapon',
