@@ -45,7 +45,7 @@ const overloadedRangeFilters: ItemFilterDefinition[] = [
   },
   {
     keywords: 'energycapacity',
-    description: tl('Filter.Energy'),
+    description: tl('Filter.EnergyCapacity'),
     format: 'range',
     destinyVersion: 2,
     filter:
