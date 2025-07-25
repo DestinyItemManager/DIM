@@ -17,7 +17,7 @@ $iconOverlayScale: math.div(65, 92);
   color: #eee;
 
   &:has(.iconOverlay) {
-    padding-left: 10px + 24px * $iconOverlayScale;
+    padding-right: 3px + 24px * $iconOverlayScale;
   }
 }
 
@@ -142,7 +142,7 @@ $iconOverlayScale: math.div(65, 92);
   align-items: center;
   gap: 7%;
   top: 0;
-  left: 0;
+  right: 0;
   width: 24px * $iconOverlayScale;
   height: 96px * $iconOverlayScale;
   background-size: cover;
