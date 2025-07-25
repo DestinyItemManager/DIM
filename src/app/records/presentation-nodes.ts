@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
@@ -510,8 +511,24 @@ export function toRecord(
   // Rename Immovable Refit -> Vexcalibur Catalyst
   const VEXCALIBUR_CATALYST_RECORD_HASH = 3787307395;
   if (recordHash === VEXCALIBUR_CATALYST_RECORD_HASH) {
-    // @ts-expect-error name is a read-only property
-    recordDef.displayProperties.name = defs.Record.get(recordHash).stateInfo.obscuredName;
+    Object.assign(recordDef, {
+      displayProperties: {
+        ...recordDef.displayProperties,
+        name: defs.Record.get(recordHash).stateInfo.obscuredName,
+      },
+    });
+  }
+
+  if (recordDef.recordTypeName === 'Exotic Catalysts' && recordDef.stateInfo.obscuredDescription) {
+    const sourceText = `\n\n${t('Organizer.Columns.Source')}: ${recordDef.stateInfo.obscuredDescription}`;
+    if (!recordDef.displayProperties.description.includes(sourceText)) {
+      Object.assign(recordDef, {
+        displayProperties: {
+          ...recordDef.displayProperties,
+          description: `${recordDef.displayProperties.description}${sourceText}`,
+        },
+      });
+    }
   }
 
   const trackedInGame = profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash;
