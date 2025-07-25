@@ -519,8 +519,13 @@ export function toRecord(
     });
   }
 
-  if (recordDef.recordTypeName === 'Exotic Catalysts' && recordDef.stateInfo.obscuredDescription) {
-    const sourceText = `\n\n${t('Organizer.Columns.Source')}: ${recordDef.stateInfo.obscuredDescription}`;
+  const CATALYST_PRESENTATION_NODES = [3788273704, 185103480, 2538646043];
+  if (
+    recordDef.parentNodeHashes?.length > 0 &&
+    recordDef.parentNodeHashes.some((hash) => CATALYST_PRESENTATION_NODES.includes(hash)) &&
+    recordDef.stateInfo?.obscuredDescription
+  ) {
+    const sourceText = `\n\n${t('Progress.CatalystSource', { source: recordDef.stateInfo.obscuredDescription })}`;
     if (!recordDef.displayProperties.description.includes(sourceText)) {
       Object.assign(recordDef, {
         displayProperties: {
