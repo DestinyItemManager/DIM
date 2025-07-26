@@ -43,6 +43,7 @@ interface Props {
   minimal?: boolean;
   style?: React.CSSProperties;
   placement?: Placement;
+  role?: string;
 }
 
 type ControlProps = Props &

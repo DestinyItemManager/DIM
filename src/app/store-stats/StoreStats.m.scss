@@ -1,14 +1,42 @@
 @use '../variables.scss' as *;
 
-.vaultStats {
+.statContainer {
   max-width: 230px;
+  margin-top: 8px;
+  gap: 3px;
+  color: var(--theme-header-characters-txt);
+
+  // When the whole container is hovered, draw a box around any buttons. When
+  // the button itself is hovered, color in the background. This is to make it
+  // easier for folks to understand that there's something here to click.
+  *[role='button'] {
+    @include interactive($hover: true, $focus: true, $focusWithin: true) {
+      outline: none;
+      background-color: var(--theme-item-polaroid-hover-border);
+      background-color: color-mix(
+        in srgb,
+        var(--theme-item-polaroid-hover-border),
+        transparent 80%
+      );
+    }
+
+    @media (any-hover: hover) {
+      div:hover > & {
+        outline: 1px solid var(--theme-item-polaroid-hover-border);
+        outline-color: color-mix(in srgb, var(--theme-item-polaroid-hover-border), transparent 60%);
+        outline-offset: -1px;
+      }
+    }
+  }
+}
+
+.vaultStats {
   display: grid;
   grid-template-columns: repeat(3, 16px minmax(min-content, 1fr));
   grid-auto-rows: 16px;
   gap: 4px 2px;
   align-items: center;
   font-size: 11px;
-  margin-top: 9px;
   color: var(--theme-header-characters-txt);
 
   @include phone-portrait {

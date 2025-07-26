@@ -121,8 +121,10 @@ export default memo(function VaultCapacity() {
                 )}
               </div>
               <PressTip
+                className={styles.bucketCount}
                 tooltip={isConsumables && !isPhonePortrait ? mats : undefined}
                 placement="bottom"
+                role={isConsumables ? 'button' : undefined}
                 wide
               >
                 <div

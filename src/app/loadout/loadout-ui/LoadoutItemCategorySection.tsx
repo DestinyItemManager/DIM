@@ -123,14 +123,12 @@ export default function LoadoutItemCategorySection({
       {items && isArmor && (
         <>
           {equippedItems.length === 5 && (
-            <div className="stat-bars">
-              <LoadoutCharacterStats
-                loadout={loadout}
-                subclass={subclass}
-                allMods={allMods}
-                items={items}
-              />
-            </div>
+            <LoadoutCharacterStats
+              loadout={loadout}
+              subclass={subclass}
+              allMods={allMods}
+              items={items}
+            />
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
           {!hideOptimizeArmor && (
