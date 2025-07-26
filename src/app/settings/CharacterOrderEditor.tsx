@@ -1,6 +1,4 @@
-import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
-import { reorder } from 'app/utils/collections';
-import { clamp } from 'es-toolkit';
+import { Reorder } from 'motion/react';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
@@ -15,24 +13,10 @@ export default function CharacterOrderEditor({
   onSortOrderChanged: (order: string[]) => void;
 }) {
   const characters = useSelector(sortedStoresSelector);
+  const nonVaultCharacters = characters.filter((c) => !c.isVault);
 
-  const moveItem = (oldIndex: number, newIndex: number) => {
-    newIndex = clamp(newIndex, 0, characters.length);
-    const order = reorder(
-      characters.filter((c) => !c.isVault).map((c) => c.id),
-      oldIndex,
-      newIndex,
-    );
-    onSortOrderChanged(order);
-  };
-
-  const onDragEnd = (result: DropResult) => {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-
-    moveItem(result.source.index, result.destination.index);
+  const handleReorder = (newOrder: typeof nonVaultCharacters) => {
+    onSortOrderChanged(newOrder.map((c) => c.id));
   };
 
   if (!characters.length) {
@@ -44,37 +28,24 @@ export default function CharacterOrderEditor({
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="characters" direction="horizontal">
-        {(provided) => (
-          <div className={styles.editor} ref={provided.innerRef}>
-            {characters.map(
-              (character, index) =>
-                !character.isVault && (
-                  <Draggable draggableId={character.id} index={index} key={character.id}>
-                    {(provided) => (
-                      <div
-                        className={styles.item}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <div className={styles.character}>
-                          <img src={character.icon} />
-                          <div>
-                            <span className={styles.powerLevel}>{character.powerLevel}</span>{' '}
-                            {character.className}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ),
-            )}
-            {provided.placeholder}
+    <Reorder.Group
+      axis="x"
+      values={nonVaultCharacters}
+      onReorder={handleReorder}
+      className={styles.editor}
+      as="div"
+    >
+      {nonVaultCharacters.map((character) => (
+        <Reorder.Item key={character.id} value={character} className={styles.item} as="div">
+          <div className={styles.character}>
+            <img src={character.icon} />
+            <div>
+              <span className={styles.powerLevel}>{character.powerLevel}</span>{' '}
+              {character.className}
+            </div>
           </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+        </Reorder.Item>
+      ))}
+    </Reorder.Group>
   );
 }

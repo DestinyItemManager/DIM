@@ -1,8 +1,8 @@
-import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { t } from 'app/i18next-t';
 import { reorder } from 'app/utils/collections';
 import clsx from 'clsx';
 import { clamp } from 'es-toolkit';
+import { Reorder } from 'motion/react';
 import { memo } from 'react';
 import {
   AppIcon,
@@ -64,13 +64,13 @@ export default function SortOrderEditor({
     onSortOrderChanged(newOrder);
   };
 
-  const onDragEnd = (result: DropResult) => {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-
-    moveItem(result.source.index, result.destination.index, true);
+  const handleReorder = (newOrder: SortProperty[]) => {
+    // Apply the drag-specific logic: enable items if they're first or if previous item is enabled
+    const reorderedItems = newOrder.map((item, index) => ({
+      ...item,
+      enabled: index === 0 || newOrder[index - 1].enabled,
+    }));
+    onSortOrderChanged(reorderedItems);
   };
 
   const toggleItem = (index: number, prop: 'enabled' | 'reversed') => {
@@ -107,16 +107,15 @@ export default function SortOrderEditor({
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(provided) => (
-          <div className={styles.editor} ref={provided.innerRef} {...provided.droppableProps}>
-            <SortEditorItemList order={order} onCommand={onCommand} />
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <Reorder.Group
+      axis="y"
+      values={order}
+      onReorder={handleReorder}
+      className={styles.editor}
+      as="div"
+    >
+      <SortEditorItemList order={order} onCommand={onCommand} />
+    </Reorder.Group>
   );
 }
 
@@ -130,60 +129,48 @@ function SortEditorItem({
   onCommand: OnCommandHandler;
 }) {
   return (
-    <Draggable draggableId={item.id} index={index}>
-      {(provided, snapshot) => (
-        <div
-          className={clsx(styles.item, {
-            [styles.dragging]: snapshot.isDragging,
-            [styles.disabled]: !item.enabled,
-          })}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-        >
-          <span {...provided.dragHandleProps} tabIndex={-1}>
-            <AppIcon icon={dragHandleIcon} className={styles.grip} />
-          </span>
-          <button
-            type="button"
-            role="checkbox"
-            aria-checked={item.enabled}
-            className={styles.button}
-            onClick={(e) => onCommand(e, index, 'toggle')}
-          >
-            <AppIcon icon={item.enabled ? faCheckSquare : faSquare} />
-          </button>
-          <span className={styles.name} {...provided.dragHandleProps}>
-            {item.displayName}
-          </span>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={(e) => onCommand(e, index, 'up')}
-          >
-            <AppIcon icon={moveUpIcon} />
-          </button>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={(e) => onCommand(e, index, 'down')}
-          >
-            <AppIcon icon={moveDownIcon} />
-          </button>
-          <button
-            type="button"
-            title={t('Settings.ReverseSort')}
-            className={styles.button}
-            onClick={(e) => onCommand(e, index, 'direction-toggle')}
-          >
-            <AppIcon
-              icon={item.reversed ? maximizeIcon : minimizeIcon}
-              className={
-                item.enabled ? (item.reversed ? styles.sortReverse : styles.sortForward) : undefined
-              }
-            />
-          </button>
-        </div>
-      )}
-    </Draggable>
+    <Reorder.Item
+      value={item}
+      className={clsx(styles.item, {
+        [styles.disabled]: !item.enabled,
+      })}
+      whileDrag={{
+        className: clsx(styles.item, styles.dragging, { [styles.disabled]: !item.enabled }),
+      }}
+      as="div"
+    >
+      <span tabIndex={-1}>
+        <AppIcon icon={dragHandleIcon} className={styles.grip} />
+      </span>
+      <button
+        type="button"
+        role="checkbox"
+        aria-checked={item.enabled}
+        className={styles.button}
+        onClick={(e) => onCommand(e, index, 'toggle')}
+      >
+        <AppIcon icon={item.enabled ? faCheckSquare : faSquare} />
+      </button>
+      <span className={styles.name}>{item.displayName}</span>
+      <button type="button" className={styles.button} onClick={(e) => onCommand(e, index, 'up')}>
+        <AppIcon icon={moveUpIcon} />
+      </button>
+      <button type="button" className={styles.button} onClick={(e) => onCommand(e, index, 'down')}>
+        <AppIcon icon={moveDownIcon} />
+      </button>
+      <button
+        type="button"
+        title={t('Settings.ReverseSort')}
+        className={styles.button}
+        onClick={(e) => onCommand(e, index, 'direction-toggle')}
+      >
+        <AppIcon
+          icon={item.reversed ? maximizeIcon : minimizeIcon}
+          className={
+            item.enabled ? (item.reversed ? styles.sortReverse : styles.sortForward) : undefined
+          }
+        />
+      </button>
+    </Reorder.Item>
   );
 }
