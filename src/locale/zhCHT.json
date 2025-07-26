@@ -227,6 +227,7 @@
     "Equipped": "當前已裝備的物品.",
     "Event": "顯示命運2中特定活動中的物品",
     "ExtraPerk": "顯示帶有額外可選特性的隨即特性傳説武器。",
+    "Featured": "Items that count as one of the \"Featured Items\" in the current season.",
     "Filter": "篩檢程式",
     "FilterWith": "篩選：",
     "Focusable": "顯示可以在商販處聚焦的物品",
@@ -236,7 +237,6 @@
     "HasNotes": "顯示已有備註的物品",
     "HasOrnament": "顯示已應用皮膚的物品",
     "HasShader": "顯示已應用著色器的物品",
-    "HoldsMod": "顯示與某種賽季模組相兼容的護甲。",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout 顯示任何游戲内配裝包含的物品。",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -263,9 +263,8 @@
     "MaxPower": "顯示每個槽位最高光等的物品。",
     "MaxPowerLoadout": "顯示每個職業中能最大化光等的配裝物品。",
     "Memento": "Shows weapons that have a memento socket.",
-    "ModSlot": "顯示有某種賽季模組插槽的護甲。",
+    "ModSlot": "Shows armor with a specific mod type slot.",
     "Mods": {
-      "Y2": "顯示帶有年2模組的物品",
       "Y3": "顯示啟用防具2.0模組的物品"
     },
     "Name": "Shows items whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
@@ -308,6 +307,7 @@
       "Tag": "顯示具有特定標籤的物品。",
       "Tagged": "顯示具有任何標籤的物品。"
     },
+    "Tier": "Shows items based on their tier from 0-5.",
     "Timelost": "（失時）",
     "Tracked": "根據追蹤狀態顯示任務/賞金.",
     "Transferable": "可在角色間移動的物品.",
@@ -635,8 +635,8 @@
     "Artifice": "Artifice",
     "AssumeMasterwork": "假定大師傑作",
     "AssumeMasterworkOptions": {
-      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
@@ -705,7 +705,6 @@
     "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
     "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
-    "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "無法添加所有模組。",
     "UnableToAddAllModsBody": "模組插槽不足，無法裝下 {{mods}}。",
     "UnlockItem": "取消固定物品"
@@ -931,6 +930,7 @@
     "AddToLoadout": "配裝",
     "AddToLoadoutTitle": "添加此物品到配裝",
     "All": "全部",
+    "ArtifactBreaker": "This weapon has {{breaker}} because of an unlocked artifact perk.",
     "CannotCurrentlyRoll": "此特性不會出現在此物品的當前版本上。",
     "CantPullFromPostmaster": "你必須去郵政官処取回此物品。",
     "CatalystProgress": "催化劑進度",
@@ -948,6 +948,7 @@
     },
     "Infuse": "灌注",
     "InfuseTitle": "打開灌注材料查找器",
+    "IntrinsicBreaker": "This weapon intrinsically has {{breaker}}.",
     "LoadingSockets": "Perk and stat details have not loaded yet for this item.",
     "LockUnlock": {
       "AutoLock": "該物品的鎖定狀態已與其標籤同步",
@@ -1013,10 +1014,12 @@
       "Damage": "傷害",
       "Energy": "能量",
       "Event": "事件",
+      "Featured": "Featured",
       "Foundry": "Foundry",
       "Harmonizable": "Harmonizable",
       "Icon": "圖示",
       "Intrinsics": "Intrinsic",
+      "ItemTier": "Tier",
       "KillTracker": "Kills",
       "Level": "等級",
       "Loadouts": "配裝",
@@ -1045,7 +1048,7 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "數值",
       "Tag": "標籤",
-      "Tier": "等級",
+      "Tier": "Rarity",
       "Traits": "武器特性",
       "WishList": "願望清單",
       "WishListNotes": "願望清單備註",
@@ -1064,6 +1067,7 @@
     "Stats": {
       "Aim": "瞄準",
       "Airborne": "空運效率",
+      "AmmoGeneration": "Ammo Gen",
       "Power": "光等",
       "RPM": "彈夾數每分鐘",
       "Recoil": "後坐力",
@@ -1077,9 +1081,7 @@
   },
   "Progress": {
     "Bounties": "賞金",
-    "CruciblePathfinder": "Crucible Pathfinder",
     "CrucibleRank": "排名",
-    "GambitPathfinder": "Gambit Pathfinder",
     "Items": "任務物品",
     "Milestones": "里程碑和挑戰",
     "NoEventChallenges": "你已經完成了所有活動挑戰",
@@ -1098,9 +1100,9 @@
     "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}點",
     "Resets_other": "{{count}} 次重置",
+    "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "數據追蹤器",
-    "TrackedTriumphs": "跟蹤的成就",
-    "VanguardPathfinder": "Vanguard Pathfinder"
+    "TrackedTriumphs": "跟蹤的成就"
   },
   "RecordBooks": {
     "HideCompleted": "隱藏完成事件",
@@ -1108,7 +1110,8 @@
   },
   "Records": {
     "Title": "記錄",
-    "UniversalOrnamentSetOther": "其它"
+    "UniversalOrnamentSetOther": "其它",
+    "VexcaliburCatalyst": "Vexcalibur Catalyst"
   },
   "SearchHistory": {
     "Date": "最近使用",
@@ -1184,12 +1187,14 @@
     "SortByClassType": "必要的類",
     "SortByCrafted": "已製造 (D2)",
     "SortByDeepsight": "深視共振 (D2)",
+    "SortByFeatured": "Featured (D2)",
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "護甲質量（D1）",
     "SortByRecent": "最近獲得（D2）",
     "SortBySeason": "賽季（D2）",
     "SortByTag": "標籤{{taglist}}",
+    "SortByTier": "Tier (D2)",
     "SortByType": "類型",
     "SortByWeaponElement": "傷害類型",
     "SortCustom": "自訂排序",
@@ -1261,7 +1266,6 @@
     "ShieldHP": "Shield HP",
     "StrafingSpeed": "掃射",
     "Strength": "力量",
-    "Tier": "{{tier}} 階",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 於 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
     "TimeToFullHP": "完全回復所需時間",

@@ -220,7 +220,7 @@ function makeItem(
     return null;
   }
 
-  const numStats = Object.keys(itemDef.stats).length;
+  const numStats = itemDef.stats ? Object.keys(itemDef.stats).length : 0;
 
   // fix itemDef for defense items with missing nodes
   if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {

@@ -272,6 +272,7 @@
     "Equipped": "Предметы, которые экипированы на персонаже.",
     "Event": "По источникам получения.",
     "ExtraPerk": "Показывает Легендарные оружия со случайными перками которые имеют дополнительный выбираемый перк.",
+    "Featured": "Items that count as one of the \"Featured Items\" in the current season.",
     "Filter": "Фильтр",
     "FilterWith": "Фильтровать с:",
     "Focusable": "Показывает предметы, которые можно сфокусировать у торговца",
@@ -281,7 +282,6 @@
     "HasNotes": "С Заметками.",
     "HasOrnament": "Показывает предметы с применённым орнаментом.",
     "HasShader": "Покрашенные шейдерами.",
-    "HoldsMod": "Показывает броню, совместимую с указанным типом сезонного мода.",
     "InDimLoadout": "is:indimloadout показывает предметы, которые включены в любые комплекты DIM.",
     "InInGameLoadout": "is:iningameloadout показывает предметы, которые включены в любые внутриигровые комплекты.",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -308,9 +308,8 @@
     "MaxPower": "Показывает предметы с наивысшей Силой на каждый слот.",
     "MaxPowerLoadout": "Показывает предметы в снаряжении, которые позволят максимизировать ваш уровень Силы для каждого класса персонажа.",
     "Memento": "Показывает оружия, которые имеют ячейку Воспоминаний.",
-    "ModSlot": "Показывает броню с определённым слотом сезонного мода.",
+    "ModSlot": "Shows armor with a specific mod type slot.",
     "Mods": {
-      "Y2": "Показывает предметы с применённым модом 2-го года.",
       "Y3": "Показывает предметы с любыми выбранными модами Брони 2.0."
     },
     "Name": "Отображает предметы, названия которых совпадает (exactname:) или частично совпадает (name:) с введённым текстом. Ищите целые фразы, используя кавычки.",
@@ -353,6 +352,7 @@
       "Tag": "С указанным Тэгом.",
       "Tagged": "С любым Тэгом."
     },
+    "Tier": "Shows items based on their tier from 0-5.",
     "Timelost": "\\(вневременн(ой|ая)\\)",
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Перемещаемые.",
@@ -683,8 +683,8 @@
     "Artifice": "Искусная",
     "AssumeMasterwork": "Предположить Абсолют",
     "AssumeMasterworkOptions": {
-      "All": "Вся броня: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Вся броня: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nЭкзотическая: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Улучшено для получения ячейки модификатора искусной брони.",
       "Current": "Текущие характеристики, предполагаемый уровень энергии как минимум {{minLoItemEnergy}}.",
       "Legendary": "Легендарная: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nЭкзотическая: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
@@ -753,7 +753,6 @@
     "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
     "StatTotal": "Total: {{total}}",
     "TierNumber": "Т{{tier}}",
-    "TierSelect": "Выберите минимальный ранг характеристики",
     "UnableToAddAllMods": "Не удалось добавить все моды.",
     "UnableToAddAllModsBody": "Не хватает слотов для модов для применения {{mods}}.",
     "UnlockItem": "Открепить"
@@ -1015,6 +1014,7 @@
     "AddToLoadout": "В наборе",
     "AddToLoadoutTitle": "Добавить это в комплект",
     "All": "Все",
+    "ArtifactBreaker": "This weapon has {{breaker}} because of an unlocked artifact perk.",
     "CannotCurrentlyRoll": "Этот перк не доступен в текущей версии этого предмета.",
     "CantPullFromPostmaster": "Вы должны посетить Почтмейстера в игре чтобы вытащить этот предмет.",
     "CatalystProgress": "Прогресс Катализатора",
@@ -1032,6 +1032,7 @@
     },
     "Infuse": "На синтез",
     "InfuseTitle": "Открыть поиск топлива для синтеза",
+    "IntrinsicBreaker": "This weapon intrinsically has {{breaker}}.",
     "LoadingSockets": "Перки и подробности характеристик для этого предмета еще не загружены.",
     "LockUnlock": {
       "AutoLock": "Состояние блокировки синхронизировано с тегом предмета",
@@ -1097,10 +1098,12 @@
       "Damage": "Стихия",
       "Energy": "Энергия",
       "Event": "Мероприятие",
+      "Featured": "Featured",
       "Foundry": "Производитель",
       "Harmonizable": "Гармонизируемое",
       "Icon": "Значок",
       "Intrinsics": "Изначальные свойства",
+      "ItemTier": "Tier",
       "KillTracker": "Kills",
       "Level": "Уровень",
       "Loadouts": "Наборы",
@@ -1129,7 +1132,7 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Характеристики",
       "Tag": "Тэг",
-      "Tier": "Редкость",
+      "Tier": "Rarity",
       "Traits": "Бонусы оружия",
       "WishList": "Wish List",
       "WishListNotes": "Заметки к Списку Желаний",
@@ -1148,6 +1151,7 @@
     "Stats": {
       "Aim": "Помощь в прицеливании",
       "Airborne": "Эффективность в воздухе",
+      "AmmoGeneration": "Ammo Gen",
       "Power": "Сила",
       "RPM": "Выстрелов в минуту",
       "Recoil": "Отдача",
@@ -1161,9 +1165,7 @@
   },
   "Progress": {
     "Bounties": "Баунти",
-    "CruciblePathfinder": "Crucible Pathfinder",
     "CrucibleRank": "Ранги",
-    "GambitPathfinder": "Gambit Pathfinder",
     "Items": "Предметы Заданий",
     "Milestones": "Испытания",
     "NoEventChallenges": "Вы выполнили все испытания мероприятия",
@@ -1188,9 +1190,9 @@
     "Resets_many": "{{count}} обнулений ранга",
     "Resets_one": "1 сброс",
     "Resets_other": "{{count}} обнулений ранга",
+    "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Трекеры",
-    "TrackedTriumphs": "Отслеживаемые Триумфы",
-    "VanguardPathfinder": "Vanguard Pathfinder"
+    "TrackedTriumphs": "Отслеживаемые Триумфы"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",
@@ -1198,7 +1200,8 @@
   },
   "Records": {
     "Title": "Записи",
-    "UniversalOrnamentSetOther": "Прочее"
+    "UniversalOrnamentSetOther": "Прочее",
+    "VexcaliburCatalyst": "Vexcalibur Catalyst"
   },
   "SearchHistory": {
     "Date": "Дата последнего Поиска",
@@ -1274,12 +1277,14 @@
     "SortByClassType": "Класс",
     "SortByCrafted": "Изготовленное (D2)",
     "SortByDeepsight": "Резонанс Глубинного зрения (D2)",
+    "SortByFeatured": "Featured (D2)",
     "SortByPrimary": "Уровень Cилы",
     "SortByRarity": "Редкость",
     "SortByRating": "Качество брони (D1)",
     "SortByRecent": "Получены недавно (D2)",
     "SortBySeason": "Сезон (D2)",
     "SortByTag": "Тэги ({{taglist}})",
+    "SortByTier": "Tier (D2)",
     "SortByType": "Тип",
     "SortByWeaponElement": "Тип Урона",
     "SortCustom": "Свой порядок",
@@ -1354,7 +1359,6 @@
     "ShieldHP": "ХП Щита",
     "StrafingSpeed": "Движение в сторону",
     "Strength": "Стойкость",
-    "Tier": "Ранг {{tier}}",
     "TierProgress": "Т{{tier}} {{statName}} ({{progress}}/60 для Т{{nextTier}})\n",
     "TierProgress_Max": "Т{{tier}} {{statName}} ({{progress}}/300)\n",
     "TimeToFullHP": "Время до полного ХП",

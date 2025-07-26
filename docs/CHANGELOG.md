@@ -1,5 +1,27 @@
 ## Next
 
+* DIMmit is back, for all your changelog notifications.
+* DIM now shows a placeholder and warning when your Silver balance is not available from Bungie.net.
+* Updated item tier display in the Item Popup.
+* In addition to weapon barrels/magazines/etc., item stat bars now display contributions from perks that provide them.
+* Big updates to Material Counts, with more mats and better grouping. Try hovering or clicking the Consumables count under the Vault banner.
+* `is:featured` now has a synonym `is:newgear` for looking up which items provide reward/combat bonuses, and can be taken into activities for New Gear only.
+* `is:armor3.0` set up for new Edge of Fate Archetype-based armor, and `is:armor2.0` now excludes 3.0 pieces.
+* Persistence stat and stat filter added for heavy crossbows.
+
+## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
+
+* Fix an item inspection crash in D1.
+
+## 8.82.1 <span class="changelog-date">(2025-07-21)</span>
+
+* Bungie.net still shows characters as having one point of Artifact Power. This has been removed.
+* Fixed the armor stat total "equation" shown in the Item Popup.
+* Fixed Armor 3.0 Exotics displaying their Archetype instead of their Intrinsic power.
+* Added `stat:ammogen:` search.
+
+## 8.82.0 <span class="changelog-date">(2025-07-20)</span>
+
 ## 8.81.4 <span class="changelog-date">(2025-07-18)</span>
 
 * Added Enhanced arrows to show Enhanced perks in the Item Feed.

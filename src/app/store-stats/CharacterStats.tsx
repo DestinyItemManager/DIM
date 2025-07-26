@@ -136,8 +136,8 @@ export function PowerFormula({ storeId }: { storeId: string }) {
     ),
     icon: xpIcon,
   };
-
-  return <CharacterPower stats={[maxTotalPower, maxGearPower, artifactPower]} />;
+  const stats = artifactPower.value ? [maxTotalPower, maxGearPower, artifactPower] : [maxGearPower];
+  return <CharacterPower stats={stats} />;
 }
 
 /**

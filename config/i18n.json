@@ -242,7 +242,9 @@
     "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "DupePerks": "Shows items whose perks are either a duplicate of, or a subset of, another item of the same type.",
-    "Energy": "Shows items that have energy capacity (Armor 2.0).",
+    "Energy": "Shows items that use the Armor 2.0 mod system introduced in Shadowkeep.",
+    "EnergyCapacity": "Shows items based on their current energy capacity.",
+    "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "Engrams": "Shows engrams.",
     "Enhanceable": "Shows weapons that can be enhanced.",
     "Enhanced": "Shows weapons based on their enhancement tier.",
@@ -252,7 +254,7 @@
     "Equipped": "Items that are currently equipped on a character.",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
-    "Featured": "Items that count as one of the \"Featured Items\" in the current season.",
+    "Featured": "Items that count as one of the \"New Gear\" or \"Featured Items\" in the current season.",
     "Filter": "Filter",
     "FilterWith": "Filter with:",
     "Focusable": "Shows items that can be focused at a vendor",
@@ -288,7 +290,7 @@
     "MaxPowerLoadout": "Shows the items in the loadout that would maximize your Power Level for each character class.",
     "MaxPower": "Shows the items at the highest power per slot.",
     "Mods": {
-      "Y3": "Shows items with any Armor 2.0 mods selected."
+      "Y3": "Shows items with any mods applied."
     },
     "DisabledModSlot": "Shows items with a disabled mod.",
     "ModSlot": "Shows armor with a specific mod type slot.",
@@ -475,7 +477,8 @@
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Inventory": {
-    "ClickToExpand": "(Click to expand)"
+    "ClickToExpand": "(Click to expand)",
+    "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
     "ThumbsUp": "Thumbs Up",
@@ -619,13 +622,13 @@
     "Artifice": "Artifice",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
-      "All": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "All Armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "All Armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
-      "Masterworked": "+2 in each stat, assumed energy level 10."
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10."
     },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
@@ -1067,7 +1070,7 @@
       "Damage": "Damage",
       "Ammo": "Ammo",
       "Foundry": "Foundry",
-      "Featured": "Featured",
+      "Featured": "New Gear",
       "Intrinsics": "Intrinsic",
       "OriginTraits": "Origin Trait",
       "Shaders": "Cosmetics",
@@ -1235,7 +1238,7 @@
     "SortByClassType": "Required Class",
     "SortByCrafted": "Crafted (D2)",
     "SortByDeepsight": "Deepsight (D2)",
-    "SortByFeatured": "Featured (D2)",
+    "SortByFeatured": "New Gear / Featured (D2)",
     "SortByPrimary": "Power level",
     "SortByRarity": "Rarity",
     "SortByRating": "Armor Quality (D1)",

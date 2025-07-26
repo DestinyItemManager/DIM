@@ -272,6 +272,7 @@
     "Equipped": "Przedmioty aktualnie wyposażone na postaci.",
     "Event": "Pokazuje przedmioty na podstawie którego zdarzenia z Destiny 2 pochodzą.",
     "ExtraPerk": "Pokazuje losowo wylosowane legendarne bronie z dodatkowym, wybieralną cechą.",
+    "Featured": "Items that count as one of the \"Featured Items\" in the current season.",
     "Filter": "Filtr",
     "FilterWith": "Filter with:",
     "Focusable": "Shows items that can be focused at a vendor",
@@ -281,7 +282,6 @@
     "HasNotes": "Pokaż przedmioty z notatkami.",
     "HasOrnament": "Pokazuje przedmioty, które mają zastosowaną ozdobę.",
     "HasShader": "Pokazuje przedmioty z zastosowaną barwą.",
-    "HoldsMod": "Pokazuje zbroję kompatybilną z określonym typem Modyfikacji Sezonowej.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -308,9 +308,8 @@
     "MaxPower": "Pokazuje przedmioty o najwyższej mocy na dany slot.",
     "MaxPowerLoadout": "Pokazuje przedmioty w uzbrojeniu, które by zmaksymalizowały Twój Poziom Mocy dla każdej klasy postaci.",
     "Memento": "Shows weapons that have a memento socket.",
-    "ModSlot": "Pokazuje pancerz z określonym gniazdem sezonowym.",
+    "ModSlot": "Shows armor with a specific mod type slot.",
     "Mods": {
-      "Y2": "Pokazuje przedmioty z dołączoną modyfikacją roku 2.",
       "Y3": "Pokazuje przedmioty z dowolnymi wybranymi modyfikacjami Pancerza 2.0."
     },
     "Name": "Shows items whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
@@ -353,6 +352,7 @@
       "Tag": "Pokazuje przedmioty, które mają konkretny tag.",
       "Tagged": "Pokazuje przedmioty, które mają dowolny tag."
     },
+    "Tier": "Shows items based on their tier from 0-5.",
     "Timelost": "\\(zagubion(y|a) w czasie\\)",
     "Tracked": "Pokazuje zadania/zlecenia na podstawie ich śledzonego stanu.",
     "Transferable": "Przedmioty, które można przenosić między postaciami.",
@@ -683,8 +683,8 @@
     "Artifice": "Pomysłowość",
     "AssumeMasterwork": "Załóżmy, że Mistrzowskie",
     "AssumeMasterworkOptions": {
-      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
@@ -753,7 +753,6 @@
     "StatRangeTooltip": "With the current min/max setting, loadouts exist which have {{min}} to {{max}} points in this stat. Double-click to set min to {{max}}.",
     "StatTotal": "Total: {{total}}",
     "TierNumber": "T{{tier}}",
-    "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
     "UnableToAddAllModsBody": "Nie ma wystarczającej ilości miejsc na modyfikacje, aby założyć {{mods}}.",
     "UnlockItem": "Odepnij Przedmiot"
@@ -1015,6 +1014,7 @@
     "AddToLoadout": "Uzbrojenie",
     "AddToLoadoutTitle": "Add this to a loadout",
     "All": "Wszystkie",
+    "ArtifactBreaker": "This weapon has {{breaker}} because of an unlocked artifact perk.",
     "CannotCurrentlyRoll": "Ta cecha nie może być otrzymana na bieżącej wersji tego przedmiotu.",
     "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CatalystProgress": "Postęp Katalizatora",
@@ -1032,6 +1032,7 @@
     },
     "Infuse": "Nasyć",
     "InfuseTitle": "Open the infusion fuel finder",
+    "IntrinsicBreaker": "This weapon intrinsically has {{breaker}}.",
     "LoadingSockets": "Perk and stat details have not loaded yet for this item.",
     "LockUnlock": {
       "AutoLock": "Stan blokady jest zsynchronizowany z tagiem tego przedmiotu",
@@ -1097,10 +1098,12 @@
       "Damage": "Obrażenia",
       "Energy": "Energia",
       "Event": "Zdarzenie",
+      "Featured": "Featured",
       "Foundry": "Foundry",
       "Harmonizable": "Harmonizable",
       "Icon": "Ikona",
       "Intrinsics": "Intrinsic",
+      "ItemTier": "Tier",
       "KillTracker": "Kills",
       "Level": "Poziom",
       "Loadouts": "Uzbrojenia",
@@ -1129,7 +1132,7 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Statystyki",
       "Tag": "Tag",
-      "Tier": "Poziom",
+      "Tier": "Rarity",
       "Traits": "Cechy Broni",
       "WishList": "Lista Życzeń",
       "WishListNotes": "Notatki listy życzeń",
@@ -1148,6 +1151,7 @@
     "Stats": {
       "Aim": "Cel",
       "Airborne": "Lotna skuteczność",
+      "AmmoGeneration": "Ammo Gen",
       "Power": "Moc",
       "RPM": "RPM",
       "Recoil": "Odrzut",
@@ -1161,9 +1165,7 @@
   },
   "Progress": {
     "Bounties": "Zlecenia",
-    "CruciblePathfinder": "Crucible Pathfinder",
     "CrucibleRank": "Rangi",
-    "GambitPathfinder": "Gambit Pathfinder",
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
     "NoEventChallenges": "Ukończyłeś wszystkie wyzwania wydarzenia",
@@ -1188,9 +1190,9 @@
     "Resets_many": "{{count}} resety(/ów)",
     "Resets_one": "1 reset",
     "Resets_other": "{{count}} resety(/ów)",
+    "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Śledzenie statystyk",
-    "TrackedTriumphs": "Śledzone triumfy",
-    "VanguardPathfinder": "Vanguard Pathfinder"
+    "TrackedTriumphs": "Śledzone triumfy"
   },
   "RecordBooks": {
     "HideCompleted": "Ukryj ukończone zapisy",
@@ -1198,7 +1200,8 @@
   },
   "Records": {
     "Title": "Rekordy",
-    "UniversalOrnamentSetOther": "Inne"
+    "UniversalOrnamentSetOther": "Inne",
+    "VexcaliburCatalyst": "Vexcalibur Catalyst"
   },
   "SearchHistory": {
     "Date": "Ostatnio używane",
@@ -1274,12 +1277,14 @@
     "SortByClassType": "Wymagana klasa",
     "SortByCrafted": "Stworzone (D2)",
     "SortByDeepsight": "Rezonans Głębokiego Wglądu (D2)",
+    "SortByFeatured": "Featured (D2)",
     "SortByPrimary": "Poziom mocy",
     "SortByRarity": "Rzadkość",
     "SortByRating": "Jakość pancerza (D1)",
     "SortByRecent": "Ostatnio nabyte (D2)",
     "SortBySeason": "Sezon (D2)",
     "SortByTag": "Tag ({{taglist}})",
+    "SortByTier": "Tier (D2)",
     "SortByType": "Rodzaj",
     "SortByWeaponElement": "Typ obrażeń",
     "SortCustom": "Sortowanie niestandardowe",
@@ -1354,7 +1359,6 @@
     "ShieldHP": "PŻ tarczy",
     "StrafingSpeed": "Strafing",
     "Strength": "Siła",
-    "Tier": "Poziom {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 do T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "TimeToFullHP": "Czas do pełnych PŻ",

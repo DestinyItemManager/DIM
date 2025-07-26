@@ -43,12 +43,13 @@ import { makeCustomStat } from './stats-custom';
 /**
  * Which stats to display, and in which order.
  */
-const itemStatAllowList = [
+export const itemStatAllowList = [
   StatHashes.RoundsPerMinute,
   StatHashes.ChargeTime,
   StatHashes.DrawTime,
   StatHashes.BlastRadius,
   StatHashes.Velocity,
+  StatHashes.Persistence,
   StatHashes.SwingSpeed,
   StatHashes.Impact,
   StatHashes.Range,
