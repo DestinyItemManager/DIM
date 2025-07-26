@@ -8,6 +8,7 @@
 * `is:featured` now has a synonym `is:newgear` for looking up which items provide reward/combat bonuses, and can be taken into activities for New Gear only.
 * `is:armor3.0` set up for new Edge of Fate Archetype-based armor, and `is:armor2.0` now excludes 3.0 pieces.
 * Persistence stat and stat filter added for heavy crossbows.
+* Catalysts now show their source on the Records page.
 
 ## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
 

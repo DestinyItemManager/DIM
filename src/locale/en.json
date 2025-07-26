@@ -1112,6 +1112,7 @@
   },
   "Progress": {
     "Bounties": "Bounties",
+    "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Ranks",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
@@ -1143,8 +1144,7 @@
   },
   "Records": {
     "Title": "Records",
-    "UniversalOrnamentSetOther": "Other",
-    "VexcaliburCatalyst": "Vexcalibur Catalyst"
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Date": "Last Used",
