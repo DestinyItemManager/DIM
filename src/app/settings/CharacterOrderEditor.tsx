@@ -36,7 +36,14 @@ export default function CharacterOrderEditor({
       as="div"
     >
       {nonVaultCharacters.map((character) => (
-        <Reorder.Item key={character.id} value={character} className={styles.item} as="div">
+        <Reorder.Item
+          key={character.id}
+          value={character}
+          className={styles.item}
+          style={{ cursor: 'grab' }}
+          whileDrag={{ cursor: 'grabbing' }}
+          as="div"
+        >
           <div className={styles.character}>
             <img src={character.icon} />
             <div>

@@ -184,6 +184,7 @@ function StatRow({
   return (
     <Reorder.Item
       value={statConstraint}
+      layout="position"
       className={clsx(styles.row, {
         [styles.ignored]: statConstraint.ignored,
       })}

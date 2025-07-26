@@ -65,12 +65,29 @@ export default function SortOrderEditor({
   };
 
   const handleReorder = (newOrder: SortProperty[]) => {
-    // Apply the drag-specific logic: enable items if they're first or if previous item is enabled
-    const reorderedItems = newOrder.map((item, index) => ({
-      ...item,
-      enabled: index === 0 || newOrder[index - 1].enabled,
-    }));
-    onSortOrderChanged(reorderedItems);
+    // Find the item that actually moved by comparing old vs new order
+    const oldOrder = order;
+    let draggedItemIndex = -1;
+
+    // Find which item changed position
+    for (let i = 0; i < newOrder.length; i++) {
+      if (newOrder[i].id !== oldOrder[i].id) {
+        draggedItemIndex = i;
+        break;
+      }
+    }
+
+    // Only apply auto-enable logic to the dragged item
+    if (draggedItemIndex !== -1) {
+      const reorderedItems = [...newOrder];
+      reorderedItems[draggedItemIndex] = {
+        ...reorderedItems[draggedItemIndex],
+        enabled: draggedItemIndex === 0 || reorderedItems[draggedItemIndex - 1].enabled,
+      };
+      onSortOrderChanged(reorderedItems);
+    } else {
+      onSortOrderChanged(newOrder);
+    }
   };
 
   const toggleItem = (index: number, prop: 'enabled' | 'reversed') => {
