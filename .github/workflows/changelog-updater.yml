@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.I18N_PAT }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -31,4 +31,4 @@ jobs:
       - name: Commit files
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
-          commit_message: Apply i18n updates
+          commit_message: Apply changelog updates
