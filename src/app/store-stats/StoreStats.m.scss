@@ -3,6 +3,7 @@
 .statContainer {
   max-width: 230px;
   margin-top: 8px;
+  gap: 3px;
   color: var(--theme-header-characters-txt);
 
   // When the whole container is hovered, draw a box around any buttons. When

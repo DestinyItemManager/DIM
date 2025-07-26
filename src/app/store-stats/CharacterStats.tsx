@@ -30,7 +30,7 @@ import StatTooltip from './StatTooltip';
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {
   return (
-    <div className={clsx('stat-row', styles.powerFormula)}>
+    <div className={styles.powerFormula}>
       {stats.map((stat) => (
         <PressTip
           key={stat.name}
@@ -172,7 +172,7 @@ export function CharacterStats({
   const statInfos = filterMap(armorStats, (h) => stats[h]);
 
   return (
-    <div className={clsx('stat-row', className)}>
+    <div className={clsx(styles.armorStats, className)}>
       {showTotal && (
         <div className={clsx(styles.tier, 'stat')}>
           {t('LoadoutBuilder.StatTotal', { total: sumBy(statInfos, (s) => s.value) })}
@@ -231,11 +231,13 @@ export function LoadoutCharacterStats({
   subclass,
   items,
   allMods,
+  className,
 }: {
   loadout: Loadout;
   subclass?: ResolvedLoadoutItem;
   allMods: PluggableInventoryItemDefinition[];
   items?: (ResolvedLoadoutItem | DimItem)[];
+  className?: string;
 }) {
   const defs = useD2Definitions()!;
   const equippedItems =
@@ -261,7 +263,7 @@ export function LoadoutCharacterStats({
 
   return (
     <CharacterStats
-      className={styles.loadoutStats}
+      className={clsx(styles.loadoutStats, className)}
       showTotal
       stats={stats}
       equippedHashes={equippedHashes}

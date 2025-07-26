@@ -8,6 +8,7 @@
     line-height: 16px;
     white-space: nowrap;
     font-size: 11px;
+    gap: 2px;
     &:global(.boostedValue) {
       color: $stat-modded;
       font-weight: bold;
@@ -16,14 +17,9 @@
     :global(.phone-portrait) & {
       font-size: 12px;
     }
-    &:last-child {
-      margin-right: 0;
-    }
     img {
       height: 14px;
       width: 14px;
-      margin-right: 2px;
-      opacity: 1;
     }
   }
 
@@ -39,30 +35,13 @@
       margin-right: auto;
       align-items: center;
     }
-
-    > div {
-      flex: 1;
-      display: flex;
-      flex-direction: row;
-    }
   }
+}
 
-  // D2 stats row. Used here and in the item feed.
-  :global(.stat-row) {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-    @include phone-portrait {
-      width: 100%;
-      justify-content: center;
-    }
-
-    &:nth-child(n + 2) {
-      justify-content: space-between !important;
-    }
-  }
+.armorStats {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  justify-content: space-between;
+  align-items: center;
 }
 
 .loadoutStats {
@@ -71,7 +50,10 @@
 }
 
 .powerFormula {
-  margin-bottom: 3px;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  justify-content: space-between;
+
   img {
     opacity: 0.6;
     height: 17px;

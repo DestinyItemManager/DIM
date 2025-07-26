@@ -72,9 +72,8 @@
 }
 
 .headerStats {
-  :global(.stat-row) {
-    gap: 8px;
-  }
+  gap: 8px;
+  width: auto !important;
 
   :global(.stat) {
     font-size: 1.2em;
