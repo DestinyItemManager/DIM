@@ -21,3 +21,25 @@
     justify-self: center;
   }
 }
+
+.statContainer {
+  *[role='button'] {
+    @include interactive($hover: true, $focus: true, $focusWithin: true) {
+      outline: none;
+      background-color: var(--theme-item-polaroid-hover-border);
+      background-color: color-mix(
+        in srgb,
+        var(--theme-item-polaroid-hover-border),
+        transparent 80%
+      );
+    }
+
+    @media (any-hover: hover) {
+      div:hover > & {
+        outline: 1px solid var(--theme-item-polaroid-hover-border);
+        outline-color: color-mix(in srgb, var(--theme-item-polaroid-hover-border), transparent 60%);
+        outline-offset: -1px;
+      }
+    }
+  }
+}

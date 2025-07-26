@@ -84,6 +84,10 @@
   img[src^='data'] {
     filter: invert(1);
   }
+  *[role='button'] {
+    margin: -2px -4px;
+    padding: 2px 4px;
+  }
   > div:nth-child(2) {
     display: flex;
     flex-direction: row;
