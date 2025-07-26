@@ -1,0 +1,42 @@
+name: Update Changelog
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - 'docs/CHANGELOG.md'  # Prevent infinite loops
+
+permissions:
+  contents: write
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Update changelog from commits
+        id: changelog
+        run: |
+          echo '${{ toJson(github.event.commits) }}' | node build/update-changelog.js > docs/CHANGELOG.md.new
+          mv docs/CHANGELOG.md.new docs/CHANGELOG.md
+
+      - name: Commit changelog updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$(git status --porcelain docs/CHANGELOG.md)" ]; then
+            git add docs/CHANGELOG.md
+            git commit -m "Update CHANGELOG.md from commit messages"
+            git push
+          else
+            echo "No changelog updates to commit"
+          fi
