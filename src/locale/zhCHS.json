@@ -190,6 +190,7 @@
     "Adept": "（专家）",
     "AmmoType": "按照弹药类型显示物品。",
     "Armor": "显示护甲物品。",
+    "Armor3": "显示使用从《宿命边缘》起引入的护甲 3.0 模组系统的装备。",
     "ArmorCategory": "按照类别显示护甲。",
     "ArmorIntrinsic": "显示带有固有特性的传说护甲，例如诡计护甲。",
     "Ascended": "显示可提升光等且已提升的物品。",
@@ -217,7 +218,8 @@
     "DupeCount": "拥有指定重复数量的物品。",
     "DupeLower": "非最高光等的重复和再版物品。重复物品中只有一件会被视为最高光等，其余均视为较低光等。",
     "DupePerks": "显示特性重复或已被其他同类物品所包含的物品。",
-    "Energy": "显示拥有能量容量的物品（护甲2.0）。",
+    "Energy": "显示使用从《暗影要塞》起引入的护甲 2.0 模组系统的装备。",
+    "EnergyCapacity": "根据护甲模组能量上限显示装备。",
     "Engrams": "显示记忆水晶。",
     "Enhanceable": "显示可被强化的武器。",
     "Enhanced": "按强化等级显示武器。",
@@ -227,7 +229,7 @@
     "Equipped": "目前已装备的物品。",
     "Event": "显示命运2特定活动中的物品。",
     "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
-    "Featured": "显示在当前赛季被列入“新装备”的物品。",
+    "Featured": "显示在当前赛季被列入“新装备”或“特色装备”的物品。",
     "Filter": "过滤器",
     "FilterWith": "筛选：",
     "Focusable": "显示可在商人处聚焦的物品",
@@ -265,7 +267,7 @@
     "Memento": "显示包含纪念物插槽的武器。",
     "ModSlot": "显示带有特定类型模组插槽的护甲。",
     "Mods": {
-      "Y3": "显示启用防具2.0模组的物品"
+      "Y3": "显示已应用模组的装备。"
     },
     "Name": "使用 (exactname:) 精确搜索某名称的物品，或使用 (name:) 搜索部分匹配某名称的物品。使用引号搜索整个词条。",
     "NamedStat": "显示重要防具.",
@@ -445,7 +447,8 @@
     "TransferItems": "转移"
   },
   "Inventory": {
-    "ClickToExpand": "（点击展开）"
+    "ClickToExpand": "（点击展开）",
+    "MissingSilver": "您的银币余额仅在您当前游玩的平台可用。"
   },
   "Item": {
     "ThumbsDown": "不推荐",
@@ -635,12 +638,12 @@
     "Artifice": "诡计",
     "AssumeMasterwork": "假定大师之作",
     "AssumeMasterworkOptions": {
-      "All": "护甲 2.0：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "传说护甲 2.0：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域护甲 2.0：$t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域护甲 2.0：$t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "强化以激活诡计护甲属性模组。",
       "Current": "当前属性，假定能量等级至少为 {{minLoItemEnergy}}。",
       "Legendary": "传说：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "每项属性值 +2，假定能量等级为 10。",
+      "Masterworked": "完整大师杰作属性加成，假定能量等级为 10。",
       "None": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自动添加属性模组",
@@ -1014,7 +1017,7 @@
       "Damage": "伤害",
       "Energy": "能量",
       "Event": "活动",
-      "Featured": "特色",
+      "Featured": "新装备",
       "Foundry": "铸造厂",
       "Harmonizable": "可协调",
       "Icon": "图标",
@@ -1081,6 +1084,7 @@
   },
   "Progress": {
     "Bounties": "赏金",
+    "CatalystSource": "来源：{{source}}",
     "CrucibleRank": "排名",
     "Items": "任务物品",
     "Milestones": "里程碑和挑战",
@@ -1110,8 +1114,7 @@
   },
   "Records": {
     "Title": "记录",
-    "UniversalOrnamentSetOther": "其他",
-    "VexcaliburCatalyst": "维王者之剑催化"
+    "UniversalOrnamentSetOther": "其他"
   },
   "SearchHistory": {
     "Date": "最近使用",
@@ -1187,7 +1190,7 @@
     "SortByClassType": "职业要求",
     "SortByCrafted": "已制造（D2）",
     "SortByDeepsight": "深视共振（D2）",
-    "SortByFeatured": "特色 (D2)",
+    "SortByFeatured": "新装备 / 特色装备（D2）",
     "SortByPrimary": "光等",
     "SortByRarity": "稀有度",
     "SortByRating": "护甲质量（D1）",

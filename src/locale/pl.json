@@ -226,6 +226,7 @@
     "Adept": "\\(adept\\)",
     "AmmoType": "Pokazuje przedmioty na podstawie rodzaju amunicji.",
     "Armor": "Pokazuje przedmioty, które są pancerzem.",
+    "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "Pokazuje zbroje na podstawie ich kategorii.",
     "ArmorIntrinsic": "Pokazuje legendarny pancerz, który ma Cechy Pancerza, takie jak Pancerz Pomysłowości.",
     "Ascended": "Pokazuje przedmioty, które posiadają węzeł wstępujący i zostały wstąpione.",
@@ -262,7 +263,8 @@
     "DupeCount": "Przedmioty, które mają określoną liczbę duplikatów.",
     "DupeLower": "Zduplikowane przedmioty, włącznie z powtórzeniami, które nie są duplikatami najwyższego poziomu mocy. Wybierany jest tylko jeden duplikat jako najwyższy, a reszta jest uważana za niższe.",
     "DupePerks": "Shows items whose perks are either a duplicate of, or a subset of, another item of the same type.",
-    "Energy": "Pokazuje przedmioty, które mają pojemność energetyczną (Pancerz 2.0).",
+    "Energy": "Shows items that use the Armor 2.0 mod system introduced in Shadowkeep.",
+    "EnergyCapacity": "Shows items based on their current energy capacity.",
     "Engrams": "Pokazuje engramy.",
     "Enhanceable": "Shows weapons that can be enhanced.",
     "Enhanced": "Shows weapons based on their enhancement tier.",
@@ -272,7 +274,7 @@
     "Equipped": "Przedmioty aktualnie wyposażone na postaci.",
     "Event": "Pokazuje przedmioty na podstawie którego zdarzenia z Destiny 2 pochodzą.",
     "ExtraPerk": "Pokazuje losowo wylosowane legendarne bronie z dodatkowym, wybieralną cechą.",
-    "Featured": "Items that count as one of the \"Featured Items\" in the current season.",
+    "Featured": "Items that count as one of the \"New Gear\" or \"Featured Items\" in the current season.",
     "Filter": "Filtr",
     "FilterWith": "Filter with:",
     "Focusable": "Shows items that can be focused at a vendor",
@@ -310,7 +312,7 @@
     "Memento": "Shows weapons that have a memento socket.",
     "ModSlot": "Shows armor with a specific mod type slot.",
     "Mods": {
-      "Y3": "Pokazuje przedmioty z dowolnymi wybranymi modyfikacjami Pancerza 2.0."
+      "Y3": "Shows items with any mods applied."
     },
     "Name": "Shows items whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "NamedStat": "Pokazuje pancerz zawierający punkty w podanej statystyce.",
@@ -493,7 +495,8 @@
     "TransferItems": "Przenieś"
   },
   "Inventory": {
-    "ClickToExpand": "(Kliknij, aby rozwinąć)"
+    "ClickToExpand": "(Kliknij, aby rozwinąć)",
+    "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
     "ThumbsDown": "Thumbs Down",
@@ -683,12 +686,12 @@
     "Artifice": "Pomysłowość",
     "AssumeMasterwork": "Załóżmy, że Mistrzowskie",
     "AssumeMasterworkOptions": {
-      "All": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "All Armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "All Armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "+2 in each stat, assumed energy level 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
       "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Automatycznie dodaj modyfikacje statystyk",
@@ -1098,7 +1101,7 @@
       "Damage": "Obrażenia",
       "Energy": "Energia",
       "Event": "Zdarzenie",
-      "Featured": "Featured",
+      "Featured": "New Gear",
       "Foundry": "Foundry",
       "Harmonizable": "Harmonizable",
       "Icon": "Ikona",
@@ -1165,6 +1168,7 @@
   },
   "Progress": {
     "Bounties": "Zlecenia",
+    "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Rangi",
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
@@ -1200,8 +1204,7 @@
   },
   "Records": {
     "Title": "Rekordy",
-    "UniversalOrnamentSetOther": "Inne",
-    "VexcaliburCatalyst": "Vexcalibur Catalyst"
+    "UniversalOrnamentSetOther": "Inne"
   },
   "SearchHistory": {
     "Date": "Ostatnio używane",
@@ -1277,7 +1280,7 @@
     "SortByClassType": "Wymagana klasa",
     "SortByCrafted": "Stworzone (D2)",
     "SortByDeepsight": "Rezonans Głębokiego Wglądu (D2)",
-    "SortByFeatured": "Featured (D2)",
+    "SortByFeatured": "New Gear / Featured (D2)",
     "SortByPrimary": "Poziom mocy",
     "SortByRarity": "Rzadkość",
     "SortByRating": "Jakość pancerza (D1)",
