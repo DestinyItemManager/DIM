@@ -23,11 +23,8 @@
   /* INT/DIS/STR bars */
   :global(.stat-bars) {
     width: 100%;
-    max-width: 230px;
     display: flex;
     justify-content: space-around;
-    margin-top: 8px;
-    opacity: 1;
     flex-direction: column;
 
     @include phone-portrait {
