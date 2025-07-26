@@ -119,20 +119,18 @@ async function main() {
     // Extract changelog entries from commit messages
     const changelogEntries = extractChangelogEntries(commits);
 
-    if (changelogEntries.length === 0) {
-      console.error('No changelog entries found in commit messages');
-      process.exit(0); // Not an error - just nothing to do
-    }
-
     // Read the current changelog
     const changelogPath = join(__dirname, '..', 'docs', 'CHANGELOG.md');
-    const originalChangelog = readFileSync(changelogPath, 'utf8');
+    let changelog = readFileSync(changelogPath, 'utf8');
 
     // Update the changelog content
-    const updatedChangelog = updateChangelog(changelogEntries, originalChangelog);
+
+    if (changelogEntries.length > 0) {
+      changelog = updateChangelog(changelogEntries, changelog);
+    }
 
     // Output the updated changelog to stdout
-    process.stdout.write(updatedChangelog);
+    process.stdout.write(changelog);
 
     console.error(`Successfully processed ${changelogEntries.length} changelog entries:`);
     changelogEntries.forEach((entry) => console.error(`  * ${entry}`));
