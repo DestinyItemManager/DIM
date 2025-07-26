@@ -2,13 +2,20 @@
 
 @layer base {
   :global(.stat) {
-    flex: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-right: 2px;
     line-height: 16px;
     white-space: nowrap;
+    font-size: 11px;
+    &.boostedValue {
+      color: $stat-modded;
+      font-weight: bold;
+      text-shadow: rgb(0, 0, 0, 0.5) 0 0 2px;
+    }
+    :global(.phone-portrait) & {
+      font-size: 12px;
+    }
     &:last-child {
       margin-right: 0;
     }
@@ -38,27 +45,14 @@
       display: flex;
       flex-direction: row;
     }
-
-    :global(.stat) {
-      flex: 0;
-      font-size: 11px;
-      color: var(--theme-header-characters-txt);
-      &.boostedValue {
-        color: $stat-modded;
-        font-weight: bold;
-        text-shadow: rgb(0, 0, 0, 0.5) 0 0 2px;
-      }
-      :global(.phone-portrait) & {
-        font-size: 12px;
-      }
-    }
   }
 
   // D2 stats row. Used here and in the item feed.
   :global(.stat-row) {
     display: flex;
     flex-direction: row;
-    place-items: center left;
+    align-items: center;
+    justify-content: space-between;
 
     @include phone-portrait {
       width: 100%;

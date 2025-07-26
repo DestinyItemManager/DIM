@@ -8,14 +8,6 @@
   align-items: center;
   gap: var(--item-margin);
   flex: 1;
-
-  :global(.stat-row) {
-    justify-content: space-between;
-  }
-
-  :global(.stat-bars) {
-    margin-top: 0;
-  }
 }
 
 .itemsInCategory {
