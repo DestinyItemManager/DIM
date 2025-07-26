@@ -8,7 +8,7 @@
     line-height: 16px;
     white-space: nowrap;
     font-size: 11px;
-    &.boostedValue {
+    &:global(.boostedValue) {
       color: $stat-modded;
       font-weight: bold;
       text-shadow: rgb(0, 0, 0, 0.5) 0 0 2px;
@@ -63,6 +63,11 @@
       justify-content: space-between !important;
     }
   }
+}
+
+.loadoutStats {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  width: 100%;
 }
 
 .powerFormula {

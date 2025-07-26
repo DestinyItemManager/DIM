@@ -73,20 +73,11 @@
 
 .headerStats {
   :global(.stat-row) {
-    display: flex;
-    flex-direction: row;
+    gap: 8px;
   }
 
   :global(.stat) {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 8px;
     font-size: 1.2em;
-
-    &:global(.boostedValue) {
-      color: $stat-modded;
-    }
 
     img {
       height: 20px;

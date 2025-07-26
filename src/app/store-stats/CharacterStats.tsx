@@ -149,6 +149,7 @@ export function CharacterStats({
   stats,
   showTotal,
   equippedHashes,
+  className,
 }: {
   /**
    * A list of stats to display. This should contain an entry for each stat in
@@ -165,12 +166,13 @@ export function CharacterStats({
    * tooltips.
    */
   equippedHashes: Set<number>;
+  className?: string;
 }) {
   // Select only the armor stats, in the correct order
   const statInfos = filterMap(armorStats, (h) => stats[h]);
 
   return (
-    <div className="stat-row">
+    <div className={clsx('stat-row', className)}>
       {showTotal && (
         <div className={clsx(styles.tier, 'stat')}>
           {t('LoadoutBuilder.StatTotal', { total: sumBy(statInfos, (s) => s.value) })}
@@ -257,5 +259,12 @@ export function LoadoutCharacterStats({
     loadout.parameters?.includeRuntimeStatBenefits ?? true,
   );
 
-  return <CharacterStats showTotal stats={stats} equippedHashes={equippedHashes} />;
+  return (
+    <CharacterStats
+      className={styles.loadoutStats}
+      showTotal
+      stats={stats}
+      equippedHashes={equippedHashes}
+    />
+  );
 }

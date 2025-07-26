@@ -2,8 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'asterisk': string;
-  'boostedValue': string;
   'dropLevel': string;
+  'loadoutStats': string;
   'powerFormula': string;
   'powerStat': string;
   'richTooltipWrapper': string;
