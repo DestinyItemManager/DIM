@@ -176,6 +176,10 @@ export function getBestArmor(
         (item) => !excludedIndices.has(item.index) && hasPerks(item), // Not excluded and has the correct locked perks
       );
 
+      if (filtered.length === 0) {
+        continue; // No items in this bucket
+      }
+
       for (const [index, hash] of statHashes.entries()) {
         if (!fullMode && index > 2) {
           continue;
