@@ -76,7 +76,7 @@ export default function ItemSocketsGeneral({
   return (
     <>
       {intrinsicRows}
-      <SingleItemSetBonus item={item} />
+      {!minimal && <SingleItemSetBonus item={item} />}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets
