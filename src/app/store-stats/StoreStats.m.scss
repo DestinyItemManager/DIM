@@ -10,6 +10,8 @@
   // the button itself is hovered, color in the background. This is to make it
   // easier for folks to understand that there's something here to click.
   *[role='button'] {
+    position: relative;
+
     @include interactive($hover: true, $focus: true, $focusWithin: true) {
       background-color: var(--theme-item-polaroid-hover-border);
       background-color: color-mix(
@@ -20,9 +22,15 @@
     }
 
     @include phone-portrait {
-      div > & {
+      div > &::after {
+        content: '';
+        display: block;
         border-bottom: 1px dashed var(--theme-item-polaroid-hover-border);
         border-color: color-mix(in srgb, var(--theme-item-polaroid-hover-border), transparent 60%);
+        position: absolute;
+        bottom: 2px;
+        left: 4px;
+        right: 4px;
       }
     }
 
