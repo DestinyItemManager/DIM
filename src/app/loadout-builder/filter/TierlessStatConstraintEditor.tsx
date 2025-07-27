@@ -90,6 +90,23 @@ export default function TierlessStatConstraintEditor({
     }
   };
 
+  const handleDragEnd = (draggedConstraint: ResolvedStatConstraint) => {
+    // Find the current index of the dragged constraint
+    const draggedIndex = resolvedStatConstraints.findIndex(
+      (constraint) => constraint.statHash === draggedConstraint.statHash,
+    );
+
+    if (draggedIndex !== -1) {
+      // Apply auto-enable logic: enable if first item or previous item is enabled
+      const shouldEnable = draggedIndex === 0 || !resolvedStatConstraints[draggedIndex - 1].ignored;
+
+      if (draggedConstraint.ignored && shouldEnable) {
+        const updatedConstraint = { ...draggedConstraint, ignored: false };
+        handleStatChange(updatedConstraint);
+      }
+    }
+  };
+
   // Handle button-based reordering (up/down buttons)
   const handleButtonMove = (currentIndex: number, direction: 'up' | 'down') => {
     const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
@@ -127,6 +144,7 @@ export default function TierlessStatConstraintEditor({
               statRange={statRangesFiltered?.[statHash]}
               onStatChange={handleStatChange}
               onButtonMove={handleButtonMove}
+              onDragEnd={handleDragEnd}
               equippedHashes={equippedHashes}
               processing={processing}
             />
@@ -143,6 +161,7 @@ function StatRow({
   index,
   onStatChange,
   onButtonMove,
+  onDragEnd,
   equippedHashes,
   processing,
 }: {
@@ -151,6 +170,7 @@ function StatRow({
   index: number;
   onStatChange: (constraint: ResolvedStatConstraint) => void;
   onButtonMove: (currentIndex: number, direction: 'up' | 'down') => void;
+  onDragEnd: (constraint: ResolvedStatConstraint) => void;
   equippedHashes: Set<number>;
   processing: boolean;
 }) {
@@ -191,6 +211,7 @@ function StatRow({
       whileDrag={{
         className: clsx(styles.row, styles.dragging, { [styles.ignored]: statConstraint.ignored }),
       }}
+      onDragEnd={() => onDragEnd(statConstraint)}
       data-index={index}
       as="div"
     >

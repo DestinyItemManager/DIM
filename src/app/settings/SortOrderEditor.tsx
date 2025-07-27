@@ -26,7 +26,7 @@ export interface SortProperty {
 type OnCommandHandler = (
   e: React.MouseEvent,
   index: number,
-  command: 'up' | 'down' | 'toggle' | 'direction-toggle',
+  command: 'up' | 'down' | 'toggle' | 'direction-toggle' | 'dragEnd',
 ) => void;
 
 const SortEditorItemList = memo(
@@ -65,27 +65,19 @@ export default function SortOrderEditor({
   };
 
   const handleReorder = (newOrder: SortProperty[]) => {
-    // Find the item that actually moved by comparing old vs new order
-    const oldOrder = order;
-    let draggedItemIndex = -1;
+    onSortOrderChanged(newOrder);
+  };
 
-    // Find which item changed position
-    for (let i = 0; i < newOrder.length; i++) {
-      if (newOrder[i].id !== oldOrder[i].id) {
-        draggedItemIndex = i;
-        break;
-      }
-    }
+  const handleDragEnd = (draggedItem: SortProperty) => {
+    // Find the current index of the dragged item
+    const draggedItemIndex = order.findIndex((item) => item.id === draggedItem.id);
 
-    // Only apply auto-enable logic to the dragged item
     if (draggedItemIndex !== -1) {
-      const reorderedItems = [...newOrder];
-      reorderedItems[draggedItemIndex] = {
-        ...reorderedItems[draggedItemIndex],
-        enabled: draggedItemIndex === 0 || reorderedItems[draggedItemIndex - 1].enabled,
+      const newOrder = [...order];
+      newOrder[draggedItemIndex] = {
+        ...newOrder[draggedItemIndex],
+        enabled: draggedItemIndex === 0 || newOrder[draggedItemIndex - 1].enabled,
       };
-      onSortOrderChanged(reorderedItems);
-    } else {
       onSortOrderChanged(newOrder);
     }
   };
@@ -116,6 +108,10 @@ export default function SortOrderEditor({
       case 'direction-toggle': {
         e.preventDefault();
         toggleItem(index, 'reversed');
+        break;
+      }
+      case 'dragEnd': {
+        handleDragEnd(order[index]);
         break;
       }
       default:
@@ -154,6 +150,7 @@ function SortEditorItem({
       whileDrag={{
         className: clsx(styles.item, styles.dragging, { [styles.disabled]: !item.enabled }),
       }}
+      onDragEnd={() => onCommand({} as React.MouseEvent, index, 'dragEnd')}
       as="div"
     >
       <span tabIndex={-1}>
