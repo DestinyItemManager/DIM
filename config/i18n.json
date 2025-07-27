@@ -482,7 +482,11 @@
   },
   "Item": {
     "ThumbsUp": "Thumbs Up",
-    "ThumbsDown": "Thumbs Down"
+    "ThumbsDown": "Thumbs Down",
+    "SetBonus": {
+      "2Piece": "2 Piece",
+      "4Piece": "4 Piece"
+    }
   },
   "ItemFeed": {
     "Description": "Item Feed",
