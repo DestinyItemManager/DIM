@@ -72,6 +72,17 @@ export default function ItemSocketsWeapons({
     />
   );
 
+  const renderSocketWithoutEmpties = (socketInfo: DimSocket) => {
+    // Prevent empty mods from showing on craftable weapons
+    const socketWithoutEmpties = {
+      ...socketInfo,
+      plugOptions: socketInfo.plugOptions.filter(
+        (option) => option.plugDef.plug.plugCategoryIdentifier !== 'crafting.recipes.empty_socket',
+      ),
+    };
+    return !isKillTrackerSocket(socketWithoutEmpties) && renderSocket(socketWithoutEmpties);
+  };
+
   return (
     <>
       {!minimal && (intrinsicSocket?.plugged || mods.length > 0) && (
@@ -122,17 +133,8 @@ export default function ItemSocketsWeapons({
                 <AppIcon icon={faList} />
               </button>
             )}
-            {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
-              (socketInfo) =>
-                !isKillTrackerSocket(socketInfo) && (
-                  <Socket
-                    key={socketInfo.socketIndex}
-                    item={item}
-                    socket={socketInfo}
-                    wishlistRoll={wishlistRoll}
-                    onClick={onPlugClicked}
-                  />
-                ),
+            {getSocketsByIndexes(item.sockets, perks.socketIndexes).map((socketInfo) =>
+              renderSocketWithoutEmpties(socketInfo),
             )}
           </div>
         ))}
