@@ -102,15 +102,24 @@ export function filterItems({
   // Group by bucket
   const itemsByBucket = Map.groupBy(items, (item) => item.bucket.hash as ArmorBucketHash);
 
+  const lockedExoticDef = lockedExoticHash ? defs.InventoryItem.get(lockedExoticHash) : undefined;
+
   for (const bucket of ArmorBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
     // There can only be one pinned item as we hide items from the item picker once
     // a single item is pinned
     const pinnedItem = pinnedItems[bucket];
-    const exotics = (itemsByBucket.get(bucket) ?? []).filter(
-      (item) => item.hash === lockedExoticHash,
-    );
+    const lockedExoticApplicable =
+      lockedExoticHash !== undefined &&
+      lockedExoticHash > 0 &&
+      lockedExoticDef?.inventory?.bucketTypeHash === bucket;
+    const exotics = lockedExoticApplicable
+      ? (itemsByBucket.get(bucket) ?? []).filter(
+          (item) =>
+            item.hash === lockedExoticHash || item.name === lockedExoticDef.displayProperties.name,
+        )
+      : undefined;
 
     // We prefer most specific filtering since there can be competing conditions.
     // This means locked item and then exotic
@@ -119,19 +128,17 @@ export function filterItems({
     if (pinnedItem) {
       // If the user pinned an item, that's what they get
       firstPassFilteredItems = [pinnedItem];
-    } else if (exotics.length) {
+    } else if (exotics) {
       // If the user chose an exotic, only include items matching that exotic
       firstPassFilteredItems = exotics;
-    } else if (lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC) {
+    } else if (
       // The user chose to exclude all exotics
+      lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC ||
+      // The locked exotic is in a different bucket, so we can remove all
+      // exotics from this bucket
+      (lockedExoticDef && !lockedExoticApplicable)
+    ) {
       firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
-    } else if (lockedExoticHash !== undefined && lockedExoticHash > 0) {
-      const def = defs.InventoryItem.get(lockedExoticHash);
-      if (def.inventory?.bucketTypeHash !== bucket) {
-        // The locked exotic is in a different bucket, so we can remove all
-        // exotics from this bucket
-        firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
-      }
     }
 
     if (!firstPassFilteredItems.length) {
