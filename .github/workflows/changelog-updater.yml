@@ -24,8 +24,13 @@ jobs:
 
       - name: Update changelog from commits
         id: changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          echo '${{ toJson(github.event.commits) }}' | node build/update-changelog.js > docs/CHANGELOG.md.new
+          # Extract commit SHAs from the push event
+          COMMIT_SHAS=$(echo '${{ toJson(github.event.commits) }}' | jq -r '.[].id' | tr '\n' ' ')
+          node build/update-changelog.js $COMMIT_SHAS > docs/CHANGELOG.md.new
           mv docs/CHANGELOG.md.new docs/CHANGELOG.md
 
       - name: Commit files
