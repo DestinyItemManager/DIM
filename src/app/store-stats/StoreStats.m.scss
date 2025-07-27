@@ -45,6 +45,7 @@
 }
 
 .vaultStats {
+  composes: statContainer;
   display: grid;
   grid-template-columns: repeat(3, 16px minmax(min-content, 1fr));
   grid-auto-rows: 16px;
@@ -61,5 +62,17 @@
 
   img {
     justify-self: center;
+  }
+}
+
+.characterStats {
+  composes: statContainer;
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  width: 100%;
+
+  @include phone-portrait {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
   }
 }

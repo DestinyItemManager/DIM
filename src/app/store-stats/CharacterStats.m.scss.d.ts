@@ -3,8 +3,8 @@
 interface CssExports {
   'armorStats': string;
   'asterisk': string;
+  'boostedValue': string;
   'dropLevel': string;
-  'loadoutStats': string;
   'powerFormula': string;
   'powerStat': string;
   'richTooltipWrapper': string;

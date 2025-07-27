@@ -185,7 +185,9 @@ export function CharacterStats({
         >
           <div
             className={clsx('stat', {
-              boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
+              [styles.boostedValue]: stat.breakdown?.some(
+                (change) => change.source === 'runtimeEffect',
+              ),
             })}
             aria-label={`${stat.displayProperties.name} ${stat.value}`}
             role="group"
@@ -262,11 +264,6 @@ export function LoadoutCharacterStats({
   );
 
   return (
-    <CharacterStats
-      className={clsx(styles.loadoutStats, className)}
-      showTotal
-      stats={stats}
-      equippedHashes={equippedHashes}
-    />
+    <CharacterStats className={className} showTotal stats={stats} equippedHashes={equippedHashes} />
   );
 }

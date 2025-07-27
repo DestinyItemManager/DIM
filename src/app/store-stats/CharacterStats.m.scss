@@ -9,43 +9,28 @@
     white-space: nowrap;
     font-size: 11px;
     gap: 2px;
-    &:global(.boostedValue) {
-      color: $stat-modded;
-      font-weight: bold;
-      text-shadow: rgb(0, 0, 0, 0.5) 0 0 2px;
-    }
-    :global(.phone-portrait) & {
+
+    @include phone-portrait {
       font-size: 12px;
     }
+
     img {
       height: 14px;
       width: 14px;
     }
   }
+}
 
-  /* INT/DIS/STR bars */
-  :global(.stat-bars) {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
-
-    @include phone-portrait {
-      margin-left: auto;
-      margin-right: auto;
-      align-items: center;
-    }
-  }
+.boostedValue {
+  color: $stat-modded;
+  font-weight: bold;
+  text-shadow: rgb(0, 0, 0, 0.5) 0 0 2px;
 }
 
 .armorStats {
   composes: flexRow from '../dim-ui/common.m.scss';
   justify-content: space-between;
   align-items: center;
-}
-
-.loadoutStats {
-  composes: flexRow from '../dim-ui/common.m.scss';
   width: 100%;
 }
 
