@@ -11,13 +11,19 @@
   // easier for folks to understand that there's something here to click.
   *[role='button'] {
     @include interactive($hover: true, $focus: true, $focusWithin: true) {
-      outline: none;
       background-color: var(--theme-item-polaroid-hover-border);
       background-color: color-mix(
         in srgb,
         var(--theme-item-polaroid-hover-border),
         transparent 80%
       );
+    }
+
+    @include phone-portrait {
+      div > & {
+        border-bottom: 1px dashed var(--theme-item-polaroid-hover-border);
+        border-color: color-mix(in srgb, var(--theme-item-polaroid-hover-border), transparent 60%);
+      }
     }
 
     @media (any-hover: hover) {

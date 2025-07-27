@@ -26,4 +26,11 @@
   width: fit-content;
   margin: -2px -4px -2px -20px;
   padding: 2px 4px 2px 20px;
+
+  &[role='button'] {
+    @include phone-portrait {
+      border-bottom: 1px dashed var(--theme-item-polaroid-hover-border);
+      border-color: color-mix(in srgb, var(--theme-item-polaroid-hover-border), transparent 60%);
+    }
+  }
 }
