@@ -145,10 +145,10 @@ function updateChangelog(entries, originalChangelog) {
   let newNextContent = '';
   if (existingContent) {
     // Preserve existing content and add new entries
-    newNextContent = `\n\n${existingContent}\n${newEntries}\n\n`;
+    newNextContent = `\n${existingContent}\n${newEntries}\n\n`;
   } else {
     // No existing content, just add new entries
-    newNextContent = `\n\n${newEntries}\n\n`;
+    newNextContent = `\n${newEntries}\n\n`;
   }
 
   // Construct the new changelog content
