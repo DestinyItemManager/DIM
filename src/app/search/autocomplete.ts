@@ -435,19 +435,6 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
                 : 0, // mid otherwise
         ),
 
-        // for is/not, prioritize words with less left to type,
-        // so "is:armor" comes before "is:armormod".
-        // but only is/not, not other list-based suggestions,
-        // otherwise it prioritizes "dawn" over "redwar" after you type "season:"
-        // which i am not into.
-        compareBy((word) => {
-          if (word.plainText.startsWith('not:') || word.plainText.startsWith('is:')) {
-            return word.plainText.length - (typedPlain.length + word.plainText.indexOf(typedPlain));
-          } else {
-            return 0;
-          }
-        }),
-
         // ---------------
         // once we have accounted for high level assumptions about user input,
         // make some opinionated choices about which filters are a priority
@@ -455,9 +442,6 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
         // tags are UGC and therefore important
         compareBy((word) => !word.plainText.startsWith('tag:')),
-
-        // sort incomplete terms (ending with ':') to the front
-        compareBy((word) => !word.plainText.endsWith(':')),
 
         // push "not" and "<=" and ">=" to the bottom if they are present
         // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
@@ -471,6 +455,22 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
         // sort more-basic incomplete terms (fewer colons) to the front
         // i.e. suggest "stat:" before "stat:magazine:"
         compareBy((word) => (word.plainText.startsWith('is:') ? 0 : colonCount(word.plainText))),
+
+        // for is/not, prioritize words with less left to type,
+        // so "is:armor" comes before "is:armormod".
+        // but only is/not, not other list-based suggestions,
+        // otherwise it prioritizes "dawn" over "redwar" after you type "season:"
+        // which i am not into.
+        compareBy((word) => {
+          if (word.plainText.startsWith('not:') || word.plainText.startsWith('is:')) {
+            return word.plainText.length - (typedPlain.length + word.plainText.indexOf(typedPlain));
+          } else {
+            return 0;
+          }
+        }),
+
+        // sort incomplete terms (ending with ':') to the front
+        compareBy((word) => !word.plainText.endsWith(':')),
 
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
