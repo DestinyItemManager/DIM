@@ -7,6 +7,43 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// GitHub API functions
+async function fetchCommitFromAPI(owner, repo, sha, token) {
+  const url = `https://api.github.com/repos/${owner}/${repo}/commits/${sha}`;
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'DIM-Changelog-Updater',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch commit ${sha}: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.json();
+}
+
+async function fetchPRFromAPI(owner, repo, prNumber, token) {
+  const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`;
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'DIM-Changelog-Updater',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch PR ${prNumber}: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.json();
+}
+
 function extractChangelogEntries(commits) {
   const entries = [];
 
@@ -16,12 +53,13 @@ function extractChangelogEntries(commits) {
   }
 
   for (const commit of commits) {
-    if (!commit || typeof commit.message !== 'string') {
+    if (!commit || typeof commit.commit?.message !== 'string') {
       console.error('Invalid commit object:', commit);
       continue;
     }
 
-    const message = commit.message;
+    // Use the full commit message from the API response
+    const message = commit.commit.message;
     const lines = message.split('\n');
 
     for (const line of lines) {
@@ -32,6 +70,31 @@ function extractChangelogEntries(commits) {
         if (changelogText) {
           entries.push(changelogText);
         }
+      }
+    }
+  }
+
+  return entries;
+}
+
+function extractChangelogEntriesFromText(text, source = 'unknown') {
+  const entries = [];
+
+  if (typeof text !== 'string') {
+    console.error(`Invalid text from ${source}:`, typeof text);
+    return entries;
+  }
+
+  const lines = text.split('\n');
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+    if (trimmedLine.toLowerCase().startsWith('changelog:')) {
+      // Extract text after "Changelog:" and trim whitespace
+      const changelogText = trimmedLine.substring(10).trim();
+      if (changelogText) {
+        console.error(`Found changelog entry from ${source}: ${changelogText}`);
+        entries.push(changelogText);
       }
     }
   }
@@ -82,10 +145,10 @@ function updateChangelog(entries, originalChangelog) {
   let newNextContent = '';
   if (existingContent) {
     // Preserve existing content and add new entries
-    newNextContent = `\n\n${existingContent}\n${newEntries}\n\n`;
+    newNextContent = `\n${existingContent}\n${newEntries}\n\n`;
   } else {
     // No existing content, just add new entries
-    newNextContent = `\n\n${newEntries}\n\n`;
+    newNextContent = `\n${newEntries}\n\n`;
   }
 
   // Construct the new changelog content
@@ -97,34 +160,92 @@ function updateChangelog(entries, originalChangelog) {
   return newChangelogContent;
 }
 
-async function readStdin() {
-  const chunks = [];
-  process.stdin.setEncoding('utf8');
+async function fetchCommitsFromAPI(commitShas, githubToken, githubRepository) {
+  const [owner, repo] = githubRepository.split('/');
+  const commits = [];
 
-  for await (const chunk of process.stdin) {
-    chunks.push(chunk);
+  for (const sha of commitShas) {
+    if (sha.trim()) {
+      try {
+        const commit = await fetchCommitFromAPI(owner, repo, sha.trim(), githubToken);
+        commits.push(commit);
+        console.error(
+          `Fetched commit ${sha.substring(0, 7)}: ${commit.commit.message.split('\n')[0]}`,
+        );
+      } catch (error) {
+        console.error(`Failed to fetch commit ${sha}: ${error.message}`);
+      }
+    }
   }
 
-  return chunks.join('');
+  return commits;
 }
 
 async function main() {
   try {
-    // Read commits JSON from stdin
-    const commitsData = await readStdin();
-    const commits = JSON.parse(commitsData);
+    // Parse command line arguments
+    const args = process.argv.slice(2);
+    let prNumber = null;
+    let commitShas = [];
 
-    console.error(`Processing ${commits.length} commits...`);
+    // Check for --pr-number flag
+    for (let i = 0; i < args.length; i++) {
+      if (args[i].startsWith('--pr-number=')) {
+        prNumber = args[i].split('=')[1];
+      } else {
+        commitShas.push(args[i]);
+      }
+    }
+
+    if (commitShas.length === 0) {
+      console.error('No commit SHAs provided');
+      process.exit(1);
+    }
+
+    // Get GitHub token and repository from environment
+    const githubToken = process.env.GITHUB_TOKEN;
+    const githubRepository = process.env.GITHUB_REPOSITORY;
+
+    if (!githubToken) {
+      console.error('GITHUB_TOKEN environment variable is required');
+      process.exit(1);
+    }
+
+    if (!githubRepository) {
+      console.error('GITHUB_REPOSITORY environment variable is required');
+      process.exit(1);
+    }
+
+    const [owner, repo] = githubRepository.split('/');
+
+    console.error(`Processing ${commitShas.length} commit SHAs...`);
+
+    // Fetch commits from GitHub API
+    const commits = await fetchCommitsFromAPI(commitShas, githubToken, githubRepository);
+
+    console.error(`Successfully fetched ${commits.length} commits`);
 
     // Extract changelog entries from commit messages
-    const changelogEntries = extractChangelogEntries(commits);
+    let changelogEntries = extractChangelogEntries(commits);
+
+    // If a PR number is provided, also fetch the PR description
+    if (prNumber) {
+      console.error(`Fetching PR #${prNumber} description...`);
+      try {
+        const pr = await fetchPRFromAPI(owner, repo, prNumber, githubToken);
+        const prEntries = extractChangelogEntriesFromText(pr.body || '', `PR #${prNumber}`);
+        changelogEntries = changelogEntries.concat(prEntries);
+        console.error(`Found ${prEntries.length} changelog entries in PR description`);
+      } catch (error) {
+        console.error(`Failed to fetch PR #${prNumber}: ${error.message}`);
+      }
+    }
 
     // Read the current changelog
     const changelogPath = join(__dirname, '..', 'docs', 'CHANGELOG.md');
     let changelog = readFileSync(changelogPath, 'utf8');
 
     // Update the changelog content
-
     if (changelogEntries.length > 0) {
       changelog = updateChangelog(changelogEntries, changelog);
     }

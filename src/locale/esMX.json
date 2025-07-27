@@ -202,6 +202,7 @@
     "Adept": "\\(Adept\\)",
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que son armaduras.",
+    "Armor3": "Muestra objetos que utilicen el sistema de estadística de Armadura 3.0 introducidos en Los Confines del Destino.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
     "ArmorIntrinsic": "Muestra armadura legendaria que tenga un perk intrínseco, como Armadura Artificiosa.",
     "Ascended": "Muestra objetos que tengan un nodo ascendente en el que haya sido ascendido.",
@@ -232,7 +233,8 @@
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
     "DupeLower": "Objetos duplicados, incluyendo reincidencias, que no son el poder más alto del duplicado. Sólo un duplicado es elegido como el más alto, y el resto son considerados más bajos.",
     "DupePerks": "Muestra objetos cuyas ventajas ya sean duplicadas de, o un subconjunto de, otro objeto del mismo tipo.",
-    "Energy": "Muestra objetos que tienen capacidad de energía (Armadura 2.0).",
+    "Energy": "Muestra objetos que utilicen el sistema de modificadores de Armadura 2.0 introducidos en Bastión de Sombras.",
+    "EnergyCapacity": "Muestra objetos basados en su capacidad de energía actual.",
     "Engrams": "Muestra engramas.",
     "Enhanceable": "Muestra armas que pueden ser mejoradas.",
     "Enhanced": "Muestra armas basadas en su nivel de mejora.",
@@ -242,7 +244,7 @@
     "Equipped": "Objetos que actualmente están equipados en un personaje.",
     "Event": "Muestra objetos en que evento de Destiny 2 aparecieron.",
     "ExtraPerk": "Muestra armas legendarias con rolls aleatorios con una perk adicional seleccionable.",
-    "Featured": "Objetos que cuentan como uno de los \"Objetos Destacados\" de la temporada actual.",
+    "Featured": "Objetos que cuenten como uno de los objetos \"Nuevo Equipamiento\" u \"Objetos Destacados\" en la temporada actual.",
     "Filter": "Filtro",
     "FilterWith": "Filtrar con:",
     "Focusable": "Muestra objetos que pueden ser enfocados en un comerciante",
@@ -250,7 +252,7 @@
     "Glimmer": "Muestra objetos que son consumibles que están relacionados con la ganancia de lumen.",
     "Harrowed": "\\(Saqueado\\)",
     "HasNotes": "Muestra objetos que contengan notas.",
-    "HasOrnament": "Muestra objetos que tengan ornamento aplicado.",
+    "HasOrnament": "Muestra objetos que tengan diseño aplicado.",
     "HasShader": "Mostrar objetos que tengan shader aplicado.",
     "InDimLoadout": "is:indimloadout muestra objetos que están incluidos en cualquier equipación en DIM.",
     "InInGameLoadout": "is:iningameloadout muestra objetos que están incluidos en cualquier equipación en el juego.",
@@ -259,7 +261,7 @@
     "Infusable": "Muestra objetos que pueden ser infundidos.",
     "InfusionFodder": "Muestra objetos que podrían ser infundidos en versiones más bajas de poder del mismo objeto sólo por lumen.",
     "IsAdept": "Muestra armas compatibles con mods Adepto.",
-    "IsCrafted": "Muestra las armas que han sido creadas.",
+    "IsCrafted": "Muestra armas que han sido fabricadas.",
     "ItemHash": "Muestra los objetos con un hash de objeto de inventario obtenido. Para usuarios avanzados.",
     "ItemId": "Muestra el objeto con un ID de inventario obtenido. Para usuarios avanzados.",
     "Leveling": {
@@ -280,15 +282,15 @@
     "Memento": "Muestra armas que tengan una ranura para recuerdo.",
     "ModSlot": "Muestra armadura con un tipo de mod específico.",
     "Mods": {
-      "Y3": "Muestra objetos con cualquier mod de Armadura 2.0 seleccionados."
+      "Y3": "Muestra objetos nuevos sin modificadores aplicados."
     },
     "Name": "Muestra objetos cuyo nombre coincida exactamente (exactname:) o parcialmente (name:) con el texto filtrado. Busca frases enteras usando comillas.",
     "NamedStat": "Muestra armadura que tiene puntos en el atributo mencionado.",
     "Negate": "Para negar una búsqueda, prefija el término de búsqueda con el signo menos o la palabra \"not\", como por ejemplo \"{{notexample}}\" o \"{{notexample2}}\".",
     "NewItems": "Muestra objetos nuevos.",
     "Notes": "Buscar objetos que tengas etiquetados con notas personalizadas.",
-    "OriginTrait": "Muestra armas que tienen una ventaja de rasgo original.",
-    "Ornament": "Muestra objetos con ornamentos y filtros para su estado.",
+    "OriginTrait": "Muestra armas que tienen un perk de rasgo original.",
+    "Ornament": "Muestra objetos con diseños y filtros para su estado.",
     "PartialMatch": "Muestra objetos donde su nombre, descripción, cualquier perk o cualquier mod tenga una coincidencia parcial al texto filtrado. Busca frases enteras usando comillas.",
     "PatternUnlocked": "Muestra objetos que tienen un patrón de fabricación desbloqueado, incluso si el objeto no está fabricado.",
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
@@ -375,7 +377,7 @@
     "Clear": "Limpiar filtro de búsqueda",
     "CompareMatching": "Comparar Objetos",
     "DeleteSearch": "Borrar Búsqueda",
-    "FilterHelp": "Buscar objeto/ventaja, {{example}}, y más",
+    "FilterHelp": "Buscar objeto/perk, {{example}}, y más",
     "FilterHelpBrief": "Buscar objetos",
     "FilterHelpLoadouts": "Buscar nombres y notas de equipamientos",
     "FilterHelpMenuItem": "Ayuda de Filtros...",
@@ -393,7 +395,7 @@
     "LaunchDIMAlone": "Separar Ventana",
     "MaterialCounts": "Contador de Materiales",
     "Menu": "Menú",
-    "ProfileAge": "Los servidores de Destiny enviaron por última vez información hace {{age}}.\nActualizar desde DIM podría obtener nuevos datos, pero Bungie.net también podría repetir información en la caché.",
+    "ProfileAge": "Los servidores de Destiny enviaron por última vez información hace {{age}}.\nActualizar desde DIM podría obtener nuevos datos, pero Bungie.net también podría repetir información en el caché.",
     "Refresh": "Actualizar Datos de Destiny [R]",
     "ReloadApp": "Recargar App",
     "ReportBug": "Informar de un Error",
@@ -461,7 +463,8 @@
     "TransferItems": "Transferir"
   },
   "Inventory": {
-    "ClickToExpand": "(Haz clic para expandir)"
+    "ClickToExpand": "(Haz clic para expandir)",
+    "MissingSilver": "Tu balance de Plata solo está disponible mientras estás jugando al juego."
   },
   "Item": {
     "ThumbsDown": "Pulgar Abajo",
@@ -651,12 +654,12 @@
     "Artifice": "Artificiosa",
     "AssumeMasterwork": "Asumir Obra Maestra",
     "AssumeMasterworkOptions": {
-      "All": "Armadura 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Armadura 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticos de Armadura 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "Todas las Armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Todas las Armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticos de Armadura 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Mejorada para aceptar modificadores de estadísticas Artificiosas.",
       "Current": "Estadísticas actuales, asumiendo nivel de energía de al menos {{minLoItemEnergy}}.",
       "Legendary": "Legendarias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "+2 en cada estadística, asumiendo nivel de energía 10.",
+      "Masterworked": "Bonus de estadísticas de obra maestra completa, asumiendo nivel de energía 10.",
       "None": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Añadir automáticamente mods de estadísticas",
@@ -958,7 +961,7 @@
     "AddToLoadout": "Equipamiento",
     "AddToLoadoutTitle": "Añadir esto al equipamiento",
     "All": "Todos",
-    "ArtifactBreaker": "Esta arma tiene {{breaker}} debido a una ventaja de artefacto desbloqueada.",
+    "ArtifactBreaker": "Esta arma tiene {{breaker}} debido a una perk del artefacto desbloqueada.",
     "CannotCurrentlyRoll": "Este perk no se puede obtener en la versión actual de este objeto.",
     "CantPullFromPostmaster": "Debes visitar la Administración en el juego para recuperar este objeto.",
     "CatalystProgress": "Progreso del Catalizador",
@@ -1042,7 +1045,7 @@
       "Damage": "Daño",
       "Energy": "Energía",
       "Event": "Evento",
-      "Featured": "Destacado",
+      "Featured": "Equipamiento Nuevo",
       "Foundry": "Forja",
       "Harmonizable": "Armonizable",
       "Icon": "Icono",
@@ -1064,7 +1067,7 @@
       "OtherPerks": "Otros Perks",
       "PercentComplete": "% Completo",
       "Perks": "Ventajas",
-      "PerksGrid": "Cuadrícula de Ventajas",
+      "PerksGrid": "Cuadrícula de Perks",
       "PerksMods": "Perks & Mods",
       "Power": "Poder",
       "Quality": "% Calidad",
@@ -1109,6 +1112,7 @@
   },
   "Progress": {
     "Bounties": "Contratos",
+    "CatalystSource": "Fuente: {{source}}",
     "CrucibleRank": "Rango",
     "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
@@ -1140,8 +1144,7 @@
   },
   "Records": {
     "Title": "Hazañas",
-    "UniversalOrnamentSetOther": "Otro",
-    "VexcaliburCatalyst": "Catalizador Vexcalibur"
+    "UniversalOrnamentSetOther": "Otro"
   },
   "SearchHistory": {
     "Date": "Último uso",
@@ -1217,7 +1220,7 @@
     "SortByClassType": "Clase Requerida",
     "SortByCrafted": "Creadas (D2)",
     "SortByDeepsight": "Visión Profunda (D2)",
-    "SortByFeatured": "Destacado (D2)",
+    "SortByFeatured": "Equipamiento Nuevo / Destacado (D2)",
     "SortByPrimary": "Nivel de Poder",
     "SortByRarity": "Rareza",
     "SortByRating": "Calidad de la armadura (D1)",

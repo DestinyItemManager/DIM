@@ -19,6 +19,7 @@
     "lintcached:eslint": "pnpm lint:eslint --cache --cache-location .eslintcache --cache-strategy content",
     "lint-report": "pnpm lint:eslint --output-file eslint_report.json --format json",
     "lint-report:cached": "pnpm lintcached:eslint --output-file eslint.results.json --format json",
+    "typecheck": "tsc --noEmit",
     "fix": "pnpm run --sequential '/^fix:.*/'",
     "fix:eslint": "pnpm lint:eslint --fix",
     "fix:json": "jsonsort src/locale",

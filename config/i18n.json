@@ -1153,7 +1153,8 @@
     "TrackedTriumphs": "Tracked Triumphs",
     "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
-    "NoEventChallenges": "You have completed all event challenges"
+    "NoEventChallenges": "You have completed all event challenges",
+    "CatalystSource": "Source: {{source}}"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
@@ -1161,8 +1162,7 @@
   },
   "Records": {
     "Title": "Records",
-    "UniversalOrnamentSetOther": "Other",
-    "VexcaliburCatalyst": "Vexcalibur Catalyst"
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Description": "These are all your past and saved searches. You can delete them from here.",

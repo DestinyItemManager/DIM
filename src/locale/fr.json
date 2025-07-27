@@ -202,6 +202,7 @@
     "Adept": "\\(expert\\)",
     "AmmoType": "Affiche les objets en fonction de leur type de munition.",
     "Armor": "Affiche les objets qui sont des armures.",
+    "Armor3": "Affiche les objets qui utilisent le système de stats d'armure 3.0 introduis dans Les Confins du Destin.",
     "ArmorCategory": "Affiche les armures selon leur catégorie.",
     "ArmorIntrinsic": "Affiche les armures qui ont un attribut intrinsèque, comme Armure d'Artifice par exemple.",
     "Ascended": "Affiche les objets qui ont eu une ascension.",
@@ -232,7 +233,8 @@
     "DupeCount": "Objets qui ont le nombre spécifié de doublons.",
     "DupeLower": "Doublons, rééditions incluses, qui ne sont pas le doublon avec la puissance la plus élevé. Un seul doublon est choisis comme étant celui avec la puissance la plus élevé, les autres sont considérés comme plus bas.",
     "DupePerks": "Affiche les objets dont les attributs sont soit les mêmes qu'un, ou un sous-ensemble d'un, autre objet du même type.",
-    "Energy": "Affiche les objets qui ont de l'énergie (Armure 2.0).",
+    "Energy": "Affiche les objets qui utilisent le système de stats d'armure 2.0 introduis dans Bastion des Ombres.",
+    "EnergyCapacity": "Affiche les objets selon leur capacité énergétique actuelle.",
     "Engrams": "Affiche les engrammes.",
     "Enhanceable": "Affiche les armes pouvant être améliorées.",
     "Enhanced": "Affiche les armes en fonction de leur niveau d'amélioration.",
@@ -242,7 +244,7 @@
     "Equipped": "Objets qui sont actuellement équipés sur un personnage.",
     "Event": "Affiche les objets en fonction de l’événement de Destiny 2 pendant lequel ils sont apparu.",
     "ExtraPerk": "Affiche les armes légendaires obtenues avec des attributs aléatoires ayant un attribut sélectionnable supplémentaire.",
-    "Featured": "Objets considérés comme \"En vedette\" dans la saison actuelle.",
+    "Featured": "Objets considérés comme \"Nouveaux équipements\" ou \"À la une\" dans la saison actuelle.",
     "Filter": "Filtre",
     "FilterWith": "Filtrer avec :",
     "Focusable": "Affiche les objets qui peuvent être concentrés auprès d'un vendeur",
@@ -280,7 +282,7 @@
     "Memento": "Affiche les armes qui ont un emplacement de memento.",
     "ModSlot": "Affiche les armures avec un type d'emplacement de mod spécifique.",
     "Mods": {
-      "Y3": "Affiche les objets avec n'importe quel mod d'armure 2.0 sélectionné."
+      "Y3": "Affiche les objets avec au moins un mod appliqué."
     },
     "Name": "Montre les objets dont le nom correspond totalement (exactname:) ou partiellement (name:) au filtre de recherche. Recherchez des phrases en utilisant des guillemets.",
     "NamedStat": "Affiche les armures qui ont des points dans la statistique sélectionnée.",
@@ -461,7 +463,8 @@
     "TransferItems": "Transférer"
   },
   "Inventory": {
-    "ClickToExpand": "(Cliquez pour agrandir)"
+    "ClickToExpand": "(Cliquez pour agrandir)",
+    "MissingSilver": "Votre solde d'Argentum est uniquement disponible lorsque vous jouez au jeu."
   },
   "Item": {
     "ThumbsDown": "Pouce baissé",
@@ -651,12 +654,12 @@
     "Artifice": "Artifice",
     "AssumeMasterwork": "Considérer pièce maîtresse",
     "AssumeMasterworkOptions": {
-      "All": "Armure 2.0 : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Armure 2.0 : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmure 2.0 Exotiques : $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmures 2.0 Exotiques : $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Améliorée pour avoir un mod d'artifice.",
       "Current": "Stats actuelles, considère un niveau d'énergie d'au moins {{minLoItemEnergy}}.",
       "Legendary": "Légendaire : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotique : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "+2 dans toutes les stats, considère un niveau d'énergie de 10.",
+      "Masterworked": "Bonus de pièce maîtresse total, niveau d'énergie à 10.",
       "None": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Ajouter automatiquement les mods de statistiques",
@@ -1042,7 +1045,7 @@
       "Damage": "Dégâts",
       "Energy": "Énergie",
       "Event": "Evènement",
-      "Featured": "En vedette",
+      "Featured": "Nouveaux équipements",
       "Foundry": "Fabricant",
       "Harmonizable": "Harmonisable",
       "Icon": "Icône",
@@ -1109,6 +1112,7 @@
   },
   "Progress": {
     "Bounties": "Contrats",
+    "CatalystSource": "Source : {{source}}",
     "CrucibleRank": "Rangs",
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
@@ -1140,8 +1144,7 @@
   },
   "Records": {
     "Title": "Archives",
-    "UniversalOrnamentSetOther": "Autre",
-    "VexcaliburCatalyst": "Catalyseur de Vexcalibur"
+    "UniversalOrnamentSetOther": "Autre"
   },
   "SearchHistory": {
     "Date": "Dernier Utilisé",
@@ -1217,14 +1220,14 @@
     "SortByClassType": "Classe requise",
     "SortByCrafted": "Façonné (D2)",
     "SortByDeepsight": "Souvenance (D2)",
-    "SortByFeatured": "En vedette (D2)",
+    "SortByFeatured": "Nouveaux équipements / À la une (D2)",
     "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
     "SortByRating": "Qualité de l'Armure (D1)",
     "SortByRecent": "Acquis récemment (D2)",
     "SortBySeason": "Saison (D2)",
     "SortByTag": "Étiquette ({{taglist}})",
-    "SortByTier": "Tier (D2)",
+    "SortByTier": "Palier (D2)",
     "SortByType": "Type",
     "SortByWeaponElement": "Type de dégâts",
     "SortCustom": "Tri personnalisé",

@@ -202,6 +202,7 @@
     "Adept": "\\(Meister\\)",
     "AmmoType": "Zeigt Gegenstände basierend auf deren Munitionstyp.",
     "Armor": "Zeigt Gegenstände, die Rüstung sind.",
+    "Armor3": "Zeigt Gegenstände an, die das 'Rüstung 3.0'-System verwenden, das mit \"Am Rande des Schicksals\" eingeführt wurde.",
     "ArmorCategory": "Zeigt Rüstungen basierend auf deren Kategorie.",
     "ArmorIntrinsic": "Zeigt legendäre Rüstung, die einen intrinsischen Perk hat, wie zum Beispiel Kunstvolle Rüstung.",
     "Ascended": "Zeigt Gegenstände, die einen aufsteigenden Knoten haben, die aufgestiegen sind.",
@@ -232,7 +233,8 @@
     "DupeCount": "Gegenstände, die die angegebene Anzahl an Duplikaten haben.",
     "DupeLower": "Doppelte Gegenstände, einschließlich Neuauflagen, die nicht das höchste Powerlevel haben. Nur ein Duplikat wird als das höchste ausgewählt, und der Rest als niedriger betrachtet.",
     "DupePerks": "Zeigt Gegenstände, deren Perks entweder ein Duplikat oder eine Teilmenge eines Gegenstands desselben Typs sind.",
-    "Energy": "Zeigt Gegenstände mit Energiekapazität (Rüstung 2.0).",
+    "Energy": "Zeigt Gegenstände an, die das 'Rüstung 2.0'-System verwenden, das mit \"Festung der Schatten\" eingeführt wurde.",
+    "EnergyCapacity": "Zeigt Gegenstände basierend auf ihrer aktuellen Energiekapazität.",
     "Engrams": "Zeige Engramme.",
     "Enhanceable": "Zeigt Waffen, die verbessert werden können.",
     "Enhanced": "Zeigt Waffen basierend auf ihrer Verbesserungsstufe.",
@@ -242,7 +244,7 @@
     "Equipped": "Gegenstände, die aktuell von einem Charakter ausgerüstet sind.",
     "Event": "Zeigt Gegenstände nach dem Event in dem sie in Destiny 2 erschienen sind an.",
     "ExtraPerk": "Zeigt Legendäre Waffen mit zufälligen Rolls und einem zusätzlich auswählbaren Perk.",
-    "Featured": "Gegenstände, die in der aktuellen Saison als \"Im Fokus stehende Gegenstände\" gelten.",
+    "Featured": "Gegenstände, die in der aktuellen Saison als \"Neue Ausrüstung\" oder \"Im Fokus stehende Gegenstände\" gelten.",
     "Filter": "Filter",
     "FilterWith": "Filtern mit:",
     "Focusable": "Zeigt Gegenstände an, die bei einem Händler fokussiert werden können",
@@ -280,7 +282,7 @@
     "Memento": "Zeigt Waffen, die einen Memento-Slot haben.",
     "ModSlot": "Zeigt Rüstungen mit einem bestimmten Mod-Typ-Slot.",
     "Mods": {
-      "Y3": "Zeigt Gegenstände mit beliebigen Rüstung-2.0-Mods."
+      "Y3": "Zeigt Gegenstände mit beliebigen, ausgestatteten Mods an."
     },
     "Name": "Zeigt Gegenstände, deren Name genau (exaktname:), oder teilweise (name:), mit dem Filtertext übereinstimmt. Suche nach ganzen Phrasen mit Anführungszeichen.",
     "NamedStat": "Zeigt Rüstung, die Punkte in der jeweiligen Kategorie hat.",
@@ -461,7 +463,8 @@
     "TransferItems": "Übertragen"
   },
   "Inventory": {
-    "ClickToExpand": "(Klicken zum Erweitern)"
+    "ClickToExpand": "(Klicken zum Erweitern)",
+    "MissingSilver": "Dein Silber-Guthaben ist nur verfügbar, wenn du das Spiel spielst."
   },
   "Item": {
     "ThumbsDown": "Daumen runter",
@@ -651,12 +654,12 @@
     "Artifice": "Kunstvoll",
     "AssumeMasterwork": "Als Meisterwerk ansehen",
     "AssumeMasterworkOptions": {
-      "All": "Rüstung 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Rüstung 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nRüstung 2.0 Exotiks: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "Alle Rüstungen: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "Alle Rüstungen: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nRüstung 2.0 Exotiks: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Verbessert um Kunstvoll-Mod zu akzeptieren.",
       "Current": "Aktuelle Stats gehen von einer Energiekapazität von mindestens {{minLoItemEnergy}} aus.",
       "Legendary": "Legendär: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotisch: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "+2 für jeden Stat, bei einer Energiekapazität von 10.",
+      "Masterworked": "Vollständige Meisterwerk-Stat-Boni, angenommen Energie Level 10.",
       "None": "Alle Rüstungen: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Stat-Mods automatisch hinzufügen",
@@ -1042,7 +1045,7 @@
       "Damage": "Schaden",
       "Energy": "Energie",
       "Event": "Event",
-      "Featured": "Im Fokus",
+      "Featured": "Neue Ausrüstung",
       "Foundry": "Schmiede",
       "Harmonizable": "Harmonisierbar",
       "Icon": "Icon",
@@ -1109,6 +1112,7 @@
   },
   "Progress": {
     "Bounties": "Beutezüge",
+    "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Ränge",
     "Items": "Quest-Gegenstände",
     "Milestones": "Meilensteine & Herausforderungen",
@@ -1140,8 +1144,7 @@
   },
   "Records": {
     "Title": "Sammlungen",
-    "UniversalOrnamentSetOther": "Andere",
-    "VexcaliburCatalyst": "Vexcalibur Katalysator"
+    "UniversalOrnamentSetOther": "Andere"
   },
   "SearchHistory": {
     "Date": "Zuletzt verwendet",
@@ -1217,7 +1220,7 @@
     "SortByClassType": "Benötigte Klasse",
     "SortByCrafted": "Geformt (D2)",
     "SortByDeepsight": "Tiefensicht (D2)",
-    "SortByFeatured": "Im Fokus (D2)",
+    "SortByFeatured": "Neue Ausrüstung / Im Fokus (D2)",
     "SortByPrimary": "Powerlevel",
     "SortByRarity": "Seltenheit",
     "SortByRating": "Rüstungsqualität (D1)",
