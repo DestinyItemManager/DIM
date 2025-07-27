@@ -1,3 +1,4 @@
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { currenciesSelector } from 'app/inventory/selectors';
@@ -10,10 +11,15 @@ import styles from './AccountCurrencies.m.scss';
 /** The account currencies (glimmer, shards, etc.) */
 export default memo(function AccountCurrency() {
   let currencies = useSelector(currenciesSelector);
+  const destinyVersion = useSelector(destinyVersionSelector);
   const defs = useD2Definitions();
   let missingSilver = false;
 
-  if (defs && !currencies.some((c) => c.itemHash === 3147280338 /* Silver */)) {
+  if (
+    destinyVersion === 2 &&
+    defs &&
+    !currencies.some((c) => c.itemHash === 3147280338 /* Silver */)
+  ) {
     const silverDef = defs.InventoryItem.get(3147280338);
     missingSilver = true;
     currencies = [

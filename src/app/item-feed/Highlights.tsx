@@ -84,11 +84,11 @@ export default function Highlights({ item }: { item: DimItem }) {
     ];
     return (
       <>
-        <div className={clsx(styles.stats, 'stat-bars')}>
-          <div className={clsx('stat-row', styles.armorStats)}>
+        <div className={styles.stats}>
+          <div className={clsx(styles.statRow, styles.armorStats)}>
             {item.stats?.filter((s) => s.statHash > 0).map(renderStat)}
           </div>
-          <div className={clsx('stat-row', styles.customTotals)}>
+          <div className={styles.statRow}>
             {item.stats?.filter((s) => s.statHash < 0).map(renderStat)}
           </div>
         </div>

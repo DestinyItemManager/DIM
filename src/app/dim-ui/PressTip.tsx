@@ -43,6 +43,7 @@ interface Props {
   minimal?: boolean;
   style?: React.CSSProperties;
   placement?: Placement;
+  role?: string;
 }
 
 type ControlProps = Props &
@@ -106,7 +107,7 @@ function Control({
   if (!tooltip) {
     const { style } = rest;
     return (
-      <Component className={className} style={style}>
+      <Component className={className} style={style} {...rest}>
         {children}
       </Component>
     );

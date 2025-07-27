@@ -1277,7 +1277,7 @@
     "DamageResistance": "PvE Damage Resist",
     "Discipline": "Discipline",
     "DropLevel": "Account Power",
-    "DropLevelExplanation1": "Account Power is the base current level when calculating the increased level of Powerful and Pinnacle rewards.",
+    "DropLevelExplanation1": "Account Power is the base power level when calculating the increased level of rewards.",
     "DropLevelExplanation2": "Account Power uses the highest level item in each slot, regardless of required Class or the \"One Exotic\" rule.",
     "EquippableGear": "Equippable Gear",
     "FlinchResistance": "Flinch Resist",

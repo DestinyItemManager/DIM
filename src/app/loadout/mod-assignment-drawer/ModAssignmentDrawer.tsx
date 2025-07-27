@@ -36,14 +36,13 @@ function Header({
       <h1>{t('Loadouts.ModPlacement.ModPlacement')}</h1>
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
-        <div className={styles.headerStats}>
-          <LoadoutCharacterStats
-            loadout={loadout}
-            subclass={subclass}
-            allMods={mods}
-            items={armor}
-          />
-        </div>
+        <LoadoutCharacterStats
+          loadout={loadout}
+          subclass={subclass}
+          allMods={mods}
+          items={armor}
+          className={styles.headerStats}
+        />
       </div>
     </div>
   );

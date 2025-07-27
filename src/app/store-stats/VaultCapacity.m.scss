@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .bucketTag {
   font-weight: bold;
   font-size: 14px;
@@ -6,6 +8,7 @@
   align-items: center;
   justify-content: center;
   color: #888;
+  pointer-events: none;
   img {
     height: 14px;
     width: 14px;
@@ -17,4 +20,27 @@
 .full {
   color: var(--theme-text);
   font-weight: bold;
+}
+
+.bucketCount {
+  width: fit-content;
+  margin: -2px -4px -2px -20px;
+  padding: 2px 4px 2px 20px;
+
+  &[role='button'] {
+    position: relative;
+
+    @include phone-portrait {
+      &::after {
+        content: '';
+        display: block;
+        border-bottom: 1px dashed var(--theme-item-polaroid-hover-border);
+        border-color: color-mix(in srgb, var(--theme-item-polaroid-hover-border), transparent 60%);
+        position: absolute;
+        bottom: 2px;
+        left: 4px;
+        right: 4px;
+      }
+    }
+  }
 }
