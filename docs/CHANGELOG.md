@@ -1,6 +1,5 @@
 ## Next
 
-
 * DIMmit is back, for all your changelog notifications.
 * DIM now shows a placeholder and warning when your Silver balance is not available from Bungie.net.
 * Updated item tier display in the Item Popup.
@@ -10,7 +9,8 @@
 * `is:armor3.0` set up for new Edge of Fate Archetype-based armor, and `is:armor2.0` now excludes 3.0 pieces.
 * Persistence stat and stat filter added for heavy crossbows.
 * Catalysts now show their source on the Records page.
-* Testing changelog bot.
+* Increased the contrast of red numbers against a black background.
+* Removed empty perks that could appear in the Armory on craftable items.
 
 ## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
 
