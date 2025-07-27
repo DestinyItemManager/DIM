@@ -8,6 +8,7 @@
   color: var(--theme-text-invert);
   font-size: 9px;
   transition: all 150ms ease-out;
+  line-height: 13px;
 }
 
 .button {
@@ -22,5 +23,9 @@
       background-color: black;
       color: var(--theme-accent-primary);
     }
+  }
+
+  > :global(.app-icon) {
+    margin-right: 1px;
   }
 }
