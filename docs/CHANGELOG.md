@@ -2,6 +2,7 @@
 
 * Fixed an issue where the Loadout Optimizer would consider Armor 3.0 and Armor 2.0 versions of exotics separately. Now, if you select an exotic, all your copies of that exotic will be considered.
 * Updated the order of search suggestions to prioritize `is:` filters.
+* Display armor archetypes in Loadout Optimizer.
 
 ## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
 
