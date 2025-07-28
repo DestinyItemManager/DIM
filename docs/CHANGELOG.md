@@ -12,6 +12,7 @@
 * Increased the contrast of red numbers against a black background.
 * Removed empty perks that could appear in the Armory on craftable items.
 * Added hover highlighting for the power formula and material counts buttons.
+* Possible Set Bonuses are now displayed in the Armor Popup.
 
 ## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
 
