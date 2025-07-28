@@ -7,6 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import { useSelector } from 'react-redux';
 import styles from './Milestones.m.scss';
 import { PowerCaps } from './PowerCaps';
@@ -42,8 +43,8 @@ export default function Milestones({
   const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassList[0]?.seasonPassHash
-    ? defs.SeasonPass.get(season.seasonPassList[0].seasonPassHash)
+  const seasonPass = season?.seasonPassList[D2SeasonPassActiveList]?.seasonPassHash
+    ? defs.SeasonPass.get(season.seasonPassList[D2SeasonPassActiveList].seasonPassHash)
     : undefined;
 
   const milestoneItems = uniqBy(
