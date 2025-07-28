@@ -1,5 +1,7 @@
 ## Next
 
+## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
+
 * DIMmit is back, for all your changelog notifications.
 * DIM now shows a placeholder and warning when your Silver balance is not available from Bungie.net.
 * Updated item tier display in the Item Popup.
