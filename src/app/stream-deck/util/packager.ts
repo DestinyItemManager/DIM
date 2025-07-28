@@ -9,6 +9,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import { BucketHashes } from 'data/d2/generated-enums';
 
 // find and get the quantity of a specif item type
@@ -69,8 +70,8 @@ function getCurrentSeason(
   const season = profile?.profile?.data?.currentSeasonHash
     ? defs?.Season.get(profile.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassList[0]?.seasonPassHash
-    ? defs?.SeasonPass.get(season.seasonPassList[0].seasonPassHash)
+  const seasonPass = season?.seasonPassList[D2SeasonPassActiveList]?.seasonPassHash
+    ? defs?.SeasonPass.get(season.seasonPassList[D2SeasonPassActiveList].seasonPassHash)
     : undefined;
   if (!season) {
     return [];
