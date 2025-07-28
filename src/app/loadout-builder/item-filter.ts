@@ -22,6 +22,7 @@ import {
 export interface FilterInfo {
   /** Did the search query limit items for any bucket? */
   searchQueryEffective: boolean;
+  exoticDoesNotExist: boolean;
   perBucketStats: {
     [key in ArmorBucketHash]: {
       totalConsidered: number;
@@ -75,6 +76,7 @@ export function filterItems({
 
   const filterInfo: FilterInfo = {
     searchQueryEffective: false,
+    exoticDoesNotExist: false,
     perBucketStats: {
       [BucketHashes.Helmet]: { ...emptyFilterInfo },
       [BucketHashes.Gauntlets]: { ...emptyFilterInfo },
@@ -120,6 +122,10 @@ export function filterItems({
             item.hash === lockedExoticHash || item.name === lockedExoticDef.displayProperties.name,
         )
       : undefined;
+
+    if (lockedExoticApplicable && !exotics?.length) {
+      filterInfo.exoticDoesNotExist = true;
+    }
 
     // We prefer most specific filtering since there can be competing conditions.
     // This means locked item and then exotic

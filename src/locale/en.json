@@ -696,6 +696,7 @@
       "AssumeMasterworked": "Allow DIM to recommend masterworking armor",
       "AssumptionsRestricted": "DIM cannot recommend armor energy changes:",
       "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
+      "ExoticDoesNotExist": "You don't have any of the selected exotic armor in your inventory.",
       "Header": "No builds were found. Here are possible reasons DIM couldn't find any builds:",
       "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Consider allowing other items:",

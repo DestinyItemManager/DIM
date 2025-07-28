@@ -661,6 +661,7 @@
       "AssumeMasterworked": "Allow DIM to recommend masterworking armor",
       "ActiveSearchQuery": "An active search query is restricting the items DIM can include in builds",
       "MaybeRemoveSearchQuery": "Consider clearing or changing the filter in the search bar",
+      "ExoticDoesNotExist": "You don't have any of the selected exotic armor in your inventory.",
       "MaybeAllowMoreItems": "Consider allowing other items:",
       "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
       "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
