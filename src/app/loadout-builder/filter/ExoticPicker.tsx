@@ -36,12 +36,12 @@ export function findLockableExotics(
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
 ) {
-  // Find all the armor 2 exotics.
+  // Find all the armor 2/3 exotics.
   const exotics = uniqBy(
     [...allItems, ...vendorItems]
       .filter((item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item))
       .sort(compareByIndex(ArmorBucketHashes, (item) => item.bucket.hash)),
-    (item) => item.hash,
+    (item) => item.name,
   );
 
   // Add in armor 1 exotics that don't have an armor 2 version
