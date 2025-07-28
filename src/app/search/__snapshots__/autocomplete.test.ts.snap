@@ -35,9 +35,9 @@ exports[`filterComplete autocomplete terms for |jun| 1`] = `
 
 exports[`filterComplete autocomplete terms for |ote| 1`] = `
 [
-  "notes:",
   "is:hasnotes",
   "is:emotes",
+  "notes:",
 ]
 `;
 
@@ -296,8 +296,9 @@ exports[`filterComplete autocomplete terms for |stat:mob| 1`] = `
 
 exports[`filterComplete autocomplete terms for |stat| 1`] = `
 [
-  "stat:",
   "is:statlower",
+  "stat:",
+  "is:customstatlower",
   "basestat:",
   "maxstatloadout:",
   "maxstatvalue:",
@@ -343,7 +344,6 @@ exports[`filterComplete autocomplete terms for |stat| 1`] = `
   "maxbasestatvalue:strength",
   "maxbasestatvalue:total",
   "maxbasestatvalue:any",
-  "is:customstatlower",
   "stat:rpm:",
   "stat:rof:",
   "stat:charge:",
