@@ -26,22 +26,57 @@ async function fetchCommitFromAPI(owner, repo, sha, token) {
   return await response.json();
 }
 
-async function fetchPRFromAPI(owner, repo, prNumber, token) {
-  const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`;
-  const response = await fetch(url, {
+async function fetchAssociatedPRsFromGraphQL(owner, repo, sha, token) {
+  const query = `
+    query associatedPRs($sha: String!, $repo: String!, $owner: String!) {
+      repository(name: $repo, owner: $owner) {
+        commit: object(expression: $sha) {
+          ... on Commit {
+            associatedPullRequests(first: 5) {
+              edges {
+                node {
+                  title
+                  number
+                  body
+                  merged
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = { sha, repo, owner };
+
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
     headers: {
-      Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${token}`,
-      'X-GitHub-Api-Version': '2022-11-28',
+      'Content-Type': 'application/json',
       'User-Agent': 'DIM-Changelog-Updater',
     },
+    body: JSON.stringify({ query, variables }),
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch PR ${prNumber}: ${response.status} ${response.statusText}`);
+    throw new Error(`GraphQL request failed: ${response.status} ${response.statusText}`);
   }
 
-  return await response.json();
+  const result = await response.json();
+
+  if (result.errors) {
+    throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+  }
+
+  // Extract the PRs from the GraphQL response
+  const commit = result.data?.repository?.commit;
+  if (!commit?.associatedPullRequests?.edges) {
+    return [];
+  }
+
+  return commit.associatedPullRequests.edges.map((edge) => edge.node).filter((pr) => pr.merged); // Only return merged PRs
 }
 
 function extractChangelogEntries(commits) {
@@ -183,19 +218,8 @@ async function fetchCommitsFromAPI(commitShas, githubToken, githubRepository) {
 
 async function main() {
   try {
-    // Parse command line arguments
-    const args = process.argv.slice(2);
-    let prNumber = null;
-    let commitShas = [];
-
-    // Check for --pr-number flag
-    for (let i = 0; i < args.length; i++) {
-      if (args[i].startsWith('--pr-number=')) {
-        prNumber = args[i].split('=')[1];
-      } else {
-        commitShas.push(args[i]);
-      }
-    }
+    // Get commit SHAs from command line arguments
+    const commitShas = process.argv.slice(2);
 
     if (commitShas.length === 0) {
       console.error('No commit SHAs provided');
@@ -228,18 +252,37 @@ async function main() {
     // Extract changelog entries from commit messages
     let changelogEntries = extractChangelogEntries(commits);
 
-    // If a PR number is provided, also fetch the PR description
-    if (prNumber) {
-      console.error(`Fetching PR #${prNumber} description...`);
-      try {
-        const pr = await fetchPRFromAPI(owner, repo, prNumber, githubToken);
-        const prEntries = extractChangelogEntriesFromText(pr.body || '', `PR #${prNumber}`);
-        changelogEntries = changelogEntries.concat(prEntries);
-        console.error(`Found ${prEntries.length} changelog entries in PR description`);
-      } catch (error) {
-        console.error(`Failed to fetch PR #${prNumber}: ${error.message}`);
+    // For each commit, check for associated PRs using GraphQL
+    const processedPRs = new Set(); // Avoid duplicate PR processing
+
+    for (const sha of commitShas) {
+      if (sha.trim()) {
+        try {
+          console.error(`Checking for associated PRs for commit ${sha.substring(0, 7)}...`);
+          const associatedPRs = await fetchAssociatedPRsFromGraphQL(
+            owner,
+            repo,
+            sha.trim(),
+            githubToken,
+          );
+
+          for (const pr of associatedPRs) {
+            // Only process each PR once
+            if (!processedPRs.has(pr.number)) {
+              processedPRs.add(pr.number);
+              console.error(`Found associated PR #${pr.number}: ${pr.title}`);
+
+              const prEntries = extractChangelogEntriesFromText(pr.body || '', `PR #${pr.number}`);
+              changelogEntries = changelogEntries.concat(prEntries);
+            }
+          }
+        } catch (error) {
+          console.error(`Failed to fetch associated PRs for commit ${sha}: ${error.message}`);
+        }
       }
     }
+
+    console.error(`Processed ${processedPRs.size} unique associated PRs`);
 
     // Read the current changelog
     const changelogPath = join(__dirname, '..', 'docs', 'CHANGELOG.md');

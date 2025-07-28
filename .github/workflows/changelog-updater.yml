@@ -30,19 +30,9 @@ jobs:
         run: |
           # Extract commit SHAs from the push event
           COMMIT_SHAS=$(echo '${{ toJson(github.event.commits) }}' | jq -r '.[].id' | tr '\n' ' ')
-
-          # Check if any commit is a merge commit (indicates a merged PR)
-          MERGE_COMMIT_SHA=$(echo '${{ toJson(github.event.commits) }}' | jq -r '.[] | select(.message | startswith("Merge pull request #")) | .id' | head -1)
-
-          # If there's a merge commit, extract the PR number
-          if [ -n "$MERGE_COMMIT_SHA" ]; then
-            PR_NUMBER=$(echo '${{ toJson(github.event.commits) }}' | jq -r '.[] | select(.message | startswith("Merge pull request #")) | .message' | head -1 | sed -n 's/Merge pull request #\([0-9]*\).*/\1/p')
-            echo "Found merged PR #$PR_NUMBER"
-            node build/update-changelog.js --pr-number="$PR_NUMBER" $COMMIT_SHAS > docs/CHANGELOG.md.new
-          else
-            node build/update-changelog.js $COMMIT_SHAS > docs/CHANGELOG.md.new
-          fi
-
+          
+          # Process all commits and automatically detect associated PRs using GitHub API
+          node build/update-changelog.js $COMMIT_SHAS > docs/CHANGELOG.md.new
           mv docs/CHANGELOG.md.new docs/CHANGELOG.md
 
       - name: Commit files
