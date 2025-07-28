@@ -58,11 +58,7 @@
   visibility: hidden;
 }
 
-.archetype {
+.archetype, .archetype img {
   height: calc(var(--item-size) * 0.4);
   width: calc(var(--item-size) * 0.4);
-  img {
-    height: calc(var(--item-size) * 0.4);
-    width: calc(var(--item-size) * 0.4);
-  }
 }
