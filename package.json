@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "8.82.2",
+  "version": "8.83.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -19,6 +19,7 @@
     "lintcached:eslint": "pnpm lint:eslint --cache --cache-location .eslintcache --cache-strategy content",
     "lint-report": "pnpm lint:eslint --output-file eslint_report.json --format json",
     "lint-report:cached": "pnpm lintcached:eslint --output-file eslint.results.json --format json",
+    "typecheck": "tsc --noEmit",
     "fix": "pnpm run --sequential '/^fix:.*/'",
     "fix:eslint": "pnpm lint:eslint --fix",
     "fix:json": "jsonsort src/locale",

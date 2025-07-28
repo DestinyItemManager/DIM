@@ -1,0 +1,39 @@
+name: Update Changelog
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - 'docs/CHANGELOG.md'  # Prevent infinite loops
+
+permissions:
+  contents: write
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.I18N_PAT }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Update changelog from commits
+        id: changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          COMMIT_SHAS: ${{ join(github.event.commits.*.id, ' ') }}
+        run: |
+          # Process all commits and automatically detect associated PRs using GitHub API
+          node build/update-changelog.js $COMMIT_SHAS > docs/CHANGELOG.md.new
+          mv docs/CHANGELOG.md.new docs/CHANGELOG.md
+
+      - name: Commit files
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: Apply changelog updates

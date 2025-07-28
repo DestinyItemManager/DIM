@@ -376,8 +376,10 @@ const D2Sources: {
       4248997900, // Incisor
     ],
     sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
       454115234, // Source: Associated Crucible Quest
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
+      705363737, // Source: Heavy Metal: Supremacy
       745186842, // Source: Associated Crucible Quest
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
@@ -388,6 +390,7 @@ const D2Sources: {
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Glory Rank of "Fabled" in Crucible
       2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
+      2602565384, // Source: Win competitive matches while at Ascendant 0 Rank.
       2622122683, // Source: Lord Shaxx Rank Up Reputation
       2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
@@ -1147,8 +1150,14 @@ const D2Sources: {
   heresy: {
     itemHashes: [],
     sourceHashes: [
+      21494224, // Source: Offer the correct final answer in an uncharted space.
+      745481267, // Source: Intrinsic Iteration Triumph
       1341921330, // Source: Episode: Heresy Activities
+      1792957897, // Source: "Efficient Challenger" Triumph
       2607970476, // Source: Sundered Doctrine
+      2869564842, // Source: "Vengeful Knife" Triumph
+      3310034131, // Source: "Crossed Blades" Triumph
+      3358334503, // Source: "Boon Ghost Mod Collector" Triumph
       3507911332, // Source: Episode: Heresy
     ],
     searchString: [],
@@ -1554,6 +1563,7 @@ const D2Sources: {
   paleheart: {
     itemHashes: [],
     sourceHashes: [
+      941123623, // Pale Heart - Cayde's Stash
       2327253880, // Source: Exploring the Pale Heart
       3614199681, // Source: Pale Heart Triumph
     ],
@@ -1577,6 +1587,13 @@ const D2Sources: {
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+    ],
+    searchString: [],
+  },
+  pinnacleops: {
+    itemHashes: [],
+    sourceHashes: [
+      1232061833, // Source: Pinnacle Ops
     ],
     searchString: [],
   },
@@ -1890,6 +1907,7 @@ const D2Sources: {
   seasonpass: {
     itemHashes: [],
     sourceHashes: [
+      333761108, // Source: Rewards Pass
       450719423, // Source: Season of the Risen
       794422188, // Source: Season of the Witch
       813075729, // Source: Season of the Deep Vendor Reputation Reward
@@ -2001,8 +2019,10 @@ const D2Sources: {
       4248997900, // Incisor
     ],
     sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
       454115234, // Source: Associated Crucible Quest
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
+      705363737, // Source: Heavy Metal: Supremacy
       745186842, // Source: Associated Crucible Quest
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
@@ -2013,6 +2033,7 @@ const D2Sources: {
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Glory Rank of "Fabled" in Crucible
       2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
+      2602565384, // Source: Win competitive matches while at Ascendant 0 Rank.
       2622122683, // Source: Lord Shaxx Rank Up Reputation
       2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
@@ -2224,18 +2245,17 @@ const D2Sources: {
     searchString: [],
   },
   trials: {
-    itemHashes: [
-      1983519830, // Hardened by Trial
-      2071635914, // Light for the Lost
-      2071635915, // Flawless Empyrean
-    ],
+    itemHashes: [],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
-      550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
+      443793689, // Source: Win games on a completed Lighthouse Passage after earning a weekly win streak of five or higher.
+      486819617, // Trials of Osiris - WEAPONS
       613791463, // Source: Saint-14 Rank Up Reputation
       752988954, // Source: Flawless Chest in Trials of Osiris
       827839814, // Source: Flawless Chest in Trials of Osiris or Grandmaster Nightfalls
+      1218637862, // Source: Open the Lighthouse chest after earning a weekly win streak of five or higher.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
+      1923289424, // Source: Open the Lighthouse chest.
       2857787138, // Source: Trials of Osiris
       3390015730, // Source: Trials of Osiris Challenges
       3471208558, // Source: Trials of Osiris Wins

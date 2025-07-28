@@ -17,7 +17,7 @@ export default function StoreStats({ store }: { store: DimStore }) {
   ) : store.destinyVersion === 1 ? (
     <D1StoreCharacterStats store={store} />
   ) : (
-    <div className="stat-bars">
+    <div className={styles.characterStats}>
       <PowerFormula storeId={store.id} />
       <StoreCharacterStats store={store} />
     </div>

@@ -539,6 +539,7 @@ export function makeItem(
     tooltipNotifications,
     featured: itemDef.isFeaturedItem,
     tier: itemInstanceData.gearTier ?? 0,
+    traitHashes: itemDef.traitHashes,
   };
 
   // *able
@@ -757,6 +758,10 @@ export function makeItem(
   }
 
   createdItem.index = createItemIndex(createdItem);
+
+  if (itemDef.equippingBlock?.equipableItemSetHash) {
+    createdItem.setBonus = defs.EquipableItemSet.get(itemDef.equippingBlock.equipableItemSetHash);
+  }
 
   return createdItem;
 }

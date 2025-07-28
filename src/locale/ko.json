@@ -190,6 +190,7 @@
     "Adept": "\\(숙련자\\)",
     "AmmoType": "탄약 유형에 따라 아이템을 표시합니다.",
     "Armor": "방어구인 아이템을 표시합니다.",
+    "Armor3": "운명의 경계에서 도입된 방어구 3.0 능력치 시스템을 사용하는 아이템을 표시합니다.",
     "ArmorCategory": "방어구의 종류를 기준으로 표시합니다.",
     "ArmorIntrinsic": "계략 방어구와 같이 본질 특성이 있는 전설 방어구를 표시합니다.",
     "Ascended": "승천 노드가 있으며 승천이 완료된 아이템을 표시합니다.",
@@ -217,7 +218,8 @@
     "DupeCount": "특정 개수만큼 중복된 아이템 표시",
     "DupeLower": "재출시된 아이템을 포함하여 가장 높은 전투력이 아닌 중복된 아이템을 표시합니다. 하나의 중복된 아이템만 가장 높은 전투력으로 선택되며, 나머지 아이템은 낮은 전투력으로 간주됩니다.",
     "DupePerks": "동일한 유형의 아이템에서 특성이 일치하거나 일부만 포함된 아이템을 표시합니다.",
-    "Energy": "에너지 수용량이 있는 아이템(방어구 2.0)을 표시합니다.",
+    "Energy": "섀도우킵에서 도입된 방어구 2.0 개조 부품 시스템을 사용하는 아이템을 표시합니다.",
+    "EnergyCapacity": "현재 에너지 수용량에 따라 아이템을 표시합니다.",
     "Engrams": "엔그램을 표시합니다.",
     "Enhanceable": "강화 가능한 무기를 표시합니다.",
     "Enhanced": "무기의 강화 등급을 기준으로 표시합니다.",
@@ -227,7 +229,7 @@
     "Equipped": "캐릭터가 착용하고 있는 아이템",
     "Event": "데스티니 2의 특정 이벤트에서 나온 아이템을 표시합니다.",
     "ExtraPerk": "추가로 선택 가능한 특성이 있는 무작위 특성의 전설 무기를 표시합니다.",
-    "Featured": "현재 시즌에서 \"추천 아이템\"에 해당되는 아이템",
+    "Featured": "현재 시즌에서 \"새 장비\"나 \"추천 아이템\"에 해당되는 아이템",
     "Filter": "필터",
     "FilterWith": "필터 조건:",
     "Focusable": "상인에게서 집중 가능한 아이템을 표시합니다.",
@@ -265,7 +267,7 @@
     "Memento": "유품 소켓이 있는 무기를 표시합니다.",
     "ModSlot": "특정 개조 부품 슬롯이 있는 방어구를 표시합니다.",
     "Mods": {
-      "Y3": "방어구 2.0 개조 부품이 선택된 아이템을 표시합니다."
+      "Y3": "개조 부품이 장착된 아이템을 표시합니다."
     },
     "Name": "필터와 일치(exactname:)하거나 부분적으로 일치(name:)하는 아이템을 표시합니다. 따옴표를 사용하여 전체 문구를 검색합니다.",
     "NamedStat": "특정 능력치가 있는 아이템을 표시합니다.",
@@ -445,7 +447,8 @@
     "TransferItems": "이동"
   },
   "Inventory": {
-    "ClickToExpand": "(클릭하여 확장)"
+    "ClickToExpand": "(클릭하여 확장)",
+    "MissingSilver": "실버 잔액은 게임을 플레이하는 동안만 사용할 수 있습니다."
   },
   "Item": {
     "ThumbsDown": "반대",
@@ -635,12 +638,12 @@
     "Artifice": "계략",
     "AssumeMasterwork": "걸작 가정",
     "AssumeMasterworkOptions": {
-      "All": "방어구 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "방어구 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n방어구 2.0 경이: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n방어구 2.0 경이: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "계략 능력치 개조 부품을 수용할 수 있도록 강화되었습니다.",
       "Current": "현재 능력치, 최소 에너지 레벨 {{minLoItemEnergy}} 가정",
       "Legendary": "전설: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n경이: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "각 능력치 +2, 에너지 레벨 10 가정",
+      "Masterworked": "걸작 능력치 보너스, 에너지 레벨 10 가정.",
       "None": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "능력치 개조 부품 자동 추가",
@@ -1014,7 +1017,7 @@
       "Damage": "피해 유형",
       "Energy": "에너지",
       "Event": "이벤트",
-      "Featured": "추천",
+      "Featured": "새 장비",
       "Foundry": "제조사",
       "Harmonizable": "조율 가능",
       "Icon": "아이콘",
@@ -1081,6 +1084,7 @@
   },
   "Progress": {
     "Bounties": "현상금",
+    "CatalystSource": "출처: {{source}}",
     "CrucibleRank": "등급",
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
@@ -1110,8 +1114,7 @@
   },
   "Records": {
     "Title": "기록",
-    "UniversalOrnamentSetOther": "기타",
-    "VexcaliburCatalyst": "벡스칼리버 촉매제"
+    "UniversalOrnamentSetOther": "기타"
   },
   "SearchHistory": {
     "Date": "최근 사용",
@@ -1187,7 +1190,7 @@
     "SortByClassType": "필요한 직업",
     "SortByCrafted": "제작됨 (D2)",
     "SortByDeepsight": "심안 (D2)",
-    "SortByFeatured": "추천 (D2)",
+    "SortByFeatured": "새 장비 / 추천 (D2)",
     "SortByPrimary": "전투력",
     "SortByRarity": "희귀도",
     "SortByRating": "방어구 품질 (D1)",

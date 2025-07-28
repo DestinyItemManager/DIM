@@ -6,6 +6,7 @@ import {
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
+  DestinyEquipableItemSetDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemInvestmentStatDefinition,
@@ -20,7 +21,7 @@ import {
   DestinySocketCategoryDefinition,
   DestinyStat,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import { InventoryBucket } from './inventory-buckets';
 
 /**
@@ -57,6 +58,12 @@ export interface DimItem {
   bucket: InventoryBucket;
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: ItemCategoryHashes[];
+  /**
+   * There's also traitHashes which fills a similar role of tagging some aspect
+   * of an item, but is not as hierarchical as itemCategoryHashes. This seems to
+   * be favored over itemCategoryHashes in newer content.
+   */
+  traitHashes?: TraitHashes[];
   /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). Do not use this for display! */
   rarity: ItemRarityName;
   /** Is this an Exotic item? */
@@ -230,8 +237,10 @@ export interface DimItem {
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
   featured: boolean;
-  /** In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which identifies  */
+  /** In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which provides increasing benefits. */
   tier: number;
+  /** In D2 since Edge of Fate, items can have a set bonus with other items */
+  setBonus?: DestinyEquipableItemSetDefinition;
 }
 
 /**

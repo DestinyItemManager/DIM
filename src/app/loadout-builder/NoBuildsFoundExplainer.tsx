@@ -136,6 +136,25 @@ export default function NoBuildsFoundExplainer({
       lockedExoticHash !== undefined &&
       lockedExoticHash > 0 &&
       defs.InventoryItem.get(lockedExoticHash).inventory!.bucketTypeHash;
+
+    if (filterInfo.exoticDoesNotExist) {
+      problems.push({
+        id: 'exoticDoesNotExist',
+        description: t('LoadoutBuilder.NoBuildsFoundExplainer.ExoticDoesNotExist'),
+        suggestions: [
+          {
+            id: 'removeExotic',
+            contents: (
+              <ExoticArmorChoice
+                lockedExoticHash={lockedExoticHash!}
+                onClose={() => dispatch({ type: 'removeLockedExotic' })}
+              />
+            ),
+          },
+        ],
+      });
+    }
+
     for (const bucketHash of ArmorBucketHashes) {
       const bucketInfo = filterInfo.perBucketStats[bucketHash];
       const bucketMods = lockedModMap.bucketSpecificMods[bucketHash];

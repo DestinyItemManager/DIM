@@ -13,6 +13,7 @@ import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
 import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import styles from './ItemSocketsGeneral.m.scss';
+import { SingleItemSetBonus } from './SetBonus';
 import Socket from './Socket';
 
 export default function ItemSocketsGeneral({
@@ -75,6 +76,7 @@ export default function ItemSocketsGeneral({
   return (
     <>
       {intrinsicRows}
+      {!minimal && <SingleItemSetBonus item={item} />}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets

@@ -30,7 +30,7 @@ import StatTooltip from './StatTooltip';
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {
   return (
-    <div className={clsx('stat-row', styles.powerFormula)}>
+    <div className={styles.powerFormula}>
       {stats.map((stat) => (
         <PressTip
           key={stat.name}
@@ -149,6 +149,7 @@ export function CharacterStats({
   stats,
   showTotal,
   equippedHashes,
+  className,
 }: {
   /**
    * A list of stats to display. This should contain an entry for each stat in
@@ -165,12 +166,13 @@ export function CharacterStats({
    * tooltips.
    */
   equippedHashes: Set<number>;
+  className?: string;
 }) {
   // Select only the armor stats, in the correct order
   const statInfos = filterMap(armorStats, (h) => stats[h]);
 
   return (
-    <div className="stat-row">
+    <div className={clsx(styles.armorStats, className)}>
       {showTotal && (
         <div className={clsx(styles.tier, 'stat')}>
           {t('LoadoutBuilder.StatTotal', { total: sumBy(statInfos, (s) => s.value) })}
@@ -183,7 +185,9 @@ export function CharacterStats({
         >
           <div
             className={clsx('stat', {
-              boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
+              [styles.boostedValue]: stat.breakdown?.some(
+                (change) => change.source === 'runtimeEffect',
+              ),
             })}
             aria-label={`${stat.displayProperties.name} ${stat.value}`}
             role="group"
@@ -229,11 +233,13 @@ export function LoadoutCharacterStats({
   subclass,
   items,
   allMods,
+  className,
 }: {
   loadout: Loadout;
   subclass?: ResolvedLoadoutItem;
   allMods: PluggableInventoryItemDefinition[];
   items?: (ResolvedLoadoutItem | DimItem)[];
+  className?: string;
 }) {
   const defs = useD2Definitions()!;
   const equippedItems =
@@ -257,5 +263,7 @@ export function LoadoutCharacterStats({
     loadout.parameters?.includeRuntimeStatBenefits ?? true,
   );
 
-  return <CharacterStats showTotal stats={stats} equippedHashes={equippedHashes} />;
+  return (
+    <CharacterStats className={className} showTotal stats={stats} equippedHashes={equippedHashes} />
+  );
 }

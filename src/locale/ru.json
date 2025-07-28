@@ -226,6 +226,7 @@
     "Adept": "\\(адепт\\)",
     "AmmoType": "Показывает предметы по их типу боеприпасов.",
     "Armor": "Показывает предметы, которые являются бронёй.",
+    "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "Показывает броню по категориям.",
     "ArmorIntrinsic": "Показывает легендарную броню, которая имеет изначальный перк, такой как Искусная Броня.",
     "Ascended": "Показывает предметы, которые имеют узел восхождения и получили восхождение.",
@@ -262,7 +263,8 @@
     "DupeCount": "Предметы, которые имеют указанное количество дубликатов.",
     "DupeLower": "Дубликаты предметов, включая переиздания, не являющиеся дубликатами самого высокого уровня Силы. Только один дубликат выбирается как высший, а остальные считаются низшими.",
     "DupePerks": "Shows items whose perks are either a duplicate of, or a subset of, another item of the same type.",
-    "Energy": "Броню с Энергией (Броню 2.0).",
+    "Energy": "Shows items that use the Armor 2.0 mod system introduced in Shadowkeep.",
+    "EnergyCapacity": "Shows items based on their current energy capacity.",
     "Engrams": "Показывает энграммы.",
     "Enhanceable": "Показывает оружия, которые могут быть улучшены.",
     "Enhanced": "Shows weapons based on their enhancement tier.",
@@ -272,7 +274,7 @@
     "Equipped": "Предметы, которые экипированы на персонаже.",
     "Event": "По источникам получения.",
     "ExtraPerk": "Показывает Легендарные оружия со случайными перками которые имеют дополнительный выбираемый перк.",
-    "Featured": "Items that count as one of the \"Featured Items\" in the current season.",
+    "Featured": "Items that count as one of the \"New Gear\" or \"Featured Items\" in the current season.",
     "Filter": "Фильтр",
     "FilterWith": "Фильтровать с:",
     "Focusable": "Показывает предметы, которые можно сфокусировать у торговца",
@@ -310,7 +312,7 @@
     "Memento": "Показывает оружия, которые имеют ячейку Воспоминаний.",
     "ModSlot": "Shows armor with a specific mod type slot.",
     "Mods": {
-      "Y3": "Показывает предметы с любыми выбранными модами Брони 2.0."
+      "Y3": "Shows items with any mods applied."
     },
     "Name": "Отображает предметы, названия которых совпадает (exactname:) или частично совпадает (name:) с введённым текстом. Ищите целые фразы, используя кавычки.",
     "NamedStat": "Показывать броню, у которой есть очки в указной характеристике.",
@@ -493,7 +495,8 @@
     "TransferItems": "Перенести"
   },
   "Inventory": {
-    "ClickToExpand": "(Нажмите, чтобы раскрыть)"
+    "ClickToExpand": "(Нажмите, чтобы раскрыть)",
+    "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
     "ThumbsDown": "Палец Вниз",
@@ -683,12 +686,12 @@
     "Artifice": "Искусная",
     "AssumeMasterwork": "Предположить Абсолют",
     "AssumeMasterworkOptions": {
-      "All": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "AllWithArtificeExotic": "Armor 2.0: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "All": "All Armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "All Armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nArmor 2.0 Exotics: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
       "ArtificeExotic": "Улучшено для получения ячейки модификатора искусной брони.",
       "Current": "Текущие характеристики, предполагаемый уровень энергии как минимум {{minLoItemEnergy}}.",
       "Legendary": "Легендарная: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nЭкзотическая: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "+2 к каждой характеристике, предполагаемый уровень энергии 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
       "None": "Вся броня: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Автоматически добавлять моды характеристик",
@@ -1098,7 +1101,7 @@
       "Damage": "Стихия",
       "Energy": "Энергия",
       "Event": "Мероприятие",
-      "Featured": "Featured",
+      "Featured": "New Gear",
       "Foundry": "Производитель",
       "Harmonizable": "Гармонизируемое",
       "Icon": "Значок",
@@ -1165,6 +1168,7 @@
   },
   "Progress": {
     "Bounties": "Баунти",
+    "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Ранги",
     "Items": "Предметы Заданий",
     "Milestones": "Испытания",
@@ -1200,8 +1204,7 @@
   },
   "Records": {
     "Title": "Записи",
-    "UniversalOrnamentSetOther": "Прочее",
-    "VexcaliburCatalyst": "Vexcalibur Catalyst"
+    "UniversalOrnamentSetOther": "Прочее"
   },
   "SearchHistory": {
     "Date": "Дата последнего Поиска",
@@ -1277,7 +1280,7 @@
     "SortByClassType": "Класс",
     "SortByCrafted": "Изготовленное (D2)",
     "SortByDeepsight": "Резонанс Глубинного зрения (D2)",
-    "SortByFeatured": "Featured (D2)",
+    "SortByFeatured": "New Gear / Featured (D2)",
     "SortByPrimary": "Уровень Cилы",
     "SortByRarity": "Редкость",
     "SortByRating": "Качество брони (D1)",

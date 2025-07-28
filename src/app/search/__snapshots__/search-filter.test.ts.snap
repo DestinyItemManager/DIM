@@ -110,7 +110,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',             'rof',             'charge',\\n  'impact',          'handling',        'range',\\n  'stability',       'reload',          'magazine',\\n  'aimassist',       'equipspeed',      'shieldduration',\\n  'velocity',        'blastradius',     'recoildirection',\\n  'drawtime',        'zoom',            'airborne',\\n  'accuracy',        'ammogen',         'swingspeed',\\n  'guardefficiency', 'guardresistance', 'chargerate',\\n  'guardendurance',  'ammocapacity',    'weapons',\\n  'health',          'class',           'grenade',\\n  'super',           'melee',           'mobility',\\n  'resilience',      'recovery',        'discipline',\\n  'intellect',       'strength',        'total',\\n  'any'\\n], overload undefined 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',        'rof',             'charge',\\n  'impact',     'handling',        'range',\\n  'stability',  'reload',          'magazine',\\n  'aimassist',  'equipspeed',      'shieldduration',\\n  'velocity',   'blastradius',     'recoildirection',\\n  'drawtime',   'zoom',            'airborne',\\n  'accuracy',   'ammogen',         'persistence',\\n  'swingspeed', 'guardefficiency', 'guardresistance',\\n  'chargerate', 'guardendurance',  'ammocapacity',\\n  'weapons',    'health',          'class',\\n  'grenade',    'super',           'melee',\\n  'mobility',   'resilience',      'recovery',\\n  'discipline', 'intellect',       'strength',\\n  'total',      'any'\\n], overload undefined 1`] = `
 [
   "stat:",
   "stat:rpm:",
@@ -213,6 +213,11 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   "stat:ammogen:>",
   "stat:ammogen:<=",
   "stat:ammogen:>=",
+  "stat:persistence:",
+  "stat:persistence:<",
+  "stat:persistence:>",
+  "stat:persistence:<=",
+  "stat:persistence:>=",
   "stat:swingspeed:",
   "stat:swingspeed:<",
   "stat:swingspeed:>",
