@@ -54,6 +54,7 @@ import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerPinnedItems,
 } from './filter/LoadoutOptimizerMenuItems';
+import LoadoutOptimizerSetBonus from './filter/LoadoutOptimizerSetBonus';
 import NewFeaturedGearFilter from './filter/NewFeaturedGearFilter';
 import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
@@ -109,6 +110,7 @@ export default memo(function LoadoutBuilder({
       strictUpgradesStatConstraints,
       pinnedItems,
       excludedItems,
+      setBonuses,
       selectedStoreId,
       modPicker,
       compareSet,
@@ -256,6 +258,7 @@ export default memo(function LoadoutBuilder({
   const { result, processing } = useProcess({
     selectedStore,
     filteredItems,
+    setBonuses,
     lockedModMap,
     modStatChanges,
     armorEnergyRules,
@@ -343,6 +346,11 @@ export default memo(function LoadoutBuilder({
         vendorItems={vendorItems}
         lbDispatch={lbDispatch}
         storeId={selectedStore.id}
+        className={styles.loadoutEditSection}
+      />
+      <LoadoutOptimizerSetBonus
+        lbDispatch={lbDispatch}
+        setBonuses={setBonuses}
         className={styles.loadoutEditSection}
       />
       <LoadoutEditModsSection

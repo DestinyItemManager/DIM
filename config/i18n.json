@@ -485,7 +485,8 @@
     "ThumbsDown": "Thumbs Down",
     "SetBonus": {
       "2Piece": "2 Piece",
-      "4Piece": "4 Piece"
+      "4Piece": "4 Piece",
+      "NPiece": "{{count}} Piece"
     }
   },
   "ItemFeed": {
@@ -545,6 +546,7 @@
     "AdvancedOptions": "Advanced Options",
     "ChooseAMod": "Choose your mods",
     "ChooseAnExotic": "Choose your exotic",
+    "ChooseASetBonus": "Choose your set bonus",
     "ClearLocked": "Clear Locked",
     "ContainsVendorItems": "This loadout contains vendor items",
     "Current": "Current",
@@ -601,6 +603,7 @@
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
+    "SelectSetBonus": "Select Set Bonus",
     "AddStack": "Add another copy of this mod",
     "RemoveStack": "Remove a copy of this mod",
     "SelectSubclassOptions": "Customize subclass",
@@ -684,6 +687,7 @@
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
+    "SetBonus": "Set Bonus",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",

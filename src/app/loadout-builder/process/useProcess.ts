@@ -14,6 +14,7 @@ import {
   DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
+  SetBonusCounts,
   StatRanges,
 } from '../types';
 import { getAutoMods } from './mappers';
@@ -49,6 +50,7 @@ interface ProcessState {
 export function useProcess({
   selectedStore,
   filteredItems,
+  setBonuses,
   lockedModMap,
   modStatChanges,
   armorEnergyRules,
@@ -59,6 +61,7 @@ export function useProcess({
 }: {
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
+  setBonuses: SetBonusCounts;
   lockedModMap: ModMap;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
@@ -96,6 +99,7 @@ export function useProcess({
       const processInfo = runProcess({
         autoModDefs,
         filteredItems,
+        setBonuses,
         lockedModMap,
         modStatChanges,
         armorEnergyRules,

@@ -18,6 +18,7 @@ import {
   ItemGroup,
   ItemsByBucket,
   ModStatChanges,
+  SetBonusCounts,
 } from '../types';
 import {
   hydrateArmorSet,
@@ -44,6 +45,7 @@ function createWorker() {
 export function runProcess({
   autoModDefs,
   filteredItems,
+  setBonuses,
   lockedModMap,
   modStatChanges,
   armorEnergyRules,
@@ -57,6 +59,7 @@ export function runProcess({
 }: {
   autoModDefs: AutoModDefs;
   filteredItems: ItemsByBucket;
+  setBonuses: SetBonusCounts;
   lockedModMap: ModMap;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
