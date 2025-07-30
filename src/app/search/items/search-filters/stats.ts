@@ -175,7 +175,11 @@ function statFilterFromString(
     const statHash = statHashByName[statNames];
     return (item) => {
       const statValuesByHash = getStatValuesByHash(item, byWhichValue);
-      return compare(statValuesByHash[statHash] || 0);
+      const statValue = statValuesByHash[statHash];
+      if (statValue === undefined) {
+        return false;
+      }
+      return compare(statValue);
     };
   }
   const statCombiner = createStatCombiner(statNames, byWhichValue, customStats);
