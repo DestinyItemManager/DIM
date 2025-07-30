@@ -1,5 +1,6 @@
 import { tl } from 'app/i18next-t';
-import { compact, isEdgeOfFateArmorMasterwork } from 'app/utils/collections';
+import { compact } from 'app/utils/collections';
+import { isEdgeOfFateArmorMasterwork } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 
