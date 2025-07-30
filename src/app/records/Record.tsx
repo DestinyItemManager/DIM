@@ -79,7 +79,12 @@ function Record({
     : recordDef.displayProperties.description;
 
   const isCatalyst = recordHash in catalystIconsTable;
-  const recordIcon = isCatalyst ? catalystIconsTable[recordHash] : recordDef.displayProperties.icon;
+  const recordIcon =
+    recordHash === 494981303
+      ? 'https://beta.destinyitemmanager.com/screenshots/osteo-striga-cataylst.jpg'
+      : isCatalyst
+        ? catalystIconsTable[recordHash]
+        : recordDef.displayProperties.icon;
 
   const itemCreationContext = useSelector(createItemContextSelector);
   const catalystTarget = isCatalyst && makeItemForCatalystRecord(recordHash, itemCreationContext);
