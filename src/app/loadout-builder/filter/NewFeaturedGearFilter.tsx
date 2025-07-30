@@ -2,9 +2,10 @@ import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { querySelector } from 'app/shell/selectors';
-import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './NewFeaturedGearFilter.m.scss';
+
+const newFeaturedGearTerms = ['is:featured', 'is:newgear'];
 
 /**
  * It's important since Edge of Fate to make builds that use "new gear" because
@@ -14,11 +15,18 @@ import styles from './NewFeaturedGearFilter.m.scss';
 export default function NewFeaturedGearFilter({ className }: { className?: string }) {
   const searchQuery = useSelector(querySelector);
   const dispatch = useDispatch();
-  const isEnabled = searchQuery.includes('is:featured') || searchQuery.includes('is:newgear');
+  let currentQueryTerm: string | undefined;
+  for (const term of newFeaturedGearTerms) {
+    if (searchQuery.includes(term)) {
+      currentQueryTerm = term;
+      break;
+    }
+  }
+  const isEnabled = Boolean(currentQueryTerm);
 
-  const handleToggle = useCallback(() => {
-    dispatch(toggleSearchQueryComponent('is:featured'));
-  }, [dispatch]);
+  const handleToggle = () => {
+    dispatch(toggleSearchQueryComponent(currentQueryTerm ?? newFeaturedGearTerms[0]));
+  };
 
   return (
     <div className={className}>
