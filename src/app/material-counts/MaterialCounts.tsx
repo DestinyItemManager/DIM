@@ -1,35 +1,33 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
   currenciesSelector,
   materialsSelector,
   transmogCurrenciesSelector,
   upgradeCurrenciesSelector,
-  vendorCurrencyEngramsSelector,
 } from 'app/inventory/selectors';
 import { AccountCurrency } from 'app/inventory/store-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { compact, filterMap } from 'app/utils/collections';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import glimmerMats from 'data/d2/spider-mats.json';
 import { useSelector } from 'react-redux';
 import styles from './MaterialCounts.m.scss';
 
-const goodMats = [
-  800069450, // Strange Coins
-  2569113415, // Strange Coin (Exotic)
-  3702027555, // Spoils of Conquest
-];
 const upgradeMats = [
-  2979281381, // Upgrade Module
   4257549984, // Enhancement Prism
   3853748946, // Enhancement Core
   2718300701, // Unstable Cores
   4257549985, // Ascendant Shard
   353704689, // Ascendant Alloy
   3467984096, // Exotic Cipher
+  2228452164, // Deepsight Harmonizer
 ];
 
 // Deprecated or otherwise uninteresting materials
+// TODO: Generate this in d2ai based on items that say "This item serves no purpose and can be safely dismantled."
 const hiddenMats = [
   529424730, // Upgrade Points
   1624697519, // Engram Tracker
@@ -40,6 +38,8 @@ const hiddenMats = [
   4046539562, // Mod Components
   4114204995, // Ghost Fragments
   1289622079, // Strand Meditations
+  2512446424, // Nonary Manifold
+  443031983, // Phantasmal Core
 ];
 
 // Synthcord is a material, Synthweave is a currency
@@ -56,6 +56,7 @@ export function MaterialCounts({
   wide?: boolean;
   includeCurrencies?: boolean;
 }) {
+  const defs = useD2Definitions()!;
   const allMats = useSelector(materialsSelector);
   const materials = Map.groupBy(allMats, (m) => m.hash);
   for (const h of hiddenMats) {
@@ -65,7 +66,6 @@ export function MaterialCounts({
   const currencies = useSelector(currenciesSelector);
   let transmogCurrencies = useSelector(transmogCurrenciesSelector);
   const upgradeCurrencies = useSelector(upgradeCurrenciesSelector);
-  const vendorCurrencyEngrams = useSelector(vendorCurrencyEngramsSelector);
 
   // TODO: This bucket hash doesn't have a name in the manifest, so I'm not sure if it's "Seasonal" or "Kepler".
   const seasonalMats = allMats.filter((m) => m.bucket.hash === 2207872501).map((m) => m.hash);
@@ -99,17 +99,18 @@ export function MaterialCounts({
     });
 
   const [
-    goodMatsAsCurrencies,
     seasonalMatsAsCurrencies,
     upgradeMatsAsCurrencies,
     glimmerMatsAsCurrencies,
     transmogMatsAsCurrencies,
     remainingMatsAsCurrencies,
   ]: AccountCurrency[][] = [
-    goodMats,
     seasonalMats,
     upgradeMats,
-    glimmerMats,
+    [
+      ...glimmerMats,
+      2979281381, // Upgrade Module (deprecated in edge of fate and turned into a source of glimmer/enhancement cores)
+    ],
     transmogMats,
     [...materials.keys()],
   ].map(matsToCurrencies);
@@ -120,8 +121,6 @@ export function MaterialCounts({
   const content = [
     ...[
       includeCurrencies ? currencies : [],
-      vendorCurrencyEngrams,
-      goodMatsAsCurrencies,
       seasonalMatsAsCurrencies,
       upgradeMatsAsCurrencies,
       glimmerMatsAsCurrencies,
@@ -130,7 +129,7 @@ export function MaterialCounts({
     ].map(
       (currencies) =>
         currencies.length > 0 && (
-          <CurrencyGroup key={currencies[0].itemHash} currencies={currencies} />
+          <CurrencyGroup key={currencies[0].itemHash} currencies={currencies} defs={defs} />
         ),
     ),
   ];
@@ -147,12 +146,25 @@ export function MaterialCounts({
   );
 }
 
-function CurrencyGroup({ currencies }: { currencies: AccountCurrency[] }) {
-  return currencies.map((currency) => (
-    <div className={styles.material} key={currency.itemHash}>
-      <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
-      <BungieImage src={currency.displayProperties.icon} />
-      <span>{currency.displayProperties.name}</span>
-    </div>
-  ));
+function CurrencyGroup({
+  currencies,
+  defs,
+}: {
+  currencies: AccountCurrency[];
+  defs: D2ManifestDefinitions;
+}) {
+  return currencies
+    .toSorted(
+      chainComparator(
+        compareBy(({ itemHash }) => defs.InventoryItem.get(itemHash)?.inventory?.tierType ?? 0),
+        compareBy(({ displayProperties }) => displayProperties.name),
+      ),
+    )
+    .map((currency) => (
+      <div className={styles.material} key={currency.itemHash}>
+        <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
+        <BungieImage src={currency.displayProperties.icon} />
+        <span>{currency.displayProperties.name}</span>
+      </div>
+    ));
 }
