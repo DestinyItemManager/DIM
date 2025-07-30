@@ -14,7 +14,7 @@ import {
   moveUpIcon,
 } from 'app/shell/icons';
 import clsx from 'clsx';
-import { Reorder } from 'motion/react';
+import { Reorder, useDragControls } from 'motion/react';
 import { Dispatch, useEffect, useId, useRef, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMaxStat, ResolvedStatConstraint, StatRanges } from '../types';
@@ -175,6 +175,7 @@ function StatRow({
   processing: boolean;
 }) {
   const defs = useD2Definitions()!;
+  const dragControls = useDragControls();
   const statHash = statConstraint.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
   const handleIgnore = () => onStatChange({ ...statConstraint, ignored: !statConstraint.ignored });
@@ -214,8 +215,15 @@ function StatRow({
       onDragEnd={() => onDragEnd(statConstraint)}
       data-index={index}
       as="div"
+      dragListener={false}
+      dragControls={dragControls}
     >
-      <span className={styles.grip} tabIndex={-1} aria-hidden={true}>
+      <span
+        className={styles.grip}
+        tabIndex={-1}
+        aria-hidden={true}
+        onPointerDown={(e) => dragControls.start(e)}
+      >
         <AppIcon icon={dragHandleIcon} />
       </span>
       <div className={styles.name}>
@@ -229,7 +237,7 @@ function StatRow({
         >
           <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
         </button>
-        <div className={styles.label}>
+        <div className={styles.label} onPointerDown={(e) => dragControls.start(e)}>
           <BungieImage
             className={styles.iconStat}
             src={statDef.displayProperties.icon}

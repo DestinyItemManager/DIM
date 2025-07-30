@@ -22,6 +22,7 @@
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: flex-start;
   cursor: grab;
+  touch-action: none;
 
   &:active {
     cursor: grabbing;
@@ -67,6 +68,12 @@
   overflow: hidden;
   align-self: stretch;
   width: 100%;
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 
   .ignored & {
     opacity: 0.4;
