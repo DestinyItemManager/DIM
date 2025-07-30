@@ -9,6 +9,7 @@ import { quoteFilterString } from 'app/search/query-parser';
 import { compact, filterMap } from 'app/utils/collections';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
 import {
+  getArmorArchetype,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
   getWeaponArchetype,
@@ -16,6 +17,7 @@ import {
 import clsx from 'clsx';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import archetypeIcon from 'images/armorArchetype.png';
 import React from 'react';
 import styles from './CompareButtons.m.scss';
 import { compareNameQuery, stripAdept } from './compare-utils';
@@ -26,6 +28,7 @@ interface CompareButton {
   /** The query that results in this list of items */
   query: string;
 }
+const modernArmor = 'is:armor2.0 or is:armor3.0';
 
 /**
  * Generate possible comparisons for armor, given a reference item.
@@ -35,6 +38,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
+  const archetype = getArmorArchetype(exampleItem);
 
   // exotic class item perks
   const extraIntrinsicButtons =
@@ -51,9 +55,13 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
               src={intrinsic.icon}
             />,
             intrinsic.name,
+            exampleItem.rarity === 'Legendary' ? (
+              // eslint-disable-next-line @eslint-react/no-duplicate-key
+              <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />
+            ) : null,
             <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
           ],
-          query: `is:armor2.0 or is:armor3.0 perk:${quoteFilterString(intrinsic.name)}`,
+          query: `${archetype ? 'is:armor3.0' : modernArmor} perk:${quoteFilterString(intrinsic.name)} is:${exampleItem.rarity}`,
         }))
         .reverse()) ||
     [];
@@ -71,7 +79,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     // above but also has to be modern armor (2.0 or 3.0)
     exampleItem.destinyVersion === 2 && {
       buttonLabel: [<ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />],
-      query: 'is:armor2.0 or is:armor3.0',
+      query: modernArmor,
     },
 
     // above but also has to be legendary
@@ -81,7 +89,20 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: 'is:armor2.0 or is:armor3.0 is:legendary',
+        query: `${modernArmor} is:legendary`,
+      },
+
+    // above but only Armor 3.0 if the example item is Armor 3.0
+    exampleItem.destinyVersion === 2 &&
+      exampleItem.rarity === 'Legendary' &&
+      archetype && {
+        buttonLabel: [
+          <img key="1" className={clsx(styles.intrinsicIcon, 'dontInvert')} src={archetypeIcon} />,
+          <span key="2">{t('Compare.Archetype')}</span>,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
+          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: `is:armor3.0 is:legendary`,
       },
 
     // above but also the same seasonal mod slot, if it has one
@@ -95,9 +116,10 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             lowRes
             item={exampleItem}
           />,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `is:armor2.0 or is:armor3.0 ${exampleItemModSlotMetadatas
+        query: `${modernArmor} ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
       },
@@ -108,14 +130,14 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         buttonLabel: [
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
             <BungieImage
-              key="2"
               className={clsx(styles.intrinsicIcon, 'dontInvert')}
               src={exampleItemIntrinsic.icon}
             />
           </PressTip>,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `is:armor2.0 or is:armor3.0 perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
+        query: `${modernArmor} perk:${quoteFilterString(exampleItemIntrinsic.name)} is:${exampleItem.rarity}`,
       },
 
     // exotic class items

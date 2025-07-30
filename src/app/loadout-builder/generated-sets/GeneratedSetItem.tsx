@@ -4,6 +4,7 @@ import { useItemPicker } from 'app/item-picker/item-picker';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
+import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -95,9 +96,7 @@ export default function GeneratedSetItem({
     }
   };
 
-  const archetype = item.sockets?.allSockets.find(
-    (s) => s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes,
-  )?.plugged?.plugDef;
+  const archetype = getArmorArchetypeSocket(item)?.plugged!.plugDef;
 
   return (
     <div>
