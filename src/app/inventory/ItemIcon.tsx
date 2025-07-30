@@ -4,7 +4,7 @@ import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
 import { braveShiny, riteShiny } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
-import { isModCostVisible } from 'app/utils/socket-utils';
+import { isArmorArchetypePlug, isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -131,7 +131,7 @@ export function DefItemIcon({
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
     itemDef.plug?.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
-    itemDef.plug?.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes ||
+    isArmorArchetypePlug(itemDef) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
 

@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DimItem,
+  DimPlug,
   DimSocket,
   DimSocketCategory,
   DimSockets,
@@ -14,7 +15,11 @@ import {
   armor2PlugCategoryHashes,
   weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
-import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
+import {
+  DestinyInventoryItemDefinition,
+  DestinySocketCategoryStyle,
+  TierType,
+} from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
@@ -140,13 +145,23 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
   }
 }
 
+export function getArmorArchetype(item: DimItem) {
+  return getArmorArchetypeSocket(item)?.plugged?.plugDef;
+}
 export function getArmorArchetypeSocket(item: DimItem): DimSocket | undefined {
-  const archetype = item.sockets?.allSockets.find(
-    (s) => s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes,
+  return item.sockets?.allSockets.find((s) => isArmorArchetypeSocket(s));
+}
+
+function isArmorArchetypeSocket(socket: DimSocket) {
+  return isArmorArchetypePlug(socket.plugged);
+}
+
+export function isArmorArchetypePlug(plug: DimPlug | DestinyInventoryItemDefinition | null) {
+  const plugDef = plug && 'plugDef' in plug ? plug.plugDef : plug;
+  return Boolean(
+    plugDef?.plug?.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes &&
+      plugDef.displayProperties.name,
   );
-  if (archetype?.plugged?.plugDef.displayProperties.name) {
-    return archetype;
-  }
 }
 
 /**
@@ -167,9 +182,7 @@ export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
           // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
           .map((s) => ({ ...s, isReusable: false }))
       : []),
-    ...item.sockets.allSockets.filter(
-      (s) => s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes,
-    ),
+    ...item.sockets.allSockets.filter(isArmorArchetypeSocket),
   ];
 }
 
