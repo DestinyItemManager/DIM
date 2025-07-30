@@ -78,10 +78,11 @@ function Record({
     ? recordDef.stateInfo.obscuredDescription
     : recordDef.displayProperties.description;
 
+  const OSTEO_STRIGA_RECORD_HASH = 494981303;
   const isCatalyst = recordHash in catalystIconsTable;
   const recordIcon =
-    recordHash === 494981303
-      ? 'https://beta.destinyitemmanager.com/screenshots/osteo-striga-cataylst.jpg'
+    recordHash === OSTEO_STRIGA_RECORD_HASH
+      ? '~/screenshots/osteo-striga-catalyst.jpg'
       : isCatalyst
         ? catalystIconsTable[recordHash]
         : recordDef.displayProperties.icon;

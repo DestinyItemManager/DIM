@@ -63,8 +63,5 @@ export function bungieNetPath(src: BungieImagePath): string {
   if (src.startsWith('~')) {
     return src.substr(1);
   }
-  if (src.startsWith('http')) {
-    return src;
-  }
   return `https://www.bungie.net${src}`;
 }
