@@ -2,8 +2,8 @@ import { t } from 'app/i18next-t';
 import { reorder } from 'app/utils/collections';
 import clsx from 'clsx';
 import { clamp } from 'es-toolkit';
-import { Reorder } from 'motion/react';
-import { memo, useEffect, useState } from 'react';
+import { Reorder, useDragControls } from 'motion/react';
+import { useState } from 'react';
 import {
   AppIcon,
   dragHandleIcon,
@@ -29,30 +29,6 @@ type OnCommandHandler = (
   command: 'up' | 'down' | 'toggle' | 'direction-toggle' | 'dragEnd',
 ) => void;
 
-const SortEditorItemList = memo(
-  ({
-    order,
-    onCommand,
-    onDragEnd,
-  }: {
-    order: SortProperty[];
-    onCommand: OnCommandHandler;
-    onDragEnd: (item: SortProperty) => void;
-  }) => (
-    <>
-      {order.map((item, index) => (
-        <SortEditorItem
-          key={item.id}
-          item={item}
-          index={index}
-          onCommand={onCommand}
-          onDragEnd={onDragEnd}
-        />
-      ))}
-    </>
-  ),
-);
-
 /**
  * An editor for sort-orders, with drag and drop.
  *
@@ -67,45 +43,35 @@ export default function SortOrderEditor({
   onSortOrderChanged: (order: SortProperty[]) => void;
 }) {
   // Local state for dragging - use the prop order as initial value
-  const [currentOrder, setCurrentOrder] = useState(order);
-
-  // Update local state when prop changes from parent
-  useEffect(() => {
-    setCurrentOrder(order);
-  }, [order]);
+  const [draggingOrder, setDraggingOrder] = useState<SortProperty[] | undefined>();
 
   const moveItem = (oldIndex: number, newIndex: number, fromDrag = false) => {
-    newIndex = clamp(newIndex, 0, currentOrder.length);
-    const newOrder = reorder(currentOrder, oldIndex, newIndex);
+    newIndex = clamp(newIndex, 0, order.length);
+    const newOrder = reorder(order, oldIndex, newIndex);
     if (fromDrag) {
-      // Apply enabling logic and call parent callback
-      const finalOrder = newOrder.map((item, index) => ({
-        ...item,
-        enabled: index === 0 || newOrder[index - 1].enabled,
-      }));
-      onSortOrderChanged(finalOrder);
-    } else {
-      // Just update local state for button clicks
-      onSortOrderChanged(newOrder);
+      newOrder[newIndex] = {
+        ...newOrder[newIndex],
+        enabled: newIndex === 0 || newOrder[newIndex - 1].enabled,
+      };
     }
+    onSortOrderChanged(newOrder);
   };
 
   const handleReorder = (newOrder: SortProperty[]) => {
     // During dragging, just update local state without applying business logic
-    setCurrentOrder(newOrder);
+    setDraggingOrder(newOrder);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (item: SortProperty) => {
     // When drag ends, apply the enabling logic and notify parent
-    const finalOrder = currentOrder.map((item, index) => ({
-      ...item,
-      enabled: index === 0 || currentOrder[index - 1].enabled,
-    }));
-    onSortOrderChanged(finalOrder);
+    const oldIndex = order.findIndex((i) => i.id === item.id);
+    const newIndex = draggingOrder!.findIndex((i) => i.id === item.id);
+    moveItem(oldIndex, newIndex, true);
+    setDraggingOrder(undefined); // Reset local state after drag ends
   };
 
   const toggleItem = (index: number, prop: 'enabled' | 'reversed') => {
-    const orderArr = Array.from(currentOrder);
+    const orderArr = Array.from(order);
     orderArr[index] = { ...orderArr[index], [prop]: !orderArr[index][prop] };
     onSortOrderChanged(orderArr);
   };
@@ -132,14 +98,14 @@ export default function SortOrderEditor({
         toggleItem(index, 'reversed');
         break;
       }
-      case 'dragEnd': {
-        handleDragEnd(order[index]);
-        break;
-      }
       default:
         break;
     }
   };
+
+  // While dragging, use local state, but when we drop we'll go back to the
+  // order from the prop.
+  const currentOrder = draggingOrder ?? order;
 
   return (
     <Reorder.Group
@@ -149,7 +115,15 @@ export default function SortOrderEditor({
       className={styles.editor}
       as="div"
     >
-      <SortEditorItemList order={currentOrder} onCommand={onCommand} onDragEnd={handleDragEnd} />
+      {currentOrder.map((item, index) => (
+        <SortEditorItem
+          key={item.id}
+          item={item}
+          index={index}
+          onCommand={onCommand}
+          onDragEnd={handleDragEnd}
+        />
+      ))}
     </Reorder.Group>
   );
 }
@@ -165,19 +139,27 @@ function SortEditorItem({
   onCommand: OnCommandHandler;
   onDragEnd: (item: SortProperty) => void;
 }) {
+  const className = clsx(styles.item, {
+    [styles.disabled]: !item.enabled,
+  });
+  // We use our own controls to avoid having the entire element be draggable.
+  // Requires dragListener={false} on Reorder.Item.
+  const controls = useDragControls();
+  // Assign this to onPointerDown to start dragging from this item
+  const startDrag = (e: React.PointerEvent) => controls.start(e);
+
   return (
     <Reorder.Item
       value={item}
-      className={clsx(styles.item, {
-        [styles.disabled]: !item.enabled,
-      })}
+      className={className}
+      dragListener={false}
       whileDrag={{
-        className: clsx(styles.item, styles.dragging, { [styles.disabled]: !item.enabled }),
+        className: clsx(className, styles.dragging),
       }}
       onDragEnd={() => onDragEnd(item)}
       as="div"
     >
-      <span tabIndex={-1}>
+      <span tabIndex={-1} onPointerDown={startDrag}>
         <AppIcon icon={dragHandleIcon} className={styles.grip} />
       </span>
       <button
@@ -189,7 +171,9 @@ function SortEditorItem({
       >
         <AppIcon icon={item.enabled ? faCheckSquare : faSquare} />
       </button>
-      <span className={styles.name}>{item.displayName}</span>
+      <span className={styles.name} onPointerDown={startDrag}>
+        {item.displayName}
+      </span>
       <button type="button" className={styles.button} onClick={(e) => onCommand(e, index, 'up')}>
         <AppIcon icon={moveUpIcon} />
       </button>
