@@ -1,5 +1,11 @@
-import { storesSelector } from 'app/inventory/selectors';
+/* eslint-disable no-console */
+import type { TagValue } from 'app/inventory/dim-item-info';
+import type { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, getTagSelector, storesSelector } from 'app/inventory/selectors';
+import { buildSocketNames, csvStatNamesForDestinyVersion } from 'app/inventory/spreadsheets';
+import { D1_StatHashes } from 'app/search/d1-known-values';
 import store from 'app/store/store';
+import { StatHashes } from 'data/d2/generated-enums';
 
 const MCP_PORT = 9130;
 const MCP_URL = `wss://localhost:${MCP_PORT}`;
@@ -8,6 +14,50 @@ let sending = false;
 
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+function buildWeaponSummary(
+  item: DimItem,
+  getTag: (item: DimItem) => TagValue | undefined,
+  statNames: Map<number, string>,
+) {
+  const stats: Record<string, number> = {};
+  for (const stat of item.stats ?? []) {
+    const name = statNames.get(stat.statHash) ?? stat.displayProperties.name;
+    stats[name] = stat.value;
+  }
+
+  return {
+    name: item.name,
+    type: item.typeName,
+    tier: item.tier,
+    element: item.element?.displayProperties.name,
+    power: item.power,
+    stats,
+    perks: buildSocketNames(item),
+    tag: getTag(item),
+  };
+}
+
+async function sendWeapons() {
+  const state = store.getState();
+  const allItems = allItemsSelector(state);
+  const getTag = getTagSelector(state);
+  const destinyVersion = allItems[0]?.destinyVersion ?? 2;
+  const statNames = csvStatNamesForDestinyVersion(destinyVersion);
+
+  const weapons = allItems
+    .filter(
+      (item) =>
+        item.primaryStat &&
+        (item.primaryStat.statHash === D1_StatHashes.Attack ||
+          item.primaryStat.statHash === StatHashes.Attack),
+    )
+    .map((item) => buildWeaponSummary(item, getTag, statNames));
+
+  if (socket?.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify({ type: 'weapons', data: weapons }));
+  }
 }
 
 async function sendInventory() {
@@ -36,12 +86,15 @@ async function sendInventory() {
 
     for (let i = 0; i < stores.length; i++) {
       const store = stores[i];
-      const seen = new WeakSet();
+      const seen = new WeakSet<object>();
       const sjson = JSON.stringify(store, function (_: any, value: any) {
         if (typeof value === 'object' && value !== null) {
-          if (seen.has(value)) return '[Circular]';
-          seen.add(value);
+          if (seen.has(value as object)) {
+            return '[Circular]';
+          }
+          seen.add(value as object);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return value;
       });
 
@@ -75,27 +128,32 @@ async function sendInventory() {
 function handleMessage(event: MessageEvent) {
   let message: any = null;
   try {
-    message = JSON.parse(event.data);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    message = JSON.parse(String(event.data));
   } catch {
     if (event.data === 'ping') {
       sendInventory();
+      sendWeapons();
       return;
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (message && message.type === 'ping') {
     sendInventory();
+    sendWeapons();
   }
 }
 
 function connect() {
   socket = new WebSocket(MCP_URL);
 
-  socket.onopen = () => {
+  socket.onopen = async () => {
     console.log('MCP WebSocket connected');
     try {
       socket?.send(JSON.stringify({ type: 'hello' }));
     } catch {}
-    sendInventory();
+    await sendInventory();
+    await sendWeapons();
   };
 
   socket.onmessage = handleMessage;
