@@ -15,6 +15,7 @@ import { loadDimApiData } from 'app/dim-api/actions';
 import { createSaveItemInfosObserver } from 'app/inventory/observers';
 import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
+import { startMcpSocket } from 'app/mcp/mcp-websocket';
 import { infoLog } from 'app/utils/log';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -71,6 +72,8 @@ const i18nPromise = initi18n();
   store.dispatch(observe(createSaveItemInfosObserver()));
 
   store.dispatch(loadDimApiData());
+
+  startMcpSocket();
 
   if ($featureFlags.elgatoStreamDeck && store.getState().streamDeck.enabled) {
     await lazyLoadStreamDeck();

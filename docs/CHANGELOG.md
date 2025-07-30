@@ -4,6 +4,7 @@
 * Updated the order of search suggestions to prioritize `is:` filters.
 * Display armor archetypes in Loadout Optimizer.
 * Support mid-season season pass track change.
+* Added a persistent MCP WebSocket client for local integrations.
 
 ## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
 
