@@ -6,6 +6,7 @@
 * Support mid-season season pass track change.
 * Stat range searches (e.g. `stat:rpm:<100`) will no longer match items that don't have that stat.
 * New Compare button for armor with Archetype-based stats.
+* Added a toggle to the Loadout Optimizer that will limit eligible armor to only new or featured gear (the gear that gets bonuses for being new). All this does is add and remove `is:featured` from the search bar.
 
 ## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
 
