@@ -6,4 +6,7 @@
     font-size: 1.17em;
     cursor: pointer;
   }
+  :global(.app-icon) {
+    color: #00a5a5;
+  }
 }

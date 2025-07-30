@@ -1,6 +1,8 @@
 import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
+import { featuredBannerIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
 import { querySelector } from 'app/shell/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './NewFeaturedGearFilter.m.scss';
@@ -31,7 +33,9 @@ export default function NewFeaturedGearFilter({ className }: { className?: strin
   return (
     <div className={className}>
       <div className={styles.container}>
-        <label htmlFor="newFeaturedGearSwitch">{t('LoadoutBuilder.LimitToNewFeaturedGear')}</label>
+        <label htmlFor="newFeaturedGearSwitch">
+          <AppIcon icon={featuredBannerIcon} /> {t('LoadoutBuilder.LimitToNewFeaturedGear')}
+        </label>
         <Switch name="newFeaturedGearSwitch" checked={isEnabled} onChange={handleToggle} />
       </div>
     </div>
