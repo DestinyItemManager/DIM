@@ -394,7 +394,7 @@
     "FilterHelpBrief": "Search items",
     "FilterHelpRecords": "Search triumphs and collections",
     "FilterHelpProgress": "Search milestones and bounties",
-    "FilterHelpOptimizer": "Select armor to be considered for loadouts: {{example}}",
+    "FilterHelpOptimizer": "Filter armor included in builds, e.g.: {{example}}",
     "FilterHelpLoadouts": "Search loadout names and notes",
     "FilterMatchCount_one": "1 item",
     "FilterMatchCount_other": "{{count}} items",
@@ -679,7 +679,7 @@
     "None": "None",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider, e.g. {{example}}. If no armor in a slot matches the search, all items will be considered for that slot.",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Finding highest stat sets...",
@@ -696,7 +696,8 @@
     "UnlockItem": "Unpin Item",
     "IncreaseStatPriority": "Increase stat priority",
     "DecreaseStatPriority": "Decrease stat priority",
-    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets"
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
+    "LimitToNewFeaturedGear": "Limit to new/featured gear"
   },
   "Loadouts": {
     "Abilities": "Abilities",

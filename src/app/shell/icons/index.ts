@@ -4,6 +4,7 @@ export const AppIcon = AppIconComponent;
 export { dimEngramIcon as engramIcon } from './custom/Engram';
 export { dimEnhancedIcon as enhancedIcon } from './custom/Enhanced';
 export { epicIcon } from './custom/Epic';
+export { featuredBannerIcon } from './custom/FeaturedBanner';
 export { dimHunterIcon as hunterIcon } from './custom/Hunter';
 export { dimPowerIcon as powerIndicatorIcon } from './custom/Power';
 export { dimPowerAltIcon as powerActionIcon } from './custom/PowerAlt';
