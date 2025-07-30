@@ -26,7 +26,7 @@ export interface SortProperty {
 type OnCommandHandler = (
   e: React.MouseEvent,
   index: number,
-  command: 'up' | 'down' | 'toggle' | 'direction-toggle' | 'dragEnd',
+  command: 'up' | 'down' | 'toggle' | 'direction-toggle',
 ) => void;
 
 /**
@@ -63,9 +63,12 @@ export default function SortOrderEditor({
   };
 
   const handleDragEnd = (item: SortProperty) => {
+    if (!draggingOrder) {
+      return; // No dragging in progress
+    }
     // When drag ends, apply the enabling logic and notify parent
     const oldIndex = order.findIndex((i) => i.id === item.id);
-    const newIndex = draggingOrder!.findIndex((i) => i.id === item.id);
+    const newIndex = draggingOrder.findIndex((i) => i.id === item.id);
     moveItem(oldIndex, newIndex, true);
     setDraggingOrder(undefined); // Reset local state after drag ends
   };
@@ -153,8 +156,10 @@ function SortEditorItem({
       value={item}
       className={className}
       dragListener={false}
+      dragControls={controls}
       whileDrag={{
-        className: clsx(className, styles.dragging),
+        // I guess we can only do inline styles here
+        outline: '1px solid var(--theme-accent-primary)',
       }}
       onDragEnd={() => onDragEnd(item)}
       as="div"
