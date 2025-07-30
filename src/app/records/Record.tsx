@@ -21,6 +21,7 @@ import {
 import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
+import osteoStrigaCatalyst from 'images/osteo-striga-catalyst.jpg';
 import trackedIcon from 'images/trackedIcon.svg';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -82,7 +83,7 @@ function Record({
   const isCatalyst = recordHash in catalystIconsTable;
   const recordIcon =
     recordHash === OSTEO_STRIGA_RECORD_HASH
-      ? '~/screenshots/osteo-striga-catalyst.jpg'
+      ? `~${osteoStrigaCatalyst}`
       : isCatalyst
         ? catalystIconsTable[recordHash]
         : recordDef.displayProperties.icon;
