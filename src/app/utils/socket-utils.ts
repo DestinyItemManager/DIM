@@ -578,8 +578,9 @@ export function getGeneralSockets(
     socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
       PlugCategoryHashes.EnhancementsArtificeExotic &&
     // Hide armor masterwork payment socket. We display masterworked status other ways.
-    socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
-      PlugCategoryHashes.V460PlugsArmorMasterworks &&
+    !socketInfo.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(
+      'v460.plugs.armor.masterworks',
+    ) &&
     // exclude artifice slots the game has marked as not visible (on un-upgraded exotics)
     !(
       socketInfo.plugged?.plugDef.plug.plugCategoryHash ===
