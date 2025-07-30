@@ -206,7 +206,9 @@ function StatRow({
         [styles.ignored]: statConstraint.ignored,
       })}
       whileDrag={{
-        className: clsx(styles.row, styles.dragging, { [styles.ignored]: statConstraint.ignored }),
+        // We can only use inline styles here apparently
+        outline: '1px solid var(--theme-accent-primary)',
+        backgroundColor: 'black',
       }}
       onDragEnd={() => onDragEnd(statConstraint)}
       data-index={index}
