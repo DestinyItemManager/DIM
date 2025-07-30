@@ -1,5 +1,6 @@
 import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
+import { exampleLOSearch } from 'app/loadout-builder/example-search';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import React, { useCallback, useMemo } from 'react';
@@ -50,7 +51,7 @@ export default function SearchFilter({
           ? t('Header.FilterHelpProgress')
           : onOptimizer
             ? t('Header.FilterHelpOptimizer', {
-                example: '-is:exotic, perkname:"iron lord\'s pride"',
+                example: exampleLOSearch,
               })
             : onLoadouts
               ? t('Header.FilterHelpLoadouts')

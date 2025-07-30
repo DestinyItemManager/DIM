@@ -47,12 +47,14 @@ import ModPicker from '../loadout/ModPicker';
 import { isLoadoutBuilderItem } from '../loadout/loadout-item-utils';
 import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
+import { exampleLOSearch } from './example-search';
 import EnergyOptions from './filter/EnergyOptions';
 import LoadoutOptimizerExotic from './filter/LoadoutOptimizerExotic';
 import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerPinnedItems,
 } from './filter/LoadoutOptimizerMenuItems';
+import NewFeaturedGearFilter from './filter/NewFeaturedGearFilter';
 import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
@@ -322,6 +324,7 @@ export default memo(function LoadoutBuilder({
         className={styles.loadoutEditSection}
         processing={processing}
       />
+      <NewFeaturedGearFilter className={styles.loadoutEditSection} />
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}
         lbDispatch={lbDispatch}
@@ -376,7 +379,11 @@ export default memo(function LoadoutBuilder({
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={3}>
-            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+            <li>
+              {t('LoadoutBuilder.OptimizerExplanationSearch', {
+                example: exampleLOSearch,
+              })}
+            </li>
           </ol>
           <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
         </div>
@@ -431,7 +438,11 @@ export default memo(function LoadoutBuilder({
             <ol>
               <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
               <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
-              <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+              <li>
+                {t('LoadoutBuilder.OptimizerExplanationSearch', {
+                  example: exampleLOSearch,
+                })}
+              </li>
             </ol>
             <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
           </div>
