@@ -76,8 +76,6 @@ export default function TierlessStatConstraintEditor({
     if (!draggingOrder) {
       return; // No dragging in progress
     }
-
-    // When drag ends, apply the order change and notify parent
     const oldIndex = resolvedStatConstraints.findIndex(
       (constraint) => constraint.statHash === draggedConstraint.statHash,
     );
@@ -91,13 +89,6 @@ export default function TierlessStatConstraintEditor({
         sourceIndex: oldIndex,
         destinationIndex: newIndex,
       });
-
-      // Apply auto-enable logic: enable if first item or previous item is enabled
-      const shouldEnable = newIndex === 0 || !resolvedStatConstraints[newIndex - 1].ignored;
-      if (draggedConstraint.ignored && shouldEnable) {
-        const updatedConstraint = { ...draggedConstraint, ignored: false };
-        handleStatChange(updatedConstraint);
-      }
     }
 
     setDraggingOrder(undefined); // Reset local state after drag ends
@@ -171,10 +162,14 @@ function StatRow({
   processing: boolean;
 }) {
   const defs = useD2Definitions()!;
-  const dragControls = useDragControls();
   const statHash = statConstraint.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
   const handleIgnore = () => onStatChange({ ...statConstraint, ignored: !statConstraint.ignored });
+  // We use our own controls to avoid having the entire element be draggable.
+  // Requires dragListener={false} on Reorder.Item.
+  const controls = useDragControls();
+  // Assign this to onPointerDown to start dragging from this item
+  const startDrag = (e: React.PointerEvent) => controls.start(e);
 
   const setMin = (value: number) => {
     if (value !== statConstraint.minStat) {
@@ -214,14 +209,9 @@ function StatRow({
       data-index={index}
       as="div"
       dragListener={false}
-      dragControls={dragControls}
+      dragControls={controls}
     >
-      <span
-        className={styles.grip}
-        tabIndex={-1}
-        aria-hidden={true}
-        onPointerDown={(e) => dragControls.start(e)}
-      >
+      <span className={styles.grip} tabIndex={-1} aria-hidden={true} onPointerDown={startDrag}>
         <AppIcon icon={dragHandleIcon} />
       </span>
       <div className={styles.name}>
@@ -235,7 +225,7 @@ function StatRow({
         >
           <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
         </button>
-        <div className={styles.label} onPointerDown={(e) => dragControls.start(e)}>
+        <div className={styles.label} onPointerDown={startDrag}>
           <BungieImage
             className={styles.iconStat}
             src={statDef.displayProperties.icon}
