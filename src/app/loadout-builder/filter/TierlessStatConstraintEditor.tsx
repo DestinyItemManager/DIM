@@ -44,6 +44,8 @@ export default function TierlessStatConstraintEditor({
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   processing: boolean;
 }) {
+  // Local state for dragging - use undefined when not dragging
+  const [draggingOrder, setDraggingOrder] = useState<ResolvedStatConstraint[] | undefined>();
   // Actually change the stat constraints in the LO state, which triggers recalculation of sets.
   const handleStatChange = (constraint: ResolvedStatConstraint) =>
     lbDispatch({ type: 'statConstraintChanged', constraint });
@@ -66,45 +68,39 @@ export default function TierlessStatConstraintEditor({
 
   // Handle reordering the stat constraints
   const handleReorder = (newOrder: ResolvedStatConstraint[]) => {
-    // Find which items moved to determine the indices
-    const oldOrder = resolvedStatConstraints;
-    let sourceIndex = -1;
-    let destinationIndex = -1;
-
-    // Find the item that moved
-    for (let i = 0; i < newOrder.length; i++) {
-      if (newOrder[i] !== oldOrder[i]) {
-        const movedItem = newOrder[i];
-        sourceIndex = oldOrder.findIndex((item) => item.statHash === movedItem.statHash);
-        destinationIndex = i;
-        break;
-      }
-    }
-
-    if (sourceIndex !== -1 && destinationIndex !== -1 && sourceIndex !== destinationIndex) {
-      lbDispatch({
-        type: 'statOrderChanged',
-        sourceIndex,
-        destinationIndex,
-      });
-    }
+    // During dragging, just update local state without applying business logic
+    setDraggingOrder(newOrder);
   };
 
   const handleDragEnd = (draggedConstraint: ResolvedStatConstraint) => {
-    // Find the current index of the dragged constraint
-    const draggedIndex = resolvedStatConstraints.findIndex(
+    if (!draggingOrder) {
+      return; // No dragging in progress
+    }
+
+    // When drag ends, apply the order change and notify parent
+    const oldIndex = resolvedStatConstraints.findIndex(
+      (constraint) => constraint.statHash === draggedConstraint.statHash,
+    );
+    const newIndex = draggingOrder.findIndex(
       (constraint) => constraint.statHash === draggedConstraint.statHash,
     );
 
-    if (draggedIndex !== -1) {
-      // Apply auto-enable logic: enable if first item or previous item is enabled
-      const shouldEnable = draggedIndex === 0 || !resolvedStatConstraints[draggedIndex - 1].ignored;
+    if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+      lbDispatch({
+        type: 'statOrderChanged',
+        sourceIndex: oldIndex,
+        destinationIndex: newIndex,
+      });
 
+      // Apply auto-enable logic: enable if first item or previous item is enabled
+      const shouldEnable = newIndex === 0 || !resolvedStatConstraints[newIndex - 1].ignored;
       if (draggedConstraint.ignored && shouldEnable) {
         const updatedConstraint = { ...draggedConstraint, ignored: false };
         handleStatChange(updatedConstraint);
       }
     }
+
+    setDraggingOrder(undefined); // Reset local state after drag ends
   };
 
   // Handle button-based reordering (up/down buttons)
@@ -129,12 +125,12 @@ export default function TierlessStatConstraintEditor({
     >
       <Reorder.Group
         axis="y"
-        values={resolvedStatConstraints}
+        values={draggingOrder ?? resolvedStatConstraints}
         onReorder={handleReorder}
         className={styles.editor}
         as="div"
       >
-        {resolvedStatConstraints.map((c, index) => {
+        {(draggingOrder ?? resolvedStatConstraints).map((c, index) => {
           const statHash = c.statHash as ArmorStatHashes;
           return (
             <StatRow

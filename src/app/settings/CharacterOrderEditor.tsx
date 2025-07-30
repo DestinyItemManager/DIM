@@ -25,7 +25,6 @@ export default function CharacterOrderEditor({
   };
 
   const handleDragEnd = () => {
-    console.log('handleDragEnd', draggingOrder);
     onSortOrderChanged(draggingOrder.map((c) => c.id));
     setDraggingOrder(emptyArray());
   };
