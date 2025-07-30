@@ -12,21 +12,25 @@
   width: 17px;
 }
 
-.grip {
-  grid-area: grip;
-  opacity: 0.5;
-  font-size: 10px;
-  padding-left: 10px;
-  padding-top: 4px;
-  align-self: stretch;
-  composes: flexRow from '../../dim-ui/common.m.scss';
-  align-items: flex-start;
+.grabHandle {
   cursor: grab;
   touch-action: none;
 
   &:active {
     cursor: grabbing;
   }
+}
+
+.grip {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: grabHandle;
+  grid-area: grip;
+  opacity: 0.5;
+  font-size: 10px;
+  padding-left: 10px;
+  padding-top: 4px;
+  align-self: stretch;
+  align-items: flex-start;
 }
 
 .row {
@@ -59,8 +63,8 @@
 }
 
 .label {
-  display: flex;
-  flex-direction: row;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: grabHandle;
   align-items: center;
   white-space: nowrap;
   gap: 2px;
@@ -68,12 +72,6 @@
   overflow: hidden;
   align-self: stretch;
   width: 100%;
-  cursor: grab;
-  touch-action: none;
-
-  &:active {
-    cursor: grabbing;
-  }
 
   .ignored & {
     opacity: 0.4;
