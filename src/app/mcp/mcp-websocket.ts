@@ -2,7 +2,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import store from 'app/store/store';
 
 const MCP_PORT = 9130;
-const MCP_URL = `ws://localhost:${MCP_PORT}`;
+const MCP_URL = `wss://localhost:${MCP_PORT}`;
 let socket: WebSocket | null = null;
 
 function sendInventory() {
