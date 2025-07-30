@@ -1,4 +1,7 @@
+import { DimStore } from 'app/inventory/store-types';
+import { emptyArray } from 'app/utils/empty';
 import { Reorder } from 'motion/react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
@@ -15,8 +18,16 @@ export default function CharacterOrderEditor({
   const characters = useSelector(sortedStoresSelector);
   const nonVaultCharacters = characters.filter((c) => !c.isVault);
 
+  const [draggingOrder, setDraggingOrder] = useState<DimStore[]>(emptyArray);
+
   const handleReorder = (newOrder: typeof nonVaultCharacters) => {
-    onSortOrderChanged(newOrder.map((c) => c.id));
+    setDraggingOrder(newOrder);
+  };
+
+  const handleDragEnd = () => {
+    console.log('handleDragEnd', draggingOrder);
+    onSortOrderChanged(draggingOrder.map((c) => c.id));
+    setDraggingOrder(emptyArray());
   };
 
   if (!characters.length) {
@@ -27,6 +38,9 @@ export default function CharacterOrderEditor({
     );
   }
 
+  // When dragging, show the order in state, then switch back to the one from props
+  const displayCharacters = draggingOrder.length > 0 ? draggingOrder : nonVaultCharacters;
+
   return (
     <Reorder.Group
       axis="x"
@@ -35,13 +49,14 @@ export default function CharacterOrderEditor({
       className={styles.editor}
       as="div"
     >
-      {nonVaultCharacters.map((character) => (
+      {displayCharacters.map((character) => (
         <Reorder.Item
           key={character.id}
           value={character}
           className={styles.item}
           style={{ cursor: 'grab' }}
           whileDrag={{ cursor: 'grabbing' }}
+          onDragEnd={handleDragEnd}
           as="div"
         >
           <div className={styles.character}>
