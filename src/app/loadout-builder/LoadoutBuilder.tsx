@@ -652,12 +652,10 @@ function useSaveStatConstraints(
       return;
     }
 
-    // Strip out min/max tiers and just save the order
-    const newStatConstraints = statConstraints.map(({ statHash }) => ({ statHash }));
-    if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
+    if (!deepEqual(statConstraints, savedStatConstraintsByClass[classType])) {
       setSetting('loStatConstraintsByClass', {
         ...savedStatConstraintsByClass,
-        [classType]: newStatConstraints,
+        [classType]: statConstraints,
       });
     }
   }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, hasPreloadedLoadout]);
