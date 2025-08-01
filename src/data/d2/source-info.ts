@@ -669,10 +669,31 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  desert: {
+    itemHashes: [],
+    sourceHashes: [
+      596084342, // Source: "The Desert Perpetual" Raid
+    ],
+    searchString: [],
+  },
+  desertperpetual: {
+    itemHashes: [],
+    sourceHashes: [
+      596084342, // Source: "The Desert Perpetual" Raid
+    ],
+    searchString: [],
+  },
   do: {
     itemHashes: [],
     sourceHashes: [
       146504277, // Source: Earn rank-up packages from Arach Jalaal.
+    ],
+    searchString: [],
+  },
+  dp: {
+    itemHashes: [],
+    sourceHashes: [
+      596084342, // Source: "The Desert Perpetual" Raid
     ],
     searchString: [],
   },
@@ -1549,7 +1570,6 @@ const D2Sources: {
     sourceHashes: [
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       2778435282, // Source: Nightmare Hunts
-      3190710249, // Source: "Root of Nightmares" Raid
     ],
     searchString: [],
   },
