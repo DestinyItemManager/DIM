@@ -6,31 +6,3 @@
   padding: 10px 10px 16px 10px;
   gap: 14px;
 }
-.setBonus {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px;
-  gap: 10px;
-
-  .perk {
-    background-color: var(--theme-item-popup-panel-bg);
-    flex-basis: 0;
-    flex-grow: 1;
-    padding: 6px;
-    display: flex;
-    align-items: center;
-  }
-
-  .perkIcon {
-    border-radius: 50%;
-    border: 1px solid white;
-    padding: 2px;
-    margin-right: 6px;
-
-    img {
-      height: 20px;
-      display: block;
-      margin: 2px;
-    }
-  }
-}

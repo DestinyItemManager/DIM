@@ -2,7 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
 import { t } from 'app/i18next-t';
-import { SetPerk } from 'app/item-popup/SetBonus';
+import { SetBonus } from 'app/item-popup/SetBonus';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { objectValues } from 'app/utils/util-types';
@@ -64,26 +64,18 @@ function ChosenSetBonusOption({
 
   // let info: { icon: React.ReactNode; title: React.ReactNode; description: React.ReactNode };
 
-  const visibleSetPerks = Object.keys(setBonuses).map((setHash) => {
+  return Object.keys(setBonuses).map((setHash) => {
     const setDef = defs.EquipableItemSet.get(Number(setHash));
     return (
       setDef &&
-      !setDef.redacted && (
-        <div className={styles.setBonus}>
-          {setDef.setPerks
-            .filter((perk) => perk && (setBonuses[Number(setHash)] || 0) >= perk.requiredSetCount)
-            .map((perk) =>
-              SetPerk({
-                perkDef: defs.SandboxPerk.get(perk.sandboxPerkHash),
-                setName: setDef.displayProperties.name,
-                pieceCount: perk.requiredSetCount,
-              }),
-            )}
-        </div>
-      )
+      !setDef.redacted &&
+      SetBonus({
+        setBonus: setDef,
+        setCount: setBonuses[Number(setHash)] || 0,
+        defs,
+      })
     );
   });
-  return visibleSetPerks;
 }
 
 export function SetBonusPicker({
