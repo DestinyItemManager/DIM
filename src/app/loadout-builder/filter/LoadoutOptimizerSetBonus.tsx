@@ -91,6 +91,7 @@ export function SetBonusPicker({
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
+  // TODO search functionality
   // const language = useSelector(languageSelector);
   // const [query, setQuery] = useState('');
 
@@ -110,7 +111,7 @@ export function SetBonusPicker({
           {/* <SearchInput
             query={query}
             onQueryChanged={setQuery}
-            placeholder={t('LB.SearchAnExotic')}
+            placeholder={t('LB.SearchASetBonus')}
             autoFocus
           /> */}
         </div>
@@ -146,8 +147,9 @@ export function SetBonusPicker({
                     })
                   }
                 >
-                  {t('Item.SetBonus.NPiece', { count: perk.requiredSetCount })}
-                  <br />
+                  <span className={styles.setCount}>
+                    {t('Item.SetBonus.NPiece', { count: perk.requiredSetCount })}
+                  </span>
                   {perkDef.displayProperties.description}
                 </TileGridTile>
               );
