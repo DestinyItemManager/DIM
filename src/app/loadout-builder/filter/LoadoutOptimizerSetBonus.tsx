@@ -4,7 +4,7 @@ import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScroll
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { SetBonus } from 'app/item-popup/SetBonus';
+import { SetBonusDisplay } from 'app/item-popup/SetBonus';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -64,7 +64,7 @@ function ChosenSetBonusOption({
 }) {
   return (
     <div className={styles.chosenSetBonus} onClick={onClick}>
-      {SetBonusDisplay({ setBonuses })}
+      <SetBonusDisplay setBonuses={setBonuses} />
     </div>
   );
 }
@@ -190,24 +190,8 @@ function Footer({
         {acceptButtonText}
       </button>
       <SheetHorizontalScrollContainer className={styles.selectedBonuses}>
-        {SetBonusDisplay({ setBonuses })}
+        <SetBonusDisplay setBonuses={setBonuses} />
       </SheetHorizontalScrollContainer>
     </div>
   );
-}
-
-function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
-  const defs = useD2Definitions()!;
-  return Object.keys(setBonuses).map((setHash) => {
-    const setDef = defs.EquipableItemSet.get(Number(setHash));
-    return (
-      setDef &&
-      !setDef.redacted &&
-      SetBonus({
-        setBonus: setDef,
-        setCount: setBonuses[Number(setHash)] || 0,
-        defs,
-      })
-    );
-  });
 }

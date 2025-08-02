@@ -3,6 +3,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { SetBonusCounts } from 'app/loadout-builder/types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DestinyEquipableItemSetDefinition,
@@ -20,6 +21,22 @@ export function SingleItemSetBonus({ item }: { item: DimItem }) {
       defs: defs,
     })
   );
+}
+
+export function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
+  const defs = useD2Definitions()!;
+  return Object.keys(setBonuses).map((setHash) => {
+    const setDef = defs.EquipableItemSet.get(Number(setHash));
+    return (
+      setDef &&
+      !setDef.redacted &&
+      SetBonus({
+        setBonus: setDef,
+        setCount: setBonuses[Number(setHash)] || 0,
+        defs,
+      })
+    );
+  });
 }
 
 export function SetBonus({
