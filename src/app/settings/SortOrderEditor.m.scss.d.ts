@@ -3,8 +3,8 @@
 interface CssExports {
   'button': string;
   'disabled': string;
-  'dragging': string;
   'editor': string;
+  'grabHandle': string;
   'grip': string;
   'item': string;
   'name': string;

@@ -12,22 +12,30 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  user-select: none;
 }
 
-.dragging {
-  outline: 1px solid var(--theme-accent-primary);
+.grabHandle {
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .grip {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: grabHandle;
   opacity: 0.5;
   font-size: 10px;
   padding-left: 10px;
   align-self: stretch;
-  composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
 }
 
 .name {
+  composes: grabHandle;
   flex: 1;
 }
 
