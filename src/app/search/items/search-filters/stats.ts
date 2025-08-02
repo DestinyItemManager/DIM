@@ -3,6 +3,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadouts';
+import { realD2ArmorStatHashByName } from 'app/search/d2-known-values';
 import {
   allAtomicStats,
   armorAnyStatHashes,
@@ -12,11 +13,17 @@ import {
   estStatNames,
   searchableArmorStatNames,
   statHashByName,
+  statOrdinals,
   weaponStatNames,
 } from 'app/search/search-filter-values';
 import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-generation';
 import { mapValues, maxOf, sumBy } from 'app/utils/collections';
-import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
+import {
+  getArmor3StatFocus,
+  getStatValuesByHash,
+  isClassCompatible,
+  isEdgeOfFateArmorMasterwork,
+} from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { once } from 'es-toolkit';
 import { ItemFilterDefinition } from '../item-filter-types';
@@ -136,6 +143,25 @@ const statFilters: ItemFilterDefinition[] = [
         // items can be 0pl but king of their own little kingdom,
         // like halloween masks, so let's exclude 0pl
         Boolean(item.power) && maxPowerPerBucket[maxPowerKey(item, classMatters)] <= item.power;
+    },
+  },
+  {
+    // looks for a loadout (simultaneously equippable) maximized for this stat
+    keywords: Object.keys(statOrdinals),
+    description: tl('Filter.StatsOrdinal'),
+    format: 'query',
+    suggestions: Object.keys(realD2ArmorStatHashByName),
+    destinyVersion: 2,
+    filter: ({ lhs, filterValue }) => {
+      // A documented assumption: this lookup must succeed if logic even reached this filter, because `keywords` above
+      const ordinal = statOrdinals[lhs]!;
+      const seekingStatHash = realD2ArmorStatHashByName[filterValue];
+      console.log({ ordinal, seekingStatHash });
+      if (!seekingStatHash) {
+        throw Error(`invalid stat name: "${filterValue}"`);
+      }
+      return (item) =>
+        isEdgeOfFateArmorMasterwork(item) && getArmor3StatFocus(item)[ordinal] === seekingStatHash;
     },
   },
 ];
