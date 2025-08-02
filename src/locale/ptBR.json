@@ -381,7 +381,7 @@
     "FilterHelpBrief": "Procurar itens",
     "FilterHelpLoadouts": "Pesquisar por nomes de sets e anotações",
     "FilterHelpMenuItem": "Ajuda sobre filtros...",
-    "FilterHelpOptimizer": "Selecione armaduras para serem consideradas em sets: {{example}}",
+    "FilterHelpOptimizer": "Filter armor included in builds, e.g.: {{example}}",
     "FilterHelpProgress": "Pesquisar marcos e contratos",
     "FilterHelpRecords": "Pesquisar em triunfos e coleções",
     "FilterMatchCount_one": "1 item",
@@ -467,6 +467,10 @@
     "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 Piece",
+      "4Piece": "4 Piece"
+    },
     "ThumbsDown": "Polegar para Baixo",
     "ThumbsUp": "Polegar para Cima"
   },
@@ -681,6 +685,7 @@
     "IgnoreStat": "Se desmarcado, o Otimizador de Sets vai fingir que este atributo não existe quando construir os sets",
     "IncreaseStatPriority": "Aumenta prioridade de atributo",
     "Legendary": "Lendária",
+    "LimitToNewFeaturedGear": "Limit to new/featured gear",
     "LockItem": "Fixar item",
     "MissingClass": "Configuração é para: {{className}}",
     "MissingClassDescription": "A configuração que você está tentando ver é para uma classe de personagem que você não possui.",
@@ -692,6 +697,7 @@
       "AssumeMasterworked": "Permitir ao DIM recomendar a transformação de armaduras em obra-prima",
       "AssumptionsRestricted": "DIM não pode sugerir alterações no tipo de energia de armadura:",
       "BadSlot": "No slot {{bucketName}}, nenhum dos itens permitidos puderam acomodar estes mods:",
+      "ExoticDoesNotExist": "You don't have any of the selected exotic armor in your inventory.",
       "Header": "Nenhuma build encontrada. Aqui estão os possíveis motivos que impediram o DIM de encontrá-las:",
       "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Considere permitir outros itens:",
@@ -711,7 +717,7 @@
     "None": "Nenhum",
     "OptimizerExplanationGuide": "Leia o Guia de Usuário para mais informações e um vídeo tutorial.",
     "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider, e.g. {{example}}. If no armor in a slot matches the search, all items will be considered for that slot.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Set do Otimizador",
     "PinnedItems": "Itens Fixados",
@@ -1277,7 +1283,7 @@
     "DamageResistance": "Resistência à Dano no PvE",
     "Discipline": "Disciplina",
     "DropLevel": "Poder da Conta",
-    "DropLevelExplanation1": "O Poder da Conta é o nível base atual ao calcular o nível de aumento de recompensas Poderosas e Pináculo.",
+    "DropLevelExplanation1": "Account Power is the base power level when calculating the increased level of rewards.",
     "DropLevelExplanation2": "O Poder da conta usa o item de nível mais alto em cada slot, independentemente da Classe requerida ou da regra \"Um Exótico\".",
     "EquippableGear": "Equipamento Equipável",
     "FlinchResistance": "Resistência à Oscilação causada por disparos",

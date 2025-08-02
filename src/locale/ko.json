@@ -366,7 +366,7 @@
     "FilterHelpBrief": "아이템 검색",
     "FilterHelpLoadouts": "로드아웃 이름 및 메모 검색",
     "FilterHelpMenuItem": "필터 도움말...",
-    "FilterHelpOptimizer": "로드아웃에서 검토할 방어구 선택: {{example}}",
+    "FilterHelpOptimizer": "빌드에 포함된 방어구 필터링 (예: {{example}})",
     "FilterHelpProgress": "이정표와 현상금 검색",
     "FilterHelpRecords": "업적과 수집품 검색",
     "FilterMatchCount_other": "아이템 {{count}}개",
@@ -451,6 +451,10 @@
     "MissingSilver": "실버 잔액은 게임을 플레이하는 동안만 사용할 수 있습니다."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 방어구",
+      "4Piece": "4 방어구"
+    },
     "ThumbsDown": "반대",
     "ThumbsUp": "추천"
   },
@@ -665,6 +669,7 @@
     "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
     "IncreaseStatPriority": "능력치 우선도 증가",
     "Legendary": "전설",
+    "LimitToNewFeaturedGear": "새로운/추천 장비로 제한",
     "LockItem": "아이템 잠금",
     "MissingClass": "빌드 대상: {{className}}",
     "MissingClassDescription": "소지하지 않은 직업의 빌드입니다.",
@@ -676,6 +681,7 @@
       "AssumeMasterworked": "DIM이 방어구 걸작을 추천하도록 허용",
       "AssumptionsRestricted": "DIM이 방어구 에너지 유형 변경을 추천할 수 없음:",
       "BadSlot": "{{bucketName}} 슬롯에서 이 모드를 장착할 수 있는 허용된 아이템이 없음:",
+      "ExoticDoesNotExist": "소지품에 선택한 경이 방어구가 없습니다.",
       "Header": "빌드를 찾을 수 없습니다. DIM에서 빌드를 찾을 수 없는 이유는 다음과 같습니다:",
       "LowerBoundsFailed": "대부분의 조합이 최소 능력치 요구사항을 충족하지 않음",
       "MaybeAllowMoreItems": "다른 아이템을 허용하는 것을 고려해보세요:",
@@ -695,7 +701,7 @@
     "None": "없음",
     "OptimizerExplanationGuide": "사용 설명서에서 더 자세한 정보나 비디오 튜토리얼을 찾을 수 있습니다.",
     "OptimizerExplanationMods": "경이 아이템, 개조 부품, 하위직업을 선택하세요. 이들은 빌드에 능력치를 추가하며, 방어구에 이미 장착된 개조 부품은 무시됩니다.",
-    "OptimizerExplanationSearch": "검색 창을 사용하여 고려할 방어구를 좁혀보세요. 슬롯에 검색 조건과 일치하는 방어구가 없으면, 해당 슬롯에 대해서는 검색이 무시됩니다.",
+    "OptimizerExplanationSearch": "검색 창을 사용하여 고려할 방어구를 좁혀보세요 (예: {{example}}). 검색 조건과 일치하는 방어구가 없는 슬롯은 모든 아이템을 대상으로 간주됩니다.",
     "OptimizerExplanationStats": "가장 중요한 능력치를 위로 끌어서 놓고, 최대화하고 싶지 않은 능력치는 선택 해제하세요.",
     "OptimizerSet": "최적화 조합",
     "PinnedItems": "고정된 아이템",
@@ -1246,7 +1252,7 @@
     "DamageResistance": "PvE 피해 저항",
     "Discipline": "규율",
     "DropLevel": "계정 전투력",
-    "DropLevelExplanation1": "계정 전투력은 강력한 보상과 최고급 보상의 전투력을 계산할 때 기준 전투력으로 사용됩니다.",
+    "DropLevelExplanation1": "계정 전투력은 보상의 레벨을 계산할 때 기준으로 사용됩니다.",
     "DropLevelExplanation2": "계정 전투력은 직업 제한이나 \"하나의 경이\" 규칙을 무시하고 각 장비 슬롯마다 가장 높은 전투력의 아이템이 사용됩니다.",
     "EquippableGear": "장착 가능한 장비",
     "FlinchResistance": "피격 반동 저항",
