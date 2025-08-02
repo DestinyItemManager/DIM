@@ -63,7 +63,7 @@ function ChosenSetBonusOption({
   onClick: () => void;
 }) {
   return (
-    <div className={styles.chosenSetBonus} onClick={onClick}>
+    <div onClick={onClick}>
       <SetBonusDisplay setBonuses={setBonuses} />
     </div>
   );

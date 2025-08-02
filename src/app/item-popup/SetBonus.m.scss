@@ -1,7 +1,7 @@
 .setBonus {
   display: flex;
   justify-content: space-between;
-  margin: 10px;
+  margin: 8px 0;
   gap: 10px;
 
   .perk {
@@ -25,4 +25,8 @@
       margin: 2px;
     }
   }
+}
+
+.extraMargin {
+  margin: 10px;
 }

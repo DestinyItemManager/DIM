@@ -9,6 +9,7 @@ import {
   DestinyEquipableItemSetDefinition,
   DestinySandboxPerkDefinition,
 } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import styles from './SetBonus.m.scss';
 
 export function SingleItemSetBonus({ item }: { item: DimItem }) {
@@ -19,6 +20,7 @@ export function SingleItemSetBonus({ item }: { item: DimItem }) {
     SetBonus({
       setBonus: item.setBonus,
       defs: defs,
+      extraMargin: true,
     })
   );
 }
@@ -34,6 +36,7 @@ export function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) 
         setBonus: setDef,
         setCount: setBonuses[Number(setHash)] || 0,
         defs,
+        extraMargin: false,
       })
     );
   });
@@ -43,14 +46,16 @@ export function SetBonus({
   setBonus,
   defs,
   setCount = 5, // Default to showing all perks
+  extraMargin = false,
 }: {
   setBonus: DestinyEquipableItemSetDefinition;
   setCount?: number;
   defs: D2ManifestDefinitions;
+  extraMargin?: boolean;
 }) {
   return (
     setCount > 0 && (
-      <div className={styles.setBonus}>
+      <div className={clsx(styles.setBonus, { [styles.extraMargin]: extraMargin })}>
         {setBonus.setPerks
           .filter((perk) => perk && setCount >= perk.requiredSetCount)
           .map((p) =>
