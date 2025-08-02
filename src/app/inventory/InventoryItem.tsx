@@ -120,7 +120,7 @@ export default function InventoryItem({
         )}
         (
         {(nonPullablePostmasterItem(item) && <AlertIcon className={styles.warningIcon} />) ||
-          (isNew && <NewItemIndicator />)}
+          ($featureFlags.newItems && isNew && <NewItemIndicator />)}
       </>
     );
   }, [isNew, item, hasNotes, subclassIconInfo, tag, wishlistRoll, autoLockTagged]);
