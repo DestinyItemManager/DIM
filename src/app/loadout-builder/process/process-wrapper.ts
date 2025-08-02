@@ -129,6 +129,7 @@ export function runProcess({
     filteredItems: processItems,
     modStatTotals: mapValues(modStatChanges, (stat) => stat.value),
     lockedMods: lockedProcessMods,
+    setBonuses,
     desiredStatRanges,
     anyExotic,
     autoModOptions: autoModsData,

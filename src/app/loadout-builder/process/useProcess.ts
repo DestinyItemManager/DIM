@@ -50,8 +50,8 @@ interface ProcessState {
 export function useProcess({
   selectedStore,
   filteredItems,
-  setBonuses,
   lockedModMap,
+  setBonuses,
   modStatChanges,
   armorEnergyRules,
   desiredStatRanges,
@@ -61,8 +61,8 @@ export function useProcess({
 }: {
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
-  setBonuses: SetBonusCounts;
   lockedModMap: ModMap;
+  setBonuses: SetBonusCounts;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
   desiredStatRanges: DesiredStatRange[];
@@ -99,8 +99,8 @@ export function useProcess({
       const processInfo = runProcess({
         autoModDefs,
         filteredItems,
-        setBonuses,
         lockedModMap,
+        setBonuses,
         modStatChanges,
         armorEnergyRules,
         desiredStatRanges,
@@ -167,6 +167,7 @@ export function useProcess({
     armorEnergyRules,
     autoStatMods,
     lockedModMap,
+    setBonuses,
     getUserItemTag,
     modStatChanges,
     autoModDefs,
