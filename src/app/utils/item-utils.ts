@@ -30,6 +30,7 @@ import {
   BucketHashes,
   ItemCategoryHashes,
   PlugCategoryHashes,
+  StatHashes,
 } from 'data/d2/generated-enums';
 import { filterMap, objectifyArray } from './collections';
 
@@ -425,4 +426,14 @@ export function itemTypeName(item: DimItem) {
   }
 
   return title;
+}
+
+/**
+ * Returns [primary stat hash, secondary stat hash, tertiary stat hash] for armor 3.0.
+ * Make sure the item is armor 3.0 upstream.
+ */
+export function getArmor3StatFocus(item: DimItem): StatHashes[] {
+  return (item.stats?.filter((s) => s.statHash > 0 && s.base > 0) ?? [])
+    .sort((a, b) => b.base - a.base)
+    .map((s) => s.statHash);
 }
