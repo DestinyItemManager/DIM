@@ -30,6 +30,7 @@ export interface ProcessItem {
   power: number;
   stats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
+  setBonus?: number;
 }
 
 export type ProcessItemsByBucket = {

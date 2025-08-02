@@ -43,6 +43,11 @@ export interface ExcludedItems {
   [bucketHash: number]: DimItem[] | undefined;
 }
 
+/** A map from setBonus hash to number of pieces selected for that bonus */
+export interface SetBonusCounts {
+  [setBonusHash: number]: number | undefined;
+}
+
 /**
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */

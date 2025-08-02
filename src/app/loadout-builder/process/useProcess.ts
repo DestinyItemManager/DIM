@@ -14,6 +14,7 @@ import {
   DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
+  SetBonusCounts,
   StatRanges,
 } from '../types';
 import { getAutoMods } from './mappers';
@@ -50,6 +51,7 @@ export function useProcess({
   selectedStore,
   filteredItems,
   lockedModMap,
+  setBonuses,
   modStatChanges,
   armorEnergyRules,
   desiredStatRanges,
@@ -60,6 +62,7 @@ export function useProcess({
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
   lockedModMap: ModMap;
+  setBonuses: SetBonusCounts;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
   desiredStatRanges: DesiredStatRange[];
@@ -97,6 +100,7 @@ export function useProcess({
         autoModDefs,
         filteredItems,
         lockedModMap,
+        setBonuses,
         modStatChanges,
         armorEnergyRules,
         desiredStatRanges,
@@ -163,6 +167,7 @@ export function useProcess({
     armorEnergyRules,
     autoStatMods,
     lockedModMap,
+    setBonuses,
     getUserItemTag,
     modStatChanges,
     autoModDefs,

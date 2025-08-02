@@ -57,7 +57,7 @@ export function mapDimItemToProcessItem({
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
-  const { id, hash, name, isExotic, power } = dimItem;
+  const { id, hash, name, isExotic, power, setBonus } = dimItem;
 
   const stats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
   const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
@@ -78,6 +78,7 @@ export function mapDimItemToProcessItem({
     stats,
     remainingEnergyCapacity: capacity - modsCost,
     compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
+    setBonus: setBonus?.hash,
   };
 }
 

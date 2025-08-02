@@ -1,45 +1,99 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
-import { t, tl } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { SetBonusCounts } from 'app/loadout-builder/types';
 import { useD2Definitions } from 'app/manifest/selectors';
+import {
+  DestinyEquipableItemSetDefinition,
+  DestinySandboxPerkDefinition,
+} from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import styles from './SetBonus.m.scss';
-
-const pieceNumbers = [tl('Item.SetBonus.2Piece'), tl('Item.SetBonus.4Piece')];
 
 export function SingleItemSetBonus({ item }: { item: DimItem }) {
   const defs = useD2Definitions();
   return (
     defs &&
-    item.setBonus && (
-      <div className={styles.setBonus}>
-        {item.setBonus?.setPerks.map((p, i) => {
-          const perkDef = defs.SandboxPerk.get(p.sandboxPerkHash);
-          const tooltip = (
-            <>
-              <Tooltip.Header text={perkDef.displayProperties.name} />
-              <Tooltip.Subheader
-                text={`${item.setBonus!.displayProperties.name} | ${t(pieceNumbers[i])}`}
-              />
-              {perkDef.displayProperties.description}
-            </>
-          );
-          return (
-            <PressTip
-              tooltip={tooltip}
-              placement="top"
-              className={styles.perk}
-              key={p.sandboxPerkHash}
-            >
-              <div className={styles.perkIcon}>
-                <BungieImage src={perkDef.displayProperties.icon} />
-              </div>
-              <span>{perkDef.displayProperties.name}</span>
-            </PressTip>
-          );
-        })}
+    item.setBonus &&
+    SetBonus({
+      setBonus: item.setBonus,
+      defs: defs,
+      extraMargin: true,
+    })
+  );
+}
+
+export function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
+  const defs = useD2Definitions()!;
+  return Object.keys(setBonuses).map((setHash) => {
+    const setDef = defs.EquipableItemSet.get(Number(setHash));
+    return (
+      setDef &&
+      !setDef.redacted &&
+      SetBonus({
+        setBonus: setDef,
+        setCount: setBonuses[Number(setHash)] || 0,
+        defs,
+        extraMargin: false,
+      })
+    );
+  });
+}
+
+export function SetBonus({
+  setBonus,
+  defs,
+  setCount = 5, // Default to showing all perks
+  extraMargin = false,
+}: {
+  setBonus: DestinyEquipableItemSetDefinition;
+  setCount?: number;
+  defs: D2ManifestDefinitions;
+  extraMargin?: boolean;
+}) {
+  return (
+    setCount > 0 && (
+      <div className={clsx(styles.setBonus, { [styles.extraMargin]: extraMargin })}>
+        {setBonus.setPerks
+          .filter((perk) => perk && setCount >= perk.requiredSetCount)
+          .map((p) =>
+            SetPerk({
+              perkDef: defs.SandboxPerk.get(p.sandboxPerkHash),
+              setName: setBonus.displayProperties.name,
+              pieceCount: p.requiredSetCount,
+            }),
+          )}
       </div>
     )
   );
-  // return item.setBonus && <div>{item.setBonus.displayProperties.name}</div>;
+}
+
+export function SetPerk({
+  perkDef,
+  setName,
+  pieceCount,
+}: {
+  perkDef: DestinySandboxPerkDefinition;
+  setName: string;
+  pieceCount: number;
+}) {
+  const tooltip = (
+    <>
+      <Tooltip.Header text={perkDef.displayProperties.name} />
+      <Tooltip.Subheader
+        text={`${setName} | ${t('Item.SetBonus.NPiece', { count: pieceCount })}`}
+      />
+      {perkDef.displayProperties.description}
+    </>
+  );
+  return (
+    <PressTip tooltip={tooltip} placement="top" className={styles.perk} key={perkDef.hash}>
+      <div className={styles.perkIcon}>
+        <BungieImage src={perkDef.displayProperties.icon} />
+      </div>
+      <span>{perkDef.displayProperties.name}</span>
+    </PressTip>
+  );
 }
