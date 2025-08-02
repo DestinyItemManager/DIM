@@ -1,10 +1,13 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
+import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { SetBonus } from 'app/item-popup/SetBonus';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { objectValues } from 'app/utils/util-types';
 import { DestinyItemSetPerkDefinition } from 'bungie-api-ts/destiny2';
 import { sum } from 'es-toolkit';
@@ -41,7 +44,7 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
       </button>
       {showSetBonusPicker && (
         <SetBonusPicker
-          setBonuses={setBonuses}
+          initialSetBonuses={setBonuses}
           onAccept={(setBonuses) => lbDispatch({ type: 'setSetBonuses', setBonuses })}
           onClose={() => setShowSetBonusPicker(false)}
         />
@@ -59,41 +62,32 @@ function ChosenSetBonusOption({
   setBonuses: SetBonusCounts;
   onClick: () => void;
 }) {
-  const defs = useD2Definitions()!;
-  // const itemCreationContext = useSelector(createItemContextSelector);
-
-  // let info: { icon: React.ReactNode; title: React.ReactNode; description: React.ReactNode };
-
-  return Object.keys(setBonuses).map((setHash) => {
-    const setDef = defs.EquipableItemSet.get(Number(setHash));
-    return (
-      setDef &&
-      !setDef.redacted &&
-      SetBonus({
-        setBonus: setDef,
-        setCount: setBonuses[Number(setHash)] || 0,
-        defs,
-      })
-    );
-  });
+  return (
+    <div className={styles.chosenSetBonus} onClick={onClick}>
+      {SetBonusDisplay({ setBonuses })}
+    </div>
+  );
 }
 
 export function SetBonusPicker({
-  setBonuses,
+  initialSetBonuses,
   onAccept,
   onClose,
 }: {
-  /** Set bonus hashes mapped to desired item counts. */
-  setBonuses: SetBonusCounts;
-  /** Called with the complete list of lockedMods when the user accepts the new mod selections. */
-  onAccept: (newSetBonuses: SetBonusCounts) => void;
-  /** Called when the user accepts the new modset of closes the sheet. */
+  /** Initial Set bonus hashes mapped to desired item counts. */
+  initialSetBonuses: SetBonusCounts;
+  /** Called with the new SetBonusCounts when the user accepts the new selections. */
+  onAccept: (setBonuses: SetBonusCounts) => void;
+  /** Called when the user accepts the new perk set or closes the sheet. */
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
+
   // TODO search functionality
   // const language = useSelector(languageSelector);
   // const [query, setQuery] = useState('');
+  const [setBonuses, setSetBonuses] = useState(initialSetBonuses);
 
   const sets = objectValues(defs.EquipableItemSet.getAll()).filter((set) => !set.redacted);
 
@@ -103,12 +97,26 @@ export function SetBonusPicker({
     !selected(perk, setHash) &&
     sum(Object.values(setBonuses)) - (setBonuses[setHash] || 0) + perk.requiredSetCount > 5;
 
+  const footer = ({ onClose }: { onClose: () => void }) => (
+    <Footer
+      isPhonePortrait={isPhonePortrait}
+      acceptButtonText={t('LB.SelectSetBonus')}
+      setBonuses={setBonuses}
+      onSubmit={(event) => {
+        event.preventDefault();
+        onAccept(setBonuses);
+        onClose();
+      }}
+    />
+  );
+
   return (
     <Sheet
       header={
         <div>
           <h1>{t('LB.ChooseASetBonus')}</h1>
-          {/* <SearchInput
+          {/* TODO search functionality
+          <SearchInput
             query={query}
             onQueryChanged={setQuery}
             placeholder={t('LB.SearchASetBonus')}
@@ -116,6 +124,7 @@ export function SetBonusPicker({
           /> */}
         </div>
       }
+      footer={footer}
       onClose={onClose}
       freezeInitialHeight={true}
     >
@@ -137,15 +146,15 @@ export function SetBonusPicker({
                       </div>
                     </>
                   }
-                  onClick={() =>
-                    onAccept({
+                  onClick={() => {
+                    setSetBonuses({
                       ...setBonuses,
                       [set.hash]:
                         (setBonuses[set.hash] || 0) === perk.requiredSetCount
                           ? 0
                           : perk.requiredSetCount,
-                    })
-                  }
+                    });
+                  }}
                 >
                   <span className={styles.setCount}>
                     {t('Item.SetBonus.NPiece', { count: perk.requiredSetCount })}
@@ -159,4 +168,46 @@ export function SetBonusPicker({
       </div>
     </Sheet>
   );
+}
+
+function Footer({
+  isPhonePortrait,
+  acceptButtonText,
+  setBonuses,
+  onSubmit,
+}: {
+  isPhonePortrait: boolean;
+  acceptButtonText: string;
+  setBonuses: SetBonusCounts;
+  onSubmit: (event: React.FormEvent | KeyboardEvent) => void;
+}) {
+  useHotkey('enter', acceptButtonText, onSubmit);
+
+  return (
+    <div className={styles.footer}>
+      <button type="button" className={styles.submitButton} onClick={onSubmit}>
+        {!isPhonePortrait && '⏎ '}
+        {acceptButtonText}
+      </button>
+      <SheetHorizontalScrollContainer className={styles.selectedBonuses}>
+        {SetBonusDisplay({ setBonuses })}
+      </SheetHorizontalScrollContainer>
+    </div>
+  );
+}
+
+function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
+  const defs = useD2Definitions()!;
+  return Object.keys(setBonuses).map((setHash) => {
+    const setDef = defs.EquipableItemSet.get(Number(setHash));
+    return (
+      setDef &&
+      !setDef.redacted &&
+      SetBonus({
+        setBonus: setDef,
+        setCount: setBonuses[Number(setHash)] || 0,
+        defs,
+      })
+    );
+  });
 }

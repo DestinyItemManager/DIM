@@ -7,15 +7,6 @@
   gap: 14px;
 }
 
-.perk {
-  background-color: var(--theme-item-popup-panel-bg);
-  flex-basis: 0;
-  flex-grow: 1;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-}
-
 .perkIcon {
   border-radius: 50%;
   border: 1px solid white;
@@ -31,4 +22,32 @@
 
 .setCount {
   color: var(--theme-text-secondary);
+}
+
+.footer {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
+
+.selectedBonuses {
+  --item-size: 32px;
+  gap: 10px;
+
+  > * {
+    margin: 1px;
+    flex-shrink: 0;
+  }
+}
+
+.chosenSetBonus {
+  > * {
+    margin: 8px 0;
+  }
 }
