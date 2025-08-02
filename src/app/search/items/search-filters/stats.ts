@@ -156,7 +156,6 @@ const statFilters: ItemFilterDefinition[] = [
       // A documented assumption: this lookup must succeed if logic even reached this filter, because `keywords` above
       const ordinal = statOrdinals[lhs]!;
       const seekingStatHash = realD2ArmorStatHashByName[filterValue];
-      console.log({ ordinal, seekingStatHash });
       if (!seekingStatHash) {
         throw Error(`invalid stat name: "${filterValue}"`);
       }
