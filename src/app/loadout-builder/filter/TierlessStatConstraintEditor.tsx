@@ -408,20 +408,8 @@ function StatBar({
           }}
         />
       )}
-      {(!range || range.minStat !== max) && (
-        <div
-          key="min"
-          className={styles.statBarMin}
-          style={{ left: percent(effectiveMin / MAX_STAT) }}
-        />
-      )}
-      {(!range || range.maxStat !== max) && (
-        <div
-          key="max"
-          className={styles.statBarMax}
-          style={{ left: percent(effectiveMax / MAX_STAT) }}
-        />
-      )}
+      <div className={styles.statBarMin} style={{ left: percent(effectiveMin / MAX_STAT) }} />
+      <div className={styles.statBarMax} style={{ left: percent(effectiveMax / MAX_STAT) }} />
     </div>
   );
 }
