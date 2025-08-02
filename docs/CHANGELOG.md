@@ -10,6 +10,7 @@
 * Hid the masterwork upgrade socket in the item popup for new armor.
 * Added a catalyst icon for the Osteo Striga.
 * Removed some uninteresting materials from the material counts display.
+* Added stat ordinality armor filters like `primarystat:super` and `tertiarystat:grenade`.
 
 ## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
 
