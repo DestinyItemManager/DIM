@@ -16,6 +16,7 @@ import {
 import { createCustomStatColumns } from 'app/organizer/CustomStatColumns';
 import { ColumnDefinition, SortDirection, Value } from 'app/organizer/table-types';
 import { quoteFilterString } from 'app/search/query-parser';
+import { Settings } from 'app/settings/initial-settings';
 import { compact } from 'app/utils/collections';
 import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
@@ -44,7 +45,7 @@ export function getColumns(
   stats: DimStat[],
   customStatDefs: CustomStatDef[],
   destinyVersion: DestinyVersion,
-  compareBaseStats: boolean,
+  armorCompare: Settings['armorCompare'],
   primaryStatDescription: DestinyDisplayPropertiesDefinition | undefined,
   initialItemId: string | undefined,
   onPlugClicked: PlugClickedHandler,
@@ -53,17 +54,24 @@ export function getColumns(
   const isWeapon = itemsType === 'weapon';
   const isGeneral = itemsType === 'general';
 
-  const { statColumns, baseStatColumns, d1ArmorQualityByStat } = getStatColumns(
-    stats,
+  const { statColumns, baseStatColumns, baseMasterworkStatColumns, d1ArmorQualityByStat } =
+    getStatColumns(
+      stats,
+      customStatDefs,
+      destinyVersion,
+      {
+        isArmor,
+        showStatLabel: true,
+      },
+      styles.stat,
+    );
+  const customStats = createCustomStatColumns(
     customStatDefs,
-    destinyVersion,
-    {
-      isArmor,
-      showStatLabel: true,
-    },
     styles.stat,
+    undefined,
+    true,
+    armorCompare === 'baseMasterwork', // withMasterwork boolean
   );
-  const customStats = createCustomStatColumns(customStatDefs, styles.stat, undefined, true);
 
   // TODO: maybe add destinyVersion / usecase to the ColumnDefinition type??
   const columns: ColumnDefinition[] = compact([
@@ -132,7 +140,11 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
       }),
-    ...(compareBaseStats && isArmor ? baseStatColumns : statColumns),
+    ...(!isArmor || armorCompare === 'current'
+      ? statColumns
+      : armorCompare === 'base'
+        ? baseStatColumns
+        : baseMasterworkStatColumns),
     ...d1ArmorQualityByStat,
     destinyVersion === 1 && isArmor && d1QualityColumn,
     ...(destinyVersion === 2 && isArmor ? customStats : []),

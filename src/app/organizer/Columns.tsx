@@ -917,6 +917,10 @@ export function getStatColumns(
     id: 'baseStats',
     header: t('Organizer.Columns.BaseStats'),
   };
+  const baseMasterworkStatsGroup: ColumnGroup = {
+    id: 'baseMasterworkStats',
+    header: t('Compare.AssumeMasterworked'),
+  };
   const statQualityGroup: ColumnGroup = {
     id: 'statQuality',
     header: t('Organizer.Columns.StatQuality'),
@@ -1026,6 +1030,45 @@ export function getStatColumns(
         }))
       : [];
 
+  const baseMasterworkStatColumns: ColumnWithStat[] =
+    destinyVersion === 2 && isArmor && !isSpreadsheet
+      ? statColumns.map((column) => ({
+          ...column,
+          id: `baseMasterwork${column.statHash}`,
+          columnGroup: baseMasterworkStatsGroup,
+          value: (item): number | undefined => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            return stat?.baseMasterworked;
+          },
+          cell: (val, item, ctx) => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            if (typeof val !== 'number') {
+              return null;
+            }
+            // TODO: force a width if this is armor, so we see the bar?
+            return (
+              <CompareStat
+                min={ctx?.min ?? 0}
+                max={ctx?.max ?? 0}
+                stat={stat}
+                item={item}
+                value={val}
+              />
+            );
+          },
+          filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
+          csv: (_value, item) => {
+            // Re-find the stat instead of using the value passed in, because the
+            // value passed in can be different if it's Recoil.
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            return [
+              `${csvStatNames.get(column.statHash) ?? `UnknownStatBase ${column.statHash}`} (Base)`,
+              stat?.base ?? 0,
+            ];
+          },
+        }))
+      : [];
+
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
       ? stats
@@ -1074,6 +1117,7 @@ export function getStatColumns(
   return {
     statColumns,
     baseStatColumns,
+    baseMasterworkStatColumns,
     d1ArmorQualityByStat,
   };
 }

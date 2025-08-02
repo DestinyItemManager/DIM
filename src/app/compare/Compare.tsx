@@ -1,7 +1,8 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { languageSelector } from 'app/dim-api/selectors';
+import Select, { Option } from 'app/dim-ui/Select';
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
@@ -17,6 +18,7 @@ import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
+import { Settings } from 'app/settings/initial-settings';
 import { AppIcon, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -37,6 +39,12 @@ import { endCompareSession, removeCompareItem, updateCompareQuery } from './acti
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
+const statModeLabels = {
+  current: tl('Compare.CurrentStats'),
+  base: tl('Organizer.Columns.BaseStats'),
+  baseMasterwork: tl('Compare.AssumeMasterworked'),
+};
+
 // TODO: CSS grid-with-sticky layout
 // TODO: dropdowns for query buttons
 // TODO: freeform query
@@ -45,6 +53,7 @@ export default function Compare({ session }: { session: CompareSession }) {
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions()!;
   const [compareBaseStats, setCompareBaseStats] = useSetting('compareBaseStats');
+  const [armorCompareSetting, setArmorCompareSetting] = useSetting('armorCompare');
   const [assumeWeaponMasterwork, setAssumeWeaponMasterwork] = useSetting('compareWeaponMasterwork');
   const itemCreationContext = useSelector(createItemContextSelector);
   const rawCompareItems = useSelector(compareItemsSelector(session.vendorCharacterId));
@@ -57,7 +66,14 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   const comparingArmor = rawCompareItems[0]?.bucket.inArmor;
   const comparingWeapons = rawCompareItems[0]?.bucket.inWeapons;
-  const doCompareBaseStats = Boolean(compareBaseStats && comparingArmor);
+
+  const armorCompareMode =
+    $DIM_FLAVOR === 'release'
+      ? compareBaseStats && comparingArmor
+        ? 'base'
+        : 'current'
+      : armorCompareSetting;
+
   const doAssumeWeaponMasterworks = Boolean(defs && assumeWeaponMasterwork && comparingWeapons);
 
   // Produce new items which have had their sockets changed
@@ -65,7 +81,7 @@ export default function Compare({ session }: { session: CompareSession }) {
     let items = rawCompareItems;
     if (doAssumeWeaponMasterworks && comparingWeapons) {
       // Fully masterwork weapons
-      items = items.map((i) => masterworkItem(i, itemCreationContext));
+      items = items.map((i) => masterworkWeapon(i, itemCreationContext));
     }
     // Apply any socket override selections (perk choices)
     return items.map((i) => applySocketOverrides(itemCreationContext, i, socketOverrides[i.id]));
@@ -143,7 +159,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         allStats,
         customStats,
         destinyVersion,
-        doCompareBaseStats,
+        armorCompareMode,
         primaryStatDescription,
         initialItem?.id,
         onPlugClicked,
@@ -152,7 +168,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       type,
       hasEnergy,
       allStats,
-      doCompareBaseStats,
+      armorCompareMode,
       destinyVersion,
       customStats,
       primaryStatDescription,
@@ -210,16 +226,37 @@ export default function Compare({ session }: { session: CompareSession }) {
     [rows, tableCtx, filteredColumns, remove, onPlugClicked],
   );
 
+  const selectOptions: Option<Settings['armorCompare']>[] = [
+    { content: t('Compare.CurrentStatsDescription'), key: 'current', value: 'current' },
+    { content: t('Compare.BaseStatsDescription'), key: 'base', value: 'base' },
+    {
+      content: t('Compare.AssumeMasterworkedDescription'),
+      key: 'baseMasterwork',
+      value: 'baseMasterwork',
+    },
+  ];
+
   const header = (
     <div className={styles.options}>
-      {comparingArmor && (
-        <Checkbox
-          label={t('Compare.CompareBaseStats')}
-          name="compareBaseStats"
-          value={compareBaseStats}
-          onChange={setCompareBaseStats}
-        />
-      )}
+      {comparingArmor &&
+        ($DIM_FLAVOR !== 'release' ? (
+          <Select
+            options={selectOptions}
+            value={armorCompareSetting}
+            onChange={(v) => setArmorCompareSetting(v ?? 'baseMasterwork')}
+            className={styles.comparisonModebutton}
+            maxDropdownWidth={500}
+          >
+            {t(statModeLabels[armorCompareSetting])}
+          </Select>
+        ) : (
+          <Checkbox
+            label={t('Compare.CompareBaseStats')}
+            name="compareBaseStats"
+            value={compareBaseStats}
+            onChange={setCompareBaseStats}
+          />
+        ))}
       {comparingWeapons && defs && destinyVersion === 2 && (
         <Checkbox
           label={t('Compare.AssumeMasterworked')}
@@ -297,7 +334,7 @@ function CompareItems({
  * Produce a copy of the item with the masterwork socket filled in with the best
  * masterwork option.
  */
-function masterworkItem(i: DimItem, itemCreationContext: ItemCreationContext): DimItem {
+function masterworkWeapon(i: DimItem, itemCreationContext: ItemCreationContext): DimItem {
   if (i.destinyVersion !== 2 || !i.sockets) {
     return i;
   }

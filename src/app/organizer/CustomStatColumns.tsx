@@ -9,6 +9,7 @@ export function createCustomStatColumns(
   className?: string,
   headerClassName?: string,
   hideFormula = false,
+  withMasterwork = false,
 ): ColumnDefinition[] {
   return customStatDefs.map(
     (c): ColumnDefinition => ({
@@ -23,10 +24,13 @@ export function createCustomStatColumns(
       ),
       className,
       headerClassName,
-      value: (item) => item.stats?.find((s) => s.statHash === c.statHash)?.value ?? 0,
-      cell: (_val, item, ctx) => {
+      value: (item) =>
+        item.stats?.find((s) => s.statHash === c.statHash)?.[
+          withMasterwork ? 'baseMasterworked' : 'base'
+        ] ?? 0,
+      cell: (val, item, ctx) => {
         const stat = item.stats?.find((s) => s.statHash === c.statHash);
-        if (!stat) {
+        if (!stat || typeof val !== 'number') {
           return null;
         }
         // TODO: force a width if this is armor, so we see the bar?
@@ -36,7 +40,7 @@ export function createCustomStatColumns(
             max={ctx?.max ?? 0}
             stat={stat}
             item={item}
-            value={stat.base}
+            value={val}
           />
         );
       },

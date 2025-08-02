@@ -46,15 +46,18 @@ export function makeCustomStat(
   const averageNonZeroStatWeight = sum(nonZeroWeights) / nonZeroWeights.length;
 
   let weightedBaseTotal = 0;
+  let weightedBaseMasterworkTotal = 0;
   let weightedTotal = 0;
 
-  for (const { base, value, statHash } of stats) {
+  for (const { base, baseMasterworked, value, statHash } of stats) {
     const multiplier = statWeights[statHash] || 0;
     weightedBaseTotal += base * multiplier;
+    weightedBaseMasterworkTotal += (baseMasterworked || 0) * multiplier;
     weightedTotal += value * multiplier;
   }
 
   weightedBaseTotal = Math.round(weightedBaseTotal / averageNonZeroStatWeight);
+  weightedBaseMasterworkTotal = Math.round(weightedBaseMasterworkTotal / averageNonZeroStatWeight);
   weightedTotal = Math.round(weightedTotal / averageNonZeroStatWeight);
 
   return {
@@ -67,6 +70,7 @@ export function makeCustomStat(
     sort: getStatSortOrder(customStatHash),
     value: baseOnly ? weightedBaseTotal : weightedTotal,
     base: weightedBaseTotal,
+    baseMasterworked: weightedBaseMasterworkTotal,
     maximumValue: 1000,
     bar: false,
     smallerIsBetter: false,

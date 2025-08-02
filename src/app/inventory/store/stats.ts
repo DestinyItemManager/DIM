@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { isClassCompatible } from 'app/utils/item-utils';
+import { isArmor3, isClassCompatible } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/memoize';
 import {
   DestinyInventoryItemDefinition,
@@ -31,11 +31,11 @@ import { makeCustomStat } from './stats-custom';
  *
  * buildStats(stats) {
  *   stats = buildInvestmentStats(stats) // based on information from an item's inherent stats
- *   applyPlugsToStats(stats)            // mutates stats. adds values provided by sockets (intrinsic armor stats&gun parts)
+ *   applyPlugsToStats(stats)            // mutates stats. adds values provided by sockets (intrinsic armor stats & gun parts)
  *   if (is armor) {
  *     if (any armor stat is missing) fill in missing stats with 0s
  *     synthesize totalStat and add it
- *     if (not classitem) synthesize customStat and add it
+ *     synthesize customStat and add it
  *   }
  * }
  */
@@ -138,7 +138,7 @@ export function buildStats(
   // functions to speed up display info lookups
   const statDisplaysByStatHash = memoStatDisplaysByStatHash(statGroup);
 
-  // We only use the raw "investment" stats to calculate all item stats.
+  // We use the raw "investment" stats to calculate all item stats (instead of API-reported stats).
   const investmentStats =
     buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
@@ -146,6 +146,8 @@ export function buildStats(
   applyPlugsToStats(investmentStats, createdItem, statDisplaysByStatHash);
 
   if (createdItem.bucket.inArmor) {
+    // Include the contributions from perks and mods
+    generateAssumedMasterworkStats(investmentStats, createdItem);
     // synthesize the "Total" stat for armor
     // it's effectively just a custom total with 6 stats evenly weighted
     const tStat = makeCustomStat(
@@ -381,6 +383,92 @@ function applyPlugsToStats(
   for (const socket of sortedSockets) {
     attachPlugStats(createdItem, socket, existingStatsByHash, statDisplaysByStatHash);
   }
+}
+
+/**
+ * Add a baseMasterworked value to armor stats, projecting what they would be if masterworked.
+ */
+function generateAssumedMasterworkStats(
+  existingStats: DimStat[], // values in this array are mutated
+  createdItem: DimItem,
+) {
+  // The presence of mod energy identifies armor 2.0 and armor 3.0.
+  if (createdItem.bucket.inArmor && createdItem.energy) {
+    // At this point, the armor only has 6 stats. DIM has not synthesized anything new.
+    // It's safe to operate on every existing stat. Otherwise, armorStats from known-values would be used.
+    if (isArmor3(createdItem)) {
+      for (const existingStat of existingStats) {
+        // Armor 3.0 gets a +5 in stats with a base of 0.
+        existingStat.baseMasterworked = existingStat.base || existingStat.base + 5;
+      }
+    } else {
+      for (const existingStat of existingStats) {
+        // Armor 2.0 gets 2 stat points in each stat when masterworked
+        existingStat.baseMasterworked = existingStat.base + 2;
+      }
+    }
+  }
+
+  // if (!createdItem.sockets?.allSockets.length) {
+  //   return;
+  // }
+
+  // const existingStatsByHash = keyByStatHash(existingStats);
+
+  // // loop through sockets looking for plugs that modify an item's investmentStats
+  // for (const [affectsBase, socketList] of socketLists) {
+  //   for (const socket of socketList) {
+  //     // skip this socket+plug if it's disabled or doesn't affect stats
+  //     if (!socket.plugged?.enabled || !socket.plugged.plugDef.investmentStats) {
+  //       continue;
+  //     }
+
+  //     for (const pluggedInvestmentStat of mapAndFilterInvestmentStats(socket.plugged.plugDef)) {
+  //       const affectedStatHash = pluggedInvestmentStat.statTypeHash;
+
+  //       const existingStat = existingStatsByHash[affectedStatHash];
+  //       // all relevant stats have been added, so if the item doesn't have the stat, we should ignore this
+  //       if (!existingStat) {
+  //         continue;
+  //       }
+
+  //       // check special conditionals
+  //       if (
+  //         !isPlugStatActive(
+  //           pluggedInvestmentStat.activationRule,
+  //           createdItem,
+  //           undefined,
+  //           existingStat,
+  //         )
+  //       ) {
+  //         continue;
+  //       }
+
+  //       // we've ruled out reasons to ignore this investment stat. apply its effects to the investmentValue
+  //       existingStat.investmentValue += getPlugStatValue(createdItem, pluggedInvestmentStat);
+
+  //       // finally, re-interpolate the stat value
+  //       const statDisplay = statDisplaysByStatHash[affectedStatHash];
+  //       const newStatValue = statDisplay
+  //         ? interpolateStatValue(existingStat.investmentValue, statDisplay)
+  //         : Math.min(existingStat.investmentValue, existingStat.maximumValue);
+  //       if (affectsBase) {
+  //         existingStat.base = newStatValue;
+  //       }
+  //       existingStat.value = newStatValue;
+  //     }
+  //   }
+  // }
+
+  // // We sort the sockets by length so that we count contributions from plugs with fewer options first.
+  // // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
+  // // stats in first.
+  // const sortedSockets = createdItem.sockets.allSockets.toSorted(
+  //   compareBy((s) => s.plugOptions.length),
+  // );
+  // for (const socket of sortedSockets) {
+  //   attachPlugStats(createdItem, socket, existingStatsByHash, statDisplaysByStatHash);
+  // }
 }
 
 /**

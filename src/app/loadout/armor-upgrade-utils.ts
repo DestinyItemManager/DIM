@@ -2,7 +2,7 @@ import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { maxEnergyCapacity } from 'app/search/d2-known-values';
-import { isArtifice, isEdgeOfFateArmorMasterwork } from 'app/utils/item-utils';
+import { isArmor3, isArtifice } from 'app/utils/item-utils';
 
 /**
  * Gets the max energy we can use on this item, based on its current energy
@@ -32,7 +32,7 @@ export function isAssumedArtifice(item: DimItem, { assumeArmorMasterwork }: Armo
     (item.isExotic &&
       item.energy &&
       assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic &&
-      !isEdgeOfFateArmorMasterwork(item)) ||
+      !isArmor3(item)) ||
     isArtifice(item)
   );
 }

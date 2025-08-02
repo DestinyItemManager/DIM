@@ -308,6 +308,8 @@ export interface DimStat {
   value: number;
   /** Base stat without bonus perks applied. Important in D2 for armor. */
   base: number;
+  /** Base stat if it were masterworked. This allows useful comparison between eras of armor. */
+  baseMasterworked?: number;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
