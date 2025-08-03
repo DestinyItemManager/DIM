@@ -3,8 +3,10 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
+import { compact } from 'app/utils/collections';
 import { itemTypeName } from 'app/utils/item-utils';
 import {
+  getArmorArchetypeSocket,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
   getWeaponArchetype,
@@ -78,10 +80,11 @@ export default function Highlights({ item }: { item: DimItem }) {
         {stat.value}
       </div>
     );
-    const extraIntrinsicSockets = [
+    const extraIntrinsicSockets = compact([
       getIntrinsicArmorPerkSocket(item),
       ...getExtraIntrinsicPerkSockets(item),
-    ];
+      getArmorArchetypeSocket(item),
+    ]);
     return (
       <>
         <div className={styles.stats}>
@@ -94,28 +97,25 @@ export default function Highlights({ item }: { item: DimItem }) {
         </div>
         {extraIntrinsicSockets.length > 0 && (
           <div className={styles.perks}>
-            {extraIntrinsicSockets.map(
-              (s) =>
-                s && (
-                  <div
-                    key={s.socketIndex}
-                    className={clsx({
-                      [styles.multiPerk]: s.isPerk && s.plugOptions.length > 1,
-                    })}
+            {extraIntrinsicSockets.map((s) => (
+              <div
+                key={s.socketIndex}
+                className={clsx({
+                  [styles.multiPerk]: s.isPerk && s.plugOptions.length > 1,
+                })}
+              >
+                {s.plugOptions.map((p) => (
+                  <PressTip
+                    key={p.plugDef.hash}
+                    tooltip={() => <DimPlugTooltip item={item} plug={p} />}
+                    className={styles.perk}
                   >
-                    {s.plugOptions.map((p) => (
-                      <PressTip
-                        key={p.plugDef.hash}
-                        tooltip={() => <DimPlugTooltip item={item} plug={p} />}
-                        className={styles.perk}
-                      >
-                        <DefItemIcon itemDef={p.plugDef} borderless={true} />
-                        {p.plugDef.displayProperties.name}
-                      </PressTip>
-                    ))}
-                  </div>
-                ),
-            )}
+                    <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                    {p.plugDef.displayProperties.name}
+                  </PressTip>
+                ))}
+              </div>
+            ))}
           </div>
         )}
       </>

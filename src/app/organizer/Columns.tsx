@@ -50,6 +50,7 @@ import {
   isD1Item,
 } from 'app/utils/item-utils';
 import {
+  getArmorArchetypeSocket,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
   getSocketsByType,
@@ -1244,14 +1245,15 @@ export function perkString(sockets: DimSocket[]): string | undefined {
     .join(',');
 }
 
-export function getIntrinsicSockets(item: DimItem) {
+export function getIntrinsicSockets(item: DimItem): DimSocket[] {
   const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
+  const archetypeSocket = getArmorArchetypeSocket(item);
   return intrinsicSocket &&
     // artifice already shows up in the "modslot" column
     !isArtificeSocket(intrinsicSocket)
-    ? [intrinsicSocket, ...extraIntrinsicSockets]
-    : extraIntrinsicSockets;
+    ? [intrinsicSocket, ...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])]
+    : [...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])];
 }
 
 /**

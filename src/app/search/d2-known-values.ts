@@ -1,6 +1,7 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ArmorStatHashes } from 'app/loadout-builder/types';
+import { invert } from 'app/utils/collections';
 import { HashLookup, StringLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 
@@ -132,6 +133,7 @@ export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
   super: StatHashes.Super,
   melee: StatHashes.Melee,
 };
+export const realD2ArmorStatSearchByHash = invert(realD2ArmorStatHashByName);
 
 /** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
 export const armorStats: ArmorStatHashes[] = [

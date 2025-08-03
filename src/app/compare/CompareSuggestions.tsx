@@ -34,6 +34,8 @@ export default memo(function CompareSuggestions({
     items: categoryItems.filter(filterFactory(button.query)),
   }));
 
+  console.log(compareButtonsWithItems.map((x) => `${x.query} ${x.items.length}`).join('\n'));
+
   let keptPenultimateButton = false;
 
   // Filter out useless buttons

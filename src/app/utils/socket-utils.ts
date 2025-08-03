@@ -182,7 +182,6 @@ export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
           // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
           .map((s) => ({ ...s, isReusable: false }))
       : []),
-    ...item.sockets.allSockets.filter(isArmorArchetypeSocket),
   ];
 }
 
