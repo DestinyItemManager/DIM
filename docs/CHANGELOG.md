@@ -11,6 +11,7 @@
 * Added a catalyst icon for the Osteo Striga.
 * Removed some uninteresting materials from the material counts display.
 * Added stat ordinality armor filters like `primarystat:super` and `tertiarystat:grenade`.
+* Add another compare button to highlight Armor 3.0 with the same 3 base stats.
 
 ## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
 
