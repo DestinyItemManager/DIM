@@ -230,6 +230,26 @@ export const DEEPSIGHT_HARMONIZER = 2228452164;
 // For loadout mods obliterated from the defs, we instead return this def
 export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
 
+// used in displaying the component segments on item stats
+export const weaponParts = new Set<PlugCategoryHashes | undefined>([
+  PlugCategoryHashes.Bowstrings,
+  PlugCategoryHashes.Batteries,
+  PlugCategoryHashes.Blades,
+  PlugCategoryHashes.Tubes,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Hafts,
+  PlugCategoryHashes.Stocks,
+  PlugCategoryHashes.Guards,
+  PlugCategoryHashes.Barrels,
+  PlugCategoryHashes.Arrows,
+  PlugCategoryHashes.Grips,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Magazines,
+  PlugCategoryHashes.MagazinesGl,
+  PlugCategoryHashes.Rails,
+  PlugCategoryHashes.Bolts,
+]);
+
 //
 // BUCKETS KNOWN VALUES
 //
