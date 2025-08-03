@@ -153,7 +153,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         query: `is:armor3.0 is:legendary`,
       },
 
-    // Try to make a group of armors 3.0 with the exact same 3 stats focused. This is an easy win for identifying better/worse armor.
+    // Try to make a group of armors 3.0 with the same archetype.
     exampleItem.destinyVersion === 2 &&
       archetype && {
         buttonLabel: [
@@ -163,10 +163,9 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             src={archetype.displayProperties.icon}
           />,
           <span key="2">{archetype.displayProperties.name}</span>,
-          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `${modernArmor} perk:${quoteFilterString(archetype.displayProperties.name)} tertiarystat:${tertiaryStat} is:${exampleItem.rarity}`,
+        query: `${modernArmor} perk:${quoteFilterString(archetype.displayProperties.name)} is:${exampleItem.rarity}`,
       },
 
     // Try to make a group of armors 3.0 with the exact same 3 stats focused. This is an easy win for identifying better/worse armor.
@@ -175,15 +174,18 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       tertiaryStat &&
       tertiaryStatDisplay && {
         buttonLabel: [
-          <PressTip minimal tooltip={archetype.displayProperties.name} key="1">
-            <BungieImage
-              className={clsx(styles.intrinsicIcon, 'dontInvert')}
-              src={archetype.displayProperties.icon}
-            />
-          </PressTip>,
+          <BungieImage
+            key="1"
+            className={clsx(styles.intrinsicIcon, 'dontInvert')}
+            src={archetype.displayProperties.icon}
+          />,
+          <span key="2">{archetype.displayProperties.name}</span>,
           '+',
-          <BungieImage key="tertiary" src={tertiaryStatDisplay.icon} />,
-          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
+          <BungieImage
+            key="tertiary"
+            className={clsx(styles.statIconAdjust, 'dontInvert')}
+            src={tertiaryStatDisplay.icon}
+          />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `${modernArmor} perk:${quoteFilterString(archetype.displayProperties.name)} tertiarystat:${tertiaryStat} is:${exampleItem.rarity}`,
