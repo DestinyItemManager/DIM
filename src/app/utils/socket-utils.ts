@@ -14,6 +14,7 @@ import {
   GhostActivitySocketTypeHashes,
   armor2PlugCategoryHashes,
   weaponMasterworkY2SocketTypeHash,
+  weaponParts,
 } from 'app/search/d2-known-values';
 import {
   DestinyInventoryItemDefinition,
@@ -254,8 +255,9 @@ export function isEventArmorRerollSocket(socket: DimSocket) {
 
 export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
   return (
-    plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
-    plugDef.inventory!.tierType === TierType.Common
+    plugDef.inventory!.tierType === TierType.Common &&
+    (plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+      weaponParts.has(plugDef.plug.plugCategoryHash))
   );
 }
 
