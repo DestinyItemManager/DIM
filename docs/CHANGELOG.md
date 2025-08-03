@@ -12,6 +12,8 @@
 * Removed some uninteresting materials from the material counts display.
 * Added stat ordinality armor filters like `primarystat:super` and `tertiarystat:grenade`.
 * Add another compare button to highlight Armor 3.0 with the same 3 base stats.
+* When you open Loadout Optimizer with the "Equipped" loadout, the loadout parameters you select will now be saved as the default for that class. This was already true if you entered Loadout Optimizer by clicking the "Loadout Optimizer" button. Editing an existing loadout does not save the parameters as a default.
+* When we save Loadout Optimizer defaults, we'll save the min/max setting for each stat now, not just whether it's enabled and what order.
 
 ## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
 
