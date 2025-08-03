@@ -257,6 +257,7 @@ export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
   return (
     plugDef.inventory!.tierType === TierType.Common &&
     (plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+      plugDef.plug.plugCategoryHash === PlugCategoryHashes.Origins ||
       weaponParts.has(plugDef.plug.plugCategoryHash))
   );
 }
