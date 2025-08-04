@@ -12,14 +12,24 @@
   width: 17px;
 }
 
+.grabHandle {
+  cursor: grab;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
 .grip {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: grabHandle;
   grid-area: grip;
   opacity: 0.5;
   font-size: 10px;
   padding-left: 10px;
   padding-top: 4px;
   align-self: stretch;
-  composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: flex-start;
 }
 
@@ -53,8 +63,8 @@
 }
 
 .label {
-  display: flex;
-  flex-direction: row;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  composes: grabHandle;
   align-items: center;
   white-space: nowrap;
   gap: 2px;
@@ -62,6 +72,8 @@
   overflow: hidden;
   align-self: stretch;
   width: 100%;
+  margin-top: -4px;
+  padding-top: 4px;
 
   .ignored & {
     opacity: 0.4;
@@ -104,10 +116,6 @@
   > :global(.app-icon) {
     pointer-events: none;
   }
-}
-
-.dragging {
-  outline: 1px solid var(--theme-accent-primary);
 }
 
 .statRange {

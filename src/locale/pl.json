@@ -411,7 +411,7 @@
     "FilterHelpBrief": "Szukaj przedmioty",
     "FilterHelpLoadouts": "Szukaj nazw i notatek na temat uzbrojenia",
     "FilterHelpMenuItem": "Pomoc z filtrami...",
-    "FilterHelpOptimizer": "Select armor to be considered for loadouts: {{example}}",
+    "FilterHelpOptimizer": "Filter armor included in builds, e.g.: {{example}}",
     "FilterHelpProgress": "Szukaj kamieni milowych i zleceń",
     "FilterHelpRecords": "Szukaj triumfy i kolekcje",
     "FilterMatchCount_few": "{{count}} przedmiotów",
@@ -499,6 +499,10 @@
     "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 Piece",
+      "4Piece": "4 Piece"
+    },
     "ThumbsDown": "Thumbs Down",
     "ThumbsUp": "Kciuk w górę"
   },
@@ -713,6 +717,7 @@
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendarny",
+    "LimitToNewFeaturedGear": "Limit to new/featured gear",
     "LockItem": "Przypnij przedmiot",
     "MissingClass": "Zestaw jest dla: {{className}}",
     "MissingClassDescription": "Zestaw który chcesz zobaczyć dotyczy klasy której nie posiadasz.",
@@ -724,6 +729,7 @@
       "AssumeMasterworked": "Zezwól DIM na rekomendowanie ulepszenie pancerza do poziomu mistrzowskiego",
       "AssumptionsRestricted": "DIM nie może zalecać zmian energii pancerza:",
       "BadSlot": "W gnieździe {{bucketName}} żaden z dozwolonych przedmiotów nie może pomieścić tych Modyfikacji:",
+      "ExoticDoesNotExist": "You don't have any of the selected exotic armor in your inventory.",
       "Header": "Nie znaleziono zestawów. To są możliwe powody, dla których DIM nie mógł znaleźć żadnych zestawów:",
       "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Rozważ dopuszczenie innych przedmiotów:",
@@ -743,7 +749,7 @@
     "None": "Brak",
     "OptimizerExplanationGuide": "Przeczytaj podręcznik użytkownika, aby uzyskać więcej informacji i poradnik wideo.",
     "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider, e.g. {{example}}. If no armor in a slot matches the search, all items will be considered for that slot.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Zestaw optymalizatora",
     "PinnedItems": "Pinned Items",
@@ -1339,7 +1345,7 @@
     "DamageResistance": "PvE Damage Resist",
     "Discipline": "Dyscyplina",
     "DropLevel": "Account Power",
-    "DropLevelExplanation1": "Account Power is the base current level when calculating the increased level of Powerful and Pinnacle rewards.",
+    "DropLevelExplanation1": "Account Power is the base power level when calculating the increased level of rewards.",
     "DropLevelExplanation2": "Account Power uses the highest level item in each slot, regardless of required Class or the \"One Exotic\" rule.",
     "EquippableGear": "Equippable Gear",
     "FlinchResistance": "Flinch Resist",

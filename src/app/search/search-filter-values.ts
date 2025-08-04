@@ -75,6 +75,12 @@ export const est = {
 
 export const estStatNames = Object.keys(est);
 
+export const statOrdinals: StringLookup<number> = {
+  primarystat: 0,
+  secondarystat: 1,
+  tertiarystat: 2,
+};
+
 export const allAtomicStats = [...allStatNames, ...estStatNames];
 
 export const lightStats = [...D2LightStats, ...D1LightStats];

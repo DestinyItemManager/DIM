@@ -381,7 +381,7 @@
     "FilterHelpBrief": "Cerca oggetti",
     "FilterHelpLoadouts": "Cerca nomi dotazioni e note",
     "FilterHelpMenuItem": "Aiuto per Filtri...",
-    "FilterHelpOptimizer": "Seleziona le armature da considerare per le dotazioni: {{example}}",
+    "FilterHelpOptimizer": "Filtra le armature incluse nelle dotazioni, ad esempio: {{example}}",
     "FilterHelpProgress": "Cerca pietre miliari e taglie",
     "FilterHelpRecords": "Cerca trionfi e collezioni",
     "FilterMatchCount_one": "1 oggetto",
@@ -467,6 +467,10 @@
     "MissingSilver": "Il tuo saldo Argento è disponibile solo mentre stai giocando."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 pezzi",
+      "4Piece": "4 pezzi"
+    },
     "ThumbsDown": "Pollici in giù",
     "ThumbsUp": "Pollici in su"
   },
@@ -681,6 +685,7 @@
     "IgnoreStat": "Se non selezionata, l'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
     "IncreaseStatPriority": "Aumenta la priorità della statistica",
     "Legendary": "Leggendaria",
+    "LimitToNewFeaturedGear": "Limita a equipaggiamento nuovo/in evidenza",
     "LockItem": "Blocca oggetto",
     "MissingClass": "Build per: {{className}}",
     "MissingClassDescription": "La build che stai cercando di visualizzare è per una classe di personaggio che non hai.",
@@ -692,6 +697,7 @@
       "AssumeMasterworked": "Consenti a DIM di raccomandarti armature da portare al massimo livello prodigio",
       "AssumptionsRestricted": "DIM non può raccomandarti dei cambiamenti al tipo di energia dell'armatura:",
       "BadSlot": "Nell'alloggiamento {{bucketName}}, nessun oggetto di quelli consentiti poteva alloggiare queste modifiche:",
+      "ExoticDoesNotExist": "Non possiedi nessuna delle armature esotiche selezionate nel tuo inventario.",
       "Header": "Nessuna build trovata. Queste sono le possibili ragioni per cui DIM non ha trovato nessuna build:",
       "LowerBoundsFailed": "Molti set non soddisfacevano i requisiti minimi delle statistiche",
       "MaybeAllowMoreItems": "Considera la possibilità di permettere altri oggetti:",
@@ -711,7 +717,7 @@
     "None": "Nessuno",
     "OptimizerExplanationGuide": "Leggi la Guida Utente per maggiori informazioni e un video tutorial.",
     "OptimizerExplanationMods": "Scegli un'esotica, modifiche e una sottoclasse.\nEsse contribuiranno alle statistiche della dotazione, mentre qualsiasi modifica già sulle armature verrà ignorata.",
-    "OptimizerExplanationSearch": "Utilizza la barra di ricerca per restringere l'insieme delle armature da considerare. Se nessuna armatura corrisponde alla ricerca, la ricerca verrà ignorata per quello slot.",
+    "OptimizerExplanationSearch": "Utilizza la barra di ricerca per restringere l'insieme di armature da considerare, ad esempio {{example}}. Se nessuna armatura in uno slot corrisponde alla ricerca, tutti gli oggetti verranno considerati per quello slot.",
     "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e disabilita quelle che non vuoi massimizzare.",
     "OptimizerSet": "Set Ottimizzatore",
     "PinnedItems": "Oggetti fissati",
@@ -1277,7 +1283,7 @@
     "DamageResistance": "Resistenza danni PvE",
     "Discipline": "Disciplina",
     "DropLevel": "Potere account",
-    "DropLevelExplanation1": "Il Potere dell'account è il livello base attuale quando si calcola l'aumento di livello delle ricompense potenti e di punta.",
+    "DropLevelExplanation1": "Il Potere dell'account è il livello base quando si calcola l'aumento di livello delle ricompense.",
     "DropLevelExplanation2": "Il Potere dell'account utilizza il livello più alto i ogni alloggiamento, indipendentemente dalla classe richiesta o dalla regola di \"una sola esotica\".",
     "EquippableGear": "Oggetti equipaggiabili",
     "FlinchResistance": "Resistenza al sussulto",

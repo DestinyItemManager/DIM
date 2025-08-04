@@ -337,6 +337,7 @@
     "StatsBase": "Filters armor based on its base stat value, not including attached mods or masterworking. $t(Filter.StatsExtras)",
     "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats. Each custom stats also has its own search term, shown in the Custom Stats settings.",
     "StatsLoadout": "Finds a set of items to equip for the maximum total value of a specific stat.",
+    "StatsOrdinal": "Finds armor 3.0 with the specified stat focusing.",
     "StatsMax": "Finds armor with the highest number for a specific stat. Includes all items with the highest stat.",
     "Tags": {
       "Tag": "Shows items that have a specific tag.",

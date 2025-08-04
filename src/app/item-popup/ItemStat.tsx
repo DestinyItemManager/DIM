@@ -7,7 +7,12 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
-import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-known-values';
+import {
+  TOTAL_STAT_HASH,
+  armorStats,
+  statfulOrnaments,
+  weaponParts,
+} from 'app/search/d2-known-values';
 import { getD1QualityColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
@@ -15,7 +20,7 @@ import { sumBy } from 'app/utils/collections';
 import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
-import { ItemCategoryHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -28,26 +33,6 @@ const modItemCategoryHashes = new Set([
   ItemCategoryHashes.WeaponModsDamage,
   ItemCategoryHashes.ArmorModsGameplay, // armor mods (pre-2.0)
   ItemCategoryHashes.ArmorMods, // armor 2.0 mods
-]);
-
-// used in displaying the component segments on item stats
-const weaponParts = new Set<PlugCategoryHashes | undefined>([
-  PlugCategoryHashes.Bowstrings,
-  PlugCategoryHashes.Batteries,
-  PlugCategoryHashes.Blades,
-  PlugCategoryHashes.Tubes,
-  PlugCategoryHashes.Scopes,
-  PlugCategoryHashes.Hafts,
-  PlugCategoryHashes.Stocks,
-  PlugCategoryHashes.Guards,
-  PlugCategoryHashes.Barrels,
-  PlugCategoryHashes.Arrows,
-  PlugCategoryHashes.Grips,
-  PlugCategoryHashes.Scopes,
-  PlugCategoryHashes.Magazines,
-  PlugCategoryHashes.MagazinesGl,
-  PlugCategoryHashes.Rails,
-  PlugCategoryHashes.Bolts,
 ]);
 
 // Some stat labels are long. This lets us replace them with i18n

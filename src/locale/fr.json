@@ -381,7 +381,7 @@
     "FilterHelpBrief": "Éléments de recherche",
     "FilterHelpLoadouts": "Rechercher les noms et les notes d'équipement",
     "FilterHelpMenuItem": "Aide des filtres...",
-    "FilterHelpOptimizer": "Sélectionner les armures à considérer pour les équipements : {{example}}",
+    "FilterHelpOptimizer": "Filtrer les armures incluses dans les builds, ex : {{example}}",
     "FilterHelpProgress": "Rechercher des jalons et des contrats",
     "FilterHelpRecords": "Rechercher triomphes et collections",
     "FilterMatchCount_one": "1 objet",
@@ -467,6 +467,10 @@
     "MissingSilver": "Votre solde d'Argentum est uniquement disponible lorsque vous jouez au jeu."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 pièces",
+      "4Piece": "4 pièces"
+    },
     "ThumbsDown": "Pouce baissé",
     "ThumbsUp": "Pousse levé"
   },
@@ -681,6 +685,7 @@
     "IgnoreStat": "Si décoché, l'optimiseur d'équipement prétendra que cette stat n'existe pas lors du calcul des ensembles",
     "IncreaseStatPriority": "Augmenter la priorité de la stat",
     "Legendary": "Légendaire",
+    "LimitToNewFeaturedGear": "Limiter aux équipements nouveaux/à la une",
     "LockItem": "Inclure objet",
     "MissingClass": "Build pour: {{className}}",
     "MissingClassDescription": "Le build que vous essayez de voir est fait pour une classe que vous n'avez pas.",
@@ -692,6 +697,7 @@
       "AssumeMasterworked": "Autoriser DIM à recommander le passage en pièce maîtresse d'une armure",
       "AssumptionsRestricted": "DIM ne peut pas recommander des changements d'élément d'armure :",
       "BadSlot": "Dans l'emplacement {{bucketName}}, aucun des objets autorisés ne peut être adapté à ces mods :",
+      "ExoticDoesNotExist": "Vous n'avez pas l'armure exotique sélectionnée dans votre inventaire.",
       "Header": "Aucun build trouver. Voici une liste des raisons possibles pour lesquelles DIM n'a pas pu trouver de builds :",
       "LowerBoundsFailed": "Plusieurs ensembles n'ont pas atteint les minimums de stats requis",
       "MaybeAllowMoreItems": "Envisagez d'autoriser d'autres objets :",
@@ -711,7 +717,7 @@
     "None": "Aucun",
     "OptimizerExplanationGuide": "Lisez le guide utilisateur pour plus d'informations et un tutoriel vidéo.",
     "OptimizerExplanationMods": "Choisissez un exotique, des mods, et une doctrine. Ils contribueront aux stats de ce build, tandis que les mods déjà présent sur l'armure seront ignorés.",
-    "OptimizerExplanationSearch": "Utilisez la barre de recherche pour affiner la sélection d'armure. Si la recherche ne renvoie aucune armure pour un emplacement, la recherche sera ignorée pour cet emplacement.",
+    "OptimizerExplanationSearch": "Utilisez la barre de recherche pour affiner la sélection d'armure, ex : {{example}}. Si la recherche ne renvoie aucune armure pour un emplacement, tous les objets seront considérés pour cet emplacement.",
     "OptimizerExplanationStats": "Déplacez les stats les plus importantes vers le haut, et décochez les stats que vous ne voulez pas maximiser.",
     "OptimizerSet": "Ensemble de l'optimiseur",
     "PinnedItems": "Objets épinglés",
@@ -1277,7 +1283,7 @@
     "DamageResistance": "Résistance aux dégats en JcE",
     "Discipline": "Discipline",
     "DropLevel": "Puissance du compte",
-    "DropLevelExplanation1": "La puissance du compte est le niveau de base utilisé lors du calcul des récompenses puissantes et de prestige.",
+    "DropLevelExplanation1": "La puissance du compte est le niveau de puissance de base utilisé lors du calcul du niveau des récompenses.",
     "DropLevelExplanation2": "La puissance du compte utilise l'objet de plus haut niveau dans chaque emplacement, peu importe la classe ou la règle \"un seul exotique\".",
     "EquippableGear": "Équipement équipable",
     "FlinchResistance": "Résistance aux tremblements",

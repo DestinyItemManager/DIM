@@ -3,6 +3,7 @@
 interface CssExports {
   'inlineImageIcon': string;
   'intrinsicIcon': string;
+  'statIconAdjust': string;
   'svgIcon': string;
 }
 export const cssExports: CssExports;

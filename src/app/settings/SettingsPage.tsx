@@ -330,22 +330,25 @@ export default function SettingsPage() {
                 <div className={styles.fineprint}>{t('Settings.DefaultItemSizeNote')}</div>
               </div>
             )}
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.ShowNewItems')}
-                name="showNewItems"
-                value={settings.showNewItems}
-                onChange={onCheckChange}
-              />
-              <button
-                type="button"
-                className="dim-button"
-                onClick={() => dispatch(clearAllNewItems())}
-              >
-                <NewItemIndicator className={styles.newItem} />{' '}
-                <span>{t('Hotkey.ClearNewItems')}</span>
-              </button>
-            </div>
+
+            {$featureFlags.newItems && (
+              <div className={styles.setting}>
+                <Checkbox
+                  label={t('Settings.ShowNewItems')}
+                  name="showNewItems"
+                  value={settings.showNewItems}
+                  onChange={onCheckChange}
+                />
+                <button
+                  type="button"
+                  className="dim-button"
+                  onClick={() => dispatch(clearAllNewItems())}
+                >
+                  <NewItemIndicator className={styles.newItem} />{' '}
+                  <span>{t('Hotkey.ClearNewItems')}</span>
+                </button>
+              </div>
+            )}
 
             <div className={styles.setting}>
               <Select
