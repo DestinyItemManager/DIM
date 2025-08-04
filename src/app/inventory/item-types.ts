@@ -237,7 +237,11 @@ export interface DimItem {
   tooltipNotifications?: DestinyItemTooltipNotification[];
   /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
   featured: boolean;
-  /** In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which provides increasing benefits. */
+  /**
+   * In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which
+   * provides increasing benefits. Pre-tiered items and all D1 items will have
+   * tier 0.
+   */
   tier: number;
   /** In D2 since Edge of Fate, items can have a set bonus with other items */
   setBonus?: DestinyEquipableItemSetDefinition;
@@ -424,6 +428,10 @@ export type PlugStatActivationRule =
   | {
       /** New Armor 3.0 archetypes grant stats only to secondary stats when masterworked. */
       rule: 'archetypeArmorMasterwork';
+    }
+  | {
+      /** Masterworked tier > 0 weapons get +tier to every stat */
+      rule: 'tieredWeaponMW';
     };
 
 /**
