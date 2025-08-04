@@ -366,7 +366,7 @@
     "FilterHelpBrief": "搜索物品",
     "FilterHelpLoadouts": "搜索配装名称和备注",
     "FilterHelpMenuItem": "过滤器帮助...",
-    "FilterHelpOptimizer": "选择用于配装的护甲: {{example}}",
+    "FilterHelpOptimizer": "过滤包含在配装中的护甲，如 {{example}}",
     "FilterHelpProgress": "搜索里程碑和悬赏",
     "FilterHelpRecords": "搜索成就和收藏品",
     "FilterMatchCount_other": "{{count}} 个物品",
@@ -451,6 +451,10 @@
     "MissingSilver": "您的银币余额仅在您当前游玩的平台可用。"
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 件",
+      "4Piece": "4 件"
+    },
     "ThumbsDown": "不推荐",
     "ThumbsUp": "推荐"
   },
@@ -665,6 +669,7 @@
     "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性。",
     "IncreaseStatPriority": "提高属性优先级",
     "Legendary": "传说",
+    "LimitToNewFeaturedGear": "仅限新装备/特色装备",
     "LockItem": "固定物品",
     "MissingClass": "配装适用于：{{className}}",
     "MissingClassDescription": "你正试图查看的配装适用于一个你未拥有的角色职业。",
@@ -676,6 +681,7 @@
       "AssumeMasterworked": "允许 DIM 建议护甲大师之作",
       "AssumptionsRestricted": "DIM 无法建议更改护甲能量：",
       "BadSlot": "这些模组无法装上{{bucketName}}槽位所允许的任何物品：",
+      "ExoticDoesNotExist": "你的物品栏中没有选定的异域护甲。",
       "Header": "找不到配装。以下是 DIM 找不到配装的可能原因：",
       "LowerBoundsFailed": "配装组合中所能达到的属性低于选择的下限",
       "MaybeAllowMoreItems": "尝试允许其他物品：",
@@ -695,7 +701,7 @@
     "None": "无",
     "OptimizerExplanationGuide": "用户指南里有更多信息和视频教程。",
     "OptimizerExplanationMods": "选择异域装备、模组和分支职业，为配装贡献属性。忽略已安装在护甲上的模组。",
-    "OptimizerExplanationSearch": "使用搜索栏缩小护甲的筛选范围。若有槽位无符合筛选的护甲，则该槽位的搜索无效。",
+    "OptimizerExplanationSearch": "使用搜索栏缩小护甲的筛选范围，如 {{example}}。若有槽位无符合筛选的护甲，则该槽位的搜索无效。",
     "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并取消选择没有最大化需求的属性。",
     "OptimizerSet": "优化器组合",
     "PinnedItems": "固定物品",
@@ -1246,7 +1252,7 @@
     "DamageResistance": "PvE伤害减免",
     "Discipline": "训练",
     "DropLevel": "账户光等",
-    "DropLevelExplanation1": "账户光等是在计算强力奖励和巅峰奖励提升光等时的基础当前光等",
+    "DropLevelExplanation1": "账户光等是计算奖励包裹提升光等时的基准值",
     "DropLevelExplanation2": "账户光等取决于每个装备栏最高光等的物品，而不考虑装备的职业要求或只能同时装备一件异域护甲/武器的规则",
     "EquippableGear": "可用装备",
     "FlinchResistance": "退缩抗性",

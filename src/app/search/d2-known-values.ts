@@ -1,7 +1,8 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ArmorStatHashes } from 'app/loadout-builder/types';
-import { HashLookup } from 'app/utils/util-types';
+import { invert } from 'app/utils/collections';
+import { HashLookup, StringLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 
 import {
@@ -124,6 +125,16 @@ export const D2ArmorStatHashByName = {
   strength: StatHashes.Melee,
 } as const;
 
+export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
+  weapons: StatHashes.Weapons,
+  health: StatHashes.Health,
+  class: StatHashes.Class,
+  grenade: StatHashes.Grenade,
+  super: StatHashes.Super,
+  melee: StatHashes.Melee,
+};
+export const realD2ArmorStatSearchByHash = invert(realD2ArmorStatHashByName);
+
 /** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
 export const armorStats: ArmorStatHashes[] = [
   StatHashes.Health,
@@ -218,6 +229,26 @@ export const DEEPSIGHT_HARMONIZER = 2228452164;
 
 // For loadout mods obliterated from the defs, we instead return this def
 export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
+
+// used in displaying the component segments on item stats
+export const weaponParts = new Set<PlugCategoryHashes | undefined>([
+  PlugCategoryHashes.Bowstrings,
+  PlugCategoryHashes.Batteries,
+  PlugCategoryHashes.Blades,
+  PlugCategoryHashes.Tubes,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Hafts,
+  PlugCategoryHashes.Stocks,
+  PlugCategoryHashes.Guards,
+  PlugCategoryHashes.Barrels,
+  PlugCategoryHashes.Arrows,
+  PlugCategoryHashes.Grips,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Magazines,
+  PlugCategoryHashes.MagazinesGl,
+  PlugCategoryHashes.Rails,
+  PlugCategoryHashes.Bolts,
+]);
 
 //
 // BUCKETS KNOWN VALUES

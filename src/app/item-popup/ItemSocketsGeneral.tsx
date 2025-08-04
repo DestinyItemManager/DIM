@@ -3,7 +3,11 @@ import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { filterMap, uniqBy } from 'app/utils/collections';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { getExtraIntrinsicPerkSockets, getGeneralSockets } from 'app/utils/socket-utils';
+import {
+  getArmorArchetypeSocket,
+  getExtraIntrinsicPerkSockets,
+  getGeneralSockets,
+} from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -41,6 +45,10 @@ export default function ItemSocketsGeneral({
 
   // exotic class armor intrinsics
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
+  const archetypeSocket = getArmorArchetypeSocket(item);
+  if (archetypeSocket) {
+    extraIntrinsicSockets.push(archetypeSocket);
+  }
   const extraIntrinsicSocketIndices = extraIntrinsicSockets.map((s) => s.socketIndex);
 
   // Only show the first of each style of category when minimal

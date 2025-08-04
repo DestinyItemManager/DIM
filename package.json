@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "8.83.0",
+  "version": "8.84.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -103,7 +103,6 @@
     "@types/papaparse": "^5.3.16",
     "@types/prop-types": "^15.7.15",
     "@types/react": "19.1.8",
-    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/ua-parser-js": "^0.7.39",
     "@types/use-subscription": "^1.0.2",
@@ -197,7 +196,6 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@hello-pangea/dnd": "^18.0.1",
     "@popperjs/core": "^2.11.8",
     "@react-hook/resize-observer": "^2.0.2",
     "@sentry/browser": "^9.40.0",

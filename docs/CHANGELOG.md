@@ -1,5 +1,9 @@
 ## Next
 
+* Improved the responsiveness of draggable lists (Loadout Optimizer stat constraints, inventory sort order, etc.)
+
+## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
+
 * Fixed an issue where the Loadout Optimizer would consider Armor 3.0 and Armor 2.0 versions of exotics separately. Now, if you select an exotic, all your copies of that exotic will be considered.
 * Updated the order of search suggestions to prioritize `is:` filters.
 * Display armor archetypes in Loadout Optimizer.
@@ -10,6 +14,11 @@
 * Hid the masterwork upgrade socket in the item popup for new armor.
 * Added a catalyst icon for the Osteo Striga.
 * Removed some uninteresting materials from the material counts display.
+* Added stat ordinality armor filters like `primarystat:super` and `tertiarystat:grenade`.
+* Add another compare button to highlight Armor 3.0 with the same 3 base stats.
+* When you open Loadout Optimizer with the "Equipped" loadout, the loadout parameters you select will now be saved as the default for that class. This was already true if you entered Loadout Optimizer by clicking the "Loadout Optimizer" button. Editing an existing loadout does not save the parameters as a default.
+* When we save Loadout Optimizer defaults, we'll save the min/max setting for each stat now, not just whether it's enabled and what order.
+* Fix "enhanced" detection to highlight barrels, magazines, etc.
 
 ## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
 

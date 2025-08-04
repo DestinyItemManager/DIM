@@ -366,7 +366,7 @@
     "FilterHelpBrief": "アイテムを検索する",
     "FilterHelpLoadouts": "ロードアウトの名前やノートを検索",
     "FilterHelpMenuItem": "フィルターヘルプ",
-    "FilterHelpOptimizer": "ロードアウトに使いたい防具をフィルターで絞り込みます: {{example}}",
+    "FilterHelpOptimizer": "Filter armor included in builds, e.g.: {{example}}",
     "FilterHelpProgress": "マイルストーンとバウンティーを検索",
     "FilterHelpRecords": "勝利の道のりとコレクションを検索する",
     "FilterMatchCount_other": "{{count}} アイテム",
@@ -451,6 +451,10 @@
     "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 Piece",
+      "4Piece": "4 Piece"
+    },
     "ThumbsDown": "低評価",
     "ThumbsUp": "いいね"
   },
@@ -665,6 +669,7 @@
     "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
     "IncreaseStatPriority": "ステータス優先度を上げる",
     "Legendary": "レジェンダリー",
+    "LimitToNewFeaturedGear": "Limit to new/featured gear",
     "LockItem": "アイテムをピン留めする",
     "MissingClass": "ビルド: {{className}}",
     "MissingClassDescription": "表示しようとしているビルドは、あなたが持っていないキャラクタークラス向けです。",
@@ -676,6 +681,7 @@
       "AssumeMasterworked": "DIM がマスターワークしているアーマーを推奨できるようにする",
       "AssumptionsRestricted": "DIM は防具のエネルギー変更を推奨できません :",
       "BadSlot": "{{bucketName}} スロットでは、許可されたアイテムのいずれもこれらの mod に対応できません :",
+      "ExoticDoesNotExist": "選択されたエキゾチックアーマーを所持していません。",
       "Header": "ビルドが見つかりませんでした。 DIM がビルドを見つけられなかった理由は次のとおりです :",
       "LowerBoundsFailed": "どの組み合わせでも指定した最小ステータスTierに届きませんでした",
       "MaybeAllowMoreItems": "他のアイテムを許可することを検討してください :",
@@ -695,7 +701,7 @@
     "None": "無し",
     "OptimizerExplanationGuide": "詳細については、ユーザーガイドまたはビデオチュートリアルをご覧ください。",
     "OptimizerExplanationMods": "エキゾチック、Mod、サブクラスを選択します。これらはビルドにステータス値を影響を与えますが、すでにアーマーにあるModは無視されます。",
-    "OptimizerExplanationSearch": "検索バーを使用して、候補となるアーマーを絞り込みます。 条件に一致するアーマーがない場合、その検索は無視されます。",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider, e.g. {{example}}. If no armor in a slot matches the search, all items will be considered for that slot.",
     "OptimizerExplanationStats": "マウスドラッグで上から最も優先したい順にステータスを並び替え、ビルドに不要なステータスは無効にしましょう。",
     "OptimizerSet": "最適化セット",
     "PinnedItems": "ピン留めしたアイテム",
@@ -1084,7 +1090,7 @@
   },
   "Progress": {
     "Bounties": "バウンティ",
-    "CatalystSource": "Source: {{source}}",
+    "CatalystSource": "ソース: {{source}}",
     "CrucibleRank": "ランク",
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
@@ -1246,7 +1252,7 @@
     "DamageResistance": "PvE ダメージ耐性",
     "Discipline": "鍛錬",
     "DropLevel": "アカウントパワー",
-    "DropLevelExplanation1": "アカウントパワーは、強力な報酬と最高峰の報酬の増加パワーを決める際の基本パワーレベルです。",
+    "DropLevelExplanation1": "アカウントパワーは、報酬の増加パワーを決める基本パワーレベルです。",
     "DropLevelExplanation2": "アカウントパワーは、クラスやエキゾチックの縛りに関係なく、各装備スロットの最大パワーの装備を参照します。",
     "EquippableGear": "装備可能な装備",
     "FlinchResistance": "ひるみ耐性",

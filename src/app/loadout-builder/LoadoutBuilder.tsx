@@ -181,11 +181,16 @@ export default memo(function LoadoutBuilder({
     [armorItems, modsToAssign],
   );
 
-  const hasPreloadedLoadout = Boolean(preloadedLoadout);
+  // If the user is playing with an existing loadout (potentially one they
+  // received from a loadout share) or a direct /optimizer link, do not
+  // overwrite the global saved loadout parameters. If they decide to save that
+  // loadout, these will still be saved with the loadout. For these purposes we
+  // won't consider the equipped loadout to be a preloaded loadout.
+  const saveParamsAsDefaults = !(preloadedLoadout && preloadedLoadout.id !== 'equipped');
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
-  useSaveLoadoutParameters(hasPreloadedLoadout, loadoutParameters);
+  useSaveLoadoutParameters(saveParamsAsDefaults, loadoutParameters);
   useSaveStatConstraints(
-    hasPreloadedLoadout,
+    saveParamsAsDefaults,
     statConstraints,
     savedStatConstraintsByClass,
     classType,
@@ -599,17 +604,13 @@ function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem
  * Save a subset of the loadout parameters to settings in order to remember them between sessions
  */
 function useSaveLoadoutParameters(
-  hasPreloadedLoadout: boolean,
+  saveParamsAsDefaults: boolean,
   loadoutParameters: LoadoutParameters,
 ) {
   const setSetting = useSetSetting();
   const firstRun = useRef(true);
   useEffect(() => {
-    // If the user is playing with an existing loadout (potentially one they
-    // received from a loadout share) or a direct /optimizer link, do not
-    // overwrite the global saved loadout parameters. If they decide to save
-    // that loadout, these will still be saved with the loadout.
-    if (hasPreloadedLoadout) {
+    if (!saveParamsAsDefaults) {
       return;
     }
 
@@ -628,7 +629,7 @@ function useSaveLoadoutParameters(
     setSetting,
     loadoutParameters.assumeArmorMasterwork,
     loadoutParameters.autoStatMods,
-    hasPreloadedLoadout,
+    saveParamsAsDefaults,
     loadoutParameters.includeRuntimeStatBenefits,
   ]);
 }
@@ -637,7 +638,7 @@ function useSaveLoadoutParameters(
  * Save stat constraints (stat order / enablement) per class when it changes
  */
 function useSaveStatConstraints(
-  hasPreloadedLoadout: boolean,
+  saveParamsAsDefaults: boolean,
   statConstraints: StatConstraint[],
   savedStatConstraintsByClass: {
     [key: number]: StatConstraint[];
@@ -648,11 +649,7 @@ function useSaveStatConstraints(
   const firstRun = useRef(true);
 
   useEffect(() => {
-    // If the user is playing with an existing loadout (potentially one they
-    // received from a loadout share) or a direct /optimizer link, do not
-    // overwrite the global saved loadout parameters. If they decide to save
-    // that loadout, these will still be saved with the loadout.
-    if (hasPreloadedLoadout) {
+    if (!saveParamsAsDefaults) {
       return;
     }
 
@@ -662,15 +659,13 @@ function useSaveStatConstraints(
       return;
     }
 
-    // Strip out min/max tiers and just save the order
-    const newStatConstraints = statConstraints.map(({ statHash }) => ({ statHash }));
-    if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
+    if (!deepEqual(statConstraints, savedStatConstraintsByClass[classType])) {
       setSetting('loStatConstraintsByClass', {
         ...savedStatConstraintsByClass,
-        [classType]: newStatConstraints,
+        [classType]: statConstraints,
       });
     }
-  }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, hasPreloadedLoadout]);
+  }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, saveParamsAsDefaults]);
 }
 
 function UndoRedoControls({

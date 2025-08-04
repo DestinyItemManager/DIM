@@ -381,7 +381,7 @@
     "FilterHelpBrief": "Buscar objetos",
     "FilterHelpLoadouts": "Buscar nombres y notas de equipaciones",
     "FilterHelpMenuItem": "Ayuda de Filtros...",
-    "FilterHelpOptimizer": "Selecciona armaduras a considerar para las equipaciones: {{example}}",
+    "FilterHelpOptimizer": "Filter armor included in builds, e.g.: {{example}}",
     "FilterHelpProgress": "Buscar hazañas y contratos",
     "FilterHelpRecords": "Buscar triunfos y colecciones",
     "FilterMatchCount_one": "1 objeto",
@@ -467,6 +467,10 @@
     "MissingSilver": "Tu balance de Plata solo está disponible mientras estás jugando al juego."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 Piezas",
+      "4Piece": "4 Piezas"
+    },
     "ThumbsDown": "Pulgar Abajo",
     "ThumbsUp": "Pulgar Arriba"
   },
@@ -681,6 +685,7 @@
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se fabriquen equipaciones",
     "IncreaseStatPriority": "Incrementar prioridad a las estadísticas",
     "Legendary": "Legendarias",
+    "LimitToNewFeaturedGear": "Limit to new/featured gear",
     "LockItem": "Anclar objeto",
     "MissingClass": "La equipación es para: {{className}}",
     "MissingClassDescription": "La equipación que estás intentando visualizar es para una clase de personaje que no tienes.",
@@ -692,6 +697,7 @@
       "AssumeMasterworked": "Permitir que DIM recomiende convertir en obra maestra armadura",
       "AssumptionsRestricted": "DIM no puede recomendar cambios de energía de armadura:",
       "BadSlot": "En la ranura {{bucketName}} ninguno de los objetos permitidos pudieron acomodar estos modificadores:",
+      "ExoticDoesNotExist": "No tienes ninguna de las armaduras exóticas seleccionadas en tu inventario.",
       "Header": "No se encontraron equipaciones. Aquí hay posibles razones por las que DIM no pudo encontrar equipaciones:",
       "LowerBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de estadísticas mínimas",
       "MaybeAllowMoreItems": "Considera permitir otros objetos:",
@@ -711,7 +717,7 @@
     "None": "Ninguno",
     "OptimizerExplanationGuide": "Lea la Guía de Usuario para más información y un vídeotutorial.",
     "OptimizerExplanationMods": "Elige un exótico, modificadores y una subclase. Esto contribuirá a las estadísticas de la equipación, mientras que los modificadores que ya estaban en la armadura serán ignorados.",
-    "OptimizerExplanationSearch": "Usa la barra de búsqueda para reducir la búsqueda de armadura a considerar. Si no hay armadura en la ranura que coincida con la búsqueda, la búsqueda será ignorada para esa ranura.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider, e.g. {{example}}. If no armor in a slot matches the search, all items will be considered for that slot.",
     "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba y desmarca las que no quieras maximizar.",
     "OptimizerSet": "Set Optimizador",
     "PinnedItems": "Objetos Fijados",
@@ -1277,7 +1283,7 @@
     "DamageResistance": "Resistencia a Daño JcE",
     "Discipline": "Disciplina",
     "DropLevel": "Poder de la Cuenta",
-    "DropLevelExplanation1": "El Poder de la Cuenta es el nivel base actual cuando se calcula el nivel incrementado de las recompensas Poderosas e Hito.",
+    "DropLevelExplanation1": "El Poder de la Cuenta es el nivel del poder base cuando se calcula el nivel incrementado de las recompensas.",
     "DropLevelExplanation2": "El Poder de la Cuenta usa el nivel más alto en cada ranura, independientemente de la Clase o de la regla del \"Exótico Único\".",
     "EquippableGear": "Equipo Equipable",
     "FlinchResistance": "Resistencia a Estremecimiento",

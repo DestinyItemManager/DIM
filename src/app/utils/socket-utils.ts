@@ -14,6 +14,7 @@ import {
   GhostActivitySocketTypeHashes,
   armor2PlugCategoryHashes,
   weaponMasterworkY2SocketTypeHash,
+  weaponParts,
 } from 'app/search/d2-known-values';
 import {
   DestinyInventoryItemDefinition,
@@ -182,7 +183,6 @@ export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
           // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
           .map((s) => ({ ...s, isReusable: false }))
       : []),
-    ...item.sockets.allSockets.filter(isArmorArchetypeSocket),
   ];
 }
 
@@ -255,8 +255,10 @@ export function isEventArmorRerollSocket(socket: DimSocket) {
 
 export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
   return (
-    plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
-    plugDef.inventory!.tierType === TierType.Common
+    plugDef.inventory!.tierType === TierType.Common &&
+    (plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+      plugDef.plug.plugCategoryHash === PlugCategoryHashes.Origins ||
+      weaponParts.has(plugDef.plug.plugCategoryHash))
   );
 }
 

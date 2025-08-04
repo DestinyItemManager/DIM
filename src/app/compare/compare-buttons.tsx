@@ -5,9 +5,15 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { compact, filterMap } from 'app/utils/collections';
-import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
+import {
+  getArmor3StatFocus,
+  getInterestingSocketMetadatas,
+  getItemDamageShortName,
+  isEdgeOfFateArmorMasterwork,
+} from 'app/utils/item-utils';
 import {
   getArmorArchetype,
   getExtraIntrinsicPerkSockets,
@@ -38,7 +44,14 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
+
   const archetype = getArmorArchetype(exampleItem);
+  const tertiaryStatHash =
+    isEdgeOfFateArmorMasterwork(exampleItem) && getArmor3StatFocus(exampleItem)?.[2];
+  const tertiaryStat = tertiaryStatHash && realD2ArmorStatSearchByHash[tertiaryStatHash];
+  const tertiaryStatDisplay =
+    tertiaryStatHash &&
+    exampleItem.stats!.find((s) => s.statHash === tertiaryStatHash)!.displayProperties;
 
   // exotic class item perks
   const extraIntrinsicButtons =
@@ -66,7 +79,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         .reverse()) ||
     [];
 
-  let comparisonSets: CompareButton[] = compact([
+  return compact([
     // same slot on the same class
     {
       buttonLabel: [
@@ -90,19 +103,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `${modernArmor} is:legendary`,
-      },
-
-    // above but only Armor 3.0 if the example item is Armor 3.0
-    exampleItem.destinyVersion === 2 &&
-      exampleItem.rarity === 'Legendary' &&
-      archetype && {
-        buttonLabel: [
-          <img key="1" className={clsx(styles.intrinsicIcon, 'dontInvert')} src={archetypeIcon} />,
-          <span key="2">{t('Compare.Archetype')}</span>,
-          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        ],
-        query: `is:armor3.0 is:legendary`,
       },
 
     // above but also the same seasonal mod slot, if it has one
@@ -140,6 +140,57 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         query: `${modernArmor} perk:${quoteFilterString(exampleItemIntrinsic.name)} is:${exampleItem.rarity}`,
       },
 
+    // above but only Armor 3.0 if the example item is Armor 3.0
+    exampleItem.destinyVersion === 2 &&
+      exampleItem.rarity === 'Legendary' &&
+      archetype && {
+        buttonLabel: [
+          <img key="1" className={clsx(styles.intrinsicIcon, 'dontInvert')} src={archetypeIcon} />,
+          <span key="2">{t('Compare.Archetype')}</span>,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
+          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: `is:armor3.0 is:legendary`,
+      },
+
+    // Try to make a group of armors 3.0 with the same archetype.
+    exampleItem.destinyVersion === 2 &&
+      archetype && {
+        buttonLabel: [
+          <BungieImage
+            key="1"
+            className={clsx(styles.intrinsicIcon, 'dontInvert')}
+            src={archetype.displayProperties.icon}
+          />,
+          <span key="2">{archetype.displayProperties.name}</span>,
+          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: `${modernArmor} perk:${quoteFilterString(archetype.displayProperties.name)} is:${exampleItem.rarity}`,
+      },
+
+    // Try to make a group of armors 3.0 with the exact same 3 stats focused. This is an easy win for identifying better/worse armor.
+    exampleItem.destinyVersion === 2 &&
+      archetype &&
+      tertiaryStat &&
+      tertiaryStatDisplay && {
+        buttonLabel: [
+          <BungieImage
+            key="1"
+            className={clsx(styles.intrinsicIcon, 'dontInvert')}
+            src={archetype.displayProperties.icon}
+          />,
+          <span key="2">{archetype.displayProperties.name}</span>,
+          '+',
+          <BungieImage
+            key="tertiary"
+            className={clsx(styles.statIconAdjust, 'dontInvert')}
+            src={tertiaryStatDisplay.icon}
+          />,
+          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: `${modernArmor} perk:${quoteFilterString(archetype.displayProperties.name)} tertiarystat:${tertiaryStat} is:${exampleItem.rarity}`,
+      },
+
     // exotic class items
     ...extraIntrinsicButtons,
 
@@ -149,10 +200,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
       query: compareNameQuery(exampleItem),
     },
-  ]);
-
-  comparisonSets = comparisonSets.reverse();
-  return comparisonSets;
+  ]).reverse();
 }
 
 const bucketToSearch = {

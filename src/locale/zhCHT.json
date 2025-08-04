@@ -366,7 +366,7 @@
     "FilterHelpBrief": "搜索物品",
     "FilterHelpLoadouts": "蒐索配裝名稱和備註",
     "FilterHelpMenuItem": "過濾器幫助...",
-    "FilterHelpOptimizer": "搜索防具：{{example}}",
+    "FilterHelpOptimizer": "Filter armor included in builds, e.g.: {{example}}",
     "FilterHelpProgress": "搜索里程碑和懸賞",
     "FilterHelpRecords": "搜索成就和收藏品",
     "FilterMatchCount_other": "{{count}} 個物品",
@@ -451,6 +451,10 @@
     "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 Piece",
+      "4Piece": "4 Piece"
+    },
     "ThumbsDown": "Thumbs Down",
     "ThumbsUp": "Thumbs Up"
   },
@@ -665,6 +669,7 @@
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "传说",
+    "LimitToNewFeaturedGear": "Limit to new/featured gear",
     "LockItem": "固定物品",
     "MissingClass": "配裝適用於：{{className}}",
     "MissingClassDescription": "你正試圖查看的配裝適用於一個你未擁有的角色職業。",
@@ -676,6 +681,7 @@
       "AssumeMasterworked": "允許DIM建議防禦大師之作",
       "AssumptionsRestricted": "DIM 無法建議更改防具能量：",
       "BadSlot": "在 {{bucketName}} 槽位，沒有合適的物品可以容納以下模組：",
+      "ExoticDoesNotExist": "You don't have any of the selected exotic armor in your inventory.",
       "Header": "找不到配裝，以下是 DIM 無法找到配裝的可能原因：",
       "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "允許嘗試其它物品：",
@@ -695,7 +701,7 @@
     "None": "無",
     "OptimizerExplanationGuide": "用戶指南里有更多信息和視頻教程。",
     "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider, e.g. {{example}}. If no armor in a slot matches the search, all items will be considered for that slot.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "優化器組合",
     "PinnedItems": "Pinned Items",
@@ -1246,7 +1252,7 @@
     "DamageResistance": "PvE 傷害減免",
     "Discipline": "訓練",
     "DropLevel": "Account Power",
-    "DropLevelExplanation1": "Account Power is the base current level when calculating the increased level of Powerful and Pinnacle rewards.",
+    "DropLevelExplanation1": "Account Power is the base power level when calculating the increased level of rewards.",
     "DropLevelExplanation2": "Account Power uses the highest level item in each slot, regardless of required Class or the \"One Exotic\" rule.",
     "EquippableGear": "Equippable Gear",
     "FlinchResistance": "倒縮抗性",

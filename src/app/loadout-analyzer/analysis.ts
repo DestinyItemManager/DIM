@@ -140,7 +140,11 @@ export async function analyzeLoadout(
       loadoutArmor.find((i) => i.isExotic) ??
       resolvedLoadout.failedResolvedLoadoutItems.find((i) => i.item.isExotic && i.loadoutItem.equip)
         ?.item;
-    const [valid, newHash] = matchesExoticArmorHash(loadoutParameters.exoticArmorHash, exotic);
+    const [valid, newHash] = matchesExoticArmorHash(
+      loadoutParameters.exoticArmorHash,
+      exotic,
+      defs,
+    );
     if (!valid) {
       findings.add(LoadoutFinding.DoesNotRespectExotic);
     }
@@ -371,6 +375,7 @@ export async function analyzeLoadout(
 function matchesExoticArmorHash(
   exoticArmorHash: number | undefined,
   exotic: DimItem | undefined,
+  defs: D2ManifestDefinitions,
 ): [valid: boolean, exoticArmorHash: number | undefined] {
   if (exoticArmorHash === LOCKED_EXOTIC_NO_EXOTIC) {
     return [!exotic, exoticArmorHash];
@@ -379,7 +384,11 @@ function matchesExoticArmorHash(
   } else if (exoticArmorHash === undefined) {
     return [true, exotic?.hash];
   } else {
-    return [exoticArmorHash === exotic?.hash, exoticArmorHash];
+    return [
+      defs.InventoryItem.get(exoticArmorHash).displayProperties.name ===
+        (exotic && defs.InventoryItem.get(exotic.hash).displayProperties.name),
+      exoticArmorHash,
+    ];
   }
 }
 

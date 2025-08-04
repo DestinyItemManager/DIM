@@ -411,7 +411,7 @@
     "FilterHelpBrief": "Поиск",
     "FilterHelpLoadouts": "Поиск названий набора и заметок",
     "FilterHelpMenuItem": "Помощь по Фильтрам...",
-    "FilterHelpOptimizer": "Выберите броню для рассмотрения в комплекты: {{example}}",
+    "FilterHelpOptimizer": "Filter armor included in builds, e.g.: {{example}}",
     "FilterHelpProgress": "По Испытаниям и Контрактам",
     "FilterHelpRecords": "Поиск по Триумфам и Коллекции",
     "FilterMatchCount_few": "{{count}} предметов",
@@ -499,6 +499,10 @@
     "MissingSilver": "Your Silver balance is only available while you are playing the game."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 Piece",
+      "4Piece": "4 Piece"
+    },
     "ThumbsDown": "Палец Вниз",
     "ThumbsUp": "Палец Вверх"
   },
@@ -713,6 +717,7 @@
     "IgnoreStat": "Если не отмечено, Оптимизатор Комплекта будет притворяться, что этой характеристики не существует при создании наборов",
     "IncreaseStatPriority": "Повысить приоритет характеристики",
     "Legendary": "Легендарный",
+    "LimitToNewFeaturedGear": "Limit to new/featured gear",
     "LockItem": "Закрепить",
     "MissingClass": "Набор для: {{className}}",
     "MissingClassDescription": "Набор, который вы пытаетесь просмотреть, предназначен для отсутствующего у вас класса персонажа.",
@@ -724,6 +729,7 @@
       "AssumeMasterworked": "Разрешить DIM рекомендовать улучшать броню до Абсолюта",
       "AssumptionsRestricted": "DIM не может рекомендовать изменения энергии брони:",
       "BadSlot": "В слоте {{bucketName}}, ни один из разрешённых предметов не может вместить эти моды:",
+      "ExoticDoesNotExist": "You don't have any of the selected exotic armor in your inventory.",
       "Header": "Не были найдены комплекты. Вот возможные причины почему DIM не смог найти какие-либо комплекты:",
       "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
       "MaybeAllowMoreItems": "Подумайте о том, чтобы разрешить другие предметы:",
@@ -743,7 +749,7 @@
     "None": "Отсутствует",
     "OptimizerExplanationGuide": "Прочтите руководство пользователя для получения дополнительной информации и видеоуроков.",
     "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. These will contribute stats to the build, while any mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor in a slot matches the search, the search will be ignored for that slot.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider, e.g. {{example}}. If no armor in a slot matches the search, all items will be considered for that slot.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Набор Оптимизатора",
     "PinnedItems": "Закрепленные Предметы",
@@ -1339,7 +1345,7 @@
     "DamageResistance": "Сопротивление урону в PvE",
     "Discipline": "Дисциплина",
     "DropLevel": "Сила Аккаунта",
-    "DropLevelExplanation1": "Сила Аккаунта - это базовый уровень при расчете повышенного уровня Мощной и Сверхмощной наград.",
+    "DropLevelExplanation1": "Account Power is the base power level when calculating the increased level of rewards.",
     "DropLevelExplanation2": "Сила Аккаунта использует предмет самого высокого уровня в каждом слоте, независимо от требуемого Класса или правила \"Один Экзотик\".",
     "EquippableGear": "Экипируемое Снаряжение",
     "FlinchResistance": "Сопротивление смещению прицела",

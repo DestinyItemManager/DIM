@@ -202,7 +202,7 @@
     "Adept": "\\(Adept\\)",
     "AmmoType": "Mostrar objetos basados en su tipo de munición.",
     "Armor": "Muestra objetos que son armaduras.",
-    "Armor3": "Muestra objetos que utilicen el sistema de estadística de Armadura 3.0 introducidos en Los Confines del Destino.",
+    "Armor3": "Muestra objetos que utilizan el sistema de estadística de Armadura 3.0 introducidos en Los Confines del Destino.",
     "ArmorCategory": "Muestra armaduras basadas en su categoría.",
     "ArmorIntrinsic": "Muestra armadura legendaria que tenga un perk intrínseco, como Armadura Artificiosa.",
     "Ascended": "Muestra objetos que tengan un nodo ascendente en el que haya sido ascendido.",
@@ -233,7 +233,7 @@
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
     "DupeLower": "Objetos duplicados, incluyendo reincidencias, que no son el poder más alto del duplicado. Sólo un duplicado es elegido como el más alto, y el resto son considerados más bajos.",
     "DupePerks": "Muestra objetos cuyas ventajas ya sean duplicadas de, o un subconjunto de, otro objeto del mismo tipo.",
-    "Energy": "Muestra objetos que utilicen el sistema de modificadores de Armadura 2.0 introducidos en Bastión de Sombras.",
+    "Energy": "Muestra objetos que utilizan el sistema de mod de Armadura 2.0 introducidos en Bastión de Sombras.",
     "EnergyCapacity": "Muestra objetos basados en su capacidad de energía actual.",
     "Engrams": "Muestra engramas.",
     "Enhanceable": "Muestra armas que pueden ser mejoradas.",
@@ -282,7 +282,7 @@
     "Memento": "Muestra armas que tengan una ranura para recuerdo.",
     "ModSlot": "Muestra armadura con un tipo de mod específico.",
     "Mods": {
-      "Y3": "Muestra objetos nuevos sin modificadores aplicados."
+      "Y3": "Muestra objetos nuevos sin mods aplicados."
     },
     "Name": "Muestra objetos cuyo nombre coincida exactamente (exactname:) o parcialmente (name:) con el texto filtrado. Busca frases enteras usando comillas.",
     "NamedStat": "Muestra armadura que tiene puntos en el atributo mencionado.",
@@ -381,7 +381,7 @@
     "FilterHelpBrief": "Buscar objetos",
     "FilterHelpLoadouts": "Buscar nombres y notas de equipamientos",
     "FilterHelpMenuItem": "Ayuda de Filtros...",
-    "FilterHelpOptimizer": "Selecciona armaduras a considerar para las equipaciones: {{example}}",
+    "FilterHelpOptimizer": "Filtro de Armadura incluida en construcciones, por ejemplo: {{example}}",
     "FilterHelpProgress": "Buscar hazañas y contratos",
     "FilterHelpRecords": "Buscar triunfos y colecciones",
     "FilterMatchCount_one": "1 objeto",
@@ -467,6 +467,10 @@
     "MissingSilver": "Tu balance de Plata solo está disponible mientras estás jugando al juego."
   },
   "Item": {
+    "SetBonus": {
+      "2Piece": "2 Piezas",
+      "4Piece": "4 Piezas"
+    },
     "ThumbsDown": "Pulgar Abajo",
     "ThumbsUp": "Pulgar Arriba"
   },
@@ -681,6 +685,7 @@
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se creen equipaciones",
     "IncreaseStatPriority": "Incrementar prioridad a la estadística",
     "Legendary": "Legendarias",
+    "LimitToNewFeaturedGear": "Limitar al equipo nuevo/destacado",
     "LockItem": "Anclar objeto",
     "MissingClass": "El equipamiento es para: {{className}}",
     "MissingClassDescription": "El equipamiento que estás intentando visualizar es para una clase de personaje que no tienes.",
@@ -692,6 +697,7 @@
       "AssumeMasterworked": "Permitir que DIM recomiende convertir armadura en obra maestra",
       "AssumptionsRestricted": "DIM no puede recomendar cambios de energía de armadura:",
       "BadSlot": "En la ranura {{bucketName}} ninguno de los objetos permitidos pudieron acomodar estos mods:",
+      "ExoticDoesNotExist": "No tienes ninguna de las armaduras exóticas seleccionadas en tu inventario.",
       "Header": "No se encontraron equipamientos. Estas son las posibles razones por las que DIM no pudo encontrar equipamientos:",
       "LowerBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de estadísticas mínimas",
       "MaybeAllowMoreItems": "Considera permitir otros objetos:",
@@ -711,7 +717,7 @@
     "None": "Ninguno",
     "OptimizerExplanationGuide": "Lea la Guía de Usuario para más información y un vídeo tutorial.",
     "OptimizerExplanationMods": "Elige un exótico, mods y una subclase. Esto contribuirá a las estadísticas de la equipación, mientras que los mods que ya estaban en la armadura serán ignorados.",
-    "OptimizerExplanationSearch": "Usa la barra de búsqueda para reducir la búsqueda de armadura a considerar. Si no hay armadura en la ranura que coincida con la búsqueda, la búsqueda será ignorada para esa ranura.",
+    "OptimizerExplanationSearch": "Utilice la barra de búsqueda para limitar la armadura a considerar, por ejemplo, {{example}}. Si ninguna armadura en una ranura coincide con la búsqueda, todos los objetos se considerarán para esa ranura.",
     "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba y desmarca las que no quieras maximizar.",
     "OptimizerSet": "Set Optimizador",
     "PinnedItems": "Objetos Fijados",
@@ -1277,7 +1283,7 @@
     "DamageResistance": "Resistencia a Daño PvE",
     "Discipline": "Disciplina",
     "DropLevel": "Poder de la Cuenta",
-    "DropLevelExplanation1": "El Poder de la Cuenta es el nivel base actual cuando se calcula el nivel incrementado de las recompensas Poderosas e Hito.",
+    "DropLevelExplanation1": "El Poder de la Cuenta es el nivel del poder base cuando se calcula el nivel incrementado de las recompensas.",
     "DropLevelExplanation2": "El Poder de la Cuenta usa el nivel más alto en cada ranura, independientemente de la Clase o de la regla del \"Exótico Único\".",
     "EquippableGear": "Equipo Equipable",
     "FlinchResistance": "Resistencia a Estremecimiento",
