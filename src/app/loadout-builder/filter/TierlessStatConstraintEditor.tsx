@@ -1,12 +1,3 @@
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-  PreDragActions,
-  SensorAPI,
-  SnapDragActions,
-} from '@hello-pangea/dnd';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
@@ -22,8 +13,8 @@ import {
   moveDownIcon,
   moveUpIcon,
 } from 'app/shell/icons';
-import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
+import { Reorder, useDragControls } from 'motion/react';
 import { Dispatch, useEffect, useId, useRef, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMaxStat, ResolvedStatConstraint, StatRanges } from '../types';
@@ -53,6 +44,8 @@ export default function TierlessStatConstraintEditor({
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   processing: boolean;
 }) {
+  // Local state for dragging - use undefined when not dragging
+  const [draggingOrder, setDraggingOrder] = useState<ResolvedStatConstraint[] | undefined>();
   // Actually change the stat constraints in the LO state, which triggers recalculation of sets.
   const handleStatChange = (constraint: ResolvedStatConstraint) =>
     lbDispatch({ type: 'statConstraintChanged', constraint });
@@ -73,19 +66,42 @@ export default function TierlessStatConstraintEditor({
     lbDispatch({ type: 'setStatConstraints', constraints });
   };
 
-  // Handle dropping the stat constraints in a new order
-  const handleDragEnd = (result: DropResult) => {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
+  // Handle reordering the stat constraints
+  const handleReorder = (newOrder: ResolvedStatConstraint[]) => {
+    // During dragging, just update local state without applying business logic
+    setDraggingOrder(newOrder);
+  };
+
+  const handleDragEnd = (draggedConstraint: ResolvedStatConstraint) => {
+    if (!draggingOrder) {
+      return; // No dragging in progress
     }
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
-    if (sourceIndex !== destinationIndex) {
+    const oldIndex = resolvedStatConstraints.findIndex(
+      (constraint) => constraint.statHash === draggedConstraint.statHash,
+    );
+    const newIndex = draggingOrder.findIndex(
+      (constraint) => constraint.statHash === draggedConstraint.statHash,
+    );
+
+    if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
       lbDispatch({
         type: 'statOrderChanged',
-        sourceIndex,
-        destinationIndex: result.destination.index,
+        sourceIndex: oldIndex,
+        destinationIndex: newIndex,
+      });
+    }
+
+    setDraggingOrder(undefined); // Reset local state after drag ends
+  };
+
+  // Handle button-based reordering (up/down buttons)
+  const handleButtonMove = (currentIndex: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex >= 0 && targetIndex < resolvedStatConstraints.length) {
+      lbDispatch({
+        type: 'statOrderChanged',
+        sourceIndex: currentIndex,
+        destinationIndex: targetIndex,
       });
     }
   };
@@ -98,30 +114,30 @@ export default function TierlessStatConstraintEditor({
       onSyncFromEquipped={handleSyncFromEquipped}
       onRandomize={handleRandomize}
     >
-      <DragDropContext onDragEnd={handleDragEnd} sensors={[useButtonSensor]}>
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div ref={provided.innerRef} className={styles.editor}>
-              {resolvedStatConstraints.map((c, index) => {
-                const statHash = c.statHash as ArmorStatHashes;
-                return (
-                  <StatRow
-                    key={statHash}
-                    statConstraint={c}
-                    index={index}
-                    statRange={statRangesFiltered?.[statHash]}
-                    onStatChange={handleStatChange}
-                    equippedHashes={equippedHashes}
-                    processing={processing}
-                  />
-                );
-              })}
-
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Reorder.Group
+        axis="y"
+        values={draggingOrder ?? resolvedStatConstraints}
+        onReorder={handleReorder}
+        className={styles.editor}
+        as="div"
+      >
+        {(draggingOrder ?? resolvedStatConstraints).map((c, index) => {
+          const statHash = c.statHash as ArmorStatHashes;
+          return (
+            <StatRow
+              key={statHash}
+              statConstraint={c}
+              index={index}
+              statRange={statRangesFiltered?.[statHash]}
+              onStatChange={handleStatChange}
+              onButtonMove={handleButtonMove}
+              onDragEnd={handleDragEnd}
+              equippedHashes={equippedHashes}
+              processing={processing}
+            />
+          );
+        })}
+      </Reorder.Group>
     </LoadoutEditSection>
   );
 }
@@ -131,6 +147,8 @@ function StatRow({
   statRange,
   index,
   onStatChange,
+  onButtonMove,
+  onDragEnd,
   equippedHashes,
   processing,
 }: {
@@ -138,6 +156,8 @@ function StatRow({
   statRange?: MinMaxStat;
   index: number;
   onStatChange: (constraint: ResolvedStatConstraint) => void;
+  onButtonMove: (currentIndex: number, direction: 'up' | 'down') => void;
+  onDragEnd: (constraint: ResolvedStatConstraint) => void;
   equippedHashes: Set<number>;
   processing: boolean;
 }) {
@@ -145,6 +165,11 @@ function StatRow({
   const statHash = statConstraint.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
   const handleIgnore = () => onStatChange({ ...statConstraint, ignored: !statConstraint.ignored });
+  // We use our own controls to avoid having the entire element be draggable.
+  // Requires dragListener={false} on Reorder.Item.
+  const controls = useDragControls();
+  // Assign this to onPointerDown to start dragging from this item
+  const startDrag = (e: React.PointerEvent) => controls.start(e);
 
   const setMin = (value: number) => {
     if (value !== statConstraint.minStat) {
@@ -169,86 +194,81 @@ function StatRow({
   const max = statConstraint.maxStat;
 
   return (
-    <Draggable draggableId={statHash.toString()} index={index}>
-      {(provided, snapshot) => (
-        <div
-          className={clsx(styles.row, {
-            [styles.dragging]: snapshot.isDragging,
-            [styles.ignored]: statConstraint.ignored,
-          })}
-          data-index={index}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
+    <Reorder.Item
+      value={statConstraint}
+      layout="position"
+      className={clsx(styles.row, {
+        [styles.ignored]: statConstraint.ignored,
+      })}
+      whileDrag={{
+        // We can only use inline styles here apparently
+        outline: '1px solid var(--theme-accent-primary)',
+        backgroundColor: 'black',
+      }}
+      onDragEnd={() => onDragEnd(statConstraint)}
+      data-index={index}
+      as="div"
+      dragListener={false}
+      dragControls={controls}
+    >
+      <span className={styles.grip} tabIndex={-1} aria-hidden={true} onPointerDown={startDrag}>
+        <AppIcon icon={dragHandleIcon} />
+      </span>
+      <div className={styles.name}>
+        <button
+          type="button"
+          role="checkbox"
+          aria-checked={!statConstraint.ignored}
+          className={styles.rowControl}
+          onClick={handleIgnore}
+          title={t('LoadoutBuilder.IgnoreStat')}
         >
-          <span
-            className={styles.grip}
-            {...provided.dragHandleProps}
-            tabIndex={-1}
+          <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
+        </button>
+        <div className={styles.label} onPointerDown={startDrag}>
+          <BungieImage
+            className={styles.iconStat}
+            src={statDef.displayProperties.icon}
             aria-hidden={true}
-          >
-            <AppIcon icon={dragHandleIcon} />
-          </span>
-          <div className={styles.name}>
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked={!statConstraint.ignored}
-              className={styles.rowControl}
-              onClick={handleIgnore}
-              title={t('LoadoutBuilder.IgnoreStat')}
-            >
-              <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
-            </button>
-            <div className={styles.label} {...provided.dragHandleProps}>
-              <BungieImage
-                className={styles.iconStat}
-                src={statDef.displayProperties.icon}
-                aria-hidden={true}
-                alt=""
-              />
-              {statDef.displayProperties.name}
-            </div>
-          </div>
-          <div className={styles.buttons}>
-            <button
-              type="button"
-              className={styles.rowControl}
-              title={t('LoadoutBuilder.IncreaseStatPriority')}
-              disabled={index === 0}
-              tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
-              data-direction="up"
-              data-draggable-id={statHash.toString()}
-            >
-              <AppIcon icon={moveUpIcon} />
-            </button>
-            <button
-              type="button"
-              className={styles.rowControl}
-              title={t('LoadoutBuilder.DecreaseStatPriority')}
-              disabled={index === 5}
-              tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
-              data-direction="down"
-              data-draggable-id={statHash.toString()}
-            >
-              <AppIcon icon={moveDownIcon} />
-            </button>
-          </div>
-          {!statConstraint.ignored && (
-            <StatEditBar min={min} max={max} setMin={setMin} setMax={setMax}>
-              <StatBar
-                range={statRange}
-                equippedHashes={equippedHashes}
-                min={min}
-                max={max}
-                setMin={setMin}
-                setMax={setMax}
-                processing={processing}
-              />
-            </StatEditBar>
-          )}
+            alt=""
+          />
+          {statDef.displayProperties.name}
         </div>
+      </div>
+      <div className={styles.buttons}>
+        <button
+          type="button"
+          className={styles.rowControl}
+          title={t('LoadoutBuilder.IncreaseStatPriority')}
+          disabled={index === 0}
+          onClick={() => onButtonMove(index, 'up')}
+        >
+          <AppIcon icon={moveUpIcon} />
+        </button>
+        <button
+          type="button"
+          className={styles.rowControl}
+          title={t('LoadoutBuilder.DecreaseStatPriority')}
+          disabled={index === 5}
+          onClick={() => onButtonMove(index, 'down')}
+        >
+          <AppIcon icon={moveDownIcon} />
+        </button>
+      </div>
+      {!statConstraint.ignored && (
+        <StatEditBar min={min} max={max} setMin={setMin} setMax={setMax}>
+          <StatBar
+            range={statRange}
+            equippedHashes={equippedHashes}
+            min={min}
+            max={max}
+            setMin={setMin}
+            setMax={setMax}
+            processing={processing}
+          />
+        </StatEditBar>
       )}
-    </Draggable>
+    </Reorder.Item>
   );
 }
 
@@ -412,52 +432,4 @@ function StatBar({
       <div className={styles.statBarMax} style={{ left: percent(effectiveMax / MAX_STAT) }} />
     </div>
   );
-}
-
-// Listen for button presses on the up and down buttons and turn it into lift+move+drop actions.
-function useButtonSensor(api: SensorAPI) {
-  useEffect(() => {
-    const onClick = (event: MouseEvent) => {
-      // Event already used
-      if (event.defaultPrevented) {
-        return;
-      }
-
-      const target = event.target as HTMLButtonElement;
-      if (
-        target.tagName !== 'BUTTON' ||
-        target.disabled ||
-        !target.dataset.direction ||
-        !target.dataset.draggableId
-      ) {
-        return;
-      }
-
-      const draggableId = target.dataset.draggableId;
-      if (!draggableId) {
-        return;
-      }
-
-      const preDrag: PreDragActions | null = api.tryGetLock(draggableId);
-      if (!preDrag) {
-        return;
-      }
-
-      // we are consuming the event
-      event.preventDefault();
-
-      (async () => {
-        const actions: SnapDragActions = preDrag.snapLift();
-        if (target.dataset.direction === 'down') {
-          actions.moveDown();
-        } else if (target.dataset.direction === 'up') {
-          actions.moveUp();
-        }
-        await delay(300);
-        actions.drop();
-      })();
-    };
-    document.addEventListener('click', onClick);
-    return () => document.removeEventListener('click', onClick);
-  }, [api]);
 }
