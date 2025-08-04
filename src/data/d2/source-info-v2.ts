@@ -354,7 +354,6 @@ const D2Sources: {
     sourceHashes: [
       596084342, // Source: "The Desert Perpetual" Raid
     ],
-    aliases: ['dp', 'desert'],
   },
   do: {
     sourceHashes: [

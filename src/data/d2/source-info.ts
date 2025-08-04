@@ -669,13 +669,6 @@ const D2Sources: {
     ],
     searchString: [],
   },
-  desert: {
-    itemHashes: [],
-    sourceHashes: [
-      596084342, // Source: "The Desert Perpetual" Raid
-    ],
-    searchString: [],
-  },
   desertperpetual: {
     itemHashes: [],
     sourceHashes: [
@@ -687,13 +680,6 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       146504277, // Source: Earn rank-up packages from Arach Jalaal.
-    ],
-    searchString: [],
-  },
-  dp: {
-    itemHashes: [],
-    sourceHashes: [
-      596084342, // Source: "The Desert Perpetual" Raid
     ],
     searchString: [],
   },
