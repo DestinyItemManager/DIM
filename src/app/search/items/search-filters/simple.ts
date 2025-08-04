@@ -1,10 +1,11 @@
 import { tl } from 'app/i18next-t';
+import { compact } from 'app/utils/collections';
 import { isEdgeOfFateArmorMasterwork } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 // simple checks against check an attribute found on DimItem
-const simpleFilters: ItemFilterDefinition[] = [
+const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | false>([
   {
     keywords: 'armor2.0',
     description: tl('Filter.Energy'),
@@ -77,7 +78,7 @@ const simpleFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Locked'),
     filter: () => (item) => !item.locked,
   },
-  {
+  $featureFlags.newItems && {
     keywords: 'new',
     description: tl('Filter.NewItems'),
     filter:
@@ -118,6 +119,6 @@ const simpleFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) => item.featured,
   },
-];
+]);
 
 export default simpleFilters;

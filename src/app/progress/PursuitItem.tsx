@@ -73,7 +73,7 @@ export default function PursuitItem({
           full={item.maxStackSize > 1 && item.amount === item.maxStackSize}
         />
       )}
-      {isNew && <NewItemIndicator />}
+      {$featureFlags.newItems && isNew && <NewItemIndicator />}
       {expired && <img className={styles.expired} src={pursuitExpired} />}
       {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
       {trackedInDim && <img className={styles.trackedIcon} src={dimTrackedIcon} />}
