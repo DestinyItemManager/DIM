@@ -13,7 +13,6 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
-import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { once, partition } from 'es-toolkit';
 import { Draft } from 'immer';
@@ -392,10 +391,7 @@ function applyPlugsToStats(
  * these stats to the intrinsic since that's the "masterwork".
  */
 function getPlugStatValue(createdItem: DimItem, stat: DimPlugInvestmentStat) {
-  if (
-    stat.activationRule?.rule === 'enhancedIntrinsic' &&
-    adeptWeaponHashes.includes(createdItem.hash)
-  ) {
+  if (stat.activationRule?.rule === 'enhancedIntrinsic' && createdItem.isAdept) {
     return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1);
   }
 

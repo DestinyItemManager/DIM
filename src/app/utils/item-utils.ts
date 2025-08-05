@@ -18,7 +18,7 @@ import {
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
 } from 'app/search/d2-known-values';
-import { damageNamesByEnum, riteOfTheNineShinyWeapons } from 'app/search/search-filter-values';
+import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
@@ -352,19 +352,6 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
  */
 export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
   return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
-}
-
-/** "shiny" items, special-edition items from Into The Light, with a unique ornament and extra perks */
-export function braveShiny(item: DimItem) {
-  return item.sockets?.allSockets.some(
-    (s) =>
-      s.plugOptions.some((s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared'), //
-  );
-}
-
-/** Rite of the Nine "shiny" weapons with a unique appearance the the diagonal stripes */
-export function riteShiny(item: DimItem) {
-  return riteOfTheNineShinyWeapons.has(item.hash);
 }
 
 const ichToBreakerType = Object.entries(artifactBreakerMods).reduce<

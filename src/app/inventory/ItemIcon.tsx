@@ -2,7 +2,6 @@ import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
-import { braveShiny, riteShiny } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { isArmorArchetypePlug, isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -60,7 +59,6 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   const classifiedPlaceholder =
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
-  const itemIsShiny = braveShiny(item) || riteShiny(item);
   return (
     <>
       {classifiedPlaceholder ? (
@@ -76,11 +74,11 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       {item.iconOverlay && (
         <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
       )}
-      {(itemIsShiny || item.masterwork || item.deepsightInfo) && (
+      {(item.isHolofoil || item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
-            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !itemIsShiny,
-            [styles.shinyMasterwork]: itemIsShiny,
+            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !item.isHolofoil,
+            [styles.shinyMasterwork]: item.isHolofoil,
             [styles.exoticMasterwork]: item.masterwork && item.isExotic,
             [styles.deepsightBorder]: item.deepsightInfo,
           })}
