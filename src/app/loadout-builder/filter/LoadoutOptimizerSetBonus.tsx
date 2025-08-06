@@ -12,7 +12,6 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { uniqBy } from 'app/utils/collections';
-import { objectValues } from 'app/utils/util-types';
 import { DestinyClass, DestinyItemSetPerkDefinition } from 'bungie-api-ts/destiny2';
 import { countBy, sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
@@ -110,7 +109,6 @@ export function SetBonusPicker({
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
-  const isPhonePortrait = useIsPhonePortrait();
 
   // TODO search functionality
   // const language = useSelector(languageSelector);
@@ -124,19 +122,29 @@ export function SetBonusPicker({
     [allItems, vendorItems, classType],
   );
 
-  const sets = objectValues(defs.EquipableItemSet.getAll()).filter((set) => !set.redacted);
+  // Only allow choosing set bonuses the user has items for
+  const sets = Object.keys(possibleSetBonuses)
+    .map((h) => defs.EquipableItemSet.get(parseInt(h, 10)))
+    .filter((set) => !set.redacted);
+
+  const totalSelected = sum(Object.values(setBonuses));
 
   const selected = (perk: DestinyItemSetPerkDefinition, setHash: number) =>
-    (setBonuses[setHash] || 0) >= perk.requiredSetCount;
+    (setBonuses[setHash] ?? 0) >= perk.requiredSetCount;
+
+  // TODO: This logic isn't quite right, since it doesn't take into account sets
+  // that we don't have a piece in every slot for. For example if you only have
+  // helmet and chest for two different sets, and you've already selected one of
+  // them, you can't select the other one.
   const disabled = (perk: DestinyItemSetPerkDefinition, setHash: number) =>
-    (possibleSetBonuses[setHash] || 0) < perk.requiredSetCount ||
+    // Either we don't have enough items to ever make this happen
+    (possibleSetBonuses[setHash] ?? 0) < perk.requiredSetCount ||
+    // Or the remaining unselected items would not allow us to reach the required set count
     (!selected(perk, setHash) &&
-      sum(Object.values(setBonuses)) - (setBonuses[setHash] || 0) + perk.requiredSetCount > 5);
+      totalSelected - (setBonuses[setHash] ?? 0) + perk.requiredSetCount > 5);
 
   const footer = ({ onClose }: { onClose: () => void }) => (
     <Footer
-      isPhonePortrait={isPhonePortrait}
-      acceptButtonText={t('LB.SelectSetBonus')}
       setBonuses={setBonuses}
       onSubmit={(event) => {
         event.preventDefault();
@@ -169,32 +177,37 @@ export function SetBonusPicker({
           <TileGrid key={set.hash} header={set.displayProperties.name}>
             {set.setPerks.map((perk) => {
               const perkDef = defs.SandboxPerk.get(perk.sandboxPerkHash);
+              const handleClick = () => {
+                setSetBonuses({
+                  ...setBonuses,
+                  [set.hash]:
+                    (setBonuses[set.hash] || 0) === perk.requiredSetCount
+                      ? 0
+                      : perk.requiredSetCount,
+                });
+              };
               return (
                 <TileGridTile
                   key={perkDef.hash}
                   selected={selected(perk, set.hash)}
                   disabled={disabled(perk, set.hash)}
-                  title={perkDef.displayProperties.name}
-                  icon={
+                  title={
                     <>
-                      <div className={styles.perkIcon} title={perkDef.displayProperties.name}>
-                        <BungieImage src={perkDef.displayProperties.icon} />
+                      {perkDef.displayProperties.name}
+                      <div className={styles.setCount}>
+                        {t('Item.SetBonus.NPiece', { count: perk.requiredSetCount })}
                       </div>
                     </>
                   }
-                  onClick={() => {
-                    setSetBonuses({
-                      ...setBonuses,
-                      [set.hash]:
-                        (setBonuses[set.hash] || 0) === perk.requiredSetCount
-                          ? 0
-                          : perk.requiredSetCount,
-                    });
-                  }}
+                  icon={
+                    <BungieImage
+                      src={perkDef.displayProperties.icon}
+                      className={styles.perkIcon}
+                      aria-hidden="true"
+                    />
+                  }
+                  onClick={handleClick}
                 >
-                  <span className={styles.setCount}>
-                    {t('Item.SetBonus.NPiece', { count: perk.requiredSetCount })}
-                  </span>
                   {perkDef.displayProperties.description}
                 </TileGridTile>
               );
@@ -207,17 +220,15 @@ export function SetBonusPicker({
 }
 
 function Footer({
-  isPhonePortrait,
-  acceptButtonText,
   setBonuses,
   onSubmit,
 }: {
-  isPhonePortrait: boolean;
-  acceptButtonText: string;
   setBonuses: SetBonusCounts;
   onSubmit: (event: React.FormEvent | KeyboardEvent) => void;
 }) {
+  const acceptButtonText = t('LB.SelectSetBonus');
   useHotkey('enter', acceptButtonText, onSubmit);
+  const isPhonePortrait = useIsPhonePortrait();
 
   return (
     <div className={styles.footer}>

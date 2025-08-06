@@ -1,27 +1,29 @@
 @use '../../variables' as *;
 
 .container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(504px, 1fr));
   padding: 10px 10px 16px 10px;
   gap: 14px;
+
+  @include phone-portrait {
+    grid-template-columns: 1fr;
+  }
 }
 
 .perkIcon {
   border-radius: 50%;
   border: 1px solid white;
   padding: 2px;
-  margin-right: 1px;
-
-  img {
-    height: 20px;
-    display: block;
-    margin: 2px;
-  }
+  height: 20px;
+  display: block;
+  margin: 2px;
 }
 
 .setCount {
   color: var(--theme-text-secondary);
+  font-weight: normal;
+  font-size: 12px;
 }
 
 .footer {
