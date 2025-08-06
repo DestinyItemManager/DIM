@@ -14,7 +14,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { uniqBy } from 'app/utils/collections';
 import { objectValues } from 'app/utils/util-types';
 import { DestinyClass, DestinyItemSetPerkDefinition } from 'bungie-api-ts/destiny2';
-import { sum } from 'es-toolkit';
+import { countBy, sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -38,8 +38,11 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
   const handleClear = () => {
     lbDispatch({ type: 'removeSetBonuses' });
   };
+  const handleUpdateSetBonuses = (setBonuses: SetBonusCounts) =>
+    lbDispatch({ type: 'setSetBonuses', setBonuses });
 
-  const handleClickEdit = () => setShowSetBonusPicker(true);
+  const showPicker = () => setShowSetBonusPicker(true);
+  const hidePicker = () => setShowSetBonusPicker(false);
 
   return (
     <LoadoutEditSection
@@ -47,8 +50,10 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
       className={className}
       onClear={handleClear}
     >
-      <ChosenSetBonusOption setBonuses={setBonuses} onClick={handleClickEdit} />
-      <button type="button" className="dim-button" onClick={handleClickEdit}>
+      <div onClick={showPicker}>
+        <SetBonusDisplay setBonuses={setBonuses} />
+      </div>
+      <button type="button" className="dim-button" onClick={showPicker}>
         {t('LB.SelectSetBonus')}
       </button>
       {showSetBonusPicker && (
@@ -56,8 +61,8 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
           initialSetBonuses={setBonuses}
           classType={classType}
           vendorItems={vendorItems}
-          onAccept={(setBonuses) => lbDispatch({ type: 'setSetBonuses', setBonuses })}
-          onClose={() => setShowSetBonusPicker(false)}
+          onAccept={handleUpdateSetBonuses}
+          onClose={hidePicker}
         />
       )}
     </LoadoutEditSection>
@@ -66,18 +71,24 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
 
 export default LoadoutOptimizerSetBonus;
 
-function ChosenSetBonusOption({
-  setBonuses,
-  onClick,
-}: {
-  setBonuses: SetBonusCounts;
-  onClick: () => void;
-}) {
-  return (
-    <div onClick={onClick}>
-      <SetBonusDisplay setBonuses={setBonuses} />
-    </div>
+/**
+ * Returns a list of set bonuses available for the given class type, and how
+ * many pieces could be used for each.
+ */
+function findSetBonuses(
+  allItems: DimItem[],
+  vendorItems: DimItem[],
+  classType: DestinyClass,
+): SetBonusCounts {
+  // One item from each bucket with a set bonus
+  const setBonusExemplars = uniqBy(
+    [...allItems, ...vendorItems].filter(
+      (item) => item.classType === classType && item.setBonus && isLoadoutBuilderItem(item),
+    ),
+    (item) => `${item.setBonus!.hash}-${item.bucket.hash}`,
   );
+  // Get the max number of items we could have available for each set bonus
+  return countBy(setBonusExemplars, (i) => i.setBonus!.hash);
 }
 
 export function SetBonusPicker({
@@ -109,16 +120,7 @@ export function SetBonusPicker({
   const allItems = useSelector(allItemsSelector);
 
   const possibleSetBonuses = useMemo(
-    () =>
-      uniqBy(
-        [...allItems, ...vendorItems].filter(
-          (item) => item.classType === classType && item.setBonus && isLoadoutBuilderItem(item),
-        ),
-        (item) => `${item.setBonus!.hash}-${item.bucket.hash}`,
-      ).reduce((acc, item) => {
-        acc[item.setBonus!.hash] = (acc[item.setBonus!.hash] || 0) + 1;
-        return acc;
-      }, {} as SetBonusCounts),
+    () => findSetBonuses(allItems, vendorItems, classType),
     [allItems, vendorItems, classType],
   );
 
