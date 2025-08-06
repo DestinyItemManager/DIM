@@ -84,8 +84,8 @@ const socketFilters: ItemFilterDefinition[] = [
         matchesCuratedRoll(d2Definitions!, item),
   },
   {
-    keywords: 'shiny',
-    description: tl('Filter.Shiny'),
+    keywords: ['holofoil', 'shiny'],
+    description: tl('Filter.Holofoil'),
     destinyVersion: 2,
     filter: () => (i) => i.bucket.inWeapons && i.holofoil,
   },
