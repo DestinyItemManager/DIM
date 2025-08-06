@@ -241,6 +241,10 @@ export interface DimItem {
   tier: number;
   /** In D2 since Edge of Fate, items can have a set bonus with other items */
   setBonus?: DestinyEquipableItemSetDefinition;
+  /** Is this an adept weapon? (D2 only) */
+  adept: boolean;
+  /** Is this a holofoil (shiny) weapon? (D2 only) */
+  holofoil: boolean;
 }
 
 /**

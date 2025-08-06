@@ -300,6 +300,8 @@ function makeFakePursuitItem(
     energy: null,
     featured: false,
     tier: 0,
+    adept: false,
+    holofoil: false,
   };
 }
 
