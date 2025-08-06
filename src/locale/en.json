@@ -254,7 +254,7 @@
     "HasNotes": "Show items that have notes applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
     "HasShader": "Shows items that have a shader applied.",
-    "Holofoil": "Shows weapons with a holofoil ornament.",
+    "Holofoil": "Shows holofoil weapons.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
