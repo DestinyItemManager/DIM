@@ -67,6 +67,7 @@ export const csvStatNamesForDestinyVersion = (destinyVersion: DestinyVersion) =>
     [StatHashes.Zoom, 'Zoom'],
     [StatHashes.BlastRadius, 'Blast Radius'],
     [StatHashes.Velocity, 'Velocity'],
+    [StatHashes.Persistence, 'Persistence'],
     [StatHashes.Stability, 'Stability'],
     [StatHashes.RoundsPerMinute, 'ROF'],
     [StatHashes.ReloadSpeed, 'Reload'],
