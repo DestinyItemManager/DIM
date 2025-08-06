@@ -354,7 +354,7 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'adept',
     description: tl('Filter.IsAdept'),
     destinyVersion: 2,
-    filter: () => (item) => item.adept,
+    filter: () => (item) => item.adept && item.bucket.inWeapons,
   },
   {
     keywords: 'origintrait',
