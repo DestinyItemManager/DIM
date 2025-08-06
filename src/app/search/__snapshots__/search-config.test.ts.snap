@@ -62,6 +62,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "heavy",
   "heavygrenadelauncher",
   "helmet",
+  "holofoil",
   "hunter",
   "incurrentchar",
   "indimloadout",
