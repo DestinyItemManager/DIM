@@ -11,10 +11,12 @@ dequips
 DIM
 DTR
 dupelower
+elgato
 equippability
 equippable
-elgato
 favorited
+hashta
+holofoil
 ICHs
 indimloadout
 iningameloadout
@@ -63,4 +65,3 @@ wayyyyy
 Xbox
 xpcomplete
 xpincomplete
-hashta
