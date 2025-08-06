@@ -135,7 +135,7 @@ export function isPlugStatActive(
       }
       return classType === rule.classType;
     case 'adeptWeapon':
-      return item?.isAdept ?? warnMissingItem();
+      return item?.adept ?? warnMissingItem();
     case 'masterwork':
       return item?.masterwork ?? warnMissingItem();
     case 'enhancedIntrinsic':
@@ -144,7 +144,7 @@ export function isPlugStatActive(
       // Alternatively, enhancing an adept weapon gives it an enhanced intrinsic
       // that gives bonus stats simply because it's an adept weapon, and more if Level 20+.
       // stats.ts:getPlugStatValue actually takes care of scaling this to the correct bonus.
-      return item ? (item.craftedInfo?.level || 0) >= 20 || item.isAdept : warnMissingItem();
+      return item ? (item.craftedInfo?.level || 0) >= 20 || item.adept : warnMissingItem();
   }
 }
 

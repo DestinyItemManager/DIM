@@ -16,7 +16,6 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
-  getSocketsByType,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
@@ -88,26 +87,7 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'shiny',
     description: tl('Filter.Shiny'),
     destinyVersion: 2,
-    filter: () => (i) => {
-      if (i.bucket.inWeapons) {
-        if (i.isHolofoil) {
-          return true;
-        }
-
-        // There are special Heresy weapons with an extra Origin Trait
-        const plugOptions = getSocketsByType(i, 'origin')[0]?.plugOptions;
-        if (
-          plugOptions &&
-          plugOptions.length === 2 &&
-          plugOptions[0].plugDef.hash === 878237828 && // Willing Vessel
-          plugOptions[1].plugDef.hash === 120721526 // Runneth Over
-        ) {
-          return true;
-        }
-      }
-
-      return false;
-    },
+    filter: () => (i) => i.bucket.inWeapons && i.holofoil,
   },
   {
     keywords: 'extraperk',
@@ -374,7 +354,7 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'adept',
     description: tl('Filter.IsAdept'),
     destinyVersion: 2,
-    filter: () => (item) => item.isAdept,
+    filter: () => (item) => item.adept,
   },
   {
     keywords: 'origintrait',

@@ -391,7 +391,7 @@ function applyPlugsToStats(
  * these stats to the intrinsic since that's the "masterwork".
  */
 function getPlugStatValue(createdItem: DimItem, stat: DimPlugInvestmentStat) {
-  if (stat.activationRule?.rule === 'enhancedIntrinsic' && createdItem.isAdept) {
+  if (stat.activationRule?.rule === 'enhancedIntrinsic' && createdItem.adept) {
     return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1);
   }
 
