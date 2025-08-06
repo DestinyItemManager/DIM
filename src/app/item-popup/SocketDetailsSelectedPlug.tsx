@@ -26,7 +26,6 @@ import { filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import {
   PlugCategoryHashes,
   SocketCategoryHashes,
@@ -245,7 +244,7 @@ export default function SocketDetailsSelectedPlug({
   ).includes(plug.plug.plugCategoryHash);
 
   return (
-    <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
+    <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} />
       </div>
@@ -287,17 +286,16 @@ export default function SocketDetailsSelectedPlug({
               </div>
             );
           })}
-
         {stats.length > 0 && (
-          <PlugStats
-            stats={stats.map((stat) => ({
-              statHash: stat.dimStat.statHash,
-              value: stat.modValue,
-            }))}
-          />
-        )}
-        {stats.length > 0 && (
-          <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
+          <div className={styles.itemStats}>
+            <PlugStats
+              stats={stats.map((stat) => ({
+                statHash: stat.dimStat.statHash,
+                value: stat.modValue,
+              }))}
+            />
+            <ItemStats stats={stats.map((s) => s.dimStat)} item={item} />
+          </div>
         )}
 
         {plugDescriptions.communityInsight && (

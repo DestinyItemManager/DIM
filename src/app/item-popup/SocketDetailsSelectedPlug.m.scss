@@ -5,6 +5,7 @@
   min-height: calc(var(--item-size) + 20px);
   display: grid;
   grid-template-columns: var(--item-size) 1fr;
+  grid-template-rows: min-content;
   grid-template-areas: 'mod name button' 'mod desc button';
   gap: 0 8px;
   height: min(25vh, 15em);
@@ -17,20 +18,6 @@
       'mod button';
     gap: 8px 8px;
     height: auto;
-    &.hasStats {
-      grid-template-columns: var(--item-size) 1fr;
-      grid-template-areas:
-        'mod name'
-        'mod desc'
-        'mod stat'
-        'mod button';
-    }
-  }
-  &.hasStats {
-    grid-template-columns: var(--item-size) 1fr 1fr;
-    grid-template-areas:
-      'mod name stat button'
-      'mod desc stat button';
   }
 }
 
@@ -52,7 +39,7 @@
 
 .modDescription {
   composes: flexColumn from '../dim-ui/common.m.scss';
-  gap: 8px 8px;
+  gap: 8px;
   grid-area: desc;
   overflow: auto;
 
@@ -70,9 +57,9 @@
 }
 
 .itemStats {
-  grid-area: stat;
-  margin: 0;
-  height: min-content;
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 8px;
+  max-width: 20em;
 }
 
 .source {
