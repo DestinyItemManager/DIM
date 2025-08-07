@@ -21,8 +21,8 @@ import { mapValues, maxOf, sumBy } from 'app/utils/collections';
 import {
   getArmor3StatFocus,
   getStatValuesByHash,
+  isArmor3,
   isClassCompatible,
-  isEdgeOfFateArmorMasterwork,
 } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { once } from 'es-toolkit';
@@ -159,8 +159,7 @@ const statFilters: ItemFilterDefinition[] = [
       if (!seekingStatHash) {
         throw Error(`invalid stat name: "${filterValue}"`);
       }
-      return (item) =>
-        isEdgeOfFateArmorMasterwork(item) && getArmor3StatFocus(item)[ordinal] === seekingStatHash;
+      return (item) => isArmor3(item) && getArmor3StatFocus(item)[ordinal] === seekingStatHash;
     },
   },
 ];

@@ -12,7 +12,7 @@ import {
   getArmor3StatFocus,
   getInterestingSocketMetadatas,
   getItemDamageShortName,
-  isEdgeOfFateArmorMasterwork,
+  isArmor3,
 } from 'app/utils/item-utils';
 import {
   getArmorArchetype,
@@ -46,8 +46,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
 
   const archetype = getArmorArchetype(exampleItem);
-  const tertiaryStatHash =
-    isEdgeOfFateArmorMasterwork(exampleItem) && getArmor3StatFocus(exampleItem)?.[2];
+  const tertiaryStatHash = isArmor3(exampleItem) && getArmor3StatFocus(exampleItem)?.[2];
   const tertiaryStat = tertiaryStatHash && realD2ArmorStatSearchByHash[tertiaryStatHash];
   const tertiaryStatDisplay =
     tertiaryStatHash &&

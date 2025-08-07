@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isEmpty } from 'app/utils/collections';
-import { isEdgeOfFateArmorMasterworkSocket } from 'app/utils/item-utils';
+import { isArmor3MasterworkSocket } from 'app/utils/item-utils';
 import { getFirstSocketByCategoryHash, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
@@ -48,9 +48,7 @@ function buildMasterworkInfo(
 
   // Look for the Edge of Fate masterwork socket
   if (!masterworkPlug && createdItem.bucket.inArmor) {
-    masterworkPlug = createdItem.sockets?.allSockets.find(
-      isEdgeOfFateArmorMasterworkSocket,
-    )?.plugged;
+    masterworkPlug = createdItem.sockets?.allSockets.find(isArmor3MasterworkSocket)?.plugged;
   }
 
   if (!masterworkPlug) {

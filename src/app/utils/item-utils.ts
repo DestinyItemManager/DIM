@@ -322,11 +322,11 @@ export function isArtificeSocket(socket: DimSocket) {
  */
 // TODO: May want to switch this to isLegacyArmorMasterwork eventually
 // TODO: Maybe replace this with "isArmor3"?
-export function isEdgeOfFateArmorMasterwork(item: DimItem) {
-  return Boolean(item.sockets?.allSockets.some(isEdgeOfFateArmorMasterworkSocket));
+export function isArmor3(item: DimItem) {
+  return Boolean(item.sockets?.allSockets.some(isArmor3MasterworkSocket));
 }
 
-export function isEdgeOfFateArmorMasterworkSocket(socket: DimSocket) {
+export function isArmor3MasterworkSocket(socket: DimSocket) {
   return (
     socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks
   );
