@@ -28,9 +28,9 @@ import { filterMap, isEmpty, mapValues, sumBy } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import { emptyObject } from 'app/utils/empty';
 import {
+  isArmor3,
+  isArmor3MasterworkSocket,
   isClassCompatible,
-  isEdgeOfFateArmorMasterwork,
-  isEdgeOfFateArmorMasterworkSocket,
   isItemLoadoutCompatible,
   itemCanBeEquippedBy,
   itemCanBeInLoadout,
@@ -374,10 +374,9 @@ export function calculateAssumedMasterworkStats(
   const assumeMasterworked = armorEnergyRules
     ? isAssumedMasterworked(dimItem, armorEnergyRules)
     : false;
-  const newMasterworkType = isEdgeOfFateArmorMasterwork(dimItem);
+  const newMasterworkType = isArmor3(dimItem);
   const mwPlug =
-    newMasterworkType &&
-    dimItem.sockets?.allSockets.find(isEdgeOfFateArmorMasterworkSocket)?.plugged;
+    newMasterworkType && dimItem.sockets?.allSockets.find(isArmor3MasterworkSocket)?.plugged;
 
   for (const { statHash, base } of dimItem.stats) {
     let value = base;
