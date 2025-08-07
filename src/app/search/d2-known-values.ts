@@ -46,6 +46,7 @@ export const DEFAULT_ORNAMENTS: number[] = [
   2931483505, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
   1959648454, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
   702981643, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
+  3854296178, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
 ];
 
 /** a weird set of 3 solstice ornaments that provide a single resilience stat point */
