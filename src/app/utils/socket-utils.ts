@@ -566,6 +566,14 @@ export function getWeaponSockets(
   };
 }
 
+// Sometimes we trust Bungie's advertised socket visibility information
+const trustBungieVisibility = new Set<PlugCategoryHashes | undefined>([
+  // Artifice slots the game has marked as not visible (on un-upgraded exotics)
+  PlugCategoryHashes.EnhancementsArtifice,
+  // Stat tuning mods only available on Tier 5 armors
+  PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
+]);
+
 export function getGeneralSockets(
   item: DimItem,
   excludeEmptySockets = false,
@@ -596,10 +604,10 @@ export function getGeneralSockets(
     !socketInfo.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(
       'v460.plugs.armor.masterworks',
     ) &&
-    // exclude artifice slots the game has marked as not visible (on un-upgraded exotics)
+    //
     !(
-      socketInfo.plugged?.plugDef.plug.plugCategoryHash ===
-        PlugCategoryHashes.EnhancementsArtifice && !socketInfo.visibleInGame
+      !socketInfo.visibleInGame &&
+      trustBungieVisibility.has(socketInfo.plugged?.plugDef.plug.plugCategoryHash)
     ) &&
     // Ghost shells unlock an activity mod slot when masterworked and hide the dummy locked slot
     (item.bucket.hash !== BucketHashes.Ghost ||
