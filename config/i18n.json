@@ -486,7 +486,7 @@
     "ThumbsDown": "Thumbs Down",
     "SetBonus": {
       "NPiece_one": "{{count}} Piece",
-      "NPiece_other": "{{count}} Pieces"
+      "NPiece_other": "{{count}} Piece"
     }
   },
   "ItemFeed": {

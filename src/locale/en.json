@@ -470,7 +470,7 @@
   "Item": {
     "SetBonus": {
       "NPiece_one": "{{count}} Piece",
-      "NPiece_other": "{{count}} Pieces"
+      "NPiece_other": "{{count}} Piece"
     },
     "ThumbsDown": "Thumbs Down",
     "ThumbsUp": "Thumbs Up"
