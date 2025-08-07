@@ -7,15 +7,18 @@ import styles from './DraggableInventoryItem.m.scss';
 import { isDragging$ } from './drag-events';
 import { DimItem } from './item-types';
 
-interface Props {
-  item: DimItem;
-  anyBucket?: boolean;
-  children?: React.ReactNode;
-}
-
 let dragTimeout: number | null = null;
 
-export default function DraggableInventoryItem({ children, item, anyBucket = false }: Props) {
+export default function DraggableInventoryItem({
+  children,
+  item,
+  anyBucket = false,
+}: {
+  item: DimItem;
+  /** Allow the item to be dragged onto any bucket, not just its own. */
+  anyBucket?: boolean;
+  children?: React.ReactNode;
+}) {
   const canDrag =
     (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
       ? item.equipment
