@@ -321,7 +321,6 @@ export function isArtificeSocket(socket: DimSocket) {
  * Is this the new-style armor masterwork in Edge of Fate that grants +1 to the three lower stats per tier?
  */
 // TODO: May want to switch this to isLegacyArmorMasterwork eventually
-// TODO: Maybe replace this with "isArmor3"?
 export function isArmor3(item: DimItem) {
   return Boolean(item.sockets?.allSockets.some(isArmor3MasterworkSocket));
 }
