@@ -368,6 +368,8 @@ function makeItem(
     pursuit: null,
     featured: false,
     tier: 0,
+    adept: false,
+    holofoil: false,
   };
 
   // *able

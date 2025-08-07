@@ -3,7 +3,6 @@ import { filterMap } from 'app/utils/collections';
 import { infoLog, warnLog } from 'app/utils/log';
 import { weakMemoize } from 'app/utils/memoize';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
-import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
@@ -147,7 +146,7 @@ export function isPlugStatActive(
       }
       return classType === rule.classType;
     case 'adeptWeapon':
-      return item ? adeptWeaponHashes.includes(item.hash) : warnMissingItem();
+      return item?.adept ?? warnMissingItem();
     case 'masterwork':
       return item?.masterwork ?? warnMissingItem();
     case 'tieredWeaponMW':
@@ -159,9 +158,7 @@ export function isPlugStatActive(
       // Alternatively, enhancing an adept weapon gives it an enhanced intrinsic
       // that gives bonus stats simply because it's an adept weapon, and more if Level 20+.
       // stats.ts:getPlugStatValue actually takes care of scaling this to the correct bonus.
-      return item
-        ? (item.craftedInfo?.level || 0) >= 20 || adeptWeaponHashes.includes(item.hash)
-        : warnMissingItem();
+      return item ? (item.craftedInfo?.level || 0) >= 20 || item.adept : warnMissingItem();
   }
 }
 

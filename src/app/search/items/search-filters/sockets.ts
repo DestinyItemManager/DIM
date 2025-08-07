@@ -8,22 +8,18 @@ import {
 } from 'app/search/d2-known-values';
 import { plainString } from 'app/search/text-utils';
 import {
-  braveShiny,
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
   modSlotTags,
-  riteShiny,
 } from 'app/utils/item-utils';
 import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
-  getSocketsByType,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
   ItemCategoryHashes,
@@ -88,29 +84,10 @@ const socketFilters: ItemFilterDefinition[] = [
         matchesCuratedRoll(d2Definitions!, item),
   },
   {
-    keywords: 'shiny',
-    description: tl('Filter.Shiny'),
+    keywords: ['holofoil', 'shiny'],
+    description: tl('Filter.Holofoil'),
     destinyVersion: 2,
-    filter: () => (i) => {
-      if (i.bucket.inWeapons) {
-        if (braveShiny(i) || riteShiny(i)) {
-          return true;
-        }
-
-        // There are special Heresy weapons with an extra Origin Trait
-        const plugOptions = getSocketsByType(i, 'origin')[0]?.plugOptions;
-        if (
-          plugOptions &&
-          plugOptions.length === 2 &&
-          plugOptions[0].plugDef.hash === 878237828 && // Willing Vessel
-          plugOptions[1].plugDef.hash === 120721526 // Runneth Over
-        ) {
-          return true;
-        }
-      }
-
-      return false;
-    },
+    filter: () => (i) => i.bucket.inWeapons && i.holofoil,
   },
   {
     keywords: 'extraperk',
@@ -377,7 +354,7 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'adept',
     description: tl('Filter.IsAdept'),
     destinyVersion: 2,
-    filter: () => (item) => adeptWeaponHashes.includes(item.hash),
+    filter: () => (item) => item.adept && item.bucket.inWeapons,
   },
   {
     keywords: 'origintrait',

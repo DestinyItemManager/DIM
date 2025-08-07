@@ -540,6 +540,8 @@ export function makeItem(
     featured: itemDef.isFeaturedItem,
     tier: itemInstanceData.gearTier ?? 0,
     traitHashes: itemDef.traitHashes,
+    adept: itemDef.isAdept,
+    holofoil: itemDef.isHolofoil,
   };
 
   // *able
