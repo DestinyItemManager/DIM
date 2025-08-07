@@ -25,12 +25,14 @@ export default function ConnectedInventoryItem({
   ref,
 }: {
   item: DimItem;
+  /** Make this item partially transparent when it does not match the current search filter */
   allowFilter?: boolean;
   hideSelectedSuper?: boolean;
   ref?: React.Ref<HTMLDivElement>;
   onClick?: (e: React.MouseEvent) => void;
   onShiftClick?: (e: React.MouseEvent) => void;
   onDoubleClick?: (e: React.MouseEvent) => void;
+  /** Make this item partially transparent if it has the archive tag */
   dimArchived?: boolean;
 }) {
   // TODO: maybe send these down via Context?
