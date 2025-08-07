@@ -20,6 +20,7 @@ import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-gene
 import { mapValues, maxOf, sumBy } from 'app/utils/collections';
 import {
   getArmor3StatFocus,
+  getArmor3TuningStat,
   getStatValuesByHash,
   isArmor3,
   isClassCompatible,
@@ -160,6 +161,20 @@ const statFilters: ItemFilterDefinition[] = [
         throw Error(`invalid stat name: "${filterValue}"`);
       }
       return (item) => isArmor3(item) && getArmor3StatFocus(item)[ordinal] === seekingStatHash;
+    },
+  },
+  {
+    keywords: 'tunedstat',
+    description: tl('Filter.TunedStat'),
+    format: 'query',
+    suggestions: Object.keys(realD2ArmorStatHashByName),
+    destinyVersion: 2,
+    filter: ({ filterValue, d2Definitions }) => {
+      const seekingStatHash = realD2ArmorStatHashByName[filterValue];
+      if (!seekingStatHash) {
+        throw Error(`invalid stat name: "${filterValue}"`);
+      }
+      return (item) => getArmor3TuningStat(item, d2Definitions!) === seekingStatHash;
     },
   },
 ];

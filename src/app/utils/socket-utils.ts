@@ -676,3 +676,15 @@ export function matchesCuratedRoll(defs: D2ManifestDefinitions, item: DimItem) {
 
   return matchesCollectionsRoll;
 }
+
+/** Finds the item's tuning socket if it's enabled. This socket can slightly modify the armor's stats. */
+export function getArmor3TuningSocket(item: DimItem): DimSocket | undefined {
+  return item.sockets?.allSockets.find(
+    (s) =>
+      // Ensures the socket is active (Tier 5 armor)
+      s.visibleInGame &&
+      // Even the "empty slot" placeholder has the right plugCategoryHash
+      s.plugged?.plugDef.plug.plugCategoryHash ===
+        PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
+  );
+}

@@ -55,7 +55,20 @@ type StatSegments = [value: number, statSegmentType: StatSegmentType, modName?: 
 /**
  * A single stat line.
  */
-export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
+export default function ItemStat({
+  stat,
+  item,
+  itemStatInfo,
+}: {
+  stat: DimStat;
+  item?: DimItem;
+  itemStatInfo?: {
+    /** Stat hash the item's tuning slot affects */
+    tunedStatHash?: number;
+    /** Results from getArmor3StatFocus */
+    statFocus?: StatHashes[];
+  };
+}) {
   const showQuality = useSelector(settingSelector('itemQuality'));
   const customStatsList = useSelector(customStatsSelector);
   const customStatHashes = customStatsList.map((c) => c.statHash);
@@ -136,6 +149,9 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     [styles.negativeModded]: modSign < 0,
     [styles.totalRow]: Boolean(totalDetails),
     [styles.customTotal]: customStatHashes.includes(stat.statHash),
+    [styles.archetypeStat]:
+      itemStatInfo?.statFocus?.[0] === stat.statHash ||
+      itemStatInfo?.statFocus?.[1] === stat.statHash,
   };
 
   return (
@@ -145,6 +161,12 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         aria-label={stat.displayProperties.name}
         title={stat.displayProperties.description}
       >
+        {stat.statHash === itemStatInfo?.tunedStatHash && (
+          <span className={styles.tunableSymbol}>
+            ▁<span>▁</span>
+            <span>▁</span>
+          </span>
+        )}{' '}
         {stat.statHash in statLabels
           ? t(statLabels[stat.statHash as StatHashes]!)
           : stat.displayProperties.name}

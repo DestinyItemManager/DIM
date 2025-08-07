@@ -33,6 +33,7 @@ import {
   StatHashes,
 } from 'data/d2/generated-enums';
 import { filterMap, objectifyArray } from './collections';
+import { getArmor3TuningSocket } from './socket-utils';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name
@@ -416,10 +417,31 @@ export function itemTypeName(item: DimItem) {
 
 /**
  * Returns [primary stat hash, secondary stat hash, tertiary stat hash] for armor 3.0.
- * Make sure the item is armor 3.0 upstream.
+ * Make sure the item is armor 3.0 upstream or these stat rankings might be misleading.
  */
 export function getArmor3StatFocus(item: DimItem): StatHashes[] {
   return (item.stats?.filter((s) => s.statHash > 0 && s.base > 0) ?? [])
     .sort((a, b) => b.base - a.base)
     .map((s) => s.statHash);
+}
+
+/**
+ * Returns the stat hash of the item's tunable stat.
+ * This stat can be upgraded at the cost of another stat.
+ *
+ * This heuristic relies on the following assumptions:
+ * - Every armor with tuning has Balanced Tuning (3122197216) which provides +1 to several stats.
+ * - Armor with e.g. a melee tuning, has several available plugs which raise Melee stat by 5 (and none which raise other stats by that much)
+ */
+export function getArmor3TuningStat(
+  item: DimItem,
+  defs: D2ManifestDefinitions,
+): number | undefined {
+  const tradeOffModHash = getArmor3TuningSocket(item)?.reusablePlugItems?.find((pi) =>
+    defs.InventoryItem.get(pi.plugItemHash).investmentStats.some((s) => s.value > 1),
+  )?.plugItemHash;
+  if (tradeOffModHash) {
+    return defs.InventoryItem.get(tradeOffModHash).investmentStats.find((s) => s.value > 0)
+      ?.statTypeHash;
+  }
 }

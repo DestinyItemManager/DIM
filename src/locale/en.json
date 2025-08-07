@@ -330,6 +330,7 @@
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
     "Trashlist": "Shows items that match your wish list's trash list.",
+    "TunedStat": "Shows items with tuning mods for the specified stat.",
     "Unascended": "Shows items that have an ascend node which have not been ascended.",
     "Undo": "Undo",
     "UnlockAllFailed": "Failed to unlock items",
