@@ -5,6 +5,7 @@
 * BETA ONLY: The new-item dot, `is:new` search, and new-item Organizer column have been removed. You can use the Item Feed to keep track of new drops.
 * Adjust text spacing for item popup headers when tier/season banner are present
 * Added an `is:holofoil` search.
+* Add the bonus to all stats for tier 10 masterwork on new weapons.
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
