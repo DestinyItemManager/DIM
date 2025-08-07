@@ -567,7 +567,7 @@ export function getWeaponSockets(
 }
 
 // Sometimes we trust Bungie's advertised socket visibility information
-const trustBungieVisibility = new Set<PlugCategoryHashes | undefined>([
+export const trustBungieVisibility = new Set<PlugCategoryHashes | undefined>([
   // Artifice slots the game has marked as not visible (on un-upgraded exotics)
   PlugCategoryHashes.EnhancementsArtifice,
   // Stat tuning mods only available on Tier 5 armors
@@ -604,7 +604,6 @@ export function getGeneralSockets(
     !socketInfo.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(
       'v460.plugs.armor.masterworks',
     ) &&
-    //
     !(
       !socketInfo.visibleInGame &&
       trustBungieVisibility.has(socketInfo.plugged?.plugDef.plug.plugCategoryHash)
