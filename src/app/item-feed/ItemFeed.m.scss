@@ -2,10 +2,7 @@
 
 .list {
   padding: 10px;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  scrollbar-gutter: stable;
 }
 
 .item {
