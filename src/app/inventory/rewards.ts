@@ -11,6 +11,8 @@ import type { DimStore } from './store-types';
 // These bonuses are hard to programatically identify, they're just dummies.
 const activityScoreBoosts = new Set([3858293505, 3858293504, 3858293507, 3858293506, 3858293509]);
 
+const maxPowerLevel = 550; // Not expected to change, but should be moved to the constants file or pulled from d2ai.
+
 // Per https://redd.it/1m5obsu, thanks u/Testifye, Reward Multiplier is based on your Gear's Power,
 // multiplied by a combination of its Newness/Featuredness and Season Pass bonuses.
 // 10,000 * C * ( ( G + A + 1 ) * ( ( P - 90 ) * ( 9 / 460 ) + 1 ) )
@@ -52,7 +54,7 @@ export function getRewardMultiplier(
     season,
   );
   const activityUnlocks = seasonProgressionDef.rewardItems.filter(
-    (i) => i.rewardedAtProgressionLevel >= seasonPassLevel && activityScoreBoosts.has(i.itemHash),
+    (i) => i.rewardedAtProgressionLevel <= seasonPassLevel && activityScoreBoosts.has(i.itemHash),
   ).length;
   // There are 5 collectible bonuses, each contributing 3%
   gearMultiplier += activityUnlocks * 3;
@@ -61,10 +63,10 @@ export function getRewardMultiplier(
   gearMultiplier = 1 + 0.01 * gearMultiplier;
 
   // The power multiplier, starting at 0, can reach 9x, leading to the 9 numerator here.
-  // Power level gains, from PL90 to PL550, affect the bonus linearly, so there are 460 increments (460 denominator).
+  // Power level gains, from PL90 to PL550, affect the bonus linearly, so there are 460 increments (460 (550-90) denominator).
   const equippedPowerLevel = Math.floor(sumBy(equippedGear, (i) => i.power) / 8);
   const powerBeyond90 = Math.max(equippedPowerLevel - 90, 0);
-  const powerMultiplier = 1 + powerBeyond90 * (9 / 460);
+  const powerMultiplier = 1 + powerBeyond90 * (9 / (maxPowerLevel - 90));
 
   return powerMultiplier * gearMultiplier;
 }
