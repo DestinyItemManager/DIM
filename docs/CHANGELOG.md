@@ -8,6 +8,8 @@
 * Add the bonus to all stats for tier 10 masterwork on new weapons.
 * Item icons in the item feed will dim if the items do not match the current search.
 * Added a scrollbar to the item feed
+* Fix showing default ornament icon for new weapons in Armory
+* Fix showing default ornament icon for new weapons in Armory
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
