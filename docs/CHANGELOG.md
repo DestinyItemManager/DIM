@@ -9,7 +9,6 @@
 * Item icons in the item feed will dim if the items do not match the current search.
 * Added a scrollbar to the item feed
 * Fix showing default ornament icon for new weapons in Armory
-* Fix showing default ornament icon for new weapons in Armory
 * Added `tunedstat:` filter for finding Tier 5 items with specific tuners.
 * Highlighted Archetype and Tuned stats in the item popup.
 
