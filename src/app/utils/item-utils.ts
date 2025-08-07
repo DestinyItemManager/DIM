@@ -33,6 +33,7 @@ import {
   StatHashes,
 } from 'data/d2/generated-enums';
 import { filterMap, objectifyArray } from './collections';
+import { getArmor3TuningSocket } from './socket-utils';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name
@@ -422,4 +423,18 @@ export function getArmor3StatFocus(item: DimItem): StatHashes[] {
   return (item.stats?.filter((s) => s.statHash > 0 && s.base > 0) ?? [])
     .sort((a, b) => b.base - a.base)
     .map((s) => s.statHash);
+}
+
+/** Returns the stat hash of the item's tunable stat. This stat can be upgraded at the cost of another stat. */
+export function getArmor3TuningStat(
+  item: DimItem,
+  defs: D2ManifestDefinitions,
+): number | undefined {
+  const tradeOffModHash = getArmor3TuningSocket(item)?.reusablePlugItems?.find((pi) =>
+    defs.InventoryItem.get(pi.plugItemHash).investmentStats.some((s) => s.value > 1),
+  )?.plugItemHash;
+  if (tradeOffModHash) {
+    return defs.InventoryItem.get(tradeOffModHash).investmentStats.find((s) => s.value > 0)
+      ?.statTypeHash;
+  }
 }

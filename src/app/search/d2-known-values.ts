@@ -107,8 +107,12 @@ export const CUSTOM_TOTAL_STAT_HASH = -111000;
 /** hashes representing D2 PL stats */
 export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.Power];
 
-/** these stats canonically exist on D2 armor */
-export const D2ArmorStatHashByName = {
+/**
+ * Lookup with `'weapons' -> StatHashes.Weapons` etc.
+ *
+ * Includes keys with the old armor 2.0 stat names.
+ */
+export const D2ArmorStatHashByName: StringLookup<StatHashes> = {
   weapons: StatHashes.Weapons,
   health: StatHashes.Health,
   class: StatHashes.Class,
@@ -126,6 +130,11 @@ export const D2ArmorStatHashByName = {
   strength: StatHashes.Melee,
 } as const;
 
+/**
+ * Lookup with `'weapons' -> StatHashes.Weapons` etc.
+ *
+ * Only the 6 real armor 3.0 stats.
+ */
 export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
   weapons: StatHashes.Weapons,
   health: StatHashes.Health,
@@ -134,6 +143,12 @@ export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
   super: StatHashes.Super,
   melee: StatHashes.Melee,
 };
+
+/**
+ * Lookup with `StatHashes.Weapons -> 'weapons'` etc.
+ *
+ * Only the 6 real armor stats.
+ */
 export const realD2ArmorStatSearchByHash = invert(realD2ArmorStatHashByName);
 
 /** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
