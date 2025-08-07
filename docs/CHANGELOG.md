@@ -6,6 +6,8 @@
 * Adjust text spacing for item popup headers when tier/season banner are present
 * Added an `is:holofoil` search.
 * Add the bonus to all stats for tier 10 masterwork on new weapons.
+* Item icons in the item feed will dim if the items do not match the current search.
+* Added a scrollbar to the item feed
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
