@@ -1,10 +1,11 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Countdown from 'app/dim-ui/Countdown';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { isClassCompatible } from 'app/utils/item-utils';
+import { getCurrentSeasonInfo } from 'app/utils/seasons';
 import {
-  DestinyCharacterProgressionComponent,
   DestinyClass,
   DestinyProfileResponse,
   DestinyProgressionRewardItemQuantity,
@@ -15,22 +16,18 @@ import clsx from 'clsx';
 import BungieImage from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
+import { getCharacterProgressions } from './selectors';
 
 export default function SeasonalRank({
   store,
-  characterProgressions,
-  season,
-  seasonPass,
   profileInfo,
 }: {
   store: DimStore;
-  characterProgressions: DestinyCharacterProgressionComponent;
-  season?: DestinySeasonDefinition;
-  seasonPass?: DestinySeasonPassDefinition;
   profileInfo: DestinyProfileResponse;
 }) {
   const defs = useD2Definitions()!;
-  if (!season) {
+  const { season, seasonPass } = getCurrentSeasonInfo(defs, profileInfo);
+  if (!season || !seasonPass) {
     return null;
   }
 
@@ -39,27 +36,17 @@ export default function SeasonalRank({
 
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
-  const seasonPassProgressionHash = seasonPass?.rewardProgressionHash;
-  const prestigeProgressionHash = seasonPass?.prestigeProgressionHash;
 
-  if (!seasonPassProgressionHash || !prestigeProgressionHash) {
-    return null;
-  }
   const seasonEnd = season.endDate;
-  const currentSeasonHash = season.hash;
-  const seasonHashes = profileInfo?.profile?.data?.seasonHashes || [];
 
-  // Get seasonal character progressions
-  const seasonProgress = characterProgressions.progressions[seasonPassProgressionHash];
-  const prestigeProgress = characterProgressions.progressions[prestigeProgressionHash];
-
-  const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
-
-  const seasonalRank = prestigeMode
-    ? prestigeProgress?.level + seasonProgress.levelCap
-    : seasonProgress.level;
-  const { progressToNextLevel, nextLevelAt } = prestigeMode ? prestigeProgress : seasonProgress;
-  const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
+  const {
+    seasonPassLevel,
+    rewardItems,
+    progressToNextLevel,
+    nextLevelAt,
+    prestigeMode,
+    hasPremiumRewards,
+  } = getSeasonPassStatus(defs, profileInfo, seasonPass, season);
 
   if (
     // Only add the fake rewards once
@@ -74,7 +61,7 @@ export default function SeasonalRank({
       if (
         prestigeMode
           ? item.rewardedAtProgressionLevel !== prestigeRewardLevel
-          : item.rewardedAtProgressionLevel !== seasonalRank + 1
+          : item.rewardedAtProgressionLevel !== seasonPassLevel + 1
       ) {
         return false;
       }
@@ -107,8 +94,6 @@ export default function SeasonalRank({
   if (!rewardItems.length) {
     return null;
   }
-
-  const hasPremiumRewards = ownCurrentSeasonPass(seasonHashes, currentSeasonHash);
 
   return (
     <div
@@ -159,7 +144,7 @@ export default function SeasonalRank({
       </div>
       <div className="milestone-info">
         <span className="milestone-name">
-          {t('Milestone.SeasonalRank', { rank: seasonalRank })}
+          {t('Milestone.SeasonalRank', { rank: seasonPassLevel })}
         </span>
         <div className="milestone-description">
           {seasonNameDisplay}
@@ -175,14 +160,55 @@ export default function SeasonalRank({
   );
 }
 
-/**
- * Does the player own the current season pass?
- */
-function ownCurrentSeasonPass(seasonHashes: number[], currentSeasonHash?: number) {
-  if (!currentSeasonHash || !seasonHashes) {
-    return false;
-  }
-  return seasonHashes.includes(currentSeasonHash);
+export function getSeasonPassStatus(
+  defs: D2ManifestDefinitions,
+  profileInfo: DestinyProfileResponse,
+  seasonPass: DestinySeasonPassDefinition,
+  season: DestinySeasonDefinition,
+  storeId?: string,
+) {
+  const characterProgressions = getCharacterProgressions(profileInfo, storeId)!;
+  const seasonPassProgressionHash = seasonPass.rewardProgressionHash;
+  const seasonProgression = characterProgressions.progressions[seasonPassProgressionHash];
+  const seasonProgressionDef = defs.Progression.get(seasonPassProgressionHash);
+
+  const prestigeProgressionHash = seasonPass.prestigeProgressionHash;
+  const prestigeProgression = characterProgressions.progressions[prestigeProgressionHash];
+  const prestigeProgressionDef = defs.Progression.get(prestigeProgressionHash);
+
+  const seasonPassLevel = seasonProgression.level + prestigeProgression.level;
+  const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
+
+  const prestigeMode = seasonProgression.level === seasonProgression.levelCap;
+
+  const { progressToNextLevel, nextLevelAt } = prestigeMode
+    ? prestigeProgression
+    : seasonProgression;
+
+  const hasPremiumRewards = (profileInfo?.profile?.data?.seasonHashes || []).includes(season.hash);
+
+  const weeklyProgress = prestigeMode
+    ? prestigeProgression.weeklyProgress
+    : seasonProgression.weeklyProgress;
+
+  return {
+    seasonPassLevel,
+    rewardItems,
+    progressToNextLevel,
+    nextLevelAt,
+    weeklyProgress,
+
+    /** The player hit the end of the season pass and is now "prestiging it" to levels beyond the reward track. */
+    prestigeMode,
+    hasPremiumRewards,
+
+    // Raw progression information
+    seasonProgression,
+    seasonProgressionDef,
+
+    prestigeProgression,
+    prestigeProgressionDef,
+  };
 }
 
 function fakeReward(hash: number, level: number): DestinyProgressionRewardItemQuantity {

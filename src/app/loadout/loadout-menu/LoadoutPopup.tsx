@@ -1,13 +1,16 @@
 import { SearchType } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
+import { getRewardMultiplier } from 'app/inventory/rewards';
 import {
   allItemsSelector,
   bucketsSelector,
+  profileResponseSelector,
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -344,6 +347,14 @@ export default function LoadoutPopup({
             onClick={onClick}
           />
         )}
+
+        {defs.isDestiny2 && $DIM_FLAVOR !== 'release' && (
+          <li className={styles.menuItem}>
+            <span>
+              Reward Multiplier ×<RewardMultiplier defs={defs} store={dimStore} />
+            </span>
+          </li>
+        )}
       </ul>
     </div>
   );
@@ -447,4 +458,10 @@ function doApplyRandomLoadout(store: DimStore, options: RandomLoadoutOptions): T
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: errorMessage(e) });
     }
   };
+}
+
+function RewardMultiplier({ defs, store }: { defs: D2ManifestDefinitions; store: DimStore }) {
+  const profileInfo = useSelector(profileResponseSelector);
+  const multi = profileInfo && getRewardMultiplier(defs, profileInfo, store);
+  return multi?.toFixed(2);
 }
