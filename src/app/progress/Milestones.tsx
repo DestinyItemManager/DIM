@@ -7,7 +7,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import { useSelector } from 'react-redux';
 import styles from './Milestones.m.scss';
 import { PowerCaps } from './PowerCaps';
@@ -29,7 +28,6 @@ const sortPowerBonus = compareBy((powerBonus: number | undefined) => -(powerBonu
 export default function Milestones({
   profileInfo,
   store,
-
   buckets,
 }: {
   store: DimStore;
@@ -40,12 +38,6 @@ export default function Milestones({
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = getCharacterProgressions(profileInfo, store.id);
   const dropPower = useSelector(dropPowerLevelSelector(store.id));
-  const season = profileInfo.profile?.data?.currentSeasonHash
-    ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
-    : undefined;
-  const seasonPass = season?.seasonPassList[D2SeasonPassActiveList]?.seasonPassHash
-    ? defs.SeasonPass.get(season.seasonPassList[D2SeasonPassActiveList].seasonPassHash)
-    : undefined;
 
   const milestoneItems = uniqBy(
     [...milestonesForCharacter(defs, profileInfo, store), ...profileMilestones],
@@ -65,18 +57,8 @@ export default function Milestones({
     <>
       {characterProgressions && (
         <PursuitGrid>
-          <SeasonalRank
-            store={store}
-            characterProgressions={characterProgressions}
-            season={season}
-            seasonPass={seasonPass}
-            profileInfo={profileInfo}
-          />
-          <WellRestedPerkIcon
-            progressions={characterProgressions}
-            season={season}
-            seasonPass={seasonPass}
-          />
+          <SeasonalRank store={store} profileInfo={profileInfo} />
+          <WellRestedPerkIcon profileInfo={profileInfo} />
           <PowerCaps />
         </PursuitGrid>
       )}
