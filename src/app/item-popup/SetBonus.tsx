@@ -1,99 +1,71 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { SetBonusCounts } from 'app/loadout-builder/types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   DestinyEquipableItemSetDefinition,
   DestinySandboxPerkDefinition,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import styles from './SetBonus.m.scss';
 
-export function SingleItemSetBonus({ item }: { item: DimItem }) {
-  const defs = useD2Definitions();
-  return (
-    defs &&
-    item.setBonus &&
-    SetBonus({
-      setBonus: item.setBonus,
-      defs: defs,
-      extraMargin: true,
-    })
-  );
-}
-
-export function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
-  const defs = useD2Definitions()!;
-  return Object.keys(setBonuses).map((setHash) => {
-    const setDef = defs.EquipableItemSet.get(Number(setHash));
-    return (
-      setDef &&
-      !setDef.redacted &&
-      SetBonus({
-        setBonus: setDef,
-        setCount: setBonuses[Number(setHash)] || 0,
-        defs,
-        extraMargin: false,
-      })
-    );
-  });
-}
-
+/**
+ * Display the perks that could be granted by an armor set.
+ */
 export function SetBonus({
   setBonus,
-  defs,
   setCount = 5, // Default to showing all perks
-  extraMargin = false,
 }: {
   setBonus: DestinyEquipableItemSetDefinition;
+  /** Only show perks that would be active with this many pieces */
   setCount?: number;
-  defs: D2ManifestDefinitions;
-  extraMargin?: boolean;
 }) {
+  const defs = useD2Definitions()!;
   return (
     setCount > 0 && (
-      <div className={clsx(styles.setBonus, { [styles.extraMargin]: extraMargin })}>
+      <div className={styles.setBonus}>
         {setBonus.setPerks
           .filter((perk) => perk && setCount >= perk.requiredSetCount)
-          .map((p) =>
-            SetPerk({
-              perkDef: defs.SandboxPerk.get(p.sandboxPerkHash),
-              setName: setBonus.displayProperties.name,
-              pieceCount: p.requiredSetCount,
-            }),
-          )}
+          .map((p) => (
+            <SetPerk
+              key={p.sandboxPerkHash}
+              perkDef={defs.SandboxPerk.get(p.sandboxPerkHash)}
+              setName={setBonus.displayProperties.name}
+              requiredSetCount={p.requiredSetCount}
+            />
+          ))}
       </div>
     )
   );
 }
 
-export function SetPerk({
+/** A single perk from an armor perk set */
+function SetPerk({
   perkDef,
   setName,
-  pieceCount,
+  requiredSetCount,
 }: {
   perkDef: DestinySandboxPerkDefinition;
   setName: string;
-  pieceCount: number;
+  requiredSetCount: number;
 }) {
   const tooltip = (
     <>
       <Tooltip.Header text={perkDef.displayProperties.name} />
       <Tooltip.Subheader
-        text={`${setName} | ${t('Item.SetBonus.NPiece', { count: pieceCount })}`}
+        text={`${setName} | ${t('Item.SetBonus.NPiece', { count: requiredSetCount })}`}
       />
       {perkDef.displayProperties.description}
     </>
   );
   return (
-    <PressTip tooltip={tooltip} placement="top" className={styles.perk} key={perkDef.hash}>
-      <div className={styles.perkIcon}>
-        <BungieImage src={perkDef.displayProperties.icon} />
-      </div>
+    <PressTip tooltip={tooltip} placement="top" className={styles.perk}>
+      <SetPerkIcon perkDef={perkDef} />
       <span>{perkDef.displayProperties.name}</span>
     </PressTip>
   );
+}
+
+/** Just the icon for a particular set perk */
+export function SetPerkIcon({ perkDef }: { perkDef: DestinySandboxPerkDefinition }) {
+  return <BungieImage src={perkDef.displayProperties.icon} className={styles.perkIcon} />;
 }

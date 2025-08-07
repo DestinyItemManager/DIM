@@ -3,8 +3,8 @@
 interface CssExports {
   'container': string;
   'footer': string;
-  'perkIcon': string;
   'selectedBonuses': string;
+  'setBonuses': string;
   'setCount': string;
   'submitButton': string;
 }

@@ -1,4 +1,3 @@
-import BungieImage from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
@@ -6,7 +5,7 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { SetBonusDisplay } from 'app/item-popup/SetBonus';
+import { SetBonus, SetPerkIcon } from 'app/item-popup/SetBonus';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -49,7 +48,7 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
       className={className}
       onClear={handleClear}
     >
-      <div onClick={showPicker}>
+      <div onClick={showPicker} className={styles.setBonuses}>
         <SetBonusDisplay setBonuses={setBonuses} />
       </div>
       <button type="button" className="dim-button" onClick={showPicker}>
@@ -199,13 +198,7 @@ export function SetBonusPicker({
                       </div>
                     </>
                   }
-                  icon={
-                    <BungieImage
-                      src={perkDef.displayProperties.icon}
-                      className={styles.perkIcon}
-                      aria-hidden="true"
-                    />
-                  }
+                  icon={<SetPerkIcon perkDef={perkDef} />}
                   onClick={handleClick}
                 >
                   {perkDef.displayProperties.description}
@@ -241,4 +234,15 @@ function Footer({
       </SheetHorizontalScrollContainer>
     </div>
   );
+}
+
+function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
+  const defs = useD2Definitions()!;
+  return Object.keys(setBonuses).map((setHash) => {
+    const setDef = defs.EquipableItemSet.get(Number(setHash));
+    return (
+      setDef &&
+      !setDef.redacted && <SetBonus setBonus={setDef} setCount={setBonuses[Number(setHash)]} />
+    );
+  });
 }

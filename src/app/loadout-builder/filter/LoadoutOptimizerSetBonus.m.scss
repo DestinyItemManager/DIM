@@ -11,13 +11,16 @@
   }
 }
 
-.perkIcon {
-  border-radius: 50%;
-  border: 1px solid white;
-  padding: 2px;
-  height: 20px;
-  display: block;
-  margin: 2px;
+.setBonuses {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+
+  // Don't let the individual set bonuses span the whole width
+  > * > * {
+    max-width: 50%;
+  }
 }
 
 .setCount {
@@ -41,9 +44,4 @@
 .selectedBonuses {
   --item-size: 32px;
   gap: 10px;
-
-  > * {
-    margin: 1px;
-    flex-shrink: 0;
-  }
 }
