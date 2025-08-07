@@ -10,6 +10,8 @@
 * Added a scrollbar to the item feed
 * Fix showing default ornament icon for new weapons in Armory
 * Fix showing default ornament icon for new weapons in Armory
+* Added `tunedstat:` filter for finding Tier 5 items with specific tuners.
+* Highlighted Archetype and Tuned stats in the item popup.
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
