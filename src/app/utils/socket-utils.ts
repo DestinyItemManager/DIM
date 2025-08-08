@@ -600,10 +600,11 @@ export function getGeneralSockets(
     // never include the "pay for artifice upgrade" slot on exotic armor
     socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
       PlugCategoryHashes.EnhancementsArtificeExotic &&
-    // Hide armor masterwork payment socket. We display masterworked status other ways.
-    !socketInfo.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(
-      'v460.plugs.armor.masterworks',
-    ) &&
+    // Hide armor masterwork payment socket for armor 2.0 since it's the same as the energy bar for them.
+    (item.tier > 0 ||
+      !socketInfo.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(
+        'v460.plugs.armor.masterworks',
+      )) &&
     !(
       !socketInfo.visibleInGame &&
       trustBungieVisibility.has(socketInfo.plugged?.plugDef.plug.plugCategoryHash)
