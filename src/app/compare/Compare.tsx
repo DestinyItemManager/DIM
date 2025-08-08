@@ -22,7 +22,6 @@ import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { maxBy } from 'es-toolkit';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
@@ -301,23 +300,31 @@ function masterworkItem(i: DimItem, itemCreationContext: ItemCreationContext): D
   if (i.destinyVersion !== 2 || !i.sockets) {
     return i;
   }
-  const y2MasterworkSocket = i.sockets?.allSockets.find(
+  const masterworkSocket = i.sockets?.allSockets.find(
     (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
   );
-  const plugSet = y2MasterworkSocket?.plugSet;
-  const plugged = y2MasterworkSocket?.plugged;
+  const plugSet = masterworkSocket?.plugSet;
+  const plugged = masterworkSocket?.plugged;
   if (plugSet && plugged) {
-    const fullMasterworkPlug = maxBy(
-      plugSet.plugs.filter(
-        (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
-      ),
-      (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
+    const fullMasterworkPlug = plugSet.plugs.find(
+      (p) =>
+        // Same stat (they each have their own plug category)
+        p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash &&
+        // And it's got a +10 stat value somewhere
+        p.plugDef.investmentStats.some((s) => s.value === 10) &&
+        // Edge of Fate (Tiered weapon) masterworks have zeroes in their
+        // conditional stats, while non-tiered masterworks have 3s. Both are in
+        // the plugset so this is the only way I know to find the right one.
+        p.plugDef.investmentStats.some(
+          (s) => s.isConditionallyActive && s.value === (i.tier > 0 ? 0 : 3),
+        ),
     );
     if (fullMasterworkPlug) {
       return applySocketOverrides(itemCreationContext, i, {
-        [y2MasterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
+        [masterworkSocket.socketIndex]: fullMasterworkPlug.plugDef.hash,
       });
     }
   }
+
   return i;
 }
