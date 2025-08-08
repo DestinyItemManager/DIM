@@ -12,6 +12,7 @@
 * Added `tunedstat:` filter for finding Tier 5 items with specific tuners.
 * Highlighted Archetype and Tuned stats in the item popup.
 * The Balanced Tuning mod now correctly applies +1 only to the three lowest armor stats
+* Remove repeated stat info in perk descriptions
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
