@@ -24,6 +24,7 @@ export default function Switch<K extends string>({
       <input
         type="checkbox"
         id={name}
+        role="switch"
         className="onoffswitch-checkbox"
         checked={checked}
         onChange={change}
