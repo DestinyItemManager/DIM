@@ -7,6 +7,8 @@
 
 @layer base {
   .item-details {
+    // tie icon size to item tile size, default value still the same
+    --set-bonus-icon-size: calc(var(--item-size) * 0.4);
     margin: 10px;
     box-sizing: border-box;
 

@@ -1,6 +1,7 @@
 @use '../../variables' as *;
 
 .container {
+  --set-bonus-icon-size: 27px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(504px, 1fr));
   padding: 10px 10px 16px 10px;
