@@ -110,29 +110,6 @@ export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.P
 /**
  * Lookup with `'weapons' -> StatHashes.Weapons` etc.
  *
- * Includes keys with the old armor 2.0 stat names.
- */
-export const D2ArmorStatHashByName: StringLookup<StatHashes> = {
-  weapons: StatHashes.Weapons,
-  health: StatHashes.Health,
-  class: StatHashes.Class,
-  grenade: StatHashes.Grenade,
-  super: StatHashes.Super,
-  melee: StatHashes.Melee,
-  // We keep the old names for now, both for D1 compatibility and for existing saved
-  // searches. In the future we could have a different map for D1 names and D2
-  // names.
-  mobility: StatHashes.Weapons,
-  resilience: StatHashes.Health,
-  recovery: StatHashes.Class,
-  discipline: StatHashes.Grenade,
-  intellect: StatHashes.Super,
-  strength: StatHashes.Melee,
-} as const;
-
-/**
- * Lookup with `'weapons' -> StatHashes.Weapons` etc.
- *
  * Only the 6 real armor 3.0 stats.
  */
 export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
@@ -150,6 +127,24 @@ export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
  * Only the 6 real armor stats.
  */
 export const realD2ArmorStatSearchByHash = invert(realD2ArmorStatHashByName);
+
+/**
+ * Lookup with `'weapons' -> StatHashes.Weapons` etc.
+ *
+ * Includes keys with the old armor 2.0 stat names.
+ */
+export const D2ArmorStatHashByName: StringLookup<StatHashes> = {
+  ...realD2ArmorStatHashByName,
+  // We keep the old names for now, both for D1 compatibility and for existing saved
+  // searches. In the future we could have a different map for D1 names and D2
+  // names.
+  mobility: StatHashes.Weapons,
+  resilience: StatHashes.Health,
+  recovery: StatHashes.Class,
+  discipline: StatHashes.Grenade,
+  intellect: StatHashes.Super,
+  strength: StatHashes.Melee,
+} as const;
 
 /** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
 export const armorStats: ArmorStatHashes[] = [
