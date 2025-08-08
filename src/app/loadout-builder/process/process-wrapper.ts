@@ -1,3 +1,4 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
@@ -18,7 +19,6 @@ import {
   ItemGroup,
   ItemsByBucket,
   ModStatChanges,
-  SetBonusCounts,
 } from '../types';
 import {
   hydrateArmorSet,

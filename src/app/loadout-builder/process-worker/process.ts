@@ -1,3 +1,4 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
 import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -11,7 +12,6 @@ import {
   majorStatBoost,
   MinMaxStat,
   minorStatBoost,
-  SetBonusCounts,
   StatRanges,
 } from '../types';
 import {

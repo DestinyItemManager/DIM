@@ -1,6 +1,7 @@
 import {
   AssumeArmorMasterwork,
   LoadoutParameters,
+  SetBonusCounts,
   defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -15,7 +16,6 @@ import {
   LOCKED_EXOTIC_NO_EXOTIC,
   MIN_LO_ITEM_ENERGY,
   ResolvedStatConstraint,
-  SetBonusCounts,
   inGameArmorEnergyRules,
 } from 'app/loadout-builder/types';
 import {

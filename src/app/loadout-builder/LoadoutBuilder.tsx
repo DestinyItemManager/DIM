@@ -110,7 +110,6 @@ export default memo(function LoadoutBuilder({
       strictUpgradesStatConstraints,
       pinnedItems,
       excludedItems,
-      setBonuses,
       selectedStoreId,
       modPicker,
       compareSet,
@@ -131,6 +130,7 @@ export default memo(function LoadoutBuilder({
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
   const includeRuntimeStatBenefits = loadoutParameters.includeRuntimeStatBenefits ?? true;
   const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+  const setBonuses = loadoutParameters.setBonuses ?? {};
   const classType = loadout.classType;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;

@@ -1,3 +1,4 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -14,7 +15,6 @@ import {
   DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
-  SetBonusCounts,
   StatRanges,
 } from '../types';
 import { getAutoMods } from './mappers';

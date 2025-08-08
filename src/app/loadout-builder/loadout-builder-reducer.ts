@@ -1,6 +1,7 @@
 import {
   AssumeArmorMasterwork,
   LoadoutParameters,
+  SetBonusCounts,
   StatConstraint,
   defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
@@ -43,7 +44,6 @@ import {
   ExcludedItems,
   PinnedItems,
   ResolvedStatConstraint,
-  SetBonusCounts,
 } from './types';
 
 interface LoadoutBuilderUI {
@@ -94,8 +94,6 @@ interface LoadoutBuilderConfiguration {
   // rely on search (e.g. -is:inloadout) and otherwise let LO choose via mods.
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
-
-  setBonuses: SetBonusCounts;
 
   // TODO: When we are starting with an existing loadout, maybe have a new sort
   // of "locked" state where we only show sets that improve upon the loadout's
@@ -177,7 +175,6 @@ const lbConfigInit = ({
   loadoutParameters = { ...loadoutParameters, ...initialLoadoutParameters };
 
   const pinnedItems: PinnedItems = {};
-  const setBonuses: SetBonusCounts = {};
 
   // Loadouts only support items that are supported by the Loadout's class
   if (preloadedLoadout) {
@@ -188,9 +185,6 @@ const lbConfigInit = ({
         const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
         if (item && isLoadoutBuilderItem(item)) {
           pinnedItems[item.bucket.hash] = item;
-          if (item.setBonus) {
-            setBonuses[item.setBonus.hash] = (setBonuses[item.setBonus.hash] || 0) + 1;
-          }
         }
       }
       // TODO: maybe swap in the updated item ID for items here, to make future manipulation easier
@@ -228,7 +222,6 @@ const lbConfigInit = ({
     strictUpgradesStatConstraints,
     pinnedItems,
     excludedItems: emptyObject(),
-    setBonuses,
     selectedStoreId,
   };
 };
@@ -511,17 +504,10 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, updateMods(newMods));
       }
       case 'setSetBonuses': {
-        const { setBonuses } = action;
-        return {
-          ...state,
-          setBonuses,
-        };
+        return updateLoadout(state, setLoadoutParameters({ setBonuses: action.setBonuses }));
       }
       case 'removeSetBonuses': {
-        return {
-          ...state,
-          setBonuses: emptyObject(),
-        };
+        return updateLoadout(state, setLoadoutParameters({ setBonuses: undefined }));
       }
       case 'removeLockedMod':
         return updateLoadout(state, removeMod(action.mod));

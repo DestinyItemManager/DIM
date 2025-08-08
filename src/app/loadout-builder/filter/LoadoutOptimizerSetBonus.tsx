@@ -1,3 +1,4 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import Sheet from 'app/dim-ui/Sheet';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
@@ -16,7 +17,6 @@ import { countBy, sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { SetBonusCounts } from '../types';
 import styles from './LoadoutOptimizerSetBonus.m.scss';
 
 const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
@@ -242,7 +242,9 @@ function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
     const setDef = defs.EquipableItemSet.get(Number(setHash));
     return (
       setDef &&
-      !setDef.redacted && <SetBonus setBonus={setDef} setCount={setBonuses[Number(setHash)]} />
+      !setDef.redacted && (
+        <SetBonus key={setDef.hash} setBonus={setDef} setCount={setBonuses[Number(setHash)]} />
+      )
     );
   });
 }
