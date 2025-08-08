@@ -20,18 +20,22 @@ import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import styles from './LoadoutOptimizerSetBonus.m.scss';
 
 const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
+  storeId,
   setBonuses,
   lbDispatch,
   className,
   classType,
   vendorItems,
 }: {
+  storeId: string;
   setBonuses: SetBonusCounts;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   className?: string;
   classType: DestinyClass;
   vendorItems: DimItem[];
 }) {
+  const defs = useD2Definitions()!;
+  const allItems = useSelector(allItemsSelector);
   const [showSetBonusPicker, setShowSetBonusPicker] = useState(false);
   const handleClear = () => {
     lbDispatch({ type: 'removeSetBonuses' });
@@ -42,11 +46,45 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
   const showPicker = () => setShowSetBonusPicker(true);
   const hidePicker = () => setShowSetBonusPicker(false);
 
+  const handleSyncFromEquipped = () => {
+    const equippedSetBonuses = allItems.filter(
+      (i) => i.equipped && isLoadoutBuilderItem(i) && i.owner === storeId && i.setBonus,
+    );
+
+    const newSetBonuses: SetBonusCounts = {};
+    for (const item of equippedSetBonuses) {
+      newSetBonuses[item.setBonus!.hash] = (newSetBonuses[item.setBonus!.hash] || 0) + 1;
+    }
+
+    for (const setHash in newSetBonuses) {
+      // Round down to the nearest perk requirement. e.g. if you have 3 pieces,
+      // round down to 2, and if you have 1 piece, remove it.
+      const setDef = defs.EquipableItemSet.get(Number(setHash));
+      // Perk requirements from high to low
+      const perkPoints = [
+        ...(setDef?.setPerks.map((p) => p.requiredSetCount) || []).sort((a, b) => b - a),
+        0,
+      ];
+      const pieceCount = newSetBonuses[setHash] ?? 0;
+      for (const perkCount of perkPoints) {
+        if (pieceCount >= perkCount) {
+          newSetBonuses[setHash] = perkCount;
+          break;
+        }
+      }
+      if (newSetBonuses[setHash] === 0) {
+        delete newSetBonuses[setHash];
+      }
+    }
+    lbDispatch({ type: 'setSetBonuses', setBonuses: newSetBonuses });
+  };
+
   return (
     <LoadoutEditSection
       title={t('LoadoutBuilder.SetBonus')}
       className={className}
       onClear={handleClear}
+      onSyncFromEquipped={handleSyncFromEquipped}
     >
       <div onClick={showPicker} className={styles.setBonuses}>
         <SetBonusDisplay setBonuses={setBonuses} />

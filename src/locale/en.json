@@ -667,7 +667,7 @@
       "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level at least 10.",
       "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Automatically add stat mods",

@@ -354,6 +354,7 @@ export default memo(function LoadoutBuilder({
         className={styles.loadoutEditSection}
       />
       <LoadoutOptimizerSetBonus
+        storeId={selectedStore.id}
         classType={selectedStore.classType}
         vendorItems={vendorItems}
         lbDispatch={lbDispatch}
