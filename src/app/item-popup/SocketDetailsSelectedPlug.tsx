@@ -260,7 +260,7 @@ export default function SocketDetailsSelectedPlug({
 
         {plugDescriptions.perks.map((perkDesc) => (
           <React.Fragment key={perkDesc.perkHash}>
-            {perkDesc.description && (
+            {perkDesc.description && !perkDesc.description.includes('▲') && (
               <div>
                 <RichDestinyText text={perkDesc.description} />
               </div>
