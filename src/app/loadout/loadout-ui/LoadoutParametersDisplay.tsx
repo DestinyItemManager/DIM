@@ -1,7 +1,12 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  SetBonusCounts,
+  StatConstraint,
+} from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { SetPerkIcon } from 'app/item-popup/SetBonus';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, equalsIcon, greaterThanIcon, lessThanIcon, searchIcon } from 'app/shell/icons';
@@ -51,6 +56,11 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           }}
         >
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
+        </PressTip>
+      )}
+      {params.setBonuses && (
+        <PressTip tooltip={() => lbParamDesc(t('Loadouts.SetBonusesDesc'))}>
+          <SetBonuses setBonuses={params.setBonuses} />
         </PressTip>
       )}
       {params.mods &&
@@ -133,4 +143,30 @@ function StatConstraintRangeExpression({ statConstraint }: { statConstraint: Sta
       </>
     );
   }
+}
+
+function SetBonuses({ setBonuses }: { setBonuses: SetBonusCounts }) {
+  const defs = useD2Definitions()!;
+  return Object.keys(setBonuses).map((setHash) => {
+    const setDef = defs.EquipableItemSet.get(Number(setHash));
+    const setCount = setBonuses[Number(setHash)] ?? 0;
+    return (
+      setDef &&
+      !setDef.redacted && (
+        <div className={styles.setBonus}>
+          {setDef.setPerks
+            .filter((perk) => perk && setCount >= perk.requiredSetCount)
+            .map((p) => {
+              const perkDef = defs.SandboxPerk.get(p.sandboxPerkHash);
+              return (
+                <div key={p.sandboxPerkHash} className={styles.perk}>
+                  <SetPerkIcon perkDef={perkDef} />
+                  <span>{perkDef.displayProperties.name}</span>
+                </div>
+              );
+            })}
+        </div>
+      )
+    );
+  });
 }

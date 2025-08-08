@@ -906,6 +906,7 @@
     },
     "SaveLoadout": "Save Loadout",
     "Season": "Season {{season}}",
+    "SetBonusesDesc": "Required set bonuses",
     "Share": {
       "Copied": "Copied loadout link to clipboard",
       "CopyButton": "Copy Link",

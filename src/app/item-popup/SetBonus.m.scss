@@ -18,8 +18,8 @@
   border-radius: 50%;
   border: 1px solid white;
   padding: 2px;
-  height: 20px;
-  width: 20px;
+  height: var(--set-bonus-icon-size, 20px);
+  width: var(--set-bonus-icon-size, 20px);
   display: block;
   margin: 2px;
 }
