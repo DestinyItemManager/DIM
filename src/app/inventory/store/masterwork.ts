@@ -4,7 +4,12 @@ import { isArmor3MasterworkSocket } from 'app/utils/item-utils';
 import { getFirstSocketByCategoryHash, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { ItemCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
@@ -89,8 +94,17 @@ function buildMasterworkInfo(
     });
   }
 
+  const isArmor3 =
+    masterworkPlug.plugDef.plug.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks;
+  const tier = exoticWeapon
+    ? maxTier
+    : isArmor3
+      ? // Pick any stat that's not the energy stat
+        masterworkPlug.plugDef.investmentStats.find((s) => s.isConditionallyActive)?.value || 0
+      : Math.abs(masterworkPlug.plugDef.investmentStats[0].value);
+
   return {
-    tier: exoticWeapon ? maxTier : Math.abs(masterworkPlug.plugDef.investmentStats[0].value),
+    tier,
     stats,
   };
 }
