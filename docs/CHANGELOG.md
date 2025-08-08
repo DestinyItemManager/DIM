@@ -16,6 +16,7 @@
 * Fixed Assume Masterwork for tiered weapons in Compare
 * Show the armor masterwork socket for tiered armor
 * Correctly calculate the masterwork level for tiered armor
+* Add the ability to specify Set Bonuses in the Loadout Optimizer
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
