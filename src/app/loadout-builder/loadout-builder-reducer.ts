@@ -1,6 +1,7 @@
 import {
   AssumeArmorMasterwork,
   LoadoutParameters,
+  SetBonusCounts,
   StatConstraint,
   defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
@@ -263,6 +264,8 @@ type LoadoutBuilderConfigAction =
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
   | { type: 'clearExcludedItems' }
+  | { type: 'setSetBonuses'; setBonuses: SetBonusCounts }
+  | { type: 'removeSetBonuses' }
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: number[] }
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
@@ -499,6 +502,12 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         }
 
         return updateLoadout(state, updateMods(newMods));
+      }
+      case 'setSetBonuses': {
+        return updateLoadout(state, setLoadoutParameters({ setBonuses: action.setBonuses }));
+      }
+      case 'removeSetBonuses': {
+        return updateLoadout(state, setLoadoutParameters({ setBonuses: undefined }));
       }
       case 'removeLockedMod':
         return updateLoadout(state, removeMod(action.mod));

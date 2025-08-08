@@ -1,3 +1,4 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
@@ -44,6 +45,7 @@ function createWorker() {
 export function runProcess({
   autoModDefs,
   filteredItems,
+  setBonuses,
   lockedModMap,
   modStatChanges,
   armorEnergyRules,
@@ -57,6 +59,7 @@ export function runProcess({
 }: {
   autoModDefs: AutoModDefs;
   filteredItems: ItemsByBucket;
+  setBonuses: SetBonusCounts;
   lockedModMap: ModMap;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
@@ -126,6 +129,7 @@ export function runProcess({
     filteredItems: processItems,
     modStatTotals: mapValues(modStatChanges, (stat) => stat.value),
     lockedMods: lockedProcessMods,
+    setBonuses,
     desiredStatRanges,
     anyExotic,
     autoModOptions: autoModsData,

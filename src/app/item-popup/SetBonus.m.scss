@@ -1,28 +1,25 @@
 .setBonus {
-  display: flex;
+  composes: flexRow from '../dim-ui/common.m.scss';
   justify-content: space-between;
-  margin: 10px;
-  gap: 10px;
+  gap: 8px;
+}
 
-  .perk {
-    background-color: var(--theme-item-popup-panel-bg);
-    flex-basis: 0;
-    flex-grow: 1;
-    padding: 6px;
-    display: flex;
-    align-items: center;
-  }
+.perk {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  background-color: var(--theme-item-popup-panel-bg);
+  flex: 1;
+  padding: 4px;
+  gap: 3px;
+}
 
-  .perkIcon {
-    border-radius: 50%;
-    border: 1px solid white;
-    padding: 2px;
-    margin-right: 6px;
-
-    img {
-      height: 20px;
-      display: block;
-      margin: 2px;
-    }
-  }
+// Sadly we have to draw our own circle around the perk
+.perkIcon {
+  border-radius: 50%;
+  border: 1px solid white;
+  padding: 2px;
+  height: var(--set-bonus-icon-size, 20px);
+  width: var(--set-bonus-icon-size, 20px);
+  display: block;
+  margin: 2px;
 }

@@ -1,6 +1,7 @@
 import {
   AssumeArmorMasterwork,
   LoadoutParameters,
+  SetBonusCounts,
   defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
@@ -103,6 +104,12 @@ export async function analyzeLoadout(
   const loadoutArmor = resolvedLoadout.resolvedLoadoutItems
     .filter((item) => item.loadoutItem.equip && item.item.bucket.inArmor)
     .map(({ item }) => item);
+  const setBonuses = loadoutArmor.reduce((setBonuses: SetBonusCounts, item) => {
+    if (item.setBonus) {
+      setBonuses[item.setBonus.hash] = (setBonuses[item.setBonus.hash] || 0) + 1;
+    }
+    return setBonuses;
+  }, {});
 
   const { modMap, unassignedMods } = categorizeArmorMods(originalModDefs, allItems);
   if (unassignedMods.length) {
@@ -319,6 +326,7 @@ export async function analyzeLoadout(
               autoModDefs,
               autoStatMods: loadoutParameters.autoStatMods,
               filteredItems,
+              setBonuses,
               lockedModMap: modMap,
               modStatChanges,
               desiredStatRanges: mergedDesiredStatRanges,

@@ -1,0 +1,48 @@
+@use '../../variables' as *;
+
+.container {
+  --set-bonus-icon-size: 27px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(504px, 1fr));
+  padding: 10px 10px 16px 10px;
+  gap: 14px;
+
+  @include phone-portrait {
+    grid-template-columns: 1fr;
+  }
+}
+
+.setBonuses {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+
+  // Don't let the individual set bonuses span the whole width
+  > * > * {
+    max-width: 50%;
+  }
+}
+
+.setCount {
+  color: var(--theme-text-secondary);
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.footer {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
+
+.selectedBonuses {
+  --item-size: 32px;
+  gap: 10px;
+}

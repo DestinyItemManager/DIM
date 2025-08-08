@@ -7,6 +7,8 @@ interface CssExports {
   'loQuery': string;
   'loStat': string;
   'loStats': string;
+  'perk': string;
+  'setBonus': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

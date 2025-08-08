@@ -54,6 +54,7 @@ import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerPinnedItems,
 } from './filter/LoadoutOptimizerMenuItems';
+import LoadoutOptimizerSetBonus from './filter/LoadoutOptimizerSetBonus';
 import NewFeaturedGearFilter from './filter/NewFeaturedGearFilter';
 import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
@@ -129,6 +130,7 @@ export default memo(function LoadoutBuilder({
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
   const includeRuntimeStatBenefits = loadoutParameters.includeRuntimeStatBenefits ?? true;
   const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+  const setBonuses = loadoutParameters.setBonuses ?? {};
   const classType = loadout.classType;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
@@ -261,6 +263,7 @@ export default memo(function LoadoutBuilder({
   const { result, processing } = useProcess({
     selectedStore,
     filteredItems,
+    setBonuses,
     lockedModMap,
     modStatChanges,
     armorEnergyRules,
@@ -348,6 +351,14 @@ export default memo(function LoadoutBuilder({
         vendorItems={vendorItems}
         lbDispatch={lbDispatch}
         storeId={selectedStore.id}
+        className={styles.loadoutEditSection}
+      />
+      <LoadoutOptimizerSetBonus
+        storeId={selectedStore.id}
+        classType={selectedStore.classType}
+        vendorItems={vendorItems}
+        lbDispatch={lbDispatch}
+        setBonuses={setBonuses}
         className={styles.loadoutEditSection}
       />
       <LoadoutEditModsSection

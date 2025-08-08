@@ -486,8 +486,8 @@
     "ThumbsUp": "Thumbs Up",
     "ThumbsDown": "Thumbs Down",
     "SetBonus": {
-      "2Piece": "2 Piece",
-      "4Piece": "4 Piece"
+      "NPiece_one": "{{count}} Piece",
+      "NPiece_other": "{{count}} Piece"
     }
   },
   "ItemFeed": {
@@ -547,6 +547,7 @@
     "AdvancedOptions": "Advanced Options",
     "ChooseAMod": "Choose your mods",
     "ChooseAnExotic": "Choose your exotic",
+    "ChooseASetBonus": "Choose your set bonuses",
     "ClearLocked": "Clear Locked",
     "ContainsVendorItems": "This loadout contains vendor items",
     "Current": "Current",
@@ -603,6 +604,7 @@
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
+    "SelectSetBonus": "Select Set Bonuses",
     "AddStack": "Add another copy of this mod",
     "RemoveStack": "Remove a copy of this mod",
     "SelectSubclassOptions": "Customize subclass",
@@ -634,7 +636,7 @@
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
-      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10."
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level at least 10."
     },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
@@ -686,6 +688,7 @@
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
+    "SetBonus": "Set Bonuses",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
@@ -760,6 +763,7 @@
     "IncludeRuntimeStatBenefits": "Include Font mod stats",
     "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "InGameLoadouts": "In-Game Loadouts",
+    "SetBonusesDesc": "Required set bonuses",
     "InGameActions": "In-Game Loadout Actions",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",

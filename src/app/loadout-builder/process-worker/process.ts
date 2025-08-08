@@ -1,3 +1,4 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
 import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -38,6 +39,8 @@ export interface ProcessInputs {
   modStatTotals: ArmorStats;
   /** Mods to add onto the sets */
   lockedMods: LockedProcessMods;
+  /** If we're requiring any set bonuses, the number of items desired from each set */
+  setBonuses: SetBonusCounts;
   /** The user's chosen stat ranges, in priority order. */
   desiredStatRanges: DesiredStatRange[];
   /** Ensure every set includes one exotic */
@@ -61,6 +64,7 @@ export function process({
   filteredItems,
   modStatTotals,
   lockedMods,
+  setBonuses,
   desiredStatRanges,
   anyExotic,
   autoModOptions,
@@ -133,6 +137,7 @@ export function process({
       doubleExotic: 0,
       noExotic: 0,
       skippedLowTier: 0,
+      insufficientSetBonus: 0,
     },
     lowerBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
     upperBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
@@ -183,6 +188,25 @@ export function process({
             }
             if (anyExotic && exoticSum === 0) {
               setStatistics.skipReasons.noExotic += 1;
+              continue;
+            }
+            let insufficientSetBonus = false;
+            for (const setHash of Object.keys(setBonuses)) {
+              // TODO unscrew
+              const setCount = [
+                helm.setBonus,
+                gaunt.setBonus,
+                chest.setBonus,
+                leg.setBonus,
+                classItem.setBonus,
+              ].filter((x) => x === Number(setHash)).length;
+              if (setCount < (setBonuses[Number(setHash)] || 0)) {
+                insufficientSetBonus = true;
+                break;
+              }
+            }
+            if (insufficientSetBonus) {
+              setStatistics.skipReasons.insufficientSetBonus += 1;
               continue;
             }
 
