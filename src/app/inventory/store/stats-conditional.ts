@@ -59,12 +59,17 @@ function getPlugInvestmentStatActivationRule(
     return { rule: 'never' };
   }
 
+  const defHash = itemDef.hash;
+
   // New Armor 3.0 archetypes grant stats only to secondary stats when masterworked.
-  if (itemDef.plug.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks) {
+  if (
+    itemDef.plug.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks ||
+    // The Balanced Tuning mod works the same way - it grants its bonus only to the three lowest stats.
+    defHash === ModsWithConditionalStats.BalancedTuning
+  ) {
     return { rule: 'archetypeArmorMasterwork' };
   }
 
-  const defHash = itemDef.hash;
   if (
     defHash === ModsWithConditionalStats.ElementalCapacitor ||
     defHash === ModsWithConditionalStats.EnhancedElementalCapacitor

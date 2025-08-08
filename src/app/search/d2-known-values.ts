@@ -405,6 +405,7 @@ export const enum ModsWithConditionalStats {
   EnhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
   EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
   SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
+  BalancedTuning = 3122197216, // InventoryItem "Balanced Tuning"
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"
