@@ -13,6 +13,9 @@
 * Highlighted Archetype and Tuned stats in the item popup.
 * The Balanced Tuning mod now correctly applies +1 only to the three lowest armor stats
 * Remove repeated stat info in perk descriptions
+* Fixed Assume Masterwork for tiered weapons in Compare
+* Show the armor masterwork socket for tiered armor
+* Correctly calculate the masterwork level for tiered armor
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
