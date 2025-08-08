@@ -16,22 +16,6 @@
 
 .tunableSymbol {
   position: relative;
-  bottom: 0.2em;
-  span {
-    position: absolute;
-    transform-origin: right;
-
-    &:nth-child(1) {
-      left: 0;
-      bottom: 0.3em;
-      scale: 0.75 1;
-    }
-    &:nth-child(2) {
-      right: 0;
-      bottom: 0.55em;
-      scale: 0.5 1;
-    }
-  }
 }
 
 // The numeric value of the stat

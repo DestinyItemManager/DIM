@@ -10,5 +10,6 @@ export { dimPowerIcon as powerIndicatorIcon } from './custom/Power';
 export { dimPowerAltIcon as powerActionIcon } from './custom/PowerAlt';
 export { dimShapedIcon as shapedIcon } from './custom/Shaped';
 export { dimTitanIcon as titanIcon } from './custom/Titan';
+export { dimTuningStatIcon as tuningStatIcon } from './custom/TuningStat';
 export { dimWarlockIcon as warlockIcon } from './custom/Warlock';
 export * from './Library.js';

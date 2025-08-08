@@ -14,7 +14,7 @@ import {
   weaponParts,
 } from 'app/search/d2-known-values';
 import { getD1QualityColor, percent } from 'app/shell/formatters';
-import { AppIcon, helpIcon } from 'app/shell/icons';
+import { AppIcon, helpIcon, tuningStatIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
 import { sumBy } from 'app/utils/collections';
 import { compareBy, reverseComparator } from 'app/utils/comparators';
@@ -162,10 +162,7 @@ export default function ItemStat({
         title={stat.displayProperties.description}
       >
         {stat.statHash === itemStatInfo?.tunedStatHash && (
-          <span className={styles.tunableSymbol}>
-            ▁<span>▁</span>
-            <span>▁</span>
-          </span>
+          <AppIcon icon={tuningStatIcon} className={styles.tunableSymbol} />
         )}{' '}
         {stat.statHash in statLabels
           ? t(statLabels[stat.statHash as StatHashes]!)
