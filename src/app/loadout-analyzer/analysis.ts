@@ -279,6 +279,7 @@ export async function analyzeLoadout(
             lockedExoticHash: loadoutParameters.exoticArmorHash,
             armorEnergyRules,
             searchFilter: itemFilter,
+            setBonuses: loadoutParameters.setBonuses,
           });
           // If the item filter loadout armor that was previously included,
           // this is due to the search filter since we've previously established

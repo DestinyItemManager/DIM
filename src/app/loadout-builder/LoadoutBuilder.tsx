@@ -232,6 +232,7 @@ export default memo(function LoadoutBuilder({
       lockedExoticHash,
       armorEnergyRules,
       searchFilter,
+      setBonuses,
     });
     return [armorEnergyRules, items, filterInfo];
   }, [
@@ -244,6 +245,7 @@ export default memo(function LoadoutBuilder({
     unassignedMods,
     lockedExoticHash,
     searchFilter,
+    setBonuses,
   ]);
 
   const modStatChanges = useMemo(
