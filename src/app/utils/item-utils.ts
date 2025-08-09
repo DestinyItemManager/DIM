@@ -437,11 +437,20 @@ export function getArmor3TuningStat(
   item: DimItem,
   defs: D2ManifestDefinitions,
 ): number | undefined {
-  const tradeOffModHash = getArmor3TuningSocket(item)?.reusablePlugItems?.find((pi) =>
-    defs.InventoryItem.get(pi.plugItemHash).investmentStats.some((s) => s.value > 1),
-  )?.plugItemHash;
-  if (tradeOffModHash) {
-    return defs.InventoryItem.get(tradeOffModHash).investmentStats.find((s) => s.value > 0)
-      ?.statTypeHash;
+  const reusablePlugItems = item.bucket.inArmor
+    ? getArmor3TuningSocket(item)?.reusablePlugItems
+    : undefined;
+  if (!reusablePlugItems?.length) {
+    return;
   }
+
+  for (const reusablePlug of reusablePlugItems) {
+    const positiveHash = defs.InventoryItem.get(reusablePlug.plugItemHash).investmentStats.find(
+      (s) => s.value > 1,
+    );
+    if (positiveHash) {
+      return positiveHash.statTypeHash;
+    }
+  }
+  return undefined;
 }

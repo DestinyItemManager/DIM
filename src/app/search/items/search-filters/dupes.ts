@@ -1,12 +1,13 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { stripAdept } from 'app/compare/compare-utils';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { isArtifice } from 'app/utils/item-utils';
+import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
@@ -157,15 +158,15 @@ const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'statlower',
     description: tl('Filter.StatLower'),
-    filter: ({ allItems }) => {
-      const duplicates = computeStatDupeLower(allItems);
+    filter: ({ allItems, d2Definitions }) => {
+      const duplicates = computeStatDupeLower(allItems, d2Definitions);
       return (item) => item.bucket.inArmor && duplicates.has(item.id);
     },
   },
   {
     keywords: 'customstatlower',
     description: tl('Filter.CustomStatLower'),
-    filter: ({ allItems, customStats }) => {
+    filter: ({ allItems, customStats, d2Definitions }) => {
       const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
 
       for (const customStat of customStats) {
@@ -178,7 +179,7 @@ const dupeFilters: ItemFilterDefinition[] = [
           }
         }
         (duplicateSetsByClass[customStat.class] ||= []).push(
-          computeStatDupeLower(allItems, relevantStatHashes),
+          computeStatDupeLower(allItems, d2Definitions, relevantStatHashes),
         );
       }
 
@@ -254,6 +255,7 @@ export function checkIfIsDupe(
  */
 export function computeStatDupeLower(
   allItems: DimItem[],
+  defs: D2ManifestDefinitions | undefined,
   relevantStatHashes: number[] = armorStats,
   getArmorStats?: (item: DimItem) => number[],
 ) {
@@ -278,10 +280,33 @@ export function computeStatDupeLower(
   for (const item of armor) {
     if (item.stats && item.power) {
       const statValues = getStats(item);
-      // Compute variants of the stats if the armor can be freely reconfigured
-      if (isArtifice(item)) {
-        statsCache.set(
-          item,
+      let statMixes = [statValues];
+
+      // Add in tuning mod variations if applicable
+      const tuningStat = defs ? getArmor3TuningStat(item, defs) : undefined;
+      if (tuningStat) {
+        const tuningStatIndex = relevantStatHashes.indexOf(tuningStat);
+        if (tuningStatIndex >= 0) {
+          statMixes = relevantStatHashes.map((statHash, i) => {
+            const modifiedStats = [...statValues];
+            for (let vi = 0; vi < relevantStatHashes.length; vi++) {
+              const v = statValues[vi];
+              if (statHash === tuningStat) {
+                // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
+                modifiedStats[vi] = v === 0 ? 1 : v;
+              } else {
+                // Apply the tuning mod that sacrifices one stat for +5 to the
+                // tuning stat. We always boost the tuning stat, but each other
+                // stat is boosted only if it is the one being sacrificed
+                modifiedStats[vi] = vi === tuningStatIndex ? v + 5 : vi === i ? v - 5 : v;
+              }
+            }
+            return modifiedStats;
+          });
+        }
+      } else if (isArtifice(item)) {
+        // We assume armor cannot be both artifice and tunable.
+        statMixes =
           // Artifice armor can be +3 in any one stat, so we compute a separate
           // version of the stats for each stat considered
           relevantStatHashes.map((_s, i) => {
@@ -289,12 +314,9 @@ export function computeStatDupeLower(
             // One stat gets +3
             modifiedStats[i] += 3;
             return modifiedStats;
-          }),
-        );
-      } else {
-        statsCache.set(item, [statValues]);
+          });
       }
-      console.log(item.name, item.id, 'statValues', statValues, statsCache.get(item));
+      statsCache.set(item, statMixes);
     }
   }
 
