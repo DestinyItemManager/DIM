@@ -732,6 +732,7 @@
     "OptimizerExplanationStats": "Drag the most important stats to the top, and uncheck stats you don't want to maximize.",
     "OptimizerSet": "Optimizer Set",
     "PinnedItems": "Pinned Items",
+    "PinnedItemsFinePrint": "Pinned items are not saved in loadouts, so they will be ignored on the loadouts page when we check for better builds. Use the search bar or other controls above to filter for items you want to include if you want this to be saved.",
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
     "SetBonus": "Set Bonuses",

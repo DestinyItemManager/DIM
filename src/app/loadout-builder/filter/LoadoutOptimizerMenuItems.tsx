@@ -80,6 +80,7 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
           ))}
           <AddItemButton onClick={chooseLockItem} title={t('LoadoutBuilder.LockItem')} />
         </div>
+        <div className={styles.fineprint}>{t('LoadoutBuilder.PinnedItemsFinePrint')}</div>
       </LoadoutBucketDropTarget>
     </LoadoutEditSection>
   );
