@@ -254,6 +254,7 @@
     "HasNotes": "Afficher les objets ayant des notes.",
     "HasOrnament": "Affiche les objets ayant un ornement appliqué.",
     "HasShader": "Affiche les objets qui ont un revêtement appliqué.",
+    "Holofoil": "Shows holofoil weapons.",
     "InDimLoadout": "is:indimloadout affiche les objets présents dans un équipement DIM.",
     "InInGameLoadout": "is:ingameloadout affiche les objets qui sont inclus dans l'un de vos équipement en jeu.",
     "InInventory": "Affiche les objets dont vous avez au moins une copie dans l'un de vos inventaires. Généralement utile dans les écrans Marchands et Archives.",
@@ -310,7 +311,6 @@
     "RetiredPerk": "Affiche les armes avec des attributs qui ne sont plus obtenable.",
     "SearchPrompt": "Rechercher les commandes de filtre disponibles",
     "Season": "Affiche les objets en fonction de la saison de Destiny 2 pendant lequel ils sont apparu.",
-    "Shiny": "Affiche les armes BRAVOURE avec un ornement en édition limitée.",
     "StackFull": "Affiche les objets qui sont dans une pile pleine (Prismes d’amélioration, pièces étranges, matériaux des armuriers etc)",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
@@ -320,6 +320,7 @@
     "StatsExtras": "Permet l'addition de statistique en connectant plusieurs noms de statistiques avec le symbole + ou &. Il y a aussi des mots-clés spéciaux highest, secondhighest, thirdhighest, etc. qui cherchent les statistiques en fonction de leur rang au sein des statistiques d'un objet. Chaque statistique personnalisé a son propre terme de recherche, affiché dans les paramètres de statistiques personnalisées.",
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
+    "StatsOrdinal": "Finds armor 3.0 with the specified stat focusing.",
     "Tags": {
       "Tag": "Affiche les objets portant une certaine étiquette.",
       "Tagged": "Affiche les objets portant une étiquette."
@@ -329,6 +330,7 @@
     "Tracked": "Affiche les quêtes/contrats selon si elles sont suivis ou non.",
     "Transferable": "Objets qui peuvent êtres déplacés entre les personnages.",
     "Trashlist": "Affiche les objets présents dans la liste d'indésirables de votre liste de souhaits.",
+    "TunedStat": "Shows items with tuning mods for the specified stat.",
     "Unascended": "Affiche les objets qui ont un attribut d’ascensions qui n'ont pas eu une ascension.",
     "Undo": "Annuler",
     "UnlockAllFailed": "Déverouillage des objets échoué",
@@ -468,8 +470,8 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 pièces",
-      "4Piece": "4 pièces"
+      "NPiece_one": "{{count}} Piece",
+      "NPiece_other": "{{count}} Piece"
     },
     "ThumbsDown": "Pouce baissé",
     "ThumbsUp": "Pousse levé"
@@ -527,6 +529,7 @@
     "AddStack": "Ajouter un autre exemplaire de ce mod",
     "AdvancedOptions": "Options avancées",
     "ChooseAMod": "Choisissez vos mods",
+    "ChooseASetBonus": "Choose your set bonuses",
     "ChooseAnExotic": "Choisissez votre exotique",
     "ClearLocked": "Enlever verrouillés",
     "ContainsVendorItems": "Cet équipement contient des objets de marchand",
@@ -580,11 +583,13 @@
     "RemoveStack": "Retirer un exemplaire de ce mod",
     "Scaled": "Échelonné",
     "SearchAMod": "Rechercher un nom ou une description de mod",
+    "SearchASetBonus": "",
     "SearchAnExotic": "Rechercher un nom ou une description d'exotique",
     "SelectExotic": "Sélectionner exotique",
     "SelectMods": "Sélectionner les Mods",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Mods d'activité",
+    "SelectSetBonus": "Select Set Bonuses",
     "SelectSubclassOptions": "Personnaliser la doctrine",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -663,7 +668,7 @@
       "ArtificeExotic": "Améliorée pour avoir un mod d'artifice.",
       "Current": "Stats actuelles, considère un niveau d'énergie d'au moins {{minLoItemEnergy}}.",
       "Legendary": "Légendaire : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotique : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Bonus de pièce maîtresse total, niveau d'énergie à 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level at least 10.",
       "None": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Ajouter automatiquement les mods de statistiques",
@@ -723,6 +728,7 @@
     "PinnedItems": "Objets épinglés",
     "ProcessingSets": "Recherche des ensembles aux stats les plus élevés...",
     "SaveAs": "Enregistrer sous",
+    "SetBonus": "Set Bonuses",
     "SpeedReport": "{{combos, number}} combinaisons générées en {{time}} secondes",
     "StatConstraints": "Priorités et fourchettes de stats",
     "StatMax": "Max",
@@ -901,6 +907,7 @@
     },
     "SaveLoadout": "Sauvegarder l'équipement",
     "Season": "Saison {{season}}",
+    "SetBonusesDesc": "Required set bonuses",
     "Share": {
       "Copied": "Lien de l'équipement copié dans le presse-papiers",
       "CopyButton": "Copier le lien",
