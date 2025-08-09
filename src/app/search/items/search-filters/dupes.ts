@@ -282,19 +282,20 @@ function computeStatDupeLower(
       // Add in tuning mod variations if applicable
       const tuningStat = defs ? getArmor3TuningStat(item, defs) : undefined;
       if (tuningStat) {
-        if (relevantStatHashes.includes(tuningStat)) {
+        const tuningStatIndex = relevantStatHashes.indexOf(tuningStat);
+        if (tuningStatIndex >= 0) {
           statMixes = relevantStatHashes.map((statHash, i) =>
-            statValues.map((v, vi) =>
-              // We always boost the tuning stat, but each other stat is boosted
-              // only if it is the one being sacrificed
-              statHash === tuningStat ? v + 5 : vi === i ? Math.max(v - 5, 0) : v,
-            ),
+            statHash === tuningStat
+              ? // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
+                statValues.map((v) => (v === 0 ? 1 : v))
+              : // Apply the tuning mod that sacrifices one stat for +5 to the tuning stat
+                statValues.map((v, vi) =>
+                  // We always boost the tuning stat, but each other stat is boosted
+                  // only if it is the one being sacrificed
+                  vi === tuningStatIndex ? v + 5 : vi === i ? v - 5 : v,
+                ),
           );
-        } else {
-          statMixes = []; // reset for below
         }
-        // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
-        statMixes.push(statValues.map((v) => (v === 0 ? 1 : v)));
       } else if (isArtifice(item)) {
         // We assume armor cannot be both artifice and tunable.
         statMixes =
@@ -307,7 +308,6 @@ function computeStatDupeLower(
             return modifiedStats;
           });
       }
-
       statsCache.set(item, statMixes);
     }
   }
