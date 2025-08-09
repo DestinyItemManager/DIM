@@ -1,7 +1,9 @@
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { stripAdept } from 'app/compare/compare-utils';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { isArtifice } from 'app/utils/item-utils';
@@ -267,10 +269,16 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power) {
-      const statValues = item.stats
-        .filter((s) => relevantStatHashes.includes(s.statHash))
-        .sort((a, b) => a.statHash - b.statHash)
-        .map((s) => s.base);
+      // Always compare items as if they were fully masterworked
+      const masterworkedStatValues = calculateAssumedMasterworkStats(item, {
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+        minItemEnergy: 1,
+      });
+
+      // Start with just the base stats
+      const statValues = relevantStatHashes
+        .sort((a, b) => a - b)
+        .map((statHash) => masterworkedStatValues[statHash] ?? 0);
       if (isArtifice(item)) {
         statsCache.set(
           item,
