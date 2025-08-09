@@ -275,7 +275,9 @@ function computeStatDupeLower(
       // Start with just the base stats
       const statValues = item.stats
         .filter((s) => relevantStatHashes.includes(s.statHash))
-        .sort((a, b) => a.statHash - b.statHash)
+        .sort(
+          (a, b) => relevantStatHashes.indexOf(a.statHash) - relevantStatHashes.indexOf(b.statHash),
+        )
         .map((s) => s.base);
       let statMixes = [statValues];
 
