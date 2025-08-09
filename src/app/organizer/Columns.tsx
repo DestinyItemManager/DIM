@@ -46,6 +46,7 @@ import {
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  isArmor3,
   isArtificeSocket,
   isD1Item,
 } from 'app/utils/item-utils';
@@ -994,10 +995,33 @@ export function getStatColumns(
           columnGroup: baseStatsGroup,
           value: (item): number | undefined => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
-            if (stat?.statHash === StatHashes.RecoilDirection) {
-              return recoilValue(stat.base);
+            if (!stat) {
+              return undefined;
             }
-            return stat?.base;
+            let statValue = stat.base;
+            // Apply masterwork bonuses to armor stats so we can fairly compare
+            // them to other items.
+            // TODO: To support weapons, I think we'd need to actually look at
+            // the masterwork plug, which requires duplicating a lot of the item
+            // creation logic. We should see how we can separate that to be used
+            // here,
+            if (item.bucket.inArmor) {
+              if (isArmor3(item) && statValue === 0) {
+                // 2. If this is an armor 3.0 item, AND we're assuming it should be
+                //    masterworked, apply +5 to the three lowest stats (they will have a
+                //    base value of 0)
+                statValue = 5;
+              } else if ((item.energy?.energyCapacity ?? 0) >= 10) {
+                // 1. If this is an armor 2.0 item, and it has max energy (whether
+                //    assumed or just normally), apply the legacy masterwork bonus (+2
+                //    to each stat)
+                statValue += 2;
+              }
+            }
+            if (stat.statHash === StatHashes.RecoilDirection) {
+              return recoilValue(statValue);
+            }
+            return statValue;
           },
           cell: (_val, item, ctx) => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
