@@ -294,6 +294,10 @@ function mapItemsToGroups(
   for (const group of Object.values(firstPassGroups)) {
     const keepSet: MappedItem[] = [];
 
+    // This came to me in a dream - if we consider energy capacity as a stat,
+    // and each relevant mod slot as a 0/1 stat, we can reuse the dupe stat
+    // logic.
+
     // TODO: Converge this is-better-stats logic with the one in
     // search-filter/dupes.ts and the one in triage-utils.ts to create a single
     // utility for figuring out if an item is strictly better than another. This

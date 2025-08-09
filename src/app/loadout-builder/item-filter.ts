@@ -1,9 +1,15 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
+import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
+import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
+import { computeStatDupeLower } from 'app/search/items/search-filters/dupes';
+import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { sumBy } from 'es-toolkit';
 import { Draft } from 'immer';
 import {
   ArmorBucketHash,
@@ -107,6 +113,15 @@ export function filterItems({
   const lockedExoticDef =
     lockedExoticHash && lockedExoticHash > 0 ? defs.InventoryItem.get(lockedExoticHash) : undefined;
 
+  const requiredModTags = new Set<string>();
+  for (const mod of lockedModMap.activityMods) {
+    const modTag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);
+    if (modTag) {
+      requiredModTags.add(modTag);
+    }
+  }
+  const requiredModTagsArray = Array.from(requiredModTags).sort();
+
   for (const bucket of ArmorBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
@@ -178,17 +193,63 @@ export function filterItems({
     // If a search filters out all the possible items for a bucket, we ignore
     // the search. This allows users to filter some buckets without getting
     // stuck making no sets.
-    filteredItems[bucket] = searchFilteredItems.length ? searchFilteredItems : itemsThatFitMods;
+    let finalFilteredItems = searchFilteredItems.length ? searchFilteredItems : itemsThatFitMods;
     const removedBySearchFilter = searchFilteredItems.length
       ? itemsThatFitMods.length - searchFilteredItems.length
       : 0;
     filterInfo.searchQueryEffective ||= removedBySearchFilter > 0;
 
+    if (finalFilteredItems.length > 1) {
+      // One last pass - remove items that are strictly worse than others. This
+      // uses the same general logic as the `is:statlower` search filter, but
+      // also considers the energy capacity of the items and the set of activity
+      // mod slots they have. So if two items have the same stats, but one has
+      // more energy capacity or more relevant slots, it will be kept. Since we
+      // reuse the logic from `is:statlower`, this also takes into account
+      // artifice/tuning mods.
+      // This duplicates some logic from mapDimItemToProcessItem, but it's
+      // easier to deal with real DimItems here.
+      const getStats = (item: DimItem) => {
+        // Masterwork them up to the assumed masterwork level
+        const masterworkedStatValues = calculateAssumedMasterworkStats(item, armorEnergyRules);
+        const compatibleModSeasons = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag);
+        const capacity = calculateAssumedItemEnergy(item, armorEnergyRules);
+        const modsCost = lockedModsForPlugCategoryHash
+          ? sumBy(lockedModsForPlugCategoryHash, (mod) => mod.plug.energyCost?.energyCost ?? 0)
+          : 0;
+        const remainingEnergyCapacity = capacity - modsCost;
+        return [
+          ...armorStats.map((statHash) => masterworkedStatValues[statHash] ?? 0),
+          remainingEnergyCapacity,
+          ...requiredModTagsArray.map((tag) => (compatibleModSeasons?.includes(tag) ? 1 : 0)),
+        ];
+      };
+
+      const strictlyWorseItemIds = computeStatDupeLower(
+        finalFilteredItems,
+        // Consider all stats, even if they're not enabled - we still want the
+        // highest total stats.
+        armorStats,
+        // Use our own getStats function to consider energy capacity and activity mod slots
+        getStats,
+      );
+      if (strictlyWorseItemIds.size > 0) {
+        console.log(
+          'loadout optimizer',
+          'removed strictly worse items',
+          bucket,
+          strictlyWorseItemIds,
+        );
+      }
+      finalFilteredItems = finalFilteredItems.filter((item) => !strictlyWorseItemIds.has(item.id));
+    }
+
+    filteredItems[bucket] = finalFilteredItems;
     filterInfo.perBucketStats[bucket] = {
       totalConsidered: firstPassFilteredItems.length,
       cantFitMods: withoutExcluded.length - itemsThatFitMods.length,
       removedBySearchFilter,
-      finalValid: filteredItems[bucket].length,
+      finalValid: finalFilteredItems.length,
     };
   }
 

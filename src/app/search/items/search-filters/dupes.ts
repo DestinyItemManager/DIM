@@ -252,16 +252,24 @@ export function checkIfIsDupe(
  * there exists another item with strictly better stats (i.e. better in at least
  * one stat and not worse in any stat).
  */
-function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
+export function computeStatDupeLower(
+  allItems: DimItem[],
+  relevantStatHashes: number[] = armorStats,
+  getArmorStats?: (item: DimItem) => number[],
+) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
 
-  // Group by class and armor type. Also, compare exotics with each other, not the general pool.
-  const grouped = Object.values(
-    Object.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`),
-  );
-
-  const dupes = new Set<string>();
+  const getStats =
+    getArmorStats ??
+    ((item: DimItem) => {
+      // Always compare items as if they were fully masterworked
+      const masterworkedStatValues = calculateAssumedMasterworkStats(item, {
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+        minItemEnergy: 1,
+      });
+      return relevantStatHashes.map((statHash) => masterworkedStatValues[statHash] ?? 0);
+    });
 
   // A mapping from an item to a list of all of its stat configurations
   // (Artifice armor can have multiple). This is just a cache to prevent
@@ -269,16 +277,8 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power) {
-      // Always compare items as if they were fully masterworked
-      const masterworkedStatValues = calculateAssumedMasterworkStats(item, {
-        assumeArmorMasterwork: AssumeArmorMasterwork.All,
-        minItemEnergy: 1,
-      });
-
-      // Start with just the base stats
-      const statValues = relevantStatHashes.map(
-        (statHash) => masterworkedStatValues[statHash] ?? 0,
-      );
+      const statValues = getStats(item);
+      // Compute variants of the stats if the armor can be freely reconfigured
       if (isArtifice(item)) {
         statsCache.set(
           item,
@@ -294,10 +294,16 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
       } else {
         statsCache.set(item, [statValues]);
       }
+      console.log(item.name, item.id, 'statValues', statValues, statsCache.get(item));
     }
   }
 
-  // For each group of items that should be compared against each other
+  const dupes = new Set<string>();
+
+  // Group by class and armor type. Also, compare exotics with each other, not the general pool.
+  const grouped = Object.values(
+    Object.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`),
+  );
   for (const group of grouped) {
     const statSet = new StatsSet<DimItem>();
     // Add a mapping from stats => item to the statsSet for each item in the group
