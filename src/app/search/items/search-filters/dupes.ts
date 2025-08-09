@@ -276,9 +276,9 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
       });
 
       // Start with just the base stats
-      const statValues = relevantStatHashes
-        .sort((a, b) => a - b)
-        .map((statHash) => masterworkedStatValues[statHash] ?? 0);
+      const statValues = relevantStatHashes.map(
+        (statHash) => masterworkedStatValues[statHash] ?? 0,
+      );
       if (isArtifice(item)) {
         statsCache.set(
           item,
