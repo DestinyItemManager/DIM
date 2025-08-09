@@ -71,9 +71,6 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}
-      {item.iconOverlay && (
-        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
-      )}
       {(item.holofoil || item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
@@ -83,6 +80,9 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             [styles.deepsightBorder]: item.deepsightInfo,
           })}
         />
+      )}
+      {item.iconOverlay && (
+        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
       )}
       {item.tier > 1 ? (
         <div className={styles.tierPipContainer}>
