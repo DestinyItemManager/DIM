@@ -1,4 +1,8 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  SetBonusCounts,
+  StatConstraint,
+} from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
@@ -130,7 +134,7 @@ export default memo(function LoadoutBuilder({
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
   const includeRuntimeStatBenefits = loadoutParameters.includeRuntimeStatBenefits ?? true;
   const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
-  const setBonuses = loadoutParameters.setBonuses ?? {};
+  const setBonuses = loadoutParameters.setBonuses ?? emptyObject<SetBonusCounts>();
   const classType = loadout.classType;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
