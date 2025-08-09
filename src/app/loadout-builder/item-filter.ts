@@ -208,7 +208,7 @@ export function filterItems({
       // reuse the logic from `is:statlower`, this also takes into account
       // artifice/tuning mods.
       // This duplicates some logic from mapDimItemToProcessItem, but it's
-      // easier to deal with real DimItems here.
+      // easier to filter items out than to do it later.
       const getStats = (item: DimItem) => {
         // Masterwork them up to the assumed masterwork level
         const masterworkedStatValues = calculateAssumedMasterworkStats(item, armorEnergyRules);

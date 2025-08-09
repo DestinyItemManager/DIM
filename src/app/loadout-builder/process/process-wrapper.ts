@@ -115,6 +115,7 @@ export function runProcess({
       armorEnergyRules,
       activityMods,
       bucketSpecificMods[bucketHash] || [],
+      Object.keys(setBonuses).map(Number),
       getUserItemTag,
     );
 
@@ -192,7 +193,7 @@ const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
  * said group. All other grouped items will be available by the swap icon in the UI.
  *
  * An important property of this grouping is that all items within a single group must be interchangeable
- * for any possible assignment of mods.
+ * for any possible assignment of mods or other LO .
  *
  * Creating a group for every item is trivially correct but inefficient. Erroneously forgetting to include a bit
  * of information in the grouping key that is relevant to the web worker results in the worker failing to discover
@@ -205,6 +206,7 @@ const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
  * - Masterwork status
  * - Exoticness (every exotic must be distinguished from other exotics and all legendaries)
  * - Energy capacity
+ * - Set bonus
  * - If there are mods with tags (activity/combat style) it will create groups split by compatible tags
  */
 function mapItemsToGroups(
@@ -213,9 +215,10 @@ function mapItemsToGroups(
   armorEnergyRules: ArmorEnergyRules,
   activityMods: PluggableInventoryItemDefinition[],
   modsForSlot: PluggableInventoryItemDefinition[],
+  setBonusHashes: number[],
   getUserItemTag?: (item: DimItem) => TagValue | undefined,
 ): ItemGroup[] {
-  // Figure out all the interesting mod slots required by mods are.
+  // Figure out all the interesting mod slots required by mods.
   // This includes combat mod tags because blue-quality items don't have them
   // and there may be legacy items that can slot CWL/Warmind Cell mods but not
   // Elemental Well mods?
@@ -226,6 +229,7 @@ function mapItemsToGroups(
       requiredModTags.add(modTag);
     }
   }
+  const requiredModTagsArray = Array.from(requiredModTags).sort();
 
   // First, map the DimItems to ProcessItems so that we can consider all things relevant to Loadout Optimizer.
   const mappedItems: MappedItem[] = items.map((dimItem) => ({
@@ -233,122 +237,36 @@ function mapItemsToGroups(
     processItem: mapDimItemToProcessItem({ dimItem, armorEnergyRules, modsForSlot }),
   }));
 
-  // First, group by exoticness to ensure exotics always form a distinct group
-  const firstPassGroupingFn = ({ hash, isExotic }: ProcessItem) =>
-    isExotic ? `${hash}-` : 'legendary-';
-
-  // Second pass -- cache the worker-relevant information, except the one we used in the first pass.
-  const cache = new Map<
-    DimItem,
-    {
-      stats: number[];
-      energyCapacity: number;
-      relevantModSeasons: Set<string>;
-      isArtifice: boolean;
-    }
-  >();
-  for (const item of mappedItems) {
-    // Id, name are not important, exoticness+hash were grouped by in phase 1.
-    // Energy value is the same for all items.
-
+  // Build groups of "interchangeable" items
+  const groupKey = ({ dimItem, processItem }: MappedItem) => {
     // Item stats are important for the stat results of a full set
-    const statValues: number[] = resolvedStatConstraints.map(
-      (c) => item.processItem.stats[c.statHash],
-    );
+    const statValues = resolvedStatConstraints.map((c) => processItem.stats[c.statHash]);
     // Energy capacity affects mod assignment
-    const energyCapacity = item.processItem.remainingEnergyCapacity;
+    const energyCapacity = processItem.remainingEnergyCapacity;
     // Supported mod tags affect mod assignment
-    const relevantModSeasons =
-      item.processItem.compatibleModSeasons?.filter((season) => requiredModTags.has(season)) ?? [];
-    relevantModSeasons.sort();
+    const relevantModSeasons = requiredModTagsArray.filter((tag) =>
+      processItem.compatibleModSeasons?.includes(tag),
+    );
+    const itemSetBonusHash = dimItem.setBonus?.hash ?? 0;
+    // Only group by set bonus if set bonuses are being filtered
+    const setBonusHash = setBonusHashes.includes(itemSetBonusHash) ? itemSetBonusHash : 0;
 
-    cache.set(item.dimItem, {
-      stats: statValues,
-      energyCapacity,
-      relevantModSeasons: new Set(relevantModSeasons),
-      isArtifice: item.processItem.isArtifice,
-    });
-  }
-
-  // Group items by everything relevant.
-  const finalGroupingFn = (item: DimItem) => {
-    const info = cache.get(item)!;
-    return `${info.stats.toString()}-${info.energyCapacity}-${[
-      ...info.relevantModSeasons.values(),
+    return `${dimItem.isExotic ? `${dimItem.hash}-` : 'legendary-'}${statValues.toString()}-${energyCapacity}-${setBonusHash}-${[
+      relevantModSeasons,
     ].toString()}`;
   };
-
-  const firstPassGroups = Object.groupBy(mappedItems, ({ processItem }) =>
-    firstPassGroupingFn(processItem),
-  );
 
   // Final grouping by everything relevant
   const groups: ItemGroup[] = [];
 
-  // Checks if test is a superset of existing, i.e. every value of existing is contained in test
-  const isSuperset = <T>(test: Set<T>, existing: Set<T>) =>
-    [...existing.values()].every((v) => test.has(v));
-
-  // Go through each grouping-by-energy-type, throw out any items with strictly worse properties than
-  // another item in that group, then use what's left to build groups by their properties.
-  for (const group of Object.values(firstPassGroups)) {
-    const keepSet: MappedItem[] = [];
-
-    // This came to me in a dream - if we consider energy capacity as a stat,
-    // and each relevant mod slot as a 0/1 stat, we can reuse the dupe stat
-    // logic.
-
-    // TODO: Converge this is-better-stats logic with the one in
-    // search-filter/dupes.ts and the one in triage-utils.ts to create a single
-    // utility for figuring out if an item is strictly better than another. This
-    // will be important when considering Tuning mods and would involve
-    // correctly accounting for artifice mods in this function.
-    const isStrictlyBetter = (testItem: MappedItem, existingItem: MappedItem) => {
-      const testInfo = cache.get(testItem.dimItem)!;
-      const existingInfo = cache.get(existingItem.dimItem)!;
-
-      const betterOrEqual =
-        testInfo.stats.every((statValue, idx) => statValue >= existingInfo.stats[idx]) &&
-        testInfo.energyCapacity >= existingInfo.energyCapacity &&
-        (testItem.processItem.isArtifice || !existingInfo.isArtifice) &&
-        isSuperset(testInfo.relevantModSeasons, existingInfo.relevantModSeasons);
-      if (!betterOrEqual) {
-        return false;
-      }
-      // The item is better or equal, so check if there are any differences -- if any of these properties are not equal
-      // it means the item is better in one of these dimensions, so it must be strictly better.
-      const isDifferent =
-        testInfo.stats.some((statValue, idx) => statValue !== existingInfo.stats[idx]) ||
-        testInfo.energyCapacity !== existingInfo.energyCapacity ||
-        testInfo.isArtifice !== existingInfo.isArtifice ||
-        testInfo.relevantModSeasons.size !== existingInfo.relevantModSeasons.size;
-      return isDifferent;
-    };
-
-    for (const item of group) {
-      let dominated = false;
-      for (let idx = keepSet.length - 1; idx >= 0; idx--) {
-        if (isStrictlyBetter(keepSet[idx], item)) {
-          dominated = true;
-          break;
-        }
-        if (isStrictlyBetter(item, keepSet[idx])) {
-          keepSet.splice(idx, 1);
-        }
-      }
-      if (!dominated) {
-        keepSet.push(item);
-      }
-    }
-
-    const groupedByEverything = Map.groupBy(keepSet, ({ dimItem }) => finalGroupingFn(dimItem));
-    for (const group of groupedByEverything.values()) {
-      group.sort(groupComparator(getUserItemTag));
-      groups.push({
-        canonicalProcessItem: group[0].processItem,
-        items: group.map(({ dimItem }) => dimItem),
-      });
-    }
+  // Go through each grouping-by-energy-type and build groups by their properties.
+  const groupedByEverything = Map.groupBy(mappedItems, groupKey);
+  for (const group of groupedByEverything.values()) {
+    group.sort(groupComparator(getUserItemTag));
+    groups.push({
+      canonicalProcessItem: group[0].processItem,
+      items: group.map(({ dimItem }) => dimItem),
+    });
   }
 
   return groups;
