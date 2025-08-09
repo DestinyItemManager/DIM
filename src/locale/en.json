@@ -712,6 +712,8 @@
       "MaybeRemoveSearchQuery": "Consider clearing or changing the filter in the search bar",
       "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
       "RemoveMods": "Remove these mods",
+      "RemoveSetBonuses": "Consider removing some set bonuses",
+      "SetBonuses": "You have chosen some set bonuses, maybe you don't have the right items to use them.",
       "UpperBoundsFailed": "Many sets did not meet maximum stat requirements"
     },
     "NoExotic": "No Exotic",

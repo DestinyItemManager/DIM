@@ -1,9 +1,11 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
 import { ItemFilter } from 'app/search/filter-types';
 import { warnLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { sum } from 'es-toolkit';
 import { Draft } from 'immer';
 import {
   ArmorBucketHash,
@@ -48,6 +50,7 @@ export function filterItems({
   lockedExoticHash,
   armorEnergyRules,
   searchFilter,
+  setBonuses,
 }: {
   defs: D2ManifestDefinitions | undefined;
   items: DimItem[];
@@ -58,6 +61,7 @@ export function filterItems({
   lockedExoticHash: number | undefined;
   armorEnergyRules: ArmorEnergyRules;
   searchFilter: ItemFilter;
+  setBonuses?: SetBonusCounts;
 }): [ItemsByBucket, FilterInfo] {
   const filteredItems: Draft<ItemsByBucket> = {
     [BucketHashes.Helmet]: [],
@@ -107,6 +111,14 @@ export function filterItems({
   const lockedExoticDef =
     lockedExoticHash && lockedExoticHash > 0 ? defs.InventoryItem.get(lockedExoticHash) : undefined;
 
+  // If the user has locked an exotic, AND they have asked for set bonuses that
+  // require 4 items, we can filter down to just items that have that set bonus.
+  let setBonusHashes: number[] = [];
+  if (setBonuses && sum(Object.values(setBonuses)) >= 4 && lockedExoticDef) {
+    // If the user has set bonuses, we can filter down to just items that have that set bonus.
+    setBonusHashes = Object.keys(setBonuses).map(Number);
+  }
+
   for (const bucket of ArmorBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
@@ -154,6 +166,13 @@ export function filterItems({
         'no items for bucket',
         bucket,
         'does this happen enough to be worth reporting in some way?',
+      );
+    }
+
+    // If every non-exotic requires set bonuses...
+    if (setBonusHashes.length && !lockedExoticApplicable) {
+      firstPassFilteredItems = firstPassFilteredItems.filter(
+        (item) => item.setBonus && setBonusHashes.includes(item.setBonus.hash),
       );
     }
 

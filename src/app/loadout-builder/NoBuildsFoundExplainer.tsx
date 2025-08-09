@@ -459,6 +459,29 @@ export default function NoBuildsFoundExplainer({
     }
   }
 
+  // TODO: Do a better job detecting when this was the problem, and offer a way
+  // to clear set bonuses inline.
+  if (params.setBonuses) {
+    const suggestions: ActionableSuggestion[] = [
+      {
+        id: 'removeSetBonuses',
+        contents: t('LoadoutBuilder.NoBuildsFoundExplainer.RemoveSetBonuses'),
+      },
+    ];
+
+    if (filterInfo?.searchQueryEffective) {
+      suggestions.push({
+        id: 'clearQuery',
+        contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveSearchQuery'),
+      });
+    }
+
+    problems.push({
+      id: 'setBonuses',
+      description: t('LoadoutBuilder.NoBuildsFoundExplainer.SetBonuses'),
+      suggestions,
+    });
+  }
   return (
     <div className={styles.noBuildsExplainerContainer}>
       <h3 className={styles.noBuildsFoundMsg}>
