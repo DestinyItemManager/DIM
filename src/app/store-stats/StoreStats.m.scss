@@ -76,3 +76,16 @@
     align-items: center;
   }
 }
+
+.topRow {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  & > div {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+}
+
+.setBonuses {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  gap: 4px;
+}
