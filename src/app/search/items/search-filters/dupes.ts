@@ -1,8 +1,10 @@
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { stripAdept } from 'app/compare/compare-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
@@ -272,13 +274,16 @@ function computeStatDupeLower(
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power) {
-      // Start with just the base stats
-      const statValues = item.stats
-        .filter((s) => relevantStatHashes.includes(s.statHash))
-        .sort(
-          (a, b) => relevantStatHashes.indexOf(a.statHash) - relevantStatHashes.indexOf(b.statHash),
-        )
-        .map((s) => s.base);
+      // Always compare items as if they were fully masterworked
+      const masterworkedStatValues = calculateAssumedMasterworkStats(item, {
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+        minItemEnergy: 1,
+      });
+
+      // Start with the stats before any artifice/tuning mods
+      const statValues = relevantStatHashes.map(
+        (statHash) => masterworkedStatValues[statHash] ?? 0,
+      );
       let statMixes = [statValues];
 
       // Add in tuning mod variations if applicable
@@ -286,10 +291,17 @@ function computeStatDupeLower(
       if (tuningStat) {
         const tuningStatIndex = relevantStatHashes.indexOf(tuningStat);
         if (tuningStatIndex >= 0) {
+          // Get the indexes of the three lowest stats, which will be boosted by the tuning mod
+          // to +1.
+          const worstThreeStatIndexes = [...statValues.entries()]
+            .sort((a, b) => a[1] - b[1])
+            .splice(0, 3)
+            .map((e) => e[0]);
+
           statMixes = relevantStatHashes.map((statHash, i) =>
             statHash === tuningStat
               ? // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
-                statValues.map((v) => (v === 0 ? 1 : v))
+                statValues.map((v, vi) => (worstThreeStatIndexes.includes(vi) ? v + 1 : v))
               : // Apply the tuning mod that sacrifices one stat for +5 to the tuning stat
                 statValues.map((v, vi) =>
                   // We always boost the tuning stat, but each other stat is boosted
