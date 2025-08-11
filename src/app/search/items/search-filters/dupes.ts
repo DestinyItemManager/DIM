@@ -287,13 +287,22 @@ export function computeStatDupeLower(
       if (tuningStat) {
         const tuningStatIndex = relevantStatHashes.indexOf(tuningStat);
         if (tuningStatIndex >= 0) {
+          // Get the indexes of the three lowest stats, which will be boosted by the tuning mod
+          // to +1. This assumes that the first stat values in statValues are armor stats
+          // in the same order as relevantStatHashes.
+          const worstThreeStatIndexes = [
+            ...statValues.splice(0, relevantStatHashes.length).entries(),
+          ]
+            .sort((a, b) => a[1] - b[1])
+            .splice(0, 3)
+            .map((e) => e[0]);
           statMixes = relevantStatHashes.map((statHash, i) => {
             const modifiedStats = [...statValues];
             for (let vi = 0; vi < relevantStatHashes.length; vi++) {
               const v = statValues[vi];
               if (statHash === tuningStat) {
                 // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
-                modifiedStats[vi] = v === 0 ? 1 : v;
+                modifiedStats[vi] = worstThreeStatIndexes.includes(vi) ? v + 1 : v;
               } else {
                 // Apply the tuning mod that sacrifices one stat for +5 to the
                 // tuning stat. We always boost the tuning stat, but each other
