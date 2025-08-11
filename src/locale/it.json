@@ -254,6 +254,7 @@
     "HasNotes": "Mostra gli oggetti che hanno delle note.",
     "HasOrnament": "Mostra gli oggetti sui quali è applicato un decoro.",
     "HasShader": "Mostra oggetti che hanno uno shader applicato.",
+    "Holofoil": "Mostra le armi con ololamina.",
     "InDimLoadout": "is:indimloadout mostra gli oggetti che sono inclusi in qualsiasi dotazione su DIM.",
     "InInGameLoadout": "is:iningameloadout mostra gli oggetti che sono in qualsiasi dotazione in gioco.",
     "InInventory": "Mostra gli oggetti di cui hai almeno una copia nel tuo inventario. Utile soltanto nelle schermate dei mercanti e record.",
@@ -310,7 +311,6 @@
     "RetiredPerk": "Mostra le armi con peculiarità non più ottenibili.",
     "SearchPrompt": "Cerca tra comandi per filtri disponibili",
     "Season": "Mostra oggetti in base a quale stagione di Destiny 2 sono comparsi.",
-    "Shiny": "Mostra le armi dell'arsenale AUDACE con un decoro in edizione limitata.",
     "StackFull": "Mostra gli oggetti che sono alla massima capacità delle loro pile. (Nuclei ottimizzanti, Strane Monete, Materiali dell'Armaiolo ecc)",
     "StackLevel": "Mostra gli oggetti basandosi sulla quantità delle loro pile.",
     "Stackable": "Mostra gli oggetti accumulabili (sintesi munizioni, strane monete, ecc)",
@@ -320,6 +320,7 @@
     "StatsExtras": "Supporta l'aggiunta di statistiche connettendo più nomi di statistiche con i simboli + e &. Ci sono anche le parole chiave speciali highest, second highest, thirdhighest, ecc con corrispondenza alle statistiche basandosi sul loro grado all'interno delle statistiche di un oggetto. Ogni statistica personalizzata ha anche il suo termine di ricerca specifico, mostrato nella sezione delle impostazioni Etichette personalizzate.",
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
+    "StatsOrdinal": "Trova le armature 3.0 con la concentrazione di statistiche specificate.",
     "Tags": {
       "Tag": "Mostra gli oggetti con un'etichetta specifica.",
       "Tagged": "Mostra gli oggetti che hanno una qualsiasi etichetta."
@@ -329,6 +330,7 @@
     "Tracked": "Mostra le imprese/taglie basandosi sul loro stato monitorato.",
     "Transferable": "Oggetti che possono essere spostati tra i personaggi.",
     "Trashlist": "Mostra gli oggetti che corrispondono alla lista degli scarti della tua Lista Desideri.",
+    "TunedStat": "Mostra gli oggetti con modifiche di aggiustamento per la statistica specificata.",
     "Unascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" che non sono stati ascesi.",
     "Undo": "Annulla",
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
@@ -468,8 +470,8 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 pezzi",
-      "4Piece": "4 pezzi"
+      "NPiece_one": "{{count}} pezzo",
+      "NPiece_other": "{{count}} pezzi"
     },
     "ThumbsDown": "Pollici in giù",
     "ThumbsUp": "Pollici in su"
@@ -527,6 +529,7 @@
     "AddStack": "Aggiungi un'altra copia di questa modifica",
     "AdvancedOptions": "Opzioni Avanzate",
     "ChooseAMod": "Scegli le tue modifiche",
+    "ChooseASetBonus": "Scegli i tuoi bonus set",
     "ChooseAnExotic": "Scegli la tua esotica",
     "ClearLocked": "Pulisci Bloccati",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
@@ -580,11 +583,13 @@
     "RemoveStack": "Rimuovi una copia di questa modifica",
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica per nome o descrizione",
+    "SearchASetBonus": "",
     "SearchAnExotic": "Cerca una esotica per nome o descrizione",
     "SelectExotic": "Seleziona esotica",
     "SelectMods": "Seleziona modifiche",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Modifiche Attività",
+    "SelectSetBonus": "Seleziona bonus set",
     "SelectSubclassOptions": "Personalizza sottoclasse",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
@@ -663,7 +668,7 @@
       "ArtificeExotic": "Aggiornata per accettare modifiche dell'artificio.",
       "Current": "Statistiche attuali, livello energetico presunto almeno {{minLoItemEnergy}}.",
       "Legendary": "Leggendarie:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nEsotiche:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Bonus alle statistiche per prodigio completo, presupposto livello energia 10.",
+      "Masterworked": "Bonus alle statistiche per prodigio completo, presupposto livello energia almeno 10.",
       "None": "Tutte le armature:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Aggiungi modifiche statistiche automaticamente",
@@ -723,6 +728,7 @@
     "PinnedItems": "Oggetti fissati",
     "ProcessingSets": "Ricerca dei set con statistiche più alte...",
     "SaveAs": "Salva come",
+    "SetBonus": "Bonus set",
     "SpeedReport": "Generate {{combos, number}} combinazioni in {{time}} secondi",
     "StatConstraints": "Priorità e limiti statistiche",
     "StatMax": "Max",
@@ -901,6 +907,7 @@
     },
     "SaveLoadout": "Salva dotazione",
     "Season": "Stagione {{season}}",
+    "SetBonusesDesc": "Bonus set richiesti",
     "Share": {
       "Copied": "Collegamento alla dotazione copiato negli appunti",
       "CopyButton": "Copia Collegamento",
@@ -1284,7 +1291,7 @@
     "Discipline": "Disciplina",
     "DropLevel": "Potere account",
     "DropLevelExplanation1": "Il Potere dell'account è il livello base quando si calcola l'aumento di livello delle ricompense.",
-    "DropLevelExplanation2": "Il Potere dell'account utilizza il livello più alto i ogni alloggiamento, indipendentemente dalla classe richiesta o dalla regola di \"una sola esotica\".",
+    "DropLevelExplanation2": "Il Potere dell'account utilizza il livello più alto in ogni alloggiamento, indipendentemente dalla classe richiesta o dalla regola di \"una sola esotica\".",
     "EquippableGear": "Oggetti equipaggiabili",
     "FlinchResistance": "Resistenza al sussulto",
     "HP": "Salute",

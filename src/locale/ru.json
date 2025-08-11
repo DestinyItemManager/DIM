@@ -284,6 +284,7 @@
     "HasNotes": "С Заметками.",
     "HasOrnament": "Показывает предметы с применённым орнаментом.",
     "HasShader": "Покрашенные шейдерами.",
+    "Holofoil": "Shows holofoil weapons.",
     "InDimLoadout": "is:indimloadout показывает предметы, которые включены в любые комплекты DIM.",
     "InInGameLoadout": "is:iningameloadout показывает предметы, которые включены в любые внутриигровые комплекты.",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -340,7 +341,6 @@
     "RetiredPerk": "Показать оружия с перками, которые больше нельзя получить.",
     "SearchPrompt": "Искать среди Фильтров",
     "Season": "По сезонам Destiny 2.",
-    "Shiny": "Показывает оружия «УДАЛЬ» с ограниченным по времени орнаментном.",
     "StackFull": "Показать предметы, которые заполнены для их набора (Улучшающие ядра, Странные монеты, Оружейные материалы и т.д.)",
     "StackLevel": "По количеству в пачке/стаке.",
     "Stackable": "Стакающиеся (боеприпасы, странные монеты и т.д.)",
@@ -350,6 +350,7 @@
     "StatsExtras": "Поддерживает добавление статистики путем объединения нескольких названий статистики с помощью символов + или &. Существуют также специальные ключевые слова: highest, secondhighest, thirdhighest, и т.д., которые соответствуют статистике на основе их рейтинга в статистике предметов. Каждая Пользовательская Характеристика также имеет собственный фильтр для поиска, отображаемый а настройках Пользовательских Характеристик.",
     "StatsLoadout": "Наборы брони с максимальной суммой Указанной Характеристики для каждого класса.",
     "StatsMax": "Броня в каждый слот с максимальной Указанной Характеристикой для всех персонажей. Фильтруются все предметы с максимальным значением Характеристики для каждого слота.",
+    "StatsOrdinal": "Finds armor 3.0 with the specified stat focusing.",
     "Tags": {
       "Tag": "С указанным Тэгом.",
       "Tagged": "С любым Тэгом."
@@ -359,6 +360,7 @@
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Перемещаемые.",
     "Trashlist": "Показывает предметы которые соответствуют вашей корзине Списка Желаний.",
+    "TunedStat": "Shows items with tuning mods for the specified stat.",
     "Unascended": "Показывает предметы, имеющие узел Абсолюта, которые ещё не получили Абсолют.",
     "Undo": "Отменить",
     "UnlockAllFailed": "Не удалось разблокировать предметы",
@@ -500,8 +502,10 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 Piece",
-      "4Piece": "4 Piece"
+      "NPiece_few": "{{count}} Piece",
+      "NPiece_many": "{{count}} Piece",
+      "NPiece_one": "{{count}} Piece",
+      "NPiece_other": "{{count}} Piece"
     },
     "ThumbsDown": "Палец Вниз",
     "ThumbsUp": "Палец Вверх"
@@ -559,6 +563,7 @@
     "AddStack": "Добавить еще одну копию этого модификатора",
     "AdvancedOptions": "Расширенные настройки",
     "ChooseAMod": "Выберите свои моды",
+    "ChooseASetBonus": "Choose your set bonuses",
     "ChooseAnExotic": "Выберите вашу экзоту",
     "ClearLocked": "Очистить \"Заблокированные\"",
     "ContainsVendorItems": "Этот набор содержит предметы вендоров",
@@ -612,11 +617,13 @@
     "RemoveStack": "Удалить копию этого модификатора",
     "Scaled": "Масштабированный",
     "SearchAMod": "Поиск по имени модификатора или описанию",
+    "SearchASetBonus": "",
     "SearchAnExotic": "Поиск по имени экзота или описанию",
     "SelectExotic": "Выбрать экзот",
     "SelectMods": "Выбрать моды",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Модификаторов Активности",
+    "SelectSetBonus": "Select Set Bonuses",
     "SelectSubclassOptions": "Настройка подкласса",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
@@ -695,7 +702,7 @@
       "ArtificeExotic": "Улучшено для получения ячейки модификатора искусной брони.",
       "Current": "Текущие характеристики, предполагаемый уровень энергии как минимум {{minLoItemEnergy}}.",
       "Legendary": "Легендарная: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nЭкзотическая: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level at least 10.",
       "None": "Вся броня: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Автоматически добавлять моды характеристик",
@@ -755,6 +762,7 @@
     "PinnedItems": "Закрепленные Предметы",
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Сохранить как",
+    "SetBonus": "Set Bonuses",
     "SpeedReport": "Сгенерировано {{combos, number}} комбинаций за {{time}} секунд",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Макс.",
@@ -953,6 +961,7 @@
     },
     "SaveLoadout": "Сохранить Набор",
     "Season": "Сезон {{season}}",
+    "SetBonusesDesc": "Required set bonuses",
     "Share": {
       "Copied": "Ссылка набора скопирована в буфер обмена",
       "CopyButton": "Скопировать ссылку",

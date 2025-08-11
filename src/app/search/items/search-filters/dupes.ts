@@ -1,12 +1,13 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { stripAdept } from 'app/compare/compare-utils';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { isArtifice } from 'app/utils/item-utils';
+import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
@@ -157,15 +158,15 @@ const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'statlower',
     description: tl('Filter.StatLower'),
-    filter: ({ allItems }) => {
-      const duplicates = computeStatDupeLower(allItems);
+    filter: ({ allItems, d2Definitions }) => {
+      const duplicates = computeStatDupeLower(allItems, d2Definitions);
       return (item) => item.bucket.inArmor && duplicates.has(item.id);
     },
   },
   {
     keywords: 'customstatlower',
     description: tl('Filter.CustomStatLower'),
-    filter: ({ allItems, customStats }) => {
+    filter: ({ allItems, customStats, d2Definitions }) => {
       const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
 
       for (const customStat of customStats) {
@@ -178,7 +179,7 @@ const dupeFilters: ItemFilterDefinition[] = [
           }
         }
         (duplicateSetsByClass[customStat.class] ||= []).push(
-          computeStatDupeLower(allItems, relevantStatHashes),
+          computeStatDupeLower(allItems, d2Definitions, relevantStatHashes),
         );
       }
 
@@ -252,7 +253,11 @@ export function checkIfIsDupe(
  * there exists another item with strictly better stats (i.e. better in at least
  * one stat and not worse in any stat).
  */
-function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
+function computeStatDupeLower(
+  allItems: DimItem[],
+  defs: D2ManifestDefinitions | undefined,
+  relevantStatHashes: number[] = armorStats,
+) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
 
@@ -275,13 +280,32 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
         minItemEnergy: 1,
       });
 
-      // Start with just the base stats
+      // Start with the stats before any artifice/tuning mods
       const statValues = relevantStatHashes.map(
         (statHash) => masterworkedStatValues[statHash] ?? 0,
       );
-      if (isArtifice(item)) {
-        statsCache.set(
-          item,
+      let statMixes = [statValues];
+
+      // Add in tuning mod variations if applicable
+      const tuningStat = defs ? getArmor3TuningStat(item, defs) : undefined;
+      if (tuningStat) {
+        const tuningStatIndex = relevantStatHashes.indexOf(tuningStat);
+        if (tuningStatIndex >= 0) {
+          statMixes = relevantStatHashes.map((statHash, i) =>
+            statHash === tuningStat
+              ? // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
+                statValues.map((v) => (v === 0 ? 1 : v))
+              : // Apply the tuning mod that sacrifices one stat for +5 to the tuning stat
+                statValues.map((v, vi) =>
+                  // We always boost the tuning stat, but each other stat is boosted
+                  // only if it is the one being sacrificed
+                  vi === tuningStatIndex ? v + 5 : vi === i ? v - 5 : v,
+                ),
+          );
+        }
+      } else if (isArtifice(item)) {
+        // We assume armor cannot be both artifice and tunable.
+        statMixes =
           // Artifice armor can be +3 in any one stat, so we compute a separate
           // version of the stats for each stat considered
           relevantStatHashes.map((_s, i) => {
@@ -289,11 +313,9 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
             // One stat gets +3
             modifiedStats[i] += 3;
             return modifiedStats;
-          }),
-        );
-      } else {
-        statsCache.set(item, [statValues]);
+          });
       }
+      statsCache.set(item, statMixes);
     }
   }
 

@@ -239,6 +239,7 @@
     "HasNotes": "메모가 추가된 아이템 표시",
     "HasOrnament": "장식이 적용된 아이템을 표시합니다.",
     "HasShader": "안료가 적용된 아이템을 표시합니다.",
+    "Holofoil": "홀로그램 장식 무기를 표시합니다.",
     "InDimLoadout": "is:indimloadout은 DIM 로드아웃에 포함된 아이템을 표시합니다.",
     "InInGameLoadout": "is:iningameloadout은 게임 내 로드아웃에 포함된 아이템을 표시합니다.",
     "InInventory": "소지품에 한 개 이상 보유 중인 아이템을 표시합니다. 상점이나 기록 화면에서만 유용합니다.",
@@ -295,7 +296,6 @@
     "RetiredPerk": "더 이상 얻을 수 없는 특성이 포함된 아이템을 표시합니다.",
     "SearchPrompt": "사용 가능한 필터 명령어 검색",
     "Season": "데스티니 2의 특정 시즌에서 나온 아이템을 표시합니다.",
-    "Shiny": "한정 장식이 적용된 용맹 무기를 표시합니다.",
     "StackFull": "스택 당 최대 소지 제한에 도달한 아이템 표시 (강화 코어, 이상한 동전, 총기 제작 재료 등)",
     "StackLevel": "아이템의 개수를 기준으로 표시합니다.",
     "Stackable": "한 칸에 중첩 가능한 아이템(탄약 신스, 이상한 동전 등)을 표시합니다.",
@@ -305,6 +305,7 @@
     "StatsExtras": "여러 능력치 이름을 +, & 기호로 연결하여 능력치를 더할 수 있습니다. highest, secondhighest, thirdhighest 등의 특수 키워드가 있으며, 아이템의 능력치 순위를 기준으로 합니다. 사용자 정의 능력치 또한 검색어가 있으며, 사용자 정의 능력치 설정에서 확인할 수 있습니다.",
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
+    "StatsOrdinal": "특정 능력치를 기반으로 3.0 방어구를 찾습니다.",
     "Tags": {
       "Tag": "특정 태그가 있는 아이템을 표시합니다.",
       "Tagged": "태그가 있는 아이템을 표시합니다."
@@ -314,6 +315,7 @@
     "Tracked": "퀘스트/현상금을 추적 여부에 따라 표시합니다.",
     "Transferable": "캐릭터 간 이동 가능한 아이템",
     "Trashlist": "희망 아이템 목록의 쓰레기 목록에 포함된 아이템을 표시합니다.",
+    "TunedStat": "특정 능력치에 대한 개조 부품이 장착된 아이템을 표시합니다.",
     "Unascended": "승천 노드가 있으나 승천을 하지 않은 아이템을 표시합니다.",
     "Undo": "되돌리기",
     "UnlockAllFailed": "아이템 잠금 해제 실패",
@@ -452,8 +454,7 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 방어구",
-      "4Piece": "4 방어구"
+      "NPiece_other": "{{count}}개"
     },
     "ThumbsDown": "반대",
     "ThumbsUp": "추천"
@@ -511,6 +512,7 @@
     "AddStack": "동일한 개조 부품 추가",
     "AdvancedOptions": "고급 옵션",
     "ChooseAMod": "개조 부품 선택",
+    "ChooseASetBonus": "세트 보너스를 선택하세요",
     "ChooseAnExotic": "경이 선택",
     "ClearLocked": "잠금 해제",
     "ContainsVendorItems": "이 로드아웃은 상인의 아이템을 포함합니다",
@@ -564,11 +566,13 @@
     "RemoveStack": "동일한 개조 부품 제거",
     "Scaled": "확대 됨",
     "SearchAMod": "개조 부품 이름이나 설명 검색",
+    "SearchASetBonus": "",
     "SearchAnExotic": "경이 이름이나 설명 검색",
     "SelectExotic": "경이 선택",
     "SelectMods": "개조 부품 선택",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 활동 개조 부품",
+    "SelectSetBonus": "세트 보너스 선택",
     "SelectSubclassOptions": "하위직업 사용자 정의",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
@@ -647,7 +651,7 @@
       "ArtificeExotic": "계략 능력치 개조 부품을 수용할 수 있도록 강화되었습니다.",
       "Current": "현재 능력치, 최소 에너지 레벨 {{minLoItemEnergy}} 가정",
       "Legendary": "전설: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n경이: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "걸작 능력치 보너스, 에너지 레벨 10 가정.",
+      "Masterworked": "걸작 능력치 보너스, 최소 에너지 레벨 10 가정.",
       "None": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "능력치 개조 부품 자동 추가",
@@ -707,6 +711,7 @@
     "PinnedItems": "고정된 아이템",
     "ProcessingSets": "가장 높은 능력치의 조합 찾는 중...",
     "SaveAs": "다른 이름으로 저장",
+    "SetBonus": "세트 보너스",
     "SpeedReport": "{{time}}초 만에 {{combos, number}}개의 조합 생성됨",
     "StatConstraints": "능력치 우선도 & 범위",
     "StatMax": "최대",
@@ -875,6 +880,7 @@
     },
     "SaveLoadout": "로드아웃 저장",
     "Season": "시즌 {{season}}",
+    "SetBonusesDesc": "필요한 세트 보너스",
     "Share": {
       "Copied": "클립보드로 로드아웃 주소가 복사됨",
       "CopyButton": "주소 복사",

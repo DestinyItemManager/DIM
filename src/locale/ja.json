@@ -239,6 +239,7 @@
     "HasNotes": "メモが適用されているアイテムを表示します。",
     "HasOrnament": "装飾品が施されているアイテムが表示されます。",
     "HasShader": "シェーダーが適用されているアイテムを表示します。",
+    "Holofoil": "Shows holofoil weapons.",
     "InDimLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用しているアイテムを強調表示します。",
     "InInGameLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用するアイテムを表示します。",
     "InInventory": "保管庫で最低1つは所有しているアイテムを表示します。このフィルターはベンダーまたはレコードの画面でのみ有効です。",
@@ -295,7 +296,6 @@
     "RetiredPerk": "入手不可のパークが付与された武器を表示します",
     "SearchPrompt": "利用可能なフィルタコマンドを検索",
     "Season": "Destiny 2のシーズンに登場したアイテムを表示します。",
-    "Shiny": "限定版の装飾が適用された果敢武器を表示します。",
     "StackFull": "スタック上限に達しているアイテムを表示します（強化のコア、奇妙なコイン、銃器技師の材料など）",
     "StackLevel": "スタック内のアイテムの量に基づいてアイテムを表示します。",
     "Stackable": "複数個をスタックして所持できるアイテムを表示します（弾薬合成、奇妙なコインなど）",
@@ -305,6 +305,7 @@
     "StatsExtras": "複数のアーマーステータスの数値を＋や&記号でつなぐ、高度な絞り込みを実装しました。  また、アーマーのステータス値の中での順位で数値を絞り込むための専用キーワード、highest、secondhighest、thirdhighestなどがあります。各カスタムステータス値にて使用する専用の検索ワードもあります。",
     "StatsLoadout": "特定の統計の最大合計値を装備するアイテムのセットを検索します。",
     "StatsMax": "特定の統計情報で最も高い数のアーマーを見つけます。 最高の統計を持つすべてのアイテムが含まれます。",
+    "StatsOrdinal": "Finds armor 3.0 with the specified stat focusing.",
     "Tags": {
       "Tag": "特定のタグが付いているアイテムを表示します。",
       "Tagged": "タグ付けされたアイテムだけを表示します。"
@@ -314,6 +315,7 @@
     "Tracked": "クエスト、バウンティのステータスを基に表示",
     "Transferable": "キャラクター間で移動可能なアイテムを表示します。",
     "Trashlist": "ウィッシュリストで、ゴミアイテムとしてカウントされているアイテムを表示します",
+    "TunedStat": "Shows items with tuning mods for the specified stat.",
     "Unascended": "上昇していない上昇ノードを持つアイテムを表示。",
     "Undo": "元に戻す",
     "UnlockAllFailed": "アイテムのアンロックに失敗しました",
@@ -452,8 +454,7 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 Piece",
-      "4Piece": "4 Piece"
+      "NPiece_other": "個"
     },
     "ThumbsDown": "低評価",
     "ThumbsUp": "いいね"
@@ -511,6 +512,7 @@
     "AddStack": "この Mod を1つスタック追加する",
     "AdvancedOptions": "高度なオプション",
     "ChooseAMod": "使用するmodを選ぶ",
+    "ChooseASetBonus": "セットボーナスを選択してください",
     "ChooseAnExotic": "使用するエキゾチックを選ぶ",
     "ClearLocked": "ロックを解除",
     "ContainsVendorItems": "装備にベンダーアイテムが含まれています。",
@@ -564,11 +566,13 @@
     "RemoveStack": "この Mod をスタックから1つ外す",
     "Scaled": "縮尺",
     "SearchAMod": "Mod名または説明で検索",
+    "SearchASetBonus": "",
     "SearchAnExotic": "エキゾチック名または説明で検索",
     "SelectExotic": "使用するエキゾチックを選ぶ",
     "SelectMods": "Mod を選択",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} アクティビティMod",
+    "SelectSetBonus": "セットボーナスを選択",
     "SelectSubclassOptions": "サブクラスをカスタマイズ",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
@@ -647,7 +651,7 @@
       "ArtificeExotic": "戦略的ステータスMODが装着できるよう強化を想定。",
       "Current": "現在のステータスで、エネルギーは少なくとも {{minLoItemEnergy}} を想定。",
       "Legendary": "レジェンダリー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nエキゾチック: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
+      "Masterworked": "マスターワーク済みステータスボーナス、エネルギーレベル10+を想定。",
       "None": "全アーマー: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自動的にステータス mod を追加する",
@@ -707,6 +711,7 @@
     "PinnedItems": "ピン留めしたアイテム",
     "ProcessingSets": "最高理論値の組み合わせを検索しています…",
     "SaveAs": "名前をつけて保存",
+    "SetBonus": "セットボーナス",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
     "StatConstraints": "ステータス値の優先度と範囲",
     "StatMax": "最大",
@@ -875,6 +880,7 @@
     },
     "SaveLoadout": "ロードアウトを保存",
     "Season": "シーズン{{season}}",
+    "SetBonusesDesc": "要求セットボーナス",
     "Share": {
       "Copied": "ロードアウトのリンクをクリップボードにコピーしました",
       "CopyButton": "リンクをコピーする",

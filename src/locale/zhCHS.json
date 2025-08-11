@@ -239,6 +239,7 @@
     "HasNotes": "显示已有备注的物品",
     "HasOrnament": "显示已应用皮肤的物品。",
     "HasShader": "显示已应用着色器的物品",
+    "Holofoil": "显示带有全息箔的武器。",
     "InDimLoadout": "is:indimgameloadout 指令会显示全部DIM配装中的物品。",
     "InInGameLoadout": "is:iningameloadout 指令会显示任何游戏内配装系统保存的物品。",
     "InInventory": "显示在库存中已拥有的物品。仅在商贩和记录页面中有效。",
@@ -295,7 +296,6 @@
     "RetiredPerk": "显示带有已无法获取特性的武器。",
     "SearchPrompt": "搜索可用的过滤器命令",
     "Season": "根据物品推出的赛季显示。",
-    "Shiny": "显示带有限定版皮肤的武器（可从英勇军械库、玖的仪式等获得）。",
     "StackFull": "显示堆叠已满的物品（强化核心、奇异硬币、枪匠材料等）",
     "StackLevel": "根据堆叠数量来显示物品。",
     "Stackable": "显示可堆叠的物品（弹药合成器、奇异硬币等）",
@@ -305,6 +305,7 @@
     "StatsExtras": "可使用 + 或 & 符号来筛选多种属性组合。也可根据装备属性高低顺序使用关键字筛选最高 (highest)、次高 (secondhighest)、第三高 (thirdhighest) 等。每个自定义属性也有各自的搜索关键词，在自定义属性设置中显示。",
     "StatsLoadout": "针对特定属性，筛选出最大化数值的一系列装备。",
     "StatsMax": "针对特定属性，筛选出最大化数值的一系列装备。包括所有最高属性值的物品。",
+    "StatsOrdinal": "显示具有特定主要/次要专注属性的 3.0 护甲。",
     "Tags": {
       "Tag": "显示具有特定标签的物品。",
       "Tagged": "显示具有任何标签的物品。"
@@ -314,6 +315,7 @@
     "Tracked": "根据追踪状态显示任务/悬赏。",
     "Transferable": "可在角色间移动的物品。",
     "Trashlist": "显示处于您的愿望单垃圾清单中的物品。",
+    "TunedStat": "显示具有特定调整属性的装备。",
     "Unascended": "显示可提升光等但尚未提升的物品。",
     "Undo": "撤销",
     "UnlockAllFailed": "解锁物品失败",
@@ -452,8 +454,7 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 件",
-      "4Piece": "4 件"
+      "NPiece_other": "{{count}} 件"
     },
     "ThumbsDown": "不推荐",
     "ThumbsUp": "推荐"
@@ -511,6 +512,7 @@
     "AddStack": "追加此模组",
     "AdvancedOptions": "高级选项",
     "ChooseAMod": "选择你的模组",
+    "ChooseASetBonus": "选择你的套装加成",
     "ChooseAnExotic": "选择你的异域装备",
     "ClearLocked": "清除锁定",
     "ContainsVendorItems": "该配装包含商贩物品",
@@ -564,11 +566,13 @@
     "RemoveStack": "递减此模组",
     "Scaled": "缩放",
     "SearchAMod": "搜索模组名称或描述",
+    "SearchASetBonus": "",
     "SearchAnExotic": "搜索异域装备名称或描述",
     "SelectExotic": "选择异域装备",
     "SelectMods": "选择模组",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 个活动模组",
+    "SelectSetBonus": "选择套装加成",
     "SelectSubclassOptions": "自定义子职业",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
@@ -647,7 +651,7 @@
       "ArtificeExotic": "强化以激活诡计护甲属性模组。",
       "Current": "当前属性，假定能量等级至少为 {{minLoItemEnergy}}。",
       "Legendary": "传说：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "完整大师杰作属性加成，假定能量等级为 10。",
+      "Masterworked": "完整大师杰作属性加成，假定能量等级至少为 10。",
       "None": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自动添加属性模组",
@@ -707,6 +711,7 @@
     "PinnedItems": "固定物品",
     "ProcessingSets": "寻找最高属性配装…",
     "SaveAs": "保存为",
+    "SetBonus": "套装加成",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 个组合",
     "StatConstraints": "属性优先级和范围",
     "StatMax": "最大值",
@@ -875,6 +880,7 @@
     },
     "SaveLoadout": "保存配装",
     "Season": "第 {{season}} 赛季",
+    "SetBonusesDesc": "需要的套装加成",
     "Share": {
       "Copied": "已复制配装链接到剪贴板",
       "CopyButton": "复制链接",
@@ -1359,7 +1365,7 @@
     "Button": "清空 {{numSockets}} 个插槽",
     "Cancel": "取消",
     "Choose": "选择要清空的插槽",
-    "DiscountedMods": "{{count}} 个已享受折扣的模组",
+    "DiscountedMods": "{{count}}x 已享受折扣的模组",
     "Done": "已清空的插槽",
     "NoSockets": "无插槽可清空",
     "Ok": "确定",
@@ -1484,7 +1490,7 @@
     "InvalidExternalSource": "请为你的外部愿望清单来源输入一个有效的 URL。URL 的开头必须为以下之一：",
     "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "最后更新于 {{lastUpdatedDate}} {{lastUpdatedTime}}",
-    "Num": "在您的愿望单中有{{num, number}} 个作品",
+    "Num": "在您的愿望单中有 {{num, number}} 种组合",
     "NumRolls": "{{num, number}} 种组合",
     "Refresh": "刷新愿望清单",
     "SourceAlreadyAdded": "愿望清单已添加",
