@@ -19,6 +19,7 @@
 * Add the ability to specify Set Bonuses in the Loadout Optimizer
 * Set Bonus names and perks are filterable via `perk:` `exactperk:` or free text search.
 * `is:statlower` now knows how to compare all the possible stat arrangements of armor with Tier 5 tuning mods, allowing you to find more strictly-worse items.
+* `is:statlower` now compares armor as if it has been masterworked, so an unmasterworked piece won't be considered worse than a masterworked piece if it would actually be better after masterworking.
 
 ## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
 
