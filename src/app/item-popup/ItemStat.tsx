@@ -97,9 +97,10 @@ export default function ItemStat({
   const masterworkValue =
     item?.masterworkInfo?.stats?.find((s) => s.hash === stat.statHash)?.value ?? 0;
   // This bool controls the stat name being gold
-  const isMasterworkedStat = masterworkValue !== 0;
+  const isMasterworkedStat = !item?.bucket.inArmor && masterworkValue !== 0;
   const masterworkDisplayValue = masterworkValue || armorMasterworkValue;
   let masterworkDisplayWidth = masterworkDisplayValue || 0;
+
   // baseBar here is the leftmost segment of the stat bar.
   // For armor, this is the "roll," the sum of its invisible stat plugs.
   // For weapons, this is the default base stat in its item definition, before barrels/mags/etc.

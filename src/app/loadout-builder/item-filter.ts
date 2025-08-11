@@ -1,3 +1,4 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
@@ -6,10 +7,11 @@ import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-uti
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { computeStatDupeLower } from 'app/search/items/search-filters/dupes';
+import { sumBy } from 'app/utils/collections';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { sumBy } from 'es-toolkit';
+import { sum } from 'es-toolkit';
 import { Draft } from 'immer';
 import {
   ArmorBucketHash,
@@ -54,6 +56,7 @@ export function filterItems({
   lockedExoticHash,
   armorEnergyRules,
   searchFilter,
+  setBonuses,
 }: {
   defs: D2ManifestDefinitions | undefined;
   items: DimItem[];
@@ -64,6 +67,7 @@ export function filterItems({
   lockedExoticHash: number | undefined;
   armorEnergyRules: ArmorEnergyRules;
   searchFilter: ItemFilter;
+  setBonuses?: SetBonusCounts;
 }): [ItemsByBucket, FilterInfo] {
   const filteredItems: Draft<ItemsByBucket> = {
     [BucketHashes.Helmet]: [],
@@ -122,6 +126,14 @@ export function filterItems({
   }
   const requiredModTagsArray = Array.from(requiredModTags).sort();
 
+  // If the user has locked an exotic, AND they have asked for set bonuses that
+  // require 4 items, we can filter down to just items that have that set bonus.
+  let setBonusHashes: number[] = [];
+  if (setBonuses && sum(Object.values(setBonuses)) >= 4 && lockedExoticDef) {
+    // If the user has set bonuses, we can filter down to just items that have that set bonus.
+    setBonusHashes = Object.keys(setBonuses).map(Number);
+  }
+
   for (const bucket of ArmorBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
@@ -169,6 +181,13 @@ export function filterItems({
         'no items for bucket',
         bucket,
         'does this happen enough to be worth reporting in some way?',
+      );
+    }
+
+    // If every non-exotic requires set bonuses...
+    if (setBonusHashes.length && !lockedExoticApplicable) {
+      firstPassFilteredItems = firstPassFilteredItems.filter(
+        (item) => item.setBonus && setBonusHashes.includes(item.setBonus.hash),
       );
     }
 
@@ -227,20 +246,13 @@ export function filterItems({
 
       const strictlyWorseItemIds = computeStatDupeLower(
         finalFilteredItems,
+        defs,
         // Consider all stats, even if they're not enabled - we still want the
         // highest total stats.
         armorStats,
         // Use our own getStats function to consider energy capacity and activity mod slots
         getStats,
       );
-      if (strictlyWorseItemIds.size > 0) {
-        console.log(
-          'loadout optimizer',
-          'removed strictly worse items',
-          bucket,
-          strictlyWorseItemIds,
-        );
-      }
       finalFilteredItems = finalFilteredItems.filter((item) => !strictlyWorseItemIds.has(item.id));
     }
 

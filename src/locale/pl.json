@@ -284,6 +284,7 @@
     "HasNotes": "Pokaż przedmioty z notatkami.",
     "HasOrnament": "Pokazuje przedmioty, które mają zastosowaną ozdobę.",
     "HasShader": "Pokazuje przedmioty z zastosowaną barwą.",
+    "Holofoil": "Shows holofoil weapons.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -340,7 +341,6 @@
     "RetiredPerk": "Pokazuje broń z cechami, które nie są już dostępne.",
     "SearchPrompt": "Wyszukaj dostępne komendy filtrujące",
     "Season": "Pokazuje przedmioty na podstawie którego sezonu z Destiny 2 pochodzą.",
-    "Shiny": "Shows BRAVE weapons with a limited-edition ornament.",
     "StackFull": "Pokaż, które przedmioty są wypełnione dla ich stosu (rdzenie wzmacniające, dziwne monety, materiały rusznikarza itp.)",
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
@@ -350,6 +350,7 @@
     "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats. Each custom stats also has its own search term, shown in the Custom Stats settings.",
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia, aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
+    "StatsOrdinal": "Finds armor 3.0 with the specified stat focusing.",
     "Tags": {
       "Tag": "Pokazuje przedmioty, które mają konkretny tag.",
       "Tagged": "Pokazuje przedmioty, które mają dowolny tag."
@@ -359,6 +360,7 @@
     "Tracked": "Pokazuje zadania/zlecenia na podstawie ich śledzonego stanu.",
     "Transferable": "Przedmioty, które można przenosić między postaciami.",
     "Trashlist": "Pokazuje przedmioty pasujące do listy śmieci z twojej listy życzeń.",
+    "TunedStat": "Shows items with tuning mods for the specified stat.",
     "Unascended": "Pokazuje przedmioty, które posiadają węzeł wstępujący, lecz nie zostały wstąpione.",
     "Undo": "Cofnij",
     "UnlockAllFailed": "Nie udało się odblokować przedmiotów",
@@ -500,8 +502,10 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 Piece",
-      "4Piece": "4 Piece"
+      "NPiece_few": "{{count}} Piece",
+      "NPiece_many": "{{count}} Piece",
+      "NPiece_one": "{{count}} Piece",
+      "NPiece_other": "{{count}} Piece"
     },
     "ThumbsDown": "Thumbs Down",
     "ThumbsUp": "Kciuk w górę"
@@ -559,6 +563,7 @@
     "AddStack": "Dodaj kolejną kopię tej modyfikacji",
     "AdvancedOptions": "Ustawienia Zaawansowane",
     "ChooseAMod": "Wybierz swoje modyfikacje",
+    "ChooseASetBonus": "Choose your set bonuses",
     "ChooseAnExotic": "Wybierz swój egzotyk",
     "ClearLocked": "Wyczyść Zablokowane",
     "ContainsVendorItems": "Te uzbrojenie zawiera przedmioty sprzedawcy",
@@ -612,11 +617,13 @@
     "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Skalowany",
     "SearchAMod": "Search for mod name or description",
+    "SearchASetBonus": "",
     "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Wybierz egzotyk",
     "SelectMods": "Wybierz modyfikacje",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
+    "SelectSetBonus": "Select Set Bonuses",
     "SelectSubclassOptions": "Dostostuj podklasę",
     "ShowAllConfigs": "Pokaż wszystkie konfiguracje",
     "ShowConfigs": "Pokaż konfiguracje",
@@ -695,7 +702,7 @@
       "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level at least 10.",
       "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Automatycznie dodaj modyfikacje statystyk",
@@ -755,6 +762,7 @@
     "PinnedItems": "Pinned Items",
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Zapisz jako",
+    "SetBonus": "Set Bonuses",
     "SpeedReport": "Wygenerowano {{combos, number}} kombinacje w {{time}} sekund",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Maks",
@@ -953,6 +961,7 @@
     },
     "SaveLoadout": "Zapisz Uzbrojenie",
     "Season": "Sezon {{season}}",
+    "SetBonusesDesc": "Required set bonuses",
     "Share": {
       "Copied": "Skopiowano link uzbrojenia do schowka",
       "CopyButton": "Kopiuj link",

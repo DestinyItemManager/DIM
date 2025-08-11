@@ -254,6 +254,7 @@
     "HasNotes": "Exibe itens que possuem anotações.",
     "HasOrnament": "Mostra itens que tem um ornamento aplicado.",
     "HasShader": "Mostra itens que tem um tonalizador aplicado.",
+    "Holofoil": "Shows holofoil weapons.",
     "InDimLoadout": "is:indimloadout mostra itens que estão incluídos em qualquer set do DIM.",
     "InInGameLoadout": "is:iningameloadout mostra itens que estão incluídos em qualquer set no jogo.",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -310,7 +311,6 @@
     "RetiredPerk": "Exibe armas com perks que não podem mais ser obtidos.",
     "SearchPrompt": "Pesquisa comandos disponíveis para filtros",
     "Season": "Mostra itens de que temporada apareceram no Destiny 2.",
-    "Shiny": "Mostra armas da VALENTIA com um ornamento de edição limitada.",
     "StackFull": "Exibe itens que atingiram a capacidade máxima de acúmulo (Núcleos de Aprimoramento, Moedas Estranhas, Materiais do Armeiro, etc.)",
     "StackLevel": "Mostra itens baseados na quantidade de itens em sua pilha.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
@@ -320,6 +320,7 @@
     "StatsExtras": "Suporta a adição de atributos conectando vários nomes de atributos (em inglês) com os símbolos + ou &. Há também palavras-chave especiais highest (mais alto), secondhighest (segundo mais alto), thirdhighest (terceiro mais alto), etc. que correspondem à uma classificação dentre os atributos de um item. Cada atributo customizado também tem seus próprios termos de busca, exibidos nas configurações de Atributos Customizados.",
     "StatsLoadout": "Encontra um conjunto de itens para equipar com valor máximo de um dado atributo.",
     "StatsMax": "Encontra armaduras com o maior número para um atributo específico. Inclui todos os itens com o atributo mais alto.",
+    "StatsOrdinal": "Finds armor 3.0 with the specified stat focusing.",
     "Tags": {
       "Tag": "Exibe itens que possuem uma determinada etiqueta.",
       "Tagged": "Exibe itens que possuam qualquer etiqueta."
@@ -329,6 +330,7 @@
     "Tracked": "Exibir jornadas/contratos baseados em seu status de rastreamento.",
     "Transferable": "Itens que podem ser movidos entre personagens.",
     "Trashlist": "Exibe itens que correspondem à sua lista de itens indesejáveis.",
+    "TunedStat": "Shows items with tuning mods for the specified stat.",
     "Unascended": "Exibe itens que possuem nódulos ascendentes e que não foram ascendidos.",
     "Undo": "Desfazer",
     "UnlockAllFailed": "Falha ao destravar itens",
@@ -468,8 +470,8 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 Piece",
-      "4Piece": "4 Piece"
+      "NPiece_one": "{{count}} Piece",
+      "NPiece_other": "{{count}} Piece"
     },
     "ThumbsDown": "Polegar para Baixo",
     "ThumbsUp": "Polegar para Cima"
@@ -527,6 +529,7 @@
     "AddStack": "Adicionar outra cópia deste mod",
     "AdvancedOptions": "Opções avançadas",
     "ChooseAMod": "Escolha seus mods",
+    "ChooseASetBonus": "Choose your set bonuses",
     "ChooseAnExotic": "Escolha seu exótico",
     "ClearLocked": "Limpar itens travados",
     "ContainsVendorItems": "Essa carga contém itens de vendedores",
@@ -580,11 +583,13 @@
     "RemoveStack": "Remover uma cópia deste mod",
     "Scaled": "Nivelado",
     "SearchAMod": "Busca pelo nome ou descrição do mod",
+    "SearchASetBonus": "",
     "SearchAnExotic": "Busca pelo nome ou descrição do exótico",
     "SelectExotic": "Selecionar exótico",
     "SelectMods": "Selecionar mods",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Mods de Atividade",
+    "SelectSetBonus": "Select Set Bonuses",
     "SelectSubclassOptions": "Personalizar subclasse",
     "ShowAllConfigs": "Exibir todas as configurações",
     "ShowConfigs": "Exibir configurações",
@@ -663,7 +668,7 @@
       "ArtificeExotic": "Melhorada para aceitar mods Artífice de atributos.",
       "Current": "Atributos atuais, nível de energia assumido de pelo menos {{minLoItemEnergy}}.",
       "Legendary": "Lendárias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level at least 10.",
       "None": "Todas as Armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Adiciona mods de atributo automaticamente",
@@ -723,6 +728,7 @@
     "PinnedItems": "Itens Fixados",
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Salvar como",
+    "SetBonus": "Set Bonuses",
     "SpeedReport": "Gerou {{combos, number}} combinações em {{time}} segundos",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Máximo",
@@ -901,6 +907,7 @@
     },
     "SaveLoadout": "Salvar Set",
     "Season": "Temporada {{season}}",
+    "SetBonusesDesc": "Required set bonuses",
     "Share": {
       "Copied": "Link de compartilhamento copiado para a área de transferência",
       "CopyButton": "Copiar Link",

@@ -673,7 +673,9 @@
       "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
       "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
       "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
-      "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods"
+      "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods",
+      "SetBonuses": "You have chosen some set bonuses, maybe you don't have the right items to use them.",
+      "RemoveSetBonuses": "Consider removing some set bonuses"
     },
     "NoExotic": "No Exotic",
     "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",

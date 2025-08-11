@@ -239,6 +239,7 @@
     "HasNotes": "顯示已有備註的物品",
     "HasOrnament": "顯示已應用皮膚的物品",
     "HasShader": "顯示已應用著色器的物品",
+    "Holofoil": "Shows holofoil weapons.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout 顯示任何游戲内配裝包含的物品。",
     "InInventory": "Shows items that you have at least one copy of in your inventory. Only really useful in the Vendors and Records screens.",
@@ -295,7 +296,6 @@
     "RetiredPerk": "显示带有已无法获取的特性的武器。",
     "SearchPrompt": "搜索可用的過濾器命令",
     "Season": "按照物品推出季度顯示.",
-    "Shiny": "Shows BRAVE weapons with a limited-edition ornament.",
     "StackFull": "顯示堆疊已滿的物品 (强化覈心、奇异硬幣、槍匠資料等)",
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
@@ -305,6 +305,7 @@
     "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats. Each custom stats also has its own search term, shown in the Custom Stats settings.",
     "StatsLoadout": "針對特定屬性, 篩選出最大化數值的一系列裝備",
     "StatsMax": "針對特定屬性, 篩選出最大化數值的一系列裝備. 包括那些最高屬性值物品",
+    "StatsOrdinal": "Finds armor 3.0 with the specified stat focusing.",
     "Tags": {
       "Tag": "顯示具有特定標籤的物品。",
       "Tagged": "顯示具有任何標籤的物品。"
@@ -314,6 +315,7 @@
     "Tracked": "根據追蹤狀態顯示任務/賞金.",
     "Transferable": "可在角色間移動的物品.",
     "Trashlist": "顯示你願望單中廢棄列表物品",
+    "TunedStat": "Shows items with tuning mods for the specified stat.",
     "Unascended": "顯示可提升光等但尚未提升的物品。",
     "Undo": "撤銷",
     "UnlockAllFailed": "鎖定物品失敗",
@@ -452,8 +454,7 @@
   },
   "Item": {
     "SetBonus": {
-      "2Piece": "2 Piece",
-      "4Piece": "4 Piece"
+      "NPiece_other": "{{count}} Piece"
     },
     "ThumbsDown": "Thumbs Down",
     "ThumbsUp": "Thumbs Up"
@@ -511,6 +512,7 @@
     "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "進階選項",
     "ChooseAMod": "選擇你的模組",
+    "ChooseASetBonus": "Choose your set bonuses",
     "ChooseAnExotic": "選擇你的異域裝備",
     "ClearLocked": "清除鎖定",
     "ContainsVendorItems": "該配裝包含商販物品.",
@@ -564,11 +566,13 @@
     "RemoveStack": "Remove a copy of this mod",
     "Scaled": "縮放",
     "SearchAMod": "搜索模組或描述",
+    "SearchASetBonus": "",
     "SearchAnExotic": "搜索異域裝備或描述",
     "SelectExotic": "選擇異域裝備",
     "SelectMods": "選擇模組",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 個活動模組",
+    "SelectSetBonus": "Select Set Bonuses",
     "SelectSubclassOptions": "自定義子職業",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
@@ -647,7 +651,7 @@
       "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "Full masterwork stat bonuses, assumed energy level 10.",
+      "Masterworked": "Full masterwork stat bonuses, assumed energy level at least 10.",
       "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自動添加屬性模組",
@@ -707,6 +711,7 @@
     "PinnedItems": "Pinned Items",
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "保存為",
+    "SetBonus": "Set Bonuses",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 個組合。",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
@@ -875,6 +880,7 @@
     },
     "SaveLoadout": "保存配裝",
     "Season": "第 {{season}} 賽季",
+    "SetBonusesDesc": "Required set bonuses",
     "Share": {
       "Copied": "將配装連結複製到剪貼板",
       "CopyButton": "複製連結",
