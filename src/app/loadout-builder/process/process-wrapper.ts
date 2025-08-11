@@ -193,7 +193,7 @@ const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
  * said group. All other grouped items will be available by the swap icon in the UI.
  *
  * An important property of this grouping is that all items within a single group must be interchangeable
- * for any possible assignment of mods or other LO .
+ * for any possible assignment of mods or other LO parameters.
  *
  * Creating a group for every item is trivially correct but inefficient. Erroneously forgetting to include a bit
  * of information in the grouping key that is relevant to the web worker results in the worker failing to discover
