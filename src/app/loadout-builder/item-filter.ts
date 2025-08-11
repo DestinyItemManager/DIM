@@ -36,6 +36,7 @@ export interface FilterInfo {
       totalConsidered: number;
       cantFitMods: number;
       finalValid: number;
+      removedStrictlyWorse: number;
       removedBySearchFilter: number;
     };
   };
@@ -82,6 +83,7 @@ export function filterItems({
     cantFitMods: 0,
     finalValid: 0,
     removedBySearchFilter: 0,
+    removedStrictlyWorse: 0,
   };
 
   const filterInfo: FilterInfo = {
@@ -218,6 +220,7 @@ export function filterItems({
       : 0;
     filterInfo.searchQueryEffective ||= removedBySearchFilter > 0;
 
+    let removedStrictlyWorse = 0;
     if (finalFilteredItems.length > 1) {
       // One last pass - remove items that are strictly worse than others. This
       // uses the same general logic as the `is:statlower` search filter, but
@@ -254,6 +257,7 @@ export function filterItems({
         getStats,
       );
       finalFilteredItems = finalFilteredItems.filter((item) => !strictlyWorseItemIds.has(item.id));
+      removedStrictlyWorse = strictlyWorseItemIds.size;
     }
 
     filteredItems[bucket] = finalFilteredItems;
@@ -261,6 +265,7 @@ export function filterItems({
       totalConsidered: firstPassFilteredItems.length,
       cantFitMods: withoutExcluded.length - itemsThatFitMods.length,
       removedBySearchFilter,
+      removedStrictlyWorse,
       finalValid: finalFilteredItems.length,
     };
   }
