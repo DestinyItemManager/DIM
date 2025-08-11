@@ -1,5 +1,7 @@
 ## Next
 
+## 8.85.0 <span class="changelog-date">(2025-08-10)</span>
+
 * Improved the responsiveness of draggable lists (Loadout Optimizer stat constraints, inventory sort order, etc.)
 * Fixed an issue where the loadout analysis on the Loadouts page treated Armor 2.0 and Armor 3.0 versions of exotics separately.
 * BETA ONLY: The new-item dot, `is:new` search, and new-item Organizer column have been removed. You can use the Item Feed to keep track of new drops.
