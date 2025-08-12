@@ -253,20 +253,25 @@ export function checkIfIsDupe(
  * there exists another item with strictly better stats (i.e. better in at least
  * one stat and not worse in any stat).
  */
-function computeStatDupeLower(
+export function computeStatDupeLower(
   allItems: DimItem[],
   defs: D2ManifestDefinitions | undefined,
   relevantStatHashes: number[] = armorStats,
+  getArmorStats?: (item: DimItem) => number[],
 ) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
 
-  // Group by class and armor type. Also, compare exotics with each other, not the general pool.
-  const grouped = Object.values(
-    Object.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`),
-  );
-
-  const dupes = new Set<string>();
+  const getStats =
+    getArmorStats ??
+    ((item: DimItem) => {
+      // Always compare items as if they were fully masterworked
+      const masterworkedStatValues = calculateAssumedMasterworkStats(item, {
+        assumeArmorMasterwork: AssumeArmorMasterwork.All,
+        minItemEnergy: 1,
+      });
+      return relevantStatHashes.map((statHash) => masterworkedStatValues[statHash] ?? 0);
+    });
 
   // A mapping from an item to a list of all of its stat configurations
   // (Artifice armor can have multiple). This is just a cache to prevent
@@ -274,16 +279,7 @@ function computeStatDupeLower(
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power) {
-      // Always compare items as if they were fully masterworked
-      const masterworkedStatValues = calculateAssumedMasterworkStats(item, {
-        assumeArmorMasterwork: AssumeArmorMasterwork.All,
-        minItemEnergy: 1,
-      });
-
-      // Start with the stats before any artifice/tuning mods
-      const statValues = relevantStatHashes.map(
-        (statHash) => masterworkedStatValues[statHash] ?? 0,
-      );
+      const statValues = getStats(item);
       let statMixes = [statValues];
 
       // Add in tuning mod variations if applicable
@@ -292,23 +288,30 @@ function computeStatDupeLower(
         const tuningStatIndex = relevantStatHashes.indexOf(tuningStat);
         if (tuningStatIndex >= 0) {
           // Get the indexes of the three lowest stats, which will be boosted by the tuning mod
-          // to +1.
-          const worstThreeStatIndexes = [...statValues.entries()]
+          // to +1. This assumes that the first stat values in statValues are armor stats
+          // in the same order as relevantStatHashes.
+          const worstThreeStatIndexes = [
+            ...statValues.splice(0, relevantStatHashes.length).entries(),
+          ]
             .sort((a, b) => a[1] - b[1])
             .splice(0, 3)
             .map((e) => e[0]);
-
-          statMixes = relevantStatHashes.map((statHash, i) =>
-            statHash === tuningStat
-              ? // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
-                statValues.map((v, vi) => (worstThreeStatIndexes.includes(vi) ? v + 1 : v))
-              : // Apply the tuning mod that sacrifices one stat for +5 to the tuning stat
-                statValues.map((v, vi) =>
-                  // We always boost the tuning stat, but each other stat is boosted
-                  // only if it is the one being sacrificed
-                  vi === tuningStatIndex ? v + 5 : vi === i ? v - 5 : v,
-                ),
-          );
+          statMixes = relevantStatHashes.map((statHash, i) => {
+            const modifiedStats = [...statValues];
+            for (let vi = 0; vi < relevantStatHashes.length; vi++) {
+              const v = statValues[vi];
+              if (statHash === tuningStat) {
+                // Apply the balanced tuning mod which gives +1 to the three zero-base stats.
+                modifiedStats[vi] = worstThreeStatIndexes.includes(vi) ? v + 1 : v;
+              } else {
+                // Apply the tuning mod that sacrifices one stat for +5 to the
+                // tuning stat. We always boost the tuning stat, but each other
+                // stat is boosted only if it is the one being sacrificed
+                modifiedStats[vi] = vi === tuningStatIndex ? v + 5 : vi === i ? v - 5 : v;
+              }
+            }
+            return modifiedStats;
+          });
         }
       } else if (isArtifice(item)) {
         // We assume armor cannot be both artifice and tunable.
@@ -326,7 +329,12 @@ function computeStatDupeLower(
     }
   }
 
-  // For each group of items that should be compared against each other
+  const dupes = new Set<string>();
+
+  // Group by class and armor type. Also, compare exotics with each other, not the general pool.
+  const grouped = Object.values(
+    Object.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`),
+  );
   for (const group of grouped) {
     const statSet = new StatsSet<DimItem>();
     // Add a mapping from stats => item to the statsSet for each item in the group

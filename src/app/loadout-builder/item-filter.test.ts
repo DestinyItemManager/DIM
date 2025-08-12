@@ -5,7 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
-import { count } from 'app/utils/collections';
+import { count, sumBy } from 'app/utils/collections';
 import { stubFalse, stubTrue } from 'app/utils/functions';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -22,6 +22,12 @@ import {
   LOCKED_EXOTIC_NO_EXOTIC,
   loDefaultArmorEnergyRules,
 } from './types';
+
+function expectItemCount(filterInfo: FilterInfo, expectedCount: number) {
+  expect(
+    sumBy(Object.values(filterInfo.perBucketStats), (s) => s.finalValid + s.removedStrictlyWorse),
+  ).toBe(expectedCount);
+}
 
 describe('loadout-builder item-filter', () => {
   let defs: D2ManifestDefinitions;
@@ -73,7 +79,8 @@ describe('loadout-builder item-filter', () => {
       const filteredNum = filteredItems[bucketHash].length;
       const removedNum =
         filterInfo.perBucketStats[bucketHash].cantFitMods +
-        filterInfo.perBucketStats[bucketHash].removedBySearchFilter;
+        filterInfo.perBucketStats[bucketHash].removedBySearchFilter +
+        filterInfo.perBucketStats[bucketHash].removedStrictlyWorse;
       const numConsidered = filterInfo.perBucketStats[bucketHash].totalConsidered;
 
       expect(numConsidered).toBe(originalNum);
@@ -88,7 +95,8 @@ describe('loadout-builder item-filter', () => {
       const filteredNum = filteredItems[bucketHash].length;
       const removedNum =
         filterInfo.perBucketStats[bucketHash].cantFitMods +
-        filterInfo.perBucketStats[bucketHash].removedBySearchFilter;
+        filterInfo.perBucketStats[bucketHash].removedBySearchFilter +
+        filterInfo.perBucketStats[bucketHash].removedStrictlyWorse;
       const numConsidered = filterInfo.perBucketStats[bucketHash].totalConsidered;
 
       expect(numConsidered - removedNum).toBe(filteredNum);
@@ -96,7 +104,7 @@ describe('loadout-builder item-filter', () => {
   }
 
   it('filters nothing out when no filters specified', () => {
-    const [filteredItems] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -104,7 +112,7 @@ describe('loadout-builder item-filter', () => {
       unassignedMods: noMods.unassignedMods,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
   });
 
   it('filters out items with insufficient energy capacity', () => {
@@ -156,7 +164,7 @@ describe('loadout-builder item-filter', () => {
   });
 
   it('filters nothing out when any exotic', () => {
-    const [filteredItems] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -165,7 +173,7 @@ describe('loadout-builder item-filter', () => {
       lockedExoticHash: LOCKED_EXOTIC_ANY_EXOTIC,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
   });
 
   it('removes exotics when no exotic', () => {
@@ -184,7 +192,7 @@ describe('loadout-builder item-filter', () => {
   });
 
   it('filters nothing out when infeasible filter', () => {
-    const [filteredItems, filterInfo] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -193,12 +201,12 @@ describe('loadout-builder item-filter', () => {
       searchFilter: stubFalse,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
     expect(filterInfo.searchQueryEffective).toBe(false);
   });
 
   it('ignores filter for certain slots', () => {
-    const [filteredItems, filterInfo] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -207,7 +215,7 @@ describe('loadout-builder item-filter', () => {
       searchFilter: (item) => item.bucket.hash === BucketHashes.Helmet,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
     expect(filterInfo.searchQueryEffective).toBe(false);
   });
 
