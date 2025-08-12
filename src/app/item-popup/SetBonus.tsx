@@ -108,7 +108,7 @@ export function SetPerkIcon({
   );
 }
 
-function ContributingArmor({
+export function ContributingArmor({
   setBonus,
   store,
   showEquipped,
