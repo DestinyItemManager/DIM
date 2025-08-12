@@ -79,6 +79,22 @@ export const storesLoadedSelector = (state: RootState) => storesSelector(state).
 /** The current (last played) character */
 export const currentStoreSelector = (state: RootState) => getCurrentStore(storesSelector(state));
 
+export const singleStoreSelector = currySelector(
+  createSelector(
+    storesSelector,
+    (_state: RootState, storeId: string) => storeId,
+    (stores, storeId) => stores.find((s) => s.id === storeId),
+  ),
+);
+
+/** All items equipped to a specific DimStore */
+export const equippedItemsSelector = currySelector(
+  createSelector(
+    (state: RootState, storeId: string) => singleStoreSelector(storeId)(state),
+    (store) => store?.items.filter((i) => i.equipped) ?? emptyArray<DimItem>(),
+  ),
+);
+
 /** The vault */
 export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
 

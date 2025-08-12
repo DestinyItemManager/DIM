@@ -1,5 +1,6 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { singleStoreSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { filterMap, uniqBy } from 'app/utils/collections';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
@@ -32,6 +33,7 @@ export default function ItemSocketsGeneral({
 }) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
+  const store = useSelector(singleStoreSelector(item.owner));
 
   if (!item.sockets || !defs) {
     return null;
@@ -86,7 +88,7 @@ export default function ItemSocketsGeneral({
       {intrinsicRows}
       {!minimal && item.setBonus && (
         <div className="item-details">
-          <SetBonus setBonus={item.setBonus} />
+          <SetBonus setBonus={item.setBonus} store={store} />
         </div>
       )}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
