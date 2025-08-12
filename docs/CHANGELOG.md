@@ -1,5 +1,7 @@
 ## Next
 
+* Added Activatedness information to Set Bonuses on armor held by a character.
+
 ## 8.85.0 <span class="changelog-date">(2025-08-10)</span>
 
 * Improved the responsiveness of draggable lists (Loadout Optimizer stat constraints, inventory sort order, etc.)
