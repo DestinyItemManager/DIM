@@ -87,5 +87,9 @@
 
 .setBonuses {
   composes: flexRow from '../dim-ui/common.m.scss';
+  flex-direction: row-reverse;
   gap: 4px;
+  & > div {
+    display: flex;
+  }
 }
