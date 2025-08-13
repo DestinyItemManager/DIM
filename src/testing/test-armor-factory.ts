@@ -94,7 +94,7 @@ export function createTestArmor(
   {
     bucketHash = BucketHashes.Helmet,
     classType = DestinyClass.Hunter,
-    tier = 1,
+    tier,
     isArtifice = false,
     masterworked = false,
     isExotic = false,
@@ -104,6 +104,11 @@ export function createTestArmor(
 ): DimItem {
   const profileResponse = getTestProfile();
   const buckets = getBuckets(defs);
+
+  if (isArtifice && tier === undefined) {
+    tier = 0; // Artifice armor must be tier 0
+  }
+  tier ??= 1;
 
   // Validation: artifice armor must be tier 0
   if (isArtifice && tier !== 0) {
@@ -148,9 +153,7 @@ export function createTestArmor(
   }
 
   // Override stats after creation if custom stats were provided
-  if (stats) {
-    overrideArmorStats(item, armorStatValues);
-  }
+  overrideArmorStats(item, armorStatValues);
 
   return item;
 }
