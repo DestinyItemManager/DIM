@@ -218,3 +218,6 @@ export function setupi18n() {
     },
   });
 }
+
+// Export test armor factory functions
+export { createTestArmor, type CreateTestArmorOptions } from './test-armor-factory';

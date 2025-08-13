@@ -1,0 +1,366 @@
+import { getBuckets } from 'app/destiny2/d2-buckets';
+import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { armorStats, ARTIFICE_PERK_HASH } from 'app/search/d2-known-values';
+import {
+  DestinyClass,
+  DestinyItemComponentSetOfint64,
+  DestinyItemSocketState,
+} from 'bungie-api-ts/destiny2';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { DimItem } from '../app/inventory/item-types';
+import { getTestDefinitions, getTestProfile } from './test-utils';
+
+/**
+ * Options for creating test armor items.
+ */
+export interface CreateTestArmorOptions {
+  /** Which armor slot (default: Helmet) */
+  bucketHash?: BucketHashes;
+  /** Which class the armor is for (default: Hunter) */
+  classType?: DestinyClass;
+  /** Stats specification - either object form or array form */
+  stats?:
+    | { [statHash: number]: number } // Object form: { [StatHashes.Health]: 15, ... }
+    | number[]; // Array form: [health, melee, grenade, super, class, weapons]
+  /** Tier level 0-5 (default: 1) */
+  tier?: number;
+  /** Has artifice socket (default: false, requires tier 0) */
+  isArtifice?: boolean;
+  /** Masterwork status (default: false) */
+  masterworked?: boolean;
+  /** Exotic vs legendary (default: false) */
+  isExotic?: boolean;
+  /** Specific item hash (auto-selected if not provided) */
+  itemHash?: number;
+}
+
+/**
+ * Main factory function for creating test armor items.
+ * Uses the actual manifest and item creation functions for realistic behavior.
+ */
+export async function createTestArmor(options: CreateTestArmorOptions = {}): Promise<DimItem> {
+  const defs = await getTestDefinitions();
+  const profileResponse = getTestProfile();
+  const buckets = getBuckets(defs);
+
+  // Apply smart defaults
+  const {
+    bucketHash = BucketHashes.Helmet,
+    classType = DestinyClass.Hunter,
+    tier = 1,
+    isArtifice = false,
+    masterworked = false,
+    isExotic = false,
+    itemHash,
+    stats,
+  } = options;
+
+  // Validation: artifice armor must be tier 0
+  if (isArtifice && tier !== 0) {
+    throw new Error('Artifice armor must be tier 0');
+  }
+
+  // Get appropriate item hash if not provided
+  const selectedItemHash = itemHash || selectArmorItemHash(defs, bucketHash, classType, isExotic);
+
+  // Generate stats specification
+  const armorStatValues = generateStatValues(stats);
+
+  // Generate consistent instance ID
+  const instanceId = generateInstanceId();
+
+  // Create the base item context with custom socket configuration
+  const context: ItemCreationContext = {
+    defs,
+    buckets,
+    profileResponse,
+    customStats: [],
+    itemComponents: await createCustomItemComponents(
+      selectedItemHash,
+      armorStatValues,
+      instanceId,
+      {
+        tier,
+        isArtifice,
+        masterworked,
+      },
+    ),
+  };
+
+  // Create the item using DIM's existing factory
+  const item = makeFakeItem(context, selectedItemHash, {
+    itemInstanceId: instanceId,
+  });
+
+  if (!item) {
+    throw new Error('Failed to create armor item');
+  }
+
+  return item;
+}
+
+/**
+ * Select an appropriate armor item hash based on bucket, class, and exotic status.
+ */
+function selectArmorItemHash(
+  defs: ReturnType<typeof getTestDefinitions>,
+  bucketHash: BucketHashes,
+  classType: DestinyClass,
+  isExotic: boolean,
+): number {
+  // Find armor items that match our criteria
+  const allItems = Object.values(defs.InventoryItem.getAll());
+  const candidates = allItems.filter((item) => {
+    if (!item.inventory?.bucketTypeHash || item.inventory.bucketTypeHash !== bucketHash) {
+      return false;
+    }
+
+    // Check class compatibility - allow Unknown (universal) or matching class
+    if (item.classType !== DestinyClass.Unknown && item.classType !== classType) {
+      return false;
+    }
+
+    const isItemExotic = item.inventory?.tierType === 6; // Exotic tier
+    if (isExotic !== isItemExotic) {
+      return false;
+    }
+
+    // Must be armor
+    if (!item.itemCategoryHashes?.includes(ItemCategoryHashes.Armor)) {
+      return false;
+    }
+
+    // Exclude classified items
+    if (item.redacted) {
+      return false;
+    }
+
+    return true;
+  });
+
+  if (candidates.length === 0) {
+    throw new Error(
+      `No suitable armor found for bucket ${bucketHash}, class ${classType}, exotic: ${isExotic}`,
+    );
+  }
+
+  // Prefer non-sunset items (power cap > 1350) if available
+  const nonSunsetCandidates = candidates.filter(
+    (item) => !item.quality?.currentVersion || item.quality.currentVersion >= 4,
+  );
+
+  // Return the first suitable candidate
+  return (nonSunsetCandidates.length > 0 ? nonSunsetCandidates[0] : candidates[0]).hash;
+}
+
+/**
+ * Generate stat values from the flexible input format.
+ */
+function generateStatValues(stats?: { [statHash: number]: number } | number[]): {
+  [statHash: number]: number;
+} {
+  if (!stats) {
+    // Generate realistic random stats totaling 60-70
+    const total = Math.floor(Math.random() * 11) + 60; // 60-70
+    const values = distributeStatPoints(total);
+    return {
+      [StatHashes.Health]: values[0],
+      [StatHashes.Melee]: values[1],
+      [StatHashes.Grenade]: values[2],
+      [StatHashes.Super]: values[3],
+      [StatHashes.Class]: values[4],
+      [StatHashes.Weapons]: values[5],
+    };
+  }
+
+  if (Array.isArray(stats)) {
+    if (stats.length !== 6) {
+      throw new Error(
+        'Stats array must have exactly 6 values: [health, melee, grenade, super, class, weapons]',
+      );
+    }
+    return {
+      [StatHashes.Health]: stats[0],
+      [StatHashes.Melee]: stats[1],
+      [StatHashes.Grenade]: stats[2],
+      [StatHashes.Super]: stats[3],
+      [StatHashes.Class]: stats[4],
+      [StatHashes.Weapons]: stats[5],
+    };
+  }
+
+  // Object format - validate it has armor stats
+  for (const statHash of armorStats) {
+    if (!(statHash in stats)) {
+      throw new Error(`Missing required armor stat: ${statHash}`);
+    }
+  }
+
+  return stats;
+}
+
+/**
+ * Distribute stat points randomly but realistically across 6 stats.
+ */
+function distributeStatPoints(total: number): number[] {
+  const values = [0, 0, 0, 0, 0, 0];
+  let remaining = total;
+
+  // Distribute points randomly but ensure each stat gets at least 2
+  for (let i = 0; i < 6; i++) {
+    values[i] = 2;
+    remaining -= 2;
+  }
+
+  // Distribute remaining points
+  while (remaining > 0) {
+    const index = Math.floor(Math.random() * 6);
+    const add = Math.min(remaining, Math.floor(Math.random() * 5) + 1);
+    values[index] += add;
+    remaining -= add;
+  }
+
+  return values;
+}
+
+/**
+ * Create custom item components that include our desired socket configuration.
+ */
+async function createCustomItemComponents(
+  itemHash: number,
+  statValues: { [statHash: number]: number },
+  instanceId: string,
+  options: {
+    tier: number;
+    isArtifice: boolean;
+    masterworked: boolean;
+  },
+): Promise<Partial<DestinyItemComponentSetOfint64>> {
+  const defs = await getTestDefinitions();
+  const itemDef = defs.InventoryItem.get(itemHash);
+
+  // Basic stats based on our desired values
+  const stats = Object.fromEntries(
+    Object.entries(statValues).map(([statHash, value]) => [
+      statHash,
+      { statHash: parseInt(statHash), value },
+    ]),
+  );
+
+  const components: Partial<DestinyItemComponentSetOfint64> = {
+    instances: {
+      data: {
+        [instanceId]: {
+          primaryStat: {
+            statHash: StatHashes.Defense,
+            value: 750 + options.tier * 5, // Higher tier = slightly higher defense
+          },
+          energy: {
+            energyCapacity: options.masterworked ? 10 : Math.max(1, options.tier * 2),
+            energyUsed: 0,
+            energyType: Math.floor(Math.random() * 3) + 1, // Random energy type (1-3)
+          },
+          gearTier: options.tier, // Set the gear tier
+        },
+      },
+    },
+    stats: {
+      data: {
+        [instanceId]: { stats },
+      },
+    },
+  };
+
+  // Add socket configurations if we have specific requirements
+  if (options.isArtifice || options.tier > 0 || options.masterworked) {
+    components.sockets = {
+      data: {
+        [instanceId]: {
+          sockets: await createSocketConfiguration(itemDef, options),
+        },
+      },
+    };
+  }
+
+  return components;
+}
+
+/**
+ * Create socket configuration for artifice, tier, and masterwork features.
+ */
+async function createSocketConfiguration(
+  itemDef: any,
+  options: {
+    tier: number;
+    isArtifice: boolean;
+    masterworked: boolean;
+  },
+): Promise<DestinyItemSocketState[]> {
+  const defs = await getTestDefinitions();
+  const sockets: DestinyItemSocketState[] = [];
+
+  // Start with base sockets from item definition
+  if (itemDef.sockets?.socketEntries) {
+    for (let i = 0; i < itemDef.sockets.socketEntries.length; i++) {
+      const socketEntry = itemDef.sockets.socketEntries[i];
+      const socketType = defs.SocketType.get(socketEntry.socketTypeHash);
+
+      sockets.push({
+        plugHash:
+          socketEntry.singleInitialItemHash ||
+          socketEntry.reusablePlugItems?.[0]?.plugItemHash ||
+          0,
+        isEnabled: true,
+        isVisible: true,
+        enableFailIndexes: [],
+      });
+    }
+  }
+
+  // Add artifice socket if requested
+  if (options.isArtifice) {
+    sockets.push({
+      plugHash: ARTIFICE_PERK_HASH,
+      isEnabled: true,
+      isVisible: true,
+      enableFailIndexes: [],
+    });
+  }
+
+  // Add tier-specific sockets (tuning socket for tier 5)
+  if (options.tier === 5) {
+    // Add a tuning socket - this is a simplified implementation
+    sockets.push({
+      plugHash: 3122197216, // Balanced Tuning plug hash from known values
+      isEnabled: true,
+      isVisible: true,
+      enableFailIndexes: [],
+    });
+  }
+
+  // Configure masterwork socket if needed
+  if (options.masterworked && sockets.length > 0) {
+    // Find what might be a masterwork socket and configure it
+    // This is simplified - in reality we'd need to find the right socket type
+    const lastSocketIndex = sockets.length - 1;
+    if (lastSocketIndex >= 0) {
+      // For armor, masterwork typically provides +2 to all stats
+      // The actual implementation would use proper masterwork plug hashes
+      sockets[lastSocketIndex] = {
+        ...sockets[lastSocketIndex],
+        plugHash: sockets[lastSocketIndex].plugHash || 0, // Keep existing or use default
+        isEnabled: true,
+        isVisible: true,
+      };
+    }
+  }
+
+  return sockets;
+}
+
+/**
+ * Generate a unique instance ID for test items.
+ */
+function generateInstanceId(): string {
+  return `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
