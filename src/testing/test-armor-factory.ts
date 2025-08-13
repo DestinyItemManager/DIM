@@ -1,13 +1,18 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { armorStats, ARTIFICE_PERK_HASH } from 'app/search/d2-known-values';
 import {
+  ComponentPrivacySetting,
   DestinyClass,
+  DestinyInventoryItemDefinition,
   DestinyItemComponentSetOfint64,
+  DestinyItemInstanceComponent,
   DestinyItemSocketState,
+  DestinyItemStatsComponent,
 } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import { DimItem } from '../app/inventory/item-types';
+import { DimItem, DimStat } from '../app/inventory/item-types';
 import { getTestDefinitions, getTestProfile } from './test-utils';
 
 /**
@@ -32,6 +37,49 @@ export interface CreateTestArmorOptions {
   isExotic?: boolean;
   /** Specific item hash (auto-selected if not provided) */
   itemHash?: number;
+}
+
+/**
+ * Override armor stats on a DIM item after creation.
+ * This is necessary because DIM calculates stats from sockets and base item data,
+ * so we need to override the final calculated stats with our custom values.
+ */
+function overrideArmorStats(item: DimItem, customStatValues: { [statHash: number]: number }): void {
+  if (!item.stats) {
+    return;
+  }
+
+  // Create new stat objects with our custom values
+  const newStats: DimStat[] = armorStats.map((statHash) => {
+    const existingStat = item.stats?.find((s) => s.statHash === statHash);
+    const customValue = customStatValues[statHash] || 0;
+
+    return {
+      statHash,
+      displayProperties: existingStat?.displayProperties || {
+        name: `Stat ${statHash}`,
+        description: '',
+        icon: '',
+        hasIcon: false,
+        iconSequences: [],
+        highResIcon: '',
+      },
+      sort: existingStat?.sort || 0,
+      base: customValue,
+      value: customValue,
+      maximumValue: existingStat?.maximumValue || 30,
+      bar: existingStat?.bar ?? true,
+      smallerIsBetter: existingStat?.smallerIsBetter ?? false,
+      investmentValue: customValue,
+      additive: true, // Armor stats are additive
+    };
+  });
+
+  // Preserve any non-armor stats (like defense)
+  const nonArmorStats = item.stats.filter((stat) => !armorStats.includes(stat.statHash));
+
+  // Replace the item's stats with our custom stats plus any non-armor stats
+  item.stats = [...newStats, ...nonArmorStats];
 }
 
 /**
@@ -61,7 +109,8 @@ export async function createTestArmor(options: CreateTestArmorOptions = {}): Pro
   }
 
   // Get appropriate item hash if not provided
-  const selectedItemHash = itemHash || selectArmorItemHash(defs, bucketHash, classType, isExotic);
+  const selectedItemHash =
+    itemHash || (await selectArmorItemHash(defs, bucketHash, classType, isExotic));
 
   // Generate stats specification
   const armorStatValues = generateStatValues(stats);
@@ -96,21 +145,26 @@ export async function createTestArmor(options: CreateTestArmorOptions = {}): Pro
     throw new Error('Failed to create armor item');
   }
 
+  // Override stats after creation if custom stats were provided
+  if (stats) {
+    overrideArmorStats(item, armorStatValues);
+  }
+
   return item;
 }
 
 /**
  * Select an appropriate armor item hash based on bucket, class, and exotic status.
  */
-function selectArmorItemHash(
-  defs: ReturnType<typeof getTestDefinitions>,
+async function selectArmorItemHash(
+  defs: D2ManifestDefinitions,
   bucketHash: BucketHashes,
   classType: DestinyClass,
   isExotic: boolean,
-): number {
+): Promise<number> {
   // Find armor items that match our criteria
   const allItems = Object.values(defs.InventoryItem.getAll());
-  const candidates = allItems.filter((item) => {
+  const candidates = allItems.filter((item: DestinyInventoryItemDefinition) => {
     if (!item.inventory?.bucketTypeHash || item.inventory.bucketTypeHash !== bucketHash) {
       return false;
     }
@@ -247,38 +301,67 @@ async function createCustomItemComponents(
     ]),
   );
 
+  // Create proper instance component with all required fields
+  const instanceComponent: DestinyItemInstanceComponent & { gearTier?: number } = {
+    damageType: 0,
+    damageTypeHash: 0, // Fix: use 0 instead of null
+    primaryStat: {
+      statHash: StatHashes.Defense,
+      value: 750 + options.tier * 5, // Higher tier = slightly higher defense
+    },
+    itemLevel: 1,
+    quality: 0,
+    isEquipped: false,
+    canEquip: true,
+    equipRequiredLevel: 0,
+    unlockHashesRequiredToEquip: [],
+    cannotEquipReason: 0,
+    energy: {
+      energyCapacity: options.masterworked ? 10 : Math.max(1, options.tier * 2),
+      energyUsed: 0,
+      energyType: Math.floor(Math.random() * 3) + 1, // Random energy type (1-3)
+      energyTypeHash: 0, // Required field
+      energyUnused: 0, // Required field
+    },
+    gearTier: options.tier, // Set the gear tier for proper tier calculation
+  };
+
+  // Create stats component with all required fields
+  const statsComponent: DestinyItemStatsComponent = {
+    stats,
+  };
+
   const components: Partial<DestinyItemComponentSetOfint64> = {
     instances: {
       data: {
-        [instanceId]: {
-          primaryStat: {
-            statHash: StatHashes.Defense,
-            value: 750 + options.tier * 5, // Higher tier = slightly higher defense
-          },
-          energy: {
-            energyCapacity: options.masterworked ? 10 : Math.max(1, options.tier * 2),
-            energyUsed: 0,
-            energyType: Math.floor(Math.random() * 3) + 1, // Random energy type (1-3)
-          },
-          gearTier: options.tier, // Set the gear tier
-        },
+        [instanceId]: instanceComponent,
       },
+      privacy: ComponentPrivacySetting.Public,
     },
     stats: {
       data: {
-        [instanceId]: { stats },
+        [instanceId]: statsComponent,
       },
+      privacy: ComponentPrivacySetting.Public,
     },
   };
 
   // Add socket configurations if we have specific requirements
   if (options.isArtifice || options.tier > 0 || options.masterworked) {
-    components.sockets = {
+    const socketsData = await createSocketConfiguration(itemDef, options);
+    const socketsComponent = {
       data: {
         [instanceId]: {
-          sockets: await createSocketConfiguration(itemDef, options),
+          sockets: socketsData,
         },
       },
+      privacy: ComponentPrivacySetting.Public,
+    };
+
+    // Create a new components object with sockets
+    return {
+      ...components,
+      sockets: socketsComponent,
     };
   }
 
@@ -289,21 +372,21 @@ async function createCustomItemComponents(
  * Create socket configuration for artifice, tier, and masterwork features.
  */
 async function createSocketConfiguration(
-  itemDef: any,
+  itemDef: DestinyInventoryItemDefinition,
   options: {
     tier: number;
     isArtifice: boolean;
     masterworked: boolean;
   },
 ): Promise<DestinyItemSocketState[]> {
-  const defs = await getTestDefinitions();
   const sockets: DestinyItemSocketState[] = [];
 
   // Start with base sockets from item definition
   if (itemDef.sockets?.socketEntries) {
     for (let i = 0; i < itemDef.sockets.socketEntries.length; i++) {
       const socketEntry = itemDef.sockets.socketEntries[i];
-      const socketType = defs.SocketType.get(socketEntry.socketTypeHash);
+      // Remove unused socketType variable to fix warning
+      // const socketType = defs.SocketType.get(socketEntry.socketTypeHash);
 
       sockets.push({
         plugHash:
@@ -362,5 +445,5 @@ async function createSocketConfiguration(
  * Generate a unique instance ID for test items.
  */
 function generateInstanceId(): string {
-  return `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `test_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }

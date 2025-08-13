@@ -104,14 +104,29 @@ describe('Test Armor Factory', () => {
       const armor = await createTestArmor();
 
       expect(armor.stats).toBeDefined();
-      expect(armor.stats?.length).toBe(6);
 
-      const totalStats = armor.stats!.reduce((sum, stat) => sum + stat.value, 0);
+      // Check that we have all 6 armor stats (may have additional stats like defense)
+      const armorStatHashes = [
+        StatHashes.Health,
+        StatHashes.Melee,
+        StatHashes.Grenade,
+        StatHashes.Super,
+        StatHashes.Class,
+        StatHashes.Weapons,
+      ];
+
+      for (const statHash of armorStatHashes) {
+        expect(armor.stats?.find((s) => s.statHash === statHash)).toBeDefined();
+      }
+
+      // Calculate total only for armor stats
+      const armorStatsOnly = armor.stats!.filter((stat) => armorStatHashes.includes(stat.statHash));
+      const totalStats = armorStatsOnly.reduce((sum, stat) => sum + stat.value, 0);
       expect(totalStats).toBeGreaterThanOrEqual(60);
       expect(totalStats).toBeLessThanOrEqual(70);
 
-      // Each stat should be at least 2
-      for (const stat of armor.stats!) {
+      // Each armor stat should be at least 2
+      for (const stat of armorStatsOnly) {
         expect(stat.value).toBeGreaterThanOrEqual(2);
       }
     });
