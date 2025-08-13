@@ -1,18 +1,23 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { armorStats } from 'app/search/d2-known-values';
+import { sumBy } from 'app/utils/collections';
 import { isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { createTestArmor } from './test-armor-factory';
-import { setupi18n } from './test-utils';
+import { getTestDefinitions, setupi18n } from './test-utils';
 
 // Set up i18n for tests
-beforeAll(() => {
+let defs: D2ManifestDefinitions | undefined;
+beforeAll(async () => {
   setupi18n();
+  defs = await getTestDefinitions();
 });
 
 describe('Test Armor Factory', () => {
   describe('Basic Functionality', () => {
     it('should create armor with default options', async () => {
-      const armor = await createTestArmor();
+      const armor = createTestArmor(defs!);
 
       expect(armor).toBeDefined();
       expect(armor.bucket.hash).toBe(BucketHashes.Helmet);
@@ -36,11 +41,11 @@ describe('Test Armor Factory', () => {
     });
 
     it('should create armor for different buckets', async () => {
-      const helmet = await createTestArmor({ bucketHash: BucketHashes.Helmet });
-      const gauntlets = await createTestArmor({ bucketHash: BucketHashes.Gauntlets });
-      const chest = await createTestArmor({ bucketHash: BucketHashes.ChestArmor });
-      const legs = await createTestArmor({ bucketHash: BucketHashes.LegArmor });
-      const classItem = await createTestArmor({ bucketHash: BucketHashes.ClassArmor });
+      const helmet = createTestArmor(defs!, { bucketHash: BucketHashes.Helmet });
+      const gauntlets = createTestArmor(defs!, { bucketHash: BucketHashes.Gauntlets });
+      const chest = createTestArmor(defs!, { bucketHash: BucketHashes.ChestArmor });
+      const legs = createTestArmor(defs!, { bucketHash: BucketHashes.LegArmor });
+      const classItem = createTestArmor(defs!, { bucketHash: BucketHashes.ClassArmor });
 
       expect(helmet.bucket.hash).toBe(BucketHashes.Helmet);
       expect(gauntlets.bucket.hash).toBe(BucketHashes.Gauntlets);
@@ -50,9 +55,9 @@ describe('Test Armor Factory', () => {
     });
 
     it('should create armor for different classes', async () => {
-      const hunterArmor = await createTestArmor({ classType: DestinyClass.Hunter });
-      const titanArmor = await createTestArmor({ classType: DestinyClass.Titan });
-      const warlockArmor = await createTestArmor({ classType: DestinyClass.Warlock });
+      const hunterArmor = createTestArmor(defs!, { classType: DestinyClass.Hunter });
+      const titanArmor = createTestArmor(defs!, { classType: DestinyClass.Titan });
+      const warlockArmor = createTestArmor(defs!, { classType: DestinyClass.Warlock });
 
       expect(hunterArmor.classType).toBe(DestinyClass.Hunter);
       expect(titanArmor.classType).toBe(DestinyClass.Titan);
@@ -71,7 +76,7 @@ describe('Test Armor Factory', () => {
         [StatHashes.Weapons]: 8,
       };
 
-      const armor = await createTestArmor({ stats: customStats });
+      const armor = createTestArmor(defs!, { stats: customStats });
 
       expect(armor.stats).toBeDefined();
       const statMap = new Map(armor.stats!.map((s) => [s.statHash, s.value]));
@@ -87,7 +92,7 @@ describe('Test Armor Factory', () => {
     it('should accept stats as an array', async () => {
       const statsArray = [25, 15, 10, 20, 12, 8]; // [health, melee, grenade, super, class, weapons]
 
-      const armor = await createTestArmor({ stats: statsArray });
+      const armor = createTestArmor(defs!, { stats: statsArray });
 
       expect(armor.stats).toBeDefined();
       const statMap = new Map(armor.stats!.map((s) => [s.statHash, s.value]));
@@ -101,38 +106,27 @@ describe('Test Armor Factory', () => {
     });
 
     it('should generate random realistic stats when none provided', async () => {
-      const armor = await createTestArmor();
+      const armor = createTestArmor(defs!);
 
       expect(armor.stats).toBeDefined();
 
-      // Check that we have all 6 armor stats (may have additional stats like defense)
-      const armorStatHashes = [
-        StatHashes.Health,
-        StatHashes.Melee,
-        StatHashes.Grenade,
-        StatHashes.Super,
-        StatHashes.Class,
-        StatHashes.Weapons,
-      ];
-
-      for (const statHash of armorStatHashes) {
+      for (const statHash of armorStats) {
         expect(armor.stats?.find((s) => s.statHash === statHash)).toBeDefined();
       }
 
       // Calculate total only for armor stats
-      const armorStatsOnly = armor.stats!.filter((stat) => armorStatHashes.includes(stat.statHash));
-      const totalStats = armorStatsOnly.reduce((sum, stat) => sum + stat.value, 0);
+      const armorStatsOnly = armor.stats!.filter((stat) => armorStats.includes(stat.statHash));
+      console.log(
+        'Generated armor stats:',
+        armorStatsOnly.map((s) => s.value),
+      );
+      const totalStats = sumBy(armorStatsOnly, (stat) => stat.value);
       expect(totalStats).toBeGreaterThanOrEqual(60);
       expect(totalStats).toBeLessThanOrEqual(70);
-
-      // Each armor stat should be at least 2
-      for (const stat of armorStatsOnly) {
-        expect(stat.value).toBeGreaterThanOrEqual(2);
-      }
     });
 
     it('should throw error for invalid stats array length', async () => {
-      await expect(createTestArmor({ stats: [10, 15, 20] })).rejects.toThrow(
+      await expect(createTestArmor(defs!, { stats: [10, 15, 20] })).toThrow(
         'Stats array must have exactly 6 values',
       );
     });
@@ -140,9 +134,9 @@ describe('Test Armor Factory', () => {
 
   describe('Tier Configuration', () => {
     it('should create armor with different tiers', async () => {
-      const tier0 = await createTestArmor({ tier: 0 });
-      const tier3 = await createTestArmor({ tier: 3 });
-      const tier5 = await createTestArmor({ tier: 5 });
+      const tier0 = createTestArmor(defs!, { tier: 0 });
+      const tier3 = createTestArmor(defs!, { tier: 3 });
+      const tier5 = createTestArmor(defs!, { tier: 5 });
 
       expect(tier0.tier).toBe(0);
       expect(tier3.tier).toBe(3);
@@ -153,7 +147,7 @@ describe('Test Armor Factory', () => {
     });
 
     it('should create tier 5 armor with tuning socket', async () => {
-      const tier5Armor = await createTestArmor({ tier: 5 });
+      const tier5Armor = createTestArmor(defs!, { tier: 5 });
 
       expect(tier5Armor.tier).toBe(5);
       expect(tier5Armor.sockets).toBeDefined();
@@ -163,7 +157,7 @@ describe('Test Armor Factory', () => {
 
   describe('Artifice Configuration', () => {
     it('should create artifice armor', async () => {
-      const artificeArmor = await createTestArmor({
+      const artificeArmor = createTestArmor(defs!, {
         tier: 0, // Artifice requires tier 0
         isArtifice: true,
       });
@@ -173,25 +167,25 @@ describe('Test Armor Factory', () => {
     });
 
     it('should throw error when artifice is requested with non-zero tier', async () => {
-      await expect(
-        createTestArmor({
+      expect(
+        createTestArmor(defs!, {
           tier: 1,
           isArtifice: true,
         }),
-      ).rejects.toThrow('Artifice armor must be tier 0');
+      ).toThrow('Artifice armor must be tier 0');
     });
   });
 
   describe('Masterwork Configuration', () => {
     it('should create masterworked armor', async () => {
-      const masterworkedArmor = await createTestArmor({ masterworked: true });
+      const masterworkedArmor = createTestArmor(defs!, { masterworked: true });
 
       expect(masterworkedArmor.masterwork).toBe(true);
       expect(masterworkedArmor.energy?.energyCapacity).toBe(10);
     });
 
     it('should create non-masterworked armor with appropriate energy', async () => {
-      const regularArmor = await createTestArmor({
+      const regularArmor = createTestArmor(defs!, {
         tier: 2,
         masterworked: false,
       });
@@ -203,7 +197,7 @@ describe('Test Armor Factory', () => {
 
   describe('Exotic Configuration', () => {
     it('should create exotic armor', async () => {
-      const exoticArmor = await createTestArmor({
+      const exoticArmor = createTestArmor(defs!, {
         isExotic: true,
         bucketHash: BucketHashes.ChestArmor,
         classType: DestinyClass.Titan,
@@ -214,7 +208,7 @@ describe('Test Armor Factory', () => {
     });
 
     it('should create legendary armor by default', async () => {
-      const legendaryArmor = await createTestArmor();
+      const legendaryArmor = createTestArmor(defs!);
 
       expect(legendaryArmor.isExotic).toBe(false);
     });
@@ -222,7 +216,7 @@ describe('Test Armor Factory', () => {
 
   describe('Complex Scenarios', () => {
     it('should create endgame artifice armor', async () => {
-      const endgameArmor = await createTestArmor({
+      const endgameArmor = createTestArmor(defs!, {
         bucketHash: BucketHashes.ChestArmor,
         classType: DestinyClass.Warlock,
         tier: 0,
@@ -247,7 +241,7 @@ describe('Test Armor Factory', () => {
     });
 
     it('should create high-tier legendary armor', async () => {
-      const highTierArmor = await createTestArmor({
+      const highTierArmor = createTestArmor(defs!, {
         bucketHash: BucketHashes.Gauntlets,
         classType: DestinyClass.Hunter,
         tier: 5,
@@ -266,7 +260,7 @@ describe('Test Armor Factory', () => {
 
   describe('Edge Cases', () => {
     it('should handle minimum stat values', async () => {
-      const minStatArmor = await createTestArmor({
+      const minStatArmor = createTestArmor(defs!, {
         stats: [2, 2, 2, 2, 2, 2], // Minimum possible values
       });
 
@@ -276,7 +270,7 @@ describe('Test Armor Factory', () => {
     });
 
     it('should handle maximum realistic stat values', async () => {
-      const maxStatArmor = await createTestArmor({
+      const maxStatArmor = createTestArmor(defs!, {
         stats: [30, 30, 30, 30, 30, 30], // Very high values
       });
 
