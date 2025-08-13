@@ -12,9 +12,15 @@ import {
   DestinyItemInstanceComponent,
   DestinyItemSocketState,
   DestinyItemStatsComponent,
+  ItemState,
   TierType,
 } from 'bungie-api-ts/destiny2';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  BucketHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 import { DimItem, DimStat } from '../app/inventory/item-types';
 import { getTestProfile } from './test-utils';
 
@@ -116,7 +122,8 @@ export function createTestArmor(
   }
 
   // Get appropriate item hash if not provided
-  const selectedItemHash = itemHash || selectArmorItemHash(defs, bucketHash, classType, isExotic);
+  const selectedItemHash =
+    itemHash || selectArmorItemHash(defs, bucketHash, classType, isExotic, isArtifice);
 
   // Generate stats specification
   const armorStatValues = generateStatValues(stats);
@@ -143,9 +150,10 @@ export function createTestArmor(
     ),
   };
 
-  // Create the item using DIM's existing factory
+  // Create the item using DIM's existing factory with proper state for masterwork
   const item = makeFakeItem(context, selectedItemHash, {
     itemInstanceId: instanceId,
+    state: masterworked ? ItemState.Masterwork : 0,
   });
 
   if (!item) {
@@ -159,13 +167,14 @@ export function createTestArmor(
 }
 
 /**
- * Select an appropriate armor item hash based on bucket, class, and exotic status.
+ * Select an appropriate armor item hash based on bucket, class, exotic status, and artifice requirement.
  */
 function selectArmorItemHash(
   defs: D2ManifestDefinitions,
   bucketHash: BucketHashes,
   classType: DestinyClass,
   isExotic: boolean,
+  isArtifice: boolean = false,
 ): number {
   // Find armor items that match our criteria
   const allItems = Object.values(defs.InventoryItem.getAll());
@@ -194,12 +203,32 @@ function selectArmorItemHash(
       return false;
     }
 
+    // Check artifice requirement
+    if (isArtifice) {
+      // For artifice armor, we need to check if the item has artifice sockets
+      // This is determined by checking the socket entries for artifice socket types
+      const hasArtificeSocket =
+        item.sockets?.socketEntries?.some((socket) => {
+          const socketType = defs.SocketType.get(socket.socketTypeHash);
+          // Check if this socket can accept artifice mods
+          return socketType?.plugWhitelist?.some(
+            (entry) =>
+              entry.categoryHash === PlugCategoryHashes.EnhancementsArtifice ||
+              entry.categoryIdentifier === 'enhancements.artifice',
+          );
+        }) ?? false;
+
+      if (!hasArtificeSocket) {
+        return false;
+      }
+    }
+
     return true;
   });
 
   if (candidates.length === 0) {
     throw new Error(
-      `No suitable armor found for bucket ${bucketHash}, class ${classType}, exotic: ${isExotic}`,
+      `No suitable armor found for bucket ${bucketHash}, class ${classType}, exotic: ${isExotic}, artifice: ${isArtifice}`,
     );
   }
 
@@ -307,7 +336,7 @@ function createCustomItemComponents(
     unlockHashesRequiredToEquip: [],
     cannotEquipReason: 0,
     energy: {
-      energyCapacity: options.tier >= 4 ? 11 : 10,
+      energyCapacity: options.masterworked ? 10 : options.tier * 2,
       energyUsed: 0,
       energyType: DestinyEnergyType.Any,
       energyTypeHash: 0, // Required field
