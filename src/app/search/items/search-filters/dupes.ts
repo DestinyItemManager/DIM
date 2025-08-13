@@ -235,6 +235,7 @@ const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: ['dupestats'],
     description: tl('Filter.DupeStats'),
+    destinyVersion: 2,
     filter: ({ allItems, d2Definitions }) => {
       if (!d2Definitions) {
         return stubFalse;
