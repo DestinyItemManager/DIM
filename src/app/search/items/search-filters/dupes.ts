@@ -8,7 +8,6 @@ import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-util
 import { DEFAULT_SHADER, TOTAL_STAT_HASH, armorStats } from 'app/search/d2-known-values';
 import { filterMap } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { stubFalse } from 'app/utils/functions';
 import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -237,9 +236,6 @@ const dupeFilters: ItemFilterDefinition[] = [
     description: tl('Filter.DupeStats'),
     destinyVersion: 2,
     filter: ({ allItems, d2Definitions }) => {
-      if (!d2Definitions) {
-        return stubFalse;
-      }
       const collector: Record<string, string[]> = {};
       for (const item of allItems) {
         if (
@@ -259,9 +255,8 @@ const dupeFilters: ItemFilterDefinition[] = [
         // *Stat-related* reasons an item's stats might not be directly comparable to another item's.
         const statExceptionKey = isArtifice(item)
           ? 'artifice'
-          : d2Definitions
-            ? getArmor3TuningStat(item, d2Definitions)
-            : 'nodefs';
+          : getArmor3TuningStat(item, d2Definitions!);
+
         const statValues = filterMap(item.stats, (s) => {
           if (armorStats.includes(s.statHash)) {
             return s.base;
