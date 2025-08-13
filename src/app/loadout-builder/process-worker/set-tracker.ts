@@ -1,3 +1,4 @@
+import { sum } from 'es-toolkit';
 import { DesiredStatRange } from '../types';
 import { getPower } from '../utils';
 import { IntermediateProcessArmorSet, ProcessItem } from './types';
@@ -6,10 +7,17 @@ import { IntermediateProcessArmorSet, ProcessItem } from './types';
  * Heap entry for the heap-based SetTracker.
  */
 interface HeapEntry {
-  tier: number;
+  /** Sum of enabled stats values. */
+  enabledStatsTotal: number;
+  /** Sum of all stats including disabled/maxed stats. */
+  statsTotal: number;
+  /** Encoded stat mix as a 48-bit integer. */
   statMix: number;
+  /** Power level of the armor set. */
   power: number;
+  /** The armor items in this set. */
   armor: ProcessItem[];
+  /** The stats associated with this armor set. */
   stats: number[];
 }
 
@@ -19,11 +27,14 @@ interface HeapEntry {
  * Ordering: tier asc, statMix asc, power asc (opposite of SetTracker for min-heap)
  */
 function isWorse(a: HeapEntry, b: HeapEntry): boolean {
-  if (a.tier !== b.tier) {
-    return a.tier < b.tier;
+  if (a.enabledStatsTotal !== b.enabledStatsTotal) {
+    return a.enabledStatsTotal < b.enabledStatsTotal;
   }
   if (a.statMix !== b.statMix) {
     return a.statMix < b.statMix;
+  }
+  if (a.statsTotal !== b.statsTotal) {
+    return a.statsTotal < b.statsTotal;
   }
   return a.power < b.power;
 }
@@ -50,16 +61,28 @@ export class HeapSetTracker {
       return true;
     }
     // In min-heap, root is the worst item - check if new item is better
-    return totalTier >= this.heap[0].tier;
+    return totalTier >= this.heap[0].enabledStatsTotal;
   }
 
   /**
    * Insert a set into the heap.
    * Matches SetTracker behavior: allows duplicates, returns true unless trimming.
    */
-  insert(tier: number, statMix: number, armor: ProcessItem[], stats: number[]): boolean {
+  insert(
+    enabledStatsTotal: number,
+    statMix: number,
+    armor: ProcessItem[],
+    stats: number[],
+  ): boolean {
     const power = getPower(armor);
-    const entry: HeapEntry = { tier, statMix, power, armor, stats };
+    const entry: HeapEntry = {
+      enabledStatsTotal,
+      statMix,
+      power,
+      armor,
+      stats,
+      statsTotal: sum(stats),
+    };
 
     if (this.heap.length < this.capacity) {
       this.heap.push(entry);
@@ -87,8 +110,8 @@ export class HeapSetTracker {
     // Copy heap and sort in SetTracker order (best first)
     return this.heap.toSorted((a, b) => {
       // Sort by tier desc, statMix desc, power desc (opposite of min-heap order)
-      if (a.tier !== b.tier) {
-        return b.tier - a.tier;
+      if (a.enabledStatsTotal !== b.enabledStatsTotal) {
+        return b.enabledStatsTotal - a.enabledStatsTotal;
       }
       if (a.statMix !== b.statMix) {
         return b.statMix - a.statMix;

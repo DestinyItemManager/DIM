@@ -43,7 +43,7 @@ export function TierlessSetStats({
   equippedHashes: Set<number>;
 }) {
   const defs = useD2Definitions()!;
-  const totalStats = sum(Object.values(stats)); // TODO: Is this useful?
+  const totalStats = sum(Object.values(stats));
   const countedStatsTotal = sumEnabledStats(stats, desiredStatRanges); // Total of the stats that were within the desired ranges
 
   // TODO: Lots of changes needed here once we drop tiers. Maybe we just show a
