@@ -298,6 +298,7 @@ exports[`filterComplete autocomplete terms for |stat| 1`] = `
 [
   "is:statlower",
   "stat:",
+  "is:dupestats",
   "is:customstatlower",
   "basestat:",
   "maxstatloadout:",

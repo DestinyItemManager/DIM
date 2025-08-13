@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 
 /**
- * A Perks can be populated with a bunch of items, and can then answer questions
+ * A PerksSet can be populated with a bunch of items, and can then answer questions
  * such as:
  * 1. Are there any items that have (at least) all the same perks (in the same
  *    columns) as the input item? This covers both exactly-identical perk sets,
