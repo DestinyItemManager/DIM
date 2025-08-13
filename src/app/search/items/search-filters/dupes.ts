@@ -291,10 +291,10 @@ export function computeStatDupeLower(
           // to +1. This assumes that the first stat values in statValues are armor stats
           // in the same order as relevantStatHashes.
           const worstThreeStatIndexes = [
-            ...statValues.splice(0, relevantStatHashes.length).entries(),
+            ...statValues.slice(0, relevantStatHashes.length).entries(),
           ]
             .sort((a, b) => a[1] - b[1])
-            .splice(0, 3)
+            .slice(0, 3)
             .map((e) => e[0]);
           statMixes = relevantStatHashes.map((statHash, i) => {
             const modifiedStats = [...statValues];
