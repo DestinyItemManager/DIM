@@ -191,6 +191,18 @@ export function SetBonusPicker({
     />
   );
 
+  const handlePerkClick = (setHash: number, perkRequiredCount: number) => () => {
+    setSetBonuses((setBonuses) => {
+      const newSetBonuses = { ...setBonuses };
+      if ((setBonuses[setHash] || 0) === perkRequiredCount) {
+        delete newSetBonuses[setHash];
+      } else {
+        newSetBonuses[setHash] = perkRequiredCount;
+      }
+      return newSetBonuses;
+    });
+  };
+
   return (
     <Sheet
       header={
@@ -214,15 +226,6 @@ export function SetBonusPicker({
           <TileGrid key={set.hash} header={set.displayProperties.name}>
             {set.setPerks.map((perk) => {
               const perkDef = defs.SandboxPerk.get(perk.sandboxPerkHash);
-              const handleClick = () => {
-                setSetBonuses({
-                  ...setBonuses,
-                  [set.hash]:
-                    (setBonuses[set.hash] || 0) === perk.requiredSetCount
-                      ? 0
-                      : perk.requiredSetCount,
-                });
-              };
               return (
                 <TileGridTile
                   key={perkDef.hash}
@@ -237,7 +240,7 @@ export function SetBonusPicker({
                     </>
                   }
                   icon={<SetPerkIcon perkDef={perkDef} active={selected(perk, set.hash)} />}
-                  onClick={handleClick}
+                  onClick={handlePerkClick(set.hash, perk.requiredSetCount)}
                 >
                   {perkDef.displayProperties.description}
                 </TileGridTile>

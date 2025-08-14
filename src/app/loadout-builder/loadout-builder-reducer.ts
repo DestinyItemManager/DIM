@@ -29,7 +29,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
-import { count, reorder } from 'app/utils/collections';
+import { count, isEmpty, reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -504,7 +504,12 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, updateMods(newMods));
       }
       case 'setSetBonuses': {
-        return updateLoadout(state, setLoadoutParameters({ setBonuses: action.setBonuses }));
+        return updateLoadout(
+          state,
+          setLoadoutParameters({
+            setBonuses: isEmpty(action.setBonuses) ? undefined : action.setBonuses,
+          }),
+        );
       }
       case 'removeSetBonuses': {
         return updateLoadout(state, setLoadoutParameters({ setBonuses: undefined }));
