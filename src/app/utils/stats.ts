@@ -22,8 +22,8 @@ export function computeStatDupeLower(
    * A optional mapping function to get stats and their hashes from an item.
    * Otherwise, grabs hypothetical masterworked stat values for armor stats.
    *
-   * This MAY CONTAIN stat that aren't in relevantStatHashes.
-   * They'll still be compared as statmixes, but missing from relevantStatHashes means
+   * This MAY CONTAIN stats that aren't in relevantArmorStatHashes.
+   * They'll still be compared as statmixes, but missing from relevantArmorStatHashes means
    * they get ignored during the armor stat adjustment layer.
    *
    * This is used from LO to override the masterwork assumption behavior.
@@ -45,8 +45,7 @@ export function computeStatDupeLower(
     }));
   };
 
-  // A mapping from an item to a list of all of its stat configurations
-  // (artifice/tunable armor can have multiple).
+  // A mapping from an item to a list of all of its stat configurations (artifice/tunable armor can have multiple).
   // This is just a cache to prevent recalculating it.
   const statsCache = new Map<DimItem, number[][]>();
 
@@ -76,7 +75,7 @@ export function computeStatDupeLower(
           }
         }
 
-        // /Stat hashes that would be affected if a Balanced Tuning Mod were applied (those whose masterworked value is 5 thus base 0)
+        // Stat hashes that would be affected if a Balanced Tuning Mod were applied (those with masterworked value 5 (the base was 0))
         const balancedTuningStatHashes = filterMap(optimizingStats, ({ statHash, value }) =>
           value === 5 ? statHash : undefined,
         );
