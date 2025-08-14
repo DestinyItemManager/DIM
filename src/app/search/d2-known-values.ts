@@ -146,7 +146,11 @@ export const D2ArmorStatHashByName: StringLookup<StatHashes> = {
   strength: StatHashes.Melee,
 } as const;
 
-/** Stats that all (D2) armor should have, ordered by how they're displayed in game. */
+/**
+ * Stats that all (D2) armor should have, ordered by how they're displayed in game.
+ *
+ * Only the 6 real armor stats, no aliases or synthetic stats.
+ */
 export const armorStats: ArmorStatHashes[] = [
   StatHashes.Health,
   StatHashes.Melee,
