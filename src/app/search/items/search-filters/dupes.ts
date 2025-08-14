@@ -5,7 +5,8 @@ import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
-import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
+import { DEFAULT_SHADER, TOTAL_STAT_HASH, armorStats } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -228,6 +229,54 @@ const dupeFilters: ItemFilterDefinition[] = [
       return (item) =>
         item.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible) &&
         Boolean(duplicates.get(getDupeId(item))?.hasPerkDupes(item));
+    },
+  },
+  {
+    keywords: ['statdupe'],
+    description: tl('Filter.DupeStats'),
+    destinyVersion: 2,
+    filter: ({ allItems, d2Definitions }) => {
+      const collector: Record<string, string[]> = {};
+      for (const item of allItems) {
+        if (
+          // This filter is for armor with stats
+          !item.bucket.inArmor ||
+          !item.stats ||
+          // Special cases for class items
+          (item.bucket.hash === BucketHashes.ClassArmor &&
+            // Older class items have no stats.
+            (item.stats.find((s) => s.statHash === TOTAL_STAT_HASH)?.base === 0 ||
+              // Exotic class items all have identical stats.
+              item.rarity === 'Exotic'))
+        ) {
+          continue;
+        }
+
+        // *Stat-related* reasons an item's stats might not be directly comparable to another item's.
+        const statExceptionKey = isArtifice(item)
+          ? 'artifice'
+          : getArmor3TuningStat(item, d2Definitions!);
+
+        const statValues = filterMap(item.stats, (s) => {
+          if (armorStats.includes(s.statHash)) {
+            return s.base;
+          }
+        });
+        const key = `${statExceptionKey}|${item.classType}|${item.bucket.name}|${statValues.join()}`;
+        (collector[key] ??= []).push(item.id);
+      }
+
+      const dupes = new Set<string>();
+      for (const key in collector) {
+        const items = collector[key];
+        if (items.length > 1) {
+          for (const id of items) {
+            dupes.add(id);
+          }
+        }
+      }
+
+      return (item) => dupes.has(item.id);
     },
   },
 ];
