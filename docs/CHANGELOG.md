@@ -7,6 +7,7 @@
 * Removed outdated power caps info from the Progress page
 * Tuning mod stat changes are reflected in the stat bars in the item popup.
 * Removed redundant stat effect text in mod tooltip.
+* Added holofoil column to organizer
 
 ## 8.85.0 <span class="changelog-date">(2025-08-10)</span>
 
