@@ -400,6 +400,17 @@ export function getColumns(
       filter: (value) => `${value ? '' : '-'}is:featured`,
       csv: 'New Gear',
     }),
+    c({
+      id: 'holofoil',
+      header: t('Organizer.Columns.Holofoil'),
+      className: styles.centered,
+      headerClassName: styles.centered,
+      defaultSort: SortDirection.DESC,
+      value: (item) => item.holofoil,
+      cell: (value) => value && <AppIcon icon={faCheck} />,
+      filter: (value) => `${value ? '' : '-'}is:holofoil`,
+      csv: 'Holofoil',
+    }),
     destinyVersion === 2 &&
       isWeapon &&
       c({
