@@ -232,7 +232,7 @@ const dupeFilters: ItemFilterDefinition[] = [
     },
   },
   {
-    keywords: ['dupestats'],
+    keywords: ['statdupe'],
     description: tl('Filter.DupeStats'),
     destinyVersion: 2,
     filter: ({ allItems, d2Definitions }) => {

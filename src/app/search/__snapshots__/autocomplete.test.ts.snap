@@ -296,9 +296,9 @@ exports[`filterComplete autocomplete terms for |stat:mob| 1`] = `
 
 exports[`filterComplete autocomplete terms for |stat| 1`] = `
 [
+  "is:statdupe",
   "is:statlower",
   "stat:",
-  "is:dupestats",
   "is:customstatlower",
   "basestat:",
   "maxstatloadout:",
