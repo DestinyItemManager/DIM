@@ -504,7 +504,6 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, updateMods(newMods));
       }
       case 'setSetBonuses': {
-        console.log('Setting set bonuses', action.setBonuses);
         return updateLoadout(
           state,
           setLoadoutParameters({
