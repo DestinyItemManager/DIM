@@ -12,7 +12,6 @@ import {
   DestinyItemInstanceComponent,
   DestinyItemSocketState,
   DestinyItemStatsComponent,
-  ItemState,
   TierType,
 } from 'bungie-api-ts/destiny2';
 import {
@@ -150,10 +149,9 @@ export function createTestArmor(
     ),
   };
 
-  // Create the item using DIM's existing factory with proper state for masterwork
+  // Create the item using DIM's existing factory
   const item = makeFakeItem(context, selectedItemHash, {
     itemInstanceId: instanceId,
-    state: masterworked ? ItemState.Masterwork : 0,
   });
 
   if (!item) {
@@ -162,6 +160,13 @@ export function createTestArmor(
 
   // Override stats after creation if custom stats were provided
   overrideArmorStats(item, armorStatValues);
+
+  // Override masterwork property directly if needed (for testing purposes)
+  if (masterworked) {
+    // Since DIM's masterwork detection for armor is complex and relies on specific socket configurations,
+    // for testing purposes we'll override the property directly
+    (item as any).masterwork = true;
+  }
 
   return item;
 }
@@ -441,20 +446,15 @@ function createSocketConfiguration(
   }
 
   // Configure masterwork socket if needed
-  if (options.masterworked && sockets.length > 0) {
-    // Find what might be a masterwork socket and configure it
-    // This is simplified - in reality we'd need to find the right socket type
-    const lastSocketIndex = sockets.length - 1;
-    if (lastSocketIndex >= 0) {
-      // For armor, masterwork typically provides +2 to all stats
-      // The actual implementation would use proper masterwork plug hashes
-      sockets[lastSocketIndex] = {
-        ...sockets[lastSocketIndex],
-        plugHash: sockets[lastSocketIndex].plugHash || 0, // Keep existing or use default
-        isEnabled: true,
-        isVisible: true,
-      };
-    }
+  if (options.masterworked) {
+    // Add a proper Armor 3.0 masterwork socket
+    // This needs to be a plug with PlugCategoryHashes.V460PlugsArmorMasterworks
+    sockets.push({
+      plugHash: 3538918066, // Resilience Armor Masterwork plug hash (this is a common masterwork plug)
+      isEnabled: true,
+      isVisible: true,
+      enableFailIndexes: [],
+    });
   }
 
   return sockets;
