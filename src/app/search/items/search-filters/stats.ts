@@ -169,12 +169,12 @@ const statFilters: ItemFilterDefinition[] = [
     format: 'query',
     suggestions: Object.keys(realD2ArmorStatHashByName),
     destinyVersion: 2,
-    filter: ({ filterValue, d2Definitions }) => {
+    filter: ({ filterValue }) => {
       const seekingStatHash = realD2ArmorStatHashByName[filterValue];
       if (!seekingStatHash) {
         throw Error(`invalid stat name: "${filterValue}"`);
       }
-      return (item) => getArmor3TuningStat(item, d2Definitions!) === seekingStatHash;
+      return (item) => getArmor3TuningStat(item) === seekingStatHash;
     },
   },
 ];

@@ -1,5 +1,4 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { armorStats } from 'app/search/d2-known-values';
@@ -15,7 +14,6 @@ import { StatsSet } from './stats-set';
  */
 export function computeStatDupeLower(
   allItems: DimItem[],
-  defs: D2ManifestDefinitions | undefined,
   /** By default, the 6 armor stats. To optimize a custom stat, a subset is passed. */
   relevantArmorStatHashes: number[] = armorStats,
   /**
@@ -54,7 +52,7 @@ export function computeStatDupeLower(
       const optimizingStats = getArmorStats(item);
       const statMixes = [optimizingStats.map((s) => s.value)]; // Start with the unadjusted stat mix.
 
-      const tuningStatHash = defs ? getArmor3TuningStat(item, defs) : undefined;
+      const tuningStatHash = getArmor3TuningStat(item);
       if (tuningStatHash) {
         // If we can tune to benefit a relevant hash, include tuning mod tradeoff stat mixes.
         if (relevantArmorStatHashes.includes(tuningStatHash)) {

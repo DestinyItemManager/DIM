@@ -408,3 +408,37 @@ export const enum ModsWithConditionalStats {
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"
+
+// TODO: replace with d2ai?
+export const tuningModToTunedStathash: Record<number, StatHashes> = {
+  309000506: StatHashes.Grenade,
+  311164277: StatHashes.Melee,
+  323635379: StatHashes.Class,
+  388618952: StatHashes.Health,
+  455024236: StatHashes.Grenade,
+  534630542: StatHashes.Melee,
+  673231129: StatHashes.Super,
+  691392383: StatHashes.Weapons,
+  891771298: StatHashes.Weapons,
+  957763733: StatHashes.Class,
+  1510949672: StatHashes.Class,
+  1672416975: StatHashes.Grenade,
+  1879022254: StatHashes.Class,
+  1918710127: StatHashes.Weapons,
+  1922571986: StatHashes.Grenade,
+  2125798995: StatHashes.Health,
+  2244422610: StatHashes.Super,
+  3121760799: StatHashes.Weapons,
+  3284443097: StatHashes.Weapons,
+  3310526732: StatHashes.Health,
+  3554800389: StatHashes.Super,
+  3681082702: StatHashes.Health,
+  3946669007: StatHashes.Super,
+  4020349587: StatHashes.Melee,
+  4026414261: StatHashes.Super,
+  4030660414: StatHashes.Class,
+  4088823605: StatHashes.Health,
+  4116389173: StatHashes.Grenade,
+  4164883102: StatHashes.Melee,
+  4210715468: StatHashes.Melee,
+};

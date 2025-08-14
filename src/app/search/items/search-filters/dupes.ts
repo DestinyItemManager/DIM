@@ -155,15 +155,15 @@ const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'statlower',
     description: tl('Filter.StatLower'),
-    filter: ({ allItems, d2Definitions }) => {
-      const duplicates = computeStatDupeLower(allItems, d2Definitions);
+    filter: ({ allItems }) => {
+      const duplicates = computeStatDupeLower(allItems);
       return (item) => item.bucket.inArmor && duplicates.has(item.id);
     },
   },
   {
     keywords: 'customstatlower',
     description: tl('Filter.CustomStatLower'),
-    filter: ({ allItems, customStats, d2Definitions }) => {
+    filter: ({ allItems, customStats }) => {
       const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
 
       for (const customStat of customStats) {
@@ -176,7 +176,7 @@ const dupeFilters: ItemFilterDefinition[] = [
           }
         }
         (duplicateSetsByClass[customStat.class] ||= []).push(
-          computeStatDupeLower(allItems, d2Definitions, relevantStatHashes),
+          computeStatDupeLower(allItems, relevantStatHashes),
         );
       }
 
@@ -231,7 +231,7 @@ const dupeFilters: ItemFilterDefinition[] = [
     keywords: ['statdupe'],
     description: tl('Filter.DupeStats'),
     destinyVersion: 2,
-    filter: ({ allItems, d2Definitions }) => {
+    filter: ({ allItems }) => {
       const collector: Record<string, string[]> = {};
       for (const item of allItems) {
         if (
@@ -249,9 +249,7 @@ const dupeFilters: ItemFilterDefinition[] = [
         }
 
         // *Stat-related* reasons an item's stats might not be directly comparable to another item's.
-        const statExceptionKey = isArtifice(item)
-          ? 'artifice'
-          : getArmor3TuningStat(item, d2Definitions!);
+        const statExceptionKey = isArtifice(item) ? 'artifice' : getArmor3TuningStat(item);
 
         const statValues = filterMap(item.stats, (s) => {
           if (armorStats.includes(s.statHash)) {
