@@ -8,7 +8,7 @@ export const builtInWishlists: { name: I18nKey; url: string }[] = [
   },
   {
     name: tl('WishListRoll.JustAnotherTeam'),
-    url: 'https://raw.githubusercontent.com/dsf000z/JAT-wishlists-bundler/main/bundles/DIM-strict/just-another-team-mnk.txt',
+    url: 'https://raw.githubusercontent.com/dsf000z/JAT-wishlists-bundler/refs/heads/main/bundles/DIM/just-another-team-mnk.txt',
   },
 ];
 

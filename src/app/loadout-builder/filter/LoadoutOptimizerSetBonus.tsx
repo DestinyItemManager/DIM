@@ -236,7 +236,7 @@ export function SetBonusPicker({
                       </div>
                     </>
                   }
-                  icon={<SetPerkIcon perkDef={perkDef} />}
+                  icon={<SetPerkIcon perkDef={perkDef} active={selected(perk, set.hash)} />}
                   onClick={handleClick}
                 >
                   {perkDef.displayProperties.description}

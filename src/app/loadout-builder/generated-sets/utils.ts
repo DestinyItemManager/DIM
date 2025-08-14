@@ -1,6 +1,8 @@
 import { sumBy } from 'app/utils/collections';
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
+import { sum } from 'es-toolkit';
 import { ArmorSet, ArmorStatHashes, ArmorStats, DesiredStatRange } from '../types';
+import { getPower } from '../utils';
 
 function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[]) {
   const comparators: Comparator<ArmorSet>[] = [
@@ -14,6 +16,12 @@ function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[
       ),
     );
   }
+
+  comparators.push(
+    // Finally sort by total stats, then by power
+    compareBy((s) => -sum(Object.values(s.stats))),
+    compareBy((s) => -getPower(s.armor.map((i) => i[0]))),
+  );
   return comparators;
 }
 

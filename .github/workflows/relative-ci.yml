@@ -10,7 +10,7 @@ jobs:
   check-artifact:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check for artifact existence
         id: check_my_artifact
         uses: xSAVIKx/artifact-exists-action@v0
@@ -23,7 +23,7 @@ jobs:
     if: ${{ needs.check-artifact.outputs.exists == 'true' }}
     steps:
       - name: Send bundle stats and build information to RelativeCI
-        uses: relative-ci/agent-action@v3.0.0
+        uses: relative-ci/agent-action@v3.0.1
         with:
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}

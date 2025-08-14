@@ -2,6 +2,7 @@ import type { DimStore } from 'app/inventory/store-types';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { PowerFormula, StoreCharacterStats } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
+import { CharacterSetBonus } from './CharacterSetBonus';
 import { D1StoreCharacterStats } from './D1CharacterStats';
 import styles from './StoreStats.m.scss';
 import VaultCapacity from './VaultCapacity';
@@ -18,7 +19,12 @@ export default function StoreStats({ store }: { store: DimStore }) {
     <D1StoreCharacterStats store={store} />
   ) : (
     <div className={styles.characterStats}>
-      <PowerFormula storeId={store.id} />
+      <div className={styles.topRow}>
+        <PowerFormula storeId={store.id} />
+        <div className={styles.setBonuses}>
+          <CharacterSetBonus store={store} />
+        </div>
+      </div>
       <StoreCharacterStats store={store} />
     </div>
   );

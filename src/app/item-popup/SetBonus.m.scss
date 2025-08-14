@@ -4,15 +4,6 @@
   gap: 8px;
 }
 
-.perk {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
-  background-color: var(--theme-item-popup-panel-bg);
-  flex: 1;
-  padding: 4px;
-  gap: 3px;
-}
-
 // Sadly we have to draw our own circle around the perk
 .perkIcon {
   border-radius: 50%;
@@ -22,4 +13,41 @@
   width: var(--set-bonus-icon-size, 20px);
   display: block;
   margin: 2px;
+}
+
+.perk {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  flex: 1;
+  padding: 4px;
+  gap: 3px;
+  background-color: var(--theme-item-popup-panel-bg);
+  &.justCircle {
+    --set-bonus-icon-size: 16px;
+    background-color: transparent;
+    flex: unset;
+    padding: 0;
+    .perkIcon {
+      margin: 0;
+    }
+  }
+}
+
+.activePerk {
+  background-color: #4887ba;
+}
+
+.gearList {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  gap: 2px;
+  margin-top: 1em;
+}
+
+.gearListIcon {
+  height: 3em;
+  border: 1px solid #ddd;
+}
+
+.unsatisfied {
+  opacity: 0.4;
 }
