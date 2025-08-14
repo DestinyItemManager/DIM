@@ -6,10 +6,10 @@ import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
-import { computeStatDupeLower } from 'app/search/items/search-filters/dupes';
 import { sumBy } from 'app/utils/collections';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
+import { computeStatDupeLower } from 'app/utils/stats';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { sum } from 'es-toolkit';
 import { Draft } from 'immer';
@@ -241,15 +241,20 @@ export function filterItems({
           : 0;
         const remainingEnergyCapacity = capacity - modsCost;
         return [
-          ...armorStats.map((statHash) => masterworkedStatValues[statHash] ?? 0),
-          remainingEnergyCapacity,
-          ...requiredModTagsArray.map((tag) => (compatibleModSeasons?.includes(tag) ? 1 : 0)),
+          ...armorStats.map((statHash) => ({
+            statHash,
+            value: masterworkedStatValues[statHash] ?? 0,
+          })),
+          { statHash: -2, value: remainingEnergyCapacity },
+          ...requiredModTagsArray.map((tag) => ({
+            statHash: -3, // ←↑ Dummy/temp stat hashes. Just need to not match real armor stat hashes.
+            value: compatibleModSeasons?.includes(tag) ? 1 : 0,
+          })),
         ];
       };
 
       const strictlyWorseItemIds = computeStatDupeLower(
         finalFilteredItems,
-        defs,
         // Consider all stats, even if they're not enabled - we still want the
         // highest total stats.
         armorStats,

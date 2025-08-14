@@ -17,6 +17,7 @@ import {
   armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
+  tuningModToTunedStathash,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
@@ -429,14 +430,10 @@ export function getArmor3StatFocus(item: DimItem): StatHashes[] {
  * Returns the stat hash of the item's tunable stat.
  * This stat can be upgraded at the cost of another stat.
  *
- * This heuristic relies on the following assumptions:
- * - Every armor with tuning has Balanced Tuning (3122197216) which provides +1 to several stats.
- * - Armor with e.g. a melee tuning, has several available plugs which raise Melee stat by 5 (and none which raise other stats by that much)
+ * Every armor with tuning has Balanced Tuning (3122197216) which provides +1 to several stats,
+ * so this seeks an available plug item that's one of the +5/-5 mods.
  */
-export function getArmor3TuningStat(
-  item: DimItem,
-  defs: D2ManifestDefinitions,
-): number | undefined {
+export function getArmor3TuningStat(item: DimItem): number | undefined {
   const reusablePlugItems = item.bucket.inArmor
     ? getArmor3TuningSocket(item)?.reusablePlugItems
     : undefined;
@@ -444,12 +441,9 @@ export function getArmor3TuningStat(
     return;
   }
 
-  for (const reusablePlug of reusablePlugItems) {
-    const positiveHash = defs.InventoryItem.get(reusablePlug.plugItemHash).investmentStats.find(
-      (s) => s.value > 1,
-    );
-    if (positiveHash) {
-      return positiveHash.statTypeHash;
+  for (const { plugItemHash } of reusablePlugItems) {
+    if (plugItemHash in tuningModToTunedStathash) {
+      return tuningModToTunedStathash[plugItemHash];
     }
   }
   return undefined;

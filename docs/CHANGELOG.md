@@ -4,6 +4,9 @@
 * Builds in Loadout Optimizer are now sorted by enabled stats, then each enabled stat in order, then total stats (including disabled stats). Before, they were not sorted by total stats, so if you had some stats disabled you could get very low-stat builds near the top.
 * Added `is:statdupe` to find armor with the same base stats.
 * Fixed a bug where removing set bonuses by un-clicking them from the set bonus picker could result in a loadout that couldn't be saved.
+* Removed outdated power caps info from the Progress page
+* Tuning mod stat changes are reflected in the stat bars in the item popup.
+* Removed redundant stat effect text in mod tooltip.
 
 ## 8.85.0 <span class="changelog-date">(2025-08-10)</span>
 

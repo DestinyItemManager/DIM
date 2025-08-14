@@ -9,7 +9,6 @@ import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import styles from './Milestones.m.scss';
-import { PowerCaps } from './PowerCaps';
 import Pursuit from './Pursuit';
 import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';
@@ -59,7 +58,7 @@ export default function Milestones({
         <PursuitGrid>
           <SeasonalRank store={store} profileInfo={profileInfo} />
           <WellRestedPerkIcon profileInfo={profileInfo} />
-          <PowerCaps />
+          {/* <PowerCaps /> */}
         </PursuitGrid>
       )}
       {[...milestonesByPower.keys()].sort(sortPowerBonus).map((powerBonus) => (
