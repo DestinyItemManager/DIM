@@ -171,6 +171,7 @@ export function generateCSVExportData(
     'locked',
     'Equipped',
     'featured',
+    'holofoil',
     'year',
     'season',
     'event',
