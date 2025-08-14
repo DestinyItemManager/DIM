@@ -1,4 +1,3 @@
-import { useD2Definitions } from 'app/manifest/selectors';
 import { getArmor3StatFocus, getArmor3TuningStat, isArmor3, isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { DimItem, DimStat } from '../inventory/item-types';
@@ -14,14 +13,12 @@ export default function ItemStats({
   item?: DimItem;
   className?: string;
 }) {
-  const defs = useD2Definitions();
-
   stats ||= item?.stats;
 
   if (!stats?.length) {
     return null;
   }
-  const tunedStatHash = item && defs && getArmor3TuningStat(item, defs);
+  const tunedStatHash = item && getArmor3TuningStat(item);
   const statFocus = item && isArmor3(item) ? getArmor3StatFocus(item) : undefined;
 
   const hasIcons = stats.some(

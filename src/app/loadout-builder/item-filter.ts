@@ -255,7 +255,6 @@ export function filterItems({
 
       const strictlyWorseItemIds = computeStatDupeLower(
         finalFilteredItems,
-        defs,
         // Consider all stats, even if they're not enabled - we still want the
         // highest total stats.
         armorStats,

@@ -7,6 +7,7 @@ interface CssExports {
   'range': string;
   'stat': string;
   'statValue': string;
+  'tunedStatIcon': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
