@@ -34,7 +34,6 @@ import { makeCustomStat } from './stats-custom';
  *   if (is armor) {
  *     if (any armor stat is missing) fill in missing stats with 0s
  *     synthesize totalStat and add it
- *     if (not classitem) synthesize customStat and add it
  *   }
  * }
  */
