@@ -63,4 +63,27 @@ describe('Light.gg URL generation', () => {
     expect(fixedResult).not.toMatch(/,,/); // No consecutive commas
     expect(fixedResult).not.toMatch(/,$/); // No trailing comma
   });
+
+  test('matches expected URL format from issue description', () => {
+    // Test the exact scenario from the issue:
+    // https://www.light.gg/db/en/items/4049127142?p=1844523823,106909392,3017780555,3673922083,1673863459,4105787911,0
+    const socketData = {
+      largePerks: [1844523823, 106909392],
+      traits: [3017780555, 3673922083, 1673863459],
+      masterwork: 4105787911,
+      weaponMod: 0,
+    };
+
+    const result = [
+      ...socketData.largePerks,
+      ...socketData.traits,
+      socketData.masterwork,
+      socketData.weaponMod,
+    ]
+      .map((s) => String(s))
+      .join(',');
+
+    // Should match the expected working URL from the issue
+    expect(result).toBe('1844523823,106909392,3017780555,3673922083,1673863459,4105787911,0');
+  });
 });
