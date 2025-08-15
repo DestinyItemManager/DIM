@@ -8,6 +8,7 @@
 * Tuning mod stat changes are reflected in the stat bars in the item popup.
 * Removed redundant stat effect text in mod tooltip.
 * Added holofoil column to organizer
+* Worked around a bug in light.gg that caused some links from DIM's Armory to log you out of light.gg.
 
 ## 8.85.0 <span class="changelog-date">(2025-08-10)</span>
 
