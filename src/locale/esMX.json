@@ -233,6 +233,7 @@
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
     "DupeLower": "Objetos duplicados, incluyendo reincidencias, que no son el poder más alto del duplicado. Sólo un duplicado es elegido como el más alto, y el resto son considerados más bajos.",
     "DupePerks": "Muestra objetos cuyas ventajas ya sean duplicadas de, o un subconjunto de, otro objeto del mismo tipo.",
+    "DupeStats": "Muestra armadura con estadísticas base idénticas, incluyendo ajustadores de estadísticas como Artificiosa y modificadores de afinación.",
     "Energy": "Muestra objetos que utilizan el sistema de mod de Armadura 2.0 introducidos en Bastión de Sombras.",
     "EnergyCapacity": "Muestra objetos basados en su capacidad de energía actual.",
     "Engrams": "Muestra engramas.",
@@ -585,8 +586,8 @@
     "SearchAMod": "Buscar un mod o descripción",
     "SearchASetBonus": "",
     "SearchAnExotic": "Busca un excepcional o descripción",
-    "SelectExotic": "Selecciona excepcional",
-    "SelectMods": "Selecciona Mods",
+    "SelectExotic": "Seleccionar excepcional",
+    "SelectMods": "Seleccionar Mods",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Mods de Actividad",
     "SelectSetBonus": "Elige set de Bonificación",
@@ -612,8 +613,8 @@
     },
     "BetterStatsAvailableFontNote": "Nota: Esta Equipación usa los mods \"Manantial de ...\" que causan que una estadística exceda 200. DIM podría identificar mejores estadísticas reduciendo la cantidad de exceso de estadísticas. Si no se deseas esto, desactiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" en la Equipación.",
     "DoesNotRespectExotic": {
-      "Description": "Esta configuración de equipación del Optimizador de Equipaciones especifica una elección de exótico, pero la equipación no coincide con ese exótico.",
-      "Name": "Exótico Incorrecto"
+      "Description": "Esta configuración de equipación del Optimizador de Equipaciones especifica la elección de un excepcional, pero la equipación no coincide con ese excepcional.",
+      "Name": "Excepcional Incorrecto"
     },
     "DoesNotSatisfyStatConstraints": {
       "Description": "La configuración del Optimizador de Equipaciones para esta Equipación especifica unos mínimos de estadísticas, pero la Equipación no las alcanza.",
@@ -712,6 +713,8 @@
       "MaybeRemoveSearchQuery": "Considera limpiar o cambiar el filtro en la barra de búsqueda",
       "ModAssignmentFailed": "Muchas equipaciones no pudieron acomodar todos los mods solicitados",
       "RemoveMods": "Elimina estos mods",
+      "RemoveSetBonuses": "Considera eliminar algunas bonificaciones de conjunto",
+      "SetBonuses": "Has elegido algunos bonificadores de conjunto, quizás no tengas los objetos correctos para usarlos.",
       "UpperBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de estadísticas máximas"
     },
     "NoExotic": "Sin Excepcional",
@@ -1061,6 +1064,7 @@
       "Featured": "Equipamiento Nuevo",
       "Foundry": "Forja",
       "Harmonizable": "Armonizable",
+      "Holofoil": "Holometalizadas",
       "Icon": "Icono",
       "Intrinsics": "Intrínseco",
       "ItemTier": "Nivel",

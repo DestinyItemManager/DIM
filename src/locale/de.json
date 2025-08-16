@@ -178,7 +178,7 @@
     "Vault": "Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen."
   },
   "FashionDrawer": {
-    "Accept": "Mode speichern",
+    "Accept": "Kosmetik speichern",
     "CannotFitOrnament": "Dieser Gegenstand hat keinen Ornamenten-Sockel oder du hast keine Ornamente dafür.",
     "CannotFitShader": "Diesem Gegenstand kann kein Shader zugewiesen werden",
     "ClearOrnaments": "Ornament-Auswahl aufheben",
@@ -186,14 +186,14 @@
     "ClearShaders": "Shader-Auswahl aufheben",
     "ClearShadersTitle": "Alle Shader mit \"Keine Präferenz\" markieren",
     "NoPreference": "Keine Präferenz - diese Fassung bleibt unverändert",
-    "Reset": "Mode-Auswahl aufheben",
+    "Reset": "Kosmetik löschen",
     "Sync": "Synchr.",
     "SyncOrnaments": "Ornamente synchronisieren",
     "SyncOrnamentsTitle": "Ornamente aus demselben Set für alle Gegenstände verwenden, falls freigeschaltet",
     "SyncShaders": "Shader synchr.",
     "SyncShadersTitle": "Denselben Shader für alle Gegenstände verwenden",
     "Title": "Shader und Ornamente auswählen",
-    "UseEquipped": "Ausgerüstete Mode verwenden"
+    "UseEquipped": "Derzeitige Kossmetik verwenden"
   },
   "FileUpload": {
     "Instructions": "Klicke oder ziehe Dateien"
@@ -233,6 +233,7 @@
     "DupeCount": "Gegenstände, die die angegebene Anzahl an Duplikaten haben.",
     "DupeLower": "Doppelte Gegenstände, einschließlich Neuauflagen, die nicht das höchste Powerlevel haben. Nur ein Duplikat wird als das höchste ausgewählt, und der Rest als niedriger betrachtet.",
     "DupePerks": "Zeigt Gegenstände, deren Perks entweder ein Duplikat oder eine Teilmenge eines Gegenstands desselben Typs sind.",
+    "DupeStats": "Zeigt Rüstungen mit identischen Basis-Stats, einschließlich Stat-Verstellern wie Kunstvoll und Tuning-Mods.",
     "Energy": "Zeigt Gegenstände an, die das 'Rüstung 2.0'-System verwenden, das mit \"Festung der Schatten\" eingeführt wurde.",
     "EnergyCapacity": "Zeigt Gegenstände basierend auf ihrer aktuellen Energiekapazität.",
     "Engrams": "Zeige Engramme.",
@@ -712,6 +713,8 @@
       "MaybeRemoveSearchQuery": "Ziehe in Betracht, Filter in der Suchleiste zu löschen oder zu ändern",
       "ModAssignmentFailed": "Viele Sets konnten nicht alle ausgewählten Mods unterbringen",
       "RemoveMods": "Diese Mods entfernen",
+      "RemoveSetBonuses": "Erwäge, einige Set-Boni zu entfernen",
+      "SetBonuses": "Du hast einige Set-Boni ausgewählt, vielleicht hast du nicht die richtigen Gegenstände, um sie zu verwenden.",
       "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen"
     },
     "NoExotic": "Kein Exotik",
@@ -1061,6 +1064,7 @@
       "Featured": "Neue Ausrüstung",
       "Foundry": "Schmiede",
       "Harmonizable": "Harmonisierbar",
+      "Holofoil": "Holofoil",
       "Icon": "Icon",
       "Intrinsics": "Intrinsisch",
       "ItemTier": "Tier",
