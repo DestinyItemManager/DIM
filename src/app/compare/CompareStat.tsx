@@ -38,7 +38,7 @@ export default function CompareStat({
           [styles.noMinWidth]: !stat || stat.statHash === StatHashes.AnyEnergyTypeCost,
         })}
       />
-      {value !== 0 && stat?.bar && item.bucket.sort === 'Armor' && (
+      {stat?.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
           {Boolean(tunedStatHash && tunedStatHash === stat?.statHash) && (
             <AppIcon icon={tuningStatIcon} className={styles.tunedStatIcon} />
