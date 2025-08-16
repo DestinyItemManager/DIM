@@ -1,13 +1,12 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { ProgressionHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 
 export const destiny2CoreSettingsSelector = (state: RootState) =>
   state.manifest.destiny2CoreSettings;
 
-export const rankProgressionHashesSelector = (state: RootState): ProgressionHashes[] =>
+export const rankProgressionHashesSelector = (state: RootState): number[] =>
   state.manifest.destiny2CoreSettings?.currentRankProgressionHashes ?? emptyArray<number>();
 
 const d1ManifestSelector = (state: RootState) => state.manifest.d1Manifest;

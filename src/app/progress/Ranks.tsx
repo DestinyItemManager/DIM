@@ -34,7 +34,7 @@ import { getCharacterProgressions } from './selectors';
 //   }))
 // );
 
-const rankProgressionToStreakProgression: LookupTable<ProgressionHashes, number> = {
+const rankProgressionToStreakProgression: LookupTable<number, number> = {
   [ProgressionHashes.StrangeFavor]: 1999336308,
 };
 
