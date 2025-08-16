@@ -28,7 +28,9 @@ import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';
 import SeasonalChallenges from './SeasonalChallenges';
+import SeasonalRank from './SeasonalRank';
 import { TrackedTriumphs } from './TrackedTriumphs';
+import WellRestedPerkIcon from './WellRestedPerkIcon';
 
 export default function Progress({ account }: { account: DestinyAccount }) {
   const defs = useD2Definitions();
@@ -141,7 +143,10 @@ export default function Progress({ account }: { account: DestinyAccount }) {
           <section id="ranks">
             <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
               <div className="progress-row">
-                <Ranks profileInfo={profileInfo} />
+                <Ranks profileInfo={profileInfo}>
+                  <SeasonalRank store={selectedStore} profileInfo={profileInfo} />
+                  <WellRestedPerkIcon profileInfo={profileInfo} />
+                </Ranks>
               </div>
             </CollapsibleTitle>
           </section>

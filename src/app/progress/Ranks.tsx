@@ -55,12 +55,19 @@ const crucibleRewardRankProgressionHash = 2206541810;
 /**
  * Displays all ranks for the account
  */
-export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResponse }) {
+export default function Ranks({
+  profileInfo,
+  children,
+}: {
+  profileInfo: DestinyProfileResponse;
+  children?: React.ReactNode;
+}) {
   const firstCharacterProgression = getCharacterProgressions(profileInfo)?.progressions ?? {};
   const progressionHashes = useSelector(rankProgressionHashesSelector);
 
   return (
     <PursuitGrid ranks>
+      {children}
       {[crucibleRewardRankProgressionHash, ...progressionHashes].map(
         (progressionHash) =>
           !hideProgressionHashes.has(progressionHash) &&
