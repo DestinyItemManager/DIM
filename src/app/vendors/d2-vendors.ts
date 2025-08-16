@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VendorHashes, silverItemHash } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
@@ -225,9 +226,10 @@ export function filterVendorGroups(
 }
 
 export function filterToUnacquired(ownedItemHashes: Set<number>): VendorFilterFunction {
-  return ({ owned, item, collectibleState }) =>
+  return ({ owned, item, collectibleState, failureStrings }) =>
     item &&
     !owned &&
+    !(failureStrings.includes(t('Vendors.AlreadyAcquired')) && item.isExotic) &&
     (collectibleState !== undefined
       ? (collectibleState & DestinyCollectibleState.NotAcquired) !== 0
       : (item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) ||

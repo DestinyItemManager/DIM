@@ -1455,6 +1455,7 @@
     "SortRecords": "Sort triumphs by completion"
   },
   "Vendors": {
+    "AlreadyAcquired": "Already Acquired",
     "Collections": "Collections",
     "Engram": "Rank",
     "FilterToUnacquired": "Only show uncollected items",
