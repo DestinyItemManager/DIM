@@ -58,12 +58,12 @@ export function Event({
   const classSpecificNode =
     classSpecificNodeHash && defs.PresentationNode.get(classSpecificNodeHash.presentationNodeHash);
 
-  if (!classSpecificNode) {
-    return null;
-  }
+  const presentationNodes = classSpecificNode
+    ? [classSpecificNode]
+    : childrenNodes.map((n) => defs.PresentationNode.get(n.presentationNodeHash));
 
-  const records = filterMap(classSpecificNode.children.records, (h) =>
-    toRecord(defs, profileResponse, h.recordHash),
+  const records = presentationNodes.flatMap((n) =>
+    filterMap(n.children.records, (h) => toRecord(defs, profileResponse, h.recordHash)),
   );
 
   const pursuits = records

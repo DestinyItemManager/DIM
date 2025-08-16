@@ -12,8 +12,6 @@ import styles from './Milestones.m.scss';
 import Pursuit from './Pursuit';
 import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';
-import SeasonalRank from './SeasonalRank';
-import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { getEngramPowerBonus } from './engrams';
 import { milestoneToItems } from './milestone-items';
 import { getCharacterProgressions } from './selectors';
@@ -35,7 +33,6 @@ export default function Milestones({
 }) {
   const defs = useD2Definitions()!;
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
-  const characterProgressions = getCharacterProgressions(profileInfo, store.id);
   const dropPower = useSelector(dropPowerLevelSelector(store.id));
 
   const milestoneItems = uniqBy(
@@ -54,13 +51,6 @@ export default function Milestones({
 
   return (
     <>
-      {characterProgressions && (
-        <PursuitGrid>
-          <SeasonalRank store={store} profileInfo={profileInfo} />
-          <WellRestedPerkIcon profileInfo={profileInfo} />
-          {/* <PowerCaps /> */}
-        </PursuitGrid>
-      )}
       {[...milestonesByPower.keys()].sort(sortPowerBonus).map((powerBonus) => (
         <div key={powerBonus ?? -1}>
           <h2 className={styles.header}>
