@@ -18,7 +18,7 @@ export function isWellRested(
   requiredXP?: number;
 } {
   const { season, seasonPass } = getCurrentSeasonInfo(defs, profileInfo);
-  if (!season?.seasonPassProgressionHash) {
+  if (!season) {
     return {
       wellRested: false,
     };

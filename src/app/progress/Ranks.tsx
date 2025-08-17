@@ -34,21 +34,43 @@ import { getCharacterProgressions } from './selectors';
 //   }))
 // );
 
-const rankProgressionToStreakProgression: LookupTable<ProgressionHashes, number> = {
+const rankProgressionToStreakProgression: LookupTable<number, number> = {
   [ProgressionHashes.StrangeFavor]: 1999336308,
 };
+
+// This set contains progression hashes that should not be displayed in the
+// Ranks component. The API still returns them, but they are no longer visible
+// in the game.
+const hideProgressionHashes = new Set([
+  784742260, // Engram Ensiders (Rahool)
+  2411069437, // Gunsmith Rank
+  1471185389, // Xûr Rank
+  527867935, // Strange Favor (Dares of Eternity)
+]);
+
+// This doesn't show up in the automatic progression hashes, but it is mildly
+// useful in that it will affect your Crucible reward multiplier.
+const crucibleRewardRankProgressionHash = 2206541810;
 
 /**
  * Displays all ranks for the account
  */
-export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResponse }) {
+export default function Ranks({
+  profileInfo,
+  children,
+}: {
+  profileInfo: DestinyProfileResponse;
+  children?: React.ReactNode;
+}) {
   const firstCharacterProgression = getCharacterProgressions(profileInfo)?.progressions ?? {};
   const progressionHashes = useSelector(rankProgressionHashesSelector);
 
   return (
     <PursuitGrid ranks>
-      {progressionHashes.map(
-        (progressionHash: ProgressionHashes) =>
+      {children}
+      {[crucibleRewardRankProgressionHash, ...progressionHashes].map(
+        (progressionHash) =>
+          !hideProgressionHashes.has(progressionHash) &&
           firstCharacterProgression[progressionHash] && (
             <ReputationRank
               key={progressionHash}

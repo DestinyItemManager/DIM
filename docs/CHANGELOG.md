@@ -9,6 +9,10 @@
 * Removed redundant stat effect text in mod tooltip.
 * Added holofoil column to organizer
 * Worked around a bug in light.gg that caused some links from DIM's Armory to log you out of light.gg.
+* Filtered down the list of reputation ranks shown on the Progress page, and included the Crucible reward rank.
+* Solstice challenges should appear on the Progress page now.
+* Moved season pass rank info to the Ranks section in Progress.
+* Fixed "Well Rested" perk detection, moved it to the Ranks section in Progress.
 
 ## 8.85.0 <span class="changelog-date">(2025-08-10)</span>
 
