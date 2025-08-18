@@ -108,7 +108,7 @@
   composes: flexColumn from '../dim-ui/common.m.scss';
   break-inside: avoid;
   gap: 4px;
-  padding-left: 5px;
+  padding-left: 3px;
 }
 
 .perks {
@@ -124,6 +124,7 @@
     flex: 0;
     min-width: 160px;
     flex-basis: 160px;
+    padding-left: 3px;
   }
 }
 .isPerk {
