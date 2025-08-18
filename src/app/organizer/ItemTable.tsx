@@ -284,7 +284,9 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             if (e.shiftKey) {
               const node = e.target as HTMLElement;
               const filter = column.filter!(
-                node.dataset.filterValue ?? row.values[column.id],
+                node.dataset.filterValue ??
+                  node.parentElement?.dataset.filterValue ?? // look for filter-value at most 1 element up
+                  row.values[column.id],
                 row.item,
               );
               if (filter !== undefined) {
