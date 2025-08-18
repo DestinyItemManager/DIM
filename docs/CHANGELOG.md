@@ -1,5 +1,7 @@
 ## Next
 
+* Fix Organizer shift-click filter behavior for perks
+
 ## 8.86.0 <span class="changelog-date">(2025-08-17)</span>
 
 * Added Activatedness information to Set Bonuses on armor held by a character.
