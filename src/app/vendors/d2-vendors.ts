@@ -16,6 +16,7 @@ import {
   DestinyVendorsResponse,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import specialVendorStrings from '../../data/d2/special-vendors-strings.json';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -232,7 +233,9 @@ export function filterToUnacquired(
     item &&
     !owned &&
     !failureStrings.includes(
-      defs?.Vendor.get(2190858386).failureStrings[0] || 'FallbackToPreventBadFiltering',
+      defs?.Vendor.get(specialVendorStrings.alreadyAcquiredFailureString.vendorHash).failureStrings[
+        specialVendorStrings.alreadyAcquiredFailureString.index
+      ] || 'FallbackToPreventBadFiltering',
     ) &&
     (collectibleState !== undefined
       ? (collectibleState & DestinyCollectibleState.NotAcquired) !== 0
