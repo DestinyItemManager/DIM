@@ -1,5 +1,7 @@
 ## Next
 
+## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
+
 * Fix Organizer shift-click filter behavior for perks
 * Fixed confusing Tuned Stat symbol placement in the Organizer.
 
