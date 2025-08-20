@@ -1,5 +1,9 @@
 import { itemConstants } from 'app/destiny2/d2-definitions';
-import BungieImage, { bungieBackgroundStyle, bungieBackgroundStyles } from 'app/dim-ui/BungieImage';
+import BungieImage, {
+  bungieBackgroundStyle,
+  bungieBackgroundStyles,
+  bungieNetPath,
+} from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
@@ -65,21 +69,18 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
 
-  const backgrounds = item.iconDef
-    ? compact([
-        // item.iconDef.secondaryBackground,
-        item.featured && itemConstants!.featuredItemFlagPath,
-        item.tier > 1 && itemConstants!.gearTierOverlayImagePaths[item.tier],
-        item.crafted && itemConstants!.craftedBackgroundPath,
-        item.iconOverlay && itemConstants!.watermarkDropShadowPath,
-        item.iconDef.foreground,
-        // In game the masterwork glow is in front of the icon but I think that looks bad.
-        item.masterwork && itemConstants!.masterworkOverlayPath,
-        item.holofoil && itemConstants!.holofoil900AnimatedBackgroundOverlayPath,
-        item.universalOrnamented && itemConstants!.universalOrnamentBackgroundOverlayPath,
-        // item.iconDef.background,
-      ])
-    : [item.icon];
+  const backgrounds =
+    item.iconDef && itemConstants
+      ? compact([
+          item.tier > 1 && itemConstants.gearTierOverlayImagePaths[item.tier],
+          item.crafted && itemConstants.craftedBackgroundPath,
+          item.iconDef.foreground,
+          // In game the masterwork glow is in front of the icon but I think that looks bad.
+          item.masterwork && itemConstants.masterworkOverlayPath,
+          item.holofoil && itemConstants.holofoil900AnimatedBackgroundOverlayPath,
+          item.universalOrnamented && itemConstants.universalOrnamentBackgroundOverlayPath,
+        ])
+      : [item.icon];
 
   return (
     <>
@@ -93,10 +94,12 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <div style={bungieBackgroundStyles(...backgrounds)} className={itemImageStyles} />
       )}
-      {item.iconDef?.secondaryBackground ? (
+      {item.iconDef?.secondaryBackground && itemConstants ? (
         <div
-          className={clsx(styles.seasonIcon, { [styles.featuredOverlay]: item.featured })}
-          style={bungieBackgroundStyle(item.iconDef.secondaryBackground)}
+          className={clsx(styles.seasonIcon, { [styles.featuredIcon]: item.featured })}
+          style={{
+            backgroundImage: `url("${bungieNetPath(item.iconDef.secondaryBackground)}")${item.featured ? `, url("${bungieNetPath(itemConstants.featuredItemFlagPath)}")` : ''}, linear-gradient(to top, transparent, rgba(0, 0, 0, 0.5))`,
+          }}
         />
       ) : (
         item.iconOverlay && (
