@@ -82,7 +82,10 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         />
       )}
       {item.iconOverlay && (
-        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
+        <div
+          className={clsx(styles.iconOverlay, { [styles.plugOverlay]: item.plug })}
+          style={bungieBackgroundStyle(item.iconOverlay)}
+        />
       )}
       {item.tier > 1 ? (
         <div className={styles.tierPipContainer}>
@@ -154,7 +157,13 @@ export function DefItemIcon({
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
-      {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
+      {iconOverlay && (
+        <BungieImage
+          src={iconOverlay}
+          className={clsx(styles.iconOverlay, { [styles.plugOverlay]: itemDef.plug })}
+          alt=""
+        />
+      )}
       {energyCost !== undefined && energyCost > 0 && (
         <>
           <div className={styles.energyCostOverlay} />

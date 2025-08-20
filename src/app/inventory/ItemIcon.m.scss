@@ -234,6 +234,11 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
   background-size: contain;
   position: absolute;
   pointer-events: none;
+
+  &.plugOverlay {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
 }
 
 .energyCostOverlay {

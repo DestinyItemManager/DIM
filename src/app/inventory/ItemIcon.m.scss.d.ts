@@ -18,6 +18,7 @@ interface CssExports {
   'legendary': string;
   'legendaryMasterwork': string;
   'masterwork': string;
+  'plugOverlay': string;
   'rare': string;
   'shinyMasterwork': string;
   'strandColorFix': string;
