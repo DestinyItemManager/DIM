@@ -43,7 +43,7 @@ export function getItemImageStyles(item: DimItem, className?: string) {
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
-    [itemTierStyles[item.rarity]]: !borderless && !item.plug,
+    [itemTierStyles[item.rarity]]: !borderless,
   });
   return itemImageStyles;
 }
@@ -68,6 +68,8 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             [styles.inverted]: !classifiedPlaceholder.colorized,
           })}
         />
+      ) : item.iconDef ? (
+        <div style={bungieBackgroundStyle(item.iconDef.foreground)} className={itemImageStyles} />
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}

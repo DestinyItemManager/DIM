@@ -7,6 +7,7 @@ import {
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
   DestinyEquipableItemSetDefinition,
+  DestinyIconDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemInvestmentStatDefinition,
@@ -82,6 +83,8 @@ export interface DimItem {
   iconOverlay?: string;
   /** Some items have a secondary icon, namely Emblems. */
   secondaryIcon?: string;
+  /** Some items have a full icon definition attached which provides layered icon assets. */
+  iconDef?: DestinyIconDefinition;
   /** Whether we can pull this item from the postmaster */
   canPullFromPostmaster: boolean;
   /** Is this "equipment" (items that can be equipped). */

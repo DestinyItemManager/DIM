@@ -471,6 +471,9 @@ export function makeItem(
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
+    iconDef: itemDef.displayProperties.iconHash
+      ? defs.Icon.get(itemDef.displayProperties.iconHash)
+      : undefined,
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable,
     ),
