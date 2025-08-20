@@ -1,10 +1,11 @@
 ## Next
 
-* Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled
+* Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled.
+* Add `source:kepler`
 
 ## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
 
-* Fix Organizer shift-click filter behavior for perks
+* Fix Organizer shift-click filter behavior for perks.
 * Fixed confusing Tuned Stat symbol placement in the Organizer.
 
 ## 8.86.0 <span class="changelog-date">(2025-08-17)</span>
