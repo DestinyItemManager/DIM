@@ -1163,16 +1163,14 @@ function PerksCell({
                     : undefined
                 }
               >
-                <div className={styles.miniPerkContainer}>
-                  <DefItemIcon itemDef={p.plugDef} borderless={true} />
-                </div>
-                <span
-                  className={clsx({
+                <div
+                  className={clsx(styles.miniPerkContainer, {
                     [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
                   })}
                 >
-                  {p.plugDef.displayProperties.name}
-                </span>
+                  <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                </div>
+                {p.plugDef.displayProperties.name}
               </div>
             </PressTip>
           ))}
