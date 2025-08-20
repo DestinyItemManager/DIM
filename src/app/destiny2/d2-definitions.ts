@@ -17,7 +17,9 @@ import {
   DestinyEventCardDefinition,
   DestinyFactionDefinition,
   DestinyGenderDefinition,
+  DestinyIconDefinition,
   DestinyInventoryBucketDefinition,
+  DestinyInventoryItemConstantsDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
   DestinyLoadoutColorDefinition,
@@ -90,6 +92,8 @@ export const allTables: ManifestTablesShort[] = [
   'Faction',
   'ActivityMode',
   'EquipableItemSet',
+  'Icon',
+  'InventoryItemConstants',
 ];
 
 export interface DefinitionTable<T> {
@@ -144,6 +148,8 @@ export interface D2ManifestDefinitions {
   LoadoutColor: DefinitionTable<DestinyLoadoutColorDefinition>;
   LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;
   EquipableItemSet: DefinitionTable<DestinyEquipableItemSetDefinition>;
+  Icon: DefinitionTable<DestinyIconDefinition>;
+  InventoryItemConstants: DestinyInventoryItemConstantsDefinition;
   /** Check if these defs are from D2. Inside an if statement, these defs will be narrowed to type D2ManifestDefinitions. */
   readonly isDestiny2: true;
 }
@@ -177,7 +183,14 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     isDestiny2: true,
   };
 
+  defs.InventoryItemConstants = db.DestinyInventoryItemConstantsDefinition[1];
+
   for (const tableShort of allTables) {
+    if (tableShort === 'InventoryItemConstants') {
+      // InventoryItemConstants is a special case, it is not a table but a single entry in the
+      // DestinyInventoryItemConstantsDefinition table.
+      continue;
+    }
     const table = `Destiny${tableShort}Definition` as const;
     const dbTable = db[table];
     if (!dbTable) {
