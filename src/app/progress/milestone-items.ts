@@ -302,6 +302,7 @@ function makeFakePursuitItem(
     tier: 0,
     adept: false,
     holofoil: false,
+    universalOrnamented: false,
   };
 }
 

@@ -20,6 +20,7 @@ import {
   DestinyAmmunitionType,
   DestinyClass,
   DestinyDisplayPropertiesDefinition,
+  DestinyIconDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
@@ -453,6 +454,21 @@ export function makeItem(
         DestinyClass.Unknown;
   }
 
+  let iconDef: DestinyIconDefinition | undefined;
+  if (overrideStyleItem) {
+    iconDef = overrideStyleItem?.displayProperties?.iconHash
+      ? defs.Icon.get(overrideStyleItem.displayProperties.iconHash)
+      : undefined;
+    if (!iconDef) {
+      // Some icon hashes aren't set, but the icon hashes and the inventory item hash match.
+      iconDef = defs.Icon.get(overrideStyleItem.hash);
+    }
+  }
+  if (!iconDef && displayProperties.iconHash) {
+    iconDef = defs.Icon.get(displayProperties.iconHash);
+  }
+  const isExotic = itemDef.inventory!.tierType === TierType.Exotic;
+
   const createdItem: DimItem = {
     owner: owner?.id || 'unknown',
     // figure out what year this item is probably from
@@ -464,16 +480,17 @@ export function makeItem(
     hash: item.itemHash,
     itemCategoryHashes,
     rarity: ItemRarityMap[itemDef.inventory!.tierType] || 'Common',
-    isExotic: itemDef.inventory!.tierType === TierType.Exotic,
+    isExotic,
     name,
     description: displayProperties.description,
     icon: overrideStyleItem?.displayProperties.icon || displayProperties.icon || d2MissingIcon,
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
-    iconDef: itemDef.displayProperties.iconHash
-      ? defs.Icon.get(itemDef.displayProperties.iconHash)
-      : undefined,
+    universalOrnamented: Boolean(
+      normalBucket.inArmor && !isExotic && overrideStyleItem?.displayProperties.icon,
+    ),
+    iconDef,
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable,
     ),

@@ -93,6 +93,7 @@ export function MaterialCounts({
           hasIcon: Boolean(item.icon),
           iconSequences: [],
           highResIcon: '',
+          iconHash: 0,
         },
         quantity: amount,
       };

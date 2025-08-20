@@ -113,6 +113,7 @@ const toD2DamageType = memoize(
         hasIcon: true,
         highResIcon: '',
         iconSequences: [],
+        iconHash: 0,
       },
       transparentIconPath: damageType.transparentIconPath,
       hash: damageType.hash,
@@ -370,6 +371,7 @@ function makeItem(
     tier: 0,
     adept: false,
     holofoil: false,
+    universalOrnamented: false,
   };
 
   // *able

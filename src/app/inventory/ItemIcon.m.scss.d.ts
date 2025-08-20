@@ -12,6 +12,7 @@ interface CssExports {
   'energyCostOverlay': string;
   'exotic': string;
   'exoticMasterwork': string;
+  'featuredOverlay': string;
   'highlightedObjective': string;
   'iconOverlay': string;
   'inverted': string;
@@ -20,6 +21,7 @@ interface CssExports {
   'masterwork': string;
   'plugOverlay': string;
   'rare': string;
+  'seasonIcon': string;
   'shinyMasterwork': string;
   'strandColorFix': string;
   'tierPip': string;

@@ -224,6 +224,23 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
   border: 2px solid $deepsight-border-color;
 }
 
+.seasonIcon {
+  top: calc(1px + (2 / 50) * var(--item-size));
+  left: calc(1px + (0.5 / 50) * var(--item-size));
+  height: calc((12 / 50) * var(--item-size));
+  width: calc((12 / 50) * var(--item-size));
+  background-size: cover;
+  position: absolute;
+  pointer-events: none;
+
+  &.featuredOverlay {
+    top: calc(1px + (2 / 50) * var(--item-size));
+    left: calc(1px + (2 / 50) * var(--item-size));
+    height: calc((10 / 50) * var(--item-size));
+    width: calc((10 / 50) * var(--item-size));
+  }
+}
+
 .iconOverlay {
   // TODO: In Edge of Fate this overlay changed, but it's actually rendered at
   // the incorrect size vs. in-game.
