@@ -233,9 +233,9 @@ export function filterToUnacquired(
     item &&
     !owned &&
     !failureStrings.includes(
-      defs?.Vendor.get(specialVendorStrings.alreadyAcquiredFailureString.vendorHash)?.failureStrings[
-        specialVendorStrings.alreadyAcquiredFailureString.index
-      ] || 'FallbackToPreventBadFiltering',
+      defs?.Vendor.get(specialVendorStrings.alreadyAcquiredFailureString.vendorHash)
+        ?.failureStrings[specialVendorStrings.alreadyAcquiredFailureString.index] ||
+        'FallbackToPreventBadFiltering',
     ) &&
     (collectibleState !== undefined
       ? (collectibleState & DestinyCollectibleState.NotAcquired) !== 0
