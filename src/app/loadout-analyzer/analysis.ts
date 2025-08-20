@@ -268,7 +268,7 @@ export async function analyzeLoadout(
             (item) =>
               item.classType === classType && item.bucket.inArmor && isLoadoutBuilderItem(item),
           );
-          const [filteredItems] = filterItems({
+          const [filteredItems, filterInfo] = filterItems({
             defs,
             items: armorForThisClass,
             pinnedItems: {},
@@ -288,12 +288,17 @@ export async function analyzeLoadout(
             loadoutParameters.query &&
             loadoutArmor.some(
               (item) =>
+                // The item exists in inventory
                 armorForThisClass.some((allItem) => allItem === item) &&
+                // But is not in the candidate items
                 !Object.values(filteredItems)
                   .flat()
                   .some((filteredItem) => filteredItem === item),
             )
           ) {
+            // Either the search filter excluded these items, OR they were strictly worse than some other item.
+            // TODO: Make a different explanation for this
+            // TODO: Suppress worse-item filtering in the above check
             findings.add(LoadoutFinding.InvalidSearchQuery);
           }
 
