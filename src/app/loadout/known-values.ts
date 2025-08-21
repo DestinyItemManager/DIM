@@ -27,6 +27,7 @@ export const knownModPlugCategoryHashes = [
   ...armor2PlugCategoryHashes,
   ...activityModPlugCategoryHashes,
   PlugCategoryHashes.EnhancementsArtifice,
+  PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
 ];
 
 /**

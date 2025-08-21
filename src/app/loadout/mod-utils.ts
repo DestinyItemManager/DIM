@@ -99,6 +99,14 @@ export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
       return t('Loadouts.Prismatic.Grenade');
     } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.melee')) {
       return t('Loadouts.Prismatic.Melee');
+    } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.meleetuning.mods')) {
+      return t('Loadouts.TuningMods');
+    } else if (
+      plug.plug.plugCategoryIdentifier === 'enhancements.raid_v800' &&
+      plug.itemTypeDisplayName.length > 50 // stop using our translation if it gets fixed
+    ) {
+      // https://github.com/Bungie-net/api/issues/1920
+      return t('Loadouts.SalvationsEdgeMods');
     } else {
       return plug.itemTypeDisplayName;
     }

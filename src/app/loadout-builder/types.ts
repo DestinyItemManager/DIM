@@ -121,6 +121,13 @@ export const generalSocketReusablePlugSetHash = 731468111;
  */
 export const artificeSocketReusablePlugSetHash = 4285066582;
 
+/**
+ * The reusablePlugSetHash for the tuning socket, which lets you trade off two
+ * stats.
+ * TODO: Find a way to generate this in d2ai.
+ */
+export const tuningSocketReusablePlugSetHash = 1155052024;
+
 /** Bonus to a single stat given by plugs in artifice armor's exclusive mod slot */
 export const artificeStatBoost = 3;
 /** Bonus to a single stat given by the "half tier mods" plugs in all armor's general mod slot */

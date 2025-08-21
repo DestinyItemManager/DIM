@@ -21,8 +21,11 @@ import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
-/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
-export const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
+/** Do not allow the user to choose artifice/tuning mods manually in Loadout Optimizer since we're supposed to be doing that */
+export const autoAssignmentPCHs = [
+  PlugCategoryHashes.EnhancementsArtifice,
+  // PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
+];
 
 const LoadoutModMemo = memo(function LoadoutMod({
   mod,
