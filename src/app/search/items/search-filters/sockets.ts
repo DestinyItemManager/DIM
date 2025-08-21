@@ -156,13 +156,12 @@ const socketFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Mods.Y3'),
     destinyVersion: 2,
     filter: () => (item) =>
-      Boolean(item.energy) &&
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
             socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/,
+              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.|v900.weapon.mod_)/,
             ) &&
             // enforce that this provides a perk (excludes empty slots)
             socket.plugged.plugDef.perks.length,
