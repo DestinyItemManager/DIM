@@ -48,7 +48,8 @@ export function isWellRested(
    *  Calculate the amount of levels we need to fullfill well rested requirements
    *  Ranks 101-110 are equiv to 5 levels each
    */
-  const WELL_RESTED_LEVELS = (seasonProgressionDef.steps[1].progressTotal * 5) / nextLevelAt;
+  const BASE_LEVEL_XP_REQUIREMENT = seasonProgressionDef?.steps[1].progressTotal || 100000;
+  const WELL_RESTED_LEVELS = (BASE_LEVEL_XP_REQUIREMENT * 5) / nextLevelAt;
 
   if (seasonProgressionDef.steps.length === seasonProgression.levelCap) {
     for (let i = 0; i < WELL_RESTED_LEVELS; i++) {
