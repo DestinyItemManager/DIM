@@ -791,6 +791,11 @@ const D2Sources: {
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
     ],
   },
+  kepler: {
+    sourceHashes: [
+      4284811963, // Source: Exploring Kepler
+    ],
+  },
   kingsfall: {
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid

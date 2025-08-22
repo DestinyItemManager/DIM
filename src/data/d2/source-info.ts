@@ -1266,6 +1266,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  kepler: {
+    itemHashes: [],
+    sourceHashes: [
+      4284811963, // Source: Exploring Kepler
+    ],
+    searchString: [],
+  },
   kf: {
     itemHashes: [],
     sourceHashes: [
