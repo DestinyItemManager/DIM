@@ -3,6 +3,7 @@
 * Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled.
 * Add `source:kepler`
 * `is:modded` can match items other than armor
+* year:8 now correctly matches Edge of Fate items.
 
 ## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
 

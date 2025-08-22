@@ -245,7 +245,11 @@ export function getItemYear(
 ) {
   if (('destinyVersion' in item && item.destinyVersion === 2) || 'displayProperties' in item) {
     const season = getSeason(item, defs);
-    return season ? Math.floor(season / 4) + 1 : 0;
+    if (season < 27) {
+      return season ? Math.floor(season / 4) + 1 : 0;
+    } else {
+      return season ? Math.floor((season - 27) / 2) + 8 : 0;
+    }
   } else if (isD1Item(item)) {
     if (!item.sourceHashes) {
       return 1;
