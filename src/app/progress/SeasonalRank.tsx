@@ -171,12 +171,18 @@ export function getSeasonPassStatus(
   const seasonPassProgressionHash = seasonPass.rewardProgressionHash;
   const seasonProgression = characterProgressions.progressions[seasonPassProgressionHash];
   const seasonProgressionDef = defs.Progression.get(seasonPassProgressionHash);
+  const overdriveLevels = seasonProgressionDef.steps.filter(
+    (step) => step.progressTotal === 500000,
+  ).length;
 
   const prestigeProgressionHash = seasonPass.prestigeProgressionHash;
   const prestigeProgression = characterProgressions.progressions[prestigeProgressionHash];
   const prestigeProgressionDef = defs.Progression.get(prestigeProgressionHash);
 
-  const seasonPassLevel = seasonProgression.level + prestigeProgression.level;
+  // Take seasonpass level and add prestige progress adjusted to remove 500k xp levels double counting
+  const seasonPassLevel =
+    seasonProgression.level +
+    (prestigeProgression.level > overdriveLevels ? prestigeProgression.level - overdriveLevels : 0);
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
   const prestigeMode = seasonProgression.level === seasonProgression.levelCap;
@@ -197,6 +203,9 @@ export function getSeasonPassStatus(
     progressToNextLevel,
     nextLevelAt,
     weeklyProgress,
+
+    // Overdrive steps, steps added in Edge of Fate that give bonus rewards and require extra XP
+    overdriveLevels,
 
     /** The player hit the end of the season pass and is now "prestiging it" to levels beyond the reward track. */
     prestigeMode,
