@@ -52,15 +52,15 @@ export function isWellRested(
   const wellRestedLevels = (baseLevelXPRequirement * 5) / nextLevelAt;
 
   if (seasonProgressionDef.steps.length === seasonProgression.levelCap) {
-    for (let i = 0; i < WELL_RESTED_LEVELS; i++) {
+    for (let i = 0; i < wellRestedLevels; i++) {
       seasonProgressionDef.steps.push(prestigeProgressionDef.steps[0]);
     }
   }
 
   const requiredXP =
-    prestigeMode && prestigeProgression.level >= WELL_RESTED_LEVELS
-      ? xpRequiredForLevel(0, prestigeProgressionDef) * WELL_RESTED_LEVELS
-      : xpTotalRequiredForLevel(seasonPassLevel, seasonProgressionDef, WELL_RESTED_LEVELS);
+    prestigeMode && prestigeProgression.level >= wellRestedLevels
+      ? xpRequiredForLevel(0, prestigeProgressionDef) * wellRestedLevels
+      : xpTotalRequiredForLevel(seasonPassLevel, seasonProgressionDef, wellRestedLevels);
 
   // Have you gained XP equal to three full levels worth of XP?
   return {
