@@ -5,6 +5,7 @@
 * `is:modded` can match items other than armor
 * year:8 now correctly matches Edge of Fate items.
 * Fixes well rested XP counter from counting ranks 101-110 as 1 level instead of 5
+* Fixed the display of Seasonal Progress and Well-Rested on mobile.
 
 ## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
 
