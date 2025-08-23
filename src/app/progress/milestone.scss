@@ -47,6 +47,10 @@
         text-align: center;
       }
 
+      > span > span {
+        white-space: nowrap;
+      }
+
       .item {
         margin: 0;
         height: auto;
@@ -76,7 +80,7 @@
 
     .milestone-info {
       flex: 1;
-      width: 0;
+      flex-basis: 0;
       display: flex;
       flex-direction: column;
 

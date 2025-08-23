@@ -27,6 +27,9 @@
 .progress {
   width: 90%;
   text-align: center;
+  > span {
+    white-space: nowrap;
+  }
 }
 
 .seasonEnd {
