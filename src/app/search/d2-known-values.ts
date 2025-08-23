@@ -333,6 +333,7 @@ export const enum VendorHashes {
   Failsafe = 1576276905,
   RivensWishesExotics = 2388521577,
   XurLegendaryItems = 3751514131, // Vendor "Strange Gear Offers"
+  VanguardArms = 153857624, // "Weekly: Vanguard Arms Rewards"
 }
 
 // See coreSettingsLoaded reducer action for details. And remove this if/when we no longer perform that hack.
