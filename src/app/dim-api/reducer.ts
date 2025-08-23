@@ -411,10 +411,10 @@ function profileLoaded(
 
   let searches = state.searches ?? {};
   if (account && (profileResponse.searches || profileResponse.deletedSearchHashes?.length)) {
-    const existingSearches = profileResponse.sync
-      ? state.searches[account.destinyVersion]
-      : undefined;
-    const newSearches = [...(existingSearches ?? [])];
+    const existingSearches = profileResponse.sync ? state.searches[account.destinyVersion] : [];
+    const newSearches = !profileResponse.searches?.length
+      ? existingSearches
+      : [...existingSearches];
     for (const search of profileResponse.searches ?? []) {
       const foundSearchIndex = newSearches.findIndex(
         (s) => s.query === search.query && search.type === s.type,
@@ -437,17 +437,27 @@ function profileLoaded(
   let profiles = state.profiles;
   if (account) {
     const existingProfile = state.profiles[profileKey];
-    const existingLoadouts = profileResponse.sync ? existingProfile?.loadouts : undefined;
-    const newLoadouts = {
-      ...existingLoadouts,
-      ...keyBy(profileResponse.loadouts ?? [], (l) => l.id),
-    };
+    const existingLoadouts = profileResponse.sync ? existingProfile?.loadouts : {};
+    const newLoadouts =
+      profileResponse.sync &&
+      !profileResponse.loadouts?.length &&
+      !profileResponse.deletedLoadoutIds?.length
+        ? existingLoadouts
+        : {
+            ...existingLoadouts,
+            ...keyBy(profileResponse.loadouts ?? [], (l) => l.id),
+          };
     for (const l of profileResponse.deletedLoadoutIds ?? []) {
       delete newLoadouts[l];
     }
 
-    const existingTags = profileResponse.sync ? existingProfile?.tags : undefined;
-    const newTags = { ...existingTags, ...keyBy(profileResponse.tags ?? [], (t) => t.id) };
+    const existingTags = profileResponse.sync ? existingProfile?.tags : {};
+    const newTags =
+      profileResponse.sync &&
+      !profileResponse.tags?.length &&
+      !profileResponse.deletedTagsIds?.length
+        ? existingTags
+        : { ...existingTags, ...keyBy(profileResponse.tags ?? [], (t) => t.id) };
     for (const t of profileResponse.deletedTagsIds ?? []) {
       delete newTags[t];
     }
