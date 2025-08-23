@@ -22,7 +22,7 @@ export default function WellRestedPerkIcon({
   }
   const perkDisplay = wellRestedPerk.displayProperties;
   return (
-    <div className="well-rested milestone-quest">
+    <div className="milestone-quest">
       <div className="milestone-icon">
         <BungieImage
           className="perk milestone-img"
@@ -31,9 +31,9 @@ export default function WellRestedPerkIcon({
         />
         {wellRestedInfo.weeklyProgress !== undefined && wellRestedInfo.requiredXP !== undefined && (
           <span>
-            {wellRestedInfo.weeklyProgress.toLocaleString()}
+            <span>{wellRestedInfo.weeklyProgress.toLocaleString()}</span>
             <wbr />/<wbr />
-            {wellRestedInfo.requiredXP.toLocaleString()}
+            <span>{wellRestedInfo.requiredXP.toLocaleString()}</span>
           </span>
         )}
       </div>

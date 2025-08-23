@@ -135,11 +135,9 @@ export default function SeasonalRank({
             percentComplete={progressToNextLevel / nextLevelAt}
             className={styles.progressBar}
           />
-          <span>
-            {progressToNextLevel.toLocaleString()}
-            <wbr />/<wbr />
-            {nextLevelAt.toLocaleString()}
-          </span>
+          <span>{progressToNextLevel.toLocaleString()}</span>
+          <wbr />/<wbr />
+          <span>{nextLevelAt.toLocaleString()}</span>
         </div>
       </div>
       <div className="milestone-info">
