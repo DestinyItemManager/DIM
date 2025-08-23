@@ -84,7 +84,7 @@ export default function ItemPopup({
       useSelector(streamDeckEnabledSelector)
     : false;
 
-  const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
+  const failureStrings = Array.from(new Set(extraInfo?.failureStrings ?? []));
 
   const header = (
     <div className={styles.header}>

@@ -21,6 +21,7 @@ const allowedVendorHashes = [
   VendorHashes.Failsafe,
   VendorHashes.RivensWishesExotics,
   VendorHashes.XurLegendaryItems,
+  VendorHashes.VanguardArms,
 ];
 
 export const loVendorItemsSelector = currySelector(
