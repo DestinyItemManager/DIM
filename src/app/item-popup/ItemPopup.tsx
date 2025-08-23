@@ -16,6 +16,7 @@ import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
 import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
+import { uniq } from 'es-toolkit';
 import { useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import DesktopItemActions, { menuClassName } from './DesktopItemActions';
@@ -84,7 +85,7 @@ export default function ItemPopup({
       useSelector(streamDeckEnabledSelector)
     : false;
 
-  const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
+  const failureStrings = uniq(Array.from(extraInfo?.failureStrings ?? []));
 
   const header = (
     <div className={styles.header}>
