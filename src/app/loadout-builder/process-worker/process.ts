@@ -45,7 +45,7 @@ export interface ProcessInputs {
   desiredStatRanges: DesiredStatRange[];
   /** Ensure every set includes one exotic */
   anyExotic: boolean;
-  /** Which artifice mods, large, and small stat mods are available */
+  /** Which artifice/tuning mods, large, and small stat mods are available */
   autoModOptions: AutoModData;
   /** Use stat mods to hit stat minimums */
   autoStatMods: boolean;
@@ -158,6 +158,8 @@ export function process({
   };
 
   const majorMinorRatio = majorStatBoost / minorStatBoost;
+  const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
+  const setBonusCounts = Object.values(setBonuses);
 
   itemLoop: for (const helm of helms) {
     const helmExotic = Number(helm.isExotic);
@@ -175,11 +177,12 @@ export function process({
           const legExotic = Number(leg.isExotic);
           const legArtifice = Number(leg.isArtifice);
           const legStats = statsCache.get(leg)!;
-          for (const classItem of classItems) {
+          innerloop: for (const classItem of classItems) {
             const classItemExotic = Number(classItem.isExotic);
             const classItemArtifice = Number(classItem.isArtifice);
             const classItemStats = statsCache.get(classItem)!;
 
+            // Check exotic constraints
             const exoticSum =
               classItemExotic + helmExotic + gauntletExotic + chestExotic + legExotic;
             if (exoticSum > 1) {
@@ -190,24 +193,21 @@ export function process({
               setStatistics.skipReasons.noExotic += 1;
               continue;
             }
-            let insufficientSetBonus = false;
-            for (const setHash of Object.keys(setBonuses)) {
-              // TODO unscrew
-              const setCount = [
-                helm.setBonus,
-                gaunt.setBonus,
-                chest.setBonus,
-                leg.setBonus,
-                classItem.setBonus,
-              ].filter((x) => x === Number(setHash)).length;
-              if (setCount < (setBonuses[Number(setHash)] || 0)) {
-                insufficientSetBonus = true;
-                break;
+
+            // Check set bonus requirements
+            // eslint-disable-next-line @typescript-eslint/prefer-for-of
+            for (let i = 0; i < setBonusHashes.length; i++) {
+              const setHash = setBonusHashes[i];
+              const setCount =
+                Number(helm.setBonus === setHash) +
+                Number(gaunt.setBonus === setHash) +
+                Number(chest.setBonus === setHash) +
+                Number(leg.setBonus === setHash) +
+                Number(classItem.setBonus === setHash);
+              if (setCount < setBonusCounts[setHash]) {
+                setStatistics.skipReasons.insufficientSetBonus += 1;
+                continue innerloop;
               }
-            }
-            if (insufficientSetBonus) {
-              setStatistics.skipReasons.insufficientSetBonus += 1;
-              continue;
             }
 
             processStatistics.numProcessed++;
