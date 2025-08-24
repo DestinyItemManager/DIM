@@ -1,5 +1,5 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
-import { compact, uniqBy } from 'app/utils/collections';
+import { compact, filterMap, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { filterDescriptionText } from './filter-description';
@@ -492,11 +492,16 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
       // For multiquery filters, if the user has typed a + they're looking to add another query term,
       // so offer to append one.
       if (multiqueryTermsLookup[possibleKeyword] && typedPlain.endsWith('+')) {
+        const existingTerms = new Set((typedSegments[1] || '').split('+'));
         suggestions.unshift(
-          ...multiqueryTermsLookup[possibleKeyword].map((t) => ({
-            rawText: typedPlain + t,
-            plainText: typedPlain + t,
-          })),
+          ...filterMap(multiqueryTermsLookup[possibleKeyword], (t) => {
+            if (!existingTerms.has(t)) {
+              return {
+                rawText: typedPlain + t,
+                plainText: typedPlain + t,
+              };
+            }
+          }),
         );
       }
 
