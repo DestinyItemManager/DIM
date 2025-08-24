@@ -120,8 +120,13 @@ function matchFilter<I, FilterCtx, SuggestionsCtx>(
       case 'simple': {
         break;
       }
-      case 'query': {
-        if (filterDef.suggestions!.includes(filterValue)) {
+      case 'query':
+      case 'multiquery': {
+        if (
+          filterDef.suggestions!.includes(filterValue) ||
+          (format === 'multiquery' &&
+            filterValue.split('+').every((s) => filterDef.suggestions?.includes(s)))
+        ) {
           return (filterContext) =>
             filterDef.filter({
               lhs,
@@ -170,6 +175,7 @@ function matchFilter<I, FilterCtx, SuggestionsCtx>(
         }
       }
       case 'custom':
+        // TODO: nothing here means that custom format filters CANNOT currently work.
         break;
     }
   }

@@ -19,6 +19,8 @@ interface HeapEntry {
   armor: ProcessItem[];
   /** The stats associated with this armor set. */
   stats: number[];
+  mods: number[];
+  bonusStats: number[];
 }
 
 /**
@@ -73,6 +75,8 @@ export class HeapSetTracker {
     statMix: number,
     armor: ProcessItem[],
     stats: number[],
+    mods: number[],
+    bonusStats: number[],
   ): boolean {
     const power = getPower(armor);
     const entry: HeapEntry = {
@@ -82,6 +86,8 @@ export class HeapSetTracker {
       armor,
       stats,
       statsTotal: sum(stats),
+      mods,
+      bonusStats,
     };
 
     if (this.heap.length < this.capacity) {

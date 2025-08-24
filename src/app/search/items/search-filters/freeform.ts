@@ -82,7 +82,7 @@ const freeformFilters: ItemFilterDefinition[] = [
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
-    suggestionsGenerator: ({ allNotesHashtags }) => allNotesHashtags,
+    suggestionsGenerator: ({ allNotesHashtags }) => ['notes:', ...(allNotesHashtags || [])],
     filter: ({ filterValue, getNotes, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
