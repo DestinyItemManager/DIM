@@ -13,12 +13,7 @@ import {
   MinMaxStat,
   StatRanges,
 } from '../types';
-import {
-  pickAndAssignSlotIndependentMods,
-  pickOptimalStatMods,
-  precalculateStructures,
-  updateMaxStats,
-} from './process-utils';
+import { pickOptimalStatMods, precalculateStructures, updateMaxStats } from './process-utils';
 import { encodeStatMix, HeapSetTracker } from './set-tracker';
 import {
   AutoModData,
@@ -129,7 +124,6 @@ export function process({
     autoStatMods,
     statOrder,
   );
-  const hasMods = Boolean(activityMods.length || generalMods.length);
 
   const setStatistics: ProcessStatistics['statistics'] = {
     skipReasons: {
@@ -264,10 +258,6 @@ export function process({
               Math.min(stats[5], maxStatConstraints[5]),
             ];
 
-            // neededStats is the extra stats we'd need in each stat in order to
-            // hit the stat minimums, and totalNeededStats is just the sum of
-            // those. This informs the logic for deciding how to add stat mods.
-            const neededStats = [0, 0, 0, 0, 0, 0];
             let totalNeededStats = 0;
 
             // Check which stats we're under the stat minimums on.
@@ -286,7 +276,6 @@ export function process({
                   const neededValue = filter.minStat - value;
                   if (neededValue > 0) {
                     totalNeededStats += neededValue;
-                    neededStats[index] = neededValue;
                   }
                 }
               }
@@ -311,28 +300,6 @@ export function process({
             }
 
             const armor = [helm, gaunt, chest, leg, classItem];
-
-            // Items that individually can't fit their slot-specific mods were
-            // filtered out before even passing them to the worker, so we only
-            // do this combined mods + auto-stats check if we need to check
-            // whether the set can fit the mods and hit target stats. This is a
-            // fast check to see if enough mods can fit to hit needed stat
-            // minimums.
-            if (
-              (hasMods || totalNeededStats > 0) &&
-              !pickAndAssignSlotIndependentMods(
-                precalculatedInfo,
-                setStatistics.modsStatistics,
-                armor,
-                totalNeededStats > 0 ? neededStats : undefined,
-                numArtifice,
-              )
-            ) {
-              // There's no way for this set to fit all requested mods while
-              // satisfying tier lower bounds, so continue on. setStatistics
-              // have been updated in pickAndAssignSlotIndependentMods.
-              continue;
-            }
 
             // At this point we know this set satisfies all constraints.
             // Update the max stat ranges. We need to do this before we short
@@ -386,6 +353,16 @@ export function process({
               finalStats[3] +
               finalStats[4] +
               finalStats[5];
+
+            for (let index = 0; index < 6; index++) {
+              const value = finalStats[index];
+              const filter = desiredStatRanges[index];
+              if (value < filter.minStat) {
+                // We couldn't hit the minimums.
+                setStatistics.modsStatistics.finalAssignment.modsAssignmentFailed++;
+                continue itemLoop;
+              }
+            }
 
             // Now use our more accurate extra tiers prediction
             if (!setTracker.couldInsert(finalTotalStats)) {

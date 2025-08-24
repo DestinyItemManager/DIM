@@ -3,7 +3,7 @@ import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
 import { ArmorStatHashes, artificeStatBoost, DesiredStatRange, MinMaxStat } from '../types';
 import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
-import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
+import { AutoModData, ProcessItem, ProcessMod } from './types';
 
 /**
  * Data that stays the same in a given LO run.
@@ -224,129 +224,16 @@ export function updateMaxStats(
 }
 
 /**
- * This figures out if all user-chosen general, combat and activity mods can be
- * assigned to an armour set and auto stat mods can be picked to provide the
- * neededStats. This is a version of pickOptimalStatMods that only cares about
- * hitting the neededStats (minimum stat targets) and not finding the optimal
- * stat mods for the highest tier.
+ * Optimizes the auto stat mod picks to maximize total stats, prioritizing stats
+ * earlier in the stat order.
  *
  * The param info.activityModPermutations is assumed to be the result from
  * processUtils.ts#generateModPermutations, i.e. all permutations of activity
  * mods. By preprocessing all the assignments we skip a lot of work in the
  * middle of the big process algorithm.
  *
- * Returns a ModsPick representing the automatically picked stat mods in the
- * success case, even if no auto stat mods were requested/needed, in which case
- * the arrays will be empty.
- *
- * TODO: Doesn't need to return anything in its current usage
- */
-export function pickAndAssignSlotIndependentMods(
-  info: LoSessionInfo,
-  modStatistics: ModAssignmentStatistics, // mutated
-  items: readonly ProcessItem[],
-  neededStats: number[] | undefined,
-  numArtifice: number,
-): ModsPick[] | undefined {
-  modStatistics.earlyModsCheck.timesChecked++;
-
-  let setEnergy = 0;
-  for (const item of items) {
-    setEnergy += item.remainingEnergyCapacity;
-  }
-
-  if (setEnergy < info.totalModEnergyCost) {
-    modStatistics.earlyModsCheck.timesFailed++;
-    return undefined;
-  }
-
-  // An early check to ensure we have enough activity mod combos
-  // It works by creating an index of tags to totals of said tag
-  // we can then ensure we have enough items with said tags.
-  if (info.hasActivityMods) {
-    for (const [tag, tagCount] of Object.entries(info.activityTagCounts)) {
-      let socketsCount = 0;
-      for (const item of items) {
-        if (item.compatibleModSeasons?.includes(tag)) {
-          socketsCount++;
-        }
-      }
-      if (socketsCount < tagCount) {
-        modStatistics.earlyModsCheck.timesFailed++;
-        return undefined;
-      }
-    }
-  }
-
-  let assignedModsAtLeastOnce = false;
-  const remainingEnergyCapacities = [0, 0, 0, 0, 0];
-
-  modStatistics.finalAssignment.modAssignmentAttempted++;
-
-  // Now we begin looping over all the mod permutations.
-  activityModLoop: for (const activityPermutation of info.activityModPermutations) {
-    activityItemLoop: for (let i = 0; i < items.length; i++) {
-      const activityMod = activityPermutation[i];
-
-      // If a mod is null there is nothing being socketed into the item so move on
-      if (!activityMod) {
-        continue activityItemLoop;
-      }
-
-      const item = items[i];
-      const tag = activityMod.tag!;
-      const energyCost = activityMod.energyCost;
-
-      // The activity mods won't fit in the item set so move on to the next set of mods
-      if (energyCost > item.remainingEnergyCapacity || !item.compatibleModSeasons?.includes(tag)) {
-        continue activityModLoop;
-      }
-    }
-
-    assignedModsAtLeastOnce = true;
-
-    // This is a valid activity and combat mod assignment. See how much energy is left over per piece
-    for (let idx = 0; idx < items.length; idx++) {
-      const item = items[idx];
-      remainingEnergyCapacities[idx] =
-        item.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0);
-    }
-    remainingEnergyCapacities.sort((a, b) => b - a);
-
-    if (neededStats) {
-      const result = chooseAutoMods(
-        info,
-        neededStats,
-        numArtifice,
-        [remainingEnergyCapacities],
-        setEnergy - info.totalModEnergyCost,
-      );
-
-      if (result) {
-        return result;
-      }
-    } else {
-      remainingEnergyCapacities.sort((a, b) => b - a);
-      if (info.generalModCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])) {
-        return [];
-      }
-    }
-  }
-
-  if (assignedModsAtLeastOnce && neededStats) {
-    modStatistics.finalAssignment.autoModsAssignmentFailed++;
-  } else {
-    modStatistics.finalAssignment.modsAssignmentFailed++;
-  }
-  return undefined;
-}
-
-/**
- * Optimizes the auto stat mod picks to maximize total stats, prioritizing stats
- * earlier in the stat order. This differs from
- * `pickAndAssignSlotIndependentMods` in that it assumes that the stat minimums
- * can definitely be hit, and instead tries to maximize the total stats by
- * picking the best auto stat mods.
+ * This assumes that the stat minimums can definitely be hit, and instead tries
+ * to maximize the total stats by picking the best auto stat mods.
  */
 export function pickOptimalStatMods(
   info: LoSessionInfo,
