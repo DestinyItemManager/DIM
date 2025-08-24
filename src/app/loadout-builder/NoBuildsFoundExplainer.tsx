@@ -29,8 +29,6 @@ interface ProblemDescription {
   suggestions: ActionableSuggestion[];
 }
 
-/** How many sets can be excluded by upper bounds before we warn. Not too high because upper bounds are rarely useful. */
-const UPPER_STAT_BOUNDS_WARN_RATIO = 0.8;
 /**
  * How many sets can be excluded by lower bounds before we warn.
  * Quite high because LO's purpose is literally to sift through tons of garbage sets.
