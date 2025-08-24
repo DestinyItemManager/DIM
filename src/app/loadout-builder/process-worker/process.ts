@@ -11,7 +11,6 @@ import {
   DesiredStatRange,
   majorStatBoost,
   MinMaxStat,
-  minorStatBoost,
   StatRanges,
 } from '../types';
 import {
@@ -157,7 +156,6 @@ export function process({
     statistics: setStatistics,
   };
 
-  const majorMinorRatio = majorStatBoost / minorStatBoost;
   const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
   const setBonusCounts = Object.values(setBonuses);
 
@@ -360,76 +358,30 @@ export function process({
               continue;
             }
 
-            // Starting from here, we end up mutating our effectiveStats array
-            // a bit. We want to figure out the best stats for this set. We
-            // can't do that for every set because it'd be too expensive.
-
-            // TODO: This is maybe where we'd want to calculate "tuning mods"
-            // contributions, but it might be better to just create different
-            // variants of each item with each tuning mod slotted. Maybe we
-            // can finally redo this as an integer programming problem?
-
-            // TODO: These calculations do not take into account the
-            // energy cost of the mods, so we can only use them to predict the
-            // best possible stats that could theoretically be achieved.
-
-            // Then spend artifice mods to boost stats greedily in stat priority
-            // order. This also allows "wasted stats" in order to hit stat
-            // maximums (e.g. adding +3 stats to a stat that is already at 199).
-            let artificeModsAvailable = numArtifice;
-            let statsFromArtificeMods = 0;
-            for (let index = 0; index < 6 && artificeModsAvailable > 0; index++) {
-              const value = effectiveStats[index];
-              const filter = desiredStatRanges[index];
-              if (value < filter.maxStat) {
-                const pointsToMax = filter.maxStat - value;
-                // How many artifice mods would that be?
-                const numArtificeModsUsed = Math.min(
-                  Math.ceil(pointsToMax / artificeStatBoost),
-                  artificeModsAvailable,
-                );
-                const statBoost = numArtificeModsUsed * artificeStatBoost;
-                effectiveStats[index] += statBoost;
-                statsFromArtificeMods += statBoost;
-                artificeModsAvailable -= numArtificeModsUsed;
-              }
-            }
-
-            // Also check how many +10 and +5 general mods we can use to boost stats.
-            let generalModsAvailable = precalculatedInfo.numAvailableGeneralMods;
-            let statsFromGeneralMods = 0;
-            for (let index = 0; index < 6; index++) {
-              const value = effectiveStats[index];
-              const filter = desiredStatRanges[index];
-              if (value < filter.maxStat) {
-                const pointsToMax = filter.maxStat - value;
-                // How many +5 mods would that be?
-                let minorStatMods = Math.ceil(pointsToMax / minorStatBoost);
-                // Use +10 mods in place of two +5 mods
-                const majorStatMods = Math.floor(minorStatMods / majorMinorRatio);
-                minorStatMods -= majorStatMods * majorMinorRatio;
-
-                const numGeneralModsUsed = Math.min(
-                  majorStatMods + minorStatMods,
-                  generalModsAvailable,
-                );
-                const numMajorModsUsed = Math.min(majorStatMods, generalModsAvailable);
-                const numMinorModsUsed = Math.min(
-                  minorStatMods,
-                  generalModsAvailable - numMajorModsUsed,
-                );
-                const statBoost =
-                  numMajorModsUsed * majorStatBoost + numMinorModsUsed * minorStatBoost;
-                effectiveStats[index] += statBoost;
-                statsFromGeneralMods += statBoost;
-                generalModsAvailable -= numGeneralModsUsed;
-              }
-            }
-
-            const statsFromMods = statsFromArtificeMods + statsFromGeneralMods;
+            const { bonusStats } = pickOptimalStatMods(
+              precalculatedInfo,
+              armor,
+              stats,
+              desiredStatRanges,
+            );
+            const finalStats = [
+              effectiveStats[0] + bonusStats[0],
+              effectiveStats[1] + bonusStats[1],
+              effectiveStats[2] + bonusStats[2],
+              effectiveStats[3] + bonusStats[3],
+              effectiveStats[4] + bonusStats[4],
+              effectiveStats[5] + bonusStats[5],
+            ];
+            const finalTotalStats =
+              finalStats[0] +
+              finalStats[1] +
+              finalStats[2] +
+              finalStats[3] +
+              finalStats[4] +
+              finalStats[5];
 
             // Now use our more accurate extra tiers prediction
-            if (!setTracker.couldInsert(totalStats + statsFromMods)) {
+            if (!setTracker.couldInsert(finalTotalStats)) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
@@ -437,11 +389,11 @@ export function process({
             // Calculate the numeric stat mix for fast integer comparison.
             // This encodes each stat value (0-200) into 8 bits, packed into a single integer.
             // Only non-ignored stats are included, maintaining lexical ordering for priority.
-            const numericStatMix = encodeStatMix(effectiveStats, desiredStatRanges);
+            const numericStatMix = encodeStatMix(finalStats, desiredStatRanges);
 
             processStatistics.numValidSets++;
             // And now insert our set using the predicted total tier and numeric stat mix.
-            setTracker.insert(totalStats + statsFromMods, numericStatMix, armor, stats);
+            setTracker.insert(finalTotalStats, numericStatMix, armor, stats);
 
             if (stopOnFirstSet) {
               if (strictUpgrades) {
