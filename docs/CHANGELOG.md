@@ -21,6 +21,7 @@
 * Check out Filters Help at the bottom of the search dropdown, for more dupe filter keywords.
 * In the future, the `dupe:` filter will replace `is:dupeperks`, `is:statdupe`, `is:statlower`, `is:customstatlower`.
 * `dupe:customstatlower` will more accurately narrow matches, checking **all* applicable custom stats against items. `is:customstatlower` is not recommended.
+* Add a button to Compare to find all Armor 3.0 with the same 3 non-zero stats, even if they have a different Archetype.
 
 ## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
 
