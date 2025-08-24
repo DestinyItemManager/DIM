@@ -25,6 +25,7 @@ const wishlistFilters: ItemFilterDefinition[] = [
   },
   {
     keywords: 'wishlistdupe',
+    deprecated: true,
     description: tl('Filter.WishlistDupe'),
     destinyVersion: 2,
     filter: ({ wishListFunction, allItems }) => {
