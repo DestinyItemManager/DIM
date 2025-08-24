@@ -36,6 +36,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('a', 1000)],
           [5, 5, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
       expect(
@@ -44,6 +46,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([6, 6, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('b', 1200)],
           [6, 6, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
       expect(
@@ -52,6 +56,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([4, 6, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('c', 1100)],
           [4, 6, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
 
@@ -74,6 +80,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('a', 1000)],
           [5, 5, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
       expect(
@@ -82,6 +90,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([6, 6, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('b', 1000)],
           [6, 6, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
       expect(
@@ -90,6 +100,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([4, 4, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('c', 1000)],
           [4, 4, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
       expect(tracker.totalSets).toBe(3);
@@ -100,6 +112,8 @@ for (const { name, ctor } of trackerImplementations) {
         encodeStatMix([3, 3, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('d', 1000)],
         [3, 3, 0, 0, 0, 0],
+        [],
+        [],
       );
       expect(lowResult).toBe(false);
       expect(tracker.totalSets).toBe(3);
@@ -110,6 +124,8 @@ for (const { name, ctor } of trackerImplementations) {
         encodeStatMix([7, 7, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('e', 1000)],
         [7, 7, 0, 0, 0, 0],
+        [],
+        [],
       );
       expect(highResult).toBe(false); // trimWorstSet returns false
       expect(tracker.totalSets).toBe(3);
@@ -134,6 +150,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('a', 1000)],
           [5, 5, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
       expect(
@@ -142,6 +160,8 @@ for (const { name, ctor } of trackerImplementations) {
           encodeStatMix([4, 4, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('b', 1000)],
           [4, 4, 0, 0, 0, 0],
+          [],
+          [],
         ),
       ).toBe(true);
 
@@ -160,6 +180,8 @@ for (const { name, ctor } of trackerImplementations) {
         encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('a', 1000)],
         [5, 5, 0, 0, 0, 0],
+        [],
+        [],
       );
 
       // SetTracker contract allows duplicates
@@ -168,6 +190,8 @@ for (const { name, ctor } of trackerImplementations) {
         encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('b', 900)],
         [5, 5, 0, 0, 0, 0],
+        [],
+        [],
       );
       expect(result).toBe(true);
       expect(tracker.totalSets).toBe(2);

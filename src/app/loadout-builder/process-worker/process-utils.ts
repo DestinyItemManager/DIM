@@ -353,11 +353,15 @@ export function pickOptimalStatMods(
   items: ProcessItem[],
   setStats: number[],
   desiredStatRanges: DesiredStatRange[],
-): { mods: number[]; bonusStats: number[] } {
+): { mods: number[]; bonusStats: number[] } | undefined {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info.activityModPermutations,
     items,
   );
+  if (remainingEnergiesPerAssignment.length === 0) {
+    // No valid activity mod assignments
+    return undefined;
+  }
 
   // The amount of additional stat points after which stats don't give us a benefit anymore.
   const maxAddedStats = [0, 0, 0, 0, 0, 0];
