@@ -192,7 +192,6 @@ export function process({
             }
 
             // Check set bonus requirements
-            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < setBonusHashes.length; i++) {
               const setHash = setBonusHashes[i];
               const setCount =
@@ -201,7 +200,7 @@ export function process({
                 Number(chest.setBonus === setHash) +
                 Number(leg.setBonus === setHash) +
                 Number(classItem.setBonus === setHash);
-              if (setCount < setBonusCounts[setHash]) {
+              if (setCount < setBonusCounts[i]) {
                 setStatistics.skipReasons.insufficientSetBonus += 1;
                 continue innerloop;
               }
