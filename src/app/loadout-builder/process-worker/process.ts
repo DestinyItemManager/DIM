@@ -358,7 +358,7 @@ export function process({
               continue;
             }
 
-            const { bonusStats } = pickOptimalStatMods(
+            const { bonusStats, mods } = pickOptimalStatMods(
               precalculatedInfo,
               armor,
               stats,
@@ -393,7 +393,7 @@ export function process({
 
             processStatistics.numValidSets++;
             // And now insert our set using the predicted total tier and numeric stat mix.
-            setTracker.insert(finalTotalStats, numericStatMix, armor, stats);
+            setTracker.insert(finalTotalStats, numericStatMix, armor, stats, mods, bonusStats);
 
             if (stopOnFirstSet) {
               if (strictUpgrades) {
@@ -412,18 +412,7 @@ export function process({
 
   const finalSets = setTracker.getArmorSets();
 
-  const sets = filterMap(finalSets, ({ armor, stats }) => {
-    // This only fails if minimum tier requirements cannot be hit, but we know
-    // they can because we ensured it internally.
-    //
-    // TODO: This is where we exhaustively search for the *best* stat mods, not
-    // just the minimum required to hit the stat minimums. But this also means
-    // that our optimistic prediction that we used when adding to the set
-    // tracker could end up smaller than what we predicted? That also makes me
-    // think this could be out of order...
-    const modPicks = pickOptimalStatMods(precalculatedInfo, armor, stats, desiredStatRanges);
-    const { mods, bonusStats } = modPicks;
-
+  const sets = filterMap(finalSets, ({ armor, stats, mods, bonusStats }) => {
     const armorOnlyStats: Partial<ArmorStats> = {};
     const fullStats: Partial<ArmorStats> = {};
 
