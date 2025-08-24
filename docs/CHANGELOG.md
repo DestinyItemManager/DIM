@@ -18,6 +18,7 @@
 * The `dupe:` filter can look for lower stats *within* a group of similar items.
   * Try `dupe:setbonus+statlower` to look inside each armor set for pieces with worse stats.
   * Try `dupe:setbonus+stats` to look for identical rolls on identical armor.
+* Check out Filters Help at the bottom of the search dropdown, for more dupe filter keywords.
 * In the future, the `dupe:` filter will replace `is:dupeperks`, `is:statdupe`, `is:statlower`, `is:customstatlower`.
 * `dupe:customstatlower` will more accurately narrow matches, checking **all* applicable custom stats against items. `is:customstatlower` is not recommended.
 
