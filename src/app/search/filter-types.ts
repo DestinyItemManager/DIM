@@ -11,11 +11,19 @@ export type ItemFilter<I = DimItem> = (item: I) => ValidFilterOutput;
  * The syntax this filter accepts.
  * * `simple`: `is:[keyword]` and `not:[keyword]`
  * * `query`: `[keyword]:[suggestion]`
+ * * `multiquery`: `[keyword]:[suggestion]+[suggestion]`
  * * `freeform`: `[keyword]:[literallyanything]`
  * * `range`: `[keyword]:op?([number]|[overload])`
  * * `stat`:  `[keyword]:[suggestion]:op?[number]`
  */
-export type FilterFormat = 'simple' | 'query' | 'freeform' | 'range' | 'stat' | 'custom';
+export type FilterFormat =
+  | 'simple'
+  | 'query'
+  | 'multiquery'
+  | 'freeform'
+  | 'range'
+  | 'stat'
+  | 'custom';
 
 export function canonicalFilterFormats<I, FilterCtx, SuggestionsCtx>(
   format: FilterDefinition<I, FilterCtx, SuggestionsCtx>['format'],
@@ -63,7 +71,7 @@ export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
    * A t()-compatible arg tuple or i18n key pointing to a full description of
    * the filter, to show in filter help
    */
-  description: I18nKey | I18nInput;
+  description: FilterDescriptionInfo;
 
   /**
    * What kind of query this is, used to help generate suggestions.
@@ -95,6 +103,9 @@ export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
 
   /**
    * A list of suggested keywords, for `query` and `stat` formats.
+   *
+   * These are used to validate the filter for query/multiquery formats.
+   * If you don't like what this generates, use suggestionsGenerator instead.
    */
   suggestions?: string[];
 
@@ -109,7 +120,8 @@ export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
   validateStat?: (filterContext?: FilterCtx) => (stat: string) => boolean;
 
   /**
-   * A custom function used to generate (additional) suggestions.
+   * A custom function used to generate suggestions instead of default permutation generation from suggestions.
+   *
    * This should only be necessary for freeform or custom formats.
    */
   suggestionsGenerator?: (
@@ -121,3 +133,5 @@ export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
    */
   fromItem?: (item: I) => string;
 }
+
+export type FilterDescriptionInfo = I18nKey | I18nInput | Record<string, I18nKey | I18nInput>;

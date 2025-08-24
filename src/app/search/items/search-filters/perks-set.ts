@@ -13,6 +13,14 @@ export class PerksSet {
   // A map from item ID to a list of columns, each of which has a set of perkHashes
   mapping = new Map<string, Set<number>[]>();
 
+  constructor(items?: DimItem[]) {
+    if (items) {
+      for (const i of items) {
+        this.insert(i);
+      }
+    }
+  }
+
   insert(item: DimItem) {
     this.mapping.set(item.id, makePerksSet(item));
   }
