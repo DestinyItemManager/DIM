@@ -8,6 +8,7 @@
 * Fixed the display of Seasonal Progress and Well-Rested on mobile.
 * Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
 * Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
+* Sped up loadout analyzer when loadouts and inventory haven't changed.
 
 ## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
 
