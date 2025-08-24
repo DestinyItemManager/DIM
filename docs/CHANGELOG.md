@@ -9,6 +9,17 @@
 * Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
 * Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
 * Sped up loadout analyzer when loadouts and inventory haven't changed.
+* Deprecated `is:dupelower` filter.
+* Deprecated `is:infusionfodder` filter.
+* Deprecated `is:wishlistdupe` filter. Use `is:dupe is:wishlist` to find dupes with a wishlist match.
+* Deprecated `is:crafteddupe` filter. Use `is:dupe is:patternunlocked` to find dupes you may replace with a crafted item.
+* A new `dupe:` filter has been added, which can find duplicates of combined factors.
+  * Try `dupe:archetype+tertiarystat` to find duplicate armors with the same armor Archetype *and* tertiary stat.
+* The `dupe:` filter can look for lower stats *within* a group of similar items.
+  * Try `dupe:setbonus+statlower` to look inside each armor set for pieces with worse stats.
+  * Try `dupe:setbonus+stats` to look for identical rolls on identical armor.
+* In the future, the `dupe:` filter will replace `is:dupeperks`, `is:statdupe`, `is:statlower`, `is:customstatlower`.
+* `dupe:customstatlower` will more accurately narrow matches, checking **all* applicable custom stats against items. `is:customstatlower` is not recommended.
 
 ## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
 
