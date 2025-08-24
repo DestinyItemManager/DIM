@@ -358,12 +358,21 @@ export function process({
               continue;
             }
 
-            const { bonusStats, mods } = pickOptimalStatMods(
+            const optimalResult = pickOptimalStatMods(
               precalculatedInfo,
               armor,
               stats,
               desiredStatRanges,
             );
+            if (!optimalResult) {
+              // This means we couldn't assign mods in a way that satisfied
+              // minimum stat constraints. This can happen if the mods that
+              // would be needed don't fit into the available slots.
+              setStatistics.modsStatistics.finalAssignment.modsAssignmentFailed++;
+              continue;
+            }
+
+            const { bonusStats, mods } = optimalResult;
             const finalStats = [
               effectiveStats[0] + bonusStats[0],
               effectiveStats[1] + bonusStats[1],
