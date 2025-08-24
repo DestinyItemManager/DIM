@@ -18,6 +18,7 @@ import { encodeStatMix, HeapSetTracker } from './set-tracker';
 import {
   AutoModData,
   LockedProcessMods,
+  ModAssignmentStatistics,
   ProcessItem,
   ProcessItemsByBucket,
   ProcessResult,
@@ -135,13 +136,11 @@ export function process({
     lowerBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
     modsStatistics: {
       earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
-      autoModsPick: { timesChecked: 0, timesFailed: 0 },
       finalAssignment: {
         modAssignmentAttempted: 0,
         modsAssignmentFailed: 0,
-        autoModsAssignmentFailed: 0,
       },
-    },
+    } satisfies ModAssignmentStatistics,
   };
   const processStatistics: ProcessStatistics = {
     numProcessed: 0,
@@ -325,6 +324,7 @@ export function process({
 
             const optimalResult = pickOptimalStatMods(
               precalculatedInfo,
+              setStatistics.modsStatistics,
               armor,
               stats,
               desiredStatRanges,
@@ -364,7 +364,8 @@ export function process({
               }
             }
 
-            // Now use our more accurate extra tiers prediction
+            // Now use our fully accurate final total to see if we could
+            // possibly be in the top RETURNED_ARMOR_SETS sets.
             if (!setTracker.couldInsert(finalTotalStats)) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
@@ -454,8 +455,6 @@ export function process({
     'mod assignment stats:',
     'early check:',
     setStatistics.modsStatistics.earlyModsCheck,
-    'auto mods pick:',
-    setStatistics.modsStatistics.autoModsPick,
     setStatistics.modsStatistics,
   );
 

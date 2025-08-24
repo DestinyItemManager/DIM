@@ -94,15 +94,11 @@ export interface RejectionRate {
 export interface ModAssignmentStatistics {
   /** Mod-tag and mod element counts check. */
   earlyModsCheck: RejectionRate;
-  /** How many times we couldn't possibly hit the target stats with any number of auto mods picks */
-  autoModsPick: RejectionRate;
   finalAssignment: {
     /** How many times we tried mod permutations for permutations that worked. */
     modAssignmentAttempted: number;
     /** How many times we failed to assign user-picked slot-independent mods. */
     modsAssignmentFailed: number;
-    /** How many times we failed to assign auto stat mods. */
-    autoModsAssignmentFailed: number;
   };
 }
 

@@ -228,7 +228,6 @@ export default function NoBuildsFoundExplainer({
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.ArtificeExotic &&
     (processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
-      processInfo?.statistics.modsStatistics.finalAssignment.autoModsAssignmentFailed ||
       failedModsInBucket) &&
     (lockedModMap.allMods.length || anyStatMinimums);
 
@@ -390,28 +389,6 @@ export default function NoBuildsFoundExplainer({
         );
       }
 
-      if (isInteresting(modsStats.autoModsPick, LOWER_STAT_BOUNDS_WARN_RATIO)) {
-        // We fail to pick stat mods to hit these stats very often, so consider
-        // relaxing stat requirements and dropping general mods so min auto mods
-        // has more freedom
-        suggestions.push(
-          lockedModMap.generalMods.length > 0 && {
-            id: 'removeGeneralMods',
-            contents: (
-              <>
-                {t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveMods')}
-                {modRow(lockedModMap.generalMods)}
-              </>
-            ),
-          },
-          {
-            id: 'decreaseLowerBounds',
-            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
-          },
-          unpinItemsSuggestion(),
-        );
-      }
-
       if (modsStats.finalAssignment.modAssignmentAttempted > 0) {
         // We made it to mod assignment, but didn't end up successfully. Definitely worth pointing out.
         suggestions.push(
@@ -423,10 +400,6 @@ export default function NoBuildsFoundExplainer({
                 {modRow(bucketIndependentMods)}
               </>
             ),
-          },
-          modsStats.finalAssignment.autoModsAssignmentFailed > 0 && {
-            id: 'decreaseLowerBounds',
-            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
           unpinItemsSuggestion(),
         );

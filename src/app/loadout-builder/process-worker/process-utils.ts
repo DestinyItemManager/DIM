@@ -3,7 +3,7 @@ import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
 import { ArmorStatHashes, artificeStatBoost, DesiredStatRange, MinMaxStat } from '../types';
 import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
-import { AutoModData, ProcessItem, ProcessMod } from './types';
+import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
  * Data that stays the same in a given LO run.
@@ -58,6 +58,7 @@ export function precalculateStructures(
  */
 function getRemainingEnergiesPerAssignment(
   activityModPermutations: (ProcessMod | null)[][],
+  totalModEnergyCost: number,
   items: readonly ProcessItem[],
 ): {
   /** Total remaining energy capacity across the set */
@@ -72,6 +73,10 @@ function getRemainingEnergiesPerAssignment(
   let setEnergy = 0;
   for (const item of items) {
     setEnergy += item.remainingEnergyCapacity;
+  }
+
+  if (setEnergy < totalModEnergyCost) {
+    return { setEnergy, remainingEnergiesPerAssignment };
   }
 
   activityModLoop: for (const activityPermutation of activityModPermutations) {
@@ -163,6 +168,7 @@ export function updateMaxStats(
 
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info.activityModPermutations,
+    info.totalModEnergyCost,
     armor,
   );
 
@@ -237,18 +243,24 @@ export function updateMaxStats(
  */
 export function pickOptimalStatMods(
   info: LoSessionInfo,
+  modStatistics: ModAssignmentStatistics, // mutated
   items: ProcessItem[],
   setStats: number[],
   desiredStatRanges: DesiredStatRange[],
 ): { mods: number[]; bonusStats: number[] } | undefined {
+  modStatistics.earlyModsCheck.timesChecked++;
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info.activityModPermutations,
+    info.totalModEnergyCost,
     items,
   );
   if (remainingEnergiesPerAssignment.length === 0) {
+    modStatistics.earlyModsCheck.timesFailed++;
     // No valid activity mod assignments
     return undefined;
   }
+
+  modStatistics.finalAssignment.modAssignmentAttempted++;
 
   // The amount of additional stat points after which stats don't give us a benefit anymore.
   const maxAddedStats = [0, 0, 0, 0, 0, 0];
@@ -283,6 +295,7 @@ export function pickOptimalStatMods(
   for (const pick of picks) {
     bonusStats[pick.targetStatIndex] += pick.exactStatPoints;
   }
+
   return {
     mods: picks.flatMap((pick) => pick.modHashes),
     bonusStats,
