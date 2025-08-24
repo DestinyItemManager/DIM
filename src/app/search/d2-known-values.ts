@@ -3,7 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { ArmorStatHashes } from 'app/loadout-builder/types';
 import { invert } from 'app/utils/collections';
 import { HashLookup, StringLookup } from 'app/utils/util-types';
-import { TierType } from 'bungie-api-ts/destiny2';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 
 import {
   BreakerTypeHashes,
@@ -442,3 +442,12 @@ export const tuningModToTunedStathash: Record<number, StatHashes> = {
   4164883102: StatHashes.Melee,
   4210715468: StatHashes.Melee,
 };
+
+export const destinyClasses = [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock];
+
+export const customStatClasses = [
+  DestinyClass.Hunter,
+  DestinyClass.Titan,
+  DestinyClass.Warlock,
+  DestinyClass.Unknown,
+];
