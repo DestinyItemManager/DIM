@@ -118,9 +118,9 @@ export interface ProcessStatistics {
       noExotic: number;
       doubleExotic: number;
       skippedLowTier: number;
+      insufficientSetBonus: number;
     };
     lowerBoundsExceeded: RejectionRate;
-    upperBoundsExceeded: RejectionRate;
     modsStatistics: ModAssignmentStatistics;
   };
 }

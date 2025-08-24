@@ -326,25 +326,7 @@ export default function NoBuildsFoundExplainer({
     const isInteresting = ({ timesChecked, timesFailed }: RejectionRate, threshold: number) =>
       timesChecked > 0 && timesFailed / timesChecked >= threshold;
 
-    const {
-      lowerBoundsExceeded,
-      upperBoundsExceeded,
-      modsStatistics: modsStats,
-    } = processInfo.statistics;
-
-    if (isInteresting(upperBoundsExceeded, UPPER_STAT_BOUNDS_WARN_RATIO)) {
-      problems.push({
-        id: 'upperBoundsExceeded',
-        description: t('LoadoutBuilder.NoBuildsFoundExplainer.UpperBoundsFailed'),
-        suggestions: compact([
-          {
-            id: 'hint',
-            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeIncreaseUpperBounds'),
-          },
-          unpinItemsSuggestion(),
-        ]),
-      });
-    }
+    const { lowerBoundsExceeded, modsStatistics: modsStats } = processInfo.statistics;
 
     if (isInteresting(lowerBoundsExceeded, LOWER_STAT_BOUNDS_WARN_RATIO)) {
       problems.push({

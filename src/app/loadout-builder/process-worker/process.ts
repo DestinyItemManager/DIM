@@ -131,7 +131,7 @@ export function process({
   );
   const hasMods = Boolean(activityMods.length || generalMods.length);
 
-  const setStatistics = {
+  const setStatistics: ProcessStatistics['statistics'] = {
     skipReasons: {
       doubleExotic: 0,
       noExotic: 0,
@@ -139,7 +139,6 @@ export function process({
       insufficientSetBonus: 0,
     },
     lowerBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
-    upperBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
     modsStatistics: {
       earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
       autoModsPick: { timesChecked: 0, timesFailed: 0 },
@@ -474,9 +473,8 @@ export function process({
     // Split into multiple objects so console.log will show them all expanded
     'sets outright skipped:',
     setStatistics.skipReasons,
-    'lower and upper bounds:',
+    'lower bounds:',
     setStatistics.lowerBoundsExceeded,
-    setStatistics.upperBoundsExceeded,
     'mod assignment stats:',
     'early check:',
     setStatistics.modsStatistics.earlyModsCheck,
