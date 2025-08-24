@@ -20,6 +20,8 @@
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
   gap: 6px;
+  grid-area: corner;
+  align-self: flex-start;
 }
 
 .volumeRocker {
@@ -27,8 +29,8 @@
   height: 100%;
   gap: 4px;
   > :global(.dim-button) {
-    padding-bottom: 0;
-    padding-top: 0;
+    padding-bottom: 2px;
+    padding-top: 2px;
     flex: 1;
   }
 }

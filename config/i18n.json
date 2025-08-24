@@ -903,6 +903,8 @@
     "Succeeded": "Loadout succeeded",
     "Failed": "Loadout failed to apply completely",
     "Update": "Save Changes",
+    "TuningMods": "Tuning Mods",
+    "SalvationsEdgeMods": "Salvation's Edge Mods",
     "CancelEditing": "Cancel Editing"
   },
   "LoadoutAnalysis": {
