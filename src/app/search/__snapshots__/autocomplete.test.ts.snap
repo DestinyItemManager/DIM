@@ -296,10 +296,9 @@ exports[`filterComplete autocomplete terms for |stat:mob| 1`] = `
 
 exports[`filterComplete autocomplete terms for |stat| 1`] = `
 [
-  "is:statdupe",
-  "is:statlower",
   "stat:",
-  "is:customstatlower",
+  "dupe:stats",
+  "dupe:statlower",
   "basestat:",
   "maxstatloadout:",
   "maxstatvalue:",
@@ -308,6 +307,10 @@ exports[`filterComplete autocomplete terms for |stat| 1`] = `
   "secondarystat:",
   "tertiarystat:",
   "tunedstat:",
+  "dupe:archetype+tertiarystat",
+  "dupe:nonzerostats",
+  "dupe:setbonus+statlower",
+  "dupe:customstatlower",
   "maxstatloadout:weapons",
   "maxstatloadout:health",
   "maxstatloadout:class",

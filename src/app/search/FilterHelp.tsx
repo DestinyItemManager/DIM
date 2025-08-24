@@ -56,7 +56,7 @@ export default function FilterHelp({ searchType = SearchType.Item }: { searchTyp
 
         const localDesc = filterDescriptionText(filter.description);
 
-        return localDesc.toLowerCase().includes(searchLower);
+        return localDesc?.toLowerCase().includes(searchLower);
       })
     : searchConfig.allFilters.filter((f) => !f.deprecated);
 
