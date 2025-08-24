@@ -299,15 +299,17 @@ export function process({
             const numArtifice =
               helmArtifice + gauntArtifice + chestArtifice + legArtifice + classItemArtifice;
 
-            // Check to see if it would be at all possible to hit the needed
-            // stats with artifice armor or general mods (without taking into
-            // account energy). If totalNeededStats is 0 this passes trivially.
-            setStatistics.lowerBoundsExceeded.timesChecked++;
-            if (
-              totalNeededStats >
+            // The most total stat points we could get from mods, assuming
+            // everything was perfectly assignable.
+            const maxModBonus =
               numArtifice * artificeStatBoost +
-                precalculatedInfo.numAvailableGeneralMods * majorStatBoost
-            ) {
+              precalculatedInfo.numAvailableGeneralMods * majorStatBoost;
+
+            // Check to see if it would be at all possible to hit the needed
+            // stat total with the best case mod bonuses. If totalNeededStats is
+            // 0 this passes trivially.
+            setStatistics.lowerBoundsExceeded.timesChecked++;
+            if (totalNeededStats > maxModBonus) {
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
             }
@@ -353,13 +355,7 @@ export function process({
             // RETURNED_ARMOR_SETS sets. We do this only after confirming that
             // any required stat mods fit and updating our max tiers so that the
             // max available tier info stays accurate.
-            if (
-              !setTracker.couldInsert(
-                totalStats +
-                  numArtifice * artificeStatBoost +
-                  precalculatedInfo.numAvailableGeneralMods * majorStatBoost,
-              )
-            ) {
+            if (!setTracker.couldInsert(totalStats + maxModBonus)) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
