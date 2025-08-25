@@ -14,6 +14,7 @@ import { count, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
+  getArmor3TuningStat,
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
   isArtifice,
@@ -66,6 +67,14 @@ export interface ModMap {
    * also don't want to ever pass these to the Loadout Optimizer process.
    */
   artificeMods: PluggableInventoryItemDefinition[];
+  /**
+   * Like artifice mods, tuning mods are free, but not all tuning mods fit onto
+   * all items with tuning mod sockets. Instead we must line up the mods to the
+   * tuning stat the item rolled with. Balanced mods go under stat hash 0.
+   */
+  tuningMods: {
+    [tuningModStatHash: number]: PluggableInventoryItemDefinition[];
+  };
 }
 
 /**
@@ -80,6 +89,7 @@ export function categorizeArmorMods(
   const generalMods: PluggableInventoryItemDefinition[] = [];
   const activityMods: PluggableInventoryItemDefinition[] = [];
   const artificeMods: PluggableInventoryItemDefinition[] = [];
+  const tuningMods: { [tuningModStatHash: number]: PluggableInventoryItemDefinition[] } = {};
   const bucketSpecificMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
 
   const validMods: PluggableInventoryItemDefinition[] = [];
@@ -110,6 +120,16 @@ export function categorizeArmorMods(
     } else if (plannedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) {
       artificeMods.push(plannedMod);
       validMods.push(plannedMod);
+    } else if (
+      plannedMod.plug.plugCategoryHash ===
+      PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods
+    ) {
+      // Find the tuning stat hash, which is the stat that gets +5 when this mod
+      // is applied. For "Balanced Tuning" this should be 0.
+      const tuningStatHash =
+        plannedMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
+      (tuningMods[tuningStatHash] ??= []).push(plannedMod);
+      validMods.push(plannedMod);
     } else {
       const bucketHash = plugCategoryHashToBucketHash[pch];
       if (bucketHash !== undefined) {
@@ -128,6 +148,7 @@ export function categorizeArmorMods(
       activityMods,
       artificeMods,
       bucketSpecificMods,
+      tuningMods,
     },
     unassignedMods,
   };
@@ -318,7 +339,7 @@ export function fitMostMods({
   );
 
   const {
-    modMap: { activityMods, generalMods, artificeMods, bucketSpecificMods },
+    modMap: { activityMods, generalMods, artificeMods, tuningMods, bucketSpecificMods },
     unassignedMods: invalidMods,
   } = categorizeArmorMods(plannedMods, items);
 
@@ -362,7 +383,43 @@ export function fitMostMods({
     }
   }
 
-  // A object of item id's to energy information. This is so we can precalculate
+  // Same deal for tuning mods, which are also free. Slightly more trouble since
+  // items with a tuning socket can only fit tuning mods with a certain stat.
+  const tuningItems = items.filter((i) => getArmor3TuningStat(i) !== undefined);
+  const tuningStatHashes = Object.keys(tuningMods)
+    .map(Number)
+    // Sort 0 last, since any tunable item can take balanced mods
+    .sort((a, b) => b - a);
+  for (const tuningStatHash of tuningStatHashes) {
+    const modsToAssign = tuningMods[tuningStatHash];
+    for (const tuningMod of modsToAssign) {
+      const itemsWithTuningStat = tuningItems.filter((i) =>
+        tuningStatHash === 0
+          ? getArmor3TuningStat(i) !== undefined
+          : getArmor3TuningStat(i) === tuningStatHash,
+      );
+      // Start with items that already have this mod slotted
+      let targetItemIndex = tuningItems.findIndex((item) =>
+        item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === tuningMod.hash),
+      );
+      if (targetItemIndex === -1 && itemsWithTuningStat.length) {
+        // OK just take the first one
+        targetItemIndex = 0;
+      }
+      if (targetItemIndex !== -1) {
+        bucketSpecificAssignments[itemsWithTuningStat[targetItemIndex].id].assigned.push(tuningMod);
+        // Remove from the top-level list, not the filtered one (which gets recreated each loop)
+        const itemIndex = tuningItems.findIndex(
+          (i) => i.id === itemsWithTuningStat[targetItemIndex].id,
+        );
+        tuningItems.splice(itemIndex, 1);
+      } else {
+        unassignedMods.push(tuningMod);
+      }
+    }
+  }
+
+  // A object of item ids to energy information. This is so we can precalculate
   // working energy used, capacity and type and use this to validate whether a mod
   // can be used in an item.
   const itemEnergies = mapValues(
@@ -530,7 +587,7 @@ function getArmorSocketsAndMods(
         // entirely since it seems redundant with the energy track?
         socket.socketDefinition.socketTypeHash !== 1843767421,
     )
-    // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
+    // Artifice sockets only plug a subset of the bucket specific mods so we sort by the size
     // of the plugItems in the plugset so we use that first if possible. This is optional and
     // simply prefers plugging artifact mods into artifice sockets if available.
     .sort(compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999)));
@@ -665,7 +722,7 @@ export function pickPlugPositions(
     // If a destination socket couldn't be found for this plug, something is seriously? wrong
     if (destinationSocketIndex === -1) {
       throw new Error(
-        `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash})`,
+        `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash}) into the item ${item.name}`,
       );
     }
 
