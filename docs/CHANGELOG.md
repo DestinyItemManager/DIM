@@ -1,5 +1,7 @@
 ## Next
 
+## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
+
 * Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled.
 * Add `source:kepler`
 * `is:modded` can match items other than armor
