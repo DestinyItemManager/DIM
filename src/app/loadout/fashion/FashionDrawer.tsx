@@ -519,7 +519,7 @@ function FashionSocket({
         <PlugDef
           onClick={handleOrnamentClick}
           plug={plug as PluggableInventoryItemDefinition}
-          forClassType={undefined}
+          item={exampleItem}
         />
       ) : (
         <PressTip

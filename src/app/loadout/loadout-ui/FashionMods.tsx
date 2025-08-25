@@ -43,13 +43,11 @@ export function FashionMods({
       <PlugDef
         className={clsx({ [styles.missingItem]: !canSlotShader })}
         plug={(shaderItem ?? defaultShader) as PluggableInventoryItemDefinition}
-        forClassType={undefined}
       />
       {ornamentItem ? (
         <PlugDef
           className={clsx({ [styles.missingItem]: !canSlotOrnament })}
           plug={ornamentItem as PluggableInventoryItemDefinition}
-          forClassType={undefined}
         />
       ) : (
         <PressTip tooltip={<div>{t('FashionDrawer.NoPreference')}</div>}>

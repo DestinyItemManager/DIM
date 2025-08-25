@@ -23,7 +23,6 @@ import {
   LoadoutEditSubclassSection,
 } from 'app/loadout/loadout-edit/LoadoutEdit';
 import { Loadout } from 'app/loadout/loadout-types';
-import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -74,6 +73,7 @@ import {
   ArmorEnergyRules,
   LOCKED_EXOTIC_ANY_EXOTIC,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
   loDefaultArmorEnergyRules,
 } from './types';
 import useEquippedHashes from './useEquippedHashes';

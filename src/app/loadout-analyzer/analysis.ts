@@ -17,6 +17,7 @@ import {
   LOCKED_EXOTIC_NO_EXOTIC,
   MIN_LO_ITEM_ENERGY,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
   inGameArmorEnergyRules,
 } from 'app/loadout-builder/types';
 import {
@@ -261,7 +262,7 @@ export async function analyzeLoadout(
           const modsToUse = originalLoadoutMods.filter(
             (mod) =>
               // drop artifice mods (always picked automatically per set)
-              mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
+              !autoAssignmentPCHs.includes(mod.resolvedMod.plug.plugCategoryHash) &&
               // drop general mods if picked automatically
               (!loadoutParameters?.autoStatMods ||
                 mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General),

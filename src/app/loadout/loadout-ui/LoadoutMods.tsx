@@ -4,6 +4,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
+import { autoAssignmentPCHs } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
@@ -21,10 +22,7 @@ import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
-/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
-export const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
-
-const LoadoutModMemo = memo(function LoadoutMod({
+const LoadoutMod = memo(function LoadoutMod({
   mod,
   className,
   classType,
@@ -45,6 +43,7 @@ const LoadoutModMemo = memo(function LoadoutMod({
     <PlugDef
       className={className}
       plug={mod.resolvedMod}
+      // TODO: if there's an item we can assign this mod to, pass that item in
       forClassType={classType}
       onClose={onClose}
       disabledByAutoStatMods={
@@ -124,7 +123,7 @@ export const LoadoutMods = memo(function LoadoutMods({
     <div>
       <div className={styles.modsGrid}>
         {allMods.map((mod) => (
-          <LoadoutModMemo
+          <LoadoutMod
             className={clsx({
               [styles.missingItem]: !(
                 unlockedPlugSetItems.has(mod.resolvedMod.hash) ||
@@ -273,7 +272,7 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
                 mod.resolvedMod.hash,
               );
               return (
-                <LoadoutModMemo
+                <LoadoutMod
                   key={mod.resolvedMod.hash}
                   mod={mod}
                   className={clsx({

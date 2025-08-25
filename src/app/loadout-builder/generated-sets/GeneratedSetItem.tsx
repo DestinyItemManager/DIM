@@ -1,7 +1,6 @@
 import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
 import { useItemPicker } from 'app/item-picker/item-picker';
-import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
@@ -13,6 +12,7 @@ import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { autoAssignmentPCHs } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 
 /**
