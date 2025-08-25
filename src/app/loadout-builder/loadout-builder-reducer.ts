@@ -27,7 +27,6 @@ import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-dr
 import { EFFECTIVE_MAX_STAT, MAX_STAT } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
-import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
 import { count, isEmpty, reorder } from 'app/utils/collections';
@@ -44,6 +43,7 @@ import {
   ExcludedItems,
   PinnedItems,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
 } from './types';
 
 interface LoadoutBuilderUI {
