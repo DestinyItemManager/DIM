@@ -1,6 +1,6 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { infoLog } from '../../utils/log';
 import {
@@ -397,6 +397,17 @@ export function process({
             // This encodes each stat value (0-200) into 8 bits, packed into a single integer.
             // Only non-ignored stats are included, maintaining lexical ordering for priority.
             const numericStatMix = encodeStatMix(finalStats, desiredStatRanges);
+
+            // Add on any tuning mods that were preset on the items.
+            mods.push(
+              ...compact([
+                helm.includedTuningMod,
+                gaunt.includedTuningMod,
+                chest.includedTuningMod,
+                leg.includedTuningMod,
+                classItem.includedTuningMod,
+              ]),
+            );
 
             processStatistics.numValidSets++;
             // And now insert our set using the predicted total tier and numeric stat mix.

@@ -5,10 +5,13 @@ import { calculateAssumedItemEnergy, isAssumedArtifice } from 'app/loadout/armor
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
+  MAX_STAT,
 } from 'app/loadout/known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { filterMap, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { getArmor3TuningSocket } from 'app/utils/socket-utils';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
@@ -18,9 +21,9 @@ import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../proces
 import {
   ArmorEnergyRules,
   ArmorSet,
-  AutoModDefs,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
+  AutoModDefs,
   generalSocketReusablePlugSetHash,
   majorStatBoost,
   minorStatBoost,
@@ -55,7 +58,7 @@ export function mapDimItemToProcessItem({
   dimItem: DimItem;
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
-}): ProcessItem {
+}): ProcessItem[] {
   const { id, hash, name, isExotic, power, setBonus } = dimItem;
 
   const stats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
@@ -67,7 +70,7 @@ export function mapDimItemToProcessItem({
 
   const assumeArtifice = isAssumedArtifice(dimItem, armorEnergyRules);
 
-  return {
+  const processItem: ProcessItem = {
     id,
     hash,
     name,
@@ -79,6 +82,35 @@ export function mapDimItemToProcessItem({
     compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
     setBonus: setBonus?.hash,
   };
+
+  const tuningSocket = getArmor3TuningSocket(dimItem);
+
+  // Make a version of the item for each possible tuning mod that could be applied.
+  if (tuningSocket?.reusablePlugItems?.length) {
+    const processItems: ProcessItem[] = [];
+    const allPlugs = tuningSocket.plugSet?.plugs;
+    for (const { plugItemHash, enabled } of tuningSocket.reusablePlugItems) {
+      if (!enabled || emptyPlugHashes.has(plugItemHash)) {
+        continue;
+      }
+      const plug = allPlugs?.find((p) => p.plugDef.hash === plugItemHash);
+      if (plug) {
+        const def = plug.plugDef;
+        if (isPluggableItem(def) && def.investmentStats?.length) {
+          const tunedStats = { ...stats };
+          for (const { statTypeHash, value } of def.investmentStats) {
+            if (statTypeHash in armorStats) {
+              tunedStats[statTypeHash] = Math.min(MAX_STAT, tunedStats[statTypeHash] + value);
+            }
+          }
+          processItems.push({ ...processItem, includedTuningMod: def.hash, stats: tunedStats });
+        }
+      }
+    }
+    return processItems;
+  }
+
+  return [processItem];
 }
 
 export function hydrateArmorSet(

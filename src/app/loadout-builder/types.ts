@@ -109,8 +109,11 @@ export type ArmorStatHashes =
 export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxStat };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
-/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
-export const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
+/** Do not allow the user to choose artifice/tuning mods manually in Loadout Optimizer since we're supposed to be doing that */
+export const autoAssignmentPCHs = [
+  PlugCategoryHashes.EnhancementsArtifice,
+  PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
+];
 
 /**
  * The reusablePlugSetHash from armour 2.0's general socket.
