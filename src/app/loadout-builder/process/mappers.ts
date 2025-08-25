@@ -1,5 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import {
+  isPlugStatActive,
+  mapAndFilterInvestmentStats,
+} from 'app/inventory/store/stats-conditional';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from 'app/loadout/armor-upgrade-utils';
 import {
@@ -98,8 +102,11 @@ export function mapDimItemToProcessItem({
         const def = plug.plugDef;
         if (isPluggableItem(def) && def.investmentStats?.length) {
           const tunedStats = { ...stats };
-          for (const { statTypeHash, value } of def.investmentStats) {
-            if (statTypeHash in armorStats) {
+          for (const { statTypeHash, activationRule, value } of mapAndFilterInvestmentStats(def)) {
+            if (
+              armorStats.includes(statTypeHash) &&
+              isPlugStatActive(activationRule, { item: dimItem, statHash: statTypeHash })
+            ) {
               tunedStats[statTypeHash] = Math.min(MAX_STAT, tunedStats[statTypeHash] + value);
             }
           }
