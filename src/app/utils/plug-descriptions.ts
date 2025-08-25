@@ -299,6 +299,7 @@ function getPerkDescriptions(
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
   classType: DestinyClass | undefined,
+  item: DimItem | undefined,
 ) {
   return mapAndFilterInvestmentStats(plugDef)
     .filter(
@@ -306,8 +307,7 @@ export function getPlugDefStats(
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
         // TODO: For balanced tuning mod, we need to know the existing stat
         // value on the actual item that will be plugged into
-        (classType === undefined ||
-          isPlugStatActive(stat.activationRule, { classType, statHash: stat.statTypeHash })),
+        isPlugStatActive(stat.activationRule, { classType, item, statHash: stat.statTypeHash }),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,
