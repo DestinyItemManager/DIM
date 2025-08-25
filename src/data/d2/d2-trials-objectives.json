@@ -1,14 +1,15 @@
 {
   "passages": [
-    7665310,
-    1181381245,
-    1600065451,
-    2001563200,
-    2879309661
+    46532100,
+    583402086,
+    1766769942
   ],
   "objectives": {
-    "984122744": "Rounds Won",
+    "250385543": "Trials Multiplier",
+    "1275600285": "Ticket win streak",
     "1586211619": "Wins",
-    "2211480687": "Flawless"
+    "2552133478": "Flawless win streak",
+    "3682362563": "Active win streak",
+    "3930064064": "Longest streak rewarded"
   }
 }
