@@ -116,7 +116,12 @@ export function getTotalModStatChanges(
       for (const stat of mapAndFilterInvestmentStats(mod)) {
         if (
           stat.statTypeHash in totals &&
-          isPlugStatActive(stat.activationRule, undefined, characterClass)
+          // TODO: For balanced tuning mod, we need to know the existing stat
+          // value on the actual item that will be plugged into
+          isPlugStatActive(stat.activationRule, {
+            classType: characterClass,
+            statHash: stat.statTypeHash,
+          })
         ) {
           const value = stat.value * modCount;
           totals[stat.statTypeHash as ArmorStatHashes].value += value;

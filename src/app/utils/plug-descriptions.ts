@@ -304,7 +304,10 @@ export function getPlugDefStats(
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isPlugStatActive(stat.activationRule, undefined, classType)),
+        // TODO: For balanced tuning mod, we need to know the existing stat
+        // value on the actual item that will be plugged into
+        (classType === undefined ||
+          isPlugStatActive(stat.activationRule, { classType, statHash: stat.statTypeHash })),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,

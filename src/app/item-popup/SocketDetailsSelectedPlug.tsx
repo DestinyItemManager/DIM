@@ -143,7 +143,7 @@ export default function SocketDetailsSelectedPlug({
       return undefined;
     }
 
-    if (!isPlugStatActive(stat.activationRule, item)) {
+    if (!isPlugStatActive(stat.activationRule, { item, existingStat: itemStat })) {
       return undefined;
     }
 
