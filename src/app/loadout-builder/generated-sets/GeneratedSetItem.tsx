@@ -6,6 +6,7 @@ import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { Dispatch } from 'react';
@@ -127,7 +128,13 @@ export default function GeneratedSetItem({
               <AppIcon icon={lockIcon} />
             </button>
           ) : (
-            archetype && <PlugDef className={styles.archetype} item={item} plug={archetype} />
+            archetype && (
+              <PlugDef
+                className={styles.archetype}
+                forClassType={DestinyClass.Unknown}
+                plug={archetype}
+              />
+            )
           )}
         </div>
         <Sockets
