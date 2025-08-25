@@ -139,7 +139,7 @@ export function isPlugStatActive(
     case 'archetypeArmorMasterwork':
       // New Armor 3.0 archetypes grant stats only to secondary stats (base 0) when masterworked,
       // so if there's already some base stat value, MW will not apply its investmentValue to this stat.
-      return !existingStat?.base;
+      return Boolean(existingStat && existingStat.base === 0);
     case 'classType':
       classType ??= item?.classType;
       if (classType === undefined) {

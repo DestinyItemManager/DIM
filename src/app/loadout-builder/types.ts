@@ -121,6 +121,13 @@ export const generalSocketReusablePlugSetHash = 731468111;
  */
 export const artificeSocketReusablePlugSetHash = 4285066582;
 
+/**
+ * The reusablePlugSetHash for the tuning socket, which lets you trade off two
+ * stats.
+ * TODO: Find a way to generate this in d2ai.
+ */
+export const tuningSocketReusablePlugSetHash = 1155052024;
+
 /** Bonus to a single stat given by plugs in artifice armor's exclusive mod slot */
 export const artificeStatBoost = 3;
 /** Bonus to a single stat given by the "half tier mods" plugs in all armor's general mod slot */
@@ -131,6 +138,11 @@ export const minorStatBoost = 5;
  * is fairly engrained in some of the algorithms, so it wouldn't be quite trivial to change this.
  */
 export const majorStatBoost = 10;
+
+/** Bonus/sacrifice made to a stat when using a tuning mod. */
+export const tuningStatBoost = 5;
+/** Bonus to the three lowest stats when using "Balanced Tuning" */
+export const balancedTuningStatBoost = 1;
 
 /**
  * Special value for lockedExoticHash indicating the user would not like any exotics included in their loadouts.
