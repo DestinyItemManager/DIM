@@ -1,5 +1,7 @@
 ## Next
 
+* Tuning mods can be chosen manually in the loadout editor, and will be assigned to compatible items when the loadout is applied. The equipped loadout and any snapshotted in-game loadouts will retain their tuning mods.
+
 ## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
 
 * Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled.
