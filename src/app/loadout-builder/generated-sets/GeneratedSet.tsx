@@ -93,6 +93,7 @@ export default memo(function GeneratedSet({
   // Assign the chosen mods to items so we can display them as if they were slotted
   const [itemModAssignments, resultingItemEnergies] = useMemo(() => {
     const allMods = [...lockedMods, ...autoMods];
+    // TODO: this isn't assigning the tuning mods correctly, and we aren't calculating balanced tuning stats correctly either.
     const { itemModAssignments, unassignedMods, invalidMods, resultingItemEnergies } = fitMostMods({
       defs,
       items: displayedItems,
