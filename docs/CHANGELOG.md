@@ -3,10 +3,9 @@
 * Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled.
 * Add `source:kepler`
 * `is:modded` can match items other than armor
-* year:8 now correctly matches Edge of Fate items.
+* `year:8` now correctly matches Edge of Fate items.
 * Fixes well rested XP counter from counting ranks 101-110 as 1 level instead of 5
 * Fixed the display of Seasonal Progress and Well-Rested on mobile.
-* Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
 * Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
 * Sped up loadout analyzer when loadouts and inventory haven't changed.
 * Deprecated `is:dupelower` filter.
