@@ -51,8 +51,8 @@ export interface ArmorSet {
   readonly stats: Readonly<ArmorStats>;
   /** The assumed stats from the armor items themselves only. */
   readonly armorStats: Readonly<ArmorStats>;
-  /** For each armor type (see ArmorBucketHashes), this is the list of items that could interchangeably be put into this loadout. */
-  readonly armor: readonly DimItem[][];
+  /** For each armor type (see ArmorBucketHashes), this is the list of items in the loadout. */
+  readonly armor: DimItem[];
   /** Which stat mods were added? */
   readonly statMods: number[];
 }

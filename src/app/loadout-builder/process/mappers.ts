@@ -19,7 +19,6 @@ import {
   ArmorEnergyRules,
   ArmorSet,
   AutoModDefs,
-  ItemGroup,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
   generalSocketReusablePlugSetHash,
@@ -84,12 +83,12 @@ export function mapDimItemToProcessItem({
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: Map<string, ItemGroup>,
+  itemsById: Map<string, DimItem>,
 ): ArmorSet {
-  const armor: DimItem[][] = [];
+  const armor: DimItem[] = [];
 
   for (const itemId of processed.armor) {
-    armor.push(itemsById.get(itemId)!.items);
+    armor.push(itemsById.get(itemId)!);
   }
 
   return {

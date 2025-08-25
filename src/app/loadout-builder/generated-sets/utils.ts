@@ -20,7 +20,7 @@ function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[
   comparators.push(
     // Finally sort by total stats, then by power
     compareBy((s) => -sum(Object.values(s.stats))),
-    compareBy((s) => -getPower(s.armor.map((i) => i[0]))),
+    compareBy((s) => -getPower(s.armor)),
   );
   return comparators;
 }
