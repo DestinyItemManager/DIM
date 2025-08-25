@@ -665,6 +665,7 @@
   },
   "LoadoutBuilder": {
     "All": "All",
+    "AlwaysAutoMods": "Artifice and Tuning mods will always be chosen automatically.",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
     "Artifice": "Artifice",

@@ -185,13 +185,16 @@ export const LoadoutMods = memo(function LoadoutMods({
             )}
 
             {$featureFlags.loAutoStatMods && onAutoStatModsChanged && (
-              <CheckButton
-                onChange={onAutoStatModsChanged}
-                name="autoStatMods"
-                checked={Boolean(autoStatMods)}
-              >
-                {t('LoadoutBuilder.AutoStatMods')}
-              </CheckButton>
+              <>
+                <CheckButton
+                  onChange={onAutoStatModsChanged}
+                  name="autoStatMods"
+                  checked={Boolean(autoStatMods)}
+                >
+                  {t('LoadoutBuilder.AutoStatMods')}
+                </CheckButton>
+                <div className={styles.fineprint}>{t('LoadoutBuilder.AlwaysAutoMods')}</div>
+              </>
             )}
           </div>
         )}
