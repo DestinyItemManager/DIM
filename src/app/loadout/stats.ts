@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStatSource } from 'app/inventory/store-types';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import {
@@ -91,6 +91,7 @@ export function getTotalModStatChanges(
    * but are active often enough to be important for loadout building.
    */
   includeRuntimeStatBenefits: boolean,
+  modToItem?: Map<PluggableInventoryItemDefinition, DimItem>,
 ) {
   const subclassPlugs = subclass?.loadoutItem.socketOverrides
     ? hashesToPluggableItems(defs, Object.values(subclass.loadoutItem.socketOverrides))
@@ -116,11 +117,10 @@ export function getTotalModStatChanges(
       for (const stat of mapAndFilterInvestmentStats(mod)) {
         if (
           stat.statTypeHash in totals &&
-          // TODO: For balanced tuning mod, we need to know the existing stat
-          // value on the actual item that will be plugged into
           isPlugStatActive(stat.activationRule, {
             classType: characterClass,
             statHash: stat.statTypeHash,
+            item: modToItem?.get(mod),
           })
         ) {
           const value = stat.value * modCount;

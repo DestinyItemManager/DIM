@@ -7,10 +7,15 @@ import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { ArmorBucketHashes, ArmorEnergyRules } from 'app/loadout-builder/types';
+import {
+  ArmorBucketHashes,
+  ArmorEnergyRules,
+  inGameArmorEnergyRules,
+} from 'app/loadout-builder/types';
 import { calculateAssumedItemEnergy, isAssumedMasterworked } from 'app/loadout/armor-upgrade-utils';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
+import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import {
   isInsertableArmor2Mod,
   mapToAvailableModCostVariant,
@@ -328,12 +333,29 @@ export function getLoadoutStats(
     });
   }
 
+  // Assign the chosen mods to items so we can display them as if they were slotted
+  const { itemModAssignments } = fitMostMods({
+    defs,
+    items: armor,
+    plannedMods: mods,
+    armorEnergyRules: armorEnergyRules ?? inGameArmorEnergyRules,
+  });
+  const modToItem = new Map<PluggableInventoryItemDefinition, DimItem>(
+    Object.entries(itemModAssignments).flatMap(([itemId, mods]) =>
+      filterMap(mods, (m) => {
+        const item = armor.find((i) => i.id === itemId);
+        return item ? ([m, item] as const) : undefined;
+      }),
+    ),
+  );
+
   const modStats = getTotalModStatChanges(
     defs,
     mods,
     subclass,
     classType,
     includeRuntimeStatBenefits,
+    modToItem,
   );
 
   for (const [statHash, value] of Object.entries(modStats)) {
