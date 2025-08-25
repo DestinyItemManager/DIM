@@ -29,15 +29,15 @@ export interface ModsPick {
 /**
  * Precalculated ways of hitting all possible stat boost values for a single stat.
  */
-interface CacheForStat {
+export interface CacheForStat {
   [targetStatValue: number]: ModsPick[] | undefined;
 }
 
 /**
  * Precalculated ways of hitting stat values, separated by stat hash.
  */
-export interface AutoModsMap {
-  statCaches: { [targetStatIndex: number]: CacheForStat };
+export interface AutoModsCache {
+  [targetStatIndex: number]: CacheForStat;
 }
 
 /**
@@ -106,7 +106,7 @@ function doGeneralModsFit(
  * `pickedMods` contains the mods chosen for earlier stats.
  */
 function recursivelyChooseMods(
-  autoModOptions: AutoModsMap,
+  autoModOptions: AutoModsCache,
   /** The cost of user-picked general mods, sorted descending. */
   generalModCosts: number[],
   /** Incremental stat increases we need to hit. */
@@ -134,7 +134,7 @@ function recursivelyChooseMods(
   }
 
   // Get a list of different mod combinations that could hit the needed stat boost for this stat.
-  const possiblePicks = autoModOptions.statCaches[statIndex][neededStats[statIndex]];
+  const possiblePicks = autoModOptions[statIndex][neededStats[statIndex]];
   if (!possiblePicks) {
     // we can't possibly hit our target stats
     return undefined;
@@ -273,13 +273,11 @@ export function buildAutoModsMap(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
   statOrder: ArmorStatHashes[],
-): AutoModsMap {
-  return {
-    statCaches: Object.fromEntries(
-      statOrder.map((statHash, statIndex) => [
-        statIndex,
-        buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
-      ]),
-    ),
-  };
+): AutoModsCache {
+  return Object.fromEntries(
+    statOrder.map((statHash, statIndex) => [
+      statIndex,
+      buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
+    ]),
+  );
 }

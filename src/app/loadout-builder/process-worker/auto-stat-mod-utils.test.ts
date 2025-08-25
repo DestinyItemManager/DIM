@@ -60,10 +60,7 @@ describe('process-utils auto mod structure', () => {
         true,
         armorStats,
       );
-      const waysOfHittingStat = mapValues(
-        sessionInfo.autoModOptions.statCaches[3],
-        (y) => y?.length,
-      );
+      const waysOfHittingStat = mapValues(sessionInfo.autoModOptions[3], (y) => y?.length);
       // Things to watch out for in the snapshot: Keys are contiguous, values first ascend
       // to around the halfway point before descending in a vaguely binomial coefficient-like fashion
       expect(waysOfHittingStat).toMatchSnapshot();
