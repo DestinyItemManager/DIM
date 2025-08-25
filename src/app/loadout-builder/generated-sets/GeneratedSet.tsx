@@ -64,7 +64,7 @@ export default memo(function GeneratedSet({
 
   let overlappingLoadout: Loadout | undefined;
   // Items are sorted by their energy capacity when grouping
-  let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
+  let displayedItems = set.armor;
   const allSetItems = set.armor.flat();
 
   // This has got to be expensive when the user has a lot of loadouts?
@@ -162,11 +162,10 @@ export default memo(function GeneratedSet({
       />
       <div className={styles.build}>
         <div className={styles.items}>
-          {displayedItems.map((item, i) => (
+          {displayedItems.map((item) => (
             <GeneratedSetItem
               key={item.index}
               item={item}
-              itemOptions={set.armor[i]}
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
