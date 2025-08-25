@@ -4,6 +4,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
+import { autoAssignmentPCHs } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
@@ -20,9 +21,6 @@ import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
-
-/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
-export const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
 
 const LoadoutMod = memo(function LoadoutMod({
   mod,

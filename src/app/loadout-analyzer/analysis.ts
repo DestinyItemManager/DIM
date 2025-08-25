@@ -17,6 +17,7 @@ import {
   LOCKED_EXOTIC_NO_EXOTIC,
   MIN_LO_ITEM_ENERGY,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
   inGameArmorEnergyRules,
 } from 'app/loadout-builder/types';
 import {
@@ -28,7 +29,6 @@ import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
 import { MAX_STAT } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
-import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { ItemFilter } from 'app/search/filter-types';

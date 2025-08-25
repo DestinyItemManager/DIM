@@ -1,7 +1,7 @@
 import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { DimCharacterStat } from 'app/inventory/store-types';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
 
@@ -108,6 +108,9 @@ export type ArmorStatHashes =
 
 export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxStat };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
+
+/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
+export const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
 
 /**
  * The reusablePlugSetHash from armour 2.0's general socket.
