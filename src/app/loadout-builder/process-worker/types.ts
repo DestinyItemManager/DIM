@@ -78,7 +78,7 @@ export interface AutoModData {
       minorMod: { hash: number; cost: number };
     };
   };
-  artificeMods: { [key in ArmorStatHashes]?: { hash: number } };
+  artificeMods: { [key in ArmorStatHashes]?: number };
 }
 
 export interface LockedProcessMods {

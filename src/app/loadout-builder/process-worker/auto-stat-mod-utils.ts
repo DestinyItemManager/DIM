@@ -242,7 +242,7 @@ function buildCacheForStat(
           modHashes: [
             ...Array<number>(numMajorMods).fill(majorMod?.hash ?? 0),
             ...Array<number>(numMinorMods).fill(minorMod?.hash ?? 0),
-            ...Array<number>(numArtificeMods).fill(artificeMod?.hash ?? 0),
+            ...Array<number>(numArtificeMods).fill(artificeMod ?? 0),
           ],
           modEnergyCost:
             numMinorMods * (minorMod?.cost ?? 0) + numMajorMods * (majorMod?.cost ?? 0),
