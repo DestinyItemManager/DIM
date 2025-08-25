@@ -406,7 +406,7 @@ export function fitMostMods({
         // OK just take the first one
         targetItemIndex = 0;
       }
-      if (targetItemIndex !== -1) {
+      if (targetItemIndex !== -1 && itemsWithTuningStat[targetItemIndex]) {
         bucketSpecificAssignments[itemsWithTuningStat[targetItemIndex].id].assigned.push(tuningMod);
         // Remove from the top-level list, not the filtered one (which gets recreated each loop)
         const itemIndex = tuningItems.findIndex(
