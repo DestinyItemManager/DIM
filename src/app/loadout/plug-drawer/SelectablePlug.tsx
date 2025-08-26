@@ -138,7 +138,7 @@ function SelectablePlugDetails({
   plug: PluggableInventoryItemDefinition;
   classType: DestinyClass;
 }) {
-  const stats = getPlugDefStats(plug, classType);
+  const stats = getPlugDefStats(plug, classType, undefined);
 
   const plugDescriptions = usePlugDescriptions(plug, stats);
 

@@ -37,13 +37,7 @@ export default function LoadoutSubclassSection({
         })}
       >
         {subclass ? (
-          <PressTip
-            tooltip={() =>
-              superPlug && (
-                <PlugDefTooltip def={superPlug?.plug} classType={subclass?.item.classType} />
-              )
-            }
-          >
+          <PressTip tooltip={() => superPlug && <PlugDefTooltip def={superPlug?.plug} />}>
             <DraggableInventoryItem item={subclass.item}>
               <ItemPopupTrigger
                 item={subclass.item}
@@ -76,11 +70,7 @@ export default function LoadoutSubclassSection({
           {plugs?.map(
             (plug) =>
               plug.socketCategoryHash !== SocketCategoryHashes.Super && (
-                <PlugDef
-                  key={getModRenderKey(plug.plug)}
-                  plug={plug.plug}
-                  forClassType={subclass?.item.classType}
-                />
+                <PlugDef key={getModRenderKey(plug.plug)} plug={plug.plug} item={subclass?.item} />
               ),
           )}
         </div>

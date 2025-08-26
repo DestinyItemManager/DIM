@@ -1,10 +1,8 @@
 import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
-import { useItemPicker } from 'app/item-picker/item-picker';
-import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
+import { AppIcon, lockIcon } from 'app/shell/icons';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -13,6 +11,7 @@ import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { autoAssignmentPCHs } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 
 /**
@@ -40,7 +39,6 @@ export function EnergySwap({ energy }: { energy: { energyCapacity: number; energ
 export default function GeneratedSetItem({
   item,
   pinned,
-  itemOptions,
   assignedMods,
   autoStatMods,
   automaticallyPickedMods,
@@ -49,7 +47,6 @@ export default function GeneratedSetItem({
 }: {
   item: DimItem;
   pinned: boolean;
-  itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
   autoStatMods: boolean;
   automaticallyPickedMods?: number[];
@@ -58,20 +55,6 @@ export default function GeneratedSetItem({
 }) {
   const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
   const unpinItem = () => lbDispatch({ type: 'unpinItem', item });
-  const showItemPicker = useItemPicker();
-
-  const chooseReplacement = async () => {
-    const ids = new Set(itemOptions.map((i) => i.id));
-
-    const item = await showItemPicker({
-      prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
-      filterItems: (item: DimItem) => ids.has(item.id),
-    });
-
-    if (item) {
-      pinItem(item);
-    }
-  };
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
@@ -109,16 +92,7 @@ export default function GeneratedSetItem({
             energy={energy}
             item={item}
           />
-          {itemOptions.length > 1 ? (
-            <button
-              type="button"
-              className={styles.swapButton}
-              title={t('LoadoutBuilder.ChooseAlternateTitle')}
-              onClick={chooseReplacement}
-            >
-              <AppIcon icon={faRandom} />
-            </button>
-          ) : pinned ? (
+          {pinned ? (
             <button
               type="button"
               className={styles.swapButton}

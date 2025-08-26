@@ -1,7 +1,7 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugDefTooltip } from 'app/item-popup/PlugTooltip';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -17,6 +17,7 @@ export default function PlugDef({
   automaticallyPicked,
   disabledByAutoStatMods,
   forClassType,
+  item,
 }: {
   plug: PluggableInventoryItemDefinition;
   className?: string;
@@ -24,7 +25,10 @@ export default function PlugDef({
   onClose?: () => void;
   automaticallyPicked?: boolean;
   disabledByAutoStatMods?: boolean;
-  forClassType: DestinyClass | undefined;
+  /** The class this plug is or will be plugged into, if we don't have the item. */
+  forClassType?: DestinyClass;
+  /** The item this plug is or will be plugged into. */
+  item?: DimItem;
 }) {
   const contents = (
     <div
@@ -41,6 +45,7 @@ export default function PlugDef({
             automaticallyPicked={automaticallyPicked}
             disabledByAutoStatMods={disabledByAutoStatMods}
             classType={forClassType}
+            item={item}
           />
         )}
       >

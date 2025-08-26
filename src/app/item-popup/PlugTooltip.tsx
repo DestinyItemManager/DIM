@@ -78,13 +78,15 @@ export function PlugDefTooltip({
   classType,
   automaticallyPicked,
   disabledByAutoStatMods,
+  item,
 }: {
   def: PluggableInventoryItemDefinition;
   classType?: DestinyClass;
   automaticallyPicked?: boolean;
   disabledByAutoStatMods?: boolean;
+  item?: DimItem;
 }) {
-  const stats = getPlugDefStats(def, classType);
+  const stats = getPlugDefStats(def, classType, item);
   return (
     <PlugTooltip
       def={def}

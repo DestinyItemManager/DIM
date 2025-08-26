@@ -1,6 +1,6 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -75,7 +75,6 @@ export function useProcess({
     resultStoreId: selectedStore.id,
     result: null,
   });
-  const getUserItemTag = useSelector(getTagSelector);
   const autoModDefs = useAutoMods(selectedStore.id);
   const firstTime = result === null;
 
@@ -106,7 +105,6 @@ export function useProcess({
         desiredStatRanges,
         anyExotic,
         autoStatMods,
-        getUserItemTag,
         stopOnFirstSet: false,
         strictUpgrades,
         lastInput: inputsRef.current,
@@ -168,7 +166,6 @@ export function useProcess({
     autoStatMods,
     lockedModMap,
     setBonuses,
-    getUserItemTag,
     modStatChanges,
     autoModDefs,
     strictUpgrades,

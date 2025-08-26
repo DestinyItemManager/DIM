@@ -123,11 +123,7 @@ export default function LoadoutEditSubclass({
             {plugs?.map(
               (plug) =>
                 plug.socketCategoryHash !== SocketCategoryHashes.Super && (
-                  <PlugDef
-                    key={getModRenderKey(plug.plug)}
-                    plug={plug.plug}
-                    forClassType={subclass?.item.classType}
-                  />
+                  <PlugDef key={getModRenderKey(plug.plug)} plug={plug.plug} item={subclass.item} />
                 ),
             )}
           </div>

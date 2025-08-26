@@ -8,15 +8,6 @@ import { createGetModRenderKey } from '../mod-utils';
 import styles from './Footer.m.scss';
 import { PlugSelectionType, PlugSet } from './types';
 
-interface Props {
-  isPhonePortrait: boolean;
-  plugSets: PlugSet[];
-  classType: DestinyClass;
-  acceptButtonText: string;
-  onSubmit: (event: React.FormEvent | KeyboardEvent) => void;
-  handlePlugSelected: (plug: PluggableInventoryItemDefinition) => void;
-}
-
 export default function Footer({
   isPhonePortrait,
   plugSets,
@@ -24,10 +15,18 @@ export default function Footer({
   acceptButtonText,
   onSubmit,
   handlePlugSelected,
-}: Props) {
+}: {
+  isPhonePortrait: boolean;
+  plugSets: PlugSet[];
+  classType: DestinyClass;
+  acceptButtonText: string;
+  onSubmit: (event: React.FormEvent | KeyboardEvent) => void;
+  handlePlugSelected: (plug: PluggableInventoryItemDefinition) => void;
+}) {
   useHotkey('enter', acceptButtonText, onSubmit);
   const getModRenderKey = createGetModRenderKey();
 
+  // TODO: Plumb in the item we're picking for, if there is one
   return (
     <div className={styles.footer}>
       <button type="button" className={styles.submitButton} onClick={onSubmit}>
