@@ -17,8 +17,10 @@ export function CharacterSetBonus({ store }: { store: DimStore }) {
               <Tooltip.Header text={sb!.setBonus.displayProperties.name} />
               {Object.values(sb!.activePerks).map((p) => (
                 <React.Fragment key={p.def.hash}>
-                  <div>{`${t('Item.SetBonus.NPiece', { count: p.requirement })} | ${p.def.displayProperties.name}`}</div>
+                  <strong>{`${t('Item.SetBonus.NPiece', { count: p.requirement })} | ${p.def.displayProperties.name}`}</strong>
+                  <br />
                   {p.def.displayProperties.description}
+                  <hr />
                 </React.Fragment>
               ))}
               {store && (
