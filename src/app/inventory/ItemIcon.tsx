@@ -1,7 +1,13 @@
-import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
+import { itemConstants } from 'app/destiny2/d2-definitions';
+import BungieImage, {
+  bungieBackgroundStyle,
+  bungieBackgroundStyles,
+  bungieNetPath,
+} from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
+import { compact } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { isArmorArchetypePlug, isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
@@ -38,12 +44,13 @@ export function getItemImageStyles(item: DimItem, className?: string) {
       (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram;
+
   const itemImageStyles = clsx('item-img', className, {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
-    [itemTierStyles[item.rarity]]: !borderless && !item.plug,
+    [itemTierStyles[item.rarity]]: !borderless,
   });
   return itemImageStyles;
 }
@@ -54,11 +61,27 @@ export function getItemImageStyles(item: DimItem, className?: string) {
  * with respect to masterwork, season icons, mod overlays, etc.
  *
  * This renders just a fragment - it always needs to be rendered inside another div with class "item".
+ *
+ * Since this is used a *lot*, it should not use any hooks, subscriptions, etc.
  */
 export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
   const classifiedPlaceholder =
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
+
+  const backgrounds =
+    item.iconDef && itemConstants
+      ? compact([
+          item.tier > 1 && itemConstants.gearTierOverlayImagePaths[item.tier],
+          item.crafted && itemConstants.craftedBackgroundPath,
+          item.iconDef.foreground,
+          // In game the masterwork glow is in front of the icon but I think that looks bad.
+          item.masterwork && itemConstants.masterworkOverlayPath,
+          item.holofoil && itemConstants.holofoil900AnimatedBackgroundOverlayPath,
+          item.universalOrnamented && itemConstants.universalOrnamentBackgroundOverlayPath,
+        ])
+      : [item.icon];
+
   return (
     <>
       {classifiedPlaceholder ? (
@@ -69,30 +92,23 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           })}
         />
       ) : (
-        <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
+        <div style={bungieBackgroundStyles(...backgrounds)} className={itemImageStyles} />
       )}
-      {(item.holofoil || item.masterwork || item.deepsightInfo) && (
+      {item.iconDef?.secondaryBackground && itemConstants ? (
         <div
-          className={clsx(styles.backgroundOverlay, {
-            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !item.holofoil,
-            [styles.shinyMasterwork]: item.holofoil,
-            [styles.exoticMasterwork]: item.masterwork && item.isExotic,
-            [styles.deepsightBorder]: item.deepsightInfo,
-          })}
+          className={clsx(styles.seasonIcon, { [styles.featuredIcon]: item.featured })}
+          style={{
+            backgroundImage: `url("${bungieNetPath(item.iconDef.secondaryBackground)}")${item.featured ? `, url("${bungieNetPath(itemConstants.featuredItemFlagPath)}")` : ''}, linear-gradient(to top, transparent, rgba(0, 0, 0, 0.5))`,
+          }}
         />
+      ) : (
+        item.iconOverlay && (
+          <div
+            className={clsx(styles.iconOverlay, { [styles.plugOverlay]: item.plug })}
+            style={bungieBackgroundStyle(item.iconOverlay)}
+          />
+        )
       )}
-      {item.iconOverlay && (
-        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
-      )}
-      {item.tier > 1 ? (
-        <div className={styles.tierPipContainer}>
-          {Array(item.tier)
-            .fill(0)
-            .map((_, i) => (
-              <div key={i} className={styles.tierPip} />
-            ))}
-        </div>
-      ) : null}
       {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
         <>
           <div className={styles.energyCostOverlay} />
@@ -154,7 +170,13 @@ export function DefItemIcon({
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
-      {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
+      {iconOverlay && (
+        <BungieImage
+          src={iconOverlay}
+          className={clsx(styles.iconOverlay, { [styles.plugOverlay]: itemDef.plug })}
+          alt=""
+        />
+      )}
       {energyCost !== undefined && energyCost > 0 && (
         <>
           <div className={styles.energyCostOverlay} />
