@@ -4,6 +4,7 @@ interface CssExports {
   'details': string;
   'infoCard': string;
   'title': string;
+  'warning': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

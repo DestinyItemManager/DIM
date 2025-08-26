@@ -656,6 +656,7 @@
     "MwExotic": "Exotic",
     "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExistingLoadout": "Existing Loadout",
+    "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Or click on the perks to toggle the search.",
     "ExoticSpecialCategory": "Special",
     "Filter": "Settings",
     "Legendary": "Legendary",

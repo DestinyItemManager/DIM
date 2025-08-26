@@ -691,6 +691,7 @@
     "ExcludedItems": "Excluded Items",
     "ExistingLoadout": "Existing Loadout",
     "Exotic": "Exotic Armor",
+    "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Or click on the perks to toggle the search.",
     "ExoticSpecialCategory": "Special",
     "Filter": "Settings",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
