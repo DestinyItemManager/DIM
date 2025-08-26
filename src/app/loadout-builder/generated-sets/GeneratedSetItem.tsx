@@ -2,7 +2,7 @@ import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { AppIcon, lockIcon } from 'app/shell/icons';
+import { AppIcon, pinIcon } from 'app/shell/icons';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -99,7 +99,7 @@ export default function GeneratedSetItem({
               title={t('LoadoutBuilder.UnlockItem')}
               onClick={unpinItem}
             >
-              <AppIcon icon={lockIcon} />
+              <AppIcon icon={pinIcon} />
             </button>
           ) : (
             archetype && (
