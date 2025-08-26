@@ -374,7 +374,6 @@ export function fitMostMods({
         targetItemIndex = 0;
       }
     }
-
     if (targetItemIndex !== -1) {
       bucketSpecificAssignments[artificeItems[targetItemIndex].id].assigned.push(artificeMod);
       artificeItems.splice(targetItemIndex, 1);
@@ -388,31 +387,26 @@ export function fitMostMods({
   const tuningItems = items.filter((i) => getArmor3TuningStat(i) !== undefined);
   const tuningStatHashes = Object.keys(tuningMods)
     .map(Number)
-    // Sort 0 last, since any tunable item can take balanced mods
+    // Sort 0 (balanced tuning) last, since any tunable item can take balanced mods
     .sort((a, b) => b - a);
   for (const tuningStatHash of tuningStatHashes) {
     const modsToAssign = tuningMods[tuningStatHash];
     for (const tuningMod of modsToAssign) {
-      const itemsWithTuningStat = tuningItems.filter((i) =>
-        tuningStatHash === 0
-          ? getArmor3TuningStat(i) !== undefined
-          : getArmor3TuningStat(i) === tuningStatHash,
-      );
-      // Start with items that already have this mod slotted
+      // Try to find an item that already has this mod slotted
       let targetItemIndex = tuningItems.findIndex((item) =>
         item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === tuningMod.hash),
       );
-      if (targetItemIndex === -1 && itemsWithTuningStat.length) {
-        // OK just take the first one
-        targetItemIndex = 0;
-      }
-      if (targetItemIndex !== -1 && itemsWithTuningStat[targetItemIndex]) {
-        bucketSpecificAssignments[itemsWithTuningStat[targetItemIndex].id].assigned.push(tuningMod);
-        // Remove from the top-level list, not the filtered one (which gets recreated each loop)
-        const itemIndex = tuningItems.findIndex(
-          (i) => i.id === itemsWithTuningStat[targetItemIndex].id,
+      if (targetItemIndex === -1) {
+        targetItemIndex = tuningItems.findIndex((i) =>
+          tuningStatHash === 0
+            ? true // Balanced tuning can go on any item with a tuning socket
+            : // Otherwise the item's tuning stat must match the mod's
+              getArmor3TuningStat(i) === tuningStatHash,
         );
-        tuningItems.splice(itemIndex, 1);
+      }
+      if (targetItemIndex !== -1) {
+        bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
+        tuningItems.splice(targetItemIndex, 1);
       } else {
         unassignedMods.push(tuningMod);
       }
