@@ -164,18 +164,18 @@
 }
 // copy pasted from src/app/item-popup/PlugTooltip.m.scss with spacing tweaks
 .enhancedArrow {
-  width: 30px;
+  width: 25px;
   display: flex;
   &::after {
     content: '';
     display: inline-block;
-    width: 9px;
-    height: 16px;
+    width: 6px;
+    height: 11px;
     vertical-align: text-bottom;
     mask-image: url('images/enhancedArrow.svg');
     background-color: $enhancedYellow;
     margin-left: 1px;
-    margin-top: 1px;
+    margin-top: 3px;
   }
 }
 
