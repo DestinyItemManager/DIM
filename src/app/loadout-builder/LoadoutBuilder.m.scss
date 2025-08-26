@@ -122,3 +122,10 @@
     font-size: 24px;
   }
 }
+
+.fineprint {
+  font-size: 0.85em;
+  color: var(--theme-text-secondary);
+  text-wrap: pretty;
+  margin-top: 4px;
+}
