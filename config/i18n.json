@@ -629,6 +629,7 @@
   },
   "LoadoutBuilder": {
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
+    "AlwaysAutoMods": "Artifice and Tuning mods will always be chosen automatically.",
     "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "AutoStatMods": "Automatically add stat mods",
     "All": "All",

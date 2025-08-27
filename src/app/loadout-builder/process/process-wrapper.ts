@@ -108,14 +108,16 @@ export function runProcess({
     const bucketHash = parseInt(bucketHashStr, 10) as ArmorBucketHash;
     processItems[bucketHash] = [];
 
-    const mappedItems: MappedItem[] = items.map((dimItem) => ({
-      dimItem,
-      processItem: mapDimItemToProcessItem({
+    const mappedItems: MappedItem[] = items.flatMap((dimItem) =>
+      mapDimItemToProcessItem({
         dimItem,
         armorEnergyRules,
         modsForSlot: bucketSpecificMods[bucketHash] || [],
-      }),
-    }));
+      }).map((processItem) => ({
+        dimItem,
+        processItem,
+      })),
+    );
 
     for (const mappedItem of mappedItems) {
       processItems[bucketHash].push(mappedItem.processItem);

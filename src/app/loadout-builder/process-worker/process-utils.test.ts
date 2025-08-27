@@ -126,31 +126,31 @@ describe('process-utils mod assignment', () => {
           helmet = mapDimItemToProcessItem({
             dimItem: storeItem,
             armorEnergyRules,
-          });
+          })[0];
         }
         if (!arms && isArmor2Arms(storeItem)) {
           arms = mapDimItemToProcessItem({
             dimItem: storeItem,
             armorEnergyRules,
-          });
+          })[0];
         }
         if (!chest && isArmor2Chest(storeItem)) {
           chest = mapDimItemToProcessItem({
             dimItem: storeItem,
             armorEnergyRules,
-          });
+          })[0];
         }
         if (!legs && isArmor2Legs(storeItem)) {
           legs = mapDimItemToProcessItem({
             dimItem: storeItem,
             armorEnergyRules,
-          });
+          })[0];
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
           classItem = mapDimItemToProcessItem({
             dimItem: storeItem,
             armorEnergyRules,
-          });
+          })[0];
         }
 
         if (helmet && arms && chest && legs && classItem) {

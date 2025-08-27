@@ -1,6 +1,6 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { infoLog } from '../../utils/log';
 import {
@@ -89,7 +89,7 @@ export function process({
   for (const item of ArmorBucketHashes.flatMap((h) => filteredItems[h])) {
     statsCache.set(
       item,
-      statOrder.map((statHash) => Math.max(item.stats[statHash], 0)),
+      statOrder.map((statHash) => item.stats[statHash]),
     );
   }
 
@@ -398,6 +398,17 @@ export function process({
             // Only non-ignored stats are included, maintaining lexical ordering for priority.
             const numericStatMix = encodeStatMix(finalStats, desiredStatRanges);
 
+            // Add on any tuning mods that were preset on the items.
+            mods.push(
+              ...compact([
+                helm.includedTuningMod,
+                gaunt.includedTuningMod,
+                chest.includedTuningMod,
+                leg.includedTuningMod,
+                classItem.includedTuningMod,
+              ]),
+            );
+
             processStatistics.numValidSets++;
             // And now insert our set using the predicted total tier and numeric stat mix.
             setTracker.insert(finalTotalStats, numericStatMix, armor, stats, mods, bonusStats);
@@ -425,6 +436,12 @@ export function process({
 
     let hasStrictUpgrade = false;
 
+    const helmStats = statsCache.get(armor[0])!;
+    const gauntStats = statsCache.get(armor[1])!;
+    const chestStats = statsCache.get(armor[2])!;
+    const legStats = statsCache.get(armor[3])!;
+    const classItemStats = statsCache.get(armor[4])!;
+
     for (let i = 0; i < statOrder.length; i++) {
       const statHash = statOrder[i];
       const value = stats[i] + bonusStats[i];
@@ -437,11 +454,11 @@ export function process({
         statFilter.minStat < statFilter.maxStat &&
         !hasStrictUpgrade
       ) {
-        const statValue = Math.min(Math.max(value, 0), MAX_STAT);
-        hasStrictUpgrade ||= statValue > statFilter.minStat;
+        hasStrictUpgrade ||= value > statFilter.minStat;
       }
 
-      armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
+      armorOnlyStats[statHash] =
+        helmStats[i] + gauntStats[i] + chestStats[i] + legStats[i] + classItemStats[i];
     }
 
     if (strictUpgrades && !hasStrictUpgrade) {

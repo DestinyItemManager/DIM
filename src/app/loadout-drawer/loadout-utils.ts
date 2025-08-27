@@ -334,28 +334,21 @@ export function getLoadoutStats(
   }
 
   // Assign the chosen mods to items so we can display them as if they were slotted
-  const { itemModAssignments } = fitMostMods({
+  const { itemModAssignments, unassignedMods } = fitMostMods({
     defs,
     items: armor,
     plannedMods: mods,
     armorEnergyRules: armorEnergyRules ?? inGameArmorEnergyRules,
   });
-  const modToItem = new Map<PluggableInventoryItemDefinition, DimItem>(
-    Object.entries(itemModAssignments).flatMap(([itemId, mods]) =>
-      filterMap(mods, (m) => {
-        const item = armor.find((i) => i.id === itemId);
-        return item ? ([m, item] as const) : undefined;
-      }),
-    ),
-  );
 
   const modStats = getTotalModStatChanges(
     defs,
-    mods,
+    unassignedMods,
     subclass,
     classType,
     includeRuntimeStatBenefits,
-    modToItem,
+    itemModAssignments,
+    armor,
   );
 
   for (const [statHash, value] of Object.entries(modStats)) {

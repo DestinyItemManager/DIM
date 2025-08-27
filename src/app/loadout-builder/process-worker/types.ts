@@ -31,6 +31,11 @@ export interface ProcessItem {
   stats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
   setBonus?: number;
+  /**
+   * This is a pre-set tuning mod on the item. This hash should be passed along
+   * to the ArmorSet.statMods list.
+   */
+  includedTuningMod?: number;
 }
 
 export type ProcessItemsByBucket = {
