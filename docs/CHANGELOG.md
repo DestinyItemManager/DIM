@@ -5,6 +5,7 @@
 * Combine the set bonus tooltips for items of the same set in character status
 * Adjust enhanced perk arrow when perk name takes up more than 1 line
 * Loadout Optimizer now automatically assigns Tier 5 tuning mods where available. This can make major differences in what stats you can achieve!
+* Loadout Optimizer will now utilize multiple CPU cores.
 
 ## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
 
