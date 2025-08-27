@@ -186,6 +186,7 @@ export function getTotalModStatChanges(
   processPlugs(lockedModAssignments, 'armorPlug');
 
   if (includeRuntimeStatBenefits) {
+    const lockedMods = lockedModAssignments.map(([m]) => m);
     const fontCounts = getFontMods(lockedMods);
     for (const statHash of armorStats) {
       const fonts = fontCounts[statHash];
