@@ -195,7 +195,7 @@
     "@destinyitemmanager/dim-api-types": "^1.37.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/react-fontawesome": "^0.2.3",
+    "@fortawesome/react-fontawesome": "^3.0.0",
     "@popperjs/core": "^2.11.8",
     "@react-hook/resize-observer": "^2.0.2",
     "@sentry/browser": "^10.5.0",
