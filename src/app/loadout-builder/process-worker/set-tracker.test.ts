@@ -1,5 +1,7 @@
 import { armorStats } from 'app/search/d2-known-values';
-import { decodeStatMix, encodeStatMix, HeapSetTracker } from './set-tracker';
+import { sum } from 'es-toolkit';
+import { getPower } from '../utils';
+import { decodeStatMix, encodeStatMix, HeapEntry, HeapSetTracker } from './set-tracker';
 import { ProcessItem } from './types';
 
 const createMockArmor = (id: string, power: number): ProcessItem => ({
@@ -16,7 +18,9 @@ const createMockArmor = (id: string, power: number): ProcessItem => ({
  * Essential functional tests for both SetTracker and HeapSetTracker.
  * Covers core behaviors needed by process.ts.
  */
-const trackerImplementations = [{ name: 'HeapSetTracker', ctor: HeapSetTracker }];
+const trackerImplementations = [
+  { name: 'HeapSetTracker', ctor: HeapSetTracker<{ armor: ProcessItem[] }> },
+];
 
 for (const { name, ctor } of trackerImplementations) {
   describe(name, () => {
@@ -26,38 +30,52 @@ for (const { name, ctor } of trackerImplementations) {
       minStat: 10,
     }));
 
+    const makeInsert =
+      (tracker: HeapSetTracker<{ armor: ProcessItem[] }>) =>
+      (
+        enabledStatsTotal: number,
+        statMix: number,
+        armor: ProcessItem[],
+        stats: number[],
+      ): boolean => {
+        const power = getPower(armor);
+        const entry: HeapEntry<{ armor: ProcessItem[] }> = {
+          enabledStatsTotal,
+          statMix,
+          power,
+          armor,
+          statsTotal: sum(stats),
+        };
+        return tracker.insert(entry);
+      };
+
     it('should handle basic insertion, ordering, and retrieval', () => {
       const tracker = new ctor(5);
+      const insert = makeInsert(tracker);
 
       // Insert sets with different tiers and stat mixes
       expect(
-        tracker.insert(
+        insert(
           10,
           encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('a', 1000)],
           [5, 5, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
       expect(
-        tracker.insert(
+        insert(
           12,
           encodeStatMix([6, 6, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('b', 1200)],
           [6, 6, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
       expect(
-        tracker.insert(
+        insert(
           10,
           encodeStatMix([4, 6, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('c', 1100)],
           [4, 6, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
 
@@ -72,60 +90,51 @@ for (const { name, ctor } of trackerImplementations) {
 
     it('should handle capacity limits and trimming correctly', () => {
       const tracker = new ctor(3);
+      const insert = makeInsert(tracker);
 
       // Fill to capacity
       expect(
-        tracker.insert(
+        insert(
           10,
           encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('a', 1000)],
           [5, 5, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
       expect(
-        tracker.insert(
+        insert(
           12,
           encodeStatMix([6, 6, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('b', 1000)],
           [6, 6, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
       expect(
-        tracker.insert(
+        insert(
           8,
           encodeStatMix([4, 4, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('c', 1000)],
           [4, 4, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
       expect(tracker.totalSets).toBe(3);
 
       // Insert low tier - should be rejected
-      const lowResult = tracker.insert(
+      const lowResult = insert(
         6,
         encodeStatMix([3, 3, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('d', 1000)],
         [3, 3, 0, 0, 0, 0],
-        [],
-        [],
       );
       expect(lowResult).toBe(false);
       expect(tracker.totalSets).toBe(3);
 
       // Insert high tier - should succeed but cause trimming
-      const highResult = tracker.insert(
+      const highResult = insert(
         14,
         encodeStatMix([7, 7, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('e', 1000)],
         [7, 7, 0, 0, 0, 0],
-        [],
-        [],
       );
       expect(highResult).toBe(false); // trimWorstSet returns false
       expect(tracker.totalSets).toBe(3);
@@ -138,6 +147,7 @@ for (const { name, ctor } of trackerImplementations) {
 
     it('should implement couldInsert correctly for hot path optimization', () => {
       const tracker = new ctor(2);
+      const insert = makeInsert(tracker);
 
       // Empty tracker accepts everything
       expect(tracker.couldInsert(5)).toBe(true);
@@ -145,23 +155,19 @@ for (const { name, ctor } of trackerImplementations) {
 
       // Fill to capacity
       expect(
-        tracker.insert(
+        insert(
           10,
           encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('a', 1000)],
           [5, 5, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
       expect(
-        tracker.insert(
+        insert(
           8,
           encodeStatMix([4, 4, 0, 0, 0, 0], desiredStatRanges),
           [createMockArmor('b', 1000)],
           [4, 4, 0, 0, 0, 0],
-          [],
-          [],
         ),
       ).toBe(true);
 
@@ -173,25 +179,22 @@ for (const { name, ctor } of trackerImplementations) {
 
     it('should handle duplicate detection', () => {
       const tracker = new ctor(5);
+      const insert = makeInsert(tracker);
 
       // Insert first item
-      tracker.insert(
+      insert(
         10,
         encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('a', 1000)],
         [5, 5, 0, 0, 0, 0],
-        [],
-        [],
       );
 
       // SetTracker contract allows duplicates
-      const result = tracker.insert(
+      const result = insert(
         10,
         encodeStatMix([5, 5, 0, 0, 0, 0], desiredStatRanges),
         [createMockArmor('b', 900)],
         [5, 5, 0, 0, 0, 0],
-        [],
-        [],
       );
       expect(result).toBe(true);
       expect(tracker.totalSets).toBe(2);

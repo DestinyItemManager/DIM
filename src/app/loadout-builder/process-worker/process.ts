@@ -2,6 +2,7 @@ import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
 import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { sum } from 'es-toolkit';
 import { infoLog } from '../../utils/log';
 import {
   ArmorBucketHashes,
@@ -13,6 +14,7 @@ import {
   MinMaxStat,
   StatRanges,
 } from '../types';
+import { getPower } from '../utils';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
@@ -125,23 +127,6 @@ export function process(
     },
   );
 
-  if (combos === 0) {
-    return { sets: [], combos: 0 };
-  }
-
-  const setTracker = new HeapSetTracker(RETURNED_ARMOR_SETS);
-
-  const { activityMods, generalMods } = lockedMods;
-
-  const precalculatedInfo = precalculateStructures(
-    autoModOptions,
-    generalMods,
-    activityMods,
-    autoStatMods,
-    statOrder,
-  );
-  const hasMods = Boolean(activityMods.length || generalMods.length);
-
   const setStatistics: ProcessStatistics['statistics'] = {
     skipReasons: {
       doubleExotic: 0,
@@ -165,6 +150,33 @@ export function process(
     numValidSets: 0,
     statistics: setStatistics,
   };
+
+  if (combos === 0) {
+    const statRangesFiltered = Object.fromEntries(
+      statOrder.map((h) => [h, { minStat: 0, maxStat: MAX_STAT }]),
+    ) as StatRanges;
+    return { sets: [], combos: 0, statRangesFiltered, processInfo: processStatistics };
+  }
+
+  const setTracker = new HeapSetTracker<{
+    /** The armor items in this set. */
+    armor: ProcessItem[];
+    /** The stats associated with this armor set. */
+    stats: number[];
+    mods: number[];
+    bonusStats: number[];
+  }>(RETURNED_ARMOR_SETS);
+
+  const { activityMods, generalMods } = lockedMods;
+
+  const precalculatedInfo = precalculateStructures(
+    autoModOptions,
+    generalMods,
+    activityMods,
+    autoStatMods,
+    statOrder,
+  );
+  const hasMods = Boolean(activityMods.length || generalMods.length);
 
   const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
   const setBonusCounts = Object.values(setBonuses);
@@ -411,7 +423,16 @@ export function process(
 
             processStatistics.numValidSets++;
             // And now insert our set using the predicted total tier and numeric stat mix.
-            setTracker.insert(finalTotalStats, numericStatMix, armor, stats, mods, bonusStats);
+            setTracker.insert({
+              enabledStatsTotal: finalTotalStats,
+              statMix: numericStatMix,
+              power: getPower(armor),
+              armor,
+              stats,
+              statsTotal: sum(stats),
+              mods,
+              bonusStats,
+            });
 
             if (stopOnFirstSet) {
               if (strictUpgrades) {
@@ -430,7 +451,7 @@ export function process(
 
   const finalSets = setTracker.getArmorSets();
 
-  const sets = filterMap(finalSets, ({ armor, stats, mods, bonusStats }) => {
+  const sets = filterMap(finalSets, ({ armor, stats, mods, bonusStats, ...rest }) => {
     const armorOnlyStats: Partial<ArmorStats> = {};
     const fullStats: Partial<ArmorStats> = {};
 
@@ -460,6 +481,7 @@ export function process(
     }
 
     return {
+      ...rest,
       armor: armor.map((item) => item.id),
       stats: fullStats as ArmorStats,
       armorStats: armorOnlyStats as ArmorStats,

@@ -5,10 +5,12 @@ import { armorStats } from 'app/search/d2-known-values';
 import { mapValues } from 'app/utils/collections';
 import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { chunk, maxBy, sum } from 'es-toolkit';
+import { chunk, maxBy } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
 import type { ProcessInputs } from '../process-worker/process';
+import { HeapSetTracker } from '../process-worker/set-tracker';
 import {
+  ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
   ProcessResult,
@@ -51,7 +53,10 @@ function createWorker() {
   return { worker, cleanup };
 }
 
-type RunProcessResult = Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number };
+export type RunProcessResult = Omit<ProcessResult, 'sets'> & {
+  sets: ArmorSet[];
+  processTime: number;
+};
 
 export function runProcess({
   autoModDefs,
@@ -197,17 +202,24 @@ export function runProcess({
   };
 }
 function combineResults(results: ProcessResult[]): ProcessResult {
-  const firstResult = results.shift()!;
-  if (results.length === 0) {
-    return firstResult;
+  if (results.length === 1) {
+    return results[0];
   }
 
+  const setTracker = new HeapSetTracker<ProcessArmorSet>(200);
+  for (const result of results) {
+    for (const set of result.sets) {
+      if (setTracker.couldInsert(set.enabledStatsTotal)) {
+        setTracker.insert(set);
+      }
+    }
+  }
+  const topSets = setTracker.getArmorSets();
+
+  const firstResult = results.shift()!;
   return results.reduce(
     (combined, result) => ({
-      // TODO: need to sort these!
-      sets: [...combined.sets, ...result.sets].sort(
-        (a, b) => sum(Object.values(a.stats)) - sum(Object.values(b.stats)),
-      ),
+      sets: topSets,
       combos: combined.combos + result.combos,
       statRangesFiltered: combineStatRanges(combined.statRangesFiltered, result.statRangesFiltered),
       processInfo: combineProcessInfo(combined.processInfo, result.processInfo),
