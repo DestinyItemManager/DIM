@@ -6,9 +6,9 @@ export interface ProcessResult {
   /** The total number of combinations considered. */
   combos: number;
   /** The stat ranges of all sets that matched our filters & mod selection. */
-  statRangesFiltered?: StatRanges;
+  statRangesFiltered: StatRanges;
   /** Statistics about how many sets passed/failed the constraints, for error reporting */
-  processInfo?: ProcessStatistics;
+  processInfo: ProcessStatistics;
 }
 
 /**

@@ -59,18 +59,21 @@ export interface ProcessInputs {
  * @param filteredItems pared down list of items to process sets from
  * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
  */
-export function process({
-  filteredItems,
-  modStatTotals,
-  lockedMods,
-  setBonuses,
-  desiredStatRanges,
-  anyExotic,
-  autoModOptions,
-  autoStatMods,
-  strictUpgrades,
-  stopOnFirstSet,
-}: ProcessInputs): ProcessResult {
+export function process(
+  workerNum: number,
+  {
+    filteredItems,
+    modStatTotals,
+    lockedMods,
+    setBonuses,
+    desiredStatRanges,
+    anyExotic,
+    autoModOptions,
+    autoStatMods,
+    strictUpgrades,
+    stopOnFirstSet,
+  }: ProcessInputs,
+): ProcessResult {
   const pstart = performance.now();
 
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.
@@ -106,13 +109,21 @@ export function process({
   const numItems =
     helms.length + gauntlets.length + chests.length + legs.length + classItems.length;
 
-  infoLog('loadout optimizer', 'Processing', combos, 'combinations from', numItems, 'items', {
-    helms: helms.length,
-    gauntlets: gauntlets.length,
-    chests: chests.length,
-    legs: legs.length,
-    classItems: classItems.length,
-  });
+  infoLog(
+    `loadout optimizer thread ${workerNum}`,
+    'Processing',
+    combos,
+    'combinations from',
+    numItems,
+    'items',
+    {
+      helms: helms.length,
+      gauntlets: gauntlets.length,
+      chests: chests.length,
+      legs: legs.length,
+      classItems: classItems.length,
+    },
+  );
 
   if (combos === 0) {
     return { sets: [], combos: 0 };
@@ -459,7 +470,7 @@ export function process({
   const totalTime = performance.now() - pstart;
 
   infoLog(
-    'loadout optimizer',
+    `loadout optimizer thread ${workerNum}`,
     'found',
     processStatistics.numValidSets,
     'stat mixes after processing',
