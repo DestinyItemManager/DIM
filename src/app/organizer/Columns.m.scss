@@ -140,7 +140,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   composes: noWrap;
   align-items: flex-start;
-  gap: 3px;
+  gap: 2px;
 }
 .miniPerkContainer {
   --item-size: 18px;
@@ -162,17 +162,20 @@
 .perkSelectable {
   cursor: pointer;
 }
-// copy pasted from src/app/item-popup/PlugTooltip.m.scss
+// copy pasted from src/app/item-popup/PlugTooltip.m.scss with spacing tweaks
 .enhancedArrow {
-  &::before {
+  width: 25px;
+  display: flex;
+  &::after {
     content: '';
     display: inline-block;
-    width: 9px;
-    height: 16px;
+    width: 6px;
+    height: 11px;
     vertical-align: text-bottom;
     mask-image: url('images/enhancedArrow.svg');
     background-color: $enhancedYellow;
-    margin-right: 3px;
+    margin-left: 1px;
+    margin-top: 3px;
   }
 }
 
