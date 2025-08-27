@@ -6,9 +6,9 @@ export interface ProcessResult {
   /** The total number of combinations considered. */
   combos: number;
   /** The stat ranges of all sets that matched our filters & mod selection. */
-  statRangesFiltered?: StatRanges;
+  statRangesFiltered: StatRanges;
   /** Statistics about how many sets passed/failed the constraints, for error reporting */
-  processInfo?: ProcessStatistics;
+  processInfo: ProcessStatistics;
 }
 
 /**
@@ -51,15 +51,15 @@ export interface ProcessArmorSet {
   readonly armor: readonly string[];
   /** Which stat mods were added? */
   readonly statMods: number[];
-}
 
-export interface IntermediateProcessArmorSet {
-  /** The overall stats for the loadout as a whole, EXCLUDING auto stat mods. */
-  stats: number[];
-  /** The first (highest-power) valid set from this stat mix. */
-  armor: ProcessItem[];
-  mods: number[];
-  bonusStats: number[];
+  /** Sum of enabled stats values. */
+  readonly enabledStatsTotal: number;
+  /** Sum of all stats including disabled/maxed stats. */
+  readonly statsTotal: number;
+  /** Encoded stat mix as a 48-bit integer. */
+  readonly statMix: number;
+  /** Power level of the armor set. */
+  readonly power: number;
 }
 
 export interface ProcessMod {
