@@ -2,14 +2,14 @@ import { MAX_STAT } from 'app/loadout/known-values';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
 import { ArmorStatHashes, artificeStatBoost, DesiredStatRange, MinMaxStat } from '../types';
-import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
+import { AutoModsCache, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
  * Data that stays the same in a given LO run.
  */
 export interface LoSessionInfo {
-  autoModOptions: AutoModsMap;
+  autoModOptions: AutoModsCache;
   hasActivityMods: boolean;
   /** The total cost of all user-picked general and activity mods. */
   totalModEnergyCost: number;

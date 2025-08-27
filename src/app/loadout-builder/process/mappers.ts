@@ -104,11 +104,9 @@ export function mapAutoMods(defs: AutoModDefs): AutoModData {
     hash: def.hash,
     cost: def.plug.energyCost?.energyCost ?? 0,
   });
-  const defToArtificeMod = (def: PluggableInventoryItemDefinition) => ({
-    hash: def.hash,
-  });
+  const defToHash = (def: PluggableInventoryItemDefinition) => def.hash;
   return {
-    artificeMods: mapValues(defs.artificeMods, defToArtificeMod),
+    artificeMods: mapValues(defs.artificeMods, defToHash),
     generalMods: mapValues(defs.generalMods, (modsForStat) => mapValues(modsForStat, defToAutoMod)),
   };
 }
