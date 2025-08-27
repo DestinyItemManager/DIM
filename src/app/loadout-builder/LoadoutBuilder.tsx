@@ -383,6 +383,7 @@ export default memo(function LoadoutBuilder({
         setLoadout={setLoadout}
         className={styles.subclassSection}
       />
+      <div className={styles.fineprint}>{t('LoadoutBuilder.PinnedItemsFinePrint')}</div>
       <LoadoutOptimizerPinnedItems
         chooseItem={chooseItem}
         selectedStore={selectedStore}

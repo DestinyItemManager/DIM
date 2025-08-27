@@ -2,11 +2,13 @@ import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { AppIcon, lockIcon } from 'app/shell/icons';
+import { toggleSearchQueryComponent } from 'app/shell/actions';
+import { AppIcon, pinIcon } from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
@@ -55,6 +57,7 @@ export default function GeneratedSetItem({
 }) {
   const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
   const unpinItem = () => lbDispatch({ type: 'unpinItem', item });
+  const dispatch = useThunkDispatch();
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
@@ -66,8 +69,10 @@ export default function GeneratedSetItem({
       // Legendary armor can have intrinsic perks and it might be
       // nice to provide a convenient user interface for those,
       // but the exotic picker is not the way to do it.
-      if (item.isExotic) {
+      if (item.isExotic && item.bucket.hash !== BucketHashes.ClassArmor) {
         lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
+      } else {
+        dispatch(toggleSearchQueryComponent(`exactperk:"${plugDef.displayProperties.name}"`));
       }
     } else if (
       !autoAssignmentPCHs.includes(plugCategoryHash) &&
@@ -99,7 +104,7 @@ export default function GeneratedSetItem({
               title={t('LoadoutBuilder.UnlockItem')}
               onClick={unpinItem}
             >
-              <AppIcon icon={lockIcon} />
+              <AppIcon icon={pinIcon} />
             </button>
           ) : (
             archetype && (

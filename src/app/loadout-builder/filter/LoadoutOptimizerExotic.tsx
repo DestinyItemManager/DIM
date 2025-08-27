@@ -5,6 +5,7 @@ import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { sample } from 'es-toolkit';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
@@ -94,7 +95,12 @@ function ChosenExoticOption({
   const defs = useD2Definitions()!;
   const itemCreationContext = useSelector(createItemContextSelector);
 
-  let info: { icon: React.ReactNode; title: React.ReactNode; description: React.ReactNode };
+  let info: {
+    icon: React.ReactNode;
+    title: React.ReactNode;
+    description: React.ReactNode;
+    descriptionClassName?: string;
+  };
 
   switch (lockedExoticHash) {
     case LOCKED_EXOTIC_NO_EXOTIC:
@@ -142,20 +148,24 @@ function ChosenExoticOption({
           exoticMods,
           isArmor1: Boolean(fakeItem?.energy),
         });
+        if (fakeItem.bucket.hash === BucketHashes.ClassArmor) {
+          info.description = t('LoadoutBuilder.ExoticClassItemPerks');
+          info.descriptionClassName = styles.warning;
+        }
         break;
       }
       break;
     }
   }
 
-  const { icon, title, description } = info!;
+  const { icon, title, description, descriptionClassName } = info!;
 
   return (
     <div className={styles.infoCard} onClick={onClick}>
       {icon}
       <div className={styles.details}>
         <div className={styles.title}>{title}</div>
-        <div>{description}</div>
+        <div className={descriptionClassName}>{description}</div>
       </div>
     </div>
   );

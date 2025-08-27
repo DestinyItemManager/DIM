@@ -656,11 +656,13 @@
     "MwExotic": "Exotic",
     "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExistingLoadout": "Existing Loadout",
+    "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Special",
     "Filter": "Settings",
     "Legendary": "Legendary",
     "LockItem": "Pin item",
     "PinnedItems": "Pinned Items",
+    "PinnedItemsFinePrint": "Search filters are saved with Loadout Optimizer settings, but pinned and excluded items are not. Pins and exclusions will be ignored when DIM checks existing Loadouts for better stat builds.",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NoBuildsFoundExplainer": {
