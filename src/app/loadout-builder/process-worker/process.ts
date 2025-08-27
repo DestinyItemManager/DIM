@@ -273,9 +273,9 @@ export function process({
             // Check which stats we're under the stat minimums on.
             let totalStats = 0;
             for (let index = 0; index < 6; index++) {
-              const value = effectiveStats[index];
               const filter = desiredStatRanges[index];
               if (filter.maxStat > 0 /* non-ignored stat */) {
+                const value = effectiveStats[index];
                 // Update the minimum stat range while we're here
                 const statRange = statRanges[index];
                 if (value < statRange.minStat) {

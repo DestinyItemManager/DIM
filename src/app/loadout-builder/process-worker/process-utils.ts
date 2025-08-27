@@ -325,11 +325,10 @@ export function pickAndAssignSlotIndependentMods(
       if (result) {
         return result;
       }
-    } else {
-      remainingEnergyCapacities.sort((a, b) => b - a);
-      if (info.generalModCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])) {
-        return [];
-      }
+    } else if (
+      info.generalModCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])
+    ) {
+      return [];
     }
   }
 
