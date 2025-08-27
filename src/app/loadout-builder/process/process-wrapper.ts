@@ -158,8 +158,8 @@ export function runProcess({
   );
   const concurrency = Math.max(
     1,
-    // Don't spin up a ton of threads for small problems
-    Math.min(navigator.hardwareConcurrency || 1, Math.ceil(numCombinations / 100000)),
+    // Don't spin up a ton of threads for smaller problems, leave at least one core free
+    Math.min((navigator.hardwareConcurrency || 1) - 1, Math.ceil(numCombinations / 5_000_000)),
   );
 
   const longestItemsBucketHash = Number(
