@@ -262,7 +262,7 @@ export function getSeasonPassStatus(
   const seasonProgressionDef = defs.Progression.get(seasonPassProgressionHash);
   const baseLevels = seasonProgressionDef.steps.filter(
     (step) => step.progressTotal === 100000,
-  ).length;
+  ).length + 1;
 
   const prestigeProgressionHash = seasonPass.prestigeProgressionHash;
   const prestigeProgression = characterProgressions.progressions[prestigeProgressionHash];
