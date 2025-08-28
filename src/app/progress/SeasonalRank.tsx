@@ -45,7 +45,6 @@ export default function SeasonalRank({
   const {
     seasonPassLevel,
     rewardItems,
-    seasonProgression,
     prestigeProgression,
     progressToNextLevel,
     nextLevelAt,
