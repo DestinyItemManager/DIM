@@ -99,7 +99,7 @@ export default function SeasonalRank({
     return null;
   }
 
-  return seasonPassLevel !== seasonProgression.levelCap ? (
+  return !prestigeMode ? (
     <div
       className={clsx('milestone-quest', {
         [styles.hasPremiumRewards]: hasPremiumRewards,
@@ -192,7 +192,7 @@ export function SeasonPrestigeRank({
       <div className={styles.seasonInfo}>
         <div className={styles.seasonName}>
           {t('Progress.SeasonPassPrestigeRank', {
-            rank: progress.level + 1,
+            rank: progress.level,
           })}
         </div>
         <div className={styles.seasonLevel}>
