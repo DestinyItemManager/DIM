@@ -15,7 +15,7 @@ import {
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import brightEngrams from 'data/d2/bright-engrams.json';
+import brightEngramsBonus from 'data/d2/bright-engram-bonus.json';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
@@ -177,9 +177,10 @@ export function SeasonPrestigeRank({
   const replacer = useDynamicStringReplacer();
   const progressionDef = defs.Progression.get(progress.progressionHash);
 
-  // We need to get the latest bright engram icon
-  const brightEngramHash = Object.values(brightEngrams);
-  const brightEngram = defs.InventoryItem.get(brightEngramHash[brightEngramHash.length - 1]);
+  // We need to get the latest bright engram bonus icon
+  const brightEngramBonus = defs.InventoryItem.get(
+    brightEngramsBonus[brightEngramsBonus.length - 1],
+  );
 
   const seasonEnd = season.endDate;
 
@@ -188,7 +189,7 @@ export function SeasonPrestigeRank({
       className={clsx(styles.activityRank, { [styles.gridLayout]: isProgressRanks })}
       title={replacer(progressionDef.displayProperties.description)}
     >
-      <ReputationRankIcon progress={progress} icon={brightEngram.displayProperties.icon} />
+      <ReputationRankIcon progress={progress} icon={brightEngramBonus.displayProperties.icon} />
       <div className={styles.seasonInfo}>
         <div className={styles.seasonName}>
           {t('Progress.SeasonPassPrestigeRank', {
@@ -239,7 +240,7 @@ export function ReputationRankIcon({
             strokeDasharray={`${
               (circumference * progress.progressToNextLevel) / progress.nextLevelAt
             } ${circumference}`}
-            stroke="white"
+            stroke="cyan"
           />
         )}
         <image xlinkHref={bungieNetPath(icon)} width="36" height="36" x="9" y="9" />
