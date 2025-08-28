@@ -1151,7 +1151,7 @@
     "RecordValue": "{{value}}pts",
     "Resets_one": "1 reset",
     "Resets_other": "{{count}} resets",
-    "SeasonPassPrestigeRank": "Prestige Rank {{rank}}",
+    "SeasonPassPrestigeRank": "Seasonal Prestige Rank {{rank}}",
     "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
