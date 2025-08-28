@@ -267,7 +267,7 @@ export function getSeasonPassStatus(
   const prestigeProgressionDef = defs.Progression.get(prestigeProgressionHash);
 
   // Take seasonpass level and add prestige progress adjusted to remove 500k xp levels double counting
-  const seasonPassLevel = baseLevels + prestigeProgression.level;
+  const seasonPassLevel = Math.min(seasonProgression.level, baseLevels) + prestigeProgression.level;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
   const prestigeMode = seasonProgression.level === seasonProgression.levelCap;
