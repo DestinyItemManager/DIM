@@ -227,8 +227,7 @@ export function ReputationRankIcon({
   return (
     <div className={styles.seasonRankIcon}>
       <svg viewBox="0 0 54 54">
-        <circle r="24" cx="27" cy="27" fill="#555" />
-        <circle r="21" cx="27" cy="27" fill="#222" />
+        <circle r="22.5" cx="27" cy="27" fillOpacity="0" stroke="#555" strokeWidth="3" />
         {progress.progressToNextLevel > 0 && (
           <circle
             r="22.5"
