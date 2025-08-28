@@ -344,12 +344,10 @@ function applyPlugsToStats(
 
         // check special conditionals
         if (
-          !isPlugStatActive(
-            pluggedInvestmentStat.activationRule,
-            createdItem,
-            undefined,
+          !isPlugStatActive(pluggedInvestmentStat.activationRule, {
+            item: createdItem,
             existingStat,
-          )
+          })
         ) {
           continue;
         }
@@ -431,7 +429,7 @@ function attachPlugStats(
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(activePlug.plugDef)) {
       const existingStat = statsByHash[plugInvestmentStat.statTypeHash];
       if (
-        !isPlugStatActive(plugInvestmentStat.activationRule, createdItem, undefined, existingStat)
+        !isPlugStatActive(plugInvestmentStat.activationRule, { item: createdItem, existingStat })
       ) {
         continue;
       }
@@ -476,11 +474,16 @@ function attachPlugStats(
     const plugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(plug.plugDef)) {
-      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
+      if (
+        !isPlugStatActive(plugInvestmentStat.activationRule, {
+          item: createdItem,
+          existingStat: itemStat,
+        })
+      ) {
         continue;
       }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
-      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
       let plugStatValue = plugStatInvestmentValue;

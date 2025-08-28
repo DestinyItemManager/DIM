@@ -2,14 +2,14 @@ import { MAX_STAT } from 'app/loadout/known-values';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
 import { ArmorStatHashes, artificeStatBoost, DesiredStatRange, MinMaxStat } from '../types';
-import { AutoModsMap, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
+import { AutoModsCache, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
  * Data that stays the same in a given LO run.
  */
 export interface LoSessionInfo {
-  autoModOptions: AutoModsMap;
+  autoModOptions: AutoModsCache;
   hasActivityMods: boolean;
   /** The total cost of all user-picked general and activity mods. */
   totalModEnergyCost: number;
@@ -325,11 +325,10 @@ export function pickAndAssignSlotIndependentMods(
       if (result) {
         return result;
       }
-    } else {
-      remainingEnergyCapacities.sort((a, b) => b - a);
-      if (info.generalModCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])) {
-        return [];
-      }
+    } else if (
+      info.generalModCosts.every((cost, index) => cost <= remainingEnergyCapacities[index])
+    ) {
+      return [];
     }
   }
 
@@ -353,11 +352,15 @@ export function pickOptimalStatMods(
   items: ProcessItem[],
   setStats: number[],
   desiredStatRanges: DesiredStatRange[],
-): { mods: number[]; bonusStats: number[] } {
+): { mods: number[]; bonusStats: number[] } | undefined {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info.activityModPermutations,
     items,
   );
+  if (remainingEnergiesPerAssignment.length === 0) {
+    // No valid activity mod assignments
+    return undefined;
+  }
 
   // The amount of additional stat points after which stats don't give us a benefit anymore.
   const maxAddedStats = [0, 0, 0, 0, 0, 0];

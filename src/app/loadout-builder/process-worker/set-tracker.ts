@@ -1,12 +1,10 @@
-import { sum } from 'es-toolkit';
 import { DesiredStatRange } from '../types';
-import { getPower } from '../utils';
-import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
 /**
- * Heap entry for the heap-based SetTracker.
+ * Heap entry for the heap-based SetTracker. T is all the other properties you
+ * want to store that aren't core to the operation of the tracker.
  */
-interface HeapEntry {
+export type HeapEntry<T> = {
   /** Sum of enabled stats values. */
   enabledStatsTotal: number;
   /** Sum of all stats including disabled/maxed stats. */
@@ -15,18 +13,14 @@ interface HeapEntry {
   statMix: number;
   /** Power level of the armor set. */
   power: number;
-  /** The armor items in this set. */
-  armor: ProcessItem[];
-  /** The stats associated with this armor set. */
-  stats: number[];
-}
+} & T;
 
 /**
  * Comparison: true if a is worse than b (lower priority in min-heap).
  * This creates a min-heap where the root is the worst item.
  * Ordering: tier asc, statMix asc, power asc (opposite of SetTracker for min-heap)
  */
-function isWorse(a: HeapEntry, b: HeapEntry): boolean {
+function isWorse<T>(a: HeapEntry<T>, b: HeapEntry<T>): boolean {
   if (a.enabledStatsTotal !== b.enabledStatsTotal) {
     return a.enabledStatsTotal < b.enabledStatsTotal;
   }
@@ -44,8 +38,8 @@ function isWorse(a: HeapEntry, b: HeapEntry): boolean {
  * Uses a min-heap where the root is the worst of the top N sets.
  * This allows O(1) access to worst element and O(log n) operations.
  */
-export class HeapSetTracker {
-  private heap: HeapEntry[] = [];
+export class HeapSetTracker<T> {
+  private heap: HeapEntry<T>[] = [];
   readonly capacity: number;
 
   constructor(capacity: number) {
@@ -68,22 +62,7 @@ export class HeapSetTracker {
    * Insert a set into the heap.
    * Matches SetTracker behavior: allows duplicates, returns true unless trimming.
    */
-  insert(
-    enabledStatsTotal: number,
-    statMix: number,
-    armor: ProcessItem[],
-    stats: number[],
-  ): boolean {
-    const power = getPower(armor);
-    const entry: HeapEntry = {
-      enabledStatsTotal,
-      statMix,
-      power,
-      armor,
-      stats,
-      statsTotal: sum(stats),
-    };
-
+  insert(entry: HeapEntry<T>): boolean {
     if (this.heap.length < this.capacity) {
       this.heap.push(entry);
       this.bubbleUp(this.heap.length - 1);
@@ -106,7 +85,7 @@ export class HeapSetTracker {
    * Get the top N armor sets in order (best first).
    * Since we have a min-heap, we sort a copy and take the best items.
    */
-  getArmorSets(): IntermediateProcessArmorSet[] {
+  getArmorSets(): HeapEntry<T>[] {
     // Copy heap and sort in SetTracker order (best first)
     return this.heap.toSorted((a, b) => {
       // Sort by tier desc, statMix desc, power desc (opposite of min-heap order)

@@ -2,8 +2,8 @@
 
 .statContainer {
   max-width: 230px;
-  margin-top: 8px;
-  gap: 3px;
+  margin-top: 7px;
+  gap: 2px;
   color: var(--theme-header-characters-txt);
 
   // When the whole container is hovered, draw a box around any buttons. When
@@ -86,6 +86,14 @@
 }
 
 .setBonuses {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  --set-bonus-icon-size: 18px;
+  display: flex;
+  flex-direction: row-reverse;
   gap: 4px;
+  & > div {
+    display: flex;
+    & > div {
+      display: flex;
+    }
+  }
 }

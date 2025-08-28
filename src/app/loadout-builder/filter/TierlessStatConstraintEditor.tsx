@@ -423,8 +423,8 @@ function StatBar({
         <div
           className={clsx(styles.statBarFill, { [styles.processing]: processing })}
           style={{
-            left: percent(range.minStat / MAX_STAT),
-            width: percent((range.maxStat - range.minStat) / MAX_STAT),
+            left: percent(Math.max(0, range.minStat) / MAX_STAT),
+            width: percent(Math.min(range.maxStat - range.minStat, MAX_STAT) / MAX_STAT),
           }}
         />
       )}

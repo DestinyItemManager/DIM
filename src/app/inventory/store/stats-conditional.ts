@@ -120,9 +120,25 @@ function getPlugInvestmentStatActivationRule(
  */
 export function isPlugStatActive(
   rule: PlugStatActivationRule,
-  item: DimItem | undefined,
-  classType?: DestinyClass,
-  existingStat?: DimStat, // The stat as it existed before deciding whether to apply this plug
+  // These options are often necessary to determine if the stat is active.
+  // Providing item and existingStat/statHash is best.
+  {
+    item,
+    classType,
+    existingStat,
+    statHash,
+  }: {
+    item?: DimItem;
+    /** The class we're plugging into, if we aren't plugging an actual item. */
+    classType?: DestinyClass;
+    /**
+     * The existing stat on the item before applying this plug's stat. Defaults
+     * if item and statHash are provided.
+     */
+    existingStat?: DimStat;
+    /** The stat being considered, if existingStat isn't provided */
+    statHash?: number;
+  },
 ): boolean {
   if (!rule) {
     return true;
@@ -137,9 +153,12 @@ export function isPlugStatActive(
       return false;
 
     case 'archetypeArmorMasterwork':
+      if (!existingStat && statHash && item) {
+        existingStat = item.stats?.find((s) => s.statHash === statHash);
+      }
       // New Armor 3.0 archetypes grant stats only to secondary stats (base 0) when masterworked,
       // so if there's already some base stat value, MW will not apply its investmentValue to this stat.
-      return !existingStat?.base;
+      return Boolean(existingStat && existingStat.base === 0);
     case 'classType':
       classType ??= item?.classType;
       if (classType === undefined) {

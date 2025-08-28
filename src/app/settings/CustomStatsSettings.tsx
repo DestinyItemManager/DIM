@@ -10,7 +10,12 @@ import { t } from 'app/i18next-t';
 import { getClassTypeNameLocalized } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { CUSTOM_TOTAL_STAT_HASH, armorStats, evenStatWeights } from 'app/search/d2-known-values';
+import {
+  CUSTOM_TOTAL_STAT_HASH,
+  armorStats,
+  customStatClasses,
+  evenStatWeights,
+} from 'app/search/d2-known-values';
 import { allAtomicStats } from 'app/search/search-filter-values';
 import { AppIcon, addIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
@@ -23,14 +28,6 @@ import { useSelector } from 'react-redux';
 import { count } from 'app/utils/collections';
 import styles from './CustomStatsSettings.m.scss';
 import { useSetSetting } from './hooks';
-
-// an order for the class dropdown
-const classes = [
-  DestinyClass.Hunter,
-  DestinyClass.Titan,
-  DestinyClass.Warlock,
-  DestinyClass.Unknown,
-];
 
 /**
  * a list of user-defined custom stat displays. each can be switched into editing mode.
@@ -130,7 +127,7 @@ function CustomStatEditor({
   const originalClass = useRef(statDef.class);
   const saveStat = useSaveStat();
   const [removeStat, removeStatDialog] = useRemoveStat();
-  const options = classes.map((c) => ({
+  const options = customStatClasses.map((c) => ({
     key: `${c}`,
     content: (
       <div className={styles.classOption}>

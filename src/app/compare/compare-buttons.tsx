@@ -45,10 +45,16 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
 
+  const focusedStats = isArmor3(exampleItem) && getArmor3StatFocus(exampleItem);
+  const tertiaryStatHash = focusedStats && focusedStats[2];
+  focusedStats && focusedStats.sort();
+
+  const focusedStatsDisplayProperties =
+    focusedStats &&
+    focusedStats.map((h) => exampleItem.stats!.find((s) => s.statHash === h)!.displayProperties);
   const archetype = getArmorArchetype(exampleItem);
-  const tertiaryStatHash = isArmor3(exampleItem) && getArmor3StatFocus(exampleItem)?.[2];
   const tertiaryStat = tertiaryStatHash && realD2ArmorStatSearchByHash[tertiaryStatHash];
-  const tertiaryStatDisplay =
+  const tertiaryStatDisplayProperties =
     tertiaryStatHash &&
     exampleItem.stats!.find((s) => s.statHash === tertiaryStatHash)!.displayProperties;
 
@@ -169,9 +175,21 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // Try to make a group of armors 3.0 with the exact same 3 stats focused. This is an easy win for identifying better/worse armor.
     exampleItem.destinyVersion === 2 &&
+      focusedStatsDisplayProperties && {
+        buttonLabel: focusedStatsDisplayProperties.map((s, index) => (
+          <React.Fragment key={s.name}>
+            {index > 0 && '+'}
+            <BungieImage className={clsx(styles.statIconAdjust, 'dontInvert')} src={s.icon} />
+          </React.Fragment>
+        )),
+        query: `is:armor3.0 is:${exampleItem.rarity} ${focusedStats.map((h) => `basestat:${realD2ArmorStatSearchByHash[h]}:>0`).join(' ')}`,
+      },
+
+    // Try to make a group of armors 3.0 with the exact same 3 stats focused and the same archetype. This is an easy win for identifying better/worse armor.
+    exampleItem.destinyVersion === 2 &&
       archetype &&
       tertiaryStat &&
-      tertiaryStatDisplay && {
+      tertiaryStatDisplayProperties && {
         buttonLabel: [
           <BungieImage
             key="1"
@@ -183,7 +201,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           <BungieImage
             key="tertiary"
             className={clsx(styles.statIconAdjust, 'dontInvert')}
-            src={tertiaryStatDisplay.icon}
+            src={tertiaryStatDisplayProperties.icon}
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],

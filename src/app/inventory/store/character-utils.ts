@@ -99,6 +99,7 @@ export function characterStatFromStatDef(
       hasIcon: Boolean(statDef.icon),
       highResIcon: '',
       iconSequences: [],
+      iconHash: 0,
     },
     value,
   };

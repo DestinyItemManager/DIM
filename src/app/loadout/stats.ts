@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStatSource } from 'app/inventory/store-types';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import {
@@ -11,7 +11,7 @@ import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { armorStats } from 'app/search/d2-known-values';
-import { mapValues } from 'app/utils/collections';
+import { filterMap, mapValues } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -76,12 +76,32 @@ export function includesRuntimeStatMods(modHashes: number[]) {
 }
 
 /**
+ * Given a mod assignment mapping (which goes from item ID to assigned mods),
+ * produce a list of mod, item pairs. This is meant to be used in
+ * getTotalModStatChanges.
+ */
+function invertModAssignments(
+  itemModAssignments: {
+    [itemInstanceId: string]: PluggableInventoryItemDefinition[];
+  },
+  armor: DimItem[],
+): [PluggableInventoryItemDefinition, DimItem][] {
+  return Object.entries(itemModAssignments).flatMap(([itemId, mods]) =>
+    filterMap(mods, (m): [PluggableInventoryItemDefinition, DimItem] | undefined => {
+      const item = armor.find((i) => i.id === itemId);
+      return item ? ([m, item] as const) : undefined;
+    }),
+  );
+}
+
+/**
  * This sums up the total stat contributions across mods passed in. These are then applied
  * to the loadouts after all the items' base stat values have been summed. This mimics how mods
  * affect stat values in game and allows us to do some preprocessing.
  */
 export function getTotalModStatChanges(
   defs: D2ManifestDefinitions,
+  /** The mods to compute stats for. When itemModAssignments is passed, this should be the list of unassigned mods. */
   lockedMods: PluggableInventoryItemDefinition[],
   subclass: ResolvedLoadoutItem | undefined,
   characterClass: DestinyClass,
@@ -91,6 +111,16 @@ export function getTotalModStatChanges(
    * but are active often enough to be important for loadout building.
    */
   includeRuntimeStatBenefits: boolean,
+  /**
+   * When getting mod benefits for auto stat mods, we need to know what the
+   * items we assigned to are, so that we can correctly calculate conditional
+   * stats.
+   */
+  itemModAssignments?: {
+    [itemInstanceId: string]: PluggableInventoryItemDefinition[];
+  },
+  /** When itemModAssigments is provided, we also need the list of items. */
+  armor?: DimItem[],
 ) {
   const subclassPlugs = subclass?.loadoutItem.socketOverrides
     ? hashesToPluggableItems(defs, Object.values(subclass.loadoutItem.socketOverrides))
@@ -105,38 +135,58 @@ export function getTotalModStatChanges(
     [StatHashes.Melee]: { value: 0, breakdown: [] },
   };
 
+  const lockedModAssignments = (
+    [
+      ...(itemModAssignments && armor ? invertModAssignments(itemModAssignments, armor) : []),
+      ...lockedMods.map((m) => [m, undefined]),
+    ] as [PluggableInventoryItemDefinition, DimItem | undefined][]
+  ).sort(([a], [b]) => a.hash - b.hash);
+
   const processPlugs = (
-    plugs: PluggableInventoryItemDefinition[],
+    modAssignments:
+      | PluggableInventoryItemDefinition[]
+      | [PluggableInventoryItemDefinition, DimItem | undefined][],
     source: DimCharacterStatSource,
   ) => {
-    const grouped = Map.groupBy(plugs, (plug) => plug.hash);
-    for (const plugCopies of grouped.values()) {
-      const mod = plugCopies[0];
-      const modCount = plugCopies.length;
+    for (const modAssignment of modAssignments) {
+      const [mod, item] = Array.isArray(modAssignment) ? modAssignment : [modAssignment, undefined];
       for (const stat of mapAndFilterInvestmentStats(mod)) {
         if (
           stat.statTypeHash in totals &&
-          isPlugStatActive(stat.activationRule, undefined, characterClass)
+          isPlugStatActive(stat.activationRule, {
+            classType: characterClass,
+            statHash: stat.statTypeHash,
+            item,
+          })
         ) {
-          const value = stat.value * modCount;
+          const value = stat.value;
           totals[stat.statTypeHash as ArmorStatHashes].value += value;
-          totals[stat.statTypeHash as ArmorStatHashes].breakdown!.push({
-            name: mod.displayProperties.name,
-            icon: bungieNetPath(mod.displayProperties.icon),
-            hash: mod.hash,
-            count: modCount,
-            source,
-            value,
-          });
+          const breakdown = totals[stat.statTypeHash as ArmorStatHashes].breakdown!;
+          const lastEntry = breakdown[breakdown.length - 1];
+          if (lastEntry?.hash === mod.hash) {
+            // merge stacks of the same mod
+            lastEntry.count!++;
+            lastEntry.value += value;
+          } else {
+            totals[stat.statTypeHash as ArmorStatHashes].breakdown!.push({
+              name: mod.displayProperties.name,
+              icon: bungieNetPath(mod.displayProperties.icon),
+              hash: mod.hash,
+              count: 1,
+              source,
+              value,
+            });
+          }
         }
       }
     }
   };
 
   processPlugs(subclassPlugs, 'subclassPlug');
-  processPlugs(lockedMods, 'armorPlug');
+  processPlugs(lockedModAssignments, 'armorPlug');
 
   if (includeRuntimeStatBenefits) {
+    const lockedMods = lockedModAssignments.map(([m]) => m);
     const fontCounts = getFontMods(lockedMods);
     for (const statHash of armorStats) {
       const fonts = fontCounts[statHash];

@@ -5,6 +5,7 @@ import {
   currentStoreSelector,
   profileResponseSelector,
 } from 'app/inventory/selectors';
+import { tuningSocketReusablePlugSetHash } from 'app/loadout-builder/types';
 import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
@@ -12,7 +13,7 @@ import { count, sumBy, uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible, modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
-import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import unstackableModHashes from 'data/d2/unstackable-mods.json';
@@ -77,10 +78,12 @@ function useUnlockedPlugSets(
 
       // Get all the armor mod sockets we can use for an item. Note that sockets without `plugged`
       // are considered disabled by the API
-      const modSockets = getSocketsByCategoryHash(
-        item.sockets,
+      const modSockets = getSocketsByCategoryHashes(item.sockets, [
         SocketCategoryHashes.ArmorMods,
-      ).filter((socket) => socket.socketDefinition.reusablePlugSetHash && socket.plugged);
+      ]).filter(
+        (socket) =>
+          socket.visibleInGame && socket.socketDefinition.reusablePlugSetHash && socket.plugged,
+      );
 
       // Group the sockets by their reusablePlugSetHash, this lets us get a count of available mods for
       // each socket in the case of bucket specific mods/sockets
@@ -98,6 +101,11 @@ function useUnlockedPlugSets(
           // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
           owner ?? currentStore!.id,
         );
+        for (const plugInfo of sockets[0].reusablePlugItems ?? emptyArray()) {
+          if (plugInfo.enabled && plugInfo.canInsert) {
+            unlockedPlugs.add(plugInfo.plugItemHash);
+          }
+        }
 
         const isArtificePlugSet = sockets[0].plugSet!.plugs.some(
           (p) => p?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
@@ -129,7 +137,15 @@ function useUnlockedPlugSets(
           ? sockets.length
           : MAX_SLOT_INDEPENDENT_MODS;
 
-        if (plugs.length && !plugSetsByHash[plugSetHash] && !(isArtificePlugSet && usedArtifice)) {
+        if (
+          plugs.length &&
+          (!plugSetsByHash[plugSetHash] ||
+            // The tuning socket can have different unlocked mods on different
+            // items, so we need to merge them. Everything else should be
+            // identical.
+            plugSetHash === tuningSocketReusablePlugSetHash) &&
+          !(isArtificePlugSet && usedArtifice)
+        ) {
           usedArtifice ||= isArtificePlugSet;
 
           const isActivityMod = plugs.some(
@@ -138,16 +154,25 @@ function useUnlockedPlugSets(
               p.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
           );
 
-          plugSetsByHash[plugSetHash] = {
-            plugSetHash,
-            maxSelectable,
-            selectionType: PlugSelectionType.Multi,
-            plugs,
-            selected: [],
-            overrideSelectedAndMax: isActivityMod
-              ? tl('LB.SelectModsCountActivityMods')
-              : undefined,
-          };
+          if (plugSetsByHash[plugSetHash]) {
+            // Mostly for the tuning mods, merge the plugs into the existing set
+            const existingPlugs = plugSetsByHash[plugSetHash].plugs;
+            plugSetsByHash[plugSetHash].plugs = uniqBy(
+              [...existingPlugs, ...plugs],
+              (plug) => plug.hash,
+            );
+          } else {
+            plugSetsByHash[plugSetHash] = {
+              plugSetHash,
+              maxSelectable,
+              selectionType: PlugSelectionType.Multi,
+              plugs,
+              selected: [],
+              overrideSelectedAndMax: isActivityMod
+                ? tl('LB.SelectModsCountActivityMods')
+                : undefined,
+            };
+          }
 
           if (isActivityMod) {
             plugSetsByHash[plugSetHash].getNumSelected = (allSelectedPlugs) =>

@@ -1,10 +1,12 @@
 import { ItemHashTag, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   currentProfileSelector,
   customStatsSelector,
   settingsSelector,
 } from 'app/dim-api/selectors';
+import { tuningSocketReusablePlugSetHash } from 'app/loadout-builder/types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
@@ -319,6 +321,7 @@ export const unlockedPlugSetItemsSelector = currySelector(
   createSelector(
     (_state: RootState, characterId?: string) => characterId,
     profileResponseSelector,
+    d2ManifestSelector,
     gatherUnlockedPlugSetItems,
   ),
 );
@@ -326,6 +329,7 @@ export const unlockedPlugSetItemsSelector = currySelector(
 function gatherUnlockedPlugSetItems(
   characterId: string | undefined,
   profileResponse: DestinyProfileResponse | undefined,
+  defs: D2ManifestDefinitions | undefined,
 ) {
   const unlockedPlugs = new Set<number>();
   if (profileResponse?.profilePlugSets.data?.plugs) {
@@ -342,6 +346,20 @@ function gatherUnlockedPlugSetItems(
       filterUnlockedPlugs(plugSetHash, plugs, unlockedPlugs);
     }
   }
+
+  // Manually add all the tuning mods since they don't get unlocked on the
+  // profile, they just show up on items with the tuning socket.
+  //
+  // TODO: We could filter these down by looking at all the user's items to see
+  // which ones are available, though that would make this selector depend on
+  // allItemsSelector.
+  const tuningPlugSet = defs?.PlugSet.get(tuningSocketReusablePlugSetHash);
+  if (tuningPlugSet) {
+    for (const plugEntry of tuningPlugSet.reusablePlugItems) {
+      unlockedPlugs.add(plugEntry.plugItemHash);
+    }
+  }
+
   return unlockedPlugs;
 }
 

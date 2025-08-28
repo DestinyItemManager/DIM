@@ -213,24 +213,12 @@ exports[`process-utils auto mod structure different ways of hitting target stats
 exports[`process-utils auto mod structure snapshot of mod defs when assuming cheapgeneral for auto mods 1`] = `
 {
   "artificeMods": {
-    "144602215": {
-      "hash": 3160845295,
-    },
-    "1735777505": {
-      "hash": 617569843,
-    },
-    "1943323491": {
-      "hash": 539459624,
-    },
-    "2996146975": {
-      "hash": 2322202118,
-    },
-    "392767087": {
-      "hash": 199176566,
-    },
-    "4244567218": {
-      "hash": 2507624050,
-    },
+    "144602215": 3160845295,
+    "1735777505": 617569843,
+    "1943323491": 539459624,
+    "2996146975": 2322202118,
+    "392767087": 199176566,
+    "4244567218": 2507624050,
   },
   "generalMods": {
     "144602215": {
@@ -300,24 +288,12 @@ exports[`process-utils auto mod structure snapshot of mod defs when assuming che
 exports[`process-utils auto mod structure snapshot of mod defs when assuming general for auto mods 1`] = `
 {
   "artificeMods": {
-    "144602215": {
-      "hash": 3160845295,
-    },
-    "1735777505": {
-      "hash": 617569843,
-    },
-    "1943323491": {
-      "hash": 539459624,
-    },
-    "2996146975": {
-      "hash": 2322202118,
-    },
-    "392767087": {
-      "hash": 199176566,
-    },
-    "4244567218": {
-      "hash": 2507624050,
-    },
+    "144602215": 3160845295,
+    "1735777505": 617569843,
+    "1943323491": 539459624,
+    "2996146975": 2322202118,
+    "392767087": 199176566,
+    "4244567218": 2507624050,
   },
   "generalMods": {
     "144602215": {

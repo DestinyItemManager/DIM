@@ -1,24 +1,30 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
-import { TagValue } from 'app/inventory/dim-item-info';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
+import { armorStats } from 'app/search/d2-known-values';
 import { mapValues } from 'app/utils/collections';
-import { chainComparator, compareBy } from 'app/utils/comparators';
-import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { chunk, maxBy } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
 import type { ProcessInputs } from '../process-worker/process';
-import { ProcessItem, ProcessItemsByBucket, ProcessResult } from '../process-worker/types';
+import { HeapSetTracker } from '../process-worker/set-tracker';
+import {
+  ProcessArmorSet,
+  ProcessItem,
+  ProcessItemsByBucket,
+  ProcessResult,
+  ProcessStatistics,
+} from '../process-worker/types';
 import {
   ArmorBucketHash,
   ArmorEnergyRules,
   ArmorSet,
   AutoModDefs,
   DesiredStatRange,
-  ItemGroup,
   ItemsByBucket,
   ModStatChanges,
+  StatRanges,
 } from '../types';
 import {
   hydrateArmorSet,
@@ -26,6 +32,11 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './mappers';
+
+interface MappedItem {
+  dimItem: DimItem;
+  processItem: ProcessItem;
+}
 
 function createWorker() {
   const instance = new Worker(
@@ -42,6 +53,11 @@ function createWorker() {
   return { worker, cleanup };
 }
 
+export type RunProcessResult = Omit<ProcessResult, 'sets'> & {
+  sets: ArmorSet[];
+  processTime: number;
+};
+
 export function runProcess({
   autoModDefs,
   filteredItems,
@@ -52,7 +68,6 @@ export function runProcess({
   desiredStatRanges,
   anyExotic,
   autoStatMods,
-  getUserItemTag,
   strictUpgrades,
   stopOnFirstSet,
   lastInput,
@@ -66,27 +81,17 @@ export function runProcess({
   desiredStatRanges: DesiredStatRange[];
   anyExotic: boolean;
   autoStatMods: boolean;
-  getUserItemTag?: (item: DimItem) => TagValue | undefined;
   strictUpgrades: boolean;
   stopOnFirstSet: boolean;
   lastInput: ProcessInputs | undefined;
 }):
   | {
       cleanup: () => void;
-      resultPromise: Promise<
-        Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number }
-      >;
+      resultPromise: Promise<RunProcessResult>;
       input: ProcessInputs;
     }
   | undefined {
   const processStart = performance.now();
-  const { worker, cleanup: cleanupWorker } = createWorker();
-  let cleanupRef: (() => void) | undefined = cleanupWorker;
-  const cleanup = () => {
-    cleanupRef?.();
-    cleanupRef = undefined;
-  };
-
   const { bucketSpecificMods, activityMods, generalMods } = lockedModMap;
 
   const lockedProcessMods = {
@@ -103,25 +108,26 @@ export function runProcess({
     [BucketHashes.LegArmor]: [],
     [BucketHashes.ClassArmor]: [],
   };
-  const itemsById = new Map<string, ItemGroup>();
+  const itemsById = new Map<string, DimItem>();
 
   for (const [bucketHashStr, items] of Object.entries(filteredItems)) {
     const bucketHash = parseInt(bucketHashStr, 10) as ArmorBucketHash;
     processItems[bucketHash] = [];
 
-    const groupedItems = mapItemsToGroups(
-      items,
-      desiredStatRanges,
-      armorEnergyRules,
-      activityMods,
-      bucketSpecificMods[bucketHash] || [],
-      Object.keys(setBonuses).map(Number),
-      getUserItemTag,
+    const mappedItems: MappedItem[] = items.flatMap((dimItem) =>
+      mapDimItemToProcessItem({
+        dimItem,
+        armorEnergyRules,
+        modsForSlot: bucketSpecificMods[bucketHash] || [],
+      }).map((processItem) => ({
+        dimItem,
+        processItem,
+      })),
     );
 
-    for (const group of groupedItems) {
-      processItems[bucketHash].push(group.canonicalProcessItem);
-      itemsById.set(group.canonicalProcessItem.id, group);
+    for (const mappedItem of mappedItems) {
+      processItems[bucketHash].push(mappedItem.processItem);
+      itemsById.set(mappedItem.dimItem.id, mappedItem.dimItem);
     }
   }
 
@@ -144,130 +150,141 @@ export function runProcess({
     return undefined;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  let cleanup = () => {};
+  const workerPromises: Promise<ProcessResult>[] = [];
+
+  const numCombinations = Object.values(processItems).reduce(
+    (total, items) => total * Math.max(1, items.length),
+    1,
+  );
+  const concurrency = Math.max(
+    1,
+    // Don't spin up a ton of threads for smaller problems, leave at least one core free
+    Math.min((navigator.hardwareConcurrency || 1) - 1, Math.ceil(numCombinations / 5_000_000)),
+  );
+
+  const longestItemsBucketHash = Number(
+    maxBy(Object.entries(processItems), ([, items]) => items.length)![0],
+  );
+  const inputSlices = sliceInputForConcurrency(input, longestItemsBucketHash, concurrency);
+
+  for (let i = 0; i < inputSlices.length; i++) {
+    const { worker, cleanup: cleanupWorker } = createWorker();
+    let cleanupRef: (() => void) | undefined = cleanupWorker;
+    const existingCleanup = cleanup;
+    const cleanupThisWorker = () => {
+      cleanupRef?.();
+      cleanupRef = undefined;
+    };
+    cleanup = () => {
+      existingCleanup();
+      cleanupThisWorker();
+    };
+    const input = inputSlices[i];
+    const workerPromise = (async () => {
+      try {
+        return await worker.process(i + 1, input);
+      } finally {
+        cleanupThisWorker();
+      }
+    })();
+    workerPromises.push(workerPromise);
+  }
+
   return {
     cleanup,
     input,
-    resultPromise: new Promise((resolve) => {
-      worker
-        .process(input)
-        .then((result) => {
-          const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
-          const processTime = performance.now() - processStart;
-          resolve({ ...result, sets: hydratedSets, processTime });
-        })
-        // Cleanup the worker, we don't need it anymore.
-        .finally(() => {
-          cleanup();
-        });
+    resultPromise: Promise.all(workerPromises).then((results) => {
+      const result = combineResults(results);
+      const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
+      const processTime = performance.now() - processStart;
+      return { ...result, sets: hydratedSets, processTime };
     }),
   };
 }
+function combineResults(results: ProcessResult[]): ProcessResult {
+  if (results.length === 1) {
+    return results[0];
+  }
 
-interface MappedItem {
-  dimItem: DimItem;
-  processItem: ProcessItem;
-}
-
-// comparator for sorting items in groups generated by groupItems. These items will all have the same stats.
-const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
-  chainComparator(
-    // Prefer higher-energy (ideally masterworked)
-    compareBy(({ dimItem }: MappedItem) => -(dimItem.energy?.energyCapacity || 0)),
-    // Prefer owned items over vendor items
-    compareBy(({ dimItem }: MappedItem) => Boolean(dimItem.vendor)),
-    // Prefer favorited items
-    compareBy(({ dimItem }: MappedItem) => getTag?.(dimItem) !== 'favorite'),
-    // Prefer items with higher power
-    compareBy(({ dimItem }: MappedItem) => -dimItem.power),
-    // Prefer items that are equipped
-    compareBy(({ dimItem }: MappedItem) => (dimItem.equipped ? 0 : 1)),
-  );
-
-/**
- * To reduce the number of items sent to the web worker we group items by a number of varying
- * parameters, depending on what mods and armour upgrades are selected. This is purely an optimization
- * and most of the time only has an effect for class items, but this can be a significant improvement
- * when we only have to check 1-4 class items instead of 12.
- *
- * After items have been grouped we only send a single item (the first one) as a representative of
- * said group. All other grouped items will be available by the swap icon in the UI.
- *
- * An important property of this grouping is that all items within a single group must be interchangeable
- * for any possible assignment of mods or other LO parameters.
- *
- * Creating a group for every item is trivially correct but inefficient. Erroneously forgetting to include a bit
- * of information in the grouping key that is relevant to the web worker results in the worker failing to discover
- * certain sets, or set rendering suddenly failing in unexpected ways when it prefers an alternative due to an existing
- * loadout, so everything in ProcessItem that affects the operation of the worker
- * must be accounted for in this function.
- *
- * It can group by any number of the following concepts depending on locked mods and armor upgrades,
- * - Stat distribution
- * - Masterwork status
- * - Exoticness (every exotic must be distinguished from other exotics and all legendaries)
- * - Energy capacity
- * - Set bonus
- * - If there are mods with tags (activity/combat style) it will create groups split by compatible tags
- */
-function mapItemsToGroups(
-  items: readonly DimItem[],
-  resolvedStatConstraints: DesiredStatRange[],
-  armorEnergyRules: ArmorEnergyRules,
-  activityMods: PluggableInventoryItemDefinition[],
-  modsForSlot: PluggableInventoryItemDefinition[],
-  setBonusHashes: number[],
-  getUserItemTag?: (item: DimItem) => TagValue | undefined,
-): ItemGroup[] {
-  // Figure out all the interesting mod slots required by mods.
-  // This includes combat mod tags because blue-quality items don't have them
-  // and there may be legacy items that can slot CWL/Warmind Cell mods but not
-  // Elemental Well mods?
-  const requiredModTags = new Set<string>();
-  for (const mod of activityMods) {
-    const modTag = getModTypeTagByPlugCategoryHash(mod.plug.plugCategoryHash);
-    if (modTag) {
-      requiredModTags.add(modTag);
+  const setTracker = new HeapSetTracker<ProcessArmorSet>(200);
+  for (const result of results) {
+    for (const set of result.sets) {
+      if (setTracker.couldInsert(set.enabledStatsTotal)) {
+        setTracker.insert(set);
+      }
     }
   }
-  const requiredModTagsArray = Array.from(requiredModTags).sort();
+  const topSets = setTracker.getArmorSets();
 
-  // First, map the DimItems to ProcessItems so that we can consider all things relevant to Loadout Optimizer.
-  const mappedItems: MappedItem[] = items.map((dimItem) => ({
-    dimItem,
-    processItem: mapDimItemToProcessItem({ dimItem, armorEnergyRules, modsForSlot }),
-  }));
+  const firstResult = results.shift()!;
+  return results.reduce(
+    (combined, result) => ({
+      sets: topSets,
+      combos: combined.combos + result.combos,
+      statRangesFiltered: combineStatRanges(combined.statRangesFiltered, result.statRangesFiltered),
+      processInfo: combineProcessInfo(combined.processInfo, result.processInfo),
+    }),
+    firstResult,
+  );
+}
 
-  // Build groups of "interchangeable" items
-  const groupKey = ({ dimItem, processItem }: MappedItem) => {
-    // Item stats are important for the stat results of a full set
-    const statValues = resolvedStatConstraints.map((c) => processItem.stats[c.statHash]);
-    // Energy capacity affects mod assignment
-    const energyCapacity = processItem.remainingEnergyCapacity;
-    // Supported mod tags affect mod assignment
-    const relevantModSeasons = requiredModTagsArray.filter((tag) =>
-      processItem.compatibleModSeasons?.includes(tag),
-    );
-    const itemSetBonusHash = dimItem.setBonus?.hash ?? 0;
-    // Only group by set bonus if set bonuses are being filtered
-    const setBonusHash = setBonusHashes.includes(itemSetBonusHash) ? itemSetBonusHash : 0;
+function combineStatRanges(a: StatRanges, b: StatRanges): StatRanges {
+  for (const statHash of armorStats) {
+    const range = a[statHash];
+    range.maxStat = Math.max(range.maxStat, b[statHash].maxStat);
+    range.minStat = Math.min(range.minStat, b[statHash].minStat);
+  }
+  return a;
+}
 
-    return `${dimItem.isExotic ? `${dimItem.hash}-` : 'legendary-'}${statValues.toString()}-${energyCapacity}-${setBonusHash}-${[
-      relevantModSeasons,
-    ].toString()}`;
-  };
+function combineProcessInfo(a: ProcessStatistics, b: ProcessStatistics): ProcessStatistics {
+  a.numProcessed += b.numProcessed;
+  a.numValidSets += b.numValidSets;
+  a.statistics.lowerBoundsExceeded.timesChecked += b.statistics.lowerBoundsExceeded.timesChecked;
+  a.statistics.lowerBoundsExceeded.timesFailed += b.statistics.lowerBoundsExceeded.timesFailed;
+  a.statistics.modsStatistics.autoModsPick.timesChecked +=
+    b.statistics.modsStatistics.autoModsPick.timesChecked;
+  a.statistics.modsStatistics.autoModsPick.timesFailed +=
+    b.statistics.modsStatistics.autoModsPick.timesFailed;
+  a.statistics.modsStatistics.earlyModsCheck.timesChecked +=
+    b.statistics.modsStatistics.earlyModsCheck.timesChecked;
+  a.statistics.modsStatistics.earlyModsCheck.timesFailed +=
+    b.statistics.modsStatistics.earlyModsCheck.timesFailed;
+  a.statistics.modsStatistics.finalAssignment.autoModsAssignmentFailed +=
+    b.statistics.modsStatistics.finalAssignment.autoModsAssignmentFailed;
+  a.statistics.modsStatistics.finalAssignment.modAssignmentAttempted +=
+    b.statistics.modsStatistics.finalAssignment.modAssignmentAttempted;
+  a.statistics.modsStatistics.finalAssignment.modsAssignmentFailed +=
+    b.statistics.modsStatistics.finalAssignment.modsAssignmentFailed;
+  a.statistics.skipReasons.doubleExotic += b.statistics.skipReasons.doubleExotic;
+  a.statistics.skipReasons.insufficientSetBonus += b.statistics.skipReasons.insufficientSetBonus;
+  a.statistics.skipReasons.noExotic += b.statistics.skipReasons.noExotic;
+  a.statistics.skipReasons.skippedLowTier += b.statistics.skipReasons.skippedLowTier;
+  return a;
+}
 
-  // Final grouping by everything relevant
-  const groups: ItemGroup[] = [];
-
-  // Go through each grouping-by-energy-type and build groups by their properties.
-  const groupedByEverything = Map.groupBy(mappedItems, groupKey);
-  for (const group of groupedByEverything.values()) {
-    group.sort(groupComparator(getUserItemTag));
-    groups.push({
-      canonicalProcessItem: group[0].processItem,
-      items: group.map(({ dimItem }) => dimItem),
-    });
+function sliceInputForConcurrency(
+  input: ProcessInputs,
+  longestItemsBucketHash: number,
+  concurrency: number,
+) {
+  if (concurrency <= 1) {
+    return [input];
   }
 
-  return groups;
+  const itemsToSlice = input.filteredItems[longestItemsBucketHash as ArmorBucketHash];
+  if (itemsToSlice.length <= 1) {
+    return [input];
+  }
+
+  const sliceSize = Math.ceil(itemsToSlice.length / concurrency);
+  return chunk(itemsToSlice, sliceSize).map((itemsSlice) => ({
+    ...input,
+    filteredItems: {
+      ...input.filteredItems,
+      [longestItemsBucketHash]: itemsSlice,
+    },
+  }));
 }

@@ -24,7 +24,6 @@ export function isWellRested(
     };
   }
 
-  const WELL_RESTED_LEVELS = 5;
   const seasonPassProgressionHash = seasonPass?.rewardProgressionHash;
   const prestigeProgressionHash = seasonPass?.prestigeProgressionHash;
 
@@ -42,18 +41,26 @@ export function isWellRested(
     prestigeProgressionDef,
     seasonProgressionDef,
     weeklyProgress,
+    nextLevelAt,
   } = getSeasonPassStatus(defs, profileInfo, seasonPass, season);
 
+  /**
+   *  Calculate the amount of levels we need to fullfill well rested requirements
+   *  Ranks 101-110 are equiv to 5 levels each
+   */
+  const baseLevelXPRequirement = seasonProgressionDef?.steps[1]?.progressTotal ?? 100000;
+  const wellRestedLevels = (baseLevelXPRequirement * 5) / nextLevelAt;
+
   if (seasonProgressionDef.steps.length === seasonProgression.levelCap) {
-    for (let i = 0; i < WELL_RESTED_LEVELS; i++) {
+    for (let i = 0; i < wellRestedLevels; i++) {
       seasonProgressionDef.steps.push(prestigeProgressionDef.steps[0]);
     }
   }
 
   const requiredXP =
-    prestigeMode && prestigeProgression.level >= WELL_RESTED_LEVELS
-      ? xpRequiredForLevel(0, prestigeProgressionDef) * WELL_RESTED_LEVELS
-      : xpTotalRequiredForLevel(seasonPassLevel, seasonProgressionDef, WELL_RESTED_LEVELS);
+    prestigeMode && prestigeProgression.level >= wellRestedLevels
+      ? xpRequiredForLevel(0, prestigeProgressionDef) * wellRestedLevels
+      : xpTotalRequiredForLevel(seasonPassLevel, seasonProgressionDef, wellRestedLevels);
 
   // Have you gained XP equal to three full levels worth of XP?
   return {

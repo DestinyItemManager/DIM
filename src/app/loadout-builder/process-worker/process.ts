@@ -1,7 +1,8 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
-import { filterMap } from 'app/utils/collections';
+import { compact, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { sum } from 'es-toolkit';
 import { infoLog } from '../../utils/log';
 import {
   ArmorBucketHashes,
@@ -11,9 +12,9 @@ import {
   DesiredStatRange,
   majorStatBoost,
   MinMaxStat,
-  minorStatBoost,
   StatRanges,
 } from '../types';
+import { getPower } from '../utils';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
@@ -45,7 +46,7 @@ export interface ProcessInputs {
   desiredStatRanges: DesiredStatRange[];
   /** Ensure every set includes one exotic */
   anyExotic: boolean;
-  /** Which artifice mods, large, and small stat mods are available */
+  /** Which artifice/tuning mods, large, and small stat mods are available */
   autoModOptions: AutoModData;
   /** Use stat mods to hit stat minimums */
   autoStatMods: boolean;
@@ -60,18 +61,21 @@ export interface ProcessInputs {
  * @param filteredItems pared down list of items to process sets from
  * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
  */
-export function process({
-  filteredItems,
-  modStatTotals,
-  lockedMods,
-  setBonuses,
-  desiredStatRanges,
-  anyExotic,
-  autoModOptions,
-  autoStatMods,
-  strictUpgrades,
-  stopOnFirstSet,
-}: ProcessInputs): ProcessResult {
+export function process(
+  workerNum: number,
+  {
+    filteredItems,
+    modStatTotals,
+    lockedMods,
+    setBonuses,
+    desiredStatRanges,
+    anyExotic,
+    autoModOptions,
+    autoStatMods,
+    strictUpgrades,
+    stopOnFirstSet,
+  }: ProcessInputs,
+): ProcessResult {
   const pstart = performance.now();
 
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.
@@ -90,7 +94,7 @@ export function process({
   for (const item of ArmorBucketHashes.flatMap((h) => filteredItems[h])) {
     statsCache.set(
       item,
-      statOrder.map((statHash) => Math.max(item.stats[statHash], 0)),
+      statOrder.map((statHash) => item.stats[statHash]),
     );
   }
 
@@ -107,32 +111,23 @@ export function process({
   const numItems =
     helms.length + gauntlets.length + chests.length + legs.length + classItems.length;
 
-  infoLog('loadout optimizer', 'Processing', combos, 'combinations from', numItems, 'items', {
-    helms: helms.length,
-    gauntlets: gauntlets.length,
-    chests: chests.length,
-    legs: legs.length,
-    classItems: classItems.length,
-  });
-
-  if (combos === 0) {
-    return { sets: [], combos: 0 };
-  }
-
-  const setTracker = new HeapSetTracker(RETURNED_ARMOR_SETS);
-
-  const { activityMods, generalMods } = lockedMods;
-
-  const precalculatedInfo = precalculateStructures(
-    autoModOptions,
-    generalMods,
-    activityMods,
-    autoStatMods,
-    statOrder,
+  infoLog(
+    `loadout optimizer thread ${workerNum}`,
+    'Processing',
+    combos,
+    'combinations from',
+    numItems,
+    'items',
+    {
+      helms: helms.length,
+      gauntlets: gauntlets.length,
+      chests: chests.length,
+      legs: legs.length,
+      classItems: classItems.length,
+    },
   );
-  const hasMods = Boolean(activityMods.length || generalMods.length);
 
-  const setStatistics = {
+  const setStatistics: ProcessStatistics['statistics'] = {
     skipReasons: {
       doubleExotic: 0,
       noExotic: 0,
@@ -140,7 +135,6 @@ export function process({
       insufficientSetBonus: 0,
     },
     lowerBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
-    upperBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
     modsStatistics: {
       earlyModsCheck: { timesChecked: 0, timesFailed: 0 },
       autoModsPick: { timesChecked: 0, timesFailed: 0 },
@@ -157,7 +151,35 @@ export function process({
     statistics: setStatistics,
   };
 
-  const majorMinorRatio = majorStatBoost / minorStatBoost;
+  if (combos === 0) {
+    const statRangesFiltered = Object.fromEntries(
+      statOrder.map((h) => [h, { minStat: 0, maxStat: MAX_STAT }]),
+    ) as StatRanges;
+    return { sets: [], combos: 0, statRangesFiltered, processInfo: processStatistics };
+  }
+
+  const setTracker = new HeapSetTracker<{
+    /** The armor items in this set. */
+    armor: ProcessItem[];
+    /** The stats associated with this armor set. */
+    stats: number[];
+    mods: number[];
+    bonusStats: number[];
+  }>(RETURNED_ARMOR_SETS);
+
+  const { activityMods, generalMods } = lockedMods;
+
+  const precalculatedInfo = precalculateStructures(
+    autoModOptions,
+    generalMods,
+    activityMods,
+    autoStatMods,
+    statOrder,
+  );
+  const hasMods = Boolean(activityMods.length || generalMods.length);
+
+  const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
+  const setBonusCounts = Object.values(setBonuses);
 
   itemLoop: for (const helm of helms) {
     const helmExotic = Number(helm.isExotic);
@@ -175,11 +197,12 @@ export function process({
           const legExotic = Number(leg.isExotic);
           const legArtifice = Number(leg.isArtifice);
           const legStats = statsCache.get(leg)!;
-          for (const classItem of classItems) {
+          innerloop: for (const classItem of classItems) {
             const classItemExotic = Number(classItem.isExotic);
             const classItemArtifice = Number(classItem.isArtifice);
             const classItemStats = statsCache.get(classItem)!;
 
+            // Check exotic constraints
             const exoticSum =
               classItemExotic + helmExotic + gauntletExotic + chestExotic + legExotic;
             if (exoticSum > 1) {
@@ -190,24 +213,20 @@ export function process({
               setStatistics.skipReasons.noExotic += 1;
               continue;
             }
-            let insufficientSetBonus = false;
-            for (const setHash of Object.keys(setBonuses)) {
-              // TODO unscrew
-              const setCount = [
-                helm.setBonus,
-                gaunt.setBonus,
-                chest.setBonus,
-                leg.setBonus,
-                classItem.setBonus,
-              ].filter((x) => x === Number(setHash)).length;
-              if (setCount < (setBonuses[Number(setHash)] || 0)) {
-                insufficientSetBonus = true;
-                break;
+
+            // Check set bonus requirements
+            for (let i = 0; i < setBonusHashes.length; i++) {
+              const setHash = setBonusHashes[i];
+              const setCount =
+                Number(helm.setBonus === setHash) +
+                Number(gaunt.setBonus === setHash) +
+                Number(chest.setBonus === setHash) +
+                Number(leg.setBonus === setHash) +
+                Number(classItem.setBonus === setHash);
+              if (setCount < setBonusCounts[i]) {
+                setStatistics.skipReasons.insufficientSetBonus += 1;
+                continue innerloop;
               }
-            }
-            if (insufficientSetBonus) {
-              setStatistics.skipReasons.insufficientSetBonus += 1;
-              continue;
             }
 
             processStatistics.numProcessed++;
@@ -277,9 +296,9 @@ export function process({
             // Check which stats we're under the stat minimums on.
             let totalStats = 0;
             for (let index = 0; index < 6; index++) {
-              const value = effectiveStats[index];
               const filter = desiredStatRanges[index];
               if (filter.maxStat > 0 /* non-ignored stat */) {
+                const value = effectiveStats[index];
                 // Update the minimum stat range while we're here
                 const statRange = statRanges[index];
                 if (value < statRange.minStat) {
@@ -299,15 +318,17 @@ export function process({
             const numArtifice =
               helmArtifice + gauntArtifice + chestArtifice + legArtifice + classItemArtifice;
 
-            // Check to see if it would be at all possible to hit the needed
-            // stats with artifice armor or general mods (without taking into
-            // account energy). If totalNeededStats is 0 this passes trivially.
-            setStatistics.lowerBoundsExceeded.timesChecked++;
-            if (
-              totalNeededStats >
+            // The most total stat points we could get from mods, assuming
+            // everything was perfectly assignable.
+            const maxModBonus =
               numArtifice * artificeStatBoost +
-                precalculatedInfo.numAvailableGeneralMods * majorStatBoost
-            ) {
+              precalculatedInfo.numAvailableGeneralMods * majorStatBoost;
+
+            // Check to see if it would be at all possible to hit the needed
+            // stat total with the best case mod bonuses. If totalNeededStats is
+            // 0 this passes trivially.
+            setStatistics.lowerBoundsExceeded.timesChecked++;
+            if (totalNeededStats > maxModBonus) {
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
             }
@@ -353,87 +374,44 @@ export function process({
             // RETURNED_ARMOR_SETS sets. We do this only after confirming that
             // any required stat mods fit and updating our max tiers so that the
             // max available tier info stays accurate.
-            if (
-              !setTracker.couldInsert(
-                totalStats +
-                  numArtifice * artificeStatBoost +
-                  precalculatedInfo.numAvailableGeneralMods * majorStatBoost,
-              )
-            ) {
+            if (!setTracker.couldInsert(totalStats + maxModBonus)) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
 
-            // Starting from here, we end up mutating our effectiveStats array
-            // a bit. We want to figure out the best stats for this set. We
-            // can't do that for every set because it'd be too expensive.
-
-            // TODO: This is maybe where we'd want to calculate "tuning mods"
-            // contributions, but it might be better to just create different
-            // variants of each item with each tuning mod slotted. Maybe we
-            // can finally redo this as an integer programming problem?
-
-            // TODO: These calculations do not take into account the
-            // energy cost of the mods, so we can only use them to predict the
-            // best possible stats that could theoretically be achieved.
-
-            // Then spend artifice mods to boost stats greedily in stat priority
-            // order. This also allows "wasted stats" in order to hit stat
-            // maximums (e.g. adding +3 stats to a stat that is already at 199).
-            let artificeModsAvailable = numArtifice;
-            let statsFromArtificeMods = 0;
-            for (let index = 0; index < 6 && artificeModsAvailable > 0; index++) {
-              const value = effectiveStats[index];
-              const filter = desiredStatRanges[index];
-              if (value < filter.maxStat) {
-                const pointsToMax = filter.maxStat - value;
-                // How many artifice mods would that be?
-                const numArtificeModsUsed = Math.min(
-                  Math.ceil(pointsToMax / artificeStatBoost),
-                  artificeModsAvailable,
-                );
-                const statBoost = numArtificeModsUsed * artificeStatBoost;
-                effectiveStats[index] += statBoost;
-                statsFromArtificeMods += statBoost;
-                artificeModsAvailable -= numArtificeModsUsed;
-              }
+            const optimalResult = pickOptimalStatMods(
+              precalculatedInfo,
+              armor,
+              stats,
+              desiredStatRanges,
+            );
+            if (!optimalResult) {
+              // This means we couldn't assign mods in a way that satisfied
+              // minimum stat constraints. This can happen if the mods that
+              // would be needed don't fit into the available slots.
+              setStatistics.modsStatistics.finalAssignment.modsAssignmentFailed++;
+              continue;
             }
 
-            // Also check how many +10 and +5 general mods we can use to boost stats.
-            let generalModsAvailable = precalculatedInfo.numAvailableGeneralMods;
-            let statsFromGeneralMods = 0;
-            for (let index = 0; index < 6; index++) {
-              const value = effectiveStats[index];
-              const filter = desiredStatRanges[index];
-              if (value < filter.maxStat) {
-                const pointsToMax = filter.maxStat - value;
-                // How many +5 mods would that be?
-                let minorStatMods = Math.ceil(pointsToMax / minorStatBoost);
-                // Use +10 mods in place of two +5 mods
-                const majorStatMods = Math.floor(minorStatMods / majorMinorRatio);
-                minorStatMods -= majorStatMods * majorMinorRatio;
-
-                const numGeneralModsUsed = Math.min(
-                  majorStatMods + minorStatMods,
-                  generalModsAvailable,
-                );
-                const numMajorModsUsed = Math.min(majorStatMods, generalModsAvailable);
-                const numMinorModsUsed = Math.min(
-                  minorStatMods,
-                  generalModsAvailable - numMajorModsUsed,
-                );
-                const statBoost =
-                  numMajorModsUsed * majorStatBoost + numMinorModsUsed * minorStatBoost;
-                effectiveStats[index] += statBoost;
-                statsFromGeneralMods += statBoost;
-                generalModsAvailable -= numGeneralModsUsed;
-              }
-            }
-
-            const statsFromMods = statsFromArtificeMods + statsFromGeneralMods;
+            const { bonusStats, mods } = optimalResult;
+            const finalStats = [
+              effectiveStats[0] + bonusStats[0],
+              effectiveStats[1] + bonusStats[1],
+              effectiveStats[2] + bonusStats[2],
+              effectiveStats[3] + bonusStats[3],
+              effectiveStats[4] + bonusStats[4],
+              effectiveStats[5] + bonusStats[5],
+            ];
+            const finalTotalStats =
+              finalStats[0] +
+              finalStats[1] +
+              finalStats[2] +
+              finalStats[3] +
+              finalStats[4] +
+              finalStats[5];
 
             // Now use our more accurate extra tiers prediction
-            if (!setTracker.couldInsert(totalStats + statsFromMods)) {
+            if (!setTracker.couldInsert(finalTotalStats)) {
               setStatistics.skipReasons.skippedLowTier++;
               continue;
             }
@@ -441,11 +419,31 @@ export function process({
             // Calculate the numeric stat mix for fast integer comparison.
             // This encodes each stat value (0-200) into 8 bits, packed into a single integer.
             // Only non-ignored stats are included, maintaining lexical ordering for priority.
-            const numericStatMix = encodeStatMix(effectiveStats, desiredStatRanges);
+            const numericStatMix = encodeStatMix(finalStats, desiredStatRanges);
+
+            // Add on any tuning mods that were preset on the items.
+            mods.push(
+              ...compact([
+                helm.includedTuningMod,
+                gaunt.includedTuningMod,
+                chest.includedTuningMod,
+                leg.includedTuningMod,
+                classItem.includedTuningMod,
+              ]),
+            );
 
             processStatistics.numValidSets++;
             // And now insert our set using the predicted total tier and numeric stat mix.
-            setTracker.insert(totalStats + statsFromMods, numericStatMix, armor, stats);
+            setTracker.insert({
+              enabledStatsTotal: finalTotalStats,
+              statMix: numericStatMix,
+              power: getPower(armor),
+              armor,
+              stats,
+              statsTotal: sum(stats),
+              mods,
+              bonusStats,
+            });
 
             if (stopOnFirstSet) {
               if (strictUpgrades) {
@@ -464,22 +462,17 @@ export function process({
 
   const finalSets = setTracker.getArmorSets();
 
-  const sets = filterMap(finalSets, ({ armor, stats }) => {
-    // This only fails if minimum tier requirements cannot be hit, but we know
-    // they can because we ensured it internally.
-    //
-    // TODO: This is where we exhaustively search for the *best* stat mods, not
-    // just the minimum required to hit the stat minimums. But this also means
-    // that our optimistic prediction that we used when adding to the set
-    // tracker could end up smaller than what we predicted? That also makes me
-    // think this could be out of order...
-    const modPicks = pickOptimalStatMods(precalculatedInfo, armor, stats, desiredStatRanges);
-    const { mods, bonusStats } = modPicks;
-
+  const sets = filterMap(finalSets, ({ armor, stats, mods, bonusStats, ...rest }) => {
     const armorOnlyStats: Partial<ArmorStats> = {};
     const fullStats: Partial<ArmorStats> = {};
 
     let hasStrictUpgrade = false;
+
+    const helmStats = statsCache.get(armor[0])!;
+    const gauntStats = statsCache.get(armor[1])!;
+    const chestStats = statsCache.get(armor[2])!;
+    const legStats = statsCache.get(armor[3])!;
+    const classItemStats = statsCache.get(armor[4])!;
 
     for (let i = 0; i < statOrder.length; i++) {
       const statHash = statOrder[i];
@@ -493,11 +486,11 @@ export function process({
         statFilter.minStat < statFilter.maxStat &&
         !hasStrictUpgrade
       ) {
-        const statValue = Math.min(Math.max(value, 0), MAX_STAT);
-        hasStrictUpgrade ||= statValue > statFilter.minStat;
+        hasStrictUpgrade ||= value > statFilter.minStat;
       }
 
-      armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
+      armorOnlyStats[statHash] =
+        helmStats[i] + gauntStats[i] + chestStats[i] + legStats[i] + classItemStats[i];
     }
 
     if (strictUpgrades && !hasStrictUpgrade) {
@@ -505,6 +498,7 @@ export function process({
     }
 
     return {
+      ...rest,
       armor: armor.map((item) => item.id),
       stats: fullStats as ArmorStats,
       armorStats: armorOnlyStats as ArmorStats,
@@ -515,7 +509,7 @@ export function process({
   const totalTime = performance.now() - pstart;
 
   infoLog(
-    'loadout optimizer',
+    `loadout optimizer thread ${workerNum}`,
     'found',
     processStatistics.numValidSets,
     'stat mixes after processing',
@@ -528,9 +522,8 @@ export function process({
     // Split into multiple objects so console.log will show them all expanded
     'sets outright skipped:',
     setStatistics.skipReasons,
-    'lower and upper bounds:',
+    'lower bounds:',
     setStatistics.lowerBoundsExceeded,
-    setStatistics.upperBoundsExceeded,
     'mod assignment stats:',
     'early check:',
     setStatistics.modsStatistics.earlyModsCheck,
