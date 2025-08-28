@@ -10,6 +10,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import { itemMoved } from '../actions';
 import { CrossTabMessage, useCrossTabUpdates } from '../cross-tab';
 import { loadStores as d1LoadStores } from '../d1-stores';
@@ -49,12 +50,14 @@ export function useLoadStores(account: DestinyAccount | undefined) {
     }, [account, dispatch]),
   );
 
+  const { pathname } = useLocation();
+  const onOptimizerPage = pathname.endsWith('/optimizer');
   const onMessage = useCallback(
     (msg: CrossTabMessage) => {
       switch (msg.type) {
         case 'stores-updated':
           // This is only implemented for D2
-          if (account?.destinyVersion === 2) {
+          if (account?.destinyVersion === 2 && !onOptimizerPage) {
             return dispatch(d2LoadStores({ fromOtherTab: true }));
           }
           break;
@@ -65,7 +68,7 @@ export function useLoadStores(account: DestinyAccount | undefined) {
           break;
       }
     },
-    [account?.destinyVersion, dispatch],
+    [account?.destinyVersion, dispatch, onOptimizerPage],
   );
   useCrossTabUpdates(onMessage);
 
