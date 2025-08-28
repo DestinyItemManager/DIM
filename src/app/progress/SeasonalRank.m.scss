@@ -45,3 +45,58 @@
   left: 0;
   margin-top: 5px;
 }
+
+.seasonName {
+  font-size: 14;
+  color: var(--theme-text);
+}
+
+.seasonInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.activityRank {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.seasonRankIcon {
+  margin: 2px 10px -2px 2px;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.gridLayout {
+  @include phone-portrait {
+    .seasonInfo {
+      align-items: center;
+      text-align: center;
+    }
+    &.activityRank {
+      align-items: center;
+      flex-direction: column;
+    }
+    .seasonRankIcon {
+      margin: 0 0 4px 0;
+    }
+  }
+}
+
+.seasonRankProgress {
+  fill: none;
+}
+
+.seasonLevel {
+  color: var(--theme-text-secondary);
+}
+
+@include phone-portrait {
+  :global(.ranks-for-character) {
+    .season {
+      flex-direction: column;
+    }
+  }
+}

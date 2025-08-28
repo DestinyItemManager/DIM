@@ -1139,6 +1139,7 @@
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
+    "SeasonPassPrestigeRank": "Prestige Rank {{rank}}",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",

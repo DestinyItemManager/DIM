@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Countdown from 'app/dim-ui/Countdown';
+import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -8,12 +9,14 @@ import { getCurrentSeasonInfo } from 'app/utils/seasons';
 import {
   DestinyClass,
   DestinyProfileResponse,
+  DestinyProgression,
   DestinyProgressionRewardItemQuantity,
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import BungieImage from '../dim-ui/BungieImage';
+import brightEngrams from 'data/d2/bright-engrams.json';
+import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
 import { getCharacterProgressions } from './selectors';
@@ -42,6 +45,8 @@ export default function SeasonalRank({
   const {
     seasonPassLevel,
     rewardItems,
+    seasonProgression,
+    prestigeProgression,
     progressToNextLevel,
     nextLevelAt,
     prestigeMode,
@@ -95,7 +100,7 @@ export default function SeasonalRank({
     return null;
   }
 
-  return (
+  return seasonPassLevel !== seasonProgression.levelCap ? (
     <div
       className={clsx('milestone-quest', {
         [styles.hasPremiumRewards]: hasPremiumRewards,
@@ -156,6 +161,92 @@ export default function SeasonalRank({
           )}
         </div>
       </div>
+    </div>
+  ) : (
+    <SeasonPrestigeRank season={season} progress={prestigeProgression} isProgressRanks />
+  );
+}
+
+export function SeasonPrestigeRank({
+  season,
+  progress,
+  isProgressRanks,
+}: {
+  season: DestinySeasonDefinition;
+  progress: DestinyProgression;
+  isProgressRanks?: boolean;
+}) {
+  const defs = useD2Definitions()!;
+  const replacer = useDynamicStringReplacer();
+  const progressionDef = defs.Progression.get(progress.progressionHash);
+
+  // We need to get the latest bright engram icon
+  const brightEngramHash = Object.values(brightEngrams);
+  const brightEngram = defs.InventoryItem.get(brightEngramHash[brightEngramHash.length - 1]);
+
+  const seasonEnd = season.endDate;
+
+  return (
+    <div
+      className={clsx(styles.activityRank, { [styles.gridLayout]: isProgressRanks })}
+      title={replacer(progressionDef.displayProperties.description)}
+    >
+      <ReputationRankIcon progress={progress} icon={brightEngram.displayProperties.icon} />
+      <div className={styles.seasonInfo}>
+        <div className={styles.seasonName}>
+          {t('Progress.SeasonPassPrestigeRank', {
+            rank: progress.level + 1,
+          })}
+        </div>
+        <div className={styles.seasonLevel}>
+          <div>{season.displayProperties.name}</div>
+          <div>
+            {progress.progressToNextLevel.toLocaleString()} /{' '}
+            {progress.nextLevelAt.toLocaleString()}
+          </div>
+
+          {seasonEnd && (
+            <div className={clsx(styles.seasonLevel, styles.seasonEnd)}>
+              {t('Milestone.SeasonEnds')}
+              <Countdown endTime={new Date(seasonEnd)} compact={true} />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ReputationRankIcon({
+  progress,
+  icon,
+}: {
+  progress: DestinyProgression;
+  icon: string;
+}) {
+  const circumference = 2 * 22 * Math.PI;
+
+  return (
+    <div className={styles.seasonRankIcon}>
+      <svg viewBox="0 0 54 54">
+        <circle r="24" cx="27" cy="27" fill="#555" />
+        <circle r="21" cx="27" cy="27" fill="#222" />
+        {progress.progressToNextLevel > 0 && (
+          <circle
+            r="22.5"
+            cx="-27"
+            cy="27"
+            transform="rotate(-90)"
+            className={styles.seasonRankProgress}
+            strokeWidth="3"
+            strokeDasharray={`${
+              (circumference * progress.progressToNextLevel) / progress.nextLevelAt
+            } ${circumference}`}
+            stroke="white"
+          />
+        )}
+        <image xlinkHref={bungieNetPath(icon)} width="36" height="36" x="9" y="9" />
+      </svg>
     </div>
   );
 }
