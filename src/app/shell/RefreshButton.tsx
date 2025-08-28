@@ -16,13 +16,13 @@ import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import ErrorPanel from './ErrorPanel';
 import styles from './RefreshButton.m.scss';
-import { AppIcon, faClock, faExclamationTriangle, refreshIcon } from './icons';
+import { AppIcon, faClock, faExclamationTriangle, refreshIcon, undoIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 import { refresh } from './refresh-events';
 
 /** We consider the profile stale if it's out of date with respect to the game data by this much */
 const STALE_PROFILE_THRESHOLD = 90_000;
-const MIN_SPIN = 1000; // 1 second
+const SHAKE_TIME = 1_000;
 
 export default function RefreshButton({ className }: { className?: string }) {
   const [disabled, setDisabled] = useState(false);
@@ -34,14 +34,15 @@ export default function RefreshButton({ className }: { className?: string }) {
   );
   const active = useSubscription(loadingTracker.active$);
 
-  // Always show the spinner for at least MIN_SPIN milliseconds
-  const [spin, setSpin] = useState(active ? Date.now() : 0);
+  // Always show the spinner for at least SHAKE_TIME milliseconds
+  // TODO instead of using SHAKE_TIME, examine profileMintedDate to see if it's the same as previous
+  // for manual refresh. for auto refresh, some other persistent stale indicator, maybe.
+  const [spin, setSpin] = useState(active ? Date.now() + SHAKE_TIME : 0);
   useEffect(() => {
     if (active && spin === 0) {
-      setSpin(Date.now());
+      setSpin(Date.now() + SHAKE_TIME);
     } else if (!active && spin !== 0) {
-      const elapsed = Date.now() - spin;
-      const remainingTime = Math.max(0, MIN_SPIN - elapsed);
+      const remainingTime = spin - Date.now();
       if (remainingTime > 0) {
         const timer = window.setTimeout(() => {
           setSpin(0);
@@ -80,7 +81,9 @@ export default function RefreshButton({ className }: { className?: string }) {
         title={t('Header.Refresh') + (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '')}
         aria-keyshortcuts="R"
       >
-        <AppIcon icon={refreshIcon} spinning={spin !== 0} />
+        {(!active && spin > Date.now() && <AppIcon icon={undoIcon} shaking={true} />) || (
+          <AppIcon icon={refreshIcon} spinning={active} />
+        )}
         {autoRefresh && <div className={styles.userIsPlaying} />}
         {(profileError || showOutOfDateWarning) && (
           <div className={styles.outOfDate}>

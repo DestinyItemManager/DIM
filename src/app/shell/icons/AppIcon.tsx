@@ -10,17 +10,25 @@ function AppIcon({
   title,
   spinning,
   ariaHidden,
+  shaking,
 }: {
   icon: string | IconDefinition;
   className?: string;
   title?: string;
   spinning?: boolean;
   ariaHidden?: boolean;
+  shaking?: boolean;
 }) {
   if (typeof icon === 'string') {
     return (
       <span
-        className={clsx(icon, 'app-icon', className, spinning ? 'fa-spin' : false)}
+        className={clsx(
+          icon,
+          'app-icon',
+          className,
+          spinning ? 'fa-spin' : false,
+          shaking ? 'fa-shake' : false,
+        )}
         title={title}
         aria-hidden={ariaHidden}
       />
@@ -33,6 +41,7 @@ function AppIcon({
         icon={icon}
         title={title}
         spin={spinning}
+        shake={shaking}
       />
     );
   }
