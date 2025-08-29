@@ -69,12 +69,12 @@ const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | fal
   {
     keywords: 'locked',
     description: tl('Filter.Locked'),
-    filter: () => (item) => item.locked,
+    filter: () => (item) => item.lockable && item.locked,
   },
   {
     keywords: 'unlocked',
     description: tl('Filter.Locked'),
-    filter: () => (item) => !item.locked,
+    filter: () => (item) => item.lockable && !item.locked,
   },
   $featureFlags.newItems && {
     keywords: 'new',
