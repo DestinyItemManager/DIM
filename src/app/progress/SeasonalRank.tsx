@@ -100,7 +100,7 @@ export default function SeasonalRank({
     return null;
   }
 
-  return prestigeMode ? (
+  return !prestigeMode ? (
     <div
       className={clsx('milestone-quest', {
         [styles.hasPremiumRewards]: hasPremiumRewards,
