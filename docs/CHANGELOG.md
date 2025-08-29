@@ -6,6 +6,8 @@
 * Adjust enhanced perk arrow when perk name takes up more than 1 line
 * Loadout Optimizer now automatically assigns Tier 5 tuning mods where available. This can make major differences in what stats you can achieve!
 * Loadout Optimizer will now utilize multiple CPU cores.
+* Bulk locking/unlocking items will skip over items that cannot be locked.
+* `is:locked` and `is:unlocked` searches will never match items that cannot be locked.
 
 ## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
 
