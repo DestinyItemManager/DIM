@@ -964,7 +964,6 @@
     "PinnacleCap": "Pinnacle Cap",
     "PowerFloor": "Power Floor",
     "PowerfulCap": "Powerful Cap",
-    "SeasonEnds": "Season ends in ",
     "SeasonalRank": "Seasonal Rank {{rank}}",
     "SoftCap": "Soft Cap",
     "Special": "Special Event Challenge",
@@ -1159,7 +1158,8 @@
     "RecordValue": "{{value}}pts",
     "Resets_one": "1 reset",
     "Resets_other": "{{count}} resets",
-    "SeasonPassPrestigeRank": "Seasonal Prestige Rank {{rank}}",
+    "RewardPassEndsIn": "Reward Pass ends in ",
+    "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
     "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
