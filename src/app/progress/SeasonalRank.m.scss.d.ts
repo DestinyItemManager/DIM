@@ -17,6 +17,7 @@ interface CssExports {
   'seasonRankProgress': string;
   'seasonalRewardWrapper': string;
   'seasonalRewards': string;
+  'seassonTitle': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

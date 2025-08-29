@@ -51,7 +51,7 @@
 
 .seasonName {
   font-size: 14;
-  color: var(--theme-text);
+  color: var(--theme-text-secondary);
 }
 
 .seasonInfo {
@@ -94,6 +94,12 @@
 
 .seasonLevel {
   color: var(--theme-text-secondary);
+}
+
+.seassonTitle {
+  font-size: 14px;
+  color: var(--theme-text);
+  text-transform: uppercase;
 }
 
 @include phone-portrait {

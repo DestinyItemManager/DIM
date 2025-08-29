@@ -16,6 +16,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import brightEngramsBonus from 'data/d2/bright-engram-bonus.json';
+import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
@@ -99,7 +100,7 @@ export default function SeasonalRank({
     return null;
   }
 
-  return !prestigeMode ? (
+  return prestigeMode ? (
     <div
       className={clsx('milestone-quest', {
         [styles.hasPremiumRewards]: hasPremiumRewards,
@@ -181,9 +182,10 @@ export function SeasonPrestigeRank({
   const brightEngramBonus = defs.InventoryItem.get(
     brightEngramsBonus[brightEngramsBonus.length - 1],
   );
-
-  const seasonEnd = season.endDate;
-
+  const rewardPassEnd = season.seasonPassList[D2SeasonPassActiveList].seasonPassEndDate;
+  const rewardPassSeasonName = defs.SeasonPass.get(
+    season.seasonPassList[D2SeasonPassActiveList].seasonPassHash,
+  ).displayProperties.name;
   return (
     <div
       className={clsx(styles.activityRank, { [styles.gridLayout]: isProgressRanks })}
@@ -197,16 +199,16 @@ export function SeasonPrestigeRank({
           })}
         </div>
         <div className={styles.seasonLevel}>
-          <div>{season.displayProperties.name}</div>
+          <div className={styles.seassonTitle}>{rewardPassSeasonName}</div>
           <div>
             {progress.progressToNextLevel.toLocaleString()} /{' '}
             {progress.nextLevelAt.toLocaleString()}
           </div>
 
-          {seasonEnd && (
+          {rewardPassEnd && (
             <div className={clsx(styles.seasonLevel, styles.seasonEnd)}>
               {t('Milestone.SeasonEnds')}
-              <Countdown endTime={new Date(seasonEnd)} compact={true} />
+              <Countdown endTime={new Date(rewardPassEnd)} compact={true} />
             </div>
           )}
         </div>
