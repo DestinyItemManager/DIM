@@ -12,6 +12,7 @@
 * In Compare and Organizer, when you hold shift and click a column to change its sorting, we now remove the sort entirely on the third click.
 * Fixed a case where some old searches could not be unsaved. Remember that you can also *delete* searches from the Search History page or by clicking the X in the autocomplete dropdown.
 * Improve autocomplete for the new `dupe:` filter.
+* Loadout Optimizer and Compare will only show vendor items that you can actually buy.
 
 ## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
 
