@@ -434,7 +434,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
           .filter((t) => multiqueryTermsLookup[possibleKeyword]!.includes(t)),
       );
       const stem = `${typedSegments[0]}:${[...existingTerms].join('+')}${existingTerms.size ? '+' : ''}`;
-      suggestions.unshift(
+      suggestions.push(
         ...filterMap(multiqueryTermsLookup[possibleKeyword], (t) => {
           if (!existingTerms.has(t)) {
             const newTerm = stem + t;
