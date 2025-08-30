@@ -71,11 +71,12 @@ function getRemainingEnergiesPerAssignment(
   const remainingEnergiesPerAssignment: number[][] = [];
 
   let setEnergy = 0;
-  for (const item of items) {
-    setEnergy += item.remainingEnergyCapacity;
+  for (let i = 0; i < items.length; i++) {
+    setEnergy += items[i].remainingEnergyCapacity;
   }
 
-  activityModLoop: for (const activityPermutation of activityModPermutations) {
+  activityModLoop: for (let p = 0; p < activityModPermutations.length; p++) {
+    const activityPermutation = activityModPermutations[p];
     const remainingEnergyCapacities = [0, 0, 0, 0, 0];
 
     // Check each item to see if it's possible to slot the activity mods in this
