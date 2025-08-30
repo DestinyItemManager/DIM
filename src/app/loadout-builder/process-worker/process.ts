@@ -75,6 +75,7 @@ export function process(
     strictUpgrades,
     stopOnFirstSet,
   }: ProcessInputs,
+  onProgress: (completed: number) => void,
 ): ProcessResult {
   const pstart = performance.now();
 
@@ -181,6 +182,7 @@ export function process(
   const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
   const setBonusCounts = Object.values(setBonuses);
 
+  let comboIndex = 0;
   itemLoop: for (const helm of helms) {
     const helmExotic = Number(helm.isExotic);
     const helmArtifice = Number(helm.isArtifice);
@@ -198,6 +200,11 @@ export function process(
           const legArtifice = Number(leg.isArtifice);
           const legStats = statsCache.get(leg)!;
           innerloop: for (const classItem of classItems) {
+            comboIndex++;
+            if (comboIndex % 100000 === 0) {
+              onProgress(comboIndex);
+            }
+
             const classItemExotic = Number(classItem.isExotic);
             const classItemArtifice = Number(classItem.isArtifice);
             const classItemStats = statsCache.get(classItem)!;
