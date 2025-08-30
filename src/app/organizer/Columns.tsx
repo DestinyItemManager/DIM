@@ -41,12 +41,14 @@ import { RootState } from 'app/store/types';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparators';
 import {
+  getArmor3StatFocus,
   getArmor3TuningStat,
   getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  isArmor3,
   isArtifice,
   isArtificeSocket,
   isD1Item,
@@ -601,6 +603,62 @@ export function getColumns(
           );
         },
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
+      }),
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
+        id: 'tertiary',
+        className: styles.centered,
+        header: t('Organizer.Columns.TertiaryStat'),
+        value: (item) => (isArmor3(item) ? getArmor3StatFocus(item)[2] : undefined),
+        cell: (statHash, item) => {
+          if (statHash) {
+            const stat = item.stats?.find((s) => s.statHash === statHash);
+            if (stat) {
+              return (
+                <BungieImage
+                  title={stat.displayProperties.name}
+                  src={stat.displayProperties.icon}
+                  width={20}
+                  height={20}
+                />
+              );
+            }
+          }
+        },
+        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
+        filter: (statHash) => {
+          const statName = invert(statHashByName)[statHash!];
+          return `tertiarystat:${statName}`;
+        },
+      }),
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
+        id: 'tuning',
+        className: styles.centered,
+        header: t('Organizer.Columns.TuningStat'),
+        value: (item) => (isArmor3(item) ? getArmor3TuningStat(item) : undefined),
+        cell: (statHash, item) => {
+          if (statHash) {
+            const stat = item.stats?.find((s) => s.statHash === statHash);
+            if (stat) {
+              return (
+                <BungieImage
+                  title={stat.displayProperties.name}
+                  src={stat.displayProperties.icon}
+                  width={20}
+                  height={20}
+                />
+              );
+            }
+          }
+        },
+        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
+        filter: (statHash) => {
+          const statName = invert(statHashByName)[statHash!];
+          return `tertiarystat:${statName}`;
+        },
       }),
     destinyVersion === 2 &&
       isArmor &&

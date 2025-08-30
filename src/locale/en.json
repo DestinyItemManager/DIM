@@ -1096,7 +1096,6 @@
       "PercentComplete": "% Complete",
       "Perks": "Perks",
       "PerksGrid": "Perks Grid",
-      "PerksMods": "Perks & Mods",
       "Power": "Power",
       "Quality": "Quality %",
       "Recency": "Recency",
@@ -1107,8 +1106,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Stats",
       "Tag": "Tag",
+      "TertiaryStat": "3rd Stat",
       "Tier": "Rarity",
       "Traits": "Weapon Traits",
+      "TuningStat": "Tuner",
       "WishList": "Wish List",
       "WishListNotes": "Wish List Notes",
       "Year": "Year"
