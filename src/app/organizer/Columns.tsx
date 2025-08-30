@@ -52,6 +52,7 @@ import {
   isD1Item,
 } from 'app/utils/item-utils';
 import {
+  getArmorArchetype,
   getArmorArchetypeSocket,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
@@ -569,15 +570,20 @@ export function getColumns(
             : undefined,
       }),
     destinyVersion === 2 &&
-      isWeapon &&
       !isSpreadsheet &&
+      !isGhost &&
       c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         className: styles.noWrap,
-        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        value: (item) =>
+          item.bucket.inWeapons
+            ? getWeaponArchetype(item)?.displayProperties.name
+            : getArmorArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
-          const plugged = getWeaponArchetypeSocket(item)?.plugged;
+          const plugged = item.bucket.inWeapons
+            ? getWeaponArchetypeSocket(item)?.plugged
+            : getArmorArchetypeSocket(item)?.plugged;
           return (
             plugged && (
               <PressTip
@@ -602,7 +608,7 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perkLike,
-        header: t('Organizer.Columns.Intrinsics'),
+        header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => (
           <PerksCell
@@ -1330,12 +1336,11 @@ export function perkString(sockets: DimSocket[]): string | undefined {
 export function getIntrinsicSockets(item: DimItem): DimSocket[] {
   const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
-  const archetypeSocket = getArmorArchetypeSocket(item);
   return intrinsicSocket &&
     // artifice already shows up in the "modslot" column
     !isArtificeSocket(intrinsicSocket)
-    ? [intrinsicSocket, ...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])]
-    : [...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])];
+    ? [intrinsicSocket, ...extraIntrinsicSockets]
+    : extraIntrinsicSockets;
 }
 
 /**
