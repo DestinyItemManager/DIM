@@ -107,6 +107,10 @@ function getRemainingEnergiesPerAssignment(
   return { setEnergy, remainingEnergiesPerAssignment };
 }
 
+// How many extra points we need to add to each stat to hit the minimums. We
+// reuse a single array to avoid allocations.
+const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
+
 /**
  * Updates the max stat range by trying to individually get the highest value in
  * each stat.
@@ -126,9 +130,6 @@ export function updateMaxStats(
   statRanges: MinMaxStat[], // mutated
 ): boolean {
   let foundAnyImprovement = false;
-
-  // How many extra points we need to add to each stat to hit the minimums.
-  const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
 
   // First, track absolutely required stats (and update existing maxes)
   for (let statIndex = 0; statIndex < desiredStatRanges.length; statIndex++) {
@@ -153,6 +154,8 @@ export function updateMaxStats(
     if (neededValue > 0) {
       // All sets need at least these extra stats to hit minimums
       requiredMinimumExtraStats[statIndex] = neededValue;
+    } else {
+      requiredMinimumExtraStats[statIndex] = 0;
     }
   }
 
