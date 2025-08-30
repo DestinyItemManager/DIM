@@ -87,7 +87,7 @@ function doGeneralModsFit(
   if (pickedMods !== undefined && pickedMods.length) {
     generalModCosts = generalModCosts.slice();
     // Intentionally open-coded for performance
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
     for (let i = 0; i < pickedMods.length; i++) {
       generalModCosts.push(...pickedMods[i].generalModsCosts);
     }
