@@ -412,7 +412,12 @@ export function getSocketsByType(
           s.plugged &&
           !s.isPerk &&
           (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
-            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) &&
+          !(
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')
+          ),
       );
       break;
     }

@@ -620,48 +620,12 @@ export function getColumns(
         sort: perkStringSort,
         filter: perkStringFilter,
       }),
-    c({
-      id: 'perks',
-      className: styles.perks,
-      header:
-        destinyVersion === 2
-          ? isWeapon
-            ? t('Organizer.Columns.OtherPerks')
-            : t('Organizer.Columns.PerksMods')
-          : t('Organizer.Columns.Perks'),
-      value: (item) => perkString(getSocketsByType(item, 'all')),
-      cell: (_val, item) =>
-        isD1Item(item) ? (
-          <D1PerksCell item={item} />
-        ) : (
-          <PerksCell
-            item={item}
-            sockets={getSocketsByType(item, 'all')}
-            onPlugClicked={onPlugClicked}
-          />
-        ),
-      sort: perkStringSort,
-      filter: perkStringFilter,
-      csv: (_value, item) => {
-        // This could go on any of the perks columns, since it computes a very
-        // different view of perks, but I just picked one.
-        const perks =
-          isD1Item(item) && item.talentGrid
-            ? buildNodeNames(item.talentGrid.nodes)
-            : item.sockets
-              ? buildSocketNames(item)
-              : [];
-
-        // Return multiple columns
-        return [`Perks`, perks];
-      },
-    }),
     destinyVersion === 2 &&
       isWeapon &&
       !isSpreadsheet &&
       c({
         id: 'traits',
-        className: styles.perks,
+        className: styles.perkLike,
         header: t('Organizer.Columns.Traits'),
         value: (item) => perkString(getSocketsByType(item, 'traits')),
         cell: (_val, item) => (
@@ -674,7 +638,43 @@ export function getColumns(
         sort: perkStringSort,
         filter: perkStringFilter,
       }),
+    isWeapon &&
+      c({
+        id: 'perks',
+        className: styles.perks,
+        header:
+          destinyVersion === 2
+            ? isWeapon
+              ? t('Organizer.Columns.OtherPerks')
+              : t('Organizer.Columns.Mods')
+            : t('Organizer.Columns.Perks'),
+        value: (item) => perkString(getSocketsByType(item, 'perks')),
+        cell: (_val, item) =>
+          isD1Item(item) ? (
+            <D1PerksCell item={item} />
+          ) : (
+            <PerksCell
+              item={item}
+              sockets={getSocketsByType(item, 'perks')}
+              onPlugClicked={onPlugClicked}
+            />
+          ),
+        sort: perkStringSort,
+        filter: perkStringFilter,
+        csv: (_value, item) => {
+          // This could go on any of the perks columns, since it computes a very
+          // different view of perks, but I just picked one.
+          const perks =
+            isD1Item(item) && item.talentGrid
+              ? buildNodeNames(item.talentGrid.nodes)
+              : item.sockets
+                ? buildSocketNames(item)
+                : [];
 
+          // Return multiple columns
+          return [`Perks`, perks];
+        },
+      }),
     destinyVersion === 2 &&
       isWeapon &&
       !isSpreadsheet &&
@@ -687,6 +687,22 @@ export function getColumns(
           <PerksCell
             item={item}
             sockets={getSocketsByType(item, 'origin')}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        sort: perkStringSort,
+        filter: perkStringFilter,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'mods',
+        className: styles.perkLike,
+        header: t('Organizer.Columns.Mods'),
+        value: (item) => perkString(getSocketsByType(item, 'mods')),
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getSocketsByType(item, 'mods')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -719,9 +735,6 @@ export function getColumns(
         undefined,
         tl('Organizer.Columns.PerksGrid'),
       ),
-    !isSpreadsheet &&
-      destinyVersion === 2 &&
-      modsColumn(styles.perksGrid, styles.perks, isWeapon, onPlugClicked),
     ...statColumns,
     ...baseStatColumns,
     ...d1ArmorQualityByStat,

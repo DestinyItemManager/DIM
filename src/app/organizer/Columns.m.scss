@@ -100,10 +100,6 @@
   color: #d14334;
 }
 
-.perkLike {
-  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
-}
-
 .modPerks {
   composes: flexColumn from '../dim-ui/common.m.scss';
   break-inside: avoid;
@@ -111,12 +107,8 @@
   padding-left: 3px;
 }
 
-.perks {
-  composes: perkLike;
-  columns: 2;
-  height: 100%;
-  box-sizing: border-box;
-  column-gap: 8px;
+.perkLike {
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
   > *:nth-last-child(n + 2) {
     margin-bottom: 4px;
   }
@@ -126,6 +118,14 @@
     flex-basis: 160px;
     padding-left: 3px;
   }
+}
+
+.perks {
+  composes: perkLike;
+  columns: 2;
+  height: 100%;
+  box-sizing: border-box;
+  column-gap: 8px;
 }
 .isPerk {
   margin-left: 0;
