@@ -368,7 +368,9 @@ function getNonReusableModSockets(item: DimItem) {
       (s.plugged.plugDef.itemCategoryHashes?.some((h) => modItemCategoryHashes.has(h)) ||
         statfulOrnaments.includes(s.plugged.plugDef.hash) ||
         // Tuning mods don't have the ArmorMods item category hash
-        s.plugged.plugDef.plug.plugCategoryIdentifier.includes('tuning.mods')),
+        s.plugged.plugDef.plug.plugCategoryIdentifier.includes('tuning.mods') ||
+        // Might be v400.weapon.mod_guns or v400.weapon.mod_damage. Covers new "Enhanced [statname]" on T5 weapons.
+        s.plugged.plugDef.plug.plugCategoryIdentifier.includes('weapon.mod_')),
   );
 }
 /**
