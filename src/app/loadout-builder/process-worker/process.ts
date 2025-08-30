@@ -61,7 +61,7 @@ export interface ProcessInputs {
  * @param filteredItems pared down list of items to process sets from
  * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
  */
-export function process(
+export async function process(
   workerNum: number,
   {
     filteredItems,
@@ -76,7 +76,7 @@ export function process(
     stopOnFirstSet,
   }: ProcessInputs,
   onProgress: (completed: number) => void,
-): ProcessResult {
+): Promise<ProcessResult> {
   const pstart = performance.now();
 
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.
@@ -182,7 +182,19 @@ export function process(
   const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
   const setBonusCounts = Object.values(setBonuses);
 
-  let comboIndex = 0;
+  interface Scheduler {
+    scheduler?: { yield: () => Promise<void> };
+  }
+
+  let yieldTask: (() => Promise<void>) | undefined = undefined;
+  if ((globalThis as unknown as Scheduler).scheduler && navigator.userAgent.includes('Firefox')) {
+    // Unlike Chrome, Firefox won't deliver postMessage until the thread yields.
+    // This relatively new API lets you yield without having to rewrite your
+    // whole loop.
+    yieldTask = () => (globalThis as unknown as Scheduler).scheduler!.yield();
+  }
+
+  let comboCount = 0;
   itemLoop: for (const helm of helms) {
     const helmExotic = Number(helm.isExotic);
     const helmArtifice = Number(helm.isArtifice);
@@ -200,9 +212,13 @@ export function process(
           const legArtifice = Number(leg.isArtifice);
           const legStats = statsCache.get(leg)!;
           innerloop: for (const classItem of classItems) {
-            comboIndex++;
-            if (comboIndex % 100000 === 0) {
-              onProgress(comboIndex);
+            comboCount++;
+            if (comboCount >= 100000) {
+              onProgress(comboCount);
+              comboCount = 0;
+              if (yieldTask) {
+                await yieldTask();
+              }
             }
 
             const classItemExotic = Number(classItem.isExotic);

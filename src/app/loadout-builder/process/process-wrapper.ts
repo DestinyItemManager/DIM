@@ -176,10 +176,6 @@ export function runProcess({
   const inputSlices = sliceInputForConcurrency(input, longestItemsBucketHash, concurrency);
 
   let progressTotal = 0;
-  const handleProgress = proxy((completed: number) => {
-    progressTotal += completed;
-    onProgress?.(progressTotal, numCombinations);
-  });
 
   for (let i = 0; i < inputSlices.length; i++) {
     const { worker, cleanup: cleanupWorker } = createWorker();
@@ -194,6 +190,14 @@ export function runProcess({
       cleanupThisWorker();
     };
     const input = inputSlices[i];
+    const handleProgress = proxy((completed: number) => {
+      if (cleanupRef === undefined) {
+        return;
+      }
+      console.log('Progress', completed, progressTotal, numCombinations);
+      progressTotal += completed;
+      onProgress?.(progressTotal, numCombinations);
+    });
     const workerPromise = (async () => {
       try {
         return await worker.process(i + 1, input, handleProgress);
