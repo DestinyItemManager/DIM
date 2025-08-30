@@ -162,10 +162,8 @@ export function updateMaxStats(
     return foundAnyImprovement;
   }
 
-  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
-    info.activityModPermutations,
-    armor,
-  );
+  let remainingEnergyResult: ReturnType<typeof getRemainingEnergiesPerAssignment> | undefined;
+
   // You wouldn't believe it, but Firefox is actually slow loading constants
   // from another module.
   const maxStat = MAX_STAT;
@@ -180,6 +178,12 @@ export function updateMaxStats(
       // We can already hit MAX_STAT for this stat, so skip it.
       continue;
     }
+
+    remainingEnergyResult ??= getRemainingEnergiesPerAssignment(
+      info.activityModPermutations,
+      armor,
+    );
+    const { remainingEnergiesPerAssignment, setEnergy } = remainingEnergyResult;
 
     // Since we calculate the maximum stat value we can hit for a stat in
     // isolation, require all other stats to hit their constrained minimums, but
