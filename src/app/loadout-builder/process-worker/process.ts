@@ -195,23 +195,28 @@ export async function process(
   }
 
   let comboCount = 0;
-  itemLoop: for (const helm of helms) {
+  itemLoop: for (let helmIdx = 0; helmIdx < helms.length; helmIdx++) {
+    const helm = helms[helmIdx];
     const helmExotic = Number(helm.isExotic);
     const helmArtifice = Number(helm.isArtifice);
     const helmStats = statsCache.get(helm)!;
-    for (const gaunt of gauntlets) {
+    for (let gauntIdx = 0; gauntIdx < gauntlets.length; gauntIdx++) {
+      const gaunt = gauntlets[gauntIdx];
       const gauntletExotic = Number(gaunt.isExotic);
       const gauntArtifice = Number(gaunt.isArtifice);
       const gauntStats = statsCache.get(gaunt)!;
-      for (const chest of chests) {
+      for (let chestIdx = 0; chestIdx < chests.length; chestIdx++) {
+        const chest = chests[chestIdx];
         const chestExotic = Number(chest.isExotic);
         const chestArtifice = Number(chest.isArtifice);
         const chestStats = statsCache.get(chest)!;
-        for (const leg of legs) {
+        for (let legIdx = 0; legIdx < legs.length; legIdx++) {
+          const leg = legs[legIdx];
           const legExotic = Number(leg.isExotic);
           const legArtifice = Number(leg.isArtifice);
           const legStats = statsCache.get(leg)!;
-          innerloop: for (const classItem of classItems) {
+          innerloop: for (let classItemIdx = 0; classItemIdx < classItems.length; classItemIdx++) {
+            const classItem = classItems[classItemIdx];
             comboCount++;
             if (comboCount >= 100000) {
               onProgress(comboCount);
