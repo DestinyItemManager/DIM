@@ -1148,6 +1148,8 @@
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
+    "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
+    "RewardPassEndsIn": "Reward Pass ends in ",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",

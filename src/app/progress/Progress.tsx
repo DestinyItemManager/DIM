@@ -144,8 +144,8 @@ export default function Progress({ account }: { account: DestinyAccount }) {
             <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">
               <div className="progress-row">
                 <Ranks profileInfo={profileInfo}>
-                  <SeasonalRank store={selectedStore} profileInfo={profileInfo} />
                   <WellRestedPerkIcon profileInfo={profileInfo} />
+                  <SeasonalRank store={selectedStore} profileInfo={profileInfo} />
                 </Ranks>
               </div>
             </CollapsibleTitle>
