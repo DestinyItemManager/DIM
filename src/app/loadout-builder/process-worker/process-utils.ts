@@ -63,18 +63,20 @@ function getRemainingEnergiesPerAssignment(
   /** Total remaining energy capacity across the set */
   setEnergy: number;
   /**
-   * For each valid permutation, how much energy is left on per item? These lists are sorted by remaining energy so they do not correspond to the input items.
+   * For each valid permutation, how much energy is left on per item? These
+   * lists are NOT sorted.
    */
   remainingEnergiesPerAssignment: number[][];
 } {
   const remainingEnergiesPerAssignment: number[][] = [];
 
   let setEnergy = 0;
-  for (const item of items) {
-    setEnergy += item.remainingEnergyCapacity;
+  for (let i = 0; i < items.length; i++) {
+    setEnergy += items[i].remainingEnergyCapacity;
   }
 
-  activityModLoop: for (const activityPermutation of activityModPermutations) {
+  activityModLoop: for (let p = 0; p < activityModPermutations.length; p++) {
+    const activityPermutation = activityModPermutations[p];
     const remainingEnergyCapacities = [0, 0, 0, 0, 0];
 
     // Check each item to see if it's possible to slot the activity mods in this
@@ -99,12 +101,15 @@ function getRemainingEnergiesPerAssignment(
         remainingEnergyCapacities[i] -= activityMod.energyCost;
       }
     }
-    remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
 
   return { setEnergy, remainingEnergiesPerAssignment };
 }
+
+// How many extra points we need to add to each stat to hit the minimums. We
+// reuse a single array to avoid allocations.
+const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
 
 /**
  * Updates the max stat range by trying to individually get the highest value in
@@ -125,9 +130,6 @@ export function updateMaxStats(
   statRanges: MinMaxStat[], // mutated
 ): boolean {
   let foundAnyImprovement = false;
-
-  // How many extra points we need to add to each stat to hit the minimums.
-  const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
 
   // First, track absolutely required stats (and update existing maxes)
   for (let statIndex = 0; statIndex < desiredStatRanges.length; statIndex++) {
@@ -152,6 +154,8 @@ export function updateMaxStats(
     if (neededValue > 0) {
       // All sets need at least these extra stats to hit minimums
       requiredMinimumExtraStats[statIndex] = neededValue;
+    } else {
+      requiredMinimumExtraStats[statIndex] = 0;
     }
   }
 
@@ -161,10 +165,11 @@ export function updateMaxStats(
     return foundAnyImprovement;
   }
 
-  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
-    info.activityModPermutations,
-    armor,
-  );
+  let remainingEnergyResult: ReturnType<typeof getRemainingEnergiesPerAssignment> | undefined;
+
+  // You wouldn't believe it, but Firefox is actually slow loading constants
+  // from another module.
+  const maxStat = MAX_STAT;
 
   // Then, for every stat where we haven't shown that we can hit MAX_STAT with any
   // set, try to see if we can exceed the previous max by adding auto stat mods.
@@ -172,10 +177,16 @@ export function updateMaxStats(
     const value = setStats[statIndex];
     const filter = desiredStatRanges[statIndex];
     const statRange = statRanges[statIndex];
-    if (statRange.maxStat >= MAX_STAT) {
+    if (statRange.maxStat >= maxStat) {
       // We can already hit MAX_STAT for this stat, so skip it.
       continue;
     }
+
+    remainingEnergyResult ??= getRemainingEnergiesPerAssignment(
+      info.activityModPermutations,
+      armor,
+    );
+    const { remainingEnergiesPerAssignment, setEnergy } = remainingEnergyResult;
 
     // Since we calculate the maximum stat value we can hit for a stat in
     // isolation, require all other stats to hit their constrained minimums, but
@@ -188,7 +199,7 @@ export function updateMaxStats(
     // assignment search that maximizes stats but with stat ranges that prevent
     // us from going over our minimum? Or maybe do a binary search for the
     // maximum we can reach?
-    while (statRange.maxStat < MAX_STAT) {
+    while (statRange.maxStat < maxStat) {
       // Now that tiers no longer matter (since Edge of Fate), we consider any
       // stat point increase a "tier". This should be a short-term change -
       // ideally we'd reconsider all these algorithms to see if they could be
@@ -311,7 +322,6 @@ export function pickAndAssignSlotIndependentMods(
       remainingEnergyCapacities[idx] =
         item.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0);
     }
-    remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
       const result = chooseAutoMods(

@@ -87,16 +87,17 @@ function doGeneralModsFit(
   if (pickedMods !== undefined && pickedMods.length) {
     generalModCosts = generalModCosts.slice();
     // Intentionally open-coded for performance
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
     for (let i = 0; i < pickedMods.length; i++) {
       generalModCosts.push(...pickedMods[i].generalModsCosts);
     }
     generalModCosts.sort((a, b) => b - a);
   }
 
-  return remainingEnergyCapacities.some((capacities) =>
-    generalModCosts.every((cost, index) => cost <= capacities[index]),
-  );
+  return remainingEnergyCapacities.some((capacities) => {
+    capacities.sort((a, b) => b - a);
+    return generalModCosts.every((cost, index) => cost <= capacities[index]);
+  });
 }
 
 /**

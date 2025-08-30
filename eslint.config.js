@@ -439,6 +439,13 @@ export default tseslint.config(
     },
   },
   {
+    // The process-worker needs to be extra fast, so we disable a few rules here.
+    files: ['src/app/loadout-builder/process-worker/**/*.ts'],
+    rules: {
+      '@typescript-eslint/prefer-for-of': 'off',
+    },
+  },
+  {
     name: 'tests',
     files: ['**/*.test.ts'],
     rules: {

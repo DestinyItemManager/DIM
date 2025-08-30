@@ -61,7 +61,7 @@ export interface ProcessInputs {
  * @param filteredItems pared down list of items to process sets from
  * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
  */
-export function process(
+export async function process(
   workerNum: number,
   {
     filteredItems,
@@ -75,7 +75,8 @@ export function process(
     strictUpgrades,
     stopOnFirstSet,
   }: ProcessInputs,
-): ProcessResult {
+  onProgress: (completed: number) => void,
+): Promise<ProcessResult> {
   const pstart = performance.now();
 
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.
@@ -181,23 +182,50 @@ export function process(
   const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
   const setBonusCounts = Object.values(setBonuses);
 
-  itemLoop: for (const helm of helms) {
+  interface Scheduler {
+    scheduler?: { yield: () => Promise<void> };
+  }
+
+  let yieldTask: (() => Promise<void>) | undefined = undefined;
+  if ((globalThis as unknown as Scheduler).scheduler && navigator.userAgent.includes('Firefox')) {
+    // Unlike Chrome, Firefox won't deliver postMessage until the thread yields.
+    // This relatively new API lets you yield without having to rewrite your
+    // whole loop.
+    yieldTask = () => (globalThis as unknown as Scheduler).scheduler!.yield();
+  }
+
+  let comboCount = 0;
+  itemLoop: for (let helmIdx = 0; helmIdx < helms.length; helmIdx++) {
+    const helm = helms[helmIdx];
     const helmExotic = Number(helm.isExotic);
     const helmArtifice = Number(helm.isArtifice);
     const helmStats = statsCache.get(helm)!;
-    for (const gaunt of gauntlets) {
+    for (let gauntIdx = 0; gauntIdx < gauntlets.length; gauntIdx++) {
+      const gaunt = gauntlets[gauntIdx];
       const gauntletExotic = Number(gaunt.isExotic);
       const gauntArtifice = Number(gaunt.isArtifice);
       const gauntStats = statsCache.get(gaunt)!;
-      for (const chest of chests) {
+      for (let chestIdx = 0; chestIdx < chests.length; chestIdx++) {
+        const chest = chests[chestIdx];
         const chestExotic = Number(chest.isExotic);
         const chestArtifice = Number(chest.isArtifice);
         const chestStats = statsCache.get(chest)!;
-        for (const leg of legs) {
+        for (let legIdx = 0; legIdx < legs.length; legIdx++) {
+          const leg = legs[legIdx];
           const legExotic = Number(leg.isExotic);
           const legArtifice = Number(leg.isArtifice);
           const legStats = statsCache.get(leg)!;
-          innerloop: for (const classItem of classItems) {
+          innerloop: for (let classItemIdx = 0; classItemIdx < classItems.length; classItemIdx++) {
+            const classItem = classItems[classItemIdx];
+            comboCount++;
+            if (comboCount >= 100000) {
+              onProgress(comboCount);
+              comboCount = 0;
+              if (yieldTask) {
+                await yieldTask();
+              }
+            }
+
             const classItemExotic = Number(classItem.isExotic);
             const classItemArtifice = Number(classItem.isArtifice);
             const classItemStats = statsCache.get(classItem)!;

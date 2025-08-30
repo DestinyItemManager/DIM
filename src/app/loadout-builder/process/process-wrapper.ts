@@ -3,7 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { mapValues } from 'app/utils/collections';
-import { releaseProxy, wrap } from 'comlink';
+import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { chunk, maxBy } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
@@ -41,6 +41,7 @@ interface MappedItem {
 function createWorker() {
   const instance = new Worker(
     /* webpackChunkName: "lo-worker" */ new URL('../process-worker/ProcessWorker', import.meta.url),
+    { type: 'module' },
   );
 
   const worker = wrap<import('../process-worker/ProcessWorker').ProcessWorker>(instance);
@@ -71,6 +72,7 @@ export function runProcess({
   strictUpgrades,
   stopOnFirstSet,
   lastInput,
+  onProgress,
 }: {
   autoModDefs: AutoModDefs;
   filteredItems: ItemsByBucket;
@@ -84,6 +86,7 @@ export function runProcess({
   strictUpgrades: boolean;
   stopOnFirstSet: boolean;
   lastInput: ProcessInputs | undefined;
+  onProgress?: (completed: number, total: number) => void;
 }):
   | {
       cleanup: () => void;
@@ -118,6 +121,7 @@ export function runProcess({
       mapDimItemToProcessItem({
         dimItem,
         armorEnergyRules,
+        desiredStatRanges,
         modsForSlot: bucketSpecificMods[bucketHash] || [],
       }).map((processItem) => ({
         dimItem,
@@ -131,7 +135,6 @@ export function runProcess({
     }
   }
 
-  // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
   const input: ProcessInputs = {
     filteredItems: processItems,
     modStatTotals: mapValues(modStatChanges, (stat) => stat.value),
@@ -160,14 +163,19 @@ export function runProcess({
   );
   const concurrency = Math.max(
     1,
-    // Don't spin up a ton of threads for smaller problems, leave at least one core free
-    Math.min((navigator.hardwareConcurrency || 1) - 1, Math.ceil(numCombinations / 5_000_000)),
+    // Don't spin up a ton of threads for smaller problems, leave half the cores free
+    Math.min(
+      Math.ceil((navigator.hardwareConcurrency || 1) / 2),
+      Math.ceil(numCombinations / 5_000_000),
+    ),
   );
 
   const longestItemsBucketHash = Number(
     maxBy(Object.entries(processItems), ([, items]) => items.length)![0],
   );
   const inputSlices = sliceInputForConcurrency(input, longestItemsBucketHash, concurrency);
+
+  let progressTotal = 0;
 
   for (let i = 0; i < inputSlices.length; i++) {
     const { worker, cleanup: cleanupWorker } = createWorker();
@@ -182,9 +190,16 @@ export function runProcess({
       cleanupThisWorker();
     };
     const input = inputSlices[i];
+    const handleProgress = proxy((completed: number) => {
+      if (cleanupRef === undefined) {
+        return;
+      }
+      progressTotal += completed;
+      onProgress?.(progressTotal, numCombinations);
+    });
     const workerPromise = (async () => {
       try {
-        return await worker.process(i + 1, input);
+        return await worker.process(i + 1, input, handleProgress);
       } finally {
         cleanupThisWorker();
       }
