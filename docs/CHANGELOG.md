@@ -9,6 +9,7 @@
 * Bulk locking/unlocking items will skip over items that cannot be locked.
 * `is:locked` and `is:unlocked` searches will never match items that cannot be locked.
 * Finishers are no longer lockable (Bungie doesn't allow it)
+* In Compare and Organizer, when you hold shift and click a column to change its sorting, we now remove the sort entirely on the third click.
 
 ## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
 
