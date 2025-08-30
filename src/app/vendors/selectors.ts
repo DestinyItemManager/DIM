@@ -122,7 +122,7 @@ export const characterVendorItemsSelector = createSelector(
       vendorGroups
         .flatMap((vg) => vg.vendors)
         .concat(Object.values(subVendors))
-        .flatMap((vs) => vs.items.map((vi) => vi.item))
+        .flatMap((vs) => vs.items.filter((vi) => vi.canBeSold).map((vi) => vi.item))
         .filter((i) => !i?.itemCategoryHashes.includes(ItemCategoryHashes.Dummies)),
     );
   },
