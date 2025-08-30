@@ -165,6 +165,9 @@ export function updateMaxStats(
     info.activityModPermutations,
     armor,
   );
+  // You wouldn't believe it, but Firefox is actually slow loading constants
+  // from another module.
+  const maxStat = MAX_STAT;
 
   // Then, for every stat where we haven't shown that we can hit MAX_STAT with any
   // set, try to see if we can exceed the previous max by adding auto stat mods.
@@ -172,7 +175,7 @@ export function updateMaxStats(
     const value = setStats[statIndex];
     const filter = desiredStatRanges[statIndex];
     const statRange = statRanges[statIndex];
-    if (statRange.maxStat >= MAX_STAT) {
+    if (statRange.maxStat >= maxStat) {
       // We can already hit MAX_STAT for this stat, so skip it.
       continue;
     }
@@ -188,7 +191,7 @@ export function updateMaxStats(
     // assignment search that maximizes stats but with stat ranges that prevent
     // us from going over our minimum? Or maybe do a binary search for the
     // maximum we can reach?
-    while (statRange.maxStat < MAX_STAT) {
+    while (statRange.maxStat < maxStat) {
       // Now that tiers no longer matter (since Edge of Fate), we consider any
       // stat point increase a "tier". This should be a short-term change -
       // ideally we'd reconsider all these algorithms to see if they could be
