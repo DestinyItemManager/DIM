@@ -750,7 +750,6 @@ export function getColumns(
       }),
     ...(destinyVersion === 2 && isArmor ? customStats : []),
     destinyVersion === 2 &&
-      isWeapon &&
       c({
         id: 'masterworkTier',
         header: t('Organizer.Columns.MasterworkTier'),
