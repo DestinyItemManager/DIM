@@ -194,7 +194,6 @@ export function runProcess({
       if (cleanupRef === undefined) {
         return;
       }
-      console.log('Progress', completed, progressTotal, numCombinations);
       progressTotal += completed;
       onProgress?.(progressTotal, numCombinations);
     });

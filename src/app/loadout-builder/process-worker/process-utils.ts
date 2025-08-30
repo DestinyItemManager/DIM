@@ -63,7 +63,8 @@ function getRemainingEnergiesPerAssignment(
   /** Total remaining energy capacity across the set */
   setEnergy: number;
   /**
-   * For each valid permutation, how much energy is left on per item? These lists are sorted by remaining energy so they do not correspond to the input items.
+   * For each valid permutation, how much energy is left on per item? These
+   * lists are NOT sorted.
    */
   remainingEnergiesPerAssignment: number[][];
 } {
@@ -99,7 +100,6 @@ function getRemainingEnergiesPerAssignment(
         remainingEnergyCapacities[i] -= activityMod.energyCost;
       }
     }
-    remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
 
@@ -311,7 +311,6 @@ export function pickAndAssignSlotIndependentMods(
       remainingEnergyCapacities[idx] =
         item.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0);
     }
-    remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
       const result = chooseAutoMods(

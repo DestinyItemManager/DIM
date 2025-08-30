@@ -94,9 +94,10 @@ function doGeneralModsFit(
     generalModCosts.sort((a, b) => b - a);
   }
 
-  return remainingEnergyCapacities.some((capacities) =>
-    generalModCosts.every((cost, index) => cost <= capacities[index]),
-  );
+  return remainingEnergyCapacities.some((capacities) => {
+    capacities.sort((a, b) => b - a);
+    return generalModCosts.every((cost, index) => cost <= capacities[index]);
+  });
 }
 
 /**
