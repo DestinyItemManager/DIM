@@ -121,6 +121,7 @@ export function runProcess({
       mapDimItemToProcessItem({
         dimItem,
         armorEnergyRules,
+        desiredStatRanges,
         modsForSlot: bucketSpecificMods[bucketHash] || [],
       }).map((processItem) => ({
         dimItem,
