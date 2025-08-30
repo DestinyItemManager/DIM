@@ -28,7 +28,7 @@ describe('autocompleteTermSuggestions', () => {
   const cases: [query: string, expected: string][] = [
     ['is:haspower is:b', 'is:haspower is:bow'],
     ['(is:blue ju|n)', '(is:blue tag:junk)'],
-    ['is:bow is:v|oid', 'is:bow is:void'],
+    ['is:bow is:v|oi', 'is:bow is:void'],
     ['season:>outl', 'season:>outlaw'],
     ['not(', 'Expected failure'],
     ['memento:', 'memento:any'],
