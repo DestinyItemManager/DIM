@@ -10,6 +10,7 @@ interface CssExports {
   'page': string;
   'referenceTiersInfo': string;
   'speedReport': string;
+  'speedReportInner': string;
   'subclassSection': string;
   'toolbar': string;
   'undoRedo': string;
