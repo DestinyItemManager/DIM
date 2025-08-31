@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Countdown from 'app/dim-ui/Countdown';
+import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -8,12 +9,15 @@ import { getCurrentSeasonInfo } from 'app/utils/seasons';
 import {
   DestinyClass,
   DestinyProfileResponse,
+  DestinyProgression,
   DestinyProgressionRewardItemQuantity,
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import BungieImage from '../dim-ui/BungieImage';
+import brightEngramsBonus from 'data/d2/bright-engram-bonus.json';
+import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
+import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
 import { getCharacterProgressions } from './selectors';
@@ -37,11 +41,10 @@ export default function SeasonalRank({
   // Get season details
   const seasonNameDisplay = season.displayProperties.name;
 
-  const seasonEnd = season.endDate;
-
   const {
     seasonPassLevel,
     rewardItems,
+    prestigeProgression,
     progressToNextLevel,
     nextLevelAt,
     prestigeMode,
@@ -95,7 +98,9 @@ export default function SeasonalRank({
     return null;
   }
 
-  return (
+  const rewardPassEnd = season.seasonPassList[D2SeasonPassActiveList].seasonPassEndDate;
+
+  return !prestigeMode ? (
     <div
       className={clsx('milestone-quest', {
         [styles.hasPremiumRewards]: hasPremiumRewards,
@@ -146,14 +151,101 @@ export default function SeasonalRank({
         </span>
         <div className="milestone-description">
           {seasonNameDisplay}
-          {seasonEnd && (
+          {rewardPassEnd && (
             <div className={styles.seasonEnd}>
-              {t('Milestone.SeasonEnds')}
-              <Countdown endTime={new Date(seasonEnd)} compact={true} />
+              {t('Progress.RewardPassEndsIn')}
+              <Countdown endTime={new Date(rewardPassEnd)} compact={true} />
             </div>
           )}
         </div>
       </div>
+    </div>
+  ) : (
+    <SeasonPrestigeRank season={season} progress={prestigeProgression} isProgressRanks />
+  );
+}
+
+export function SeasonPrestigeRank({
+  season,
+  progress,
+  isProgressRanks,
+}: {
+  season: DestinySeasonDefinition;
+  progress: DestinyProgression;
+  isProgressRanks?: boolean;
+}) {
+  const defs = useD2Definitions()!;
+  const replacer = useDynamicStringReplacer();
+  const progressionDef = defs.Progression.get(progress.progressionHash);
+
+  // We need to get the latest bright engram bonus icon
+  const brightEngramBonus = defs.InventoryItem.get(
+    brightEngramsBonus[brightEngramsBonus.length - 1],
+  );
+  const rewardPassEnd = season.seasonPassList[D2SeasonPassActiveList].seasonPassEndDate;
+  const rewardPassSeasonName = defs.SeasonPass.get(
+    season.seasonPassList[D2SeasonPassActiveList].seasonPassHash,
+  ).displayProperties.name;
+  return (
+    <div
+      className={clsx(styles.activityRank, { [styles.gridLayout]: isProgressRanks })}
+      title={replacer(progressionDef.displayProperties.description)}
+    >
+      <ReputationRankIcon progress={progress} icon={brightEngramBonus.displayProperties.icon} />
+      <div className={styles.seasonInfo}>
+        <div className={styles.seasonName}>
+          {t('Progress.RewardPassPrestigeRank', {
+            rank: progress.level,
+          })}
+        </div>
+        <div className={styles.seasonLevel}>
+          <div className={styles.seassonTitle}>{rewardPassSeasonName}</div>
+          <div>
+            {progress.progressToNextLevel.toLocaleString()} /{' '}
+            {progress.nextLevelAt.toLocaleString()}
+          </div>
+
+          {rewardPassEnd && (
+            <div className={clsx(styles.seasonLevel, styles.seasonEnd)}>
+              {t('Progress.RewardPassEndsIn')}
+              <Countdown endTime={new Date(rewardPassEnd)} compact={true} />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ReputationRankIcon({
+  progress,
+  icon,
+}: {
+  progress: DestinyProgression;
+  icon: string;
+}) {
+  const circumference = 2 * 22 * Math.PI;
+
+  return (
+    <div className={styles.seasonRankIcon}>
+      <svg viewBox="0 0 54 54">
+        <circle r="22.5" cx="27" cy="27" fillOpacity="0" stroke="#555" strokeWidth="3" />
+        {progress.progressToNextLevel > 0 && (
+          <circle
+            r="22.5"
+            cx="-27"
+            cy="27"
+            transform="rotate(-90)"
+            className={styles.seasonRankProgress}
+            strokeWidth="3"
+            strokeDasharray={`${
+              (circumference * progress.progressToNextLevel) / progress.nextLevelAt
+            } ${circumference}`}
+            stroke="cyan"
+          />
+        )}
+        <image xlinkHref={bungieNetPath(icon)} width="36" height="36" x="9" y="9" />
+      </svg>
     </div>
   );
 }
@@ -169,12 +261,15 @@ export function getSeasonPassStatus(
   const seasonPassProgressionHash = seasonPass.rewardProgressionHash;
   const seasonProgression = characterProgressions.progressions[seasonPassProgressionHash];
   const seasonProgressionDef = defs.Progression.get(seasonPassProgressionHash);
+  const baseLevels =
+    seasonProgressionDef.steps.filter((step) => step.progressTotal === 100000).length + 1;
 
   const prestigeProgressionHash = seasonPass.prestigeProgressionHash;
   const prestigeProgression = characterProgressions.progressions[prestigeProgressionHash];
   const prestigeProgressionDef = defs.Progression.get(prestigeProgressionHash);
 
-  const seasonPassLevel = seasonProgression.level + prestigeProgression.level;
+  // Take seasonpass level and add prestige progress adjusted to remove 500k xp levels double counting
+  const seasonPassLevel = Math.min(seasonProgression.level, baseLevels) + prestigeProgression.level;
   const { rewardItems } = defs.Progression.get(seasonPassProgressionHash);
 
   const prestigeMode = seasonProgression.level === seasonProgression.levelCap;
@@ -195,6 +290,9 @@ export function getSeasonPassStatus(
     progressToNextLevel,
     nextLevelAt,
     weeklyProgress,
+
+    // The number of regular 100k xp requiring levels
+    baseLevels,
 
     /** The player hit the end of the season pass and is now "prestiging it" to levels beyond the reward track. */
     prestigeMode,
