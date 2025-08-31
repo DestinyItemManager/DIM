@@ -1278,7 +1278,21 @@ function saveSearch(
   }
   query = canonical;
 
-  const existingSearch = draft.searches[destinyVersion].find((s) => s.query === query);
+  // Look for any existing search, either by exact query match or canonical match
+  let existingSearch = draft.searches[destinyVersion].find((s) => s.query === query);
+
+  if (!existingSearch && !saved) {
+    // If we're trying to unsave a search that doesn't exist, maybe it's saved under another version.
+    existingSearch = draft.searches[destinyVersion].find((s) => {
+      if (!s.saved) {
+        return false;
+      }
+      const { canonical } = parseAndValidateQuery(s.query, filtersMap, {
+        customStats: draft.settings.customStats ?? [],
+      } as FilterContext);
+      return canonical === query;
+    });
+  }
 
   if (!existingSearch && saveable) {
     // Save this as a "used" search first. This may happen if it's a type of

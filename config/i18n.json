@@ -655,7 +655,7 @@
     "ExcludedItems": "Excluded Items",
     "Exotic": "Exotic Armor",
     "MwExotic": "Exotic",
-    "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
+    "ExcludeVendors": "Search \"not:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExistingLoadout": "Existing Loadout",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Special",

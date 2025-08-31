@@ -266,7 +266,7 @@ export default memo(function LoadoutBuilder({
     );
 
   // Run the actual loadout generation process in a web worker
-  const { result, processing } = useProcess({
+  const { result, processing, totalCombos, completedCombos } = useProcess({
     selectedStore,
     filteredItems,
     setBonuses,
@@ -439,11 +439,14 @@ export default memo(function LoadoutBuilder({
           {processing ? (
             <span className={styles.speedReport} role="status">
               <AppIcon icon={refreshIcon} spinning={true} />
-              <span>
-                {t('LoadoutBuilder.ProcessingSets', {
-                  character: selectedStore.name,
-                })}
-              </span>
+              <div className={styles.speedReportInner}>
+                <span>
+                  {t('LoadoutBuilder.ProcessingSets', {
+                    character: selectedStore.name,
+                  })}
+                </span>
+                <progress value={completedCombos} max={totalCombos || 1} />
+              </div>
             </span>
           ) : (
             result && (

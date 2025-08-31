@@ -49,7 +49,6 @@ exports[`filterComplete autocomplete terms for |sni| 1`] = `
 
 exports[`filterComplete autocomplete terms for |stat:| 1`] = `
 [
-  "stat:",
   "stat:rpm:",
   "stat:rof:",
   "stat:charge:",

@@ -424,6 +424,29 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
     // TODO: sort this first?? it depends on term in one place
 
+    if (multiqueryTermsLookup[possibleKeyword] && filterNames.includes(possibleKeyword)) {
+      // For multiquery filters, if the user has typed a + (or hasn't typed
+      // anything) they're looking to add another query term, so offer to append
+      // one.
+      const existingTerms = new Set(
+        (typedSegments[1] || '')
+          .split('+')
+          .filter((t) => multiqueryTermsLookup[possibleKeyword]!.includes(t)),
+      );
+      const stem = `${typedSegments[0]}:${[...existingTerms].join('+')}${existingTerms.size ? '+' : ''}`;
+      suggestions.push(
+        ...filterMap(multiqueryTermsLookup[possibleKeyword], (t) => {
+          if (!existingTerms.has(t)) {
+            const newTerm = stem + t;
+            return {
+              rawText: newTerm,
+              plainText: newTerm,
+            };
+          }
+        }),
+      );
+    }
+
     suggestions = suggestions.sort(
       chainComparator(
         // ---------------
@@ -487,26 +510,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
         compareBy((word) => !mathCheck.test(word.plainText)),
       ),
     );
-
-    if (filterNames.includes(possibleKeyword)) {
-      // For multiquery filters, if the user has typed a + they're looking to add another query term,
-      // so offer to append one.
-      if (multiqueryTermsLookup[possibleKeyword] && typedPlain.endsWith('+')) {
-        const existingTerms = new Set((typedSegments[1] || '').split('+'));
-        suggestions.unshift(
-          ...filterMap(multiqueryTermsLookup[possibleKeyword], (t) => {
-            if (!existingTerms.has(t)) {
-              return {
-                rawText: typedPlain + t,
-                plainText: typedPlain + t,
-              };
-            }
-          }),
-        );
-      }
-
-      return suggestions.map((suggestion) => suggestion.rawText);
-    } else if (suggestions.length) {
+    if (suggestions.length) {
       // we will always add in (later) a suggestion of "what you've already typed so far"
       // so prevent "what's been typed" from appearing in the returned suggestions from this function
       const deDuped = new Set(suggestions.map((suggestion) => suggestion.rawText));
