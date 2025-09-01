@@ -3,6 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { mapValues } from 'app/utils/collections';
+import { getMaxParallelCores } from 'app/utils/parallel-cores';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { chunk, maxBy } from 'es-toolkit';
@@ -161,14 +162,7 @@ export function runProcess({
     (total, items) => total * Math.max(1, items.length),
     1,
   );
-  const concurrency = Math.max(
-    1,
-    // Don't spin up a ton of threads for smaller problems, leave half the cores free
-    Math.min(
-      Math.ceil((navigator.hardwareConcurrency || 1) / 2),
-      Math.ceil(numCombinations / 5_000_000),
-    ),
-  );
+  const concurrency = getMaxParallelCores();
 
   const longestItemsBucketHash = Number(
     maxBy(Object.entries(processItems), ([, items]) => items.length)![0],

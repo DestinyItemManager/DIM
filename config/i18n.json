@@ -1197,6 +1197,7 @@
     "Loadout": "Loadout Searches"
   },
   "Settings": {
+    "Appearance": "Appearance",
     "AutoLockTagged": "Sync item lock state with tag",
     "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
@@ -1240,12 +1241,10 @@
     "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Item Display",
     "Language": "Language",
-    "LoadoutSort": "Loadout order:",
     "LogOut": "Log out",
     "Masterworked": "Masterworked",
-    "PerkDisplay": "Perk display in item popup",
-    "PerkList": "List",
-    "PerkGrid": "Grid",
+    "MaxParallelCores": "Maximum cores for parallel tasks",
+    "MaxParallelCoresExplanation": "Controls how many CPU cores DIM can use for intensive tasks like Loadout Optimizer and Loadout Analyzer. Higher values may improve performance but use more system resources.",
     "ResetToDefault": "Reset",
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
@@ -1278,6 +1277,7 @@
     "SpacesSize_one": "{{count}} space",
     "SpacesSize_other": "{{count}} spaces",
     "Theme": "Theme",
+    "Troubleshooting": "Troubleshooting",
     "VaultGroupingNone": "None",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
     "WishlistRefreshNotificationTitle": "Wishlists Reloaded"
