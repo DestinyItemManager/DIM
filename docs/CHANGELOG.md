@@ -1,5 +1,7 @@
 ## Next
 
+## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
+
 * Tuning mods can be chosen manually in the loadout editor, and will be assigned to compatible items when the loadout is applied. The equipped loadout and any snapshotted in-game loadouts will retain their tuning mods.
 * Loadout Optimizer will no longer collapse sets with items that have the exact same stats. Now you'll see a separate set for each copy.
 * Combine the set bonus tooltips for items of the same set in character status
