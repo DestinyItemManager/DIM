@@ -1,5 +1,5 @@
 import { RootState } from 'app/store/types';
-import { useSelector } from 'react-redux';
+import { useSyncExternalStore } from 'react';
 
 export const isPhonePortraitSelector = (state: RootState) => state.shell.isPhonePortrait;
 export const querySelector = (state: RootState) => state.shell.searchQuery;
@@ -9,6 +9,17 @@ export const bungieAlertsSelector = (state: RootState) => state.shell.bungieAler
 export const searchResultsOpenSelector = (state: RootState) => state.shell.searchResultsOpen;
 export const routerLocationSelector = (state: RootState) => state.shell.routerLocation;
 
+export function useMediaQuery(query: string) {
+  const mql = window.matchMedia(query);
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      mql.addEventListener('change', onStoreChange);
+      return () => mql.removeEventListener('change', onStoreChange);
+    },
+    () => mql.matches,
+  );
+}
+
 export function useIsPhonePortrait() {
-  return useSelector(isPhonePortraitSelector);
+  return useMediaQuery('(max-width: 540px)');
 }
