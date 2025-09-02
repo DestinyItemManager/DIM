@@ -102,7 +102,11 @@
     "Archetype": "Archetype",
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
+    "BaseStatsDescription": "Base stats, without Masterwork or Mods",
     "AssumeMasterworked": "Assume Masterworked",
+    "AssumeMasterworkedDescription": "Stats if fully Masterworked, without mods",
+    "CurrentStats": "Current Stats",
+    "CurrentStatsDescription": "Current stats, including Mods and Masterwork level",
     "InitialItem": "This is the item the Compare tool was launched from",
     "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it.",
     "Error": {

@@ -98,9 +98,13 @@
   "Compare": {
     "Archetype": "Archetype",
     "AssumeMasterworked": "Assume Masterworked",
+    "AssumeMasterworkedDescription": "Stats if fully Masterworked, without mods",
+    "BaseStatsDescription": "Base stats, without Masterwork or Mods",
     "Button": "Compare",
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
+    "CurrentStats": "Current Stats",
+    "CurrentStatsDescription": "Current stats, including Mods and Masterwork level",
     "Error": {
       "Invalid": "There are no valid items for comparison.",
       "Unmatched": "This item doesn't match the type of items being compared."

@@ -324,7 +324,7 @@ export function isArtificeSocket(socket: DimSocket) {
 }
 
 /**
- * Is this the new-style armor masterwork in Edge of Fate that grants +1 to the three lower stats per tier?
+ * Does this armor have the new-style armor masterwork in Edge of Fate, that grants +1 per MW tier, to the three lower stats?
  */
 // TODO: May want to switch this to isLegacyArmorMasterwork eventually
 export function isArmor3(item: DimItem) {

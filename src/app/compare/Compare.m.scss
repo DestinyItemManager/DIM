@@ -65,3 +65,14 @@
     }
   }
 }
+
+.comparisonModebutton {
+  position: relative;
+  margin-right: 7px;
+  &::after {
+    content: '';
+    position: absolute;
+    border-right: 1px solid #8888;
+    inset: -4px -6px -4px 100%;
+  }
+}
