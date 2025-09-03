@@ -98,7 +98,7 @@
   "Compare": {
     "Archetype": "Archetype",
     "AssumeMasterworked": "Assume Masterworked",
-    "AssumeMasterworkedDescription": "Stats if fully Masterworked, without mods",
+    "AssumeMasterworkedDescription": "Stats if fully Masterworked, without current Mods",
     "BaseStatsDescription": "Base stats, without Masterwork or Mods",
     "Button": "Compare",
     "ButtonHelp": "Compare Items",

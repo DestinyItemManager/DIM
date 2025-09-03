@@ -76,3 +76,24 @@
     inset: -4px -6px -4px 100%;
   }
 }
+
+.comparisonModeDescription {
+  display: block;
+  min-width: 200px;
+}
+:global(.dim-button) .comparisonModeDescription {
+  display: none;
+}
+
+[role='listbox'] .comparisonModeName {
+  display: none;
+}
+
+.invertedIcon {
+  filter: invert(1) drop-shadow(0 0 1px black);
+}
+:global(.dim-button):hover {
+  .invertedIcon {
+    filter: none !important;
+  }
+}

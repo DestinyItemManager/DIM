@@ -2,7 +2,7 @@ import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { languageSelector } from 'app/dim-api/selectors';
 import Select, { Option } from 'app/dim-ui/Select';
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
-import { t, tl } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
@@ -19,11 +19,13 @@ import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { Settings } from 'app/settings/initial-settings';
-import { AppIcon, faList } from 'app/shell/icons';
+import { AppIcon, faList, tuningStatIcon } from 'app/shell/icons';
+import { masterworkHammer } from 'app/shell/icons/custom/MasterworkHammer';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
+import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
@@ -37,12 +39,6 @@ import CompareSuggestions from './CompareSuggestions';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
-
-const statModeLabels = {
-  current: tl('Compare.CurrentStats'),
-  base: tl('Organizer.Columns.BaseStats'),
-  baseMasterwork: tl('Compare.AssumeMasterworked'),
-};
 
 // TODO: CSS grid-with-sticky layout
 // TODO: dropdowns for query buttons
@@ -224,10 +220,46 @@ export default function Compare({ session }: { session: CompareSession }) {
   );
 
   const selectOptions: Option<Settings['armorCompare']>[] = [
-    { content: t('Compare.CurrentStatsDescription'), key: 'current', value: 'current' },
-    { content: t('Compare.BaseStatsDescription'), key: 'base', value: 'base' },
     {
-      content: t('Compare.AssumeMasterworkedDescription'),
+      content: (
+        <span>
+          <span className={styles.comparisonModeName}>
+            <img src={modificationsIcon} className={styles.invertedIcon} />{' '}
+            {t('Compare.CurrentStats')}
+          </span>
+          <span className={styles.comparisonModeDescription}>
+            {t('Compare.CurrentStatsDescription')}
+          </span>
+        </span>
+      ),
+      key: 'current',
+      value: 'current',
+    },
+    {
+      content: (
+        <span>
+          <span className={styles.comparisonModeName}>
+            <AppIcon icon={tuningStatIcon} /> {t('Organizer.Columns.BaseStats')}
+          </span>
+          <span className={styles.comparisonModeDescription}>
+            {t('Compare.BaseStatsDescription')}
+          </span>
+        </span>
+      ),
+      key: 'base',
+      value: 'base',
+    },
+    {
+      content: (
+        <span>
+          <span className={styles.comparisonModeName}>
+            <AppIcon icon={masterworkHammer} /> {t('Compare.AssumeMasterworked')}
+          </span>
+          <span className={styles.comparisonModeDescription}>
+            {t('Compare.AssumeMasterworkedDescription')}
+          </span>
+        </span>
+      ),
       key: 'baseMasterwork',
       value: 'baseMasterwork',
     },
@@ -243,9 +275,7 @@ export default function Compare({ session }: { session: CompareSession }) {
             onChange={(v) => setArmorCompareSetting(v ?? 'baseMasterwork')}
             className={styles.comparisonModebutton}
             maxDropdownWidth={500}
-          >
-            {t(statModeLabels[armorCompareSetting])}
-          </Select>
+          />
         ) : (
           <Checkbox
             label={t('Compare.CompareBaseStats')}

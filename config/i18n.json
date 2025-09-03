@@ -104,7 +104,7 @@
     "CompareBaseStats": "Show Base Stats",
     "BaseStatsDescription": "Base stats, without Masterwork or Mods",
     "AssumeMasterworked": "Assume Masterworked",
-    "AssumeMasterworkedDescription": "Stats if fully Masterworked, without mods",
+    "AssumeMasterworkedDescription": "Stats if fully Masterworked, without current Mods",
     "CurrentStats": "Current Stats",
     "CurrentStatsDescription": "Current stats, including Mods and Masterwork level",
     "InitialItem": "This is the item the Compare tool was launched from",
