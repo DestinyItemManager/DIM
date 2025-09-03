@@ -91,7 +91,10 @@
 .comparisonModeDescription {
   display: block;
   min-width: 200px;
+  opacity: 0.7;
+  font-size: smaller;
 }
+
 :global(.dim-button) .comparisonModeDescription {
   display: none;
 }
