@@ -33,6 +33,7 @@ import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shel
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { getMaxParallelCores } from 'app/utils/parallel-cores';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -454,6 +455,7 @@ export default memo(function LoadoutBuilder({
                 {t('LoadoutBuilder.SpeedReport', {
                   combos: result.combos,
                   time: (result.processTime / 1000).toFixed(2),
+                  cpus: getMaxParallelCores(),
                 })}
               </span>
             )
