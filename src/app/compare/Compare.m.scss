@@ -104,7 +104,7 @@
   filter: invert(1) drop-shadow(0 0 1px black);
 }
 
-:global(.dim-button) .invertedIcon,
-div:hover > div > .invertedIcon {
+div:hover > div > .invertedIcon,
+:global(.dim-button):hover .invertedIcon {
   filter: none !important;
 }
