@@ -2,6 +2,11 @@
 // Please do not change this file!
 interface CssExports {
   'bucket': string;
+  'comparisonModeDescription': string;
+  'comparisonModeHint': string;
+  'comparisonModeInfo': string;
+  'comparisonModebutton': string;
+  'invertedIcon': string;
   'options': string;
   'organizerLink': string;
   'scroller': string;
