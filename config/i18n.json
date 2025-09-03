@@ -699,7 +699,7 @@
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
     "SetBonus": "Set Bonuses",
-    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds <a>using {{cpus}} CPU cores.</a>",
+    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores.",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
     "StatMin": "Min",
