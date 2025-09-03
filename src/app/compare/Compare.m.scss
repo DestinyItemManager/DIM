@@ -77,6 +77,17 @@
   }
 }
 
+.comparisonModeHint {
+  display: flex;
+  gap: 3px;
+}
+[role='listbox'] .comparisonModeHint {
+  display: none;
+}
+:global(.dim-button) .comparisonModeInfo {
+  display: none;
+}
+
 .comparisonModeDescription {
   display: block;
   min-width: 200px;
@@ -85,15 +96,11 @@
   display: none;
 }
 
-[role='listbox'] .comparisonModeName {
-  display: none;
-}
-
 .invertedIcon {
+  height: 12px;
   filter: invert(1) drop-shadow(0 0 1px black);
 }
-:global(.dim-button):hover {
-  .invertedIcon {
-    filter: none !important;
-  }
+
+div:hover > div > .invertedIcon {
+  filter: none !important;
 }

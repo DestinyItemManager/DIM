@@ -3,7 +3,8 @@
 interface CssExports {
   'bucket': string;
   'comparisonModeDescription': string;
-  'comparisonModeName': string;
+  'comparisonModeHint': string;
+  'comparisonModeInfo': string;
   'comparisonModebutton': string;
   'invertedIcon': string;
   'options': string;

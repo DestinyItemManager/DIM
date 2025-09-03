@@ -19,7 +19,7 @@ import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { Settings } from 'app/settings/initial-settings';
-import { AppIcon, faList, tuningStatIcon } from 'app/shell/icons';
+import { AppIcon, faList, settingsIcon, tuningStatIcon } from 'app/shell/icons';
 import { masterworkHammer } from 'app/shell/icons/custom/MasterworkHammer';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -222,43 +222,55 @@ export default function Compare({ session }: { session: CompareSession }) {
   const selectOptions: Option<Settings['armorCompare']>[] = [
     {
       content: (
-        <span>
-          <span className={styles.comparisonModeName}>
+        <>
+          <span className={styles.comparisonModeHint}>
+            <AppIcon icon={settingsIcon} />
+            <img src={modificationsIcon} className={styles.invertedIcon} />
+          </span>
+          <div className={styles.comparisonModeInfo}>
             <img src={modificationsIcon} className={styles.invertedIcon} />{' '}
             {t('Compare.CurrentStats')}
-          </span>
-          <span className={styles.comparisonModeDescription}>
-            {t('Compare.CurrentStatsDescription')}
-          </span>
-        </span>
+            <span className={styles.comparisonModeDescription}>
+              {t('Compare.CurrentStatsDescription')}
+            </span>
+          </div>
+        </>
       ),
       key: 'current',
       value: 'current',
     },
     {
       content: (
-        <span>
-          <span className={styles.comparisonModeName}>
+        <>
+          <span className={styles.comparisonModeHint}>
+            <AppIcon icon={settingsIcon} />
+            <AppIcon icon={tuningStatIcon} />
+          </span>
+          <div className={styles.comparisonModeInfo}>
             <AppIcon icon={tuningStatIcon} /> {t('Organizer.Columns.BaseStats')}
-          </span>
-          <span className={styles.comparisonModeDescription}>
-            {t('Compare.BaseStatsDescription')}
-          </span>
-        </span>
+            <span className={styles.comparisonModeDescription}>
+              {t('Compare.BaseStatsDescription')}
+            </span>
+          </div>
+        </>
       ),
       key: 'base',
       value: 'base',
     },
     {
       content: (
-        <span>
-          <span className={styles.comparisonModeName}>
+        <>
+          <span className={styles.comparisonModeHint}>
+            <AppIcon icon={settingsIcon} />
+            <AppIcon icon={masterworkHammer} />
+          </span>
+          <div className={styles.comparisonModeInfo}>
             <AppIcon icon={masterworkHammer} /> {t('Compare.AssumeMasterworked')}
-          </span>
-          <span className={styles.comparisonModeDescription}>
-            {t('Compare.AssumeMasterworkedDescription')}
-          </span>
-        </span>
+            <span className={styles.comparisonModeDescription}>
+              {t('Compare.AssumeMasterworkedDescription')}
+            </span>
+          </div>
+        </>
       ),
       key: 'baseMasterwork',
       value: 'baseMasterwork',
