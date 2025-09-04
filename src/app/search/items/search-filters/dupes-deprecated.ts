@@ -76,7 +76,6 @@ export const deprecatedDupeFilters: ItemFilterDefinition[] = [
     keywords: 'infusionfodder',
     description: tl('Filter.InfusionFodder'),
     destinyVersion: 2,
-    deprecated: true,
     filter: ({ allItems }) => {
       const duplicates: { [dupeID: string]: DimItem[] } = {};
 

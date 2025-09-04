@@ -208,20 +208,9 @@ const dupeTypeLookupRaw: Record<
       return destinyClasses.flatMap((destinyClass) => armorsByDestinyClass.get(destinyClass)!);
     },
   },
-
-  // Finds items within the group that could be infused using another item in the
-  // group for glimmer only.
-  infuse: {
-    keyGenerator: (item) => {
-      if (item.infusable) {
-        return item.hash.toString();
-      }
-    },
-    confirmItemsInGroup: (items) => items.filter((item) => items.some((i) => i.power < item.power)),
-  },
 };
 
-const lowerComparatorTypes = ['statlower', 'customstatlower', 'infuse'];
+const lowerComparatorTypes = ['statlower', 'customstatlower'];
 
 const dupeFilters: ItemFilterDefinition[] = [
   {
@@ -250,7 +239,6 @@ const dupeFilters: ItemFilterDefinition[] = [
       perks: tl('Filter.DupePerks'),
       statlower: tl('Filter.StatLower'),
       customstatlower: tl('Filter.CustomStatLower'),
-      infuse: tl('Filter.InfusionFodder'),
     },
     destinyVersion: 2,
     filter: (context) => {
