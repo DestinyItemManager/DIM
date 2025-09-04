@@ -254,7 +254,7 @@ export function filterItems({
             value: compatibleModSeasons?.includes(tag) ? 1 : 0,
           })),
           // Add a comparison stat for each required set bonus. An item that has that bonus scores 1, others score zero.
-          // Statlower will make sure any matching set bonus beats an item without that one.
+          // Statlower will make sure any matching set bonus item won't lose to an item without it.
           ...Object.keys(setBonuses || {}).map((h) => {
             const setBonusHash = parseInt(h, 10);
             return {
