@@ -258,7 +258,6 @@ export function filterItems({
           ...Object.keys(setBonuses || {}).map((h) => {
             const setBonusHash = parseInt(h, 10);
             return {
-              // Ensure an item with a requested set bonus is not valued lower than an item without.
               statHash: -10 - setBonusHash,
               value: item.setBonus?.hash === setBonusHash ? 1 : 0,
             };
