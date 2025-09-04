@@ -6,6 +6,7 @@
 * Reorganized the Settings page.
 * Loadout Optimizer no longer excludes pieces with the requested Set Bonus, even if their stats are terrible.
 * Fix wishlists not properly matching some new enhanced perks
+* The perk list vs. grid setting is now saved independently for mobile and desktop views.
 
 ## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
 
