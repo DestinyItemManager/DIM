@@ -5,6 +5,7 @@
 * Added a setting to control how many CPU cores can be used by Loadout Optimizer/Analyzer.
 * Reorganized the Settings page.
 * Loadout Optimizer no longer excludes pieces with the requested Set Bonus, even if their stats are terrible.
+* Fix wishlists not properly matching some new enhanced perks
 
 ## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
 
