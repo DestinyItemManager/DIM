@@ -26,14 +26,12 @@ import { filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import {
   PlugCategoryHashes,
   SocketCategoryHashes,
   StatHashes,
   TraitHashes,
 } from 'data/d2/generated-enums';
-import { motion } from 'motion/react';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
@@ -145,7 +143,7 @@ export default function SocketDetailsSelectedPlug({
       return undefined;
     }
 
-    if (!isPlugStatActive(stat.activationRule, item)) {
+    if (!isPlugStatActive(stat.activationRule, { item, existingStat: itemStat })) {
       return undefined;
     }
 
@@ -239,29 +237,29 @@ export default function SocketDetailsSelectedPlug({
   const hideRequirements =
     plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
-  const showPerks = [
-    PlugCategoryHashes.Season25PotionsLoot,
-    PlugCategoryHashes.Season25PotionsCombat,
-    PlugCategoryHashes.Season25PotionsPlaceholder,
-    PlugCategoryHashes.Season25PotionsReagents,
-    PlugCategoryHashes.Season25PotionsFormula,
-  ].includes(plug.plug.plugCategoryHash);
+  const showPerks = (
+    [
+      // Include plug hashes here that should show their perks in the socket details.
+    ] as PlugCategoryHashes[]
+  ).includes(plug.plug.plugCategoryHash);
 
   return (
-    <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
+    <div className={styles.selectedPlug}>
       <div className={styles.modIcon}>
         <SocketDetailsMod itemDef={plug} />
       </div>
+
+      <h3 className={styles.modName}>
+        <span>{plug.displayProperties.name}</span>
+        {plug.hash === socket.emptyPlugItemHash && <span> &mdash; {plug.itemTypeDisplayName}</span>}
+      </h3>
+
       <div className={styles.modDescription}>
-        <h3>
-          <span>{plug.displayProperties.name}</span>
-          {plug.hash === socket.emptyPlugItemHash && (
-            <span> &mdash; {plug.itemTypeDisplayName}</span>
-          )}
-        </h3>
+        {sourceString && <div className={styles.source}>{sourceString}</div>}
+
         {plugDescriptions.perks.map((perkDesc) => (
           <React.Fragment key={perkDesc.perkHash}>
-            {perkDesc.description && (
+            {perkDesc.description && !perkDesc.description.includes('▲') && (
               <div>
                 <RichDestinyText text={perkDesc.description} />
               </div>
@@ -288,46 +286,43 @@ export default function SocketDetailsSelectedPlug({
               </div>
             );
           })}
+        {stats.length > 0 && (
+          <div className={styles.itemStats}>
+            <PlugStats
+              stats={stats.map((stat) => ({
+                statHash: stat.dimStat.statHash,
+                value: stat.modValue,
+              }))}
+            />
+            <ItemStats stats={stats.map((s) => s.dimStat)} item={item} />
+          </div>
+        )}
+
+        {plugDescriptions.communityInsight && (
+          <ClarityDescriptions
+            perk={plugDescriptions.communityInsight}
+            className={styles.modClarityDescription}
+          />
+        )}
       </div>
 
-      {stats.length > 0 && (
-        <div className={styles.modStats}>
-          <PlugStats
-            stats={stats.map((stat) => ({ statHash: stat.dimStat.statHash, value: stat.modValue }))}
-          />
-        </div>
-      )}
-      {stats.length > 0 && (
-        <ItemStats stats={stats.map((s) => s.dimStat)} className={styles.itemStats} />
-      )}
-
-      {plugDescriptions.communityInsight && (
-        <ClarityDescriptions
-          perk={plugDescriptions.communityInsight}
-          className={styles.modClarityDescription}
-        />
-      )}
-
-      {sourceString && <div className={styles.source}>{sourceString}</div>}
-
       {(canDoAWA || onPlugSelected) && (
-        <motion.button
-          layout
+        <button
           type="button"
           className={styles.insertButton}
           onClick={onInsertPlug}
           disabled={(canDoAWA && !equippable) || insertInProgress}
         >
           {insertInProgress && (
-            <motion.span layout>
+            <span>
               <AppIcon icon={refreshIcon} spinning={true} />
-            </motion.span>
+            </span>
           )}
-          <motion.span layout className={styles.insertLabel}>
-            <motion.span layout>{insertName}</motion.span>
-            <motion.span layout>{costs}</motion.span>
-          </motion.span>
-        </motion.button>
+          <span className={styles.insertLabel}>
+            <span>{insertName}</span>
+            <span>{costs}</span>
+          </span>
+        </button>
       )}
     </div>
   );

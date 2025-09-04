@@ -18,7 +18,7 @@ jobs:
       name: beta
       url: https://beta.dim.gg
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 2 # So sentry can get the previous commit
 
@@ -96,5 +96,5 @@ jobs:
           SENTRY_PROJECT: dim
         with:
           environment: beta
-          version: ${{ env.VERSION }}
+          release: ${{ env.VERSION }}
           ignore_missing: true

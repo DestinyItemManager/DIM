@@ -1,11 +1,9 @@
 @use '../variables.scss' as *;
 
 .list {
+  --search-hidden-opacity: 0.4;
   padding: 10px;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  scrollbar-gutter: stable;
 }
 
 .item {

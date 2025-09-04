@@ -3,7 +3,7 @@ import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import {
-  D2ItemTiers,
+  ItemRarityMap,
   SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
   d2MissingIcon,
@@ -345,6 +345,7 @@ export function makeItem(
   const isEngram =
     normalBucket.hash === BucketHashes.Engrams ||
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Engrams) ||
+    itemDef.traitHashes?.includes(TraitHashes.ItemEngram) ||
     false;
 
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
@@ -398,6 +399,7 @@ export function makeItem(
 
   // null out falsy values like a blank string for a url
   const iconOverlay =
+    (itemDef.isFeaturedItem && itemDef.iconWatermarkFeatured) ||
     (item.versionNumber !== undefined &&
       itemDef.quality?.displayVersionWatermarkIcons?.[item.versionNumber]) ||
     itemDef.iconWatermark ||
@@ -461,7 +463,7 @@ export function makeItem(
     bucket: normalBucket,
     hash: item.itemHash,
     itemCategoryHashes,
-    tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
+    rarity: ItemRarityMap[itemDef.inventory!.tierType] || 'Common',
     isExotic: itemDef.inventory!.tierType === TierType.Exotic,
     name,
     description: displayProperties.description,
@@ -494,7 +496,7 @@ export function makeItem(
     classTypeNameLocalized: getClassTypeNameLocalized(defs)(classType),
     element,
     energy: itemInstanceData.energy ?? null,
-    lockable: normalBucket.hash !== BucketHashes.Finishers ? item.lockable : true,
+    lockable: item.lockable,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
@@ -535,6 +537,11 @@ export function makeItem(
     masterworkInfo: null,
     infusionCategoryHashes: null,
     tooltipNotifications,
+    featured: itemDef.isFeaturedItem,
+    tier: itemInstanceData.gearTier ?? 0,
+    traitHashes: itemDef.traitHashes,
+    adept: itemDef.isAdept,
+    holofoil: itemDef.isHolofoil,
   };
 
   // *able
@@ -572,6 +579,7 @@ export function makeItem(
   createdItem.wishListEnabled = Boolean(
     createdItem.sockets &&
       (createdItem.bucket.inWeapons ||
+        // Exotic class items can be wishlisted
         (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
   );
 
@@ -753,11 +761,15 @@ export function makeItem(
 
   createdItem.index = createItemIndex(createdItem);
 
+  if (itemDef.equippingBlock?.equipableItemSetHash) {
+    createdItem.setBonus = defs.EquipableItemSet.get(itemDef.equippingBlock.equipableItemSetHash);
+  }
+
   return createdItem;
 }
 
 function isLegendaryOrBetter(item: DimItem) {
-  return item.tier === 'Legendary' || item.tier === 'Exotic';
+  return item.rarity === 'Legendary' || item.rarity === 'Exotic';
 }
 
 function getQuestLineInfo(itemDef: DestinyInventoryItemDefinition): DimQuestLine | undefined {

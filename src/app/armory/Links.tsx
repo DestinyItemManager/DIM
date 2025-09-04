@@ -89,7 +89,7 @@ function buildLightGGSockets(item: DimItem) {
   const perkValues = getWeaponSocketInfo(item);
 
   if (perkValues) {
-    return `?p=${[...perkValues.largePerks, ...perkValues.traits, perkValues.masterwork, perkValues.weaponMod].map((s) => s || '').join(',')}`;
+    return `?p=${[...perkValues.largePerks, ...perkValues.traits, perkValues.masterwork, perkValues.weaponMod].map((s) => String(s)).join(',')}`;
   }
 
   return '';

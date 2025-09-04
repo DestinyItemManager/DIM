@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout DIM
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Sort en.json
         run: dimJSON="$(jq -S . src/locale/en.json)" && echo "${dimJSON}" > src/locale/en.json
 
       - name: Upload updated en.json to crowdin
-        uses: crowdin/github-action@v2.7.1
+        uses: crowdin/github-action@v2.10.0
         with:
           upload_sources: true
           upload_translations: false
@@ -39,14 +39,3 @@ jobs:
           filters: |
             changed:
               - 'src/locale/en.json'
-
-      - name: Discord notification
-        # TODO: Add back in the number of changes via `git diff --numstat -- src/locale/en.json` and some awk or grep magic
-        if: steps.filter.outputs.changed
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
-          DISCORD_EMBEDS: '[{"title":"DIM - crowdin", "color": 15954978, "url": "https://crowdin.com/project/destiny-item-manager","description": "Translation(s) have been added or changed on crowdin."  }]'
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "<@&622449489008918548>"
-

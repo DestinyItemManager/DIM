@@ -1,4 +1,4 @@
-import { isD1Item } from 'app/utils/item-utils';
+import { getArmor3StatFocus, getArmor3TuningStat, isArmor3, isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { DimItem, DimStat } from '../inventory/item-types';
 import ItemStat, { D1QualitySummaryStat, isD1Stat } from './ItemStat';
@@ -18,6 +18,8 @@ export default function ItemStats({
   if (!stats?.length) {
     return null;
   }
+  const tunedStatHash = item && getArmor3TuningStat(item);
+  const statFocus = item && isArmor3(item) ? getArmor3StatFocus(item) : undefined;
 
   const hasIcons = stats.some(
     (s) => s.displayProperties.hasIcon || (item && isD1Stat(item, s) && s.qualityPercentage?.min),
@@ -26,7 +28,12 @@ export default function ItemStats({
   return (
     <div className={clsx(className, styles.stats, { [styles.hasIcons]: hasIcons })}>
       {stats.map((stat) => (
-        <ItemStat key={stat.statHash} stat={stat} item={item} />
+        <ItemStat
+          key={stat.statHash}
+          stat={stat}
+          item={item}
+          itemStatInfo={{ tunedStatHash, statFocus }}
+        />
       ))}
 
       {item && isD1Item(item) && Boolean(item.quality?.min) && <D1QualitySummaryStat item={item} />}

@@ -2,7 +2,8 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import { ItemFilterDefinition } from '../item-filter-types';
-import { checkIfIsDupe, computeDupes, makeDupeID } from './dupes';
+import { computeDupes, itemDupeID } from './dupes';
+import { checkIfIsDupe } from './dupes-deprecated';
 
 const checkIfIsWishlist = (
   item: DimItem,
@@ -24,12 +25,13 @@ const wishlistFilters: ItemFilterDefinition[] = [
   },
   {
     keywords: 'wishlistdupe',
+    deprecated: true,
     description: tl('Filter.WishlistDupe'),
     destinyVersion: 2,
     filter: ({ wishListFunction, allItems }) => {
       const duplicates = computeDupes(allItems);
       return (item) => {
-        const dupeId = makeDupeID(item);
+        const dupeId = itemDupeID(item);
         if (!checkIfIsDupe(duplicates, dupeId, item)) {
           return false;
         }

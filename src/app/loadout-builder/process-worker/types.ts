@@ -1,4 +1,4 @@
-import { ArmorStatHashes, ArmorStats, LockableBucketHash, StatRanges } from '../types';
+import { ArmorBucketHash, ArmorStatHashes, ArmorStats, StatRanges } from '../types';
 
 export interface ProcessResult {
   /** A small number of the best sets, depending on operation mode. */
@@ -6,26 +6,40 @@ export interface ProcessResult {
   /** The total number of combinations considered. */
   combos: number;
   /** The stat ranges of all sets that matched our filters & mod selection. */
-  statRangesFiltered?: StatRanges;
+  statRangesFiltered: StatRanges;
   /** Statistics about how many sets passed/failed the constraints, for error reporting */
-  processInfo?: ProcessStatistics;
+  processInfo: ProcessStatistics;
 }
 
+/**
+ * The minimum information about an item that is needed to consider it when
+ * processing optimal sets. This is calculated from the full item before being
+ * passed into the process worker.
+ */
 export interface ProcessItem {
   id: string;
-  hash: number;
-  name: string;
+  hash?: number; // Included for debugging purposes, not used in processing
+  name?: string; // Included for debugging purposes, not used in processing
   isExotic: boolean;
   isArtifice: boolean;
-  /** The remaining assumed energy capacity for this item, after assigning slot-specific mods */
+  /**
+   * The remaining energy capacity for this item, after assuming energy upgrades
+   * and assigning slot-specific mods. This can be spent on stat mods.
+   */
   remainingEnergyCapacity: number;
   power: number;
   stats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
+  setBonus?: number;
+  /**
+   * This is a pre-set tuning mod on the item. This hash should be passed along
+   * to the ArmorSet.statMods list.
+   */
+  includedTuningMod?: number;
 }
 
 export type ProcessItemsByBucket = {
-  [bucketHash in LockableBucketHash]: ProcessItem[];
+  [bucketHash in ArmorBucketHash]: ProcessItem[];
 };
 
 export interface ProcessArmorSet {
@@ -33,17 +47,19 @@ export interface ProcessArmorSet {
   readonly stats: Readonly<ArmorStats>;
   /** The assumed stats from the armor items themselves only. */
   readonly armorStats: Readonly<ArmorStats>;
-  /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
+  /** For each armor type (see ArmorBucketHashes), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
   /** Which stat mods were added? */
   readonly statMods: number[];
-}
 
-export interface IntermediateProcessArmorSet {
-  /** The overall stats for the loadout as a whole, EXCLUDING auto stat mods. */
-  stats: number[];
-  /** The first (highest-power) valid set from this stat mix. */
-  armor: ProcessItem[];
+  /** Sum of enabled stats values. */
+  readonly enabledStatsTotal: number;
+  /** Sum of all stats including disabled/maxed stats. */
+  readonly statsTotal: number;
+  /** Encoded stat mix as a 48-bit integer. */
+  readonly statMix: number;
+  /** Power level of the armor set. */
+  readonly power: number;
 }
 
 export interface ProcessMod {
@@ -55,7 +71,10 @@ export interface ProcessMod {
 }
 
 /**
- * Data describing the mods that can be automatically picked.
+ * Data describing the mods that can be automatically picked. This takes into
+ * account the fact that stat mods for different stats cost different amounts of
+ * energy - and sometimes there are even discounted versions that can be
+ * unlocked.
  */
 export interface AutoModData {
   generalMods: {
@@ -64,7 +83,7 @@ export interface AutoModData {
       minorMod: { hash: number; cost: number };
     };
   };
-  artificeMods: { [key in ArmorStatHashes]?: { hash: number } };
+  artificeMods: { [key in ArmorStatHashes]?: number };
 }
 
 export interface LockedProcessMods {
@@ -104,9 +123,9 @@ export interface ProcessStatistics {
       noExotic: number;
       doubleExotic: number;
       skippedLowTier: number;
+      insufficientSetBonus: number;
     };
     lowerBoundsExceeded: RejectionRate;
-    upperBoundsExceeded: RejectionRate;
     modsStatistics: ModAssignmentStatistics;
   };
 }

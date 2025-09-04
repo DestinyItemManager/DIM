@@ -91,7 +91,9 @@ const missingSources: { [key: string]: number[] } = {
     397654099, // Wastelander Vest
     402937789, // Shadow Specter
     406995961, // Stagnatious Rebuke
-    411014648, // Solar Reserves
+    407150810, // Ribbontail
+    407150811, // Ribbontail
+    411014648, // Solar Ammo Generation
     417821705, // Primal Siege Type 1
     418611312, // Shadow Specter
     420937712, // War Mantis Cloak
@@ -171,17 +173,17 @@ const missingSources: { [key: string]: number[] } = {
     1048498953, // Bond of the Raven Shard
     1070180272, // Hardcase Helm
     1086997255, // Solar Siphon
-    1103878128, // Harmonic Reserves
+    1103878128, // Harmonic Ammo Generation
     1118428792, // Unflinching Stasis Aim
     1118437892, // War Mantis
-    1124184622, // Minor Recovery Mod
+    1124184622, // Minor Class Mod
     1139671158, // Melee Kickstart
     1153260021, // Impact Induction
     1169595348, // Mythos Hack 4.1
     1176372075, // Stasis Resistance
     1208761894, // Empowered Finish
     1210012576, // Void Siphon
-    1255614814, // Font of Focus
+    1255614814, // Grenade Font
     1256569366, // Raven Shard
     1279721672, // Fortress Field
     1300106409, // Prophet Snow
@@ -205,6 +207,7 @@ const missingSources: { [key: string]: number[] } = {
     1501094193, // Strand Weapon Surge
     1503713660, // Stagnatious Rebuke
     1512570524, // Hardcase Stompers
+    1537074069, // Phoenix Cradle
     1556652797, // The Outlander's Grip
     1561736585, // Kinetic Dexterity
     1578478684, // Refugee Gloves
@@ -216,14 +219,14 @@ const missingSources: { [key: string]: number[] } = {
     1630079134, // Bond of Forgotten Wars
     1658512403, // Mythos Hack 4.1
     1665016007, // Primal Siege Type 1
-    1672155562, // Font of Restoration
+    1672155562, // Class Font
     1691784182, // Mythos Hack 4.1
     1701236611, // The Outlander's Heart
     1702273159, // Harmonic Loader
     1709236482, // Heavy Handed
     1715842350, // Generalist Shell
     1736993473, // Legion-Bane
-    1763607626, // Strength Mod
+    1763607626, // Melee Mod
     1775818231, // Legion-Bane
     1783952505, // Time Dilation
     1784774885, // Vector Home
@@ -231,10 +234,10 @@ const missingSources: { [key: string]: number[] } = {
     1824298413, // War Mantis
     1848999098, // Bond of Symmetry
     1862164825, // War Mantis Cloak
-    1866564759, // Intellect Mod
+    1866564759, // Super Mod
     1872887954, // Atonement Tau
     1891463783, // Harmonic Targeting
-    1901221009, // Font of Agility
+    1901221009, // Weapons Font
     1912568536, // Primal Siege Type 1
     1915498345, // Cloak of Retelling
     1924584408, // Grenade Kickstart
@@ -243,11 +246,12 @@ const missingSources: { [key: string]: number[] } = {
     1981225397, // Shadow Specter
     1988790493, // Stagnatious Rebuke
     1992338980, // The Outlander's Cover
+    1996008488, // Stormdancer's Brace
     2002682954, // Vector Home
     2031584061, // Momentum Transfer
     2049820819, // Vector Home
     2065578431, // Shadow Specter
-    2113881316, // Minor Resilience Mod
+    2113881316, // Minor Health Mod
     2136310244, // Ashes to Assets
     2148305277, // Raven Shard
     2151724216, // Prophet Snow
@@ -256,6 +260,7 @@ const missingSources: { [key: string]: number[] } = {
     2165661157, // Baseline Mark
     2183384906, // War Mantis
     2190967049, // Prophet Snow
+    2203146422, // Assassin's Cowl
     2211544324, // The Outlander's Cloak
     2214424583, // Kinetic Targeting
     2230522771, // War Mantis
@@ -265,8 +270,8 @@ const missingSources: { [key: string]: number[] } = {
     2253044470, // Legion-Bane
     2267311547, // Stasis Dexterity
     2283894334, // Solar Weapon Surge
-    2303417969, // Strand Reserves
-    2305736470, // Kinetic Reserves
+    2303417969, // Strand Ammo Generation
+    2305736470, // Kinetic Ammo Generation
     2317046938, // Shadow Specter
     2318667184, // Kinetic Weapon Surge
     2325151798, // Unflinching Kinetic Aim
@@ -275,7 +280,7 @@ const missingSources: { [key: string]: number[] } = {
     2343139242, // Bond of Refuge
     2362809459, // Hardcase Stompers
     2363903643, // Makeshift Suit
-    2413278875, // Void Reserves
+    2413278875, // Void Ammo Generation
     2426340790, // Dreamer's Mark
     2436471653, // Arc Scavenger
     2441435355, // Prophet Snow
@@ -283,14 +288,14 @@ const missingSources: { [key: string]: number[] } = {
     2466525328, // RPC Valiant
     2476964124, // War Mantis
     2479297167, // Harmonic Dexterity
-    2493161484, // Recovery Mod
+    2493161484, // Class Mod
     2504771764, // Refugee Helm
-    2519597513, // Minor Intellect Mod
+    2519597513, // Minor Super Mod
     2526922422, // Stasis Weapon Surge
     2541019576, // Mark of Confrontation
     2562645296, // Melee Damage Resistance
     2567295299, // Cosmic Wind III
-    2568808786, // Resilience Mod
+    2568808786, // Health Mod
     2574857320, // Sly Cloak
     2583547635, // Cry Defiance
     2626766308, // Mark of the Longest Line
@@ -301,7 +306,9 @@ const missingSources: { [key: string]: number[] } = {
     2739875972, // RPC Valiant
     2742930797, // Fatum Praevaricator
     2745108287, // War Mantis
-    2771425787, // Font of Vigor
+    2765451290, // Synanceia
+    2765451291, // Synanceia
+    2771425787, // Melee Font
     2788997987, // Void Resistance
     2794359402, // Arc Dexterity
     2801811288, // Stasis Holster
@@ -319,6 +326,8 @@ const missingSources: { [key: string]: number[] } = {
     2871824910, // Mythos Hack 4.1
     2880545163, // Black Shield Mark
     2886651369, // Renegade Plate
+    2888021252, // Trachinus
+    2888021253, // Trachinus
     2888195476, // Void Targeting
     2893448006, // Farseeker's March
     2930768301, // Wastelander Wraps
@@ -336,7 +345,7 @@ const missingSources: { [key: string]: number[] } = {
     3046678542, // Arc Loader
     3047946307, // Shield Break Charge
     3061532064, // Farseeker's Intuition
-    3075302157, // Font of Endurance
+    3075302157, // Health Font
     3080409700, // Bond of Forgotten Wars
     3102366928, // Atonement Tau
     3121104079, // Rite of Refusal
@@ -358,7 +367,7 @@ const missingSources: { [key: string]: number[] } = {
     3264653916, // Mythos Hack 4.1
     3276278122, // Kinetic Holster
     3279257734, // Strand Siphon
-    3294892432, // Stasis Reserves
+    3294892432, // Stasis Ammo Generation
     3302420523, // Hardcase Brawlers
     3309120116, // Shadow Specter
     3310450277, // Scavenger Suit
@@ -373,7 +382,7 @@ const missingSources: { [key: string]: number[] } = {
     3438103366, // Black Shield Mark
     3456147612, // RPC Valiant
     3456250548, // Stasis Resistance
-    3461249873, // Font of Wisdom
+    3461249873, // Super Font
     3465323600, // Legion-Bane
     3468148580, // Aspirant Robes
     3483602905, // Mark of Inquisition
@@ -404,7 +413,9 @@ const missingSources: { [key: string]: number[] } = {
     3790903614, // Mechanik 2.1
     3791691774, // Orbs of Restoration
     3798468567, // Arc Holster
-    3808902618, // Mobility Mod
+    3804242792, // Phoneutria Fera
+    3804242793, // Phoneutria Fera
+    3808902618, // Weapons Mod
     3812037372, // Aspirant Gloves
     3846931924, // Solar Resistance
     3847471926, // Arc Siphon
@@ -413,7 +424,7 @@ const missingSources: { [key: string]: number[] } = {
     3880804895, // The Outlander's Steps
     3885104741, // Hardcase Battleplate
     3887037435, // Unflinching Void Aim
-    3896141096, // Discipline Mod
+    3896141096, // Grenade Mod
     3904524734, // The Outlander's Cover
     3914973263, // Void Weapon Surge
     3922069396, // The Outlander's Heart
@@ -444,7 +455,7 @@ const missingSources: { [key: string]: number[] } = {
     4267244538, // Distribution
     4267370571, // Chiron's Cure
     4281850920, // Farseeker's Reach
-    4283953067, // Arc Reserves
+    4283953067, // Arc Ammo Generation
     4288395850, // Cloak of Retelling
   ],
   cos: [
@@ -882,6 +893,16 @@ const missingSources: { [key: string]: number[] } = {
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
   ],
+  edgeoffate: [
+    407150810, // Ribbontail
+    407150811, // Ribbontail
+    2765451290, // Synanceia
+    2765451291, // Synanceia
+    2888021252, // Trachinus
+    2888021253, // Trachinus
+    3804242792, // Phoneutria Fera
+    3804242793, // Phoneutria Fera
+  ],
   edz: [
     10307688, // Wildwood Plate
     11686458, // Orobas Vectura Cloak
@@ -964,6 +985,7 @@ const missingSources: { [key: string]: number[] } = {
     540653483, // Solstice Vest (Scorched)
     574167778, // Solstice Gauntlets (Drained)
     574790717, // Solstice Gloves (Drained)
+    591672323, // Fortunate Star
     601948197, // Zephyr
     627596132, // Solstice Hood (Drained)
     677939288, // Solstice Helm (Scorched)
@@ -1048,6 +1070,7 @@ const missingSources: { [key: string]: number[] } = {
     2877046370, // Solstice Strides (Majestic)
     2924095235, // Solstice Bond (Rekindled)
     2940416351, // Solstice Boots (Drained)
+    2965080304, // Yeartide Apex
     2978747767, // Solstice Vest (Rekindled)
     2994721336, // Solstice Boots (Scorched)
     3015197581, // Solstice Gauntlets (Rekindled)
@@ -1076,6 +1099,7 @@ const missingSources: { [key: string]: number[] } = {
     3965417933, // Inaugural Revelry Vest
     3968560442, // Solstice Bond (Drained)
     3970040886, // Sublime Bond
+    3977654524, // Festival Flight
     3987442049, // Solstice Mark (Majestic)
     4075522049, // Inaugural Revelry Bond
     4100029812, // Solstice Strides (Renewed)
@@ -1085,6 +1109,7 @@ const missingSources: { [key: string]: number[] } = {
     4272367383, // Solstice Strides (Scorched)
   ],
   eververse: [
+    80338527, // Flutter By
     138961800, // Helm of Optimacy
     163660481, // Bond of Optimacy
     167651268, // Crimson Passion
@@ -1358,23 +1383,17 @@ const missingSources: { [key: string]: number[] } = {
   ],
   garden: [
     11974904, // Greaves of Ascendancy
-    147444292, // Omniscient Eye
     281660259, // Temptation's Mark
     519078295, // Helm of Righteousness
     557676195, // Cowl of Righteousness
-    963574173, // Ancient Gospel
     1653741426, // Grips of Exaltation
-    1992309064, // Reckless Oracle
     2015894615, // Gloves of Exaltation
     2054979724, // Strides of Ascendancy
-    2145441168, // Prophet of Doom
-    2241507890, // Sacred Provenance
     2320830625, // Robes of Transcendence
-    2720651699, // Zealot's Reward
     3001934726, // Mask of Righteousness
     3103335676, // Temptation's Bond
+    3388655311, // Tyranny of Heaven
     3549177695, // Cloak of Temptation
-    3621336854, // Accrued Redemption
     3824429433, // Boots of Ascendancy
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
@@ -1382,23 +1401,17 @@ const missingSources: { [key: string]: number[] } = {
   ],
   gardenofsalvation: [
     11974904, // Greaves of Ascendancy
-    147444292, // Omniscient Eye
     281660259, // Temptation's Mark
     519078295, // Helm of Righteousness
     557676195, // Cowl of Righteousness
-    963574173, // Ancient Gospel
     1653741426, // Grips of Exaltation
-    1992309064, // Reckless Oracle
     2015894615, // Gloves of Exaltation
     2054979724, // Strides of Ascendancy
-    2145441168, // Prophet of Doom
-    2241507890, // Sacred Provenance
     2320830625, // Robes of Transcendence
-    2720651699, // Zealot's Reward
     3001934726, // Mask of Righteousness
     3103335676, // Temptation's Bond
+    3388655311, // Tyranny of Heaven
     3549177695, // Cloak of Temptation
-    3621336854, // Accrued Redemption
     3824429433, // Boots of Ascendancy
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
@@ -1424,23 +1437,17 @@ const missingSources: { [key: string]: number[] } = {
   ],
   gos: [
     11974904, // Greaves of Ascendancy
-    147444292, // Omniscient Eye
     281660259, // Temptation's Mark
     519078295, // Helm of Righteousness
     557676195, // Cowl of Righteousness
-    963574173, // Ancient Gospel
     1653741426, // Grips of Exaltation
-    1992309064, // Reckless Oracle
     2015894615, // Gloves of Exaltation
     2054979724, // Strides of Ascendancy
-    2145441168, // Prophet of Doom
-    2241507890, // Sacred Provenance
     2320830625, // Robes of Transcendence
-    2720651699, // Zealot's Reward
     3001934726, // Mask of Righteousness
     3103335676, // Temptation's Bond
+    3388655311, // Tyranny of Heaven
     3549177695, // Cloak of Temptation
-    3621336854, // Accrued Redemption
     3824429433, // Boots of Ascendancy
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
@@ -1840,7 +1847,6 @@ const missingSources: { [key: string]: number[] } = {
     3208178411, // Gauntlets of the Great Hunt
     3227674085, // Boots of the Great Hunt
     3251351304, // Hood of the Great Hunt
-    3388655311, // Tyranny of Heaven
     3445296383, // Robes of the Great Hunt
     3445582154, // Hood of the Great Hunt
     3492720019, // Gloves of the Great Hunt
@@ -2191,6 +2197,11 @@ const missingSources: { [key: string]: number[] } = {
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
   ],
+  lostsectors: [
+    322173891, // Mask of Fealty
+    1188437342, // Blastwave Striders
+    4060793397, // Rime-coat Raiment
+  ],
   lw: [
     4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
@@ -2233,7 +2244,6 @@ const missingSources: { [key: string]: number[] } = {
     3208178411, // Gauntlets of the Great Hunt
     3227674085, // Boots of the Great Hunt
     3251351304, // Hood of the Great Hunt
-    3388655311, // Tyranny of Heaven
     3445296383, // Robes of the Great Hunt
     3445582154, // Hood of the Great Hunt
     3492720019, // Gloves of the Great Hunt
@@ -2389,6 +2399,53 @@ const missingSources: { [key: string]: number[] } = {
   psiops: [
     3358687360, // Synaptic Spear
   ],
+  rahool: [
+    50291571, // Speaker's Sight
+    90009855, // Arbor Warden
+    192896783, // Cyrtarachne's Facade
+    300502917, // Nothing Manacles
+    461841403, // Gyrfalcon's Hauberk
+    511888814, // Secant Filaments
+    1001356380, // Star-Eater Scales
+    1322544481, // Hoarfrost-Z
+    1443166262, // Second Chance
+    1453120846, // The Path of Burning Steps
+    1467044898, // Icefall Mantle
+    1619425569, // Mask of Bakris
+    1624882687, // Rain of Fire
+    1627691271, // Gifted Conviction
+    1702288800, // Radiant Dance Machines
+    1703551922, // Blight Ranger
+    1703598057, // Point-Contact Cannon Brace
+    1849149215, // Fallen Sunstar
+    1909305643, // Hazardous Propulsion
+    1935198785, // Omnioculus
+    1955548646, // Mataiodoxía
+    2066430310, // Pyrogale Gauntlets
+    2169905051, // Renewal Grasps
+    2316914168, // Dawn Chorus
+    2321120637, // Cuirass of the Falling Star
+    2374129871, // Cenotaph Mask
+    2390471904, // Speedloader Slacks
+    2415768376, // Athrys's Embrace
+    2463947681, // Swarmers
+    2780717641, // Necrotic Grip
+    3001449507, // Balance of Power
+    3045642045, // Boots of the Assembler
+    3093309525, // Triton Vice
+    3234692237, // Briarbinds
+    3259193988, // Osmiomancy Gloves
+    3267996858, // No Backup Plans
+    3301944824, // Mantle of Battle Harmony
+    3316517958, // Loreley Splendor Helm
+    3453042252, // Caliban's Hand
+    3534173884, // Mothkeeper's Wraps
+    3574051505, // Cadmus Ridge Lancecap
+    3637722482, // Abeyant Leap
+    3717431477, // Wishful Ignorance
+    3831935023, // Ballidorse Wrathweavers
+    3974038291, // Precious Scars
+  ],
   raid: [
     4968701, // Greaves of the Great Hunt
     11974904, // Greaves of Ascendancy
@@ -2401,7 +2458,6 @@ const missingSources: { [key: string]: number[] } = {
     65929376, // Gauntlets of the Great Hunt
     70083888, // Nation of Beasts
     146275556, // Vest of the Great Hunt
-    147444292, // Omniscient Eye
     196235132, // Grips of the Great Hunt
     223783885, // Insigne Shade Bond
     239489770, // Bond of Sekris
@@ -2456,7 +2512,6 @@ const missingSources: { [key: string]: number[] } = {
     874272413, // Shadow's Robes
     917591018, // Grips of the Ace-Defiant
     917591019, // Gloves of the Emperor's Agent
-    963574173, // Ancient Gospel
     972689703, // Vest of the Great Hunt
     974648224, // Shadow's Boots
     1021341893, // Mark of the Great Hunt
@@ -2501,7 +2556,6 @@ const missingSources: { [key: string]: number[] } = {
     1946621757, // Shadow's Grips
     1960303677, // Grips of the Ace-Defiant
     1991039861, // Mask of Nohr
-    1992309064, // Reckless Oracle
     1999427172, // Shadow's Mask
     2013109092, // Helm of the Ace-Defiant
     2015894615, // Gloves of Exaltation
@@ -2511,7 +2565,6 @@ const missingSources: { [key: string]: number[] } = {
     2070062385, // Bond of the Emperor's Minister
     2112541750, // Cloak of the Great Hunt
     2128823667, // Turris Shade Mark
-    2145441168, // Prophet of Doom
     2153222031, // Shadow's Gloves
     2158603584, // Gauntlets of Rull
     2158603585, // Gauntlets of the Emperor's Champion
@@ -2519,7 +2572,6 @@ const missingSources: { [key: string]: number[] } = {
     2193494688, // Boots of the Fulminator
     2194479195, // Penumbral Bond
     2232730708, // Vest of the Emperor's Agent
-    2241507890, // Sacred Provenance
     2274520361, // Helm of the Great Hunt
     2280287728, // Bond of the Great Hunt
     2320830625, // Robes of Transcendence
@@ -2528,7 +2580,6 @@ const missingSources: { [key: string]: number[] } = {
     2369496221, // Plate of Nohr
     2480074702, // Forbearance
     2513313400, // Insigne Shade Gloves
-    2527555418, // Spoils of Conquest
     2530113265, // Bulletsmith's Ire Plate
     2537874394, // Boots of Sekris
     2550116544, // Robes of the Great Hunt
@@ -2541,7 +2592,6 @@ const missingSources: { [key: string]: number[] } = {
     2676042150, // Wraps of the Fulminator
     2700598111, // Mask of the Fulminator
     2710517999, // Equitis Shade Grips
-    2720651699, // Zealot's Reward
     2722103686, // Equitis Shade Boots
     2758465168, // Greaves of the Emperor's Champion
     2762445138, // Gunsmith's Devotion Gloves
@@ -2599,7 +2649,6 @@ const missingSources: { [key: string]: number[] } = {
     3591141932, // Techeun Force
     3592548938, // Robes of the Fulminator
     3614211816, // Plate of the Great Hunt
-    3621336854, // Accrued Redemption
     3711700026, // Mask of the Emperor's Agent
     3711700027, // Helm of the Ace-Defiant
     3719175804, // Equitis Shade Grips
@@ -2669,7 +2718,6 @@ const missingSources: { [key: string]: number[] } = {
     2730671571, // Terminus Horizon
     2764074355, // A Sudden Death (Adept)
     3185151619, // New Pacific Epitaph (Adept)
-    3329218848, // Judgment (Adept)
     3421639790, // Liminal Vigil (Adept)
     3598944128, // Foretold
     3598944129, // Seer
@@ -2694,7 +2742,6 @@ const missingSources: { [key: string]: number[] } = {
     2730671571, // Terminus Horizon
     2764074355, // A Sudden Death (Adept)
     3185151619, // New Pacific Epitaph (Adept)
-    3329218848, // Judgment (Adept)
     3421639790, // Liminal Vigil (Adept)
     3598944128, // Foretold
     3598944129, // Seer
@@ -3237,7 +3284,6 @@ const missingSources: { [key: string]: number[] } = {
     3149072083, // Bond Relentless
     3365406121, // Mark of the Exile
     3426704397, // Annihilating Greaves
-    3624844116, // Unwavering Duty
     3682803680, // Shayura's Wrath
     3920882229, // Exalted Truth (Adept)
     3921970316, // Gauntlets of the Exile

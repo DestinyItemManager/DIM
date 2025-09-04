@@ -5,7 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
-import { count } from 'app/utils/collections';
+import { count, sumBy } from 'app/utils/collections';
 import { stubFalse, stubTrue } from 'app/utils/functions';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -14,14 +14,20 @@ import { elementalChargeModHash, stacksOnStacksModHash } from 'testing/test-item
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { FilterInfo, filterItems } from './item-filter';
 import {
+  ArmorBucketHash,
+  ArmorBucketHashes,
   ArmorEnergyRules,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
   LOCKED_EXOTIC_NO_EXOTIC,
-  LockableBucketHash,
-  LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
+
+function expectItemCount(filterInfo: FilterInfo, expectedCount: number) {
+  expect(
+    sumBy(Object.values(filterInfo.perBucketStats), (s) => s.finalValid + s.removedStrictlyWorse),
+  ).toBe(expectedCount);
+}
 
 describe('loadout-builder item-filter', () => {
   let defs: D2ManifestDefinitions;
@@ -67,13 +73,14 @@ describe('loadout-builder item-filter', () => {
 
   function noPinInvariants(filteredItems: ItemsByBucket, filterInfo: FilterInfo) {
     let numItems = 0;
-    for (const bucketHash of LockableBucketHashes) {
+    for (const bucketHash of ArmorBucketHashes) {
       const originalItems = items.filter((i) => i.bucket.hash === bucketHash);
       const originalNum = originalItems.length;
       const filteredNum = filteredItems[bucketHash].length;
       const removedNum =
         filterInfo.perBucketStats[bucketHash].cantFitMods +
-        filterInfo.perBucketStats[bucketHash].removedBySearchFilter;
+        filterInfo.perBucketStats[bucketHash].removedBySearchFilter +
+        filterInfo.perBucketStats[bucketHash].removedStrictlyWorse;
       const numConsidered = filterInfo.perBucketStats[bucketHash].totalConsidered;
 
       expect(numConsidered).toBe(originalNum);
@@ -84,11 +91,12 @@ describe('loadout-builder item-filter', () => {
   }
 
   function pinInvariants(filteredItems: ItemsByBucket, filterInfo: FilterInfo) {
-    for (const bucketHash of LockableBucketHashes) {
+    for (const bucketHash of ArmorBucketHashes) {
       const filteredNum = filteredItems[bucketHash].length;
       const removedNum =
         filterInfo.perBucketStats[bucketHash].cantFitMods +
-        filterInfo.perBucketStats[bucketHash].removedBySearchFilter;
+        filterInfo.perBucketStats[bucketHash].removedBySearchFilter +
+        filterInfo.perBucketStats[bucketHash].removedStrictlyWorse;
       const numConsidered = filterInfo.perBucketStats[bucketHash].totalConsidered;
 
       expect(numConsidered - removedNum).toBe(filteredNum);
@@ -96,7 +104,7 @@ describe('loadout-builder item-filter', () => {
   }
 
   it('filters nothing out when no filters specified', () => {
-    const [filteredItems] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -104,7 +112,7 @@ describe('loadout-builder item-filter', () => {
       unassignedMods: noMods.unassignedMods,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
   });
 
   it('filters out items with insufficient energy capacity', () => {
@@ -137,7 +145,7 @@ describe('loadout-builder item-filter', () => {
         armorEnergyRules: rules,
       });
       noPinInvariants(filteredItems, filterInfo);
-      for (const bucketHash of LockableBucketHashes) {
+      for (const bucketHash of ArmorBucketHashes) {
         const removedNum = filterInfo.perBucketStats[bucketHash].cantFitMods;
 
         if (bucketHash === BucketHashes.LegArmor) {
@@ -156,7 +164,7 @@ describe('loadout-builder item-filter', () => {
   });
 
   it('filters nothing out when any exotic', () => {
-    const [filteredItems] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -165,7 +173,7 @@ describe('loadout-builder item-filter', () => {
       lockedExoticHash: LOCKED_EXOTIC_ANY_EXOTIC,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
   });
 
   it('removes exotics when no exotic', () => {
@@ -184,7 +192,7 @@ describe('loadout-builder item-filter', () => {
   });
 
   it('filters nothing out when infeasible filter', () => {
-    const [filteredItems, filterInfo] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -193,12 +201,12 @@ describe('loadout-builder item-filter', () => {
       searchFilter: stubFalse,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
     expect(filterInfo.searchQueryEffective).toBe(false);
   });
 
   it('ignores filter for certain slots', () => {
-    const [filteredItems, filterInfo] = filterItems({
+    const [_filteredItems, filterInfo] = filterItems({
       ...defaultArgs,
       defs,
       items,
@@ -207,7 +215,7 @@ describe('loadout-builder item-filter', () => {
       searchFilter: (item) => item.bucket.hash === BucketHashes.Helmet,
     });
 
-    expect(Object.values(filteredItems).flat().length).toBe(items.length);
+    expectItemCount(filterInfo, items.length);
     expect(filterInfo.searchQueryEffective).toBe(false);
   });
 
@@ -245,7 +253,7 @@ describe('loadout-builder item-filter', () => {
     });
 
     pinInvariants(filteredItems, filterInfo);
-    for (const bucketHash of LockableBucketHashes) {
+    for (const bucketHash of ArmorBucketHashes) {
       if (bucketHash === targetExotic.bucket.hash) {
         for (const item of filteredItems[bucketHash]) {
           expect(item.hash).toBe(targetExotic.hash);
@@ -266,7 +274,8 @@ describe('loadout-builder item-filter', () => {
       lockedModMap: noMods.modMap,
       unassignedMods: noMods.unassignedMods,
       lockedExoticHash: LOCKED_EXOTIC_ANY_EXOTIC,
-      searchFilter: (item) => item.tier === 'Legendary' || item.bucket.hash === BucketHashes.Helmet,
+      searchFilter: (item) =>
+        item.rarity === 'Legendary' || item.bucket.hash === BucketHashes.Helmet,
     });
 
     noPinInvariants(filteredItems, filterInfo);
@@ -283,7 +292,7 @@ describe('loadout-builder item-filter', () => {
       lockedModMap: noMods.modMap,
       unassignedMods: noMods.unassignedMods,
       lockedExoticHash: LOCKED_EXOTIC_ANY_EXOTIC,
-      searchFilter: (item) => item.tier === 'Legendary',
+      searchFilter: (item) => item.rarity === 'Legendary',
     });
 
     noPinInvariants(filteredItems, filterInfo);
@@ -322,6 +331,6 @@ describe('loadout-builder item-filter', () => {
     });
 
     pinInvariants(filteredItems, filterInfo);
-    expect(filteredItems[exotic.bucket.hash as LockableBucketHash].length).toBe(0);
+    expect(filteredItems[exotic.bucket.hash as ArmorBucketHash].length).toBe(0);
   });
 });

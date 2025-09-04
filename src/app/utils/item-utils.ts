@@ -11,14 +11,15 @@ import {
 } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
+import { knownModPlugCategoryHashes } from 'app/loadout/known-values';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import {
   ARTIFICE_PERK_HASH,
-  armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
+  tuningModToTunedStathash,
 } from 'app/search/d2-known-values';
-import { damageNamesByEnum, riteOfTheNineShinyWeapons } from 'app/search/search-filter-values';
+import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
@@ -30,8 +31,10 @@ import {
   BucketHashes,
   ItemCategoryHashes,
   PlugCategoryHashes,
+  StatHashes,
 } from 'data/d2/generated-enums';
 import { filterMap, objectifyArray } from './collections';
+import { getArmor3TuningSocket } from './socket-utils';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name
@@ -53,7 +56,6 @@ export const modMetadataByPlugCategoryHash = objectifyArray(
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
 export const modSlotTags = modSocketMetadata.map((m) => m.slotTag);
-export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compatibleModTags))];
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
 const specialtySocketTypeHashes = modSocketMetadata.flatMap(
@@ -112,7 +114,7 @@ export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): strin
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   item.plug !== undefined &&
-  (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
+  (knownModPlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
     specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
 /** accepts a DimMasterwork or lack thereof */
@@ -243,7 +245,11 @@ export function getItemYear(
 ) {
   if (('destinyVersion' in item && item.destinyVersion === 2) || 'displayProperties' in item) {
     const season = getSeason(item, defs);
-    return season ? Math.floor(season / 4) + 1 : 0;
+    if (season < 27) {
+      return season ? Math.floor(season / 4) + 1 : 0;
+    } else {
+      return season ? Math.floor((season - 27) / 2) + 8 : 0;
+    }
   } else if (isD1Item(item)) {
     if (!item.sourceHashes) {
       return 1;
@@ -318,6 +324,20 @@ export function isArtificeSocket(socket: DimSocket) {
 }
 
 /**
+ * Does this armor have the new-style armor masterwork in Edge of Fate, that grants +1 per MW tier, to the three lower stats?
+ */
+// TODO: May want to switch this to isLegacyArmorMasterwork eventually
+export function isArmor3(item: DimItem) {
+  return Boolean(item.sockets?.allSockets.some(isArmor3MasterworkSocket));
+}
+
+export function isArmor3MasterworkSocket(socket: DimSocket) {
+  return (
+    socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks
+  );
+}
+
+/**
  * Are two Destiny classes compatible? e.g. can an item (firstClass) be equipped
  * by a character (secondClass)? True if they're the same class or one is the
  * wildcard class.
@@ -337,19 +357,6 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
  */
 export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
   return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
-}
-
-/** "shiny" items, special-edition items from Into The Light, with a unique ornament and extra perks */
-export function braveShiny(item: DimItem) {
-  return item.sockets?.allSockets.some(
-    (s) =>
-      s.plugOptions.some((s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared'), //
-  );
-}
-
-/** Rite of the Nine "shiny" weapons with a unique appearance the the diagonal stripes */
-export function riteShiny(item: DimItem) {
-  return riteOfTheNineShinyWeapons.has(item.hash);
 }
 
 const ichToBreakerType = Object.entries(artifactBreakerMods).reduce<
@@ -387,6 +394,14 @@ export function itemTypeName(item: DimItem) {
       item.bucket.hash !== D1BucketHashes.Artifact &&
       item.bucket.hash !== BucketHashes.Subclass &&
       !item.classified &&
+      !(
+        item.isExotic &&
+        [
+          ItemCategoryHashes.ArmorModsOrnamentsWarlock,
+          ItemCategoryHashes.ArmorModsOrnamentsHunter,
+          ItemCategoryHashes.ArmorModsOrnamentsTitan,
+        ].some((h) => item.itemCategoryHashes.includes(h))
+      ) &&
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
     '';
 
@@ -403,4 +418,37 @@ export function itemTypeName(item: DimItem) {
   }
 
   return title;
+}
+
+/**
+ * Returns [primary stat hash, secondary stat hash, tertiary stat hash] for armor 3.0.
+ * Make sure the item is armor 3.0 upstream or these stat rankings might be misleading.
+ */
+export function getArmor3StatFocus(item: DimItem): StatHashes[] {
+  return (item.stats?.filter((s) => s.statHash > 0 && s.base > 0) ?? [])
+    .sort((a, b) => b.base - a.base)
+    .map((s) => s.statHash);
+}
+
+/**
+ * Returns the stat hash of the item's tunable stat.
+ * This stat can be upgraded at the cost of another stat.
+ *
+ * Every armor with tuning has Balanced Tuning (3122197216) which provides +1 to several stats,
+ * so this seeks an available plug item that's one of the +5/-5 mods.
+ */
+export function getArmor3TuningStat(item: DimItem): number | undefined {
+  const reusablePlugItems = item.bucket.inArmor
+    ? getArmor3TuningSocket(item)?.reusablePlugItems
+    : undefined;
+  if (!reusablePlugItems?.length) {
+    return;
+  }
+
+  for (const { plugItemHash } of reusablePlugItems) {
+    if (plugItemHash in tuningModToTunedStathash) {
+      return tuningModToTunedStathash[plugItemHash];
+    }
+  }
+  return undefined;
 }

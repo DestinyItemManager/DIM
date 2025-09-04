@@ -10,6 +10,7 @@ export interface SearchAction {
   action: 'search';
   query: string;
   page: string;
+  append?: boolean;
   pullItems?: boolean;
   sendToVault?: boolean;
 }
@@ -99,12 +100,7 @@ interface VaultArgs {
 }
 
 interface MetricsArgs {
-  gambit: number;
-  vanguard: number;
-  crucible: number;
-  trials: number;
   gunsmith: number;
-  ironBanner: number;
   triumphs: number;
   triumphsActive: number;
   battlePass: number;
@@ -138,7 +134,11 @@ interface SendStateArgs {
     maxPower?: MaxPowerArgs;
     equippedItems?: string[];
     metrics?: MetricsArgs;
+    /**
+     * @deprecated replaced by`inventory`.
+     */
     vault?: VaultArgs;
+    inventory?: Record<string, number>;
   };
 }
 
@@ -162,6 +162,7 @@ interface SendPickerItemsArgs {
     items: {
       item: string;
       icon: string;
+      tier?: number;
       overlay?: string;
       isExotic?: boolean;
       element?: string;

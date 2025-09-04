@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
 import { invert } from './collections';
 import { compareBy } from './comparators';
+import { isArmorArchetypePlug } from './socket-utils';
 import { LookupTable } from './util-types';
 
 export interface DimPlugPerkDescription {
@@ -115,7 +116,15 @@ export function usePlugDescriptions(
   // if we don't have a community description, fall back to the Bungie description (if we aren't already
   // displaying it)
   if (showBungieDescription || (showCommunityDescriptionOnly && !result.communityInsight)) {
-    result.perks.push(...perks);
+    result.perks.push(
+      ...perks.map((p) => {
+        if (isArmorArchetypePlug(plug)) {
+          // Remove the unnecesary prose in Armor 3.0 Archetype descriptions
+          return { ...p, description: p.description?.split('\n\n')[1] || p.description };
+        }
+        return p;
+      }),
+    );
   }
 
   return result;
@@ -290,12 +299,13 @@ function getPerkDescriptions(
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
   classType: DestinyClass | undefined,
+  item: DimItem | undefined,
 ) {
   return mapAndFilterInvestmentStats(plugDef)
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isPlugStatActive(stat.activationRule, undefined, classType)),
+        isPlugStatActive(stat.activationRule, { classType, item, statHash: stat.statTypeHash }),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,

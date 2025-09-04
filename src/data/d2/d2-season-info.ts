@@ -158,8 +158,8 @@ export const D2SeasonInfo: Record<
   },
   11: {
     DLCName: '',
-    seasonName: 'Season of the Arrival',
-    seasonTag: 'arrival',
+    seasonName: 'Season of Arrivals',
+    seasonTag: 'arrivals',
     season: 11,
     maxLevel: 50,
     powerFloor: 750,
@@ -383,6 +383,21 @@ export const D2SeasonInfo: Record<
     numWeeks: 23,
     episode: 3,
   },
+  27: {
+    DLCName: 'Edge of Fate',
+    seasonName: 'Reclamation',
+    seasonTag: 'reclamation',
+    season: 27,
+    maxLevel: 50,
+    powerFloor: 10,
+    softCap: 200,
+    powerfulCap: 400,
+    pinnacleCap: 450,
+    releaseDate: '2025-07-15',
+    resetTime: '17:00:00Z',
+    numWeeks: 20,
+  },
 };
 
-export const D2CalculatedSeason = 26;
+export const D2CalculatedSeason = 27;
+export const D2SeasonPassActiveList = 0;

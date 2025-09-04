@@ -1,6 +1,8 @@
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getCompareColor, percent } from 'app/shell/formatters';
+import { AppIcon, tuningStatIcon } from 'app/shell/icons';
+import { getArmor3TuningStat } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
@@ -25,6 +27,7 @@ export default function CompareStat({
       item.masterworkInfo?.stats?.some((s) => s.isPrimary && s.hash === stat.statHash),
   );
   const color = getCompareColor(statRange(stat, min, max, value));
+  const tunedStatHash = getArmor3TuningStat(item);
 
   return (
     <div className={styles.stat} style={{ color }}>
@@ -35,9 +38,12 @@ export default function CompareStat({
           [styles.noMinWidth]: !stat || stat.statHash === StatHashes.AnyEnergyTypeCost,
         })}
       />
-      {value !== 0 && stat?.bar && item.bucket.sort === 'Armor' && (
+      {stat?.bar && item.bucket.sort === 'Armor' && (
         <span className={styles.bar}>
-          <span style={{ width: percent(value / stat.maximumValue) }} />
+          {Boolean(tunedStatHash && tunedStatHash === stat?.statHash) && (
+            <AppIcon icon={tuningStatIcon} className={styles.tunedStatIcon} />
+          )}
+          <span style={{ width: percent(Math.max(0, value) / stat.maximumValue) }} />
         </span>
       )}
       {stat?.statHash === StatHashes.RecoilDirection && <RecoilStat value={value} />}

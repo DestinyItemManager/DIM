@@ -6,7 +6,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { UserInfoCard } from 'bungie-api-ts/user';
 import d1Profile from 'testing/data/d1profiles-2022-10-24.json';
-import linkedAccounts from 'testing/data/linkedaccounts-2022-10-23.json';
+import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json';
 import { generatePlatforms } from './destiny-account';
 
 jest.mock('app/bungie-api/oauth-tokens', () => ({

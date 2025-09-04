@@ -1,4 +1,5 @@
 import BungieImage from 'app/dim-ui/BungieImage';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getSeasonalBreakerTypeHash } from 'app/utils/item-utils';
@@ -22,6 +23,15 @@ export default function BreakerType({ item }: { item: DimItem }) {
       <BungieImage
         className={clsx(styles.breakerIcon, breakerClass)}
         src={breakerType.displayProperties.icon}
+        title={
+          breakerClass === styles.artifactBreaker
+            ? t('MovePopup.ArtifactBreaker', {
+                breaker: breakerType.displayProperties.name,
+              })
+            : t('MovePopup.IntrinsicBreaker', {
+                breaker: breakerType.displayProperties.name,
+              })
+        }
       />
     )
   );

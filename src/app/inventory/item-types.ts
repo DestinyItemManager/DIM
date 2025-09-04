@@ -1,11 +1,12 @@
 import type { DestinyVersion } from '@destinyitemmanager/dim-api-types';
-import type { ItemTierName } from 'app/search/d2-known-values';
+import type { ItemRarityName } from 'app/search/d2-known-values';
 import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
+  DestinyEquipableItemSetDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemInvestmentStatDefinition,
@@ -20,7 +21,7 @@ import {
   DestinySocketCategoryDefinition,
   DestinyStat,
 } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import { InventoryBucket } from './inventory-buckets';
 
 /**
@@ -57,8 +58,14 @@ export interface DimItem {
   bucket: InventoryBucket;
   /** Hashes of DestinyItemCategoryDefinitions this item belongs to */
   itemCategoryHashes: ItemCategoryHashes[];
-  /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). */
-  tier: ItemTierName;
+  /**
+   * There's also traitHashes which fills a similar role of tagging some aspect
+   * of an item, but is not as hierarchical as itemCategoryHashes. This seems to
+   * be favored over itemCategoryHashes in newer content.
+   */
+  traitHashes?: TraitHashes[];
+  /** A readable English name for the rarity of the item (e.g. "Exotic", "Rare"). Do not use this for display! */
+  rarity: ItemRarityName;
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** If this came from a vendor (instead of character inventory), this houses enough information to re-identify the item. */
@@ -228,6 +235,20 @@ export interface DimItem {
   foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
+  /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
+  featured: boolean;
+  /**
+   * In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which
+   * provides increasing benefits. Pre-tiered items and all D1 items will have
+   * tier 0.
+   */
+  tier: number;
+  /** In D2 since Edge of Fate, items can have a set bonus with other items */
+  setBonus?: DestinyEquipableItemSetDefinition;
+  /** Is this an adept weapon? (D2 only) */
+  adept: boolean;
+  /** Is this a holofoil (shiny) weapon? (D2 only) */
+  holofoil: boolean;
 }
 
 /**
@@ -295,6 +316,11 @@ export interface DimStat {
   value: number;
   /** Base stat without bonus perks applied. Important in D2 for armor. */
   base: number;
+  /**
+   * Base stat if it were masterworked. This allows useful comparison between eras of armor.
+   * TODO: Get this right for weapons and un-optional it.
+   */
+  baseMasterworked?: number;
   /** The maximum value this stat can have. */
   maximumValue: number;
   /** Should this be displayed as a bar or just a number? */
@@ -407,6 +433,14 @@ export type PlugStatActivationRule =
   | {
       /** Only active if the weapon is crafted and either adept or at level 20 */
       rule: 'enhancedIntrinsic';
+    }
+  | {
+      /** New Armor 3.0 archetypes grant stats only to secondary stats when masterworked. */
+      rule: 'archetypeArmorMasterwork';
+    }
+  | {
+      /** Masterworked tier > 0 weapons get +tier to every stat */
+      rule: 'tieredWeaponMW';
     };
 
 /**

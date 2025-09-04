@@ -142,7 +142,7 @@ describe('validateQuery', () => {
     ['season:worthy', true],
     ['season:<=worthy', true],
     ['season:=worthy', true],
-    ['season:>=arrival', true],
+    ['season:>=arrivals', true],
     ['season:222', true],
     ['season:=10', true],
     ['season:>2.5', true],
@@ -151,7 +151,7 @@ describe('validateQuery', () => {
     // DIM used to parse this as `season:11` because `redwar` is `1`...
     ['season:1redwar', false],
     ['season:season', false],
-    ['season:arrivals', false],
+    ['season:arrival', false],
     ['season:arrivalworthy', false],
   ];
 

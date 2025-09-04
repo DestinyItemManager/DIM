@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`generateSuggestionsForFilter full suggestions for filter format 'freeform', keyword 'a' with suggestions [ 'b', 'c' ], overload undefined 1`] = `
 [
@@ -14,18 +14,15 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [
-  'mobility',
-  'resilience',
-  'recovery',
-  'discipline',
-  'intellect',
-  'strength',
-  'total',
-  'any'
-], overload undefined 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [\\n  'weapons',   'health',\\n  'class',     'grenade',\\n  'super',     'melee',\\n  'mobility',  'resilience',\\n  'recovery',  'discipline',\\n  'intellect', 'strength',\\n  'total',     'any'\\n], overload undefined 1`] = `
 [
   "maxstatvalue:",
+  "maxstatvalue:weapons",
+  "maxstatvalue:health",
+  "maxstatvalue:class",
+  "maxstatvalue:grenade",
+  "maxstatvalue:super",
+  "maxstatvalue:melee",
   "maxstatvalue:mobility",
   "maxstatvalue:resilience",
   "maxstatvalue:recovery",
@@ -37,18 +34,15 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'query'
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [
-  'mobility',
-  'resilience',
-  'recovery',
-  'discipline',
-  'intellect',
-  'strength',
-  'total',
-  'any'
-], overload undefined 2`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'query', keyword 'maxstatvalue' with suggestions [\\n  'weapons',   'health',\\n  'class',     'grenade',\\n  'super',     'melee',\\n  'mobility',  'resilience',\\n  'recovery',  'discipline',\\n  'intellect', 'strength',\\n  'total',     'any'\\n], overload undefined 2`] = `
 [
   "maxstatvalue:",
+  "maxstatvalue:weapons",
+  "maxstatvalue:health",
+  "maxstatvalue:class",
+  "maxstatvalue:grenade",
+  "maxstatvalue:super",
+  "maxstatvalue:melee",
   "maxstatvalue:mobility",
   "maxstatvalue:resilience",
   "maxstatvalue:recovery",
@@ -116,25 +110,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [
-  'rpm',             'rof',
-  'charge',          'impact',
-  'handling',        'range',
-  'stability',       'reload',
-  'magazine',        'aimassist',
-  'equipspeed',      'shieldduration',
-  'velocity',        'blastradius',
-  'recoildirection', 'drawtime',
-  'zoom',            'airborne',
-  'accuracy',        'swingspeed',
-  'guardefficiency', 'guardresistance',
-  'chargerate',      'guardendurance',
-  'ammocapacity',    'mobility',
-  'resilience',      'recovery',
-  'discipline',      'intellect',
-  'strength',        'total',
-  'any'
-], overload undefined 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',        'rof',             'charge',\\n  'impact',     'handling',        'range',\\n  'stability',  'reload',          'magazine',\\n  'aimassist',  'equipspeed',      'shieldduration',\\n  'velocity',   'blastradius',     'recoildirection',\\n  'drawtime',   'zoom',            'airborne',\\n  'accuracy',   'ammogen',         'persistence',\\n  'swingspeed', 'guardefficiency', 'guardresistance',\\n  'chargerate', 'guardendurance',  'ammocapacity',\\n  'weapons',    'health',          'class',\\n  'grenade',    'super',           'melee',\\n  'mobility',   'resilience',      'recovery',\\n  'discipline', 'intellect',       'strength',\\n  'total',      'any'\\n], overload undefined 1`] = `
 [
   "stat:",
   "stat:rpm:",
@@ -232,6 +208,16 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   "stat:accuracy:>",
   "stat:accuracy:<=",
   "stat:accuracy:>=",
+  "stat:ammogen:",
+  "stat:ammogen:<",
+  "stat:ammogen:>",
+  "stat:ammogen:<=",
+  "stat:ammogen:>=",
+  "stat:persistence:",
+  "stat:persistence:<",
+  "stat:persistence:>",
+  "stat:persistence:<=",
+  "stat:persistence:>=",
   "stat:swingspeed:",
   "stat:swingspeed:<",
   "stat:swingspeed:>",
@@ -262,6 +248,36 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   "stat:ammocapacity:>",
   "stat:ammocapacity:<=",
   "stat:ammocapacity:>=",
+  "stat:weapons:",
+  "stat:weapons:<",
+  "stat:weapons:>",
+  "stat:weapons:<=",
+  "stat:weapons:>=",
+  "stat:health:",
+  "stat:health:<",
+  "stat:health:>",
+  "stat:health:<=",
+  "stat:health:>=",
+  "stat:class:",
+  "stat:class:<",
+  "stat:class:>",
+  "stat:class:<=",
+  "stat:class:>=",
+  "stat:grenade:",
+  "stat:grenade:<",
+  "stat:grenade:>",
+  "stat:grenade:<=",
+  "stat:grenade:>=",
+  "stat:super:",
+  "stat:super:<",
+  "stat:super:>",
+  "stat:super:<=",
+  "stat:super:>=",
+  "stat:melee:",
+  "stat:melee:<",
+  "stat:melee:>",
+  "stat:melee:<=",
+  "stat:melee:>=",
   "stat:mobility:",
   "stat:mobility:<",
   "stat:mobility:>",

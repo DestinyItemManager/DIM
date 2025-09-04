@@ -2,18 +2,14 @@ import { ModsWithConditionalStats } from 'app/search/d2-known-values';
 import { filterMap } from 'app/utils/collections';
 import { infoLog, warnLog } from 'app/utils/log';
 import { weakMemoize } from 'app/utils/memoize';
-import {
-  DestinyClass,
-  DestinyInventoryItemDefinition,
-  DestinyItemInvestmentStatDefinition,
-} from 'bungie-api-ts/destiny2';
-import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
+import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import {
   DimItem,
   DimPlugInvestmentStat,
+  DimStat,
   PlugStatActivationRule,
   PluggableInventoryItemDefinition,
 } from '../item-types';
@@ -24,7 +20,7 @@ import {
  * when the stat is always active.
  */
 function getPlugInvestmentStatActivationRule(
-  itemDef: DestinyInventoryItemDefinition,
+  itemDef: PluggableInventoryItemDefinition,
   stat: DestinyItemInvestmentStatDefinition,
 ): PlugStatActivationRule | undefined {
   // Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
@@ -32,6 +28,21 @@ function getPlugInvestmentStatActivationRule(
   // We'll assume that the item can only be masterworked if its associated catalyst has been completed.
   if (itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)) {
     return { rule: 'masterwork' };
+  }
+
+  // Check if this is a tiered weapon masterwork plug stat. The new-style tiered
+  // weapon masterwork plugs have a single unconditional stat at value 10, and
+  // the rest are at value 0, while the old-style masterwork plugs have a single
+  // unconditional stat at value 10, and the rest are at value 3. The new style
+  // masterwork plugs add +tier to *every* stat, even the masterwork stat.
+  if (
+    itemDef.plug.uiPlugLabel === 'masterwork' &&
+    ((stat.isConditionallyActive && stat.value === 0) ||
+      (!stat.isConditionallyActive &&
+        stat.value === 10 &&
+        itemDef.investmentStats.some((s) => s.isConditionallyActive && s.value === 0)))
+  ) {
+    return { rule: 'tieredWeaponMW' };
   }
 
   // When adding new conditions here that bypass `stat.isConditionallyActive`, update
@@ -44,11 +55,21 @@ function getPlugInvestmentStatActivationRule(
 
   // These are preview stats for the Adept enhancing plugs to indicate that enhancing
   // implicitly upgrades the masterwork to T10
-  if (itemDef.plug?.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers) {
+  if (itemDef.plug.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers) {
     return { rule: 'never' };
   }
 
   const defHash = itemDef.hash;
+
+  // New Armor 3.0 archetypes grant stats only to secondary stats when masterworked.
+  if (
+    itemDef.plug.plugCategoryHash === PlugCategoryHashes.V460PlugsArmorMasterworks ||
+    // The Balanced Tuning mod works the same way - it grants its bonus only to the three lowest stats.
+    defHash === ModsWithConditionalStats.BalancedTuning
+  ) {
+    return { rule: 'archetypeArmorMasterwork' };
+  }
+
   if (
     defHash === ModsWithConditionalStats.ElementalCapacitor ||
     defHash === ModsWithConditionalStats.EnhancedElementalCapacitor
@@ -56,17 +77,22 @@ function getPlugInvestmentStatActivationRule(
     return { rule: 'never' };
   }
 
+  // It seems unbelievable that these fragments still work the same way as
+  // before Edge of Fate, since they are supposed to affect "class ability
+  // regeneration", and there's now a dedicated stat for that. But no, they're
+  // still conditional and affect different stats based on the class that uses
+  // them.
   if (
     defHash === ModsWithConditionalStats.EchoOfPersistence ||
     defHash === ModsWithConditionalStats.SparkOfFocus
   ) {
-    // "-10 to the stat that governs your class ability recharge"
+    // "-10 to the stat that governs your class ability regeneration"
     const classType =
-      stat.statTypeHash === StatHashes.Mobility
+      stat.statTypeHash === StatHashes.Weapons
         ? DestinyClass.Hunter
-        : stat.statTypeHash === StatHashes.Resilience
+        : stat.statTypeHash === StatHashes.Health
           ? DestinyClass.Titan
-          : stat.statTypeHash === StatHashes.Recovery
+          : stat.statTypeHash === StatHashes.Class
             ? DestinyClass.Warlock
             : undefined;
     if (classType === undefined) {
@@ -94,8 +120,25 @@ function getPlugInvestmentStatActivationRule(
  */
 export function isPlugStatActive(
   rule: PlugStatActivationRule,
-  item: DimItem | undefined,
-  classType?: DestinyClass,
+  // These options are often necessary to determine if the stat is active.
+  // Providing item and existingStat/statHash is best.
+  {
+    item,
+    classType,
+    existingStat,
+    statHash,
+  }: {
+    item?: DimItem;
+    /** The class we're plugging into, if we aren't plugging an actual item. */
+    classType?: DestinyClass;
+    /**
+     * The existing stat on the item before applying this plug's stat. Defaults
+     * if item and statHash are provided.
+     */
+    existingStat?: DimStat;
+    /** The stat being considered, if existingStat isn't provided */
+    statHash?: number;
+  },
 ): boolean {
   if (!rule) {
     return true;
@@ -108,6 +151,14 @@ export function isPlugStatActive(
   switch (rule.rule) {
     case 'never':
       return false;
+
+    case 'archetypeArmorMasterwork':
+      if (!existingStat && statHash && item) {
+        existingStat = item.stats?.find((s) => s.statHash === statHash);
+      }
+      // New Armor 3.0 archetypes grant stats only to secondary stats (base 0) when masterworked,
+      // so if there's already some base stat value, MW will not apply its investmentValue to this stat.
+      return Boolean(existingStat && existingStat.base === 0);
     case 'classType':
       classType ??= item?.classType;
       if (classType === undefined) {
@@ -119,18 +170,19 @@ export function isPlugStatActive(
       }
       return classType === rule.classType;
     case 'adeptWeapon':
-      return item ? adeptWeaponHashes.includes(item.hash) : warnMissingItem();
+      return item?.adept ?? warnMissingItem();
     case 'masterwork':
       return item?.masterwork ?? warnMissingItem();
+    case 'tieredWeaponMW':
+      // All stats are active for tiered weapon masterworks.
+      return true;
     case 'enhancedIntrinsic':
       // Crafted weapons get bonus stats from enhanced intrinsics at Level 20+.
       // The number 20 isn't in the definitions, so just hardcoding it here.
       // Alternatively, enhancing an adept weapon gives it an enhanced intrinsic
       // that gives bonus stats simply because it's an adept weapon, and more if Level 20+.
       // stats.ts:getPlugStatValue actually takes care of scaling this to the correct bonus.
-      return item
-        ? (item.craftedInfo?.level || 0) >= 20 || adeptWeaponHashes.includes(item.hash)
-        : warnMissingItem();
+      return item ? (item.craftedInfo?.level || 0) >= 20 || item.adept : warnMissingItem();
   }
 }
 

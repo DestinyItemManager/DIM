@@ -3,7 +3,7 @@ import { noop } from 'app/utils/functions';
 /**
  * A rate limiter queue applies when the path of a request matches its regex. It will implement the semantics of
  * Bungie.net's rate limiter (expressed in API docs via ThrottleSecondsBetweenActionPerUser), which requires that
- * we wait a specified amount between certain actions.
+ * we wait a specified amount between the start of certain actions.
  */
 export class RateLimiterQueue {
   pattern: RegExp;
@@ -18,7 +18,7 @@ export class RateLimiterQueue {
   }[] = [];
   /** number of requests in the current period */
   count = 0;
-  /** The time the latest request finished */
+  /** The time the latest request started */
   lastRequestTime = window.performance.now();
   timer?: number;
 
@@ -85,7 +85,7 @@ export class RateLimiterQueue {
     }
   }
 
-  // Returns whether or not we can process a request right now. Mutates state.
+  // Returns whether or not we can process a request right now.
   canProcess() {
     const currentRequestTime = window.performance.now();
     const timeSinceLastRequest = currentRequestTime - this.lastRequestTime;

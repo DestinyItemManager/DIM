@@ -23,7 +23,7 @@ import noExoticIcon from 'images/noExotic.svg';
 import noExoticPreferenceIcon from 'images/noExoticPreference.svg';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC, LockableBucketHashes } from '../types';
+import { ArmorBucketHashes, LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
@@ -36,12 +36,12 @@ export function findLockableExotics(
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
 ) {
-  // Find all the armor 2 exotics.
+  // Find all the armor 2/3 exotics.
   const exotics = uniqBy(
     [...allItems, ...vendorItems]
       .filter((item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item))
-      .sort(compareByIndex(LockableBucketHashes, (item) => item.bucket.hash)),
-    (item) => item.hash,
+      .sort(compareByIndex(ArmorBucketHashes, (item) => item.bucket.hash)),
+    (item) => item.name,
   );
 
   // Add in armor 1 exotics that don't have an armor 2 version

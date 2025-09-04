@@ -1,10 +1,12 @@
 import { ItemHashTag, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   currentProfileSelector,
   customStatsSelector,
   settingsSelector,
 } from 'app/dim-api/selectors';
+import { tuningSocketReusablePlugSetHash } from 'app/loadout-builder/types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
@@ -13,7 +15,7 @@ import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -79,6 +81,22 @@ export const storesLoadedSelector = (state: RootState) => storesSelector(state).
 /** The current (last played) character */
 export const currentStoreSelector = (state: RootState) => getCurrentStore(storesSelector(state));
 
+export const singleStoreSelector = currySelector(
+  createSelector(
+    storesSelector,
+    (_state: RootState, storeId: string) => storeId,
+    (stores, storeId) => stores.find((s) => s.id === storeId),
+  ),
+);
+
+/** All items equipped to a specific DimStore */
+export const equippedItemsSelector = currySelector(
+  createSelector(
+    (state: RootState, storeId: string) => singleStoreSelector(storeId)(state),
+    (store) => store?.items.filter((i) => i.equipped) ?? emptyArray<DimItem>(),
+  ),
+);
+
 /** The vault */
 export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
 
@@ -115,6 +133,15 @@ export const transmogCurrenciesSelector = createSelector(
   (currencies) => currencies.filter((c) => transmogCurrencies.includes(c.itemHash)),
 );
 
+const upgradeCurrencies = [
+  2718300701, // Unstable Cores
+];
+/** Mostly just unstable cores right now */
+export const upgradeCurrenciesSelector = createSelector(
+  (state: RootState) => state.inventory.currencies,
+  (currencies) => currencies.filter((c) => upgradeCurrencies.includes(c.itemHash)),
+);
+
 /** Vendor engrams you can decrypt at a vendor or use for item focusing */
 export const vendorCurrencyEngramsSelector = createSelector(
   d2ManifestSelector,
@@ -134,16 +161,14 @@ export const vendorCurrencyEngramsSelector = createSelector(
 
 const materialsWithMissingICH = [
   3702027555, // InventoryItem "Spoils of Conquest"
-  1289622079, // InventoryItem "Strand Meditations"
-  3467984096, // InventoryItem "Exotic Cipher"
 ];
 
 /** materials/currencies that aren't top level stuff */
 export const materialsSelector = createSelector(allItemsSelector, (allItems) =>
   allItems.filter(
     (i) =>
-      i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
-      i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
+      i.traitHashes?.includes(TraitHashes.ItemCurrency) ||
+      i.itemCategoryHashes?.includes(ItemCategoryHashes.Materials) ||
       materialsWithMissingICH.includes(i.hash),
   ),
 );
@@ -296,6 +321,7 @@ export const unlockedPlugSetItemsSelector = currySelector(
   createSelector(
     (_state: RootState, characterId?: string) => characterId,
     profileResponseSelector,
+    d2ManifestSelector,
     gatherUnlockedPlugSetItems,
   ),
 );
@@ -303,6 +329,7 @@ export const unlockedPlugSetItemsSelector = currySelector(
 function gatherUnlockedPlugSetItems(
   characterId: string | undefined,
   profileResponse: DestinyProfileResponse | undefined,
+  defs: D2ManifestDefinitions | undefined,
 ) {
   const unlockedPlugs = new Set<number>();
   if (profileResponse?.profilePlugSets.data?.plugs) {
@@ -319,6 +346,20 @@ function gatherUnlockedPlugSetItems(
       filterUnlockedPlugs(plugSetHash, plugs, unlockedPlugs);
     }
   }
+
+  // Manually add all the tuning mods since they don't get unlocked on the
+  // profile, they just show up on items with the tuning socket.
+  //
+  // TODO: We could filter these down by looking at all the user's items to see
+  // which ones are available, though that would make this selector depend on
+  // allItemsSelector.
+  const tuningPlugSet = defs?.PlugSet.get(tuningSocketReusablePlugSetHash);
+  if (tuningPlugSet) {
+    for (const plugEntry of tuningPlugSet.reusablePlugItems) {
+      unlockedPlugs.add(plugEntry.plugItemHash);
+    }
+  }
+
   return unlockedPlugs;
 }
 

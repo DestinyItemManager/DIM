@@ -1,25 +1,17 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { WELL_RESTED_PERK } from 'app/search/d2-known-values';
-import {
-  DestinyCharacterProgressionComponent,
-  DestinySeasonDefinition,
-  DestinySeasonPassDefinition,
-} from 'bungie-api-ts/destiny2';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import BungieImage from '../dim-ui/BungieImage';
 import { isWellRested } from '../inventory/store/well-rested';
 
 export default function WellRestedPerkIcon({
-  progressions,
-  season,
-  seasonPass,
+  profileInfo,
 }: {
-  progressions: DestinyCharacterProgressionComponent;
-  season: DestinySeasonDefinition | undefined;
-  seasonPass?: DestinySeasonPassDefinition;
+  profileInfo: DestinyProfileResponse;
 }) {
   const defs = useD2Definitions()!;
-  const wellRestedInfo = isWellRested(defs, season, seasonPass, progressions);
+  const wellRestedInfo = isWellRested(defs, profileInfo);
 
   if (!wellRestedInfo.wellRested) {
     return null;
@@ -30,18 +22,18 @@ export default function WellRestedPerkIcon({
   }
   const perkDisplay = wellRestedPerk.displayProperties;
   return (
-    <div className="well-rested milestone-quest">
+    <div className="milestone-quest">
       <div className="milestone-icon">
         <BungieImage
           className="perk milestone-img"
           src={perkDisplay.icon}
           title={perkDisplay.description}
         />
-        {wellRestedInfo.progress !== undefined && wellRestedInfo.requiredXP !== undefined && (
+        {wellRestedInfo.weeklyProgress !== undefined && wellRestedInfo.requiredXP !== undefined && (
           <span>
-            {wellRestedInfo.progress.toLocaleString()}
+            <span>{wellRestedInfo.weeklyProgress.toLocaleString()}</span>
             <wbr />/<wbr />
-            {wellRestedInfo.requiredXP.toLocaleString()}
+            <span>{wellRestedInfo.requiredXP.toLocaleString()}</span>
           </span>
         )}
       </div>

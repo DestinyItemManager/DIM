@@ -569,7 +569,8 @@ export default (env: Env) => {
         deep: true,
         sources: true,
         gzip: false,
-        brotli: true,
+        brotli: false,
+        exclude: [/\.br$/, /\.gz$/, /\/manifests\//, /webpack-stats\.json/],
       }),
 
       new CopyWebpackPlugin({

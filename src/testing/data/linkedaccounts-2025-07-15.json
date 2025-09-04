@@ -1,0 +1,176 @@
+{
+  "profiles": [
+    {
+      "dateLastPlayed": "2025-07-15T06:30:55Z",
+      "isOverridden": false,
+      "isCrossSavePrimary": true,
+      "platformSilver": {
+        "platformSilver": {
+          "TigerPsn": {
+            "itemHash": 3147280338,
+            "quantity": 400,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798306,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerXbox": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798307,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerBlizzard": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798316,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerStadia": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 2689798317,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerSteam": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 130233231,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "BungieNext": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 130233230,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          },
+          "TigerEgs": {
+            "itemHash": 3147280338,
+            "quantity": 0,
+            "bindStatus": 0,
+            "location": 1,
+            "bucketHash": 130233229,
+            "transferStatus": 2,
+            "lockable": false,
+            "state": 0,
+            "dismantlePermission": 0,
+            "isWrapper": false
+          }
+        }
+      },
+      "crossSaveOverride": 2,
+      "applicableMembershipTypes": [
+        1,
+        3,
+        5,
+        6,
+        2
+      ],
+      "isPublic": false,
+      "membershipType": 2,
+      "membershipId": "4611686018433092312",
+      "displayName": "VidBoi-BMC",
+      "bungieGlobalDisplayName": "VidBoi",
+      "bungieGlobalDisplayNameCode": 9226
+    }
+  ],
+  "bnetMembership": {
+    "supplementalDisplayName": "VidBoi#9226",
+    "iconPath": "/img/profile/avatars/cc25.jpg",
+    "crossSaveOverride": 0,
+    "isPublic": false,
+    "membershipType": 254,
+    "membershipId": "7094",
+    "displayName": "VidBoi",
+    "bungieGlobalDisplayName": "VidBoi",
+    "bungieGlobalDisplayNameCode": 9226
+  },
+  "profilesWithErrors": [
+    {
+      "errorCode": 1601,
+      "infoCard": {
+        "crossSaveOverride": 2,
+        "applicableMembershipTypes": [],
+        "isPublic": true,
+        "membershipType": 1,
+        "membershipId": "4611686018429726245",
+        "displayName": "Vid Boi",
+        "bungieGlobalDisplayName": "VidBoi",
+        "bungieGlobalDisplayNameCode": 9226
+      }
+    },
+    {
+      "errorCode": 1601,
+      "infoCard": {
+        "crossSaveOverride": 2,
+        "applicableMembershipTypes": [],
+        "isPublic": true,
+        "membershipType": 3,
+        "membershipId": "4611686018509956320",
+        "displayName": "VidBoi",
+        "bungieGlobalDisplayName": "VidBoi",
+        "bungieGlobalDisplayNameCode": 9226
+      }
+    },
+    {
+      "errorCode": 1601,
+      "infoCard": {
+        "crossSaveOverride": 2,
+        "applicableMembershipTypes": [],
+        "isPublic": true,
+        "membershipType": 5,
+        "membershipId": "4611686018509956086",
+        "displayName": "vidboi#6166",
+        "bungieGlobalDisplayName": "VidBoi",
+        "bungieGlobalDisplayNameCode": 9226
+      }
+    },
+    {
+      "errorCode": 1601,
+      "infoCard": {
+        "crossSaveOverride": 2,
+        "applicableMembershipTypes": [],
+        "isPublic": true,
+        "membershipType": 6,
+        "membershipId": "4611686018528634783",
+        "displayName": "VidBoi-BMC",
+        "bungieGlobalDisplayName": "VidBoi",
+        "bungieGlobalDisplayNameCode": 9226
+      }
+    }
+  ]
+}

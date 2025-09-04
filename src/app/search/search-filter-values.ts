@@ -75,6 +75,12 @@ export const est = {
 
 export const estStatNames = Object.keys(est);
 
+export const statOrdinals: StringLookup<number> = {
+  primarystat: 0,
+  secondarystat: 1,
+  tertiarystat: 2,
+};
+
 export const allAtomicStats = [...allStatNames, ...estStatNames];
 
 export const lightStats = [...D2LightStats, ...D1LightStats];
@@ -89,9 +95,3 @@ export const cosmeticTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Ships,
   BucketHashes.Finishers,
 ];
-
-export const riteOfTheNineShinyWeapons = new Set([
-  749483159, 2129814338, 1050582210, 1685406703, 1066598837, 3681280908, 1157220231, 4193602194,
-  2126543269, 2760833884, 2477408004, 2982006965, 2764074355, 1904170910, 3185151619, 492673102,
-  3329218848, 1773934241, 3421639790, 1460079227, 3692140710, 14929251, 4267192886, 2730671571,
-]);

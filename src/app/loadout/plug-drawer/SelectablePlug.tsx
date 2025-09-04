@@ -9,6 +9,7 @@ import { banIcon, minusIcon, plusIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { useCallback, useMemo } from 'react';
 import PlugStackableIcon from './PlugStackableIcon';
 import styles from './SelectablePlug.m.scss';
@@ -119,6 +120,11 @@ export default function SelectablePlug({
       }
       onClick={handleClick}
       corner={corner}
+      compact={[
+        PlugCategoryHashes.EnhancementsArtifice,
+        PlugCategoryHashes.EnhancementsV2General,
+        PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
+      ].includes(plug.plug?.plugCategoryHash)}
     >
       {plugDetails}
     </TileGridTile>
@@ -132,7 +138,7 @@ function SelectablePlugDetails({
   plug: PluggableInventoryItemDefinition;
   classType: DestinyClass;
 }) {
-  const stats = getPlugDefStats(plug, classType);
+  const stats = getPlugDefStats(plug, classType, undefined);
 
   const plugDescriptions = usePlugDescriptions(plug, stats);
 
@@ -140,7 +146,8 @@ function SelectablePlugDetails({
     <>
       {plugDescriptions.perks.map(
         (perkDesc) =>
-          perkDesc.description && (
+          perkDesc.description &&
+          !perkDesc.description.match(/^\+.*▲/m) && (
             <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
           ),
       )}

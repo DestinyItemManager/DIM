@@ -8,23 +8,18 @@ import {
 } from 'app/search/d2-known-values';
 import { plainString } from 'app/search/text-utils';
 import {
-  braveShiny,
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
   modSlotTags,
-  modTypeTags,
-  riteShiny,
 } from 'app/utils/item-utils';
 import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
-  getSocketsByType,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
   ItemCategoryHashes,
@@ -89,36 +84,17 @@ const socketFilters: ItemFilterDefinition[] = [
         matchesCuratedRoll(d2Definitions!, item),
   },
   {
-    keywords: 'shiny',
-    description: tl('Filter.Shiny'),
+    keywords: ['holofoil', 'shiny'],
+    description: tl('Filter.Holofoil'),
     destinyVersion: 2,
-    filter: () => (i) => {
-      if (i.bucket.inWeapons) {
-        if (braveShiny(i) || riteShiny(i)) {
-          return true;
-        }
-
-        // There are special Heresy weapons with an extra Origin Trait
-        const plugOptions = getSocketsByType(i, 'origin')[0]?.plugOptions;
-        if (
-          plugOptions &&
-          plugOptions.length === 2 &&
-          plugOptions[0].plugDef.hash === 878237828 && // Willing Vessel
-          plugOptions[1].plugDef.hash === 120721526 // Runneth Over
-        ) {
-          return true;
-        }
-      }
-
-      return false;
-    },
+    filter: () => (i) => i.bucket.inWeapons && i.holofoil,
   },
   {
     keywords: 'extraperk',
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
     filter: () => (item) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary')) {
         return false;
       }
 
@@ -165,25 +141,6 @@ const socketFilters: ItemFilterDefinition[] = [
       ),
   },
   {
-    keywords: 'hasmod',
-    description: tl('Filter.Mods.Y2'),
-    destinyVersion: 2,
-    filter: () => (item) =>
-      item.sockets?.allSockets.some((socket) =>
-        Boolean(
-          socket.plugged &&
-            !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/,
-            ) &&
-            // enforce that this provides a perk (excludes empty slots)
-            socket.plugged.plugDef.perks.length &&
-            // enforce that this doesn't have an energy cost (y3 reusables)
-            !socket.plugged.plugDef.plug.energyCost,
-        ),
-      ),
-  },
-  {
     keywords: 'hasdisabledmod',
     description: tl('Filter.DisabledModSlot'),
     destinyVersion: 2,
@@ -199,13 +156,12 @@ const socketFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Mods.Y3'),
     destinyVersion: 2,
     filter: () => (item) =>
-      Boolean(item.energy) &&
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
             socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/,
+              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.|v900.weapon.mod_)/,
             ) &&
             // enforce that this provides a perk (excludes empty slots)
             socket.plugged.plugDef.perks.length,
@@ -232,24 +188,6 @@ const socketFilters: ItemFilterDefinition[] = [
         return Boolean(intrinsic && plainString(intrinsic, language).includes(filterValue));
       };
     },
-  },
-  {
-    keywords: 'holdsmod',
-    description: tl('Filter.HoldsMod'),
-    format: 'query',
-    suggestions: modTypeTags.concat(['any', 'none']),
-    destinyVersion: 2,
-    filter:
-      ({ filterValue }) =>
-      (item) => {
-        const compatibleModTags = getSpecialtySocketMetadatas(item)?.flatMap(
-          (m) => m.compatibleModTags,
-        );
-        return (
-          (filterValue === 'none' && !compatibleModTags) ||
-          (compatibleModTags && (filterValue === 'any' || compatibleModTags.includes(filterValue)))
-        );
-      },
   },
   {
     keywords: 'deepsight',
@@ -402,7 +340,7 @@ const socketFilters: ItemFilterDefinition[] = [
     description: tl('Filter.RetiredPerk'),
     destinyVersion: 2,
     filter: () => (item) => {
-      if (!(item.bucket?.sort === 'Weapons' && item.tier === 'Legendary')) {
+      if (!(item.bucket?.sort === 'Weapons' && item.rarity === 'Legendary')) {
         return false;
       }
 
@@ -415,7 +353,7 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'adept',
     description: tl('Filter.IsAdept'),
     destinyVersion: 2,
-    filter: () => (item) => adeptWeaponHashes.includes(item.hash),
+    filter: () => (item) => item.adept && item.bucket.inWeapons,
   },
   {
     keywords: 'origintrait',

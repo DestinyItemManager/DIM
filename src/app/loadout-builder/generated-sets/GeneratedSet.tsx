@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -27,7 +28,7 @@ import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import { SetStats } from './SetStats';
+import { TierlessSetStats } from './SetStats';
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
@@ -43,7 +44,6 @@ export default memo(function GeneratedSet({
   modStatChanges,
   loadouts,
   lbDispatch,
-  halfTierMods,
   armorEnergyRules,
   equippedHashes,
   autoStatMods,
@@ -57,7 +57,6 @@ export default memo(function GeneratedSet({
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
   autoStatMods: boolean;
@@ -66,7 +65,7 @@ export default memo(function GeneratedSet({
 
   let overlappingLoadout: Loadout | undefined;
   // Items are sorted by their energy capacity when grouping
-  let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
+  let displayedItems = set.armor;
   const allSetItems = set.armor.flat();
 
   // This has got to be expensive when the user has a lot of loadouts?
@@ -93,8 +92,9 @@ export default memo(function GeneratedSet({
   );
 
   // Assign the chosen mods to items so we can display them as if they were slotted
-  const [itemModAssignments, resultingItemEnergies] = useMemo(() => {
+  const [itemModAssignments, unassignedMods, resultingItemEnergies] = useMemo(() => {
     const allMods = [...lockedMods, ...autoMods];
+    // TODO: this isn't assigning the tuning mods correctly, and we aren't calculating balanced tuning stats correctly either.
     const { itemModAssignments, unassignedMods, invalidMods, resultingItemEnergies } = fitMostMods({
       defs,
       items: displayedItems,
@@ -109,12 +109,11 @@ export default memo(function GeneratedSet({
       errorLog(
         'loadout optimizer',
         'internal error: set rendering was unable to fit some mods that the worker thought were possible',
-        unassignedMods,
-        invalidMods,
+        { unassignedMods, invalidMods },
       );
     }
 
-    return [itemModAssignments, resultingItemEnergies];
+    return [itemModAssignments, unassignedMods, resultingItemEnergies];
   }, [lockedMods, autoMods, defs, displayedItems, armorEnergyRules]);
 
   // Compute a presentable stat breakdown, lazily. This is a bit expensive, so we calculate it only
@@ -122,7 +121,15 @@ export default memo(function GeneratedSet({
   // the memoized function since this component itself is memoized and the dependency array would
   // include most props).
   const getStatsBreakdownOnce = once(() =>
-    getStatsBreakdown(defs, selectedStore.classType, set, autoMods, modStatChanges),
+    getStatsBreakdown(
+      defs,
+      selectedStore.classType,
+      set,
+      modStatChanges,
+      armorEnergyRules,
+      itemModAssignments,
+      unassignedMods,
+    ),
   );
 
   const boostedStats = useMemo(
@@ -154,7 +161,7 @@ export default memo(function GeneratedSet({
 
   return (
     <>
-      <SetStats
+      <TierlessSetStats
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
@@ -162,15 +169,13 @@ export default memo(function GeneratedSet({
         boostedStats={boostedStats}
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
-        autoStatMods={autoStatMods}
       />
       <div className={styles.build}>
         <div className={styles.items}>
-          {displayedItems.map((item, i) => (
+          {displayedItems.map((item) => (
             <GeneratedSetItem
               key={item.index}
               item={item}
-              itemOptions={set.armor[i]}
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
@@ -187,7 +192,6 @@ export default memo(function GeneratedSet({
           lockedMods={lockedMods}
           store={selectedStore}
           canCompareLoadouts={canCompareLoadouts}
-          halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}
         />
       </div>
@@ -211,24 +215,30 @@ function getStatsBreakdown(
   defs: D2ManifestDefinitions,
   classType: DestinyClass,
   set: ArmorSet,
-  autoMods: PluggableInventoryItemDefinition[],
   modStatChanges: ModStatChanges,
+  armorEnergyRules: ArmorEnergyRules,
+  itemModAssignments: {
+    [itemInstanceId: string]: PluggableInventoryItemDefinition[];
+  },
+  unassignedMods: PluggableInventoryItemDefinition[],
 ) {
   const totals: ModStatChanges = {
-    [StatHashes.Mobility]: { value: 0, breakdown: [] },
-    [StatHashes.Resilience]: { value: 0, breakdown: [] },
-    [StatHashes.Recovery]: { value: 0, breakdown: [] },
-    [StatHashes.Discipline]: { value: 0, breakdown: [] },
-    [StatHashes.Intellect]: { value: 0, breakdown: [] },
-    [StatHashes.Strength]: { value: 0, breakdown: [] },
+    [StatHashes.Weapons]: { value: 0, breakdown: [] },
+    [StatHashes.Health]: { value: 0, breakdown: [] },
+    [StatHashes.Class]: { value: 0, breakdown: [] },
+    [StatHashes.Grenade]: { value: 0, breakdown: [] },
+    [StatHashes.Super]: { value: 0, breakdown: [] },
+    [StatHashes.Melee]: { value: 0, breakdown: [] },
   };
 
   const autoModStats = getTotalModStatChanges(
     defs,
-    autoMods,
-    /* subclass */ undefined,
+    unassignedMods,
+    /* subclass */ undefined, // doesn't matter, modStatChanges already includes subclass stats
     classType,
     /* includeRuntimeStatBenefits */ false, // doesn't matter, auto mods have no runtime stats
+    itemModAssignments,
+    set.armor,
   );
 
   // We have a bit of a problem where armor mods can come from both
@@ -263,15 +273,28 @@ function getStatsBreakdown(
     }
   };
 
+  // Recompute the assumed armor stats, since the set stats might already have
+  // the effect of a tuning mod baked in.
+  const stats = set.armor.reduce<{
+    [statHash: number]: number;
+  }>((memo, dimItem) => {
+    const itemStats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
+    for (const [statHash, value] of Object.entries(itemStats)) {
+      const statHashNum = parseInt(statHash, 10) as ArmorStatHashes;
+      memo[statHashNum] = (memo[statHashNum] || 0) + value;
+    }
+    return memo;
+  }, {});
+
   for (const hash of armorStats) {
-    totals[hash].value += set.armorStats[hash];
+    totals[hash].value += stats[hash];
     totals[hash].breakdown!.push({
       hash: -1,
       count: undefined,
       name: t('Loadouts.ArmorStats'),
       icon: undefined,
       source: 'armorStats',
-      value: set.armorStats[hash],
+      value: stats[hash],
     });
 
     mergeContributions(modStatChanges[hash], hash);

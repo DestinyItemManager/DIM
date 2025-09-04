@@ -1,4 +1,7 @@
 @use '../variables.scss' as *;
+@use 'sass:math';
+
+$iconOverlayScale: math.div(65, 92);
 
 .header {
   composes: resetButton from 'app/dim-ui/common.m.scss';
@@ -12,6 +15,10 @@
 
   background-color: #555;
   color: #eee;
+
+  &:has(.iconOverlay) {
+    padding-left: 5px + 24px * $iconOverlayScale;
+  }
 }
 
 .armory {
@@ -126,4 +133,30 @@
   .itemType {
     opacity: 0.9;
   }
+}
+
+.iconOverlay {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  position: absolute;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 7%;
+  top: 0;
+  left: 0;
+  width: 24px * $iconOverlayScale;
+  height: 96px * $iconOverlayScale;
+  background-size: cover;
+  background-position: -2px * $iconOverlayScale -2px * $iconOverlayScale;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  padding-top: 30px * $iconOverlayScale;
+  font-size: 12px;
+}
+
+.tierPip {
+  display: block;
+  height: 4px;
+  aspect-ratio: 1;
+  background: #fffd;
+  rotate: 45deg;
 }

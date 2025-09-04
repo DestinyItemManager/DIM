@@ -6,7 +6,6 @@ import { showCheatSheet$ } from 'app/hotkeys/HotkeysCheatSheet';
 import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import D1BrokenWarning from 'app/inventory-page/D1BrokenWarning';
 import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
@@ -391,7 +390,6 @@ export default function Header() {
         )}
         {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
         <PostmasterWarningBanner />
-        <D1BrokenWarning />
         {$featureFlags.warnNoSync && <DimApiWarningBanner />}
         {promptIosPwa && (
           <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>

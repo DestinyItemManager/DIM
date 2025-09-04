@@ -34,10 +34,6 @@
   align-items: center;
 }
 
-.masterworked {
-  color: $masterwork-border-color;
-}
-
 .swapButton {
   composes: dim-button from global;
   justify-self: center;
@@ -60,4 +56,10 @@
 
 .energyHidden {
   visibility: hidden;
+}
+
+.archetype,
+.archetype img {
+  height: calc(var(--item-size) * 0.4);
+  width: calc(var(--item-size) * 0.4);
 }

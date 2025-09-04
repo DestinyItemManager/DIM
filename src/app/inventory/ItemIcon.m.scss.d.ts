@@ -21,6 +21,8 @@ interface CssExports {
   'rare': string;
   'shinyMasterwork': string;
   'strandColorFix': string;
+  'tierPip': string;
+  'tierPipContainer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

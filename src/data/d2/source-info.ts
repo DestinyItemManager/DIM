@@ -195,9 +195,12 @@ const D2Sources: {
       100617404, // Requires Titan Class
       286427063, // Source: Fallen Empire Campaign
       409652252, // Source: The Witch Queen Campaign
+      431243768, // Source: The Edge of Fate Campaign
       460742691, // Requires Guardian Rank 6: Masterwork Weapons
       569214265, // Source: Red War Campaign
+      633667627, // Requires Tier 4 or 5 Weapon
       677167936, // Source: Complete the campaign as a Warlock.
+      712662541, // Requires Season 27 Tier 5 Weapon
       736336644, // Source: "A Spark of Hope" Quest
       901482731, // Source: Lightfall Campaign
       918840100, // Source: Shadowkeep Campaign
@@ -373,8 +376,10 @@ const D2Sources: {
       4248997900, // Incisor
     ],
     sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
       454115234, // Source: Associated Crucible Quest
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
+      705363737, // Source: Heavy Metal: Supremacy
       745186842, // Source: Associated Crucible Quest
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
@@ -385,6 +390,7 @@ const D2Sources: {
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Glory Rank of "Fabled" in Crucible
       2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
+      2602565384, // Source: Win competitive matches while at Ascendant 0 Rank.
       2622122683, // Source: Lord Shaxx Rank Up Reputation
       2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
@@ -663,6 +669,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  desertperpetual: {
+    itemHashes: [],
+    sourceHashes: [
+      596084342, // Source: "The Desert Perpetual" Raid
+    ],
+    searchString: [],
+  },
   do: {
     itemHashes: [],
     sourceHashes: [
@@ -739,32 +752,27 @@ const D2Sources: {
   dungeon: {
     itemHashes: [
       14929251, // Long Arm
-      32287609, // Boondoggle Mk. 55
       185321778, // The Eternal Return
       189194532, // No Survivors (Adept)
       233402416, // New Pacific Epitaph (Adept)
       291447487, // Cold Comfort
       492673102, // New Pacific Epitaph
-      559523765, // Wilderflight (Adept)
       749483159, // Prosecutor (Adept)
       814876684, // Wish-Ender
       1050582210, // Greasy Luck (Adept)
       1066598837, // Relentless (Adept)
       1157220231, // No Survivors (Adept)
-      1206729100, // Wilderflight
       1303313141, // Unsworn
       1460079227, // Liminal Vigil
       1685406703, // Greasy Luck
       1773934241, // Judgment
       1817605554, // Cold Comfort (Adept)
       1904170910, // A Sudden Death
-      1905934655, // Liminal Vigil (Adept)
+      1987644603, // Judgment (Adept)
       2059741649, // New Pacific Epitaph
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
-      2210806903, // Terminus Horizon (Adept)
       2477408004, // Wilderflight (Adept)
-      2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2760833884, // Cold Comfort
       2764074355, // A Sudden Death (Adept)
@@ -777,11 +785,8 @@ const D2Sources: {
       3421639790, // Liminal Vigil (Adept)
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)
-      3984556130, // Terminus Horizon
       4193602194, // No Survivors
       4228149269, // No Survivors
-      4239378215, // Long Arm (Adept)
-      4249949938, // Long Arm
       4267192886, // Terminus Horizon (Adept)
     ],
     sourceHashes: [
@@ -805,6 +810,14 @@ const D2Sources: {
       2306801178, // Source: Episode: Echoes Activities
       2514060836, // Source: Episode: Echoes Enigma Protocol Activity
       2631398023, // Source: Radiolite Bay Deposits
+    ],
+    searchString: [],
+  },
+  edgeoffate: {
+    itemHashes: [],
+    sourceHashes: [
+      431243768, // Source: The Edge of Fate Campaign
+      4034415948, // Source: The Edge of Fate Activities
     ],
     searchString: [],
   },
@@ -875,7 +888,6 @@ const D2Sources: {
       2812100428, // Stay Frosty
       2814093983, // Cold Front
       2869466318, // BrayTech Werewolf
-      3240434620, // Something New
       3400256755, // Zephyr
       3558681245, // BrayTech Werewolf
       3559361670, // The Title
@@ -905,6 +917,7 @@ const D2Sources: {
       1919933822, // Source: Festival of the Lost 2020
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
+      2045032171, // Source: Arms Week Event
       2050870152, // Source: Solstice
       2187511136, // Source: Earned during the seasonal Revelry event.
       2364515524, // Source: Dawning 2022
@@ -1144,8 +1157,14 @@ const D2Sources: {
   heresy: {
     itemHashes: [],
     sourceHashes: [
+      21494224, // Source: Offer the correct final answer in an uncharted space.
+      745481267, // Source: Intrinsic Iteration Triumph
       1341921330, // Source: Episode: Heresy Activities
+      1792957897, // Source: "Efficient Challenger" Triumph
       2607970476, // Source: Sundered Doctrine
+      2869564842, // Source: "Vengeful Knife" Triumph
+      3310034131, // Source: "Crossed Blades" Triumph
+      3358334503, // Source: "Boon Ghost Mod Collector" Triumph
       3507911332, // Source: Episode: Heresy
     ],
     searchString: [],
@@ -1244,6 +1263,13 @@ const D2Sources: {
       1902517582, // Source: Where's Archie?
       2068312112, // Source: Exotic Mission "Zero Hour"
       2952071500, // Source: Into the Light
+    ],
+    searchString: [],
+  },
+  kepler: {
+    itemHashes: [],
+    sourceHashes: [
+      4284811963, // Source: Exploring Kepler
     ],
     searchString: [],
   },
@@ -1537,7 +1563,6 @@ const D2Sources: {
     sourceHashes: [
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       2778435282, // Source: Nightmare Hunts
-      3190710249, // Source: "Root of Nightmares" Raid
     ],
     searchString: [],
   },
@@ -1551,6 +1576,7 @@ const D2Sources: {
   paleheart: {
     itemHashes: [],
     sourceHashes: [
+      941123623, // Pale Heart - Cayde's Stash
       2327253880, // Source: Exploring the Pale Heart
       3614199681, // Source: Pale Heart Triumph
     ],
@@ -1574,6 +1600,13 @@ const D2Sources: {
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
+    ],
+    searchString: [],
+  },
+  pinnacleops: {
+    itemHashes: [],
+    sourceHashes: [
+      1232061833, // Source: Pinnacle Ops
     ],
     searchString: [],
   },
@@ -1666,6 +1699,7 @@ const D2Sources: {
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
       557146120, // Source: Complete a Guided Game as a guide or seeker.
+      596084342, // Source: "The Desert Perpetual" Raid
       654652973, // Guide 25 Last Wish encounters
       707740602, // Guide 10 Last Wish encounters
       866530798, // Source: "Not a Scratch" Triumph
@@ -1736,6 +1770,7 @@ const D2Sources: {
       1685406703, // Greasy Luck
       1773934241, // Judgment
       1904170910, // A Sudden Death
+      1987644603, // Judgment (Adept)
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
       2477408004, // Wilderflight (Adept)
@@ -1822,6 +1857,7 @@ const D2Sources: {
       1685406703, // Greasy Luck
       1773934241, // Judgment
       1904170910, // A Sudden Death
+      1987644603, // Judgment (Adept)
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
       2477408004, // Wilderflight (Adept)
@@ -1884,6 +1920,7 @@ const D2Sources: {
   seasonpass: {
     itemHashes: [],
     sourceHashes: [
+      333761108, // Source: Rewards Pass
       450719423, // Source: Season of the Risen
       794422188, // Source: Season of the Witch
       813075729, // Source: Season of the Deep Vendor Reputation Reward
@@ -1995,8 +2032,10 @@ const D2Sources: {
       4248997900, // Incisor
     ],
     sourceHashes: [
+      164083100, // Source: Display of Supremacy, Weekly Challenge
       454115234, // Source: Associated Crucible Quest
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
+      705363737, // Source: Heavy Metal: Supremacy
       745186842, // Source: Associated Crucible Quest
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
@@ -2007,6 +2046,7 @@ const D2Sources: {
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Glory Rank of "Fabled" in Crucible
       2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
+      2602565384, // Source: Win competitive matches while at Ascendant 0 Rank.
       2622122683, // Source: Lord Shaxx Rank Up Reputation
       2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
@@ -2068,25 +2108,7 @@ const D2Sources: {
     searchString: [],
   },
   sotw: {
-    itemHashes: [
-      14929251, // Long Arm
-      32287609, // Boondoggle Mk. 55
-      559523765, // Wilderflight (Adept)
-      1206729100, // Wilderflight
-      1460079227, // Liminal Vigil
-      1905934655, // Liminal Vigil (Adept)
-      2210806903, // Terminus Horizon (Adept)
-      2477408004, // Wilderflight (Adept)
-      2575844666, // Liminal Vigil
-      2730671571, // Terminus Horizon
-      2982006965, // Wilderflight
-      3421639790, // Liminal Vigil (Adept)
-      3692140710, // Long Arm (Adept)
-      3984556130, // Terminus Horizon
-      4239378215, // Long Arm (Adept)
-      4249949938, // Long Arm
-      4267192886, // Terminus Horizon (Adept)
-    ],
+    itemHashes: [],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
@@ -2101,25 +2123,7 @@ const D2Sources: {
     searchString: [],
   },
   spireofthewatcher: {
-    itemHashes: [
-      14929251, // Long Arm
-      32287609, // Boondoggle Mk. 55
-      559523765, // Wilderflight (Adept)
-      1206729100, // Wilderflight
-      1460079227, // Liminal Vigil
-      1905934655, // Liminal Vigil (Adept)
-      2210806903, // Terminus Horizon (Adept)
-      2477408004, // Wilderflight (Adept)
-      2575844666, // Liminal Vigil
-      2730671571, // Terminus Horizon
-      2982006965, // Wilderflight
-      3421639790, // Liminal Vigil (Adept)
-      3692140710, // Long Arm (Adept)
-      3984556130, // Terminus Horizon
-      4239378215, // Long Arm (Adept)
-      4249949938, // Long Arm
-      4267192886, // Terminus Horizon (Adept)
-    ],
+    itemHashes: [],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
@@ -2254,32 +2258,17 @@ const D2Sources: {
     searchString: [],
   },
   trials: {
-    itemHashes: [
-      2307365, // The Inquisitor (Adept)
-      711889599, // Whistler's Whim (Adept)
-      825554997, // The Inquisitor (Adept)
-      1401300690, // Eye of Sol
-      1574601402, // Whistler's Whim
-      1983519830, // Hardened by Trial
-      2059255495, // Eye of Sol (Adept)
-      2071635914, // Light for the Lost
-      2071635915, // Flawless Empyrean
-      2185327324, // The Inquisitor
-      2421180981, // Incisor (Adept)
-      2653171212, // The Inquisitor
-      2759251821, // Unwavering Duty (Adept)
-      3102421004, // Exalted Truth
-      3624844116, // Unwavering Duty
-      3920882229, // Exalted Truth (Adept)
-      4248997900, // Incisor
-    ],
+    itemHashes: [],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
-      550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
+      443793689, // Source: Win games on a completed Lighthouse Passage after earning a weekly win streak of five or higher.
+      486819617, // Trials of Osiris - WEAPONS
       613791463, // Source: Saint-14 Rank Up Reputation
       752988954, // Source: Flawless Chest in Trials of Osiris
       827839814, // Source: Flawless Chest in Trials of Osiris or Grandmaster Nightfalls
+      1218637862, // Source: Open the Lighthouse chest after earning a weekly win streak of five or higher.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
+      1923289424, // Source: Open the Lighthouse chest.
       2857787138, // Source: Trials of Osiris
       3390015730, // Source: Trials of Osiris Challenges
       3471208558, // Source: Trials of Osiris Wins
@@ -2430,25 +2419,7 @@ const D2Sources: {
     searchString: [],
   },
   watcher: {
-    itemHashes: [
-      14929251, // Long Arm
-      32287609, // Boondoggle Mk. 55
-      559523765, // Wilderflight (Adept)
-      1206729100, // Wilderflight
-      1460079227, // Liminal Vigil
-      1905934655, // Liminal Vigil (Adept)
-      2210806903, // Terminus Horizon (Adept)
-      2477408004, // Wilderflight (Adept)
-      2575844666, // Liminal Vigil
-      2730671571, // Terminus Horizon
-      2982006965, // Wilderflight
-      3421639790, // Liminal Vigil (Adept)
-      3692140710, // Long Arm (Adept)
-      3984556130, // Terminus Horizon
-      4239378215, // Long Arm (Adept)
-      4249949938, // Long Arm
-      4267192886, // Terminus Horizon (Adept)
-    ],
+    itemHashes: [],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
     ],

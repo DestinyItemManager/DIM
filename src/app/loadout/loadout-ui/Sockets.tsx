@@ -6,7 +6,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
 import { AppIcon, shoppingCart } from 'app/shell/icons';
-import { isEventArmorRerollSocket } from 'app/utils/socket-utils';
+import { isEventArmorRerollSocket, trustBungieVisibility } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -95,7 +95,7 @@ function Sockets({
       (toSave.itemTypeDisplayName ||
         modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes]) &&
       // either it's some other kind of mod-slot, give it a pass, or
-      (socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice ||
+      (!trustBungieVisibility.has(socket.plugged?.plugDef.plug.plugCategoryHash) ||
         // if it IS an artifice slot, then we render it
         // if it's already paid for (visibleInGame)
         socket.visibleInGame ||
@@ -119,7 +119,7 @@ function Sockets({
           plug={plugDef}
           onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
           automaticallyPicked={automaticallyPicked}
-          forClassType={item.classType}
+          item={item}
         />
       ))}
       {item.vendor && <VendorItemPlug item={item} />}

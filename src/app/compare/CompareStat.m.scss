@@ -14,10 +14,9 @@
 }
 
 .statValue {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  align-items: center;
-  gap: 3px;
   min-width: 2ch; // Try to right-align 2-digit numbers
+  text-align: right;
+  position: relative;
 
   &.noMinWidth {
     min-width: unset;
@@ -27,6 +26,7 @@
 .bar {
   height: 80%;
   width: 100%;
+  position: relative;
   > span {
     display: block;
     background-color: rgb(255, 255, 255, 0.25);
@@ -41,4 +41,14 @@
   background-color: $stat-masterworked;
   height: 4px;
   width: 4px;
+  position: absolute;
+  top: calc(50% - 2px);
+  left: calc(100% + 2px);
+}
+
+.tunedStatIcon {
+  color: #fff;
+  position: absolute;
+  left: 0;
+  transform: scale(-1, 1);
 }

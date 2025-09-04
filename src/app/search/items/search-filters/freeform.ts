@@ -82,7 +82,7 @@ const freeformFilters: ItemFilterDefinition[] = [
     keywords: 'notes',
     description: tl('Filter.Notes'),
     format: 'freeform',
-    suggestionsGenerator: ({ allNotesHashtags }) => allNotesHashtags,
+    suggestionsGenerator: ({ allNotesHashtags }) => ['notes:', ...(allNotesHashtags || [])],
     filter: ({ filterValue, getNotes, language }) => {
       filterValue = plainString(filterValue, language);
       return (item) => {
@@ -111,7 +111,8 @@ const freeformFilters: ItemFilterDefinition[] = [
         (isD1Item(item) &&
           item.talentGrid &&
           testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
-        (item.sockets && testStringsFromAllSockets(test, item, d2Definitions));
+        (item.sockets && testStringsFromAllSockets(test, item, d2Definitions)) ||
+        testStringsFromSetBonuses(test, item, d2Definitions);
     },
   },
   {
@@ -142,6 +143,17 @@ const freeformFilters: ItemFilterDefinition[] = [
           perkNames.add(perkName);
         }
 
+        for (const setBonus of Object.values(d2Definitions.EquipableItemSet.getAll())) {
+          perkNames.add(setBonus.displayProperties.name.toLowerCase());
+          for (const perk of setBonus.setPerks) {
+            perkNames.add(
+              d2Definitions.SandboxPerk.get(
+                perk.sandboxPerkHash,
+              ).displayProperties.name.toLowerCase(),
+            );
+          }
+        }
+
         return Array.from(perkNames, (s) => `exactperk:${quoteFilterString(s)}`);
       }
     },
@@ -150,7 +162,8 @@ const freeformFilters: ItemFilterDefinition[] = [
       return (item) =>
         (isD1Item(item) &&
           testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false)) ||
-        testStringsFromAllSockets(test, item, d2Definitions, /* includeDescription */ false);
+        testStringsFromAllSockets(test, item, d2Definitions, /* includeDescription */ false) ||
+        testStringsFromSetBonuses(test, item, d2Definitions, /* includeDescription */ false);
     },
   },
   {
@@ -169,6 +182,7 @@ const freeformFilters: ItemFilterDefinition[] = [
           test(item.typeName) ||
           (isD1Item(item) && testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes)) ||
           testStringsFromAllSockets(test, item, d2Definitions) ||
+          testStringsFromSetBonuses(test, item, d2Definitions) ||
           (d2Definitions &&
             (testStringsFromObjectives(test, d2Definitions, item.objectives) ||
               testStringsFromRewards(test, d2Definitions, item.pursuit)))
@@ -236,6 +250,27 @@ function testStringsFromAllSockets(
           return true;
         }
       }
+    }
+  }
+  return false;
+}
+
+function testStringsFromSetBonuses(
+  test: (str: string) => boolean,
+  item: DimItem,
+  defs: D2ManifestDefinitions | undefined,
+  includeDescription = true,
+): boolean {
+  if (!item.setBonus || !defs) {
+    return false;
+  }
+  if (testStringsFromDisplayPropertiesMap(test, item.setBonus.displayProperties)) {
+    return true;
+  }
+  for (const bonus of item.setBonus.setPerks) {
+    const perkDef = defs.SandboxPerk.get(bonus.sandboxPerkHash);
+    if (testStringsFromDisplayPropertiesMap(test, perkDef.displayProperties, includeDescription)) {
+      return true;
     }
   }
   return false;

@@ -25,6 +25,7 @@ import { AppIcon, faCheck } from '../shell/icons';
 import ApplyPerkSelection from './ApplyPerkSelection';
 import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
+import { ItemPopupExtraInfo } from './item-popup';
 import ItemDescription from './ItemDescription';
 import styles from './ItemDetails.m.scss';
 import ItemExpiration from './ItemExpiration';
@@ -37,7 +38,6 @@ import MetricCategories from './MetricCategories';
 import { WeaponCatalystInfo } from './WeaponCatalystInfo';
 import { WeaponCraftedInfo } from './WeaponCraftedInfo';
 import { WeaponDeepsightInfo } from './WeaponDeepsightInfo';
-import { ItemPopupExtraInfo } from './item-popup';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({

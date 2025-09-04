@@ -1,14 +1,22 @@
 import { tl } from 'app/i18next-t';
+import { compact } from 'app/utils/collections';
+import { isArmor3 } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 // simple checks against check an attribute found on DimItem
-const simpleFilters: ItemFilterDefinition[] = [
+const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | false>([
   {
     keywords: 'armor2.0',
     description: tl('Filter.Energy'),
     destinyVersion: 2,
-    filter: () => (item) => Boolean(item.energy) && item.bucket.inArmor,
+    filter: () => (item) => Boolean(item.energy) && item.bucket.inArmor && !isArmor3(item),
+  },
+  {
+    keywords: 'armor3.0',
+    description: tl('Filter.Armor3'),
+    destinyVersion: 2,
+    filter: () => (item) => Boolean(item.energy) && item.bucket.inArmor && isArmor3(item),
   },
   {
     keywords: 'weapon',
@@ -61,14 +69,14 @@ const simpleFilters: ItemFilterDefinition[] = [
   {
     keywords: 'locked',
     description: tl('Filter.Locked'),
-    filter: () => (item) => item.locked,
+    filter: () => (item) => item.lockable && item.locked,
   },
   {
     keywords: 'unlocked',
     description: tl('Filter.Locked'),
-    filter: () => (item) => !item.locked,
+    filter: () => (item) => item.lockable && !item.locked,
   },
-  {
+  $featureFlags.newItems && {
     keywords: 'new',
     description: tl('Filter.NewItems'),
     filter:
@@ -95,6 +103,20 @@ const simpleFilters: ItemFilterDefinition[] = [
     description: tl('Filter.VendorItem'),
     filter: () => (item) => Boolean(item.vendor),
   },
-];
+  {
+    keywords: 'ininventory',
+    description: tl('Filter.InInventory'),
+    filter: ({ allItems }) => {
+      const ownedHashes = new Set(allItems.map((item) => item.hash));
+      return (item) => ownedHashes.has(item.hash);
+    },
+  },
+  {
+    keywords: ['featured', 'newgear'],
+    description: tl('Filter.Featured'),
+    destinyVersion: 2,
+    filter: () => (item) => item.featured,
+  },
+]);
 
 export default simpleFilters;

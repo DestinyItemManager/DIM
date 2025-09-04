@@ -32,7 +32,7 @@ import {
   getVault,
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
-import { LockableBucketHashes, inGameArmorEnergyRules } from 'app/loadout-builder/types';
+import { ArmorBucketHashes, inGameArmorEnergyRules } from 'app/loadout-builder/types';
 import { updateAfterInGameLoadoutApply } from 'app/loadout/ingame/ingame-loadout-apply';
 import {
   createPluggingStrategy,
@@ -1140,7 +1140,7 @@ function applyLoadoutMods(
       }
     }
     const armor = filterMap(
-      LockableBucketHashes,
+      ArmorBucketHashes,
       (bucketHash) =>
         loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
         currentEquippedArmor.find((item) => item.bucket.hash === bucketHash),
@@ -1241,7 +1241,9 @@ function applyLoadoutMods(
       }
     }
 
-    // given limited time, slow API, impatient teammates, we'll plug all mods into all armor pieces, *then* all fashion
+    // Given limited time, slow API, impatient teammates, we'll plug all mods
+    // into all armor pieces, *then* all fashion. We do each item in parallel
+    // though, subject to the rate limit for the API.
     for (const assignGroup of [modAssigns, fashionAssigns]) {
       await Promise.all(
         assignGroup.map(({ item, actions }) =>

@@ -9,6 +9,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import { BucketHashes } from 'data/d2/generated-enums';
 
 // find and get the quantity of a specif item type
@@ -69,8 +70,8 @@ function getCurrentSeason(
   const season = profile?.profile?.data?.currentSeasonHash
     ? defs?.Season.get(profile.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassHash
-    ? defs?.SeasonPass.get(season.seasonPassHash)
+  const seasonPass = season?.seasonPassList[D2SeasonPassActiveList]?.seasonPassHash
+    ? defs?.SeasonPass.get(season.seasonPassList[D2SeasonPassActiveList].seasonPassHash)
     : undefined;
   if (!season) {
     return [];
@@ -95,19 +96,14 @@ function metrics(state: RootState) {
   const seasonProgress = progression[battlePassHash!];
   const prestigeProgress = progression[prestigeLevel!];
 
-  const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
+  const prestigeMode = seasonProgress?.level === seasonProgress?.levelCap;
 
   const seasonalRank = prestigeMode
-    ? prestigeProgress.level + seasonProgress.levelCap
-    : seasonProgress.level;
+    ? prestigeProgress?.level + seasonProgress?.levelCap
+    : seasonProgress?.level;
 
   return {
-    gambit: progression[3008065600].currentProgress,
-    vanguard: progression[457612306].currentProgress,
-    crucible: progression[2083746873].currentProgress,
-    trials: progression[2755675426].currentProgress,
     gunsmith: progression[1471185389].currentProgress,
-    ironBanner: progression[599071390].currentProgress,
     triumphs: lifetimeScore ?? 0,
     triumphsActive: activeScore ?? 0,
     battlePass: battlePassHash ? seasonalRank : 0,
@@ -121,6 +117,24 @@ export function streamDeckClearId(id: string) {
 
 function equippedItems(store?: DimStore) {
   return store?.items.filter((it) => it.equipment).map((it) => streamDeckClearId(it.index)) ?? [];
+}
+
+function inventoryCounters(state?: RootState) {
+  return state?.inventory.stores
+    .flatMap((it) => it.items)
+    .filter((it) => it.bucket.inInventory)
+    .reduce(
+      (acc, it) => {
+        const key = streamDeckClearId(it.index);
+        if (acc[key]) {
+          acc[key] += it.amount;
+        } else {
+          acc[key] = it.amount;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 }
 
 function character(store: DimStore) {
@@ -193,4 +207,5 @@ export default {
   maxPower,
   postmaster,
   equippedItems,
+  inventoryCounters,
 };

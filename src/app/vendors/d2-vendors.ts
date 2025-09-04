@@ -16,6 +16,7 @@ import {
   DestinyVendorsResponse,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import specialVendorStrings from 'data/d2/special-vendors-strings.json';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -105,7 +106,8 @@ export function toVendor(
 
   const destinationHash =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0
-      ? (vendorDef.locations[vendor.vendorLocationIndex]?.destinationHash ?? 0)
+      ? // Unadvertised nullability: DestinyVendorDefinition.locations
+        (vendorDef.locations?.[vendor.vendorLocationIndex]?.destinationHash ?? 0)
       : 0;
   const destinationDef = destinationHash ? defs.Destination.get(destinationHash) : undefined;
   const placeDef = destinationDef?.placeHash ? defs.Place.get(destinationDef.placeHash) : undefined;
@@ -223,10 +225,18 @@ export function filterVendorGroups(
     .filter((g) => g.vendors.length);
 }
 
-export function filterToUnacquired(ownedItemHashes: Set<number>): VendorFilterFunction {
-  return ({ owned, item, collectibleState }) =>
+export function filterToUnacquired(
+  ownedItemHashes: Set<number>,
+  defs: D2ManifestDefinitions | undefined,
+): VendorFilterFunction {
+  return ({ owned, item, collectibleState, failureStrings }) =>
     item &&
     !owned &&
+    !failureStrings.includes(
+      defs?.Vendor.get(specialVendorStrings.alreadyAcquiredFailureString.vendorHash)
+        ?.failureStrings[specialVendorStrings.alreadyAcquiredFailureString.index] ||
+        'FallbackToPreventBadFiltering',
+    ) &&
     (collectibleState !== undefined
       ? (collectibleState & DestinyCollectibleState.NotAcquired) !== 0
       : (item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) ||

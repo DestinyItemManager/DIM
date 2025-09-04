@@ -1,0 +1,12 @@
+.container {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  justify-content: space-between;
+  label {
+    font-size: 1.17em;
+    cursor: pointer;
+  }
+  :global(.app-icon) {
+    color: #00a5a5;
+  }
+}

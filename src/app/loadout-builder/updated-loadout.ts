@@ -3,10 +3,9 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
-import { sumBy } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { ArmorSet, LockableBucketHashes } from './types';
-import { statTier } from './utils';
+import { sum } from 'es-toolkit';
+import { ArmorBucketHashes, ArmorSet } from './types';
 
 /**
  * Create a new loadout from the original prototype loadout, but with the armor
@@ -22,7 +21,7 @@ export function updateLoadoutWithArmorSet(
   loadoutParameters = loadout.parameters,
 ): Loadout {
   const data = {
-    tier: sumBy(Object.values(set.stats), statTier),
+    statTotal: sum(Object.values(set.stats)),
   };
 
   const existingItemsWithoutArmor = loadout.items.filter(
@@ -32,9 +31,7 @@ export function updateLoadoutWithArmorSet(
       // Remove equipped armor items
       !(
         li.equip &&
-        LockableBucketHashes.includes(
-          defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0,
-        )
+        ArmorBucketHashes.includes(defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0)
       ),
   );
   const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));

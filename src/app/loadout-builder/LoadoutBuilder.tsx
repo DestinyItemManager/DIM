@@ -1,4 +1,8 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  SetBonusCounts,
+  StatConstraint,
+} from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
@@ -19,7 +23,6 @@ import {
   LoadoutEditSubclassSection,
 } from 'app/loadout/loadout-edit/LoadoutEdit';
 import { Loadout } from 'app/loadout/loadout-types';
-import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -30,6 +33,7 @@ import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shel
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { getMaxParallelCores } from 'app/utils/parallel-cores';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -47,26 +51,30 @@ import ModPicker from '../loadout/ModPicker';
 import { isLoadoutBuilderItem } from '../loadout/loadout-item-utils';
 import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
+import { exampleLOSearch } from './example-search';
 import EnergyOptions from './filter/EnergyOptions';
 import LoadoutOptimizerExotic from './filter/LoadoutOptimizerExotic';
 import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerPinnedItems,
 } from './filter/LoadoutOptimizerMenuItems';
-import StatConstraintEditor from './filter/StatConstraintEditor';
+import LoadoutOptimizerSetBonus from './filter/LoadoutOptimizerSetBonus';
+import NewFeaturedGearFilter from './filter/NewFeaturedGearFilter';
+import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
-import { ReferenceTiers } from './generated-sets/SetStats';
+import { ReferenceConstraints } from './generated-sets/SetStats';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
 import { useProcess } from './process/useProcess';
 import {
+  ArmorBucketHashes,
   ArmorEnergyRules,
   LOCKED_EXOTIC_ANY_EXOTIC,
-  LockableBucketHashes,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
   loDefaultArmorEnergyRules,
 } from './types';
 import useEquippedHashes from './useEquippedHashes';
@@ -127,6 +135,7 @@ export default memo(function LoadoutBuilder({
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
   const includeRuntimeStatBenefits = loadoutParameters.includeRuntimeStatBenefits ?? true;
   const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+  const setBonuses = loadoutParameters.setBonuses ?? emptyObject<SetBonusCounts>();
   const classType = loadout.classType;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
@@ -177,11 +186,16 @@ export default memo(function LoadoutBuilder({
     [armorItems, modsToAssign],
   );
 
-  const hasPreloadedLoadout = Boolean(preloadedLoadout);
+  // If the user is playing with an existing loadout (potentially one they
+  // received from a loadout share) or a direct /optimizer link, do not
+  // overwrite the global saved loadout parameters. If they decide to save that
+  // loadout, these will still be saved with the loadout. For these purposes we
+  // won't consider the equipped loadout to be a preloaded loadout.
+  const saveParamsAsDefaults = !(preloadedLoadout && preloadedLoadout.id !== 'equipped');
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
-  useSaveLoadoutParameters(hasPreloadedLoadout, loadoutParameters);
+  useSaveLoadoutParameters(saveParamsAsDefaults, loadoutParameters);
   useSaveStatConstraints(
-    hasPreloadedLoadout,
+    saveParamsAsDefaults,
     statConstraints,
     savedStatConstraintsByClass,
     classType,
@@ -223,6 +237,7 @@ export default memo(function LoadoutBuilder({
       lockedExoticHash,
       armorEnergyRules,
       searchFilter,
+      setBonuses,
     });
     return [armorEnergyRules, items, filterInfo];
   }, [
@@ -235,6 +250,7 @@ export default memo(function LoadoutBuilder({
     unassignedMods,
     lockedExoticHash,
     searchFilter,
+    setBonuses,
   ]);
 
   const modStatChanges = useMemo(
@@ -251,9 +267,10 @@ export default memo(function LoadoutBuilder({
     );
 
   // Run the actual loadout generation process in a web worker
-  const { result, processing } = useProcess({
+  const { result, processing, totalCombos, completedCombos } = useProcess({
     selectedStore,
     filteredItems,
+    setBonuses,
     lockedModMap,
     modStatChanges,
     armorEnergyRules,
@@ -282,7 +299,7 @@ export default memo(function LoadoutBuilder({
             isLoadoutBuilderItem(item) &&
             itemCanBeEquippedBy(item, selectedStore, true) &&
             (!filter || filter(item)),
-          sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
+          sortBy: (item) => ArmorBucketHashes.indexOf(item.bucket.hash),
         });
 
         if (item) {
@@ -312,14 +329,17 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
-      <StatConstraintEditor
+      <TierlessStatConstraintEditor
+        key={storeId}
         resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}
         equippedHashes={equippedHashes}
         store={selectedStore}
         className={styles.loadoutEditSection}
+        processing={processing}
       />
+      <NewFeaturedGearFilter className={styles.loadoutEditSection} />
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}
         lbDispatch={lbDispatch}
@@ -340,6 +360,14 @@ export default memo(function LoadoutBuilder({
         storeId={selectedStore.id}
         className={styles.loadoutEditSection}
       />
+      <LoadoutOptimizerSetBonus
+        storeId={selectedStore.id}
+        classType={selectedStore.classType}
+        vendorItems={vendorItems}
+        lbDispatch={lbDispatch}
+        setBonuses={setBonuses}
+        className={styles.loadoutEditSection}
+      />
       <LoadoutEditModsSection
         loadout={loadout}
         setLoadout={setLoadout}
@@ -356,6 +384,7 @@ export default memo(function LoadoutBuilder({
         setLoadout={setLoadout}
         className={styles.subclassSection}
       />
+      <div className={styles.fineprint}>{t('LoadoutBuilder.PinnedItemsFinePrint')}</div>
       <LoadoutOptimizerPinnedItems
         chooseItem={chooseItem}
         selectedStore={selectedStore}
@@ -374,7 +403,11 @@ export default memo(function LoadoutBuilder({
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={3}>
-            <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+            <li>
+              {t('LoadoutBuilder.OptimizerExplanationSearch', {
+                example: exampleLOSearch,
+              })}
+            </li>
           </ol>
           <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
         </div>
@@ -407,11 +440,14 @@ export default memo(function LoadoutBuilder({
           {processing ? (
             <span className={styles.speedReport} role="status">
               <AppIcon icon={refreshIcon} spinning={true} />
-              <span>
-                {t('LoadoutBuilder.ProcessingSets', {
-                  character: selectedStore.name,
-                })}
-              </span>
+              <div className={styles.speedReportInner}>
+                <span>
+                  {t('LoadoutBuilder.ProcessingSets', {
+                    character: selectedStore.name,
+                  })}
+                </span>
+                <progress value={completedCombos} max={totalCombos || 1} />
+              </div>
             </span>
           ) : (
             result && (
@@ -419,6 +455,7 @@ export default memo(function LoadoutBuilder({
                 {t('LoadoutBuilder.SpeedReport', {
                   combos: result.combos,
                   time: (result.processTime / 1000).toFixed(2),
+                  cpus: getMaxParallelCores(),
                 })}
               </span>
             )
@@ -429,7 +466,11 @@ export default memo(function LoadoutBuilder({
             <ol>
               <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
               <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
-              <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
+              <li>
+                {t('LoadoutBuilder.OptimizerExplanationSearch', {
+                  example: exampleLOSearch,
+                })}
+              </li>
             </ol>
             <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
           </div>
@@ -576,17 +617,13 @@ function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem
  * Save a subset of the loadout parameters to settings in order to remember them between sessions
  */
 function useSaveLoadoutParameters(
-  hasPreloadedLoadout: boolean,
+  saveParamsAsDefaults: boolean,
   loadoutParameters: LoadoutParameters,
 ) {
   const setSetting = useSetSetting();
   const firstRun = useRef(true);
   useEffect(() => {
-    // If the user is playing with an existing loadout (potentially one they
-    // received from a loadout share) or a direct /optimizer link, do not
-    // overwrite the global saved loadout parameters. If they decide to save
-    // that loadout, these will still be saved with the loadout.
-    if (hasPreloadedLoadout) {
+    if (!saveParamsAsDefaults) {
       return;
     }
 
@@ -605,7 +642,7 @@ function useSaveLoadoutParameters(
     setSetting,
     loadoutParameters.assumeArmorMasterwork,
     loadoutParameters.autoStatMods,
-    hasPreloadedLoadout,
+    saveParamsAsDefaults,
     loadoutParameters.includeRuntimeStatBenefits,
   ]);
 }
@@ -614,7 +651,7 @@ function useSaveLoadoutParameters(
  * Save stat constraints (stat order / enablement) per class when it changes
  */
 function useSaveStatConstraints(
-  hasPreloadedLoadout: boolean,
+  saveParamsAsDefaults: boolean,
   statConstraints: StatConstraint[],
   savedStatConstraintsByClass: {
     [key: number]: StatConstraint[];
@@ -625,11 +662,7 @@ function useSaveStatConstraints(
   const firstRun = useRef(true);
 
   useEffect(() => {
-    // If the user is playing with an existing loadout (potentially one they
-    // received from a loadout share) or a direct /optimizer link, do not
-    // overwrite the global saved loadout parameters. If they decide to save
-    // that loadout, these will still be saved with the loadout.
-    if (hasPreloadedLoadout) {
+    if (!saveParamsAsDefaults) {
       return;
     }
 
@@ -639,15 +672,13 @@ function useSaveStatConstraints(
       return;
     }
 
-    // Strip out min/max tiers and just save the order
-    const newStatConstraints = statConstraints.map(({ statHash }) => ({ statHash }));
-    if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
+    if (!deepEqual(statConstraints, savedStatConstraintsByClass[classType])) {
       setSetting('loStatConstraintsByClass', {
         ...savedStatConstraintsByClass,
-        [classType]: newStatConstraints,
+        [classType]: statConstraints,
       });
     }
-  }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, hasPreloadedLoadout]);
+  }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, saveParamsAsDefaults]);
 }
 
 function UndoRedoControls({
@@ -692,7 +723,7 @@ function ExistingLoadoutStats({
     <div className={styles.referenceTiersInfo}>
       <div className={styles.header}>
         {t('LB.ExistingBuildStats')}
-        <ReferenceTiers resolvedStatConstraints={statConstraints} />
+        <ReferenceConstraints resolvedStatConstraints={statConstraints} />
       </div>
       {t('LB.ExistingBuildStatsNote')}
       <button

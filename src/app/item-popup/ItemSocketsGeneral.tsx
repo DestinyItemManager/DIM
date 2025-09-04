@@ -1,9 +1,14 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { singleStoreSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { filterMap, uniqBy } from 'app/utils/collections';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { getExtraIntrinsicPerkSockets, getGeneralSockets } from 'app/utils/socket-utils';
+import {
+  getArmorArchetypeSocket,
+  getExtraIntrinsicPerkSockets,
+  getGeneralSockets,
+} from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -13,6 +18,7 @@ import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
 import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import styles from './ItemSocketsGeneral.m.scss';
+import { SetBonus } from './SetBonus';
 import Socket from './Socket';
 
 export default function ItemSocketsGeneral({
@@ -27,6 +33,7 @@ export default function ItemSocketsGeneral({
 }) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
+  const store = useSelector(singleStoreSelector(item.owner));
 
   if (!item.sockets || !defs) {
     return null;
@@ -40,6 +47,10 @@ export default function ItemSocketsGeneral({
 
   // exotic class armor intrinsics
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
+  const archetypeSocket = getArmorArchetypeSocket(item);
+  if (archetypeSocket) {
+    extraIntrinsicSockets.push(archetypeSocket);
+  }
   const extraIntrinsicSocketIndices = extraIntrinsicSockets.map((s) => s.socketIndex);
 
   // Only show the first of each style of category when minimal
@@ -75,6 +86,11 @@ export default function ItemSocketsGeneral({
   return (
     <>
       {intrinsicRows}
+      {!minimal && item.setBonus && (
+        <div className="item-details">
+          <SetBonus setBonus={item.setBonus} store={store} />
+        </div>
+      )}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets

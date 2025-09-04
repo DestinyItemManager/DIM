@@ -140,7 +140,7 @@ function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
       !i.equipped &&
       !i.notransfer &&
       (i.isEngram ||
-        (i.equipment && i.bucket.hash !== BucketHashes.Emblems && i.tier === 'Uncommon') ||
+        (i.equipment && i.bucket.hash !== BucketHashes.Emblems && i.rarity === 'Uncommon') ||
         supplies.includes(i.hash)),
   );
 

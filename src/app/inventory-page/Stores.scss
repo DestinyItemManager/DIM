@@ -25,6 +25,7 @@
     border: $equipped-item-border solid #ddd;
     height: fit-content;
     padding: $equipped-item-padding;
+    margin-top: -1 * ($equipped-item-border + $equipped-item-padding);
   }
 
   .store-cell {

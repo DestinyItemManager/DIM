@@ -1,4 +1,4 @@
-import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
@@ -9,17 +9,18 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { profileResponseSelector } from 'app/inventory/selectors';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
-import { statTier } from 'app/loadout-builder/utils';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { getSubclassPlugHashes } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { dimPowerIcon } from 'app/shell/icons/custom/Power';
 import { RootState } from 'app/store/types';
 import { filterMap, sumBy } from 'app/utils/collections';
 import clsx from 'clsx';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
@@ -29,7 +30,7 @@ import StatTooltip from './StatTooltip';
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {
   return (
-    <div className={clsx('stat-row', styles.powerFormula)}>
+    <div className={styles.powerFormula}>
       {stats.map((stat) => (
         <PressTip
           key={stat.name}
@@ -52,13 +53,12 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
             role={stat.onClick ? 'button' : 'group'}
             onClick={stat.onClick}
           >
-            <img src={stat.icon} alt={stat.name} />
-            <div>
-              <span className={styles.powerStat}>
-                <FractionalPowerLevel power={stat.value} />
-              </span>
-              {stat.problems?.hasClassified && <sup className={styles.asterisk}>*</sup>}
+            {typeof stat.icon === 'string' ? <img src={stat.icon} alt={stat.name} /> : stat.icon}
+
+            <div className={styles.powerStat}>
+              <FractionalPowerLevel power={stat.value} />
             </div>
+            {stat.problems?.hasClassified && <sup className={styles.asterisk}>*</sup>}
           </div>
         </PressTip>
       ))}
@@ -68,7 +68,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
 
 interface PowerStat {
   value: number;
-  icon: string;
+  icon: string | React.ReactNode;
   name: string;
   richTooltipContent?: () => React.ReactNode;
   onClick?: () => void;
@@ -88,7 +88,7 @@ export function PowerFormula({ storeId }: { storeId: string }) {
 
   const maxTotalPower: PowerStat = {
     value: powerLevel.maxTotalPower,
-    icon: bungieNetPath(defs.Stat.get(StatHashes.Power).displayProperties.icon),
+    icon: <AppIcon icon={dimPowerIcon} />,
     name: t('Stats.MaxTotalPower'),
     problems: { ...powerLevel.problems, notOnStore: false },
   };
@@ -135,8 +135,8 @@ export function PowerFormula({ storeId }: { storeId: string }) {
     ),
     icon: xpIcon,
   };
-
-  return <CharacterPower stats={[maxTotalPower, maxGearPower, artifactPower]} />;
+  const stats = artifactPower.value ? [maxTotalPower, maxGearPower, artifactPower] : [maxGearPower];
+  return <CharacterPower stats={stats} />;
 }
 
 /**
@@ -146,8 +146,9 @@ export function PowerFormula({ storeId }: { storeId: string }) {
  */
 export function CharacterStats({
   stats,
-  showTier,
+  showTotal,
   equippedHashes,
+  className,
 }: {
   /**
    * A list of stats to display. This should contain an entry for each stat in
@@ -157,24 +158,23 @@ export function CharacterStats({
   stats: {
     [hash: number]: DimCharacterStat;
   };
-  /** Whether to show the total tier of the set. */
-  showTier?: boolean;
+  /** Whether to show the total stat sum of the set. */
+  showTotal?: boolean;
   /**
    * Item hashes for equipped exotics, used to show more accurate cooldown
    * tooltips.
    */
   equippedHashes: Set<number>;
+  className?: string;
 }) {
   // Select only the armor stats, in the correct order
   const statInfos = filterMap(armorStats, (h) => stats[h]);
 
   return (
-    <div className="stat-row">
-      {showTier && (
+    <div className={clsx(styles.armorStats, className)}>
+      {showTotal && (
         <div className={clsx(styles.tier, 'stat')}>
-          {t('LoadoutBuilder.TierNumber', {
-            tier: sumBy(statInfos, (s) => statTier(s.value)),
-          })}
+          {t('LoadoutBuilder.StatTotal', { total: sumBy(statInfos, (s) => s.value) })}
         </div>
       )}
       {statInfos.map((stat) => (
@@ -184,7 +184,9 @@ export function CharacterStats({
         >
           <div
             className={clsx('stat', {
-              boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
+              [styles.boostedValue]: stat.breakdown?.some(
+                (change) => change.source === 'runtimeEffect',
+              ),
             })}
             aria-label={`${stat.displayProperties.name} ${stat.value}`}
             role="group"
@@ -230,11 +232,13 @@ export function LoadoutCharacterStats({
   subclass,
   items,
   allMods,
+  className,
 }: {
   loadout: Loadout;
   subclass?: ResolvedLoadoutItem;
   allMods: PluggableInventoryItemDefinition[];
   items?: (ResolvedLoadoutItem | DimItem)[];
+  className?: string;
 }) {
   const defs = useD2Definitions()!;
   const equippedItems =
@@ -258,5 +262,7 @@ export function LoadoutCharacterStats({
     loadout.parameters?.includeRuntimeStatBenefits ?? true,
   );
 
-  return <CharacterStats showTier stats={stats} equippedHashes={equippedHashes} />;
+  return (
+    <CharacterStats className={className} showTotal stats={stats} equippedHashes={equippedHashes} />
+  );
 }

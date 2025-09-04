@@ -10,6 +10,7 @@ import { useCallback, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers';
 import CategoryStrip from './CategoryStrip';
+import D1ReputationSection from './D1ReputationSection';
 import HeaderShadowDiv from './HeaderShadowDiv';
 import styles from './PhoneStores.m.scss';
 import PhoneStoresHeader from './PhoneStoresHeader';
@@ -184,6 +185,9 @@ function StoresInventory({
       )}
       {showPostmaster && buckets.byCategory.Postmaster.map(renderBucket)}
       {buckets.byCategory[selectedCategoryId].map(renderBucket)}
+      {store.destinyVersion === 1 && !store.isVault && selectedCategoryId === 'Progress' && (
+        <D1ReputationSection stores={[store]} />
+      )}
     </>
   );
 }

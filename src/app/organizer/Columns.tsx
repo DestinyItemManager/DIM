@@ -31,6 +31,7 @@ import { statHashByName } from 'app/search/search-filter-values';
 import { getD1QualityColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
+  faCheck,
   lockIcon,
   powerIndicatorIcon,
   thumbsDownIcon,
@@ -49,6 +50,7 @@ import {
   isD1Item,
 } from 'app/utils/item-utils';
 import {
+  getArmorArchetypeSocket,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
   getSocketsByType,
@@ -72,6 +74,7 @@ import {
   buildSocketNames,
   csvStatNamesForDestinyVersion,
 } from 'app/inventory/spreadsheets';
+import { PlugClickedHandler } from 'app/inventory/store/override-sockets';
 import { AmmoIcon } from 'app/item-popup/AmmoIcon';
 import { DeepsightHarmonizerIcon, HarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
 import ItemSockets from 'app/item-popup/ItemSockets';
@@ -99,6 +102,7 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.Attack]: tl('Organizer.Stats.Power'),
   [StatHashes.Defense]: tl('Organizer.Stats.Power'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
+  [StatHashes.AmmoGeneration]: tl('Organizer.Stats.AmmoGeneration'),
 };
 
 export const perkStringSort: Comparator<string | undefined> = (a, b) => {
@@ -114,7 +118,9 @@ export const perkStringSort: Comparator<string | undefined> = (a, b) => {
       bi++;
       continue;
     }
-    return aPart.localeCompare(bPart) as 1 | 0 | -1;
+    // Disrupt normal alphabetization by making empty string (no interesting information) sort to last.
+    // (the "both are blank" condition is already ruled out above)
+    return !aPart ? 1 : !bPart ? -1 : (aPart.localeCompare(bPart) as 1 | 0 | -1);
   }
   return 0;
 };
@@ -128,6 +134,88 @@ const perkStringFilter = (value: string | undefined) => {
     .map((perk) => `exactperk:"${perk}"`)
     .join(' ');
 };
+
+/**
+ * This helper allows TypeScript to perform type inference to determine the
+ * type of V based on its arguments. This allows us to automatically type the
+ * various column methods like `cell` and `filter` automatically based on the
+ * return type of `value`.
+ */
+/*@__INLINE__*/
+function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
+  return columnDef;
+}
+
+export const d1QualityColumn = c({
+  id: 'quality',
+  header: t('Organizer.Columns.Quality'),
+  csv: '% Quality',
+  value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
+  cell: (value) => <span style={getD1QualityColor(value)}>{value}%</span>,
+  filter: (value) => `quality:>=${value}`,
+});
+
+export function modsColumn(
+  className: string,
+  headerClassName: string,
+  isWeapon: boolean,
+  onPlugClicked?: PlugClickedHandler,
+) {
+  return c({
+    id: 'mods',
+    className,
+    headerClassName,
+    header: t('Organizer.Columns.Mods'),
+    // TODO: for ghosts this should return ghost mods, not cosmetics
+    value: (item) => perkString(getSocketsByType(item, 'mods')),
+    cell: (_val, item) => (
+      <>
+        {isD1Item(item) && item.talentGrid && (
+          <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+        )}
+        {item.sockets &&
+          (isWeapon ? (
+            <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
+          ) : (
+            <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
+          ))}
+      </>
+    ),
+    sort: perkStringSort,
+  });
+}
+
+export function perksGridColumn(
+  className: string,
+  headerClassName: string,
+  onPlugClicked: PlugClickedHandler | undefined,
+  initialItemId?: string,
+  headerKey: I18nKey = 'Organizer.Columns.Perks',
+) {
+  return c({
+    id: 'perksGrid',
+    className,
+    headerClassName,
+    header: t(headerKey),
+    value: (item) => perkString(getSocketsByType(item, 'perks')),
+    cell: (_val, item) => (
+      <>
+        {isD1Item(item) && item.talentGrid && (
+          <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
+        )}
+        {item.missingSockets && item.id === initialItemId && (
+          <div className="item-details warning">
+            {item.missingSockets === 'missing'
+              ? t('MovePopup.MissingSockets')
+              : t('MovePopup.LoadingSockets')}
+          </div>
+        )}
+        {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
+      </>
+    ),
+    sort: perkStringSort,
+  });
+}
 
 /**
  * This function generates the columns.
@@ -145,7 +233,7 @@ export function getColumns(
   loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
-  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
+  onPlugClicked?: PlugClickedHandler,
 ): ColumnDefinition[] {
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
@@ -166,17 +254,6 @@ export function getColumns(
   const customStats = isSpreadsheet
     ? []
     : createCustomStatColumns(customStatDefs, styles.stats, styles.statsHeader);
-
-  /**
-   * This helper allows TypeScript to perform type inference to determine the
-   * type of V based on its arguments. This allows us to automatically type the
-   * various column methods like `cell` and `filter` automatically based on the
-   * return type of `value`.
-   */
-  /*@__INLINE__*/
-  function c<V extends Value>(columnDef: ColumnDefinition<V>): ColumnDefinition<V> {
-    return columnDef;
-  }
 
   const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
@@ -301,6 +378,7 @@ export function getColumns(
       csv: (value) => ['Tag', value || undefined],
     }),
     !isSpreadsheet &&
+      $featureFlags.newItems &&
       c({
         id: 'new',
         header: t('Organizer.Columns.New'),
@@ -311,6 +389,28 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `${value ? '' : '-'}is:new`,
       }),
+    c({
+      id: 'featured',
+      header: t('Organizer.Columns.Featured'),
+      className: styles.centered,
+      headerClassName: styles.centered,
+      defaultSort: SortDirection.DESC,
+      value: (item) => item.featured,
+      cell: (value) => value && <AppIcon icon={faCheck} />,
+      filter: (value) => `${value ? '' : '-'}is:featured`,
+      csv: 'New Gear',
+    }),
+    c({
+      id: 'holofoil',
+      header: t('Organizer.Columns.Holofoil'),
+      className: styles.centered,
+      headerClassName: styles.centered,
+      defaultSort: SortDirection.DESC,
+      value: (item) => item.holofoil,
+      cell: (value) => value && <AppIcon icon={faCheck} />,
+      filter: (value) => `${value ? '' : '-'}is:holofoil`,
+      csv: 'Holofoil',
+    }),
     destinyVersion === 2 &&
       isWeapon &&
       c({
@@ -358,9 +458,19 @@ export function getColumns(
     c({
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
-      csv: 'Tier',
-      value: (i) => i.tier,
+      csv: 'Rarity',
+      value: (i) => i.rarity,
       filter: (value) => `is:${value}`,
+    }),
+    c({
+      id: 'itemTier',
+      header: t('Organizer.Columns.ItemTier'),
+      className: styles.centered,
+      headerClassName: styles.centered,
+      defaultSort: SortDirection.DESC,
+      value: (item) => item.tier,
+      filter: (value) => `tier:${value}`,
+      csv: 'Tier',
     }),
     isSpreadsheet &&
       !isGhost &&
@@ -594,46 +704,16 @@ export function getColumns(
       }),
     !isSpreadsheet &&
       (isWeapon || (isArmor && destinyVersion === 1)) &&
-      c({
-        id: 'perksgrid',
-        className: styles.perksGrid,
-        headerClassName: styles.perks,
-        header: t('Organizer.Columns.PerksGrid'),
-        value: (item) => perkString(getSocketsByType(item, 'perks')),
-        cell: (_val, item) => (
-          <>
-            {isD1Item(item) && item.talentGrid && (
-              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-            )}
-            {item.sockets && <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />}
-          </>
-        ),
-        sort: perkStringSort,
-      }),
+      perksGridColumn(
+        styles.perksGrid,
+        styles.perks,
+        onPlugClicked,
+        undefined,
+        tl('Organizer.Columns.PerksGrid'),
+      ),
     !isSpreadsheet &&
       destinyVersion === 2 &&
-      c({
-        id: 'mods',
-        className: styles.perksGrid,
-        headerClassName: styles.perks,
-        header: t('Organizer.Columns.Mods'),
-        // TODO: for ghosts this should return ghost mods, not cosmetics
-        value: (item) => perkString(getSocketsByType(item, 'mods')),
-        cell: (_val, item) => (
-          <>
-            {isD1Item(item) && item.talentGrid && (
-              <ItemTalentGrid item={item} className={styles.talentGrid} perksOnly={true} />
-            )}
-            {item.sockets &&
-              (isWeapon ? (
-                <ItemModSockets item={item} onPlugClicked={onPlugClicked} />
-              ) : (
-                <ItemSockets item={item} minimal grid onPlugClicked={onPlugClicked} />
-              ))}
-          </>
-        ),
-        sort: perkStringSort,
-      }),
+      modsColumn(styles.perksGrid, styles.perks, isWeapon, onPlugClicked),
     ...statColumns,
     ...baseStatColumns,
     ...d1ArmorQualityByStat,
@@ -850,6 +930,10 @@ export function getStatColumns(
     id: 'baseStats',
     header: t('Organizer.Columns.BaseStats'),
   };
+  const baseMasterworkStatsGroup: ColumnGroup = {
+    id: 'baseMasterworkStats',
+    header: t('Compare.AssumeMasterworked'),
+  };
   const statQualityGroup: ColumnGroup = {
     id: 'statQuality',
     header: t('Organizer.Columns.StatQuality'),
@@ -959,6 +1043,45 @@ export function getStatColumns(
         }))
       : [];
 
+  const baseMasterworkStatColumns: ColumnWithStat[] =
+    destinyVersion === 2 && isArmor && !isSpreadsheet
+      ? statColumns.map((column) => ({
+          ...column,
+          id: `baseMasterwork${column.statHash}`,
+          columnGroup: baseMasterworkStatsGroup,
+          value: (item): number | undefined => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            return stat?.baseMasterworked;
+          },
+          cell: (val, item, ctx) => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            if (typeof val !== 'number') {
+              return null;
+            }
+            // TODO: force a width if this is armor, so we see the bar?
+            return (
+              <CompareStat
+                min={ctx?.min ?? 0}
+                max={ctx?.max ?? 0}
+                stat={stat}
+                item={item}
+                value={val}
+              />
+            );
+          },
+          filter: (value) => `basestat:${invert(statHashByName)[column.statHash]}:>=${value}`,
+          csv: (_value, item) => {
+            // Re-find the stat instead of using the value passed in, because the
+            // value passed in can be different if it's Recoil.
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            return [
+              `${csvStatNames.get(column.statHash) ?? `UnknownStatBase ${column.statHash}`} (Base)`,
+              stat?.base ?? 0,
+            ];
+          },
+        }))
+      : [];
+
   const d1ArmorQualityByStat =
     destinyVersion === 1 && isArmor
       ? stats
@@ -1007,6 +1130,7 @@ export function getStatColumns(
   return {
     statColumns,
     baseStatColumns,
+    baseMasterworkStatColumns,
     d1ArmorQualityByStat,
   };
 }
@@ -1070,7 +1194,6 @@ function PerksCell({
                   [styles.perkSelected]:
                     socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
                   [styles.perkSelectable]: socket.plugOptions.length > 1,
-                  [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
                 })}
                 data-filter-value={p.plugDef.displayProperties.name}
                 onClick={
@@ -1084,7 +1207,11 @@ function PerksCell({
                     : undefined
                 }
               >
-                <div className={styles.miniPerkContainer}>
+                <div
+                  className={clsx(styles.miniPerkContainer, {
+                    [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
+                  })}
+                >
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />
                 </div>
                 {p.plugDef.displayProperties.name}
@@ -1172,14 +1299,15 @@ export function perkString(sockets: DimSocket[]): string | undefined {
     .join(',');
 }
 
-export function getIntrinsicSockets(item: DimItem) {
+export function getIntrinsicSockets(item: DimItem): DimSocket[] {
   const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
+  const archetypeSocket = getArmorArchetypeSocket(item);
   return intrinsicSocket &&
     // artifice already shows up in the "modslot" column
     !isArtificeSocket(intrinsicSocket)
-    ? [intrinsicSocket, ...extraIntrinsicSockets]
-    : extraIntrinsicSockets;
+    ? [intrinsicSocket, ...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])]
+    : [...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])];
 }
 
 /**

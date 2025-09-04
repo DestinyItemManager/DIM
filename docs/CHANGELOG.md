@@ -1,5 +1,216 @@
 ## Next
 
+* Reduced how much items are dimmed out in the Item Feed when they don't match the current search.
+* BETA: Option to compare by base masterworked stats in Compare feature. This allows a fair comparison between Armor 2.0 and Armor 3.0.
+* Added a setting to control how many CPU cores can be used by Loadout Optimizer/Analyzer.
+* Reorganized the Settings page.
+
+## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
+
+* Tuning mods can be chosen manually in the loadout editor, and will be assigned to compatible items when the loadout is applied. The equipped loadout and any snapshotted in-game loadouts will retain their tuning mods.
+* Loadout Optimizer will no longer collapse sets with items that have the exact same stats. Now you'll see a separate set for each copy.
+* Combine the set bonus tooltips for items of the same set in character status
+* Adjust enhanced perk arrow when perk name takes up more than 1 line
+* Loadout Optimizer now automatically assigns Tier 5 tuning mods where available. This can make major differences in what stats you can achieve!
+* Loadout Optimizer will now utilize multiple CPU cores.
+* Bulk locking/unlocking items will skip over items that cannot be locked.
+* `is:locked` and `is:unlocked` searches will never match items that cannot be locked.
+* Finishers are no longer lockable (Bungie doesn't allow it)
+* In Compare and Organizer, when you hold shift and click a column to change its sorting, we now remove the sort entirely on the third click.
+* Fixed a case where some old searches could not be unsaved. Remember that you can also *delete* searches from the Search History page or by clicking the X in the autocomplete dropdown.
+* Improve autocomplete for the new `dupe:` filter.
+* Loadout Optimizer and Compare will only show vendor items that you can actually buy.
+* Fixed Progress tab season pass counter double counting levels 101-110
+
+## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
+
+* Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled.
+* Add `source:kepler`
+* `is:modded` can match items other than armor
+* `year:8` now correctly matches Edge of Fate items.
+* Fixes well rested XP counter from counting ranks 101-110 as 1 level instead of 5
+* Fixed the display of Seasonal Progress and Well-Rested on mobile.
+* Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
+* Sped up loadout analyzer when loadouts and inventory haven't changed.
+* Deprecated `is:dupelower` filter.
+* Deprecated `is:infusionfodder` filter.
+* Deprecated `is:wishlistdupe` filter. Use `is:dupe is:wishlist` to find dupes with a wishlist match.
+* Deprecated `is:crafteddupe` filter. Use `is:dupe is:patternunlocked` to find dupes you may replace with a crafted item.
+* A new `dupe:` filter has been added, which can find duplicates of combined factors.
+  * Try `dupe:archetype+tertiarystat` to find duplicate armors with the same armor Archetype *and* tertiary stat.
+* The `dupe:` filter can look for lower stats *within* a group of similar items.
+  * Try `dupe:setbonus+statlower` to look inside each armor set for pieces with worse stats.
+  * Try `dupe:setbonus+stats` to look for identical rolls on identical armor.
+* Check out Filters Help at the bottom of the search dropdown, for more dupe filter keywords.
+* In the future, the `dupe:` filter will replace `is:dupeperks`, `is:statdupe`, `is:statlower`, `is:customstatlower`.
+* `dupe:customstatlower` will more accurately narrow matches, checking **all* applicable custom stats against items. `is:customstatlower` is not recommended.
+* Add a button to Compare to find all Armor 3.0 with the same 3 non-zero stats, even if they have a different Archetype.
+* The loading spinner will always spin when loading vendors.
+
+## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
+
+* Fix Organizer shift-click filter behavior for perks.
+* Fixed confusing Tuned Stat symbol placement in the Organizer.
+
+## 8.86.0 <span class="changelog-date">(2025-08-17)</span>
+
+* Added Activatedness information to Set Bonuses on armor held by a character.
+* Builds in Loadout Optimizer are now sorted by enabled stats, then each enabled stat in order, then total stats (including disabled stats). Before, they were not sorted by total stats, so if you had some stats disabled you could get very low-stat builds near the top.
+* Added `is:statdupe` to find armor with the same base stats.
+* Fixed a bug where removing set bonuses by un-clicking them from the set bonus picker could result in a loadout that couldn't be saved.
+* Removed outdated power caps info from the Progress page
+* Tuning mod stat changes are reflected in the stat bars in the item popup.
+* Removed redundant stat effect text in mod tooltip.
+* Added holofoil column to organizer
+* Worked around a bug in light.gg that caused some links from DIM's Armory to log you out of light.gg.
+* Filtered down the list of reputation ranks shown on the Progress page, and included the Crucible reward rank.
+* Solstice challenges should appear on the Progress page now.
+* Moved season pass rank info to the Ranks section in Progress.
+* Fixed "Well Rested" perk detection, moved it to the Ranks section in Progress.
+
+## 8.85.0 <span class="changelog-date">(2025-08-10)</span>
+
+* Improved the responsiveness of draggable lists (Loadout Optimizer stat constraints, inventory sort order, etc.)
+* Fixed an issue where the loadout analysis on the Loadouts page treated Armor 2.0 and Armor 3.0 versions of exotics separately.
+* BETA ONLY: The new-item dot, `is:new` search, and new-item Organizer column have been removed. You can use the Item Feed to keep track of new drops.
+* Adjust text spacing for item popup headers when tier/season banner are present
+* Added an `is:holofoil` search.
+* Add the bonus to all stats for tier 10 masterwork on new weapons.
+* Item icons in the item feed will dim if the items do not match the current search.
+* Added a scrollbar to the item feed
+* Fix showing default ornament icon for new weapons in Armory
+* Added `tunedstat:` filter for finding Tier 5 items with specific tuners.
+* Highlighted Archetype and Tuned stats in the item popup.
+* The Balanced Tuning mod now correctly applies +1 only to the three lowest armor stats
+* Remove repeated stat info in perk descriptions
+* Fixed Assume Masterwork for tiered weapons in Compare
+* Show the armor masterwork socket for tiered armor
+* Correctly calculate the masterwork level for tiered armor
+* Add the ability to specify Set Bonuses in the Loadout Optimizer
+* Set Bonus names and perks are filterable via `perk:` `exactperk:` or free text search.
+* `is:statlower` now knows how to compare all the possible stat arrangements of armor with Tier 5 tuning mods, allowing you to find more strictly-worse items.
+* `is:statlower` now compares armor as if it has been masterworked, so an unmasterworked piece won't be considered worse than a masterworked piece if it would actually be better after masterworking.
+
+## 8.84.0 <span class="changelog-date">(2025-08-03)</span>
+
+* Fixed an issue where the Loadout Optimizer would consider Armor 3.0 and Armor 2.0 versions of exotics separately. Now, if you select an exotic, all your copies of that exotic will be considered.
+* Updated the order of search suggestions to prioritize `is:` filters.
+* Display armor archetypes in Loadout Optimizer.
+* Support mid-season season pass track change.
+* Stat range searches (e.g. `stat:rpm:<100`) will no longer match items that don't have that stat.
+* New Compare button for armor with Archetype-based stats.
+* Added a toggle to the Loadout Optimizer that will limit eligible armor to only new or featured gear (the gear that gets bonuses for being new). All this does is add and remove `is:featured` from the search bar.
+* Hid the masterwork upgrade socket in the item popup for new armor.
+* Added a catalyst icon for the Osteo Striga.
+* Removed some uninteresting materials from the material counts display.
+* Added stat ordinality armor filters like `primarystat:super` and `tertiarystat:grenade`.
+* Add another compare button to highlight Armor 3.0 with the same 3 base stats.
+* When you open Loadout Optimizer with the "Equipped" loadout, the loadout parameters you select will now be saved as the default for that class. This was already true if you entered Loadout Optimizer by clicking the "Loadout Optimizer" button. Editing an existing loadout does not save the parameters as a default.
+* When we save Loadout Optimizer defaults, we'll save the min/max setting for each stat now, not just whether it's enabled and what order.
+* Fix "enhanced" detection to highlight barrels, magazines, etc.
+
+## 8.83.0 <span class="changelog-date">(2025-07-27)</span>
+
+* DIMmit is back, for all your changelog notifications.
+* DIM now shows a placeholder and warning when your Silver balance is not available from Bungie.net.
+* Updated item tier display in the Item Popup.
+* In addition to weapon barrels/magazines/etc., item stat bars now display contributions from perks that provide them.
+* Big updates to Material Counts, with more mats and better grouping. Try hovering or clicking the Consumables count under the Vault banner.
+* `is:featured` now has a synonym `is:newgear` for looking up which items provide reward/combat bonuses, and can be taken into activities for New Gear only.
+* `is:armor3.0` set up for new Edge of Fate Archetype-based armor, and `is:armor2.0` now excludes 3.0 pieces.
+* Persistence stat and stat filter added for heavy crossbows.
+* Catalysts now show their source on the Records page.
+* Increased the contrast of red numbers against a black background.
+* Removed empty perks that could appear in the Armory on craftable items.
+* Added hover highlighting for the power formula and material counts buttons.
+* Possible Set Bonuses are now displayed in the Armor Popup.
+
+## 8.82.2 <span class="changelog-date">(2025-07-22)</span>
+
+* Fix an item inspection crash in D1.
+
+## 8.82.1 <span class="changelog-date">(2025-07-21)</span>
+
+* Bungie.net still shows characters as having one point of Artifact Power. This has been removed.
+* Fixed the armor stat total "equation" shown in the Item Popup.
+* Fixed Armor 3.0 Exotics displaying their Archetype instead of their Intrinsic power.
+* Added `stat:ammogen:` search.
+
+## 8.82.0 <span class="changelog-date">(2025-07-20)</span>
+
+## 8.81.4 <span class="changelog-date">(2025-07-18)</span>
+
+* Added Enhanced arrows to show Enhanced perks in the Item Feed.
+* Updated armor intrinsic detection to identify Armor 3.0 Archetypes. It should appear now in Organizer/Item Popup/Compare.
+* Improved cramped spacing of stats display in Loadouts.
+* Updated Echo of Persistence and other class-conditional fragments to lower the right stat.
+* Added archetypes in the Item Feed and adjusted multiple-perk display.
+* Added inventory sorting by item Tier.
+* Fix masterwork stat numbers in Loadouts/Optimizer.
+* Fixed a crash in Loadout Optimizer result sets rendering.
+* Stream Deck updates
+  * Removed progress metrics (no more available)
+  * Added new "append only" mode to append filters to search query from plugin (search action)
+  * Now the state sent to the plugin includes also the counters of inventory items grouped by element id (vault action)
+  * Restored subclass item pick
+  * Added tier to selection/picker action
+
+## 8.81.3 <span class="changelog-date">(2025-07-16)</span>
+
+* Fixed a crash in Loadout Optimizer when using the "+Artifice" Assume Masterwork option.
+* Restore season pass info in Progress.
+* Manually renamed "Immovable Refit" to "Vexcalibur Catalyst".
+
+## 8.81.2 <span class="changelog-date">(2025-07-16)</span>
+
+* Added tier-level pips to item icons.
+* Fixed an issue in Loadout Optimizer that could exclude some valid sets when auto stat mods are off.
+* On the Loadouts page, hashtags are now combined if they only differ by case, and are sorted case-insensitively.
+* Fixed masterwork bonuses not showing up in orange in the stat bars for new armor.
+* Fixed some engrams not looking like engrams.
+* Fixed a number of places where class items did not display stats.
+
+## 8.81.1 <span class="changelog-date">(2025-07-15)</span>
+
+* Fixed new Armor 3.0 items not showing any stat bars.
+* Fixed Armor 3.0 masterworks applying points to all stats instead of the lowest 3 stats.
+* Add an explanatory tooltip to the Anti-Champion icon in the item tooltip, since folks have been confused by it.
+* Reposition the season badge on the item tile a bit, to better match in-game.
+* Add the stat icon to stat tooltips to help folks learn them.
+* Add the season icon to the item popup header.
+* Add the item tier as a number under the season icon.
+* Add an inventory sort property for "featured". Waiting on "tier" sorting until we show it on the tile somewhere.
+* Add Organizer/spreadsheet columns for "featured" and "tier".
+* Add `tier:` search to find items by tier.
+* Fixed the missing title for "Seasonal Hub" in the Progress page.
+* Fixed a crash when using the Stream Deck integration.
+* Fixed the display of the power icon in the character power calculation.
+* Show the Ammo Generation stat on weapons.
+* Prevent a crash in the Loadout Optimizer when auto stat mods is disabled.
+* Fixed cramped stat min/max fields in the Loadout Optimizer.
+* Changed the Loadout Optimizer min/max stat fields to not update other numbers until you hit Enter or blur the field.
+
+## 8.81.0 <span class="changelog-date">(2025-07-15)</span>
+
+* Improved the Loadout Optimizer algorithm to correctly maximize stats now that it's tierless. Also improved its performance.
+* Fix some interactions with the Loadout Optimizer stat constraint editor.
+* Add `is:featured` search for the new Featured Items.
+
+## 8.80.0 <span class="changelog-date">(2025-07-13)</span>
+
+* The Loadout Optimizer has been updated to target exact stats (up to 200) instead of tiers. There are lots more changes to Loadout Optimizer after Edge of Fate has released and we are able to adapt to the new way armor and stats works.
+* Fixed the D1 Reputation display not showing up on mobile.
+* Exotic armor ornaments no longer repeat the class name.
+* Fix an occasional crash in the Compare tool.
+* Removed `is:hasmod`, `modslot:legacy`, and `holdsmod:` searches as they don't have any use anymore.
+
+## 8.79.0 <span class="changelog-date">(2025-07-06)</span>
+
+* Added an `is:ininventory` filter that will highlight items that you have at least one copy of. This is meant to be used in the Records and Vendors tabs.
+* Fixed an issue where community insights on mods are so long that you could not select mods on mobile.
+
+## 8.78.0 <span class="changelog-date">(2025-06-29)</span>
+
 ## 8.77.0 <span class="changelog-date">(2025-06-22)</span>
 
 ## 8.76.0 <span class="changelog-date">(2025-06-15)</span>

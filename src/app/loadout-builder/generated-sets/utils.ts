@@ -1,7 +1,8 @@
 import { sumBy } from 'app/utils/collections';
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
+import { sum } from 'es-toolkit';
 import { ArmorSet, ArmorStatHashes, ArmorStats, DesiredStatRange } from '../types';
-import { statTier } from '../utils';
+import { getPower } from '../utils';
 
 function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[]) {
   const comparators: Comparator<ArmorSet>[] = [
@@ -11,11 +12,16 @@ function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[
   for (const constraint of desiredStatRanges) {
     comparators.push(
       compareBy(
-        (s) =>
-          -Math.min(statTier(s.stats[constraint.statHash as ArmorStatHashes]), constraint.maxTier),
+        (s) => -Math.min(s.stats[constraint.statHash as ArmorStatHashes], constraint.maxStat),
       ),
     );
   }
+
+  comparators.push(
+    // Finally sort by total stats, then by power
+    compareBy((s) => -sum(Object.values(s.stats))),
+    compareBy((s) => -getPower(s.armor)),
+  );
   return comparators;
 }
 
@@ -31,16 +37,8 @@ export function sortGeneratedSets(
   return sets.sort(chainComparator(...getComparatorsForMatchedSetSorting(desiredStatRanges)));
 }
 
-/**
- * The "Tier" of a set takes into account that each stat only ticks over to a new effective value
- * every 10.
- */
-export function calculateTotalTier(stats: ArmorStats) {
-  return sumBy(Object.values(stats), statTier);
-}
-
 export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
   return sumBy(desiredStatRanges, (constraint) =>
-    Math.min(statTier(stats[constraint.statHash as ArmorStatHashes]), constraint.maxTier),
+    Math.min(stats[constraint.statHash as ArmorStatHashes], constraint.maxStat),
   );
 }

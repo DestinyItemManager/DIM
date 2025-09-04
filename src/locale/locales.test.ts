@@ -52,7 +52,6 @@ const keysWithCounts = [
   'Loadouts.Share.NumMods',
   'Progress.PointsUsed',
   'Progress.Resets',
-  'Settings.SpacesSize',
   'Storage.UpdateQueueLength',
   'WishListRoll.BestRatedTip',
   'WishListRoll.WorstRatedTip',

@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
@@ -505,6 +506,34 @@ export function toRecord(
 
   if (record === undefined || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
     return undefined;
+  }
+
+  // Rename Immovable Refit -> Vexcalibur Catalyst
+  const VEXCALIBUR_CATALYST_RECORD_HASH = 3787307395;
+  if (recordHash === VEXCALIBUR_CATALYST_RECORD_HASH) {
+    Object.assign(recordDef, {
+      displayProperties: {
+        ...recordDef.displayProperties,
+        name: defs.Record.get(recordHash).stateInfo.obscuredName,
+      },
+    });
+  }
+
+  const CATALYST_PRESENTATION_NODES = [3788273704, 185103480, 2538646043];
+  if (
+    recordDef.parentNodeHashes?.length > 0 &&
+    recordDef.parentNodeHashes.some((hash) => CATALYST_PRESENTATION_NODES.includes(hash)) &&
+    recordDef.stateInfo?.obscuredDescription
+  ) {
+    const sourceText = `\n\n${t('Progress.CatalystSource', { source: recordDef.stateInfo.obscuredDescription })}`;
+    if (!recordDef.displayProperties.description.includes(sourceText)) {
+      Object.assign(recordDef, {
+        displayProperties: {
+          ...recordDef.displayProperties,
+          description: `${recordDef.displayProperties.description}${sourceText}`,
+        },
+      });
+    }
   }
 
   const trackedInGame = profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash;

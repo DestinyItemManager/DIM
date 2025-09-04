@@ -1,6 +1,7 @@
 import {
   AssumeArmorMasterwork,
   LoadoutParameters,
+  SetBonusCounts,
   StatConstraint,
   defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
@@ -23,25 +24,26 @@ import {
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
+import { EFFECTIVE_MAX_STAT, MAX_STAT } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
-import { count, reorder } from 'app/utils/collections';
+import { count, isEmpty, reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy, shuffle } from 'es-toolkit';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
 import {
+  ArmorBucketHashes,
   ArmorSet,
   ExcludedItems,
-  LockableBucketHashes,
   PinnedItems,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
 } from './types';
 
 interface LoadoutBuilderUI {
@@ -196,7 +198,7 @@ const lbConfigInit = ({
         .find(
           (i) =>
             Boolean(i?.equippingBlock?.uniqueLabel) &&
-            LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0),
+            ArmorBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0),
         );
 
       if (equippedExotic) {
@@ -205,11 +207,11 @@ const lbConfigInit = ({
     }
   }
 
-  // Also delete artifice mods -- artifice mods are always picked automatically
+  // Also delete always-auto-assigned mods since they are picked automatically
   // per set. In contrast we remove stat mods dynamically depending on the auto
   // stat mods setting.
   if (loadoutParameters.mods) {
-    loadoutParameters.mods = stripArtificeMods(defs, loadoutParameters.mods);
+    loadoutParameters.mods = stripAlwaysAutoAssignedMods(defs, loadoutParameters.mods);
   }
 
   loadout = { ...loadout, parameters: loadoutParameters };
@@ -225,17 +227,17 @@ const lbConfigInit = ({
 };
 
 /**
- * We never want to include artifice mods in the list of mods for a loadout
- * being edited by LO - they should be chosen by LO itself, and only re-added
- * when the loadout is saved.
+ * We never want to include always-auto-assigned mods in the list of mods for a
+ * loadout being edited by LO - they should be chosen by LO itself, and only
+ * re-added when the loadout is saved.
  */
-function stripArtificeMods(defs: D2ManifestDefinitions, mods: number[]) {
+function stripAlwaysAutoAssignedMods(defs: D2ManifestDefinitions, mods: number[]) {
   return mods.filter((modHash) => {
     const def = defs.InventoryItem.get(modHash);
     return (
-      !def ||
-      !isPluggableItem(def) ||
-      def.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice
+      def &&
+      isPluggableItem(def) &&
+      !autoAssignmentPCHs.some((h) => def.plug.plugCategoryHash === h)
     );
   });
 }
@@ -262,6 +264,8 @@ type LoadoutBuilderConfigAction =
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
   | { type: 'clearExcludedItems' }
+  | { type: 'setSetBonuses'; setBonuses: SetBonusCounts }
+  | { type: 'removeSetBonuses' }
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: number[] }
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
@@ -315,7 +319,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
 
           // Always check to make sure Artifice mods haven't snuck in - if they have, remove them
           const originalMods = updatedLoadout.parameters?.mods ?? [];
-          const strippedMods = stripArtificeMods(defs, originalMods);
+          const strippedMods = stripAlwaysAutoAssignedMods(defs, originalMods);
           if (strippedMods.length !== originalMods.length) {
             return updateMods(strippedMods)(updatedLoadout);
           }
@@ -364,7 +368,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'statConstraintReset': {
         return updateStatConstraints(
           state,
-          armorStats.map((s) => ({ statHash: s, minTier: 0, maxTier: 10, ignored: false })),
+          armorStats.map((s) => ({ statHash: s, minStat: 0, maxStat: MAX_STAT, ignored: false })),
         );
       }
       case 'statConstraintRandomize': {
@@ -373,8 +377,8 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           shuffle(
             armorStats.map((s) => ({
               statHash: s,
-              minTier: Math.floor(Math.random() * 10),
-              maxTier: 10,
+              minStat: Math.floor(Math.random() * EFFECTIVE_MAX_STAT),
+              maxStat: MAX_STAT,
               ignored: false,
             })),
           ),
@@ -498,6 +502,17 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         }
 
         return updateLoadout(state, updateMods(newMods));
+      }
+      case 'setSetBonuses': {
+        return updateLoadout(
+          state,
+          setLoadoutParameters({
+            setBonuses: isEmpty(action.setBonuses) ? undefined : action.setBonuses,
+          }),
+        );
+      }
+      case 'removeSetBonuses': {
+        return updateLoadout(state, setLoadoutParameters({ setBonuses: undefined }));
       }
       case 'removeLockedMod':
         return updateLoadout(state, removeMod(action.mod));

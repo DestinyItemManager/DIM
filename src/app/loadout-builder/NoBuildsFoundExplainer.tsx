@@ -16,7 +16,7 @@ import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
 import { ProcessStatistics, RejectionRate } from './process-worker/types';
-import { ArmorEnergyRules, LockableBucketHashes, PinnedItems } from './types';
+import { ArmorBucketHashes, ArmorEnergyRules, PinnedItems } from './types';
 
 interface ActionableSuggestion {
   id: string;
@@ -29,8 +29,6 @@ interface ProblemDescription {
   suggestions: ActionableSuggestion[];
 }
 
-/** How many sets can be excluded by upper bounds before we warn. Not too high because upper bounds are rarely useful. */
-const UPPER_STAT_BOUNDS_WARN_RATIO = 0.8;
 /**
  * How many sets can be excluded by lower bounds before we warn.
  * Quite high because LO's purpose is literally to sift through tons of garbage sets.
@@ -136,7 +134,26 @@ export default function NoBuildsFoundExplainer({
       lockedExoticHash !== undefined &&
       lockedExoticHash > 0 &&
       defs.InventoryItem.get(lockedExoticHash).inventory!.bucketTypeHash;
-    for (const bucketHash of LockableBucketHashes) {
+
+    if (filterInfo.exoticDoesNotExist) {
+      problems.push({
+        id: 'exoticDoesNotExist',
+        description: t('LoadoutBuilder.NoBuildsFoundExplainer.ExoticDoesNotExist'),
+        suggestions: [
+          {
+            id: 'removeExotic',
+            contents: (
+              <ExoticArmorChoice
+                lockedExoticHash={lockedExoticHash!}
+                onClose={() => dispatch({ type: 'removeLockedExotic' })}
+              />
+            ),
+          },
+        ],
+      });
+    }
+
+    for (const bucketHash of ArmorBucketHashes) {
       const bucketInfo = filterInfo.perBucketStats[bucketHash];
       const bucketMods = lockedModMap.bucketSpecificMods[bucketHash];
       if (bucketInfo.totalConsidered > 0 && bucketInfo.finalValid === 0 && bucketMods?.length) {
@@ -203,7 +220,7 @@ export default function NoBuildsFoundExplainer({
   // two non-solar combat mods, mod assignment is trivially infeasible and we
   // can point that out directly?
 
-  const anyStatMinimums = params.statConstraints!.some((f) => Boolean(f.minTier));
+  const anyStatMinimums = params.statConstraints!.some((f) => Boolean(f.minTier || f.minStat));
 
   const bucketIndependentMods = [...lockedModMap.generalMods, ...lockedModMap.activityMods];
 
@@ -260,7 +277,7 @@ export default function NoBuildsFoundExplainer({
       });
     }
 
-    const allPinnedItems = filterMap(LockableBucketHashes, (hash) => pinnedItems[hash]);
+    const allPinnedItems = filterMap(ArmorBucketHashes, (hash) => pinnedItems[hash]);
     let usedUnpinSuggestion = false;
     const unpinItemsSuggestion = () => {
       if (usedUnpinSuggestion) {
@@ -307,25 +324,7 @@ export default function NoBuildsFoundExplainer({
     const isInteresting = ({ timesChecked, timesFailed }: RejectionRate, threshold: number) =>
       timesChecked > 0 && timesFailed / timesChecked >= threshold;
 
-    const {
-      lowerBoundsExceeded,
-      upperBoundsExceeded,
-      modsStatistics: modsStats,
-    } = processInfo.statistics;
-
-    if (isInteresting(upperBoundsExceeded, UPPER_STAT_BOUNDS_WARN_RATIO)) {
-      problems.push({
-        id: 'upperBoundsExceeded',
-        description: t('LoadoutBuilder.NoBuildsFoundExplainer.UpperBoundsFailed'),
-        suggestions: compact([
-          {
-            id: 'hint',
-            contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeIncreaseUpperBounds'),
-          },
-          unpinItemsSuggestion(),
-        ]),
-      });
-    }
+    const { lowerBoundsExceeded, modsStatistics: modsStats } = processInfo.statistics;
 
     if (isInteresting(lowerBoundsExceeded, LOWER_STAT_BOUNDS_WARN_RATIO)) {
       problems.push({
@@ -440,6 +439,29 @@ export default function NoBuildsFoundExplainer({
     }
   }
 
+  // TODO: Do a better job detecting when this was the problem, and offer a way
+  // to clear set bonuses inline.
+  if (params.setBonuses) {
+    const suggestions: ActionableSuggestion[] = [
+      {
+        id: 'removeSetBonuses',
+        contents: t('LoadoutBuilder.NoBuildsFoundExplainer.RemoveSetBonuses'),
+      },
+    ];
+
+    if (filterInfo?.searchQueryEffective) {
+      suggestions.push({
+        id: 'clearQuery',
+        contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveSearchQuery'),
+      });
+    }
+
+    problems.push({
+      id: 'setBonuses',
+      description: t('LoadoutBuilder.NoBuildsFoundExplainer.SetBonuses'),
+      suggestions,
+    });
+  }
   return (
     <div className={styles.noBuildsExplainerContainer}>
       <h3 className={styles.noBuildsFoundMsg}>

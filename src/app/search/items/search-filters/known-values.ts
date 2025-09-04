@@ -6,7 +6,7 @@ import { getEvent } from 'app/inventory/store/season';
 import { D1BucketHashes, D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import {
   D2ItemCategoryHashesByName,
-  ItemTierName,
+  ItemRarityName,
   breakerTypes,
   pinnacleSources,
 } from 'app/search/d2-known-values';
@@ -35,7 +35,8 @@ const D2EventPredicateLookup = Object.fromEntries(
 );
 // filters relying on curated known values (class names, rarities, elements)
 
-const tierMap: NodeJS.Dict<ItemTierName> = {
+/** Alternate search names for rarity tiers. */
+const rarityMap: NodeJS.Dict<ItemRarityName> = {
   white: 'Common',
   green: 'Uncommon',
   blue: 'Rare',
@@ -309,11 +310,11 @@ const knownValuesFilters: ItemFilterDefinition[] = [
     ],
     description: tl('Filter.RarityTier'),
     filter: ({ filterValue }) => {
-      const tierName = tierMap[filterValue];
-      if (!tierName) {
+      const rarityName = rarityMap[filterValue];
+      if (!rarityName) {
         throw new Error(`Unknown rarity type ${filterValue}`);
       }
-      return (item) => item.tier === tierName;
+      return (item) => item.rarity === rarityName;
     },
   },
   {

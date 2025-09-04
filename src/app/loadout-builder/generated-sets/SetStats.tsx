@@ -1,12 +1,14 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { sumBy } from 'app/utils/collections';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { sum } from 'es-toolkit';
 import {
   ArmorStatHashes,
   ArmorStats,
@@ -14,15 +16,14 @@ import {
   ModStatChanges,
   ResolvedStatConstraint,
 } from '../types';
-import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
-import { calculateTotalTier, sumEnabledStats } from './utils';
+import { sumEnabledStats } from './utils';
 
 /**
- * Displays the overall tier and per-stat tier of a generated loadout set.
+ * Displays the overall stats and per-stat stat of a generated loadout set.
  */
 // TODO: would be a lot easier if this was just passed a Loadout or FullyResolvedLoadout...
-export function SetStats({
+export function TierlessSetStats({
   stats,
   getStatsBreakdown,
   maxPower,
@@ -31,7 +32,6 @@ export function SetStats({
   className,
   existingLoadoutName,
   equippedHashes,
-  autoStatMods,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -41,16 +41,19 @@ export function SetStats({
   className?: string;
   existingLoadoutName?: string;
   equippedHashes: Set<number>;
-  autoStatMods: boolean;
 }) {
   const defs = useD2Definitions()!;
-  const totalTier = calculateTotalTier(stats);
-  const enabledTier = sumEnabledStats(stats, desiredStatRanges);
+  const totalStats = sum(Object.values(stats));
+  const countedStatsTotal = sumEnabledStats(stats, desiredStatRanges); // Total of the stats that were within the desired ranges
+
+  // TODO: Lots of changes needed here once we drop tiers. Maybe we just show a
+  // total stat sum? Doesn't seem that useful...
+  // TODO: Highlight enhanced stats?
 
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
-        <TotalTier enabledTier={enabledTier} totalTier={totalTier} />
+        <TotalStats enabledStats={countedStatsTotal} totalStats={totalStats} />
       </div>
       {desiredStatRanges.map((c) => {
         const statHash = c.statHash as ArmorStatHashes;
@@ -71,13 +74,12 @@ export function SetStats({
               />
             )}
           >
-            <Stat
-              isActive={c.maxTier > 0}
+            <TierlessStat
+              isActive={c.maxStat > 0}
               isBoosted={boostedStats.has(statHash)}
               stat={statDef}
               value={value}
-              effectiveValue={Math.min(value, c.maxTier * 10)}
-              showHalfStat={!autoStatMods}
+              effectiveValue={Math.min(value, c.maxStat)}
             />
           </PressTip>
         );
@@ -96,25 +98,23 @@ export function SetStats({
   );
 }
 
-function Stat({
+function TierlessStat({
   stat,
   isActive,
   isBoosted,
   value,
   effectiveValue,
-  showHalfStat,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   isBoosted: boolean;
   value: number;
-  showHalfStat: boolean;
   effectiveValue: number;
 }) {
   let shownValue: number;
   let ignoredExcess: number | undefined;
   if (effectiveValue !== value) {
-    if (effectiveValue === 0 || effectiveValue >= 100) {
+    if (effectiveValue === 0 || effectiveValue >= MAX_STAT) {
       shownValue = value;
     } else {
       shownValue = effectiveValue;
@@ -123,8 +123,7 @@ function Stat({
   } else {
     shownValue = value;
   }
-  const showIgnoredExcess = ignoredExcess !== undefined && ignoredExcess >= 5;
-  const isHalfTier = showHalfStat && isActive && remEuclid(value, 10) >= 5;
+  const showIgnoredExcess = ignoredExcess !== undefined;
   return (
     <span
       className={clsx(styles.statSegment, {
@@ -134,56 +133,43 @@ function Stat({
       <BungieImage className={styles.statIcon} src={stat.displayProperties.icon} />
       <span
         className={clsx(styles.tier, {
-          [styles.halfTierValue]: isHalfTier,
-          [styles.boostedValue]: !isHalfTier && isBoosted,
+          [styles.boostedValue]: isBoosted,
         })}
       >
-        {t('LoadoutBuilder.TierNumber', {
-          tier: statTierWithHalf(shownValue),
-        })}
-        {showIgnoredExcess && (
-          <span className={styles.nonActiveStat}>+{statTierWithHalf(ignoredExcess!)}</span>
-        )}
+        {shownValue}
+        {showIgnoredExcess && <span className={styles.nonActiveStat}>+{ignoredExcess}</span>}
       </span>
     </span>
   );
 }
 
-function TotalTier({ totalTier, enabledTier }: { totalTier: number; enabledTier: number }) {
+function TotalStats({ totalStats, enabledStats }: { totalStats: number; enabledStats: number }) {
   return (
     <>
-      <span className={styles.tier}>
-        {t('LoadoutBuilder.TierNumber', {
-          tier: enabledTier,
-        })}
-      </span>
-      {enabledTier !== totalTier && (
-        <span className={clsx(styles.tier, styles.nonActiveStat)}>
-          {` (${t('LoadoutBuilder.TierNumber', {
-            tier: totalTier,
-          })})`}
-        </span>
+      <span className={styles.tier}>{t('LoadoutBuilder.StatTotal', { total: enabledStats })}</span>
+      {enabledStats !== totalStats && (
+        <span className={clsx(styles.tier, styles.nonActiveStat)}>({totalStats})</span>
       )}
     </>
   );
 }
 
-export function ReferenceTiers({
+export function ReferenceConstraints({
   resolvedStatConstraints,
 }: {
   resolvedStatConstraints: ResolvedStatConstraint[];
 }) {
   const defs = useD2Definitions()!;
-  const totalTier = sumBy(resolvedStatConstraints, (c) => c.minTier);
-  const enabledTier = sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : c.minTier));
+  const totalStats = sumBy(resolvedStatConstraints, (c) => c.minStat);
+  const enabledStats = sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : c.minStat));
 
   return (
     <div className={styles.container}>
-      <TotalTier enabledTier={enabledTier} totalTier={totalTier} />
+      <TotalStats enabledStats={enabledStats} totalStats={totalStats} />
       {resolvedStatConstraints.map((c) => {
         const statHash = c.statHash as ArmorStatHashes;
         const statDef = defs.Stat.get(statHash);
-        const tier = c.minTier;
+        const value = c.minStat;
         return (
           <span
             key={statHash}
@@ -192,11 +178,7 @@ export function ReferenceTiers({
             })}
           >
             <BungieImage className={styles.statIcon} src={statDef.displayProperties.icon} />
-            <span className={styles.tier}>
-              {t('LoadoutBuilder.TierNumber', {
-                tier,
-              })}
-            </span>
+            <span className={styles.tier}>{value}</span>
           </span>
         );
       })}

@@ -17,46 +17,6 @@
 @use 'app/dim-ui/dim-button.scss';
 
 @layer base {
-  @include phone-portrait {
-    :root {
-      --item-margin: 10px;
-      // Padding at the ends of inventory column
-      --inventory-column-padding: 12px;
-      /* prettier-ignore */
-      --item-size: calc(
-      (
-          100vw -
-          var(--column-padding) -
-          #{$equipped-item-total-outset} -
-          var(--combined-item-margins)
-        ) / (var(--tiles-per-char-column) + 1)
-    ) !important;
-      --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
-      --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
-      --engram-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
-      // sets scroll bar back to auto as the content shift an issue at this size.
-      overflow-y: auto;
-    }
-
-    .char-cols-3 {
-      --item-margin: 15px;
-      // Padding at the ends of inventory column
-      --inventory-column-padding: 34px;
-      // this is duplicated for .char-cols-3 to recalculate using local var adjustments
-      /* prettier-ignore */
-      --item-size: calc(
-      (
-        100vw -
-        var(--column-padding) -
-        #{$equipped-item-total-outset} -
-        var(--combined-item-margins)
-      ) / (var(--tiles-per-char-column) + 1)
-    ) !important;
-      --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
-      --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
-    }
-  }
-
   @font-face {
     font-family: 'Destiny Symbols';
     src: url('../data/font/DestinySymbols.woff2') format('woff2');
@@ -113,17 +73,58 @@
 
     // How many desktop mode sidebar trays are open
     --expanded-sidebars: 0;
-    --sidebar-size: 260px;
+    --sidebar-size: 277px;
 
     // How big to render each engram in the row of engrams in the Postmaster (on the Inventory screen).
     --engram-size: calc(var(--character-column-width) / 10);
 
     // Rumors have it that the Windows scrollbar size is 17px. I always thought
-    // it was 16px. We'll override this with a detected value in JavaScript.
+    // it was 16px.
     --scrollbar-size: 17px;
 
     // prevents content shift with persistent scroll-y bar
     overflow-y: scroll;
+  }
+
+  /* stylelint-disable-next-line order/order */
+  @include phone-portrait {
+    :root {
+      --item-margin: 10px;
+      // Padding at the ends of inventory column
+      --inventory-column-padding: 12px;
+      /* prettier-ignore */
+      --item-size: calc(
+      (
+          100vw -
+          var(--column-padding) -
+          #{$equipped-item-total-outset} -
+          var(--combined-item-margins)
+        ) / (var(--tiles-per-char-column) + 1)
+    ) !important;
+      --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+      --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
+      --engram-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
+      // sets scroll bar back to auto as the content shift an issue at this size.
+      overflow-y: auto;
+    }
+
+    .char-cols-3 {
+      --item-margin: 15px;
+      // Padding at the ends of inventory column
+      --inventory-column-padding: 34px;
+      // this is duplicated for .char-cols-3 to recalculate using local var adjustments
+      /* prettier-ignore */
+      --item-size: calc(
+      (
+        100vw -
+        var(--column-padding) -
+        #{$equipped-item-total-outset} -
+        var(--combined-item-margins)
+      ) / (var(--tiles-per-char-column) + 1)
+    ) !important;
+      --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+      --combined-item-margins: calc(var(--item-margin) * (var(--tiles-per-char-column) + 1));
+    }
   }
 
   h1,

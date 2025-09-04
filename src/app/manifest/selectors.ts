@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 export const destiny2CoreSettingsSelector = (state: RootState) =>
   state.manifest.destiny2CoreSettings;
 
-export const rankProgressionHashesSelector = (state: RootState) =>
+export const rankProgressionHashesSelector = (state: RootState): number[] =>
   state.manifest.destiny2CoreSettings?.currentRankProgressionHashes ?? emptyArray<number>();
 
 const d1ManifestSelector = (state: RootState) => state.manifest.d1Manifest;

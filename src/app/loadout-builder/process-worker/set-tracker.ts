@@ -1,28 +1,45 @@
-import { getPower } from '../utils';
-import { IntermediateProcessArmorSet, ProcessItem } from './types';
+import { DesiredStatRange } from '../types';
 
-interface TierSet {
-  tier: number;
-  /** Stat mixes ordered by decreasing lexical order of the statMix string */
-  statMixes: {
-    statMix: string;
-    // TODO: Maybe only keep one set with the same stat mix?
-    /** Armor sets ordered by decreasing power */
-    armorSets: IntermediateProcessArmorSet[];
-  }[];
+/**
+ * Heap entry for the heap-based SetTracker. T is all the other properties you
+ * want to store that aren't core to the operation of the tracker.
+ */
+export type HeapEntry<T> = {
+  /** Sum of enabled stats values. */
+  enabledStatsTotal: number;
+  /** Sum of all stats including disabled/maxed stats. */
+  statsTotal: number;
+  /** Encoded stat mix as a 48-bit integer. */
+  statMix: number;
+  /** Power level of the armor set. */
+  power: number;
+} & T;
+
+/**
+ * Comparison: true if a is worse than b (lower priority in min-heap).
+ * This creates a min-heap where the root is the worst item.
+ * Ordering: tier asc, statMix asc, power asc (opposite of SetTracker for min-heap)
+ */
+function isWorse<T>(a: HeapEntry<T>, b: HeapEntry<T>): boolean {
+  if (a.enabledStatsTotal !== b.enabledStatsTotal) {
+    return a.enabledStatsTotal < b.enabledStatsTotal;
+  }
+  if (a.statMix !== b.statMix) {
+    return a.statMix < b.statMix;
+  }
+  if (a.statsTotal !== b.statsTotal) {
+    return a.statsTotal < b.statsTotal;
+  }
+  return a.power < b.power;
 }
 
 /**
- * A list of stat mixes by total tier. We can keep this list up to date
- * as we process new sets with an insertion sort algorithm.
- *
- * The `statMix` string is what actually matters for sorting, the `stats` array
- * is simply an output used for set display.
+ * Min-heap based SetTracker that maintains the top N armor sets.
+ * Uses a min-heap where the root is the worst of the top N sets.
+ * This allows O(1) access to worst element and O(log n) operations.
  */
-export class SetTracker {
-  // Tiers ordered by decreasing tier
-  tiers: TierSet[] = [];
-  totalSets = 0;
+export class HeapSetTracker<T> {
+  private heap: HeapEntry<T>[] = [];
   readonly capacity: number;
 
   constructor(capacity: number) {
@@ -30,166 +47,141 @@ export class SetTracker {
   }
 
   /**
-   * A short-circuit helper to check if inserting a set at this total tier could possibly be accepted.
+   * Can we insert a set with this total tier?
+   * Fast O(1) check using the root (worst set) of our min-heap.
    */
-  couldInsert(totalTier: number) {
-    const lowestKnownTier = this.tiers.length ? this.tiers.at(-1)!.tier : 0;
-    return totalTier >= lowestKnownTier || this.totalSets < this.capacity;
+  couldInsert(totalTier: number): boolean {
+    if (this.heap.length < this.capacity) {
+      return true;
+    }
+    // In min-heap, root is the worst item - check if new item is better
+    return totalTier >= this.heap[0].enabledStatsTotal;
   }
 
   /**
-   * Insert this set into the tracker. If the tracker is at capacity this set or another one may be dropped.
+   * Insert a set into the heap.
+   * Matches SetTracker behavior: allows duplicates, returns true unless trimming.
    */
-  insert(tier: number, statMix: string, armor: ProcessItem[], stats: number[]) {
-    if (this.tiers.length === 0) {
-      this.tiers.push({ tier, statMixes: [{ statMix, armorSets: [{ armor, stats }] }] });
-    } else {
-      // We have very few tiers at one time, so insertion sort is fine
-      outer: for (let tierIndex = 0; tierIndex < this.tiers.length; tierIndex++) {
-        const currentTier = this.tiers[tierIndex];
-
-        // This set has better overall tier, insert
-        if (tier > currentTier.tier) {
-          this.tiers.splice(tierIndex, 0, {
-            tier,
-            statMixes: [{ statMix, armorSets: [{ armor, stats }] }],
-          });
-          break outer;
-        }
-
-        // Same tier, insert this armor mix into the list at the right order
-        if (tier === currentTier.tier) {
-          const currentStatMixes = currentTier.statMixes;
-
-          if (insertStatMix(currentStatMixes, statMix, armor, stats)) {
-            break outer;
-          } else {
-            return false;
-          }
-        }
-
-        // This is lower tier than our previous lowest tier
-        if (tierIndex === this.tiers.length - 1) {
-          if (this.totalSets < this.capacity) {
-            this.tiers.push({
-              tier,
-              statMixes: [{ statMix, armorSets: [{ armor, stats }] }],
-            });
-            break outer;
-          } else {
-            // Don't bother inserting it at all
-            return false;
-          }
-        }
-      }
-    }
-
-    this.totalSets++;
-
-    return this.trimWorstSet();
-  }
-
-  private trimWorstSet(): boolean {
-    if (this.totalSets <= this.capacity) {
+  insert(entry: HeapEntry<T>): boolean {
+    if (this.heap.length < this.capacity) {
+      this.heap.push(entry);
+      this.bubbleUp(this.heap.length - 1);
       return true;
     }
 
-    const lowestTierSet = this.tiers.at(-1)!;
-    const worstMix = lowestTierSet.statMixes.at(-1)!;
-
-    worstMix.armorSets.pop();
-
-    if (worstMix.armorSets.length === 0) {
-      lowestTierSet.statMixes.pop();
-
-      if (lowestTierSet.statMixes.length === 0) {
-        this.tiers.pop();
-      }
+    // Check with full comparison
+    if (isWorse(entry, this.heap[0])) {
+      return false; // Not good enough after full comparison
     }
-    this.totalSets--;
-    return false;
+
+    // Replace the worst set (root) with the new one
+    this.heap[0] = entry;
+    this.bubbleDown(0);
+
+    return false; // Match original SetTracker behavior (trimWorstSet returns false)
   }
 
   /**
-   * Get the top N tracked armor sets in order.
+   * Get the top N armor sets in order (best first).
+   * Since we have a min-heap, we sort a copy and take the best items.
    */
-  getArmorSets(max: number) {
-    const result: IntermediateProcessArmorSet[] = [];
-    for (const tier of this.tiers) {
-      for (const statMix of tier.statMixes) {
-        for (const armorSet of statMix.armorSets) {
-          result.push(armorSet);
-          if (result.length >= max) {
-            return result;
-          }
-        }
+  getArmorSets(): HeapEntry<T>[] {
+    // Copy heap and sort in SetTracker order (best first)
+    return this.heap.toSorted((a, b) => {
+      // Sort by tier desc, statMix desc, power desc (opposite of min-heap order)
+      if (a.enabledStatsTotal !== b.enabledStatsTotal) {
+        return b.enabledStatsTotal - a.enabledStatsTotal;
+      }
+      if (a.statMix !== b.statMix) {
+        return b.statMix - a.statMix;
+      }
+      return b.power - a.power;
+    });
+  }
+
+  get totalSets(): number {
+    return this.heap.length;
+  }
+
+  // Heap maintenance methods
+
+  private bubbleUp(index: number): void {
+    while (index > 0) {
+      const parentIndex = Math.floor((index - 1) / 2);
+      if (isWorse(this.heap[index], this.heap[parentIndex])) {
+        [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+        index = parentIndex;
+      } else {
+        break;
       }
     }
-    return result;
+  }
+
+  private bubbleDown(index: number): void {
+    const length = this.heap.length;
+    while (true) {
+      let smallest = index;
+      const leftChild = 2 * index + 1;
+      const rightChild = 2 * index + 2;
+
+      if (leftChild < length && isWorse(this.heap[leftChild], this.heap[smallest])) {
+        smallest = leftChild;
+      }
+
+      if (rightChild < length && isWorse(this.heap[rightChild], this.heap[smallest])) {
+        smallest = rightChild;
+      }
+
+      if (smallest !== index) {
+        [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+        index = smallest;
+      } else {
+        break;
+      }
+    }
   }
 }
 
 /**
- * Insert a new stat mix into the list of stat mixes (all of which sum to the
- * same tier). They should remain in lexical order of the statmix string.
+ * Encodes stat values into a 48-bit integer for fast comparison.
+ * Each stat uses 8 bits (sufficient for 0-200 range), packed in priority order.
+ * Only non-ignored stats (with maxStat > 0) are included in the encoding.
+ *
+ * @param stats Array of stat values in stat priority order
+ * @param desiredStatRanges Stat ranges to determine which stats are ignored
+ * @returns 48-bit integer representation that maintains lexical ordering
  */
-function insertStatMix(
-  currentStatMixes: {
-    statMix: string;
-    armorSets: IntermediateProcessArmorSet[];
-  }[],
-  statMix: string,
-  armor: ProcessItem[],
-  stats: number[],
-): boolean {
-  // This is a binary search insertion strategy, since these lists may grow large
-  let start = 0;
-  let end = currentStatMixes.length - 1;
-  while (start < end) {
-    const statMixIndex = Math.floor((end - start) / 2 + start);
-    const currentStatMix = currentStatMixes[statMixIndex];
-
-    const comparison =
-      statMix > currentStatMix.statMix ? 1 : statMix < currentStatMix.statMix ? -1 : 0;
-
-    // Same mix
-    if (comparison === 0) {
-      return insertArmorSet(armor, stats, currentStatMix.armorSets);
-    }
-    if (comparison > 0) {
-      end = statMixIndex - 1;
-    } else {
-      start = statMixIndex + 1;
+export function encodeStatMix(
+  stats: readonly number[],
+  desiredStatRanges: readonly DesiredStatRange[],
+): number {
+  let encoded = 0;
+  for (let i = 0; i < 6; i++) {
+    const filter = desiredStatRanges[i];
+    if (filter.maxStat > 0) {
+      // non-ignored stat
+      // Use multiplication instead of bit shifting to avoid 32-bit overflow
+      encoded = encoded * 256 + Math.min(stats[i], 255);
     }
   }
-
-  const currentStatMix = currentStatMixes[start];
-  const comparison =
-    statMix > currentStatMix.statMix ? 1 : statMix < currentStatMix.statMix ? -1 : 0;
-
-  currentStatMixes.splice(comparison > 0 ? start : start + 1, 0, {
-    statMix,
-    armorSets: [{ armor, stats }],
-  });
-  return true;
+  return encoded;
 }
 
-function insertArmorSet(
-  armor: ProcessItem[],
-  stats: number[],
-  armorSets: IntermediateProcessArmorSet[],
-) {
-  // These lists don't tend to grow large, so it's back to insertion sort
-  const armorSetPower = getPower(armor);
-  for (let armorSetIndex = 0; armorSetIndex < armorSets.length; armorSetIndex++) {
-    if (armorSetPower > getPower(armorSets[armorSetIndex].armor)) {
-      armorSets.splice(armorSetIndex, 0, { armor, stats });
-      return true;
-    }
-    if (armorSetIndex === armorSets.length - 1) {
-      armorSets.push({ armor, stats });
-      return true;
-    }
+/**
+ * Decodes a stat mix integer back to individual stat values.
+ * Useful for debugging or display purposes.
+ *
+ * @param encoded The encoded stat mix integer
+ * @param numStats Number of stats that were encoded
+ * @returns Array of decoded stat values
+ */
+export function decodeStatMix(encoded: number, numStats: number): number[] {
+  const stats: number[] = [];
+  let remaining = encoded;
+  for (let i = 0; i < numStats; i++) {
+    // Extract the rightmost 8 bits using modulo, then divide for next stat
+    stats.unshift(remaining % 256);
+    remaining = Math.floor(remaining / 256);
   }
-  return false;
+  return stats;
 }

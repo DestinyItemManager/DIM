@@ -44,8 +44,8 @@
 
   &.compact {
     grid-template-areas:
-      'icon title'
-      'icon details';
+      'icon title corner'
+      'icon details corner';
     row-gap: 4px;
   }
 

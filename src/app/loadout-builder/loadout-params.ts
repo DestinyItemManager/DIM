@@ -1,6 +1,7 @@
 /* Functions for dealing with the LoadoutParameters structure we save with loadouts and use to save and share LO settings. */
 
-import { StatConstraint, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { keyBy } from 'es-toolkit';
@@ -16,7 +17,9 @@ export function resolveStatConstraints(
   const statConstraintsByStatHash = keyBy(statConstraints, (c) => c.statHash);
   const resolvedStatConstraints: ResolvedStatConstraint[] = armorStats.map((statHash) => {
     const c = statConstraintsByStatHash[statHash];
-    return { statHash, minTier: c?.minTier ?? 0, maxTier: c ? (c.maxTier ?? 10) : 0, ignored: !c };
+    const minStat = c?.minStat ?? (c?.minTier ?? 0) * 10;
+    const maxStat = c?.maxStat ?? (c?.maxTier !== undefined ? c.maxTier * 10 : MAX_STAT);
+    return { statHash, minStat, maxStat, ignored: !c };
   });
 
   return resolvedStatConstraints.sort(
@@ -24,9 +27,8 @@ export function resolveStatConstraints(
       const index = statConstraints.findIndex((c) => c.statHash === h.statHash);
       return index >= 0
         ? index
-        : // Fall back to hardcoded defaults
-          100 +
-            defaultLoadoutParameters.statConstraints!.findIndex((c) => c.statHash === h.statHash);
+        : // Fall back to the in-game order
+          100 + armorStats.findIndex((c) => c === h.statHash);
     }),
   );
 }
@@ -37,13 +39,13 @@ export function unresolveStatConstraints(
   return resolvedStatConstraints
     .filter((c) => !c.ignored)
     .map((c) => {
-      const { statHash, minTier, maxTier } = c;
+      const { statHash, minStat, maxStat } = c;
       const constraint: StatConstraint = { statHash };
-      if (minTier > 0) {
-        constraint.minTier = minTier;
+      if (minStat > 0) {
+        constraint.minStat = minStat;
       }
-      if (maxTier < 10) {
-        constraint.maxTier = maxTier;
+      if (maxStat < MAX_STAT) {
+        constraint.maxStat = maxStat;
       }
       return constraint;
     });

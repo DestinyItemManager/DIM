@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { isClassCompatible } from 'app/utils/item-utils';
+import { isArmor3, isClassCompatible } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/memoize';
 import {
   DestinyInventoryItemDefinition,
@@ -13,8 +13,7 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
-import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { once, partition } from 'es-toolkit';
 import { Draft } from 'immer';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
@@ -31,11 +30,11 @@ import { makeCustomStat } from './stats-custom';
  *
  * buildStats(stats) {
  *   stats = buildInvestmentStats(stats) // based on information from an item's inherent stats
- *   applyPlugsToStats(stats)            // mutates stats. adds values provided by sockets (intrinsic armor stats&gun parts)
+ *   applyPlugsToStats(stats)            // mutates stats. adds values provided by sockets (intrinsic armor stats & weapon components)
  *   if (is armor) {
  *     if (any armor stat is missing) fill in missing stats with 0s
  *     synthesize totalStat and add it
- *     if (not classitem) synthesize customStat and add it
+ *     synthesize customStat and add it
  *   }
  * }
  */
@@ -43,12 +42,13 @@ import { makeCustomStat } from './stats-custom';
 /**
  * Which stats to display, and in which order.
  */
-const itemStatAllowList = [
+export const itemStatAllowList = [
   StatHashes.RoundsPerMinute,
   StatHashes.ChargeTime,
   StatHashes.DrawTime,
   StatHashes.BlastRadius,
   StatHashes.Velocity,
+  StatHashes.Persistence,
   StatHashes.SwingSpeed,
   StatHashes.Impact,
   StatHashes.Range,
@@ -64,6 +64,7 @@ const itemStatAllowList = [
   StatHashes.AimAssistance,
   StatHashes.AirborneEffectiveness,
   StatHashes.Zoom,
+  StatHashes.AmmoGeneration,
   StatHashes.RecoilDirection,
   StatHashes.Magazine,
   StatHashes.AmmoCapacity,
@@ -136,7 +137,7 @@ export function buildStats(
   // functions to speed up display info lookups
   const statDisplaysByStatHash = memoStatDisplaysByStatHash(statGroup);
 
-  // We only use the raw "investment" stats to calculate all item stats.
+  // We use the raw "investment" stats to calculate all item stats (instead of API-reported stats).
   const investmentStats =
     buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
@@ -144,6 +145,7 @@ export function buildStats(
   applyPlugsToStats(investmentStats, createdItem, statDisplaysByStatHash);
 
   if (createdItem.bucket.inArmor) {
+    generateAssumedMasterworkStats(investmentStats, createdItem);
     // synthesize the "Total" stat for armor
     // it's effectively just a custom total with 6 stats evenly weighted
     const tStat = makeCustomStat(
@@ -157,20 +159,18 @@ export function buildStats(
     investmentStats.push(tStat!);
 
     // synthesize custom stats for meaningfully stat-bearing items
-    if (createdItem.bucket.hash !== BucketHashes.ClassArmor) {
-      for (const customStat of customStats) {
-        if (isClassCompatible(customStat.class, createdItem.classType)) {
-          const cStat = makeCustomStat(
-            investmentStats,
-            customStat.weights,
-            customStat.statHash,
-            customStat.label,
-            memoCustomDesc(),
-            true,
-          );
-          if (cStat) {
-            investmentStats.push(cStat);
-          }
+    for (const customStat of customStats) {
+      if (isClassCompatible(customStat.class, createdItem.classType)) {
+        const cStat = makeCustomStat(
+          investmentStats,
+          customStat.weights,
+          customStat.statHash,
+          customStat.label,
+          memoCustomDesc(),
+          true,
+        );
+        if (cStat) {
+          investmentStats.push(cStat);
         }
       }
     }
@@ -345,7 +345,12 @@ function applyPlugsToStats(
         }
 
         // check special conditionals
-        if (!isPlugStatActive(pluggedInvestmentStat.activationRule, createdItem)) {
+        if (
+          !isPlugStatActive(pluggedInvestmentStat.activationRule, {
+            item: createdItem,
+            existingStat,
+          })
+        ) {
           continue;
         }
 
@@ -377,19 +382,48 @@ function applyPlugsToStats(
 }
 
 /**
- * Adept raid weapons that were randomly acquired can be enhanced to get an enhanced intrinsic,
- * at which point they're functionally crafted.
- * Their intrinsic says "conditionally +2 to some stats", but they get +3 because that's how
- * masterworked adepts behave, and an additional +1 by reaching weapon level 20. There's no
- * basis for this behavior in the defs, so we cheat when we calculate live stats and attribute
- * these stats to the intrinsic since that's the "masterwork".
+ * Add a baseMasterworked value to armor stats, projecting what they would be if masterworked.
+ * This assumes base stat values are already set.
  */
+function generateAssumedMasterworkStats(
+  existingStats: DimStat[], // values in this array are mutated
+  createdItem: DimItem,
+) {
+  // The presence of mod energy identifies armor 2.0 and armor 3.0.
+  if (createdItem.bucket.inArmor && createdItem.energy) {
+    const statsToModify = existingStats.filter((s) => armorStats.includes(s.statHash));
+    if (isArmor3(createdItem)) {
+      for (const existingStat of statsToModify) {
+        // Armor 3.0 gets a +5 in stats with a base of 0.
+        existingStat.baseMasterworked = existingStat.base || existingStat.base + 5;
+      }
+    } else if (createdItem.energy) {
+      for (const existingStat of statsToModify) {
+        // Armor 2.0 gets 2 stat points in each stat when masterworked
+        existingStat.baseMasterworked = existingStat.base + 2;
+      }
+    }
+    // TODO: What happens to Armor <2?
+  }
+}
+
 function getPlugStatValue(createdItem: DimItem, stat: DimPlugInvestmentStat) {
-  if (
-    stat.activationRule?.rule === 'enhancedIntrinsic' &&
-    adeptWeaponHashes.includes(createdItem.hash)
-  ) {
+  // Adept raid weapons that were randomly acquired can be enhanced to get an
+  // enhanced intrinsic, at which point they're functionally crafted. Their
+  // intrinsic says "conditionally +2 to some stats", but they get +3 because
+  // that's how masterworked adepts behave, and an additional +1 by reaching
+  // weapon level 20. There's no basis for this behavior in the defs, so we
+  // cheat when we calculate live stats and attribute these stats to the
+  // intrinsic since that's the "masterwork".
+  if (stat.activationRule?.rule === 'enhancedIntrinsic' && createdItem.adept) {
     return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1);
+  }
+
+  // Tiered weapons at max masterwork get +tier to every stat ("Applies
+  // additional stats to this weapon equal to the weapon's tier"). There's
+  // nothing in the defs to indicate this.
+  if (stat.activationRule?.rule === 'tieredWeaponMW') {
+    return stat.value + createdItem.tier;
   }
 
   return stat.value;
@@ -421,7 +455,10 @@ function attachPlugStats(
     const activePlugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(activePlug.plugDef)) {
-      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+      const existingStat = statsByHash[plugInvestmentStat.statTypeHash];
+      if (
+        !isPlugStatActive(plugInvestmentStat.activationRule, { item: createdItem, existingStat })
+      ) {
         continue;
       }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
@@ -465,11 +502,16 @@ function attachPlugStats(
     const plugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(plug.plugDef)) {
-      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
+      if (
+        !isPlugStatActive(plugInvestmentStat.activationRule, {
+          item: createdItem,
+          existingStat: itemStat,
+        })
+      ) {
         continue;
       }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
-      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
       let plugStatValue = plugStatInvestmentValue;

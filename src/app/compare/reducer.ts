@@ -4,6 +4,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
 import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas, isD1Item } from 'app/utils/item-utils';
+import { getArmorArchetype } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ActionType, Reducer, getType } from 'typesafe-actions';
 import * as actions from './actions';
@@ -162,7 +163,8 @@ function initialCompareQuery(item: DimItem) {
     return compareNameQuery(item);
   } else {
     // For D2 armor, we match by rarity, intrinsic and interesting mod sockets
-    const factors = [`is:${item.tier.toLowerCase()}`];
+    const factors = [`is:${item.rarity.toLowerCase()}`];
+
     const intrinsicSocket = item.sockets?.allSockets.find(
       (socket) =>
         socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
@@ -172,12 +174,19 @@ function initialCompareQuery(item: DimItem) {
       const intrinsicName = intrinsicSocket.plugged!.plugDef.displayProperties.name;
       factors.push(`exactperk:${quoteFilterString(intrinsicName)}`);
     }
+
     const modSlotMetadata = getInterestingSocketMetadatas(item);
     if (modSlotMetadata) {
       for (const m of modSlotMetadata) {
         factors.push(`modslot:${m.slotTag}`);
       }
     }
+
+    const archetype = getArmorArchetype(item);
+    if (archetype) {
+      factors.push(`perk:${quoteFilterString(archetype.displayProperties.name)}`);
+    }
+
     return factors.join(' ');
   }
 }

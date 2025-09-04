@@ -1,23 +1,29 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  SetBonusCounts,
+  StatConstraint,
+} from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { SetPerkIcon } from 'app/item-popup/SetBonus';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, equalsIcon, greaterThanIcon, lessThanIcon, searchIcon } from 'app/shell/icons';
 import clsx from 'clsx';
+import { MAX_STAT } from '../known-values';
 import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutParametersDisplay.m.scss';
 
 export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
-  return (
+  return Boolean(
     params &&
-    (params.query ||
-      params.exoticArmorHash ||
-      params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined) ||
-      (params.mods &&
-        includesRuntimeStatMods(params.mods) &&
-        (params.includeRuntimeStatBenefits ?? true)))
+      (params.query ||
+        params.exoticArmorHash ||
+        params.statConstraints?.length ||
+        (params.mods &&
+          includesRuntimeStatMods(params.mods) &&
+          (params.includeRuntimeStatBenefits ?? true))),
   );
 }
 
@@ -52,6 +58,11 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
         </PressTip>
       )}
+      {params.setBonuses && (
+        <PressTip tooltip={() => lbParamDesc(t('Loadouts.SetBonusesDesc'))}>
+          <SetBonuses setBonuses={params.setBonuses} />
+        </PressTip>
+      )}
       {params.mods &&
         includesRuntimeStatMods(params.mods) &&
         (params.includeRuntimeStatBenefits ?? true) && (
@@ -83,57 +94,79 @@ function StatConstraintRange({
   statConstraint: StatConstraint;
   className?: string;
 }) {
-  className = clsx(className, styles.constraintRange);
-
   return (
-    <span className={className}>
+    <span className={clsx(className, styles.constraintRange)}>
       <StatConstraintRangeExpression statConstraint={statConstraint} />
     </span>
   );
 }
 
+/** This displays the user's chosen stat constraint as a range, e.g. T4-T9 */
 function StatConstraintRangeExpression({ statConstraint }: { statConstraint: StatConstraint }) {
-  const min = statConstraint.minTier ?? 0;
-  const max = statConstraint.maxTier ?? 10;
+  // Post-Edge of Fate stat constraints use minStat/maxStat instead of minTier/maxTier.
+  const min =
+    statConstraint.minStat ??
+    (statConstraint.minTier !== undefined ? statConstraint.minTier * 10 : 0);
+  const max =
+    statConstraint.maxStat ??
+    (statConstraint.maxTier !== undefined ? statConstraint.maxTier * 10 : MAX_STAT);
 
   if (min === max) {
-    // =Tmin
+    // =min
     return (
       <>
         <AppIcon icon={equalsIcon} />
-        {t('LoadoutBuilder.TierNumber', {
-          tier: min,
-        })}
+        {min}
       </>
     );
-  } else if (max === 10) {
-    // >= Tmin
+  } else if (max === MAX_STAT) {
+    // >= min
     return (
       <>
         <AppIcon icon={greaterThanIcon} />
-        {t('LoadoutBuilder.TierNumber', {
-          tier: min,
-        })}
+        {min}
       </>
     );
   } else if (min === 0) {
-    // <= Tmax
+    // <= max
     return (
       <>
         <AppIcon icon={lessThanIcon} />
-        {t('LoadoutBuilder.TierNumber', {
-          tier: max,
-        })}
+        {max}
       </>
     );
   } else {
-    // Tmin-Tmax
+    // min-max
     return (
       <>
-        {`${t('LoadoutBuilder.TierNumber', {
-          tier: min,
-        })}-${max}`}
+        {min}-{max}
       </>
     );
   }
+}
+
+function SetBonuses({ setBonuses }: { setBonuses: SetBonusCounts }) {
+  const defs = useD2Definitions()!;
+  return Object.keys(setBonuses).map((setHash) => {
+    const setDef = defs.EquipableItemSet.get(Number(setHash));
+    const setCount = setBonuses[Number(setHash)] ?? 0;
+    return (
+      setDef &&
+      !setDef.redacted && (
+        <div className={styles.setBonus}>
+          {setDef.setPerks
+            .filter((perk) => perk && setCount >= perk.requiredSetCount)
+            .map((p) => {
+              const perkDef = defs.SandboxPerk.get(p.sandboxPerkHash);
+              return (
+                <div key={p.sandboxPerkHash} className={styles.perk}>
+                  <SetPerkIcon perkDef={perkDef} />
+                  <span>{perkDef.displayProperties.name}</span>
+                </div>
+              );
+            })}
+        </div>
+      )
+    );
+  });
 }

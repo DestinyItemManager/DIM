@@ -14,6 +14,10 @@
   }
 }
 
+.tunableSymbol {
+  position: relative;
+}
+
 // The numeric value of the stat
 .value {
   grid-column: 2;
@@ -96,6 +100,17 @@
     }
   }
 
+  &.trait {
+    order: 3;
+    background-color: #4887ba;
+    & + &.trait {
+      opacity: 0.8;
+      & + &.trait {
+        opacity: 0.6;
+      }
+    }
+  }
+
   // Colors for the stat bars
   &.masterwork {
     order: 4;
@@ -114,6 +129,9 @@
 
   .mod {
     color: $stat-modded;
+  }
+  .trait {
+    color: #4887ba;
   }
   .masterwork {
     color: $stat-masterworked;
@@ -165,9 +183,10 @@
 
 .negativeModded {
   color: $red;
-  .statName {
-    font-weight: bold;
-  }
+}
+
+.archetypeStat {
+  font-weight: bold;
 }
 
 .totalRow {

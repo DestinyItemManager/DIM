@@ -38,6 +38,7 @@ export const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
   [BungieMembershipType.TigerStadia]: 'Stadia',
   [BungieMembershipType.TigerEgs]: 'Epic',
   [BungieMembershipType.BungieNext]: 'Bungie.net',
+  [BungieMembershipType.GoliathGame]: 'Marathon',
 };
 
 export const PLATFORM_ICONS: LookupTable<BungieMembershipType, string | IconDefinition> = {

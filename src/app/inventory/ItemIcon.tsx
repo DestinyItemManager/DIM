@@ -1,10 +1,9 @@
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
-import { D2ItemTiers, d2MissingIcon, ItemTierName } from 'app/search/d2-known-values';
-import { braveShiny, riteShiny } from 'app/utils/item-utils';
+import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
-import { isModCostVisible } from 'app/utils/socket-utils';
+import { isArmorArchetypePlug, isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -13,7 +12,7 @@ import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 import { isPluggableItem } from './store/sockets';
 
-const itemTierStyles: Record<ItemTierName, string> = {
+const itemTierStyles: Record<ItemRarityName, string> = {
   Legendary: styles.legendary,
   Exotic: styles.exotic,
   Common: styles.basic,
@@ -44,7 +43,7 @@ export function getItemImageStyles(item: DimItem, className?: string) {
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
-    [itemTierStyles[item.tier]]: !borderless && !item.plug,
+    [itemTierStyles[item.rarity]]: !borderless && !item.plug,
   });
   return itemImageStyles;
 }
@@ -60,7 +59,6 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   const classifiedPlaceholder =
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
-  const itemIsShiny = braveShiny(item) || riteShiny(item);
   return (
     <>
       {classifiedPlaceholder ? (
@@ -73,19 +71,28 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}
-      {item.iconOverlay && (
-        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
-      )}
-      {(itemIsShiny || item.masterwork || item.deepsightInfo) && (
+      {(item.holofoil || item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
-            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !itemIsShiny,
-            [styles.shinyMasterwork]: itemIsShiny,
+            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !item.holofoil,
+            [styles.shinyMasterwork]: item.holofoil,
             [styles.exoticMasterwork]: item.masterwork && item.isExotic,
             [styles.deepsightBorder]: item.deepsightInfo,
           })}
         />
       )}
+      {item.iconOverlay && (
+        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
+      )}
+      {item.tier > 1 ? (
+        <div className={styles.tierPipContainer}>
+          {Array(item.tier)
+            .fill(0)
+            .map((_, i) => (
+              <div key={i} className={styles.tierPip} />
+            ))}
+        </div>
+      ) : null}
       {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
         <>
           <div className={styles.energyCostOverlay} />
@@ -122,6 +129,7 @@ export function DefItemIcon({
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
     itemDef.plug?.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
+    isArmorArchetypePlug(itemDef) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Packages) ||
     itemCategoryHashes.includes(ItemCategoryHashes.Engrams);
 
@@ -137,7 +145,7 @@ export function DefItemIcon({
     },
     !borderless &&
       !itemDef.plug &&
-      itemDef.inventory && [itemTierStyles[D2ItemTiers[itemDef.inventory.tierType]]],
+      itemDef.inventory && [itemTierStyles[ItemRarityMap[itemDef.inventory.tierType]]],
   );
   const energyCost = getModCostInfo(itemDef);
 

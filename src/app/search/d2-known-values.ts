@@ -1,6 +1,9 @@
 import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
-import { HashLookup } from 'app/utils/util-types';
-import { TierType } from 'bungie-api-ts/destiny2';
+import { DimItem } from 'app/inventory/item-types';
+import { ArmorStatHashes } from 'app/loadout-builder/types';
+import { invert } from 'app/utils/collections';
+import { HashLookup, StringLookup } from 'app/utils/util-types';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 
 import {
   BreakerTypeHashes,
@@ -20,6 +23,11 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 // GAME MECHANICS KNOWN VALUES
 //
 
+// In Edge of Fate, Tier 5 armor was introduced that has 11 energy instead of 10.
+export const maxEnergyCapacity = (item: DimItem): number => (item.tier === 5 ? 11 : 10);
+/**
+ * @deprecated: use `maxEnergyCapacity` instead
+ */
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 export const MASTERWORK_ARMOR_STAT_BONUS = 2;
 
@@ -38,6 +46,7 @@ export const DEFAULT_ORNAMENTS: number[] = [
   2931483505, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
   1959648454, // InventoryItem "Default Ornament" Restores your weapon to its default appearance.
   702981643, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
+  3854296178, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
 ];
 
 /** a weird set of 3 solstice ornaments that provide a single resilience stat point */
@@ -98,18 +107,58 @@ export const CUSTOM_TOTAL_STAT_HASH = -111000;
 /** hashes representing D2 PL stats */
 export const D2LightStats = [StatHashes.Attack, StatHashes.Defense, StatHashes.Power];
 
-/** these stats canonically exist on D2 armor */
-export const D2ArmorStatHashByName = {
-  mobility: StatHashes.Mobility,
-  resilience: StatHashes.Resilience,
-  recovery: StatHashes.Recovery,
-  discipline: StatHashes.Discipline,
-  intellect: StatHashes.Intellect,
-  strength: StatHashes.Strength,
+/**
+ * Lookup with `'weapons' -> StatHashes.Weapons` etc.
+ *
+ * Only the 6 real armor 3.0 stats.
+ */
+export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
+  weapons: StatHashes.Weapons,
+  health: StatHashes.Health,
+  class: StatHashes.Class,
+  grenade: StatHashes.Grenade,
+  super: StatHashes.Super,
+  melee: StatHashes.Melee,
+};
+
+/**
+ * Lookup with `StatHashes.Weapons -> 'weapons'` etc.
+ *
+ * Only the 6 real armor stats.
+ */
+export const realD2ArmorStatSearchByHash = invert(realD2ArmorStatHashByName);
+
+/**
+ * Lookup with `'weapons' -> StatHashes.Weapons` etc.
+ *
+ * Includes keys with the old armor 2.0 stat names.
+ */
+export const D2ArmorStatHashByName: StringLookup<StatHashes> = {
+  ...realD2ArmorStatHashByName,
+  // We keep the old names for now, both for D1 compatibility and for existing saved
+  // searches. In the future we could have a different map for D1 names and D2
+  // names.
+  mobility: StatHashes.Weapons,
+  resilience: StatHashes.Health,
+  recovery: StatHashes.Class,
+  discipline: StatHashes.Grenade,
+  intellect: StatHashes.Super,
+  strength: StatHashes.Melee,
 } as const;
 
-/** Stats that all (D2) armor should have. */
-export const armorStats = Object.values(D2ArmorStatHashByName);
+/**
+ * Stats that all (D2) armor should have, ordered by how they're displayed in game.
+ *
+ * Only the 6 real armor stats, no aliases or synthetic stats.
+ */
+export const armorStats: ArmorStatHashes[] = [
+  StatHashes.Health,
+  StatHashes.Melee,
+  StatHashes.Grenade,
+  StatHashes.Super,
+  StatHashes.Class,
+  StatHashes.Weapons,
+];
 
 // a set of base stat weights, all worth the same, "switched on"
 export const evenStatWeights = /* @__PURE__ */ armorStats.reduce<CustomStatWeights>(
@@ -137,6 +186,8 @@ export const D2WeaponStatHashByName = {
   zoom: StatHashes.Zoom,
   airborne: StatHashes.AirborneEffectiveness,
   accuracy: StatHashes.Accuracy,
+  ammogen: StatHashes.AmmoGeneration,
+  persistence: StatHashes.Persistence,
 };
 
 export const D2PlugCategoryByStatHash = new Map<StatHashes, PlugCategoryHashes>([
@@ -193,6 +244,26 @@ export const DEEPSIGHT_HARMONIZER = 2228452164;
 
 // For loadout mods obliterated from the defs, we instead return this def
 export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
+
+// used in displaying the component segments on item stats
+export const weaponParts = new Set<PlugCategoryHashes | undefined>([
+  PlugCategoryHashes.Bowstrings,
+  PlugCategoryHashes.Batteries,
+  PlugCategoryHashes.Blades,
+  PlugCategoryHashes.Tubes,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Hafts,
+  PlugCategoryHashes.Stocks,
+  PlugCategoryHashes.Guards,
+  PlugCategoryHashes.Barrels,
+  PlugCategoryHashes.Arrows,
+  PlugCategoryHashes.Grips,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Magazines,
+  PlugCategoryHashes.MagazinesGl,
+  PlugCategoryHashes.Rails,
+  PlugCategoryHashes.Bolts,
+]);
 
 //
 // BUCKETS KNOWN VALUES
@@ -262,6 +333,7 @@ export const enum VendorHashes {
   Failsafe = 1576276905,
   RivensWishesExotics = 2388521577,
   XurLegendaryItems = 3751514131, // Vendor "Strange Gear Offers"
+  VanguardArms = 153857624, // "Weekly: Vanguard Arms Rewards"
 }
 
 // See coreSettingsLoaded reducer action for details. And remove this if/when we no longer perform that hack.
@@ -275,12 +347,12 @@ export const unadvertisedResettableVendors = [
 export const WELL_RESTED_PERK = 1519921522; // SandboxPerk "Well-Rested"
 
 /**
- * Maps TierType to tierTypeName in English and vice versa.
+ * Maps TierType to ItemRarityName in English and vice versa.
  * The Bungie.net version of this enum is not representative of real game strings.
  */
 // A manually constructed bi-directional enum,
 // because the `enum` keyword unfortunately returns type `string`.
-export const D2ItemTiers = {
+export const ItemRarityMap = {
   Unknown: TierType.Unknown,
   [TierType.Unknown]: 'Unknown',
   Currency: TierType.Currency,
@@ -297,7 +369,11 @@ export const D2ItemTiers = {
   [TierType.Exotic]: 'Exotic',
 } as const;
 
-export type ItemTierName =
+/**
+ * We use our own names for rarity because the API types don't match what's in
+ * game (e.g. Legendary = TierType.Superior, Uncommon = TierType.Common).
+ */
+export type ItemRarityName =
   | 'Unknown'
   | 'Currency'
   | 'Common'
@@ -326,9 +402,53 @@ export const breakerTypeNames = Object.entries(breakerTypes)
 
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
-  EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
   EnhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
+  EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
   SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
+  BalancedTuning = 3122197216, // InventoryItem "Balanced Tuning"
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"
+
+// TODO: replace with d2ai?
+export const tuningModToTunedStathash: Record<number, StatHashes> = {
+  309000506: StatHashes.Grenade,
+  311164277: StatHashes.Melee,
+  323635379: StatHashes.Class,
+  388618952: StatHashes.Health,
+  455024236: StatHashes.Grenade,
+  534630542: StatHashes.Melee,
+  673231129: StatHashes.Super,
+  691392383: StatHashes.Weapons,
+  891771298: StatHashes.Weapons,
+  957763733: StatHashes.Class,
+  1510949672: StatHashes.Class,
+  1672416975: StatHashes.Grenade,
+  1879022254: StatHashes.Class,
+  1918710127: StatHashes.Weapons,
+  1922571986: StatHashes.Grenade,
+  2125798995: StatHashes.Health,
+  2244422610: StatHashes.Super,
+  3121760799: StatHashes.Weapons,
+  3284443097: StatHashes.Weapons,
+  3310526732: StatHashes.Health,
+  3554800389: StatHashes.Super,
+  3681082702: StatHashes.Health,
+  3946669007: StatHashes.Super,
+  4020349587: StatHashes.Melee,
+  4026414261: StatHashes.Super,
+  4030660414: StatHashes.Class,
+  4088823605: StatHashes.Health,
+  4116389173: StatHashes.Grenade,
+  4164883102: StatHashes.Melee,
+  4210715468: StatHashes.Melee,
+};
+
+export const destinyClasses = [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock];
+
+export const customStatClasses = [
+  DestinyClass.Hunter,
+  DestinyClass.Titan,
+  DestinyClass.Warlock,
+  DestinyClass.Unknown,
+];

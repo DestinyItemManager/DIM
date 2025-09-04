@@ -25,7 +25,9 @@ const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | 
   const isPhonePortrait = useIsPhonePortrait();
   const itemIcon = (
     <ItemPopupTrigger item={item}>
-      {(ref, onClick) => <ConnectedInventoryItem item={item} ref={ref} onClick={onClick} />}
+      {(ref, onClick) => (
+        <ConnectedInventoryItem item={item} ref={ref} onClick={onClick} allowFilter />
+      )}
     </ItemPopupTrigger>
   );
   return (
@@ -33,7 +35,7 @@ const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | 
       {isPhonePortrait ? (
         itemIcon
       ) : (
-        <DraggableInventoryItem item={item} anyBucket={true}>
+        <DraggableInventoryItem item={item} anyBucket>
           {itemIcon}
         </DraggableInventoryItem>
       )}

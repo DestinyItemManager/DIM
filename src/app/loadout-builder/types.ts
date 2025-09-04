@@ -1,36 +1,37 @@
 import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { DimCharacterStat } from 'app/inventory/store-types';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
 
-export interface MinMaxTier {
-  minTier: number;
-  maxTier: number;
+export interface MinMaxStat {
+  minStat: number; // 0 to 200
+  maxStat: number; // 0 to 200
 }
 
 /**
  * Resolved stat constraints take the compact form of the API stat constraints
  * and expand them so that each stat has a corresponding constraint, the min and
- * max are defined, and the ignored flag is set. In the API version, stat
- * constraints are simply missing if ignored, and min-0/max-10 is omitted as
- * implied.
+ * max are defined, and the ignored flag is set. Tiers are replaced with exact
+ * stat values. In the API version, stat constraints are simply missing if
+ * ignored, and min-0/max-10 is omitted as implied.
  */
-export interface ResolvedStatConstraint extends Required<StatConstraint> {
+export interface ResolvedStatConstraint
+  extends Required<Omit<StatConstraint, 'minTier' | 'maxTier'>> {
   /**
-   * An ignored stat has an effective maximum tier of 0, so that any
-   * stat tiers in excess of T0 are deemed worthless.
+   * An ignored stat has an effective maximum stat of 0, so that any stats in
+   * excess of 0 are deemed worthless.
    */
   ignored: boolean;
 }
 
 /**
  * When a stat is ignored, we treat it as if it were effectively a constraint
- * with a max desired tier of 0. ResolvedStatContraintRange is the same as
- * DesiredStatRange, but with the ignored flag removed, and maxTier set to
- * 0 for ignored sets.
+ * with a max desired stat of 0. DesiredStatRange is the same as StatConstraint,
+ * but with the ignored flag removed, and maxStat set to 0 for ignored sets.
  */
-export type DesiredStatRange = Required<StatConstraint>;
+export type DesiredStatRange = Required<Omit<StatConstraint, 'minTier' | 'maxTier'>>;
 
 /** A map from bucketHash to the pinned item if there is one. */
 export interface PinnedItems {
@@ -50,14 +51,14 @@ export interface ArmorSet {
   readonly stats: Readonly<ArmorStats>;
   /** The assumed stats from the armor items themselves only. */
   readonly armorStats: Readonly<ArmorStats>;
-  /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
-  readonly armor: readonly DimItem[][];
+  /** For each armor type (see ArmorBucketHashes), this is the list of items in the loadout. */
+  readonly armor: DimItem[];
   /** Which stat mods were added? */
   readonly statMods: number[];
 }
 
 export type ItemsByBucket = Readonly<{
-  [bucketHash in LockableBucketHash]: readonly DimItem[];
+  [bucketHash in ArmorBucketHash]: readonly DimItem[];
 }>;
 
 /**
@@ -83,40 +84,36 @@ export type ItemGroup = Readonly<{
   items: DimItem[];
 }>;
 
-/**
- * Bucket lookup, also used for ordering of the buckets.
- */
-export const LockableBuckets = {
-  helmet: BucketHashes.Helmet as LockableBucketHash,
-  gauntlets: BucketHashes.Gauntlets as LockableBucketHash,
-  chest: BucketHashes.ChestArmor as LockableBucketHash,
-  leg: BucketHashes.LegArmor as LockableBucketHash,
-  classitem: BucketHashes.ClassArmor as LockableBucketHash,
-};
-
-export type LockableBucketHash =
+/** A restricted set of bucket hashes for armor. */
+export type ArmorBucketHash =
   | BucketHashes.Helmet
   | BucketHashes.Gauntlets
   | BucketHashes.ChestArmor
   | BucketHashes.LegArmor
   | BucketHashes.ClassArmor;
 
-export const LockableBucketHashes = Object.values(LockableBuckets);
+export const ArmorBucketHashes = D2Categories.Armor as ArmorBucketHash[];
 
 export type ModStatChanges = {
   [statHash in ArmorStatHashes]: Pick<DimCharacterStat, 'value' | 'breakdown'>;
 };
 
 export type ArmorStatHashes =
-  | StatHashes.Mobility
-  | StatHashes.Resilience
-  | StatHashes.Recovery
-  | StatHashes.Discipline
-  | StatHashes.Intellect
-  | StatHashes.Strength;
+  | StatHashes.Weapons
+  | StatHashes.Health
+  | StatHashes.Class
+  | StatHashes.Grenade
+  | StatHashes.Super
+  | StatHashes.Melee;
 
-export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxTier };
+export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxStat };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
+
+/** Do not allow the user to choose artifice/tuning mods manually in Loadout Optimizer since we're supposed to be doing that */
+export const autoAssignmentPCHs = [
+  PlugCategoryHashes.EnhancementsArtifice,
+  PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
+];
 
 /**
  * The reusablePlugSetHash from armour 2.0's general socket.
@@ -130,6 +127,13 @@ export const generalSocketReusablePlugSetHash = 731468111;
  */
 export const artificeSocketReusablePlugSetHash = 4285066582;
 
+/**
+ * The reusablePlugSetHash for the tuning socket, which lets you trade off two
+ * stats.
+ * TODO: Find a way to generate this in d2ai.
+ */
+export const tuningSocketReusablePlugSetHash = 1155052024;
+
 /** Bonus to a single stat given by plugs in artifice armor's exclusive mod slot */
 export const artificeStatBoost = 3;
 /** Bonus to a single stat given by the "half tier mods" plugs in all armor's general mod slot */
@@ -140,6 +144,11 @@ export const minorStatBoost = 5;
  * is fairly engrained in some of the algorithms, so it wouldn't be quite trivial to change this.
  */
 export const majorStatBoost = 10;
+
+/** Bonus/sacrifice made to a stat when using a tuning mod. */
+export const tuningStatBoost = 5;
+/** Bonus to the three lowest stats when using "Balanced Tuning" */
+export const balancedTuningStatBoost = 1;
 
 /**
  * Special value for lockedExoticHash indicating the user would not like any exotics included in their loadouts.

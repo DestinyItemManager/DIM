@@ -9,12 +9,9 @@ import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import styles from './Milestones.m.scss';
-import { PowerCaps } from './PowerCaps';
 import Pursuit from './Pursuit';
 import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';
-import SeasonalRank from './SeasonalRank';
-import WellRestedPerkIcon from './WellRestedPerkIcon';
 import { getEngramPowerBonus } from './engrams';
 import { milestoneToItems } from './milestone-items';
 import { getCharacterProgressions } from './selectors';
@@ -28,7 +25,6 @@ const sortPowerBonus = compareBy((powerBonus: number | undefined) => -(powerBonu
 export default function Milestones({
   profileInfo,
   store,
-
   buckets,
 }: {
   store: DimStore;
@@ -37,14 +33,7 @@ export default function Milestones({
 }) {
   const defs = useD2Definitions()!;
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
-  const characterProgressions = getCharacterProgressions(profileInfo, store.id);
   const dropPower = useSelector(dropPowerLevelSelector(store.id));
-  const season = profileInfo.profile?.data?.currentSeasonHash
-    ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
-    : undefined;
-  const seasonPass = season?.seasonPassHash
-    ? defs.SeasonPass.get(season.seasonPassHash)
-    : undefined;
 
   const milestoneItems = uniqBy(
     [...milestonesForCharacter(defs, profileInfo, store), ...profileMilestones],
@@ -62,23 +51,6 @@ export default function Milestones({
 
   return (
     <>
-      {characterProgressions && (
-        <PursuitGrid>
-          <SeasonalRank
-            store={store}
-            characterProgressions={characterProgressions}
-            season={season}
-            seasonPass={seasonPass}
-            profileInfo={profileInfo}
-          />
-          <WellRestedPerkIcon
-            progressions={characterProgressions}
-            season={season}
-            seasonPass={seasonPass}
-          />
-          <PowerCaps />
-        </PursuitGrid>
-      )}
       {[...milestonesByPower.keys()].sort(sortPowerBonus).map((powerBonus) => (
         <div key={powerBonus ?? -1}>
           <h2 className={styles.header}>

@@ -31,7 +31,7 @@ const overloadedRangeFilters: ItemFilterDefinition[] = [
       }
       // "masterwork:<5" case
       if (compare) {
-        return (item) => Boolean(item.masterworkInfo?.tier && compare(item.masterworkInfo.tier));
+        return (item) => item.masterworkInfo && compare(item.masterworkInfo.tier ?? 0);
       }
       // "masterwork:range" case
       const searchedMasterworkStatHash = statHashByName[filterValue];
@@ -45,7 +45,7 @@ const overloadedRangeFilters: ItemFilterDefinition[] = [
   },
   {
     keywords: 'energycapacity',
-    description: tl('Filter.Energy'),
+    description: tl('Filter.EnergyCapacity'),
     format: 'range',
     destinyVersion: 2,
     filter:

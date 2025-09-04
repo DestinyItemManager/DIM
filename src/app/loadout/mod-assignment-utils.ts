@@ -5,15 +5,16 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import {
-  ItemTierName,
-  MAX_ARMOR_ENERGY_CAPACITY,
+  ItemRarityName,
   armor2PlugCategoryHashesByName,
+  maxEnergyCapacity,
 } from 'app/search/d2-known-values';
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { count, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
+  getArmor3TuningStat,
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
   isArtifice,
@@ -24,7 +25,7 @@ import {
   getSocketsByCategoryHash,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
-import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy } from 'es-toolkit';
 import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from './armor-upgrade-utils';
@@ -66,6 +67,14 @@ export interface ModMap {
    * also don't want to ever pass these to the Loadout Optimizer process.
    */
   artificeMods: PluggableInventoryItemDefinition[];
+  /**
+   * Like artifice mods, tuning mods are free, but not all tuning mods fit onto
+   * all items with tuning mod sockets. Instead we must line up the mods to the
+   * tuning stat the item rolled with. Balanced mods go under stat hash 0.
+   */
+  tuningMods: {
+    [tuningModStatHash: number]: PluggableInventoryItemDefinition[];
+  };
 }
 
 /**
@@ -80,6 +89,7 @@ export function categorizeArmorMods(
   const generalMods: PluggableInventoryItemDefinition[] = [];
   const activityMods: PluggableInventoryItemDefinition[] = [];
   const artificeMods: PluggableInventoryItemDefinition[] = [];
+  const tuningMods: { [tuningModStatHash: number]: PluggableInventoryItemDefinition[] } = {};
   const bucketSpecificMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
 
   const validMods: PluggableInventoryItemDefinition[] = [];
@@ -110,6 +120,16 @@ export function categorizeArmorMods(
     } else if (plannedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) {
       artificeMods.push(plannedMod);
       validMods.push(plannedMod);
+    } else if (
+      plannedMod.plug.plugCategoryHash ===
+      PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods
+    ) {
+      // Find the tuning stat hash, which is the stat that gets +5 when this mod
+      // is applied. For "Balanced Tuning" this should be 0.
+      const tuningStatHash =
+        plannedMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
+      (tuningMods[tuningStatHash] ??= []).push(plannedMod);
+      validMods.push(plannedMod);
     } else {
       const bucketHash = plugCategoryHashToBucketHash[pch];
       if (bucketHash !== undefined) {
@@ -128,6 +148,7 @@ export function categorizeArmorMods(
       activityMods,
       artificeMods,
       bucketSpecificMods,
+      tuningMods,
     },
     unassignedMods,
   };
@@ -160,10 +181,11 @@ function getUpgradeCost(
   newEnergy: number,
   needsArtifice: boolean,
 ) {
+  const maxEnergy = maxEnergyCapacity(dimItem);
   if (!model.byRarity[item.rarity]) {
     const plugs = getEnergyUpgradePlugs(dimItem);
-    const costsPerTier = Array<number[]>(MAX_ARMOR_ENERGY_CAPACITY);
-    for (let i = 0; i <= MAX_ARMOR_ENERGY_CAPACITY; i++) {
+    const costsPerTier = Array<number[]>(maxEnergy);
+    for (let i = 0; i <= maxEnergy; i++) {
       const previousTierCosts = costsPerTier[i - 1];
       costsPerTier[i] = previousTierCosts
         ? [...previousTierCosts]
@@ -182,14 +204,14 @@ function getUpgradeCost(
         }
       }
     }
-    model.byRarity[dimItem.tier] = costsPerTier;
+    model.byRarity[dimItem.rarity] = costsPerTier;
   }
   const needsEnhancing = item.rarity === 'Exotic' && needsArtifice && !isArtifice(dimItem);
-  const targetEnergy = needsEnhancing ? MAX_ARMOR_ENERGY_CAPACITY : newEnergy;
-  const tierModel = model.byRarity[dimItem.tier]!;
-  const alreadyPaidCosts = tierModel[item.originalCapacity];
+  const targetEnergy = needsEnhancing ? maxEnergy : newEnergy;
+  const rarityModel = model.byRarity[dimItem.rarity]!;
+  const alreadyPaidCosts = rarityModel[item.originalCapacity];
 
-  const costs = tierModel[targetEnergy].map((val, idx) => val - alreadyPaidCosts[idx]);
+  const costs = rarityModel[targetEnergy]?.map((val, idx) => val - alreadyPaidCosts[idx]) ?? [];
   if (needsEnhancing && model.exoticArtificeCosts) {
     for (let i = 0; i < costs.length; i++) {
       costs[i] += model.exoticArtificeCosts[i];
@@ -206,7 +228,7 @@ function getUpgradeCost(
 interface EnergyUpgradeCostModel {
   defs: D2ManifestDefinitions;
   /** Cumulative costs to reach the indexed capacity. Subtract the costs for current capacity. */
-  byRarity: { [rarity in ItemTierName]?: number[][] };
+  byRarity: { [rarity in ItemRarityName]?: number[][] };
   exoticArtificeCosts?: number[];
 }
 
@@ -317,7 +339,7 @@ export function fitMostMods({
   );
 
   const {
-    modMap: { activityMods, generalMods, artificeMods, bucketSpecificMods },
+    modMap: { activityMods, generalMods, artificeMods, tuningMods, bucketSpecificMods },
     unassignedMods: invalidMods,
   } = categorizeArmorMods(plannedMods, items);
 
@@ -352,7 +374,6 @@ export function fitMostMods({
         targetItemIndex = 0;
       }
     }
-
     if (targetItemIndex !== -1) {
       bucketSpecificAssignments[artificeItems[targetItemIndex].id].assigned.push(artificeMod);
       artificeItems.splice(targetItemIndex, 1);
@@ -361,7 +382,38 @@ export function fitMostMods({
     }
   }
 
-  // A object of item id's to energy information. This is so we can precalculate
+  // Same deal for tuning mods, which are also free. Slightly more trouble since
+  // items with a tuning socket can only fit tuning mods with a certain stat.
+  const tuningItems = items.filter((i) => getArmor3TuningStat(i) !== undefined);
+  const tuningStatHashes = Object.keys(tuningMods)
+    .map(Number)
+    // Sort 0 (balanced tuning) last, since any tunable item can take balanced mods
+    .sort((a, b) => b - a);
+  for (const tuningStatHash of tuningStatHashes) {
+    const modsToAssign = tuningMods[tuningStatHash];
+    for (const tuningMod of modsToAssign) {
+      // Try to find an item that already has this mod slotted
+      let targetItemIndex = tuningItems.findIndex((item) =>
+        item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === tuningMod.hash),
+      );
+      if (targetItemIndex === -1) {
+        targetItemIndex = tuningItems.findIndex((i) =>
+          tuningStatHash === 0
+            ? true // Balanced tuning can go on any item with a tuning socket
+            : // Otherwise the item's tuning stat must match the mod's
+              getArmor3TuningStat(i) === tuningStatHash,
+        );
+      }
+      if (targetItemIndex !== -1) {
+        bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
+        tuningItems.splice(targetItemIndex, 1);
+      } else {
+        unassignedMods.push(tuningMod);
+      }
+    }
+  }
+
+  // A object of item ids to energy information. This is so we can precalculate
   // working energy used, capacity and type and use this to validate whether a mod
   // can be used in an item.
   const itemEnergies = mapValues(
@@ -490,7 +542,7 @@ export function fitMostMods({
       resultingItemEnergies[item.id] = {
         energyCapacity: itemEnergies[item.id].originalCapacity,
         energyUsed: requiresArtificeEnhancement
-          ? MAX_ARMOR_ENERGY_CAPACITY
+          ? maxEnergyCapacity(item)
           : sumBy(modsForItem, (mod) => mod.plug.energyCost?.energyCost ?? 0),
       };
     }
@@ -521,8 +573,15 @@ function getArmorSocketsAndMods(
     // If a socket is not plugged (even with an empty socket) we consider it disabled
     // This needs to be checked as the 30th anniversary armour has the Artifice socket
     // but the API considers it to be disabled.
-    .filter((socket) => socket.plugged)
-    // Artificer sockets only plug a subset of the bucket specific mods so we sort by the size
+    .filter(
+      (socket) =>
+        socket.plugged &&
+        // TODO: Edge of Fate: This is a hacky fix for the masterwork socket
+        // that has appeared. We should maybe exclude it from the socket list
+        // entirely since it seems redundant with the energy track?
+        socket.socketDefinition.socketTypeHash !== 1843767421,
+    )
+    // Artifice sockets only plug a subset of the bucket specific mods so we sort by the size
     // of the plugItems in the plugset so we use that first if possible. This is optional and
     // simply prefers plugging artifact mods into artifice sockets if available.
     .sort(compareBy((socket) => (socket.plugSet ? socket.plugSet.plugs.length : 999)));
@@ -657,7 +716,7 @@ export function pickPlugPositions(
     // If a destination socket couldn't be found for this plug, something is seriously? wrong
     if (destinationSocketIndex === -1) {
       throw new Error(
-        `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash})`,
+        `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash}) into the item ${item.name}`,
       );
     }
 
@@ -889,7 +948,7 @@ function isActivityModValid(
   return (
     isModEnergyValid(itemEnergy, activityMod) &&
     modTag &&
-    itemSocketMetadata?.some((metadata) => metadata.compatibleModTags.includes(modTag))
+    itemSocketMetadata?.some((metadata) => metadata.slotTag === modTag)
   );
 }
 
@@ -935,8 +994,7 @@ function buildItemEnergy({
     used: sumBy(assignedMods, (mod) => mod.plug.energyCost?.energyCost || 0),
     originalCapacity: item.energy?.energyCapacity || 0,
     derivedCapacity: calculateAssumedItemEnergy(item, armorEnergyRules),
-    isClassItem: item.bucket.hash === BucketHashes.ClassArmor,
-    rarity: item.tier,
+    rarity: item.rarity,
   };
 }
 
@@ -944,8 +1002,7 @@ interface ItemEnergy {
   used: number;
   originalCapacity: number;
   derivedCapacity: number;
-  isClassItem: boolean;
-  rarity: ItemTierName;
+  rarity: ItemRarityName;
 }
 /**
  * Validates whether a mod can be assigned to an item in the mod assignments algorithm.

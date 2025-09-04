@@ -1,10 +1,13 @@
+import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { infoLog } from 'app/utils/log';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import type { ProcessInputs } from '../process-worker/process';
 import { ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
@@ -39,6 +42,8 @@ interface ProcessState {
     // What the actual process did to remove some sets.
     processInfo: ProcessStatistics | undefined;
   } | null;
+  totalCombos: number;
+  completedCombos: number;
 }
 
 /**
@@ -48,6 +53,7 @@ export function useProcess({
   selectedStore,
   filteredItems,
   lockedModMap,
+  setBonuses,
   modStatChanges,
   armorEnergyRules,
   desiredStatRanges,
@@ -58,6 +64,7 @@ export function useProcess({
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
   lockedModMap: ModMap;
+  setBonuses: SetBonusCounts;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
   desiredStatRanges: DesiredStatRange[];
@@ -65,57 +72,76 @@ export function useProcess({
   autoStatMods: boolean;
   strictUpgrades: boolean;
 }) {
-  const [{ result, processing }, setState] = useState<ProcessState>({
+  const [{ result, processing, totalCombos, completedCombos }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStore.id,
     result: null,
+    totalCombos: 0,
+    completedCombos: 0,
   });
-  const getUserItemTag = useSelector(getTagSelector);
+  const autoModDefs = useAutoMods(selectedStore.id);
+  const firstTime = result === null;
 
-  const cleanupRef = useRef<() => void>(null);
-
-  // Cleanup worker on unmount
+  // Normally we'd just use the cleanup function in the main useEffect, but we
+  // want to be able to short circuit updates without killing in-progress
+  // processes.
+  const cleanupRef = useRef<() => void>(undefined);
   useEffect(
     () => () => {
-      if (cleanupRef.current) {
-        cleanupRef.current();
-        cleanupRef.current = null;
-      }
+      // Cleanup the previous process if it exists
+      cleanupRef.current?.();
+      cleanupRef.current = undefined;
     },
     [],
   );
-
-  const autoModDefs = useAutoMods(selectedStore.id);
+  // This allows for some memoization of the inputs to the worker
+  const inputsRef = useRef<ProcessInputs>(undefined);
 
   useEffect(() => {
-    // Stop any previous worker
-    if (cleanupRef.current) {
-      cleanupRef.current();
-    }
-    const { cleanup, resultPromise } = runProcess({
-      autoModDefs,
-      filteredItems,
-      lockedModMap,
-      modStatChanges,
-      armorEnergyRules,
-      desiredStatRanges,
-      anyExotic,
-      autoStatMods,
-      getUserItemTag,
-      stopOnFirstSet: false,
-      strictUpgrades,
-    });
+    const doProcess = async () => {
+      const handleProgress = (completed: number, total: number) => {
+        setState((state) => ({
+          ...state,
+          totalCombos: total,
+          completedCombos: completed,
+        }));
+      };
 
-    cleanupRef.current = cleanup;
+      const processInfo = runProcess({
+        autoModDefs,
+        filteredItems,
+        lockedModMap,
+        setBonuses,
+        modStatChanges,
+        armorEnergyRules,
+        desiredStatRanges,
+        anyExotic,
+        autoStatMods,
+        stopOnFirstSet: false,
+        strictUpgrades,
+        lastInput: inputsRef.current,
+        onProgress: handleProgress,
+      });
+      if (processInfo === undefined) {
+        infoLog('loadout optimizer', 'Inputs were equal to the previous run, not recalculating');
+        return;
+      }
 
-    setState((state) => ({
-      processing: true,
-      resultStoreId: selectedStore.id,
-      result: selectedStore.id === state.resultStoreId ? state.result : null,
-    }));
+      const { cleanup, resultPromise, input } = processInfo;
+      cleanupRef.current?.();
+      cleanupRef.current = cleanup;
+      inputsRef.current = input;
 
-    resultPromise
-      .then(({ sets, combos, statRangesFiltered, processInfo, processTime }) => {
+      setState((state) => ({
+        processing: true,
+        resultStoreId: selectedStore.id,
+        result: selectedStore.id === state.resultStoreId ? state.result : null,
+        totalCombos: 0,
+        completedCombos: 0,
+      }));
+
+      try {
+        const { sets, combos, statRangesFiltered, processInfo, processTime } = await resultPromise;
         setState((oldState) => ({
           ...oldState,
           processing: false,
@@ -130,12 +156,22 @@ export function useProcess({
             processInfo,
           },
         }));
-      })
-      // Cleanup the worker, we don't need it anymore.
-      .finally(() => {
+      } finally {
         cleanup();
-        cleanupRef.current = null;
-      });
+        cleanupRef.current = undefined;
+      }
+    };
+
+    const timer = setTimeout(
+      () => {
+        doProcess();
+      },
+      firstTime ? 0 : 500,
+    );
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [
     filteredItems,
     selectedStore.id,
@@ -144,13 +180,14 @@ export function useProcess({
     armorEnergyRules,
     autoStatMods,
     lockedModMap,
-    getUserItemTag,
+    setBonuses,
     modStatChanges,
     autoModDefs,
     strictUpgrades,
+    firstTime,
   ]);
 
-  return { result, processing };
+  return { result, processing, totalCombos, completedCombos };
 }
 
 /**

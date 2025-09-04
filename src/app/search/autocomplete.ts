@@ -1,8 +1,8 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
-import { t } from 'app/i18next-t';
-import { compact, uniqBy } from 'app/utils/collections';
+import { compact, filterMap, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
+import { filterDescriptionText } from './filter-description';
 import { canonicalFilterFormats } from './filter-types';
 import { lexer, makeCommentString, parseQuery, QueryLexerError } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
@@ -79,6 +79,7 @@ const filterNames = [
   'modname',
   'name',
   'description',
+  'dupe',
 ];
 
 /**
@@ -323,9 +324,7 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
       const filterDef = findFilter(word, searchConfig.filtersMap);
       const newQuery = base + word + query.slice(caretIndex);
       const helpText: string | undefined = filterDef
-        ? Array.isArray(filterDef.description)
-          ? t(...filterDef.description)
-          : t(filterDef.description)
+        ? filterDescriptionText(filterDef.description)
         : undefined;
       return {
         query: {
@@ -367,19 +366,31 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 ) {
   // these filters might include quotes, so we search for two text segments to ignore quotes & colon
   // i.e. `name:test` can find `name:"test item"`
-  const freeformTerms = Object.values(searchConfig.filtersMap.kvFilters)
-    .filter((f) => canonicalFilterFormats(f.format).includes('freeform'))
-    .flatMap((f) => f.keywords)
-    .map((s) => `${s}:`);
+  const freeformTerms: string[] = [];
+  const multiqueryTermsLookup: NodeJS.Dict<string[]> = {};
+  for (const filter of Object.values(searchConfig.filtersMap.kvFilters)) {
+    const formats = canonicalFilterFormats(filter.format);
+    if (formats.includes('freeform')) {
+      for (const k of filter.keywords) {
+        freeformTerms.push(`${k}:`);
+      }
+    }
+    if (formats.includes('multiquery')) {
+      for (const k of filter.keywords) {
+        (multiqueryTermsLookup[k] ??= []).push(...(filter.suggestions ?? []));
+      }
+    }
+  }
 
   // TODO: also search filter descriptions
   return (typed: string): string[] => {
     if (!typed) {
       return [];
     }
-
     const typedToLower = typed.toLowerCase();
     let typedPlain = plainString(typedToLower, searchConfig.language);
+    const typedSegments = typedPlain.split(':');
+    const possibleKeyword = typedSegments[0];
 
     // because we are fighting against other elements for space in the suggestion dropdown,
     // we will entirely skip "not" and "<" and ">" and "<=" and ">=" suggestions,
@@ -393,7 +404,6 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
     let mustStartWith = '';
     if (freeformTerms.some((t) => typedPlain.startsWith(t))) {
-      const typedSegments = typedPlain.split(':');
       mustStartWith = typedSegments.shift()!;
       typedPlain = typedSegments.join(':');
     }
@@ -413,6 +423,29 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
       .filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
+
+    if (multiqueryTermsLookup[possibleKeyword] && filterNames.includes(possibleKeyword)) {
+      // For multiquery filters, if the user has typed a + (or hasn't typed
+      // anything) they're looking to add another query term, so offer to append
+      // one.
+      const existingTerms = new Set(
+        (typedSegments[1] || '')
+          .split('+')
+          .filter((t) => multiqueryTermsLookup[possibleKeyword]!.includes(t)),
+      );
+      const stem = `${typedSegments[0]}:${[...existingTerms].join('+')}${existingTerms.size ? '+' : ''}`;
+      suggestions.push(
+        ...filterMap(multiqueryTermsLookup[possibleKeyword], (t) => {
+          if (!existingTerms.has(t)) {
+            const newTerm = stem + t;
+            return {
+              rawText: newTerm,
+              plainText: newTerm,
+            };
+          }
+        }),
+      );
+    }
 
     suggestions = suggestions.sort(
       chainComparator(
@@ -435,19 +468,6 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
                 : 0, // mid otherwise
         ),
 
-        // for is/not, prioritize words with less left to type,
-        // so "is:armor" comes before "is:armormod".
-        // but only is/not, not other list-based suggestions,
-        // otherwise it prioritizes "dawn" over "redwar" after you type "season:"
-        // which i am not into.
-        compareBy((word) => {
-          if (word.plainText.startsWith('not:') || word.plainText.startsWith('is:')) {
-            return word.plainText.length - (typedPlain.length + word.plainText.indexOf(typedPlain));
-          } else {
-            return 0;
-          }
-        }),
-
         // ---------------
         // once we have accounted for high level assumptions about user input,
         // make some opinionated choices about which filters are a priority
@@ -455,9 +475,6 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
         // tags are UGC and therefore important
         compareBy((word) => !word.plainText.startsWith('tag:')),
-
-        // sort incomplete terms (ending with ':') to the front
-        compareBy((word) => !word.plainText.endsWith(':')),
 
         // push "not" and "<=" and ">=" to the bottom if they are present
         // we discourage "not", and "<=" and ">=" are highly discoverable from "<" and ">"
@@ -472,14 +489,28 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
         // i.e. suggest "stat:" before "stat:magazine:"
         compareBy((word) => (word.plainText.startsWith('is:') ? 0 : colonCount(word.plainText))),
 
+        // for is/not, prioritize words with less left to type,
+        // so "is:armor" comes before "is:armormod".
+        // but only is/not, not other list-based suggestions,
+        // otherwise it prioritizes "dawn" over "redwar" after you type "season:"
+        // which i am not into.
+        compareBy((word) => {
+          if (word.plainText.startsWith('not:') || word.plainText.startsWith('is:')) {
+            return word.plainText.length - (typedPlain.length + word.plainText.indexOf(typedPlain));
+          } else {
+            return 0;
+          }
+        }),
+
+        // sort incomplete terms (ending with ':') to the front
+        compareBy((word) => !word.plainText.endsWith(':')),
+
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
         compareBy((word) => !mathCheck.test(word.plainText)),
       ),
     );
-    if (filterNames.includes(typedPlain.split(':')[0])) {
-      return suggestions.map((suggestion) => suggestion.rawText);
-    } else if (suggestions.length) {
+    if (suggestions.length) {
       // we will always add in (later) a suggestion of "what you've already typed so far"
       // so prevent "what's been typed" from appearing in the returned suggestions from this function
       const deDuped = new Set(suggestions.map((suggestion) => suggestion.rawText));

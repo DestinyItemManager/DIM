@@ -1,15 +1,21 @@
 @use '../variables' as *;
 @use '../dim-ui/tooltip-mixins' as *;
 
-.values {
-  display: flex;
-  justify-content: space-between;
-}
-
-.label {
-  margin-right: 8px;
+.title {
   display: flex;
   align-items: center;
+  gap: 4px;
+  > img {
+    height: 24px;
+    width: 24px;
+  }
+  > *:last-child {
+    margin-left: auto;
+  }
+}
+
+.value {
+  font-weight: normal;
 }
 
 .row {

@@ -25,7 +25,7 @@ import {
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { TraitHashes } from 'data/d2/generated-enums';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import styles from './PlugTooltip.m.scss';
@@ -78,13 +78,15 @@ export function PlugDefTooltip({
   classType,
   automaticallyPicked,
   disabledByAutoStatMods,
+  item,
 }: {
   def: PluggableInventoryItemDefinition;
   classType?: DestinyClass;
   automaticallyPicked?: boolean;
   disabledByAutoStatMods?: boolean;
+  item?: DimItem;
 }) {
-  const stats = getPlugDefStats(def, classType);
+  const stats = getPlugDefStats(def, classType, item);
   return (
     <PlugTooltip
       def={def}
@@ -147,13 +149,17 @@ function PlugTooltip({
   const bungieDescription =
     plugDescriptions.perks.length > 0 &&
     plugDescriptions.perks.map((perkDesc) => (
-      <div key={perkDesc.perkHash}>
-        {perkDesc.name && <div className={styles.perkName}>{perkDesc.name}</div>}
-        {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+      <React.Fragment key={perkDesc.perkHash}>
+        {perkDesc.name && !perkDesc.name.match(/^\+.*▲/m) && (
+          <div className={styles.perkName}>{perkDesc.name}</div>
+        )}
+        {perkDesc.description && perkDesc.description !== perkDesc.name && (
+          <RichDestinyText text={perkDesc.description} />
+        )}
         {!hideRequirements && perkDesc.requirement && (
           <RichDestinyText text={perkDesc.requirement} className={styles.requirement} />
         )}
-      </div>
+      </React.Fragment>
     ));
   const clarityDescriptionSection = plugDescriptions.communityInsight && (
     <Tooltip.Section className={styles.communityInsightSection}>

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'dismissButton': string;
+  'fineprint': string;
   'guide': string;
   'header': string;
   'loadoutEditSection': string;
@@ -9,6 +10,7 @@ interface CssExports {
   'page': string;
   'referenceTiersInfo': string;
   'speedReport': string;
+  'speedReportInner': string;
   'subclassSection': string;
   'toolbar': string;
   'undoRedo': string;

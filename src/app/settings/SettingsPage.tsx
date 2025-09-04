@@ -1,4 +1,4 @@
-import { LoadoutSort, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
+import { VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -20,13 +20,15 @@ import { compact } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
+import { useMaxParallelCores } from 'app/utils/parallel-cores';
 import { range } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import '../inventory-page/StoreBucket.scss';
 import InventoryItem from '../inventory/InventoryItem';
-import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons';
+import { AppIcon, lockIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { CustomStatsSettings } from './CustomStatsSettings';
@@ -68,6 +70,8 @@ export default function SettingsPage() {
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
   const allItems = useSelector(allItemsSelector);
+
+  const [maxParallelCores, setMaxParallelCores] = useMaxParallelCores();
 
   const exampleWeapon = allItems.find(
     (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
@@ -113,10 +117,6 @@ export default function SettingsPage() {
     setSetting(e.target.name as keyof Settings, parseInt(e.target.value, 10));
   };
 
-  const onChangePerkList: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setSetting('perkList', e.target.value === 'true');
-  };
-
   const onBadgePostmasterChanged = (checked: boolean, name: keyof Settings) => {
     if (!checked) {
       clearAppBadge();
@@ -142,6 +142,10 @@ export default function SettingsPage() {
   const changeVaultWeaponGrouping = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const vaultWeaponGrouping = e.target.value;
     setSetting('vaultWeaponGrouping', vaultWeaponGrouping);
+  };
+
+  const onMaxParallelCoresChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setMaxParallelCores(parseInt(e.target.value, 10));
   };
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
@@ -178,7 +182,8 @@ export default function SettingsPage() {
     masterworked: t('Settings.Masterworked'),
     crafted: t('Settings.SortByCrafted'),
     deepsight: t('Settings.SortByDeepsight'),
-    // archetype: 'Archetype'
+    featured: t('Settings.SortByFeatured'),
+    tier: t('Settings.SortByTier'),
   };
 
   const vaultWeaponGroupingOptions = mapToOptions({
@@ -200,10 +205,6 @@ export default function SettingsPage() {
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
-  const numberOfSpacesOptions = range(1, 10).map((count) => ({
-    value: count,
-    name: t('Settings.SpacesSize', { count }),
-  }));
   const vaultColOptions = range(5, 21).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
@@ -224,16 +225,16 @@ export default function SettingsPage() {
     .sort(compareByIndex(sortSettings.sortOrder, (o) => o.id));
 
   const menuItems = compact([
-    { id: 'general', title: t('Settings.Language') },
-    { id: 'theme', title: t('Settings.Theme') },
-    { id: 'items', title: t('Settings.Items') },
+    { id: 'appearance', title: t('Settings.Appearance') },
     { id: 'inventory', title: t('Settings.Inventory') },
+    { id: 'items', title: t('Settings.Items') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
     { id: 'storage', title: t('Storage.MenuTitle') },
     { id: 'spreadsheets', title: t('Settings.Data') },
     $featureFlags.elgatoStreamDeck && !isPhonePortrait
       ? { id: 'stream-deck', title: 'Elgato Stream Deck' }
       : undefined,
+    { id: 'troubleshooting', title: t('Settings.Troubleshooting') },
   ]);
 
   return (
@@ -247,17 +248,12 @@ export default function SettingsPage() {
           ))}
       </PageWithMenu.Menu>
       <PageWithMenu.Contents className={styles.settings}>
-        <h1>{t('Settings.Settings')}</h1>
         <form>
-          <section id="general">
-            <h2>{t('Settings.Language')}</h2>
+          <section id="appearance">
+            <h2>{t('Settings.Appearance')}</h2>
             <div className={styles.setting}>
               <LanguageSetting />
             </div>
-          </section>
-
-          <section id="theme">
-            <h2>{t('Settings.Theme')}</h2>
             <div className={styles.setting}>
               <Select
                 label={t('Settings.Theme')}
@@ -266,223 +262,6 @@ export default function SettingsPage() {
                 options={themeOptions}
                 onChange={changeTheme}
               />
-            </div>
-          </section>
-
-          <section id="items">
-            <h2>{t('Settings.Items')}</h2>
-
-            <div className="sub-bucket">
-              {exampleWeapon && (
-                <InventoryItem
-                  item={exampleWeapon}
-                  isNew={settings.showNewItems}
-                  tag="keep"
-                  wishlistRoll={godRoll}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-              {exampleWeaponMasterworked && (
-                <InventoryItem
-                  item={exampleWeaponMasterworked}
-                  isNew={settings.showNewItems}
-                  tag="favorite"
-                  wishlistRoll={godRoll}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-              {exampleArmor && (
-                <InventoryItem
-                  item={exampleArmor}
-                  isNew={settings.showNewItems}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-              {exampleArchivedArmor && (
-                <InventoryItem
-                  item={exampleArchivedArmor}
-                  isNew={settings.showNewItems}
-                  tag="archive"
-                  searchHidden={true}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-            </div>
-
-            {!isPhonePortrait && (
-              <div className={styles.setting}>
-                <div className={styles.itemSize}>
-                  <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
-                  <input
-                    value={settings.itemSize}
-                    type="range"
-                    min="48"
-                    max="66"
-                    name="itemSize"
-                    onChange={onChangeNumeric}
-                  />
-                  {Math.max(48, settings.itemSize)}px
-                  <button type="button" className="dim-button" onClick={resetItemSize}>
-                    {t('Settings.ResetToDefault')}
-                  </button>
-                </div>
-                <div className={styles.fineprint}>{t('Settings.DefaultItemSizeNote')}</div>
-              </div>
-            )}
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.ShowNewItems')}
-                name="showNewItems"
-                value={settings.showNewItems}
-                onChange={onCheckChange}
-              />
-              <button
-                type="button"
-                className="dim-button"
-                onClick={() => dispatch(clearAllNewItems())}
-              >
-                <NewItemIndicator className={styles.newItem} />{' '}
-                <span>{t('Hotkey.ClearNewItems')}</span>
-              </button>
-            </div>
-
-            <div className={styles.setting}>
-              <Select
-                label={t('Settings.SetVaultWeaponGrouping')}
-                name="vaultWeaponGrouping"
-                value={settings.vaultWeaponGrouping}
-                options={vaultWeaponGroupingOptions}
-                onChange={changeVaultWeaponGrouping}
-              />
-              {settings.vaultWeaponGrouping && (
-                <Checkbox
-                  label={t('Settings.VaultWeaponGroupingStyle')}
-                  name="vaultWeaponGroupingStyle"
-                  value={settings.vaultWeaponGroupingStyle !== VaultWeaponGroupingStyle.Inline}
-                  onChange={(checked, setting) =>
-                    setSetting(
-                      setting,
-                      checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
-                    )
-                  }
-                />
-              )}
-              <Checkbox
-                label={t('Settings.VaultArmorGroupingStyle')}
-                name="vaultArmorGroupingStyle"
-                value={settings.vaultArmorGroupingStyle !== VaultWeaponGroupingStyle.Inline}
-                onChange={(checked, setting) =>
-                  setSetting(
-                    setting,
-                    checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
-                  )
-                }
-              />
-            </div>
-
-            <div className={styles.setting}>
-              <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
-
-              <SortOrderEditor order={itemSortCustom} onSortOrderChanged={itemSortOrderChanged} />
-              <div className={styles.fineprint}>{t('Settings.DontForgetDupes')}</div>
-            </div>
-
-            <div className={styles.setting}>
-              <CustomStatsSettings />
-            </div>
-
-            <div className={styles.setting}>
-              {t('Settings.PerkDisplay')}
-              <ul className={styles.radioOptions}>
-                <li>
-                  <label>
-                    <input
-                      type="radio"
-                      name="perkDisplay"
-                      checked={settings.perkList}
-                      value="true"
-                      onChange={onChangePerkList}
-                    />
-                    <AppIcon icon={faList} /> {t('Settings.PerkList')}
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input
-                      type="radio"
-                      name="perkDisplay"
-                      checked={!settings.perkList}
-                      value="false"
-                      onChange={onChangePerkList}
-                    />
-                    <AppIcon icon={faGrid} /> {t('Settings.PerkGrid')}
-                  </label>
-                </li>
-              </ul>
-            </div>
-            {$featureFlags.clarityDescriptions && (
-              <div className={styles.setting}>
-                <Select
-                  label={t('Settings.CommunityData')}
-                  name="descriptionsToDisplay"
-                  value={settings.descriptionsToDisplay}
-                  options={descriptionDisplayOptions}
-                  onChange={changeDescriptionDisplay}
-                />
-                <div
-                  className={styles.fineprint}
-                  dangerouslySetInnerHTML={{
-                    __html: t('Views.About.CommunityInsight', {
-                      clarityLink,
-                      clarityDiscordLink,
-                    }),
-                  }}
-                />
-              </div>
-            )}
-            {hasD1Account && (
-              <div className={styles.setting}>
-                <Checkbox
-                  label={t('Settings.EnableAdvancedStats')}
-                  name="itemQuality"
-                  value={settings.itemQuality}
-                  onChange={onCheckChange}
-                />
-              </div>
-            )}
-            <div className={styles.setting}>
-              <Checkbox
-                label={t('Settings.AutoLockTagged')}
-                name="autoLockTagged"
-                value={settings.autoLockTagged}
-                onChange={onCheckChange}
-              />
-              <div className={styles.fineprint}>{t('Settings.AutoLockTaggedExplanation')}</div>
-              <table className={styles.autoTagTable}>
-                <tbody>
-                  <tr>
-                    <td>
-                      <TagIcon tag="favorite" />
-                      <TagIcon tag="keep" />
-                      <TagIcon tag="archive" />
-                    </td>
-                    <td>→</td>
-                    <td>
-                      <AppIcon icon={lockIcon} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <TagIcon tag="junk" />
-                      <TagIcon tag="infuse" />
-                    </td>
-                    <td>→</td>
-                    <td>
-                      <AppIcon icon={unlockedIcon} />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
           </section>
 
@@ -557,6 +336,47 @@ export default function SettingsPage() {
             )}
 
             <div className={styles.setting}>
+              <Select
+                label={t('Settings.SetVaultWeaponGrouping')}
+                name="vaultWeaponGrouping"
+                value={settings.vaultWeaponGrouping}
+                options={vaultWeaponGroupingOptions}
+                onChange={changeVaultWeaponGrouping}
+              />
+              {settings.vaultWeaponGrouping && (
+                <Checkbox
+                  label={t('Settings.VaultWeaponGroupingStyle')}
+                  name="vaultWeaponGroupingStyle"
+                  value={settings.vaultWeaponGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                  onChange={(checked, setting) =>
+                    setSetting(
+                      setting,
+                      checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                    )
+                  }
+                />
+              )}
+              <Checkbox
+                label={t('Settings.VaultArmorGroupingStyle')}
+                name="vaultArmorGroupingStyle"
+                value={settings.vaultArmorGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                onChange={(checked, setting) =>
+                  setSetting(
+                    setting,
+                    checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                  )
+                }
+              />
+            </div>
+
+            <div className={styles.setting}>
+              <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
+
+              <SortOrderEditor order={itemSortCustom} onSortOrderChanged={itemSortOrderChanged} />
+              <div className={styles.fineprint}>{t('Settings.DontForgetDupes')}</div>
+            </div>
+
+            <div className={styles.setting}>
               {isPhonePortrait ? (
                 <>
                   <Select
@@ -597,40 +417,158 @@ export default function SettingsPage() {
               />
               <div className={styles.fineprint}>{t('Settings.BadgePostmasterExplanation')}</div>
             </div>
-            <div className={styles.setting}>
-              <Select
-                label={t('Settings.InventoryNumberOfSpacesToClear')}
-                name="inventoryClearSpaces"
-                value={settings.inventoryClearSpaces}
-                options={numberOfSpacesOptions}
-                onChange={onChangeNumeric}
-              />
+          </section>
+
+          <section id="items">
+            <h2>{t('Settings.Items')}</h2>
+
+            <div className="sub-bucket">
+              {exampleWeapon && (
+                <InventoryItem
+                  item={exampleWeapon}
+                  isNew={settings.showNewItems}
+                  tag="keep"
+                  wishlistRoll={godRoll}
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleWeaponMasterworked && (
+                <InventoryItem
+                  item={exampleWeaponMasterworked}
+                  isNew={settings.showNewItems}
+                  tag="favorite"
+                  wishlistRoll={godRoll}
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleArmor && (
+                <InventoryItem
+                  item={exampleArmor}
+                  isNew={settings.showNewItems}
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleArchivedArmor && (
+                <InventoryItem
+                  item={exampleArchivedArmor}
+                  isNew={settings.showNewItems}
+                  tag="archive"
+                  searchHidden={true}
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
             </div>
-            <div className={styles.setting}>
-              <label>{t('Settings.LoadoutSort')}</label>
-              <div className={styles.radioOptions}>
-                <label>
+
+            {!isPhonePortrait && (
+              <div className={styles.setting}>
+                <div className={styles.itemSize}>
+                  <label htmlFor="itemSize">{t('Settings.SizeItem')}</label>
                   <input
-                    type="radio"
-                    name="loadoutSort"
-                    checked={settings.loadoutSort === LoadoutSort.ByEditTime}
-                    value={LoadoutSort.ByEditTime}
+                    value={settings.itemSize}
+                    type="range"
+                    min="48"
+                    max="66"
+                    name="itemSize"
                     onChange={onChangeNumeric}
                   />
-                  <span>{t('Loadouts.SortByEditTime')}</span>
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="loadoutSort"
-                    checked={settings.loadoutSort === LoadoutSort.ByName}
-                    value={LoadoutSort.ByName}
-                    onChange={onChangeNumeric}
-                  />
-                  <span>{t('Loadouts.SortByName')}</span>
-                </label>
+                  {Math.max(48, settings.itemSize)}px
+                  <button type="button" className="dim-button" onClick={resetItemSize}>
+                    {t('Settings.ResetToDefault')}
+                  </button>
+                </div>
+                <div className={styles.fineprint}>{t('Settings.DefaultItemSizeNote')}</div>
               </div>
+            )}
+
+            {$featureFlags.newItems && (
+              <div className={styles.setting}>
+                <Checkbox
+                  label={t('Settings.ShowNewItems')}
+                  name="showNewItems"
+                  value={settings.showNewItems}
+                  onChange={onCheckChange}
+                />
+                <button
+                  type="button"
+                  className="dim-button"
+                  onClick={() => dispatch(clearAllNewItems())}
+                >
+                  <NewItemIndicator className={styles.newItem} />{' '}
+                  <span>{t('Hotkey.ClearNewItems')}</span>
+                </button>
+              </div>
+            )}
+
+            {$featureFlags.clarityDescriptions && (
+              <div className={styles.setting}>
+                <Select
+                  label={t('Settings.CommunityData')}
+                  name="descriptionsToDisplay"
+                  value={settings.descriptionsToDisplay}
+                  options={descriptionDisplayOptions}
+                  onChange={changeDescriptionDisplay}
+                />
+                <div
+                  className={styles.fineprint}
+                  dangerouslySetInnerHTML={{
+                    __html: t('Views.About.CommunityInsight', {
+                      clarityLink,
+                      clarityDiscordLink,
+                    }),
+                  }}
+                />
+              </div>
+            )}
+
+            <div className={styles.setting}>
+              <Checkbox
+                label={t('Settings.AutoLockTagged')}
+                name="autoLockTagged"
+                value={settings.autoLockTagged}
+                onChange={onCheckChange}
+              />
+              <div className={styles.fineprint}>{t('Settings.AutoLockTaggedExplanation')}</div>
+              <table className={styles.autoTagTable}>
+                <tbody>
+                  <tr>
+                    <td>
+                      <TagIcon tag="favorite" />
+                      <TagIcon tag="keep" />
+                      <TagIcon tag="archive" />
+                    </td>
+                    <td>→</td>
+                    <td>
+                      <AppIcon icon={lockIcon} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <TagIcon tag="junk" />
+                      <TagIcon tag="infuse" />
+                    </td>
+                    <td>→</td>
+                    <td>
+                      <AppIcon icon={unlockedIcon} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+
+            <div className={styles.setting}>
+              <CustomStatsSettings />
+            </div>
+
+            {hasD1Account && (
+              <div className={styles.setting}>
+                <Checkbox
+                  label={t('Settings.EnableAdvancedStats')}
+                  name="itemQuality"
+                  value={settings.itemQuality}
+                  onChange={onCheckChange}
+                />
+              </div>
+            )}
           </section>
 
           {$featureFlags.wishLists && <WishListSettings />}
@@ -643,11 +581,34 @@ export default function SettingsPage() {
 
           {$featureFlags.elgatoStreamDeck && !isPhonePortrait && <StreamDeckSettings />}
 
-          {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
+          <section id="troubleshooting">
+            <h2>{t('Settings.Troubleshooting')}</h2>
             <div className={styles.setting}>
-              <TroubleshootingSettings />
+              <Link to="/debug" className="dim-button">
+                Debug Info
+              </Link>
             </div>
-          )}
+            <div className={styles.setting}>
+              <label htmlFor="maxParallelCores">{t('Settings.MaxParallelCores')}</label>
+              <div className={styles.itemSize}>
+                <input
+                  value={maxParallelCores}
+                  type="range"
+                  min="1"
+                  max={navigator.hardwareConcurrency || 4}
+                  name="maxParallelCores"
+                  onChange={onMaxParallelCoresChanged}
+                />
+                {maxParallelCores} {maxParallelCores === 1 ? 'core' : 'cores'}
+              </div>
+              <div className={styles.fineprint}>{t('Settings.MaxParallelCoresExplanation')}</div>
+            </div>
+            {currentAccount?.destinyVersion === 2 && (
+              <div className={styles.setting}>
+                <TroubleshootingSettings />
+              </div>
+            )}
+          </section>
         </form>
       </PageWithMenu.Contents>
     </PageWithMenu>

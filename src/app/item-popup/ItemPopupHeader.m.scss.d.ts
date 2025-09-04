@@ -7,6 +7,7 @@ interface CssExports {
   'elementIcon': string;
   'exotic': string;
   'header': string;
+  'iconOverlay': string;
   'itemType': string;
   'legendary': string;
   'masterwork': string;
@@ -14,6 +15,7 @@ interface CssExports {
   'pursuit': string;
   'rare': string;
   'subtitle': string;
+  'tierPip': string;
   'title': string;
   'type': string;
   'uncommon': string;
