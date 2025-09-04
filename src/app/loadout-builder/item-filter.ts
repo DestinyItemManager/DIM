@@ -253,11 +253,16 @@ export function filterItems({
             statHash: -3, // ←↑ Dummy/temp stat hashes. Just need to not match real armor stat hashes.
             value: compatibleModSeasons?.includes(tag) ? 1 : 0,
           })),
-          {
-            // Ensure an item with a requested set bonus is not valued lower than an item without.
-            statHash: -4,
-            value: setBonuses && item.setBonus && item.setBonus.hash in setBonuses ? 1 : 0,
-          },
+          // Add a comparison stat for each required set bonus. An item that has that bonus scores 1, others score zero.
+          // Statlower will make sure any matching set bonus beats an item without that one.
+          ...Object.keys(setBonuses || {}).map((h) => {
+            const setBonusHash = parseInt(h, 10);
+            return {
+              // Ensure an item with a requested set bonus is not valued lower than an item without.
+              statHash: -10 - setBonusHash,
+              value: item.setBonus?.hash === setBonusHash ? 1 : 0,
+            };
+          }),
         ];
       };
 
