@@ -19,7 +19,6 @@ interface CssExports {
   'legendaryMasterwork': string;
   'masterwork': string;
   'rare': string;
-  'shinyMasterwork': string;
   'strandColorFix': string;
   'tierPip': string;
   'tierPipContainer': string;

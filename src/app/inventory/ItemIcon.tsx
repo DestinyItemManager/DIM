@@ -71,11 +71,10 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       )}
-      {(item.holofoil || item.masterwork || item.deepsightInfo) && (
+      {(item.masterwork || item.deepsightInfo) && (
         <div
           className={clsx(styles.backgroundOverlay, {
-            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic && !item.holofoil,
-            [styles.shinyMasterwork]: item.holofoil,
+            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
             [styles.exoticMasterwork]: item.masterwork && item.isExotic,
             [styles.deepsightBorder]: item.deepsightInfo,
           })}
