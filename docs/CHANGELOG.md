@@ -8,6 +8,7 @@
 * Fix wishlists not properly matching some new enhanced perks
 * The perk list vs. grid setting is now saved independently for mobile and desktop views.
 * Un-deprecated the `is:infusionfodder` filter.
+* Removed redundant holofoil overlay.
 
 ## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
 
