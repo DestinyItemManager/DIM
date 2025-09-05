@@ -2,7 +2,7 @@ import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import CompareStat from 'app/compare/CompareStat';
 import { CustomStatWeightsDisplay } from 'app/dim-ui/CustomStatWeights';
 import { primitiveComparator } from 'app/utils/comparators';
-import { getArmor3TuningStat } from 'app/utils/item-utils';
+import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
 import { collectRelevantStatHashes } from 'app/utils/stats';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ColumnDefinition, SortDirection } from './table-types';
@@ -60,18 +60,19 @@ export function createCustomStatColumns(
       },
       limitToClass: guardianClass === DestinyClass.Unknown ? undefined : guardianClass,
       sort: (firstValue, secondValue, firstItem, secondItem) => {
-        if (
-          typeof firstValue === 'number' &&
-          relevantStatHashes.includes(getArmor3TuningStat(firstItem)!)
-        ) {
-          firstValue += 0.5;
+        if (typeof firstValue === 'number' && typeof secondValue === 'number') {
+          if (isArtifice(firstItem)) {
+            firstValue += 0.3;
+          } else if (relevantStatHashes.includes(getArmor3TuningStat(firstItem)!)) {
+            firstValue += 0.5;
+          }
+          if (isArtifice(secondItem)) {
+            secondValue += 0.3;
+          } else if (relevantStatHashes.includes(getArmor3TuningStat(secondItem)!)) {
+            secondValue += 0.5;
+          }
         }
-        if (
-          typeof secondValue === 'number' &&
-          relevantStatHashes.includes(getArmor3TuningStat(secondItem)!)
-        ) {
-          secondValue += 0.5;
-        }
+
         return primitiveComparator(firstValue, secondValue);
       },
     };
