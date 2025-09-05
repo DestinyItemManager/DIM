@@ -17,7 +17,7 @@ import {
   isArtifice,
 } from 'app/utils/item-utils';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
-import { computeStatDupeLower } from 'app/utils/stats';
+import { collectRelevantStatHashes, computeStatDupeLower } from 'app/utils/stats';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
@@ -190,10 +190,7 @@ const dupeTypeLookupRaw: Record<
             ? allArmors
             : armorsByDestinyClass.get(customStat.class)!;
 
-        const relevantStatHashes = filterMap(
-          Object.entries(customStat.weights),
-          ([statHashKey, weight]) => (weight && weight > 0 ? parseInt(statHashKey, 10) : undefined),
-        );
+        const relevantStatHashes = collectRelevantStatHashes(customStat.weights);
         const thisStatLowerIds = computeStatDupeLower(thisStatClassArmors, relevantStatHashes);
         const armorSetsToNarrow =
           customStat.class === DestinyClass.Unknown ? destinyClasses : [customStat.class];

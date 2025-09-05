@@ -39,8 +39,9 @@ import {
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { compact, filterMap, invert } from 'app/utils/collections';
-import { Comparator, compareBy } from 'app/utils/comparators';
+import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparators';
 import {
+  getArmor3TuningStat,
   getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
@@ -997,6 +998,15 @@ export function getStatColumns(
         // value passed in can be different if it's Recoil.
         const stat = item.stats?.find((s) => s.statHash === statHash);
         return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
+      },
+      sort: (firstValue, secondValue, firstItem, secondItem) => {
+        if (typeof firstValue === 'number' && getArmor3TuningStat(firstItem) === statHash) {
+          firstValue += 0.5;
+        }
+        if (typeof secondValue === 'number' && getArmor3TuningStat(secondItem) === statHash) {
+          secondValue += 0.5;
+        }
+        return primitiveComparator(firstValue, secondValue);
       },
     };
   }).sort(compareBy((s) => getStatSortOrder(s.statHash)));

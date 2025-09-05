@@ -65,12 +65,20 @@ export function getColumns(
       },
       styles.stat,
     );
-  const customStats = createCustomStatColumns(
+
+  const preferredStatColumns =
+    !isArmor || armorCompare === 'current'
+      ? statColumns
+      : armorCompare === 'base'
+        ? baseStatColumns
+        : baseMasterworkStatColumns;
+
+  const customStatColumns = createCustomStatColumns(
     customStatDefs,
     styles.stat,
-    undefined,
-    true,
-    armorCompare === 'baseMasterwork', // createCustomStatColumns's withMasterwork boolean
+    undefined, // `headerClassName` string
+    true, // `hideFormula` boolean
+    armorCompare === 'baseMasterwork', // `withMasterwork` boolean
   );
 
   // TODO: maybe add destinyVersion / usecase to the ColumnDefinition type??
@@ -140,14 +148,10 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
       }),
-    ...(!isArmor || armorCompare === 'current'
-      ? statColumns
-      : armorCompare === 'base'
-        ? baseStatColumns
-        : baseMasterworkStatColumns),
+    ...preferredStatColumns,
     ...d1ArmorQualityByStat,
     destinyVersion === 1 && isArmor && d1QualityColumn,
-    ...(destinyVersion === 2 && isArmor ? customStats : []),
+    ...(destinyVersion === 2 && isArmor ? customStatColumns : []),
     destinyVersion === 2 &&
       isWeapon &&
       c({

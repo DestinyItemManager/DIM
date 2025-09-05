@@ -1,6 +1,9 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import CompareStat from 'app/compare/CompareStat';
 import { CustomStatWeightsDisplay } from 'app/dim-ui/CustomStatWeights';
+import { primitiveComparator } from 'app/utils/comparators';
+import { getArmor3TuningStat } from 'app/utils/item-utils';
+import { collectRelevantStatHashes } from 'app/utils/stats';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ColumnDefinition, SortDirection } from './table-types';
 
@@ -11,26 +14,29 @@ export function createCustomStatColumns(
   hideFormula = false,
   withMasterwork = false,
 ): ColumnDefinition[] {
-  return customStatDefs.map(
-    (c): ColumnDefinition => ({
-      id: `customstat_${c.shortLabel}${c.statHash}`,
+  return customStatDefs.map((c): ColumnDefinition => {
+    const { class: guardianClass, label, shortLabel, statHash, weights } = c;
+    const relevantStatHashes = collectRelevantStatHashes(weights);
+
+    return {
+      id: `customstat_${shortLabel}${statHash}`,
       header: hideFormula ? (
-        c.label
+        label
       ) : (
         <div>
-          {c.label}
+          {label}
           <CustomStatWeightsDisplay customStat={c} />
         </div>
       ),
       className,
       headerClassName,
       value: (item) =>
-        item.stats?.find((s) => s.statHash === c.statHash)?.[
+        item.stats?.find((s) => s.statHash === statHash)?.[
           withMasterwork ? 'baseMasterworked' : 'base'
         ] ?? 0,
 
       cell: (val, item, ctx) => {
-        const stat = item.stats?.find((s) => s.statHash === c.statHash);
+        const stat = item.stats?.find((s) => s.statHash === statHash);
         if (!stat || typeof val !== 'number') {
           return null;
         }
@@ -42,16 +48,32 @@ export function createCustomStatColumns(
             stat={stat}
             item={item}
             value={val}
+            relevantStatHashes={relevantStatHashes}
           />
         );
       },
       defaultSort: SortDirection.DESC,
-      filter: (value) => `stat:${c.label}:>=${value}`,
+      filter: (value) => `stat:${label}:>=${value}`,
       columnGroup: {
-        id: c.shortLabel + c.statHash,
-        header: c.label,
+        id: shortLabel + statHash,
+        header: label,
       },
-      limitToClass: c.class === DestinyClass.Unknown ? undefined : c.class,
-    }),
-  );
+      limitToClass: guardianClass === DestinyClass.Unknown ? undefined : guardianClass,
+      sort: (firstValue, secondValue, firstItem, secondItem) => {
+        if (
+          typeof firstValue === 'number' &&
+          relevantStatHashes.includes(getArmor3TuningStat(firstItem)!)
+        ) {
+          firstValue += 0.5;
+        }
+        if (
+          typeof secondValue === 'number' &&
+          relevantStatHashes.includes(getArmor3TuningStat(secondItem)!)
+        ) {
+          secondValue += 0.5;
+        }
+        return primitiveComparator(firstValue, secondValue);
+      },
+    };
+  });
 }

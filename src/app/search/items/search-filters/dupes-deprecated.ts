@@ -5,7 +5,7 @@ import { armorStats, DEFAULT_SHADER, TOTAL_STAT_HASH } from 'app/search/d2-known
 import { filterMap } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
-import { computeStatDupeLower } from 'app/utils/stats';
+import { collectRelevantStatHashes, computeStatDupeLower } from 'app/utils/stats';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 import { computeDupes, itemDupeID } from './dupes';
@@ -116,14 +116,7 @@ export const deprecatedDupeFilters: ItemFilterDefinition[] = [
       const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
 
       for (const customStat of customStats) {
-        const relevantStatHashes: number[] = [];
-        const statWeights = customStat.weights;
-        for (const statHash in statWeights) {
-          const weight = statWeights[statHash];
-          if (weight && weight > 0) {
-            relevantStatHashes.push(parseInt(statHash, 10));
-          }
-        }
+        const relevantStatHashes = collectRelevantStatHashes(customStat.weights);
         (duplicateSetsByClass[customStat.class] ||= []).push(
           computeStatDupeLower(allItems, relevantStatHashes),
         );
