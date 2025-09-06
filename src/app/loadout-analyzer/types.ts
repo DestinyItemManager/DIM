@@ -62,8 +62,10 @@ export const enum LoadoutFinding {
   ModsDontFit,
   /** The armor set does not match the saved stat constraints. */
   DoesNotSatisfyStatConstraints,
-  /** The loadout parameters search query is invalid or the items don't match them */
+  /** The loadout parameters search query is invalid. */
   InvalidSearchQuery,
+  /** The loadout parameters search query excludes items in the loadout. */
+  ItemsDoNotMatchSearchQuery,
 }
 
 /** These aren't problems per se but they do block further analysis */

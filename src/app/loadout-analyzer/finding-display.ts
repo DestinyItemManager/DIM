@@ -1,5 +1,5 @@
 import { I18nKey, tl } from 'app/i18next-t';
-import { faArrowCircleUp, faExclamationTriangle, infoIcon } from 'app/shell/icons';
+import { faArrowCircleUp, faExclamationTriangle, infoIcon, searchIcon } from 'app/shell/icons';
 import { LoadoutFinding } from './types';
 
 export interface FindingDisplay {
@@ -68,5 +68,10 @@ export const findingDisplays: Record<LoadoutFinding, FindingDisplay> = {
     name: tl('LoadoutAnalysis.InvalidSearchQuery.Name'),
     description: tl('LoadoutAnalysis.InvalidSearchQuery.Description'),
     icon: faExclamationTriangle,
+  },
+  [LoadoutFinding.ItemsDoNotMatchSearchQuery]: {
+    name: tl('LoadoutAnalysis.ItemsDoNotMatchSearchQuery.Name'),
+    description: tl('LoadoutAnalysis.ItemsDoNotMatchSearchQuery.Description'),
+    icon: searchIcon,
   },
 };
