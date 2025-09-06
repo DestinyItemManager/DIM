@@ -56,6 +56,10 @@
   background-color: transparent !important;
   line-height: 1;
   white-space: pre;
+  sup {
+    position: absolute;
+    right: 100%;
+  }
 }
 
 .customStat {

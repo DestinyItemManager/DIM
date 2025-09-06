@@ -40,7 +40,7 @@ export default function CompareStat({
   // If this is Artifice armor and a custom or Total stat
   const showArtificeIcon = isArtifice(item) && syntheticStat;
   const extraIcon = showTunerIcon ? tuningStatIcon : showArtificeIcon ? artificeIcon : undefined;
-  const showBar = stat?.bar && item.bucket.sort === 'Armor';
+  const showBar = stat?.bar && item.bucket.inArmor;
 
   return (
     <div className={styles.stat} style={{ color }}>
@@ -51,7 +51,7 @@ export default function CompareStat({
           [styles.noMinWidth]: !stat || stat.statHash === StatHashes.AnyEnergyTypeCost,
         })}
       />
-      {item.bucket.sort === 'Armor' && (
+      {item.bucket.inArmor && (
         <span className={clsx(styles.statBarArea, showBar && styles.statBarContainer)}>
           {extraIcon && (
             <span
@@ -60,7 +60,7 @@ export default function CompareStat({
                 [styles.smaller]: showArtificeIcon,
               })}
             >
-              {(showArtificeIcon || relevantStatHashes) && '⁺'}
+              {(showArtificeIcon || relevantStatHashes) && <sup>+</sup>}
               <AppIcon icon={extraIcon} />
             </span>
           )}
