@@ -1,3 +1,4 @@
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
@@ -6,7 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { faExclamationTriangle } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
-import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
+import { wishListInfosSelector, wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';
 import { partition } from 'es-toolkit';
 import { useSelector } from 'react-redux';
@@ -80,6 +81,7 @@ function WishlistRolls({
   realAvailablePlugHashes?: number[];
 }) {
   const defs = useD2Definitions()!;
+  const wishlistInfos = useSelector(wishListInfosSelector);
   const groupedWishlistRolls = Object.groupBy(wishlistRolls, (r) => r.notes || t('Armory.NoNotes'));
 
   const templateSockets = getCraftingTemplate(defs, item.hash)?.sockets?.socketEntries;
@@ -117,14 +119,29 @@ function WishlistRolls({
 
   // TODO: group by making a tree of least cardinality -> most?
 
+  const usedTitles = new Set<string>();
+  function useTitle(roll: WishListRoll) {
+    if (roll.title && !usedTitles.has(roll.title)) {
+      usedTitles.add(roll.title);
+      const url = wishlistInfos?.[roll.sourceWishListIndex ?? -1]?.url;
+      return (
+        <>
+          <h3>{url ? <ExternalLink href={url}>{roll.title}</ExternalLink> : roll.title}</h3>
+          {roll.description && <p className={styles.subtitle}>{roll.description}</p>}
+        </>
+      );
+    }
+  }
+
   return (
     <>
       {Object.entries(groupedWishlistRolls).map(([notes, rolls]) => {
         const consolidatedRolls = consolidateRollsForOneWeapon(defs, item, rolls);
 
         return (
-          <div key={notes}>
-            <div className={styles.notes}>{notes}</div>
+          <div key={notes} className={styles.rollGroup}>
+            {useTitle(rolls[0])}
+            <p className={styles.notes}>{notes}</p>
             <ul>
               {consolidatedRolls.map((cr) => {
                 // groups [outlaw, enhanced outlaw, rampage]

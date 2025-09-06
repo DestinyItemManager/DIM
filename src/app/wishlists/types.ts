@@ -38,12 +38,24 @@ export interface WishListRoll {
 
   /** Optional notes from the curator. */
   notes?: string;
+
+  /**
+   * The index into the "infos" list for which wishlist this roll was sourced
+   * from. Not set on some old wishlists from storage.
+   */
+  sourceWishListIndex?: number;
+
+  /** Optional title and description from the curator. */
+  title?: string;
+  description?: string;
 }
 
 export interface WishListAndInfo {
+  /** A merged list of wish list rolls from each of the source wish lists. */
   wishListRolls: WishListRoll[];
   /** The URL(s) we fetched the wish list(s) from */
   source?: string;
+  /** Information about the wishlists themselves that contribute to the rolls. */
   infos: WishListInfo[];
 }
 
