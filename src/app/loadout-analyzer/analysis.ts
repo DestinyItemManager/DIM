@@ -268,7 +268,7 @@ export async function analyzeLoadout(
             (item) =>
               item.classType === classType && item.bucket.inArmor && isLoadoutBuilderItem(item),
           );
-          const [filteredItems, filterInfo] = filterItems({
+          const [filteredItems] = filterItems({
             defs,
             items: armorForThisClass,
             pinnedItems: {},
@@ -281,9 +281,10 @@ export async function analyzeLoadout(
             searchFilter: itemFilter,
             setBonuses: loadoutParameters.setBonuses,
           });
-          // If the item filter loadout armor that was previously included,
-          // this is due to the search filter since we've previously established
-          // that mods fit and the exotic matches.
+          // If filterItems does not include the armor currently in the loadout,
+          // this is maybe due to the search filter since we've previously
+          // established that mods fit and the exotic matches. Or, it's due to
+          // the inherent statlower check done in filterItems.
           if (
             loadoutParameters.query &&
             loadoutArmor.some(
@@ -296,10 +297,9 @@ export async function analyzeLoadout(
                   .some((filteredItem) => filteredItem === item),
             )
           ) {
-            // Either the search filter excluded these items, OR they were strictly worse than some other item.
-            // TODO: Make a different explanation for this
-            // TODO: Suppress worse-item filtering in the above check
-            findings.add(LoadoutFinding.InvalidSearchQuery);
+            // Either the search filter excluded these items, OR they were
+            // strictly worse than some other item.
+            findings.add(LoadoutFinding.ItemsDoNotMatchSearchQuery);
           }
 
           const modStatChanges = getTotalModStatChanges(
@@ -344,6 +344,10 @@ export async function analyzeLoadout(
             hasStrictUpgrade = Boolean((await resultPromise).sets.length);
             if (hasStrictUpgrade) {
               findings.add(LoadoutFinding.BetterStatsAvailable);
+              // Also *remove* the "items don't match" finding - it was likely
+              // caused by stat-lower filtering, and even if not, the better
+              // stats available finding is more important.
+              findings.delete(LoadoutFinding.ItemsDoNotMatchSearchQuery);
             }
           } catch (e) {
             errorLog('loadout analyzer', 'internal error', e);
