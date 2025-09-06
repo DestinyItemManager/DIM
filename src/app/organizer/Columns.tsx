@@ -572,12 +572,12 @@ export function getColumns(
             : undefined,
       }),
     destinyVersion === 2 &&
-      !isSpreadsheet &&
       !isGhost &&
       c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         className: styles.noWrap,
+        csv: 'Archetype',
         value: (item) =>
           item.bucket.inWeapons
             ? getWeaponArchetype(item)?.displayProperties.name
@@ -610,6 +610,7 @@ export function getColumns(
         id: 'tertiary',
         className: styles.centered,
         header: t('Organizer.Columns.TertiaryStat'),
+        csv: 'Tertiary Stat',
         value: (item) => (isArmor3(item) ? getArmor3StatFocus(item)[2] : undefined),
         cell: (statHash, item) => {
           if (statHash) {
@@ -638,6 +639,7 @@ export function getColumns(
         id: 'tuning',
         className: styles.centered,
         header: t('Organizer.Columns.TuningStat'),
+        csv: 'Tuning Stat',
         value: (item) => (isArmor3(item) ? getArmor3TuningStat(item) : undefined),
         cell: (statHash, item) => {
           if (statHash) {
@@ -696,7 +698,7 @@ export function getColumns(
         sort: perkStringSort,
         filter: perkStringFilter,
       }),
-    isWeapon &&
+    (isWeapon || isSpreadsheet) &&
       c({
         id: 'perks',
         className: styles.perks,
@@ -752,6 +754,7 @@ export function getColumns(
         filter: perkStringFilter,
       }),
     destinyVersion === 2 &&
+      !isSpreadsheet &&
       c({
         id: 'mods',
         className: styles.perkLike,
