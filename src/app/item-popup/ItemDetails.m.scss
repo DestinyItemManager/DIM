@@ -45,14 +45,4 @@
   border-radius: 50%;
   padding: 3px;
   box-sizing: border-box;
-
-  .mods & {
-    width: calc(var(--item-size) / 3) !important;
-    font-size: calc(var(--item-size) / 5) !important;
-    vertical-align: middle;
-    padding: 0;
-    border-radius: 0;
-    filter: invert(1);
-    background: none !important;
-  }
 }

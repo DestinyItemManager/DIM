@@ -40,6 +40,8 @@
       background-color: var(--theme-accent-primary) !important;
       color: var(--theme-text-invert) !important;
       text-shadow: none;
+      // Invert images on buttons to match text color, unless they have the dontInvert class
+      // (e.g. colored icons in organizer/compare)
       img:not(.dontInvert) {
         filter: invert(1);
       }

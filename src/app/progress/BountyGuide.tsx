@@ -266,7 +266,7 @@ function PillContent({
     case 'ItemCategory':
       return (
         <>
-          <BucketIcon itemCategoryHash={value} height="16" />
+          <BucketIcon itemCategoryHash={value} />
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );

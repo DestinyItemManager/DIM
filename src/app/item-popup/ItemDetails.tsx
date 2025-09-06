@@ -14,9 +14,6 @@ import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
 import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
-import modificationIcon from 'destiny-icons/general/modifications.svg';
-import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import { use } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
@@ -55,9 +52,6 @@ export default function ItemDetails({
   const item = defs.isDestiny2
     ? applySocketOverrides(itemCreationContext, originalItem, socketOverrides)
     : originalItem;
-  const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
-    ? helmetIcon
-    : handCannonIcon;
 
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
@@ -194,34 +188,21 @@ export default function ItemDetails({
         </div>
       )}
 
-      {extraInfo.mod ? (
-        <div className={clsx('item-details', styles.mods)}>
+      {(extraInfo.owned || extraInfo.acquired) && (
+        <div className="item-details">
           {extraInfo.owned && (
             <div>
-              <img className={styles.ownedIcon} src={modificationIcon} /> {t('MovePopup.OwnedMod')}
+              <AppIcon className={styles.ownedIcon} icon={faCheck} />{' '}
+              {extraInfo.mod ? t('MovePopup.OwnedMod') : t('MovePopup.Owned')}
             </div>
           )}
           {extraInfo.acquired && (
             <div>
-              <img className={styles.acquiredIcon} src={modTypeIcon} /> {t('MovePopup.AcquiredMod')}
+              <AppIcon className={styles.acquiredIcon} icon={faCheck} />{' '}
+              {extraInfo.mod ? t('MovePopup.AcquiredMod') : t('MovePopup.Acquired')}
             </div>
           )}
         </div>
-      ) : (
-        (extraInfo.owned || extraInfo.acquired) && (
-          <div className="item-details">
-            {extraInfo.owned && (
-              <div>
-                <AppIcon className={styles.ownedIcon} icon={faCheck} /> {t('MovePopup.Owned')}
-              </div>
-            )}
-            {extraInfo.acquired && (
-              <div>
-                <AppIcon className={styles.acquiredIcon} icon={faCheck} /> {t('MovePopup.Acquired')}
-              </div>
-            )}
-          </div>
-        )
       )}
 
       <ItemExpiration item={item} />
