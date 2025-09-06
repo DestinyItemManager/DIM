@@ -352,7 +352,7 @@ async function transferItems(
   ];
 
   if (source.destinyVersion === 1) {
-    if (target.bucket.sort === 'General') {
+    if (target.bucket.inGeneral) {
       // Mote of Light
       items.push({
         id: '0',
@@ -360,7 +360,7 @@ async function transferItems(
         amount: 2,
         equip: false,
       });
-    } else if (target.bucket.sort === 'Weapons') {
+    } else if (target.bucket.inWeapons) {
       // Weapon Parts
       items.push({
         id: '0',

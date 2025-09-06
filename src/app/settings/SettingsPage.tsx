@@ -74,15 +74,15 @@ export default function SettingsPage() {
   const [maxParallelCores, setMaxParallelCores] = useMaxParallelCores();
 
   const exampleWeapon = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
+    (i) => i.bucket.inWeapons && !i.isExotic && !i.masterwork && !i.deepsightInfo,
   );
   // Include a masterworked item because they look different in some themes
   const exampleWeaponMasterworked = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
+    (i) => i.bucket.inWeapons && !i.isExotic && i.masterwork && !i.deepsightInfo,
   );
-  const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
+  const exampleArmor = allItems.find((i) => i.bucket.inArmor && !i.isExotic);
   const exampleArchivedArmor = allItems.find(
-    (i) => i !== exampleArmor && i.bucket.sort === 'Armor' && !i.isExotic,
+    (i) => i !== exampleArmor && i.bucket.inArmor && !i.isExotic,
   );
   const godRoll = {
     wishListPerks: new Set<number>(),

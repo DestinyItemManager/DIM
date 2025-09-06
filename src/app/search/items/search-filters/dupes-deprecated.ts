@@ -51,13 +51,7 @@ export const deprecatedDupeFilters: ItemFilterDefinition[] = [
     filter: ({ allItems, getTag }) => {
       const duplicates = sortDupes(computeDupes(allItems), getTag);
       return (item) => {
-        if (
-          !(
-            item.bucket &&
-            (item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor') &&
-            !item.notransfer
-          )
-        ) {
+        if (!(item.bucket && (item.bucket.inWeapons || item.bucket.inArmor) && !item.notransfer)) {
           return false;
         }
 
