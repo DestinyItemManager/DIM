@@ -13,6 +13,7 @@
 * Totals and Custom stats in Compare/Organizer have an indicator when Tuners or Artifice mods can contribute.
 * Invalid wish list rolls are now shown in Armory with a tooltip that explains them.
 * Loadout analyzer is more precise about calling out invalid search queries vs. loadouts whose search query excludes some of its armor.
+* Added wishlist title/description and link to source to the Armory page.
 
 ## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
 
