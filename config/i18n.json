@@ -969,7 +969,11 @@
     },
     "InvalidSearchQuery": {
       "Name": "Invalid Search Query",
-      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout."
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is not valid."
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Name": "Search Excludes Items",
+      "Description": "This loadout was created with a search query in Loadout Optimizer, and that search query excludes at least one of the items in the loadout."
     }
   },
   "Manifest": {
