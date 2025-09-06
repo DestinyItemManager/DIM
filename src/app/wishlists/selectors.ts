@@ -6,6 +6,8 @@ import { getInventoryWishListRoll, InventoryWishListRoll } from './wishlists';
 
 export const wishListsSelector = (state: RootState) => state.wishLists;
 
+export const wishListInfosSelector = (state: RootState) => state.wishLists.wishListAndInfo.infos;
+
 export const wishListsLastFetchedSelector = (state: RootState) =>
   wishListsSelector(state).lastFetched;
 
