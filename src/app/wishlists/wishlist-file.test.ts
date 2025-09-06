@@ -10,6 +10,9 @@ const cases: [wishlist: string, result: WishListRoll][] = [
       notes: 'Enh Over, Enh FocuFury',
       isExpertMode: true,
       isUndesirable: false,
+      description: undefined,
+      sourceWishListIndex: 0,
+      title: undefined,
     },
   ],
 ];
