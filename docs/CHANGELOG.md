@@ -9,6 +9,8 @@
 * The perk list vs. grid setting is now saved independently for mobile and desktop views.
 * Un-deprecated the `is:infusionfodder` filter.
 * Removed redundant holofoil overlay.
+* Compare/Organizer sorting now takes Tuning Mods and Artifice armor into account when sorting Totals or Custom Stats.
+* Totals and Custom stats in Compare/Organizer have an indicator when Tuners or Artifice mods can contribute.
 
 ## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
 
