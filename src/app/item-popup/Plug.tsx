@@ -46,7 +46,6 @@ export default function Plug({
 } & PlugStatuses) {
   const defs = useD2Definitions()!;
 
-  // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugDef.hash);
   if (!modDef || !isPluggableItem(modDef)) {
     return null;

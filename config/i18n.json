@@ -40,7 +40,8 @@
     "NoNotes": "No Notes",
     "YourItems": "Your Items",
     "Unknown": "Unknown Item",
-    "Season": "Season {{season}}, Year {{year}}"
+    "Season": "Season {{season}}, Year {{year}}",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks."
   },
   "Browsercheck": {
     "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work.",

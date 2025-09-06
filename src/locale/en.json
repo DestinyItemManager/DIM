@@ -37,6 +37,7 @@
     "TrashlistedRolls_one": "Trashlisted Roll",
     "TrashlistedRolls_other": "{{count, number}} Trashlisted Rolls",
     "Unknown": "Unknown Item",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_one": "Wishlisted Roll",
     "WishlistedRolls_other": "{{count, number}} Wishlisted Rolls",
     "YourItems": "Your Items"
