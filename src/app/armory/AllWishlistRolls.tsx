@@ -1,3 +1,4 @@
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
@@ -7,7 +8,7 @@ import { faExclamationTriangle } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
 import { wishListInfosSelector, wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
-import { WishListInfo, WishListRoll } from 'app/wishlists/types';
+import { WishListRoll } from 'app/wishlists/types';
 import { partition } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import styles from './AllWishlistRolls.m.scss';
@@ -119,10 +120,16 @@ function WishlistRolls({
   // TODO: group by making a tree of least cardinality -> most?
 
   const usedTitles = new Set<string>();
-  function useTitle(info: WishListInfo) {
-    if (info.title && !usedTitles.has(info.title)) {
-      usedTitles.add(info.title);
-      return <h3>{info.title}</h3>;
+  function useTitle(roll: WishListRoll) {
+    if (roll.title && !usedTitles.has(roll.title)) {
+      usedTitles.add(roll.title);
+      const url = wishlistInfos?.[roll.sourceWishListIndex ?? -1]?.url;
+      return (
+        <>
+          <h3>{url ? <ExternalLink href={url}>{roll.title}</ExternalLink> : roll.title}</h3>
+          {roll.description && <p className={styles.subtitle}>{roll.description}</p>}
+        </>
+      );
     }
   }
 
@@ -130,12 +137,11 @@ function WishlistRolls({
     <>
       {Object.entries(groupedWishlistRolls).map(([notes, rolls]) => {
         const consolidatedRolls = consolidateRollsForOneWeapon(defs, item, rolls);
-        const info = wishlistInfos[rolls[0].sourceWishListIndex ?? -1];
 
         return (
-          <div key={notes}>
-            {useTitle(info)}
-            <div className={styles.notes}>{notes}</div>
+          <div key={notes} className={styles.rollGroup}>
+            {useTitle(rolls[0])}
+            <p className={styles.notes}>{notes}</p>
             <ul>
               {consolidatedRolls.map((cr) => {
                 // groups [outlaw, enhanced outlaw, rampage]

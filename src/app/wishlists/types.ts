@@ -44,6 +44,10 @@ export interface WishListRoll {
    * from. Not set on some old wishlists from storage.
    */
   sourceWishListIndex?: number;
+
+  /** Optional title and description from the curator. */
+  title?: string;
+  description?: string;
 }
 
 export interface WishListAndInfo {
