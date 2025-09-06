@@ -18,7 +18,12 @@ import { ColumnDefinition, SortDirection, Value } from 'app/organizer/table-type
 import { quoteFilterString } from 'app/search/query-parser';
 import { Settings } from 'app/settings/initial-settings';
 import { compact } from 'app/utils/collections';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
+import {
+  getArmorArchetype,
+  getArmorArchetypeSocket,
+  getWeaponArchetype,
+  getWeaponArchetypeSocket,
+} from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import styles from './CompareColumns.m.scss';
@@ -153,15 +158,19 @@ export function getColumns(
     destinyVersion === 1 && isArmor && d1QualityColumn,
     ...(destinyVersion === 2 && isArmor ? customStatColumns : []),
     destinyVersion === 2 &&
-      isWeapon &&
       c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         className: styles.archetype,
         headerClassName: styles.archetype,
-        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        value: (item) =>
+          item.bucket.inWeapons
+            ? getWeaponArchetype(item)?.displayProperties.name
+            : getArmorArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
-          const s = getWeaponArchetypeSocket(item);
+          const s = item.bucket.inWeapons
+            ? getWeaponArchetypeSocket(item)
+            : getArmorArchetypeSocket(item);
           return (
             s && (
               <div className={styles.archetypeRow}>
@@ -192,7 +201,7 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perks,
-        header: t('Organizer.Columns.Intrinsics'),
+        header: t('Organizer.Columns.Perks'),
         value: (item) => {
           const intrinsics = getIntrinsicSockets(item);
           return (
