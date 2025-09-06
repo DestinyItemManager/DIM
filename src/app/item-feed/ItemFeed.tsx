@@ -85,7 +85,7 @@ export default function ItemFeed({ page }: { page?: boolean }) {
       {items.length > 0 && (
         <button
           type="button"
-          className={clsx('dim-button', styles.clearButton)}
+          className={clsx('dim-button', 'left', styles.clearButton)}
           onClick={() => setItemFeedWatermark(allItems[0].id)}
         >
           {t('ItemFeed.ClearFeed')}
@@ -95,7 +95,7 @@ export default function ItemFeed({ page }: { page?: boolean }) {
         <>
           <button
             type="button"
-            className={clsx('dim-button', styles.clearButton)}
+            className={clsx('dim-button', 'left', styles.clearButton)}
             onClick={() => {
               setItemFeedWatermark('0');
             }}

@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import BungieImage from '../BungieImage';
-import styles from './BucketIcon.m.scss';
 import { ItemCategoryIcon, getBucketSvgIcon, itemCategoryIcons } from './itemCategory';
 
-type BucketIconProps = (React.SVGProps<SVGSVGElement> | React.ImgHTMLAttributes<HTMLImageElement>) &
+type BucketIconProps = React.SVGProps<SVGSVGElement> &
+  React.ImgHTMLAttributes<HTMLImageElement> &
   (
     | {
         icon: ItemCategoryIcon;
@@ -47,7 +47,7 @@ export default function BucketIcon(props: BucketIconProps) {
   return resolved.icon ? (
     <resolved.icon.svg
       {...resolved.otherProps}
-      className={clsx(props.className, styles.icon, {
+      className={clsx(props.className, {
         dontInvert: resolved.icon.colorized,
       })}
     />

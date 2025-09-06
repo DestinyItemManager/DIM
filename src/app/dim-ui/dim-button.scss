@@ -2,11 +2,23 @@
 
 /* Button */
 
+@mixin drop-shadow {
+  filter: drop-shadow(0 0 1px rgb(0, 0, 0, 0.25));
+  filter: drop-shadow(
+    0 0 1px color-mix(in srgb, var(--theme-accent-primary), rgb(0, 0, 0, 0.5) 70%)
+  );
+}
+
 @layer base {
   .dim-button {
     cursor: pointer;
     padding: 4px 10px;
-    display: inline-block;
+    min-height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
     background-color: var(--theme-button-bg);
     color: var(--theme-button-txt);
     font-size: 12px;
@@ -28,28 +40,37 @@
       background-color: var(--theme-accent-primary) !important;
       color: var(--theme-text-invert) !important;
       text-shadow: none;
-      img {
+      img:not(.dontInvert) {
         filter: invert(1);
-        .dontInvert {
-          filter: invert(0) drop-shadow(0 0 1px black);
+      }
+      img,
+      svg {
+        &.dontInvert {
+          @include drop-shadow;
         }
       }
     }
 
-    img {
+    img,
+    svg {
+      display: block;
       height: 1.3em;
       width: auto;
       vertical-align: bottom;
-      margin: 0 0.3em;
-      filter: drop-shadow(0 0 1px black);
+
       &:only-child {
         margin: 0;
       }
       // Don't invert images/icons on buttons when they're not monochrome
       // e.g. kinetic slot filters in compare/organizer, or material cost for mod preview
-      .dontInvert {
-        filter: invert(0);
+      &.dontInvert {
+        @include drop-shadow;
       }
+    }
+
+    // Organizer embeds radio buttons in here
+    input {
+      display: none;
     }
 
     &[disabled] {
@@ -59,8 +80,9 @@
       @include interactive($hover: true, $active: true, $selectedClass: '.selected') {
         background-color: var(--theme-button-bg);
         color: var(--theme-text);
-        img {
-          filter: drop-shadow(0 0 1px black);
+        img,
+        svg {
+          @include drop-shadow;
         }
       }
     }
@@ -69,17 +91,13 @@
         background-color: $red !important;
       }
     }
+    &.left {
+      justify-content: flex-start;
+    }
     // Set focus styles
     &:focus-visible {
       border-color: var(--theme-accent-primary);
       outline: none;
-    }
-
-    & .app-icon {
-      margin-right: 4px;
-      &:only-child {
-        margin-right: unset;
-      }
     }
   }
 
