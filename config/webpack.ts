@@ -226,6 +226,7 @@ export default (env: Env) => {
           // Optimize SVGs - mostly for destiny-icons.
           test: /\.svg$/,
           exclude: /data\/webfonts\//,
+          resourceQuery: { not: [/react/] },
           type: 'asset',
           generator: {
             dataUrl: (content: any) => svgToMiniDataURI(content.toString()),
@@ -242,6 +243,20 @@ export default (env: Env) => {
                   loader: 'svgo-loader',
                 },
               ],
+        },
+        // Allow importing SVGs as React components if *.svg?react
+        {
+          test: /\.svg$/i,
+          issuer: /\.[jt]sx?$/,
+          resourceQuery: /react/, // only create react component if *.svg?react
+          use: [
+            {
+              loader: '@svgr/webpack',
+              options: {
+                memo: true,
+              },
+            },
+          ],
         },
         {
           test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,

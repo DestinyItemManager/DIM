@@ -6,7 +6,7 @@ import BungieImage from '../BungieImage';
 import styles from './BucketIcon.m.scss';
 import { ItemCategoryIcon, getBucketSvgIcon, itemCategoryIcons } from './itemCategory';
 
-type BucketIconProps = React.ImgHTMLAttributes<HTMLImageElement> &
+type BucketIconProps = (React.SVGProps<SVGSVGElement> | React.ImgHTMLAttributes<HTMLImageElement>) &
   (
     | {
         icon: ItemCategoryIcon;
@@ -45,8 +45,7 @@ function resolveIcon(props: BucketIconProps) {
 export default function BucketIcon(props: BucketIconProps) {
   const resolved = resolveIcon(props);
   return resolved.icon ? (
-    <img
-      src={resolved.icon.svg}
+    <resolved.icon.svg
       {...resolved.otherProps}
       className={clsx(props.className, styles.icon, {
         dontInvert: resolved.icon.colorized,
