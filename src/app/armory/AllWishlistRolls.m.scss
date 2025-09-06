@@ -33,3 +33,17 @@
   justify-content: center;
   margin: 1px;
 }
+
+.rollGroup {
+  h3 {
+    &:has(+ .subtitle) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.subtitle {
+  color: var(--theme-text-secondary);
+  margin-top: 0.1em;
+  margin-bottom: 0.5em;
+}

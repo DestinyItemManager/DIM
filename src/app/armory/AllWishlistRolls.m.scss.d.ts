@@ -5,6 +5,8 @@ interface CssExports {
   'notes': string;
   'orGroup': string;
   'roll': string;
+  'rollGroup': string;
+  'subtitle': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
