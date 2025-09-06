@@ -800,7 +800,7 @@ function useActivePerks({
             .map((i) => i.item)
             .filter(
               (item) =>
-                item.bucket.sort === 'Armor' ||
+                item.bucket.inArmor ||
                 item.bucket.hash === D1BucketHashes.Artifact ||
                 item.bucket.hash === BucketHashes.Ghost,
             ),

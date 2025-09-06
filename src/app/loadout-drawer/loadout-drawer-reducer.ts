@@ -566,7 +566,7 @@ export function setLoadoutParameters(params: Partial<LoadoutParameters>): Loadou
 export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
   const mods: number[] = [];
   const equippedArmor = store.items.filter(
-    (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor',
+    (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.inArmor,
   );
   for (const item of equippedArmor) {
     mods.push(...extractArmorModHashes(item));
@@ -757,9 +757,7 @@ export function randomizeLoadoutItems(
       allItems,
       (item) =>
         itemMatchesCategory(item, category) &&
-        (!(item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor') ||
-          !itemFilter ||
-          itemFilter(item)),
+        (!(item.bucket.inArmor || item.bucket.inWeapons) || !itemFilter || itemFilter(item)),
     );
     const randomizedLoadoutBuckets = randomizedLoadout.items.map((li) =>
       getBucketHashFromItemHash(defs, li.hash),
@@ -796,12 +794,12 @@ export function randomizeLoadoutMods(
 ): LoadoutUpdateFunction {
   return produce((loadout) => {
     const equippedArmor = store.items.filter(
-      (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor',
+      (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.inArmor,
     );
 
     for (const li of loadout.items) {
       const existingItem = findItemForLoadout(defs, allItems, store.id, li);
-      if (existingItem?.bucket.sort === 'Armor') {
+      if (existingItem?.bucket.inArmor) {
         const idx = equippedArmor.findIndex(
           (item) => item.bucket.hash === existingItem.bucket.hash,
         );
