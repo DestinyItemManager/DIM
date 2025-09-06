@@ -593,7 +593,8 @@ export function sortRows(
       if (column) {
         const sort = column.sort;
         const compare: Comparator<Row> = sort
-          ? (row1, row2) => sort(row1.values[column.id], row2.values[column.id])
+          ? (row1, row2) =>
+              sort(row1.values[column.id], row2.values[column.id], row1.item, row2.item)
           : unsortedRows.some((row) => typeof row.values[column.id] === 'string')
             ? localizedSorter(language, (row) => (row.values[column.id] ?? '') as string)
             : compareBy((row) => row.values[column.id] ?? 0);

@@ -17,21 +17,23 @@
   min-width: 2ch; // Try to right-align 2-digit numbers
   text-align: right;
   position: relative;
+  white-space: nowrap;
 
   &.noMinWidth {
     min-width: unset;
   }
 }
-
-.bar {
+.statBarArea {
   height: 80%;
-  width: 100%;
   position: relative;
-  > span {
-    display: block;
-    background-color: rgb(255, 255, 255, 0.25);
-    height: 100%;
-  }
+}
+.statBarContainer {
+  width: 100%;
+}
+.statBarFill {
+  display: block;
+  background-color: rgb(255, 255, 255, 0.25);
+  height: 100%;
 }
 
 .masterwork::after {
@@ -46,9 +48,25 @@
   left: calc(100% + 2px);
 }
 
-.tunedStatIcon {
+.statExceptionIndicator {
   color: #fff;
   position: absolute;
   left: 0;
   transform: scale(-1, 1);
+  background-color: transparent !important;
+  line-height: 1;
+  white-space: pre;
+  sup {
+    position: absolute;
+    right: 100%;
+  }
+}
+
+.customStat {
+  opacity: 0.8;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.smaller :global(.svg-inline--fa) {
+  height: 0.8em;
 }

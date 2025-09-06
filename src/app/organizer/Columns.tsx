@@ -24,7 +24,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { breakerTypeNames } from 'app/search/d2-known-values';
+import { TOTAL_STAT_HASH, breakerTypeNames } from 'app/search/d2-known-values';
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -39,13 +39,15 @@ import {
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { compact, filterMap, invert } from 'app/utils/collections';
-import { Comparator, compareBy } from 'app/utils/comparators';
+import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparators';
 import {
+  getArmor3TuningStat,
   getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  isArtifice,
   isArtificeSocket,
   isD1Item,
 } from 'app/utils/item-utils';
@@ -997,6 +999,32 @@ export function getStatColumns(
         // value passed in can be different if it's Recoil.
         const stat = item.stats?.find((s) => s.statHash === statHash);
         return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
+      },
+      sort: (firstValue, secondValue, firstItem, secondItem) => {
+        if (typeof firstValue === 'number' && typeof secondValue === 'number') {
+          const firstItemTuningHash = getArmor3TuningStat(firstItem);
+          const secondItemTuningHash = getArmor3TuningStat(secondItem);
+          if ((statHash as number) === TOTAL_STAT_HASH) {
+            if (firstItemTuningHash) {
+              firstValue += 0.5;
+            } else if (isArtifice(firstItem)) {
+              firstValue += 0.3;
+            }
+            if (secondItemTuningHash) {
+              secondValue += 0.5;
+            } else if (isArtifice(secondItem)) {
+              secondValue += 0.3;
+            }
+          } else {
+            if (firstItemTuningHash === statHash) {
+              firstValue += 0.5;
+            }
+            if (secondItemTuningHash === statHash) {
+              secondValue += 0.5;
+            }
+          }
+        }
+        return primitiveComparator(firstValue, secondValue);
       },
     };
   }).sort(compareBy((s) => getStatSortOrder(s.statHash)));
