@@ -6,8 +6,8 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { faExclamationTriangle } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
-import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
-import { WishListRoll } from 'app/wishlists/types';
+import { wishListInfosSelector, wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
+import { WishListInfo, WishListRoll } from 'app/wishlists/types';
 import { partition } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import styles from './AllWishlistRolls.m.scss';
@@ -80,6 +80,7 @@ function WishlistRolls({
   realAvailablePlugHashes?: number[];
 }) {
   const defs = useD2Definitions()!;
+  const wishlistInfos = useSelector(wishListInfosSelector);
   const groupedWishlistRolls = Object.groupBy(wishlistRolls, (r) => r.notes || t('Armory.NoNotes'));
 
   const templateSockets = getCraftingTemplate(defs, item.hash)?.sockets?.socketEntries;
@@ -117,13 +118,23 @@ function WishlistRolls({
 
   // TODO: group by making a tree of least cardinality -> most?
 
+  const usedTitles = new Set<string>();
+  function useTitle(info: WishListInfo) {
+    if (info.title && !usedTitles.has(info.title)) {
+      usedTitles.add(info.title);
+      return <h3>{info.title}</h3>;
+    }
+  }
+
   return (
     <>
       {Object.entries(groupedWishlistRolls).map(([notes, rolls]) => {
         const consolidatedRolls = consolidateRollsForOneWeapon(defs, item, rolls);
+        const info = wishlistInfos[rolls[0].sourceWishListIndex ?? -1];
 
         return (
           <div key={notes}>
+            {useTitle(info)}
             <div className={styles.notes}>{notes}</div>
             <ul>
               {consolidatedRolls.map((cr) => {

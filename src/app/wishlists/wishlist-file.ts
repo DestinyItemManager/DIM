@@ -73,6 +73,7 @@ export function toWishList(files: [url: string | undefined, contents: string][])
             } else {
               info.dupeRolls++;
             }
+            roll.sourceWishListIndex = wishList.infos.length;
           }
         }
       }
