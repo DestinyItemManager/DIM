@@ -1,7 +1,10 @@
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import Plug from 'app/item-popup/Plug';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { faExclamationTriangle } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
 import { wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';
@@ -121,7 +124,7 @@ function WishlistRolls({
 
         return (
           <div key={notes}>
-            <div>{notes}</div>
+            <div className={styles.notes}>{notes}</div>
             <ul>
               {consolidatedRolls.map((cr) => {
                 // groups [outlaw, enhanced outlaw, rampage]
@@ -158,11 +161,6 @@ function WishlistRolls({
 
                 return consolidatedSecondaries.map((secondaryBundle) => {
                   const bundles = [...secondaryBundle, ...primaryBundles];
-
-                  // remove invalid rolls. this should really be handled upstream in wishlist processing
-                  if (bundles.some((b) => b.some((h) => !(h in plugByPerkHash)))) {
-                    return null;
-                  }
                   return (
                     <li key={bundles.map((b) => b.join()).join()} className={styles.roll}>
                       {bundles.map((hashes) => (
@@ -177,20 +175,17 @@ function WishlistRolls({
                             .map((h) => {
                               const socket = socketByPerkHash[h];
                               const plug = plugByPerkHash[h];
-                              return (
-                                plug &&
-                                socket && (
-                                  <Plug
-                                    key={plug.plugDef.hash}
-                                    plug={plug}
-                                    item={item}
-                                    socketInfo={socket}
-                                    hasMenu={false}
-                                    notSelected={realAvailablePlugHashes?.includes(
-                                      plug.plugDef.hash,
-                                    )}
-                                  />
-                                )
+                              return plug && socket ? (
+                                <Plug
+                                  key={plug.plugDef.hash}
+                                  plug={plug}
+                                  item={item}
+                                  socketInfo={socket}
+                                  hasMenu={false}
+                                  notSelected={realAvailablePlugHashes?.includes(plug.plugDef.hash)}
+                                />
+                              ) : (
+                                <InvalidPlug key={h} hash={h} />
                               );
                             })}
                         </div>
@@ -204,5 +199,13 @@ function WishlistRolls({
         );
       })}
     </>
+  );
+}
+
+function InvalidPlug({ hash }: { hash: number }) {
+  return (
+    <PressTip tooltip={t('Armory.UnknownPerkHash', { hash })} className={styles.invalidPlug}>
+      <AppIcon icon={faExclamationTriangle} />
+    </PressTip>
   );
 }
