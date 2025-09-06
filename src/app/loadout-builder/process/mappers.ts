@@ -17,6 +17,7 @@ import { compareBy } from 'app/utils/comparators';
 import { getArmor3TuningSocket } from 'app/utils/socket-utils';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { StatHashes } from 'data/d2/generated-enums';
+import { minBy } from 'es-toolkit';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
@@ -97,8 +98,11 @@ export function mapDimItemToProcessItem({
   if (tuningSocket?.reusablePlugItems?.length) {
     const processItems: ProcessItem[] = [];
     const allPlugs = tuningSocket.plugSet?.plugs;
-    // By default, we'll only sacrifice the last ignored stat
-    const defaultDumpStat = desiredStatRanges.toReversed().find((r) => r.maxStat === 0)?.statHash;
+    // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums
+    const defaultDumpStat =
+      desiredStatRanges.findLast((r) => r.maxStat === 0)?.statHash ??
+      minBy(Array.from(desiredStatRanges.entries()), ([i, r]) => r.maxStat * 1000 - i)?.[1]
+        .statHash;
 
     for (const { plugItemHash, enabled } of tuningSocket.reusablePlugItems) {
       if (!enabled || emptyPlugHashes.has(plugItemHash)) {
@@ -131,7 +135,7 @@ export function mapDimItemToProcessItem({
             // This is dumping the stat we want to dump
             (defaultDumpStat && dumpStatHash === defaultDumpStat) ||
             // The maximum is low enough that we might actually want to dump this stat to benefit others
-            (desiredMax <= 175 && desiredMax > 0)
+            (0 < desiredMax && desiredMax <= 175)
           ) {
             processItems.push({ ...processItem, includedTuningMod: def.hash, stats: tunedStats });
           }

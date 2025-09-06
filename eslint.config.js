@@ -278,7 +278,7 @@ export default tseslint.config(
       'prefer-promise-reject-errors': 'error',
       'prefer-spread': 'error',
       radix: 'error',
-      yoda: 'error',
+      yoda: ['error', { exceptRange: true }],
       'prefer-template': 'error',
       'class-methods-use-this': ['error', { exceptMethods: ['render'] }],
       'no-unmodified-loop-condition': 'error',
