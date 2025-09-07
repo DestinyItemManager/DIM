@@ -362,7 +362,7 @@ export function getDisplayedItemSockets(
 
 export function getSocketsByType(
   item: DimItem,
-  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks',
+  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks' | 'components',
 ): DimSocket[] {
   if (!item.sockets) {
     return [];
@@ -421,6 +421,7 @@ export function getSocketsByType(
       );
       break;
     }
+
     case 'perks': {
       sockets.push(...[...modSocketsByCategory.values()].flat());
       sockets = sockets.filter(
@@ -429,6 +430,26 @@ export function getSocketsByType(
           s.isPerk &&
           (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
             s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
+      );
+      break;
+    }
+
+    // "Other perks" aka weapon components, not including mods or intrinsic traits
+    case 'components': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          s.isPerk &&
+          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) &&
+          !(
+            s.plugged?.plugDef.itemCategoryHashes?.includes(
+              ItemCategoryHashes.WeaponModsOriginTraits,
+            ) ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics
+          ),
       );
       break;
     }

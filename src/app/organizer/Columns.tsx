@@ -575,7 +575,7 @@ export function getColumns(
       !isGhost &&
       c({
         id: 'archetype',
-        header: t('Organizer.Columns.Archetype'),
+        header: isWeapon ? t('Organizer.Columns.Archetype') : t('Organizer.Columns.Frame'),
         className: styles.noWrap,
         csv: 'Archetype',
         value: (item) =>
@@ -708,14 +708,20 @@ export function getColumns(
               ? t('Organizer.Columns.OtherPerks')
               : t('Organizer.Columns.Mods')
             : t('Organizer.Columns.Perks'),
-        value: (item) => perkString(getSocketsByType(item, 'perks')),
+        value: (item) =>
+          perkString(
+            getSocketsByType(item, isSpreadsheet || destinyVersion === 1 ? 'perks' : 'components'),
+          ),
         cell: (_val, item) =>
           isD1Item(item) ? (
             <D1PerksCell item={item} />
           ) : (
             <PerksCell
               item={item}
-              sockets={getSocketsByType(item, 'perks')}
+              sockets={getSocketsByType(
+                item,
+                isSpreadsheet || destinyVersion === 1 ? 'perks' : 'components',
+              )}
               onPlugClicked={onPlugClicked}
             />
           ),
