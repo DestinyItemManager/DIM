@@ -575,7 +575,7 @@ export function getColumns(
       !isGhost &&
       c({
         id: 'archetype',
-        header: isWeapon ? t('Organizer.Columns.Archetype') : t('Organizer.Columns.Frame'),
+        header: isWeapon ? t('Organizer.Columns.Frame') : t('Organizer.Columns.Archetype'),
         className: styles.noWrap,
         csv: 'Archetype',
         value: (item) =>
@@ -782,11 +782,11 @@ export function getColumns(
         id: 'shaders',
         className: styles.perkLike,
         header: t('Organizer.Columns.Shaders'),
-        value: (item) => perkString(getSocketsByType(item, 'shaders')),
+        value: (item) => perkString(getSocketsByType(item, 'cosmetics')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSocketsByType(item, 'shaders')}
+            sockets={getSocketsByType(item, 'cosmetics')}
             onPlugClicked={onPlugClicked}
           />
         ),

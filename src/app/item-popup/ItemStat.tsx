@@ -11,7 +11,7 @@ import {
   TOTAL_STAT_HASH,
   armorStats,
   statfulOrnaments,
-  weaponParts,
+  weaponComponentPCHs,
 } from 'app/search/d2-known-values';
 import { getD1QualityColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon, tuningStatIcon } from 'app/shell/icons';
@@ -379,7 +379,7 @@ function getNonReusableModSockets(item: DimItem) {
  */
 function getWeaponPartSockets(item: DimItem) {
   return (item.sockets?.allSockets ?? []).filter((s) =>
-    weaponParts.has(s.plugged?.plugDef.plug.plugCategoryHash),
+    weaponComponentPCHs.has(s.plugged?.plugDef.plug.plugCategoryHash),
   );
 }
 

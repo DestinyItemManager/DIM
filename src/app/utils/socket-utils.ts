@@ -13,8 +13,8 @@ import {
   D2PlugCategoryByStatHash,
   GhostActivitySocketTypeHashes,
   armor2PlugCategoryHashes,
+  weaponComponentPCHs,
   weaponMasterworkY2SocketTypeHash,
-  weaponParts,
 } from 'app/search/d2-known-values';
 import {
   DestinyInventoryItemDefinition,
@@ -258,7 +258,7 @@ export function isEnhancedPerk(plugDef: PluggableInventoryItemDefinition) {
     plugDef.inventory!.tierType === TierType.Common &&
     (plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
       plugDef.plug.plugCategoryHash === PlugCategoryHashes.Origins ||
-      weaponParts.has(plugDef.plug.plugCategoryHash))
+      weaponComponentPCHs.has(plugDef.plug.plugCategoryHash))
   );
 }
 
@@ -362,7 +362,7 @@ export function getDisplayedItemSockets(
 
 export function getSocketsByType(
   item: DimItem,
-  type?: 'all' | 'traits' | 'shaders' | 'origin' | 'mods' | 'perks' | 'components',
+  type?: 'all' | 'traits' | 'cosmetics' | 'origin' | 'mods' | 'perks' | 'components',
 ): DimSocket[] {
   if (!item.sockets) {
     return [];
@@ -379,78 +379,34 @@ export function getSocketsByType(
   }
   switch (type) {
     case 'traits':
-      sockets = sockets.filter(
-        (s) =>
-          s.plugged &&
-          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
-      );
+      sockets = sockets.filter(socketIsTrait);
       break;
 
     case 'origin':
-      sockets = sockets.filter((s) =>
-        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
-      );
+      sockets = sockets.filter(socketIsOriginTrait);
       break;
 
-    case 'shaders': {
+    case 'cosmetics': {
       sockets.push(...[...modSocketsByCategory.values()].flat());
-      sockets = sockets.filter(
-        (s) =>
-          s.plugged &&
-          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
-            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
-      );
+      sockets = sockets.filter(socketIsCosmetic);
       break;
     }
 
     case 'mods': {
       sockets.push(...[...modSocketsByCategory.values()].flat());
-      sockets = sockets.filter(
-        (s) =>
-          s.plugged &&
-          !s.isPerk &&
-          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
-            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) &&
-          !(
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
-            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')
-          ),
-      );
+      sockets = sockets.filter(socketIsMod);
+      break;
+    }
+
+    case 'components': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(socketIsWeaponComponent);
       break;
     }
 
     case 'perks': {
       sockets.push(...[...modSocketsByCategory.values()].flat());
-      sockets = sockets.filter(
-        (s) =>
-          s.plugged &&
-          s.isPerk &&
-          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
-            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)),
-      );
-      break;
-    }
-
-    // "Other perks" aka weapon components, not including mods or intrinsic traits
-    case 'components': {
-      sockets.push(...[...modSocketsByCategory.values()].flat());
-      sockets = sockets.filter(
-        (s) =>
-          s.plugged &&
-          s.isPerk &&
-          (s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
-            s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) &&
-          !(
-            s.plugged?.plugDef.itemCategoryHashes?.includes(
-              ItemCategoryHashes.WeaponModsOriginTraits,
-            ) ||
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
-            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics
-          ),
-      );
+      sockets = sockets.filter(socketIsPerk);
       break;
     }
 
@@ -596,7 +552,7 @@ export function getWeaponSockets(
 export const trustBungieVisibility = new Set<PlugCategoryHashes | undefined>([
   // Artifice slots the game has marked as not visible (on un-upgraded exotics)
   PlugCategoryHashes.EnhancementsArtifice,
-  // Stat tuning mods only available on Tier 5 armors
+  // Stat tuning mod slots on all Armor 3.0 but only available at Tier 5
   PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
 ]);
 
@@ -713,4 +669,93 @@ export function getArmor3TuningSocket(item: DimItem): DimSocket | undefined {
       s.plugged?.plugDef.plug.plugCategoryHash ===
         PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
   );
+}
+
+//
+// TODO: Use these functions other places in DIM where sockets are identified.
+//
+
+/**
+ * Identifies a Trait. Think "Rampage" or "Subsistence".
+ */
+function socketIsTrait(socket: DimSocket) {
+  return (
+    socket.plugged &&
+    (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+      socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
+  );
+}
+
+// TODO: Stop trusting itemCategoryHashes
+/**
+ * Identifies an Origin Trait, introduced in Witch Queen, fixed Traits associated with sets of weapons.
+ */
+function socketIsOriginTrait(socket: DimSocket) {
+  return socket.plugged?.plugDef.itemCategoryHashes?.includes(
+    ItemCategoryHashes.WeaponModsOriginTraits,
+  );
+}
+
+// TODO: Stop trusting itemCategoryHashes
+// TODO: This would fail to find Enhanced Impact mod, due to the above, even though it finds other mods.
+/**
+ * This could be almost anything. It's unclear what this is useful for.
+ */
+function socketIsPerk(socket: DimSocket) {
+  return (
+    socket.plugged &&
+    socket.isPerk &&
+    (socket.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+      socket.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods))
+  );
+}
+
+// TODO: This should also find Combat Flair sockets?
+/**
+ * This identifies shaders, mementos, and ornaments.
+ */
+function socketIsCosmetic(socket: DimSocket) {
+  return (
+    socket.plugged &&
+    (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+      socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+      socket.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
+  );
+}
+
+// TODO: Stop trusting itemCategoryHashes
+// TODO: This would fail to find Enhanced Impact mod, due to the above, even though it finds other mods.
+// TODO: Improve this.
+/**
+ * Find a square-looking mod on an item.
+ * Things like "Mobility Mod" or "Stasis Targeting" or "Backup Mag".
+ */
+function socketIsMod(socket: DimSocket) {
+  return (
+    socket.plugged &&
+    !socket.isPerk &&
+    (socket.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponMods) ||
+      socket.plugged.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) &&
+    !(
+      socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+      socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+      socket.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')
+    )
+  );
+}
+
+/**
+ * Check to see if a socket contains a barrel, mag, etc.
+ * A plug that contributes to a weapon's stats, but aren't its base stats, traits, or mods.
+ */
+function socketIsWeaponComponent(socket: DimSocket) {
+  return weaponComponentPCHs.has(socket.plugged?.plugDef.plug.plugCategoryHash);
+}
+
+/**
+ * Gets weapon components, like barrels, mags, etc.
+ * Sockets that contribute to a weapon's stats, but aren't its base stats, traits, or mods.
+ */
+export function getWeaponComponentSockets(item: DimItem) {
+  return (item.sockets?.allSockets ?? []).filter(socketIsWeaponComponent);
 }
