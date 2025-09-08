@@ -1,5 +1,7 @@
 ## Next
 
+## 8.89.0 <span class="changelog-date">(2025-09-07)</span>
+
 * Reduced how much items are dimmed out in the Item Feed when they don't match the current search.
 * BETA: Option to compare by base masterworked stats in Compare feature. This allows a fair comparison between Armor 2.0 and Armor 3.0.
 * Added a setting to control how many CPU cores can be used by Loadout Optimizer/Analyzer.
