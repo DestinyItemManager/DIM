@@ -7,12 +7,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
-import {
-  TOTAL_STAT_HASH,
-  armorStats,
-  statfulOrnaments,
-  weaponParts,
-} from 'app/search/d2-known-values';
+import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-known-values';
 import { getD1QualityColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon, tuningStatIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
@@ -24,7 +19,11 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp } from 'es-toolkit';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { getSocketsByType, socketContainsIntrinsicPlug } from '../utils/socket-utils';
+import {
+  getSocketsByType,
+  getWeaponComponentSockets,
+  socketContainsIntrinsicPlug,
+} from '../utils/socket-utils';
 import styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
 
@@ -80,7 +79,9 @@ export default function ItemStat({
 
   const partEffects =
     item &&
-    getPartEffects(item, stat.statHash).sort(reverseComparator(compareBy(([value]) => value)));
+    getWeaponComponentEffects(item, stat.statHash).sort(
+      reverseComparator(compareBy(([value]) => value)),
+    );
   const partEffectsTotal = partEffects ? sumBy(partEffects, ([value]) => value) : 0;
 
   const traitEffects =
@@ -373,15 +374,6 @@ function getNonReusableModSockets(item: DimItem) {
         s.plugged.plugDef.plug.plugCategoryIdentifier.includes('weapon.mod_')),
   );
 }
-/**
- * Gets weapon parts, like barrels, mags, etc.
- * Sockets that contribute to the item's stats, but aren't its base stats or mods.
- */
-function getWeaponPartSockets(item: DimItem) {
-  return (item.sockets?.allSockets ?? []).filter((s) =>
-    weaponParts.has(s.plugged?.plugDef.plug.plugCategoryHash),
-  );
-}
 
 /**
  * Looks through the item sockets to find any weapon/armor mods that modify this stat.
@@ -391,12 +383,13 @@ function getModEffects(item: DimItem, statHash: number) {
   const modSockets = getNonReusableModSockets(item);
   return getPlugEffects(modSockets, [statHash]);
 }
+
 /**
- * Looks through the item sockets to find any weapon/armor mods that modify this stat.
+ * Looks through the item sockets to find any weapon components, like barrels, mags, etc. modify this stat.
  * Returns the value the stat is modified by, or 0 if it is not being modified.
  */
-function getPartEffects(item: DimItem, statHash: number) {
-  const modSockets = getWeaponPartSockets(item);
+function getWeaponComponentEffects(item: DimItem, statHash: number) {
+  const modSockets = getWeaponComponentSockets(item);
   return getPlugEffects(modSockets, [statHash]);
 }
 

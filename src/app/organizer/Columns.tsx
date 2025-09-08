@@ -41,17 +41,20 @@ import { RootState } from 'app/store/types';
 import { compact, filterMap, invert } from 'app/utils/collections';
 import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparators';
 import {
+  getArmor3StatFocus,
   getArmor3TuningStat,
   getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  isArmor3,
   isArtifice,
   isArtificeSocket,
   isD1Item,
 } from 'app/utils/item-utils';
 import {
+  getArmorArchetype,
   getArmorArchetypeSocket,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
@@ -569,15 +572,20 @@ export function getColumns(
             : undefined,
       }),
     destinyVersion === 2 &&
-      isWeapon &&
-      !isSpreadsheet &&
+      !isGhost &&
       c({
         id: 'archetype',
-        header: t('Organizer.Columns.Archetype'),
+        header: isWeapon ? t('Organizer.Columns.Frame') : t('Organizer.Columns.Archetype'),
         className: styles.noWrap,
-        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        csv: 'Archetype',
+        value: (item) =>
+          item.bucket.inWeapons
+            ? getWeaponArchetype(item)?.displayProperties.name
+            : getArmorArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
-          const plugged = getWeaponArchetypeSocket(item)?.plugged;
+          const plugged = item.bucket.inWeapons
+            ? getWeaponArchetypeSocket(item)?.plugged
+            : getArmorArchetypeSocket(item)?.plugged;
           return (
             plugged && (
               <PressTip
@@ -598,11 +606,69 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isArmor &&
+      c({
+        id: 'tertiary',
+        className: styles.centered,
+        header: t('Organizer.Columns.TertiaryStat'),
+        csv: 'Tertiary Stat',
+        value: (item) => (isArmor3(item) ? getArmor3StatFocus(item)[2] : undefined),
+        cell: (statHash, item) => {
+          if (statHash) {
+            const stat = item.stats?.find((s) => s.statHash === statHash);
+            if (stat) {
+              return (
+                <BungieImage
+                  title={stat.displayProperties.name}
+                  src={stat.displayProperties.icon}
+                  width={20}
+                  height={20}
+                />
+              );
+            }
+          }
+        },
+        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
+        filter: (statHash) => {
+          const statName = invert(statHashByName)[statHash!];
+          return `tertiarystat:${statName}`;
+        },
+      }),
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
+        id: 'tuning',
+        className: styles.centered,
+        header: t('Organizer.Columns.TuningStat'),
+        csv: 'Tuning Stat',
+        value: (item) => (isArmor3(item) ? getArmor3TuningStat(item) : undefined),
+        cell: (statHash, item) => {
+          if (statHash) {
+            const stat = item.stats?.find((s) => s.statHash === statHash);
+            if (stat) {
+              return (
+                <BungieImage
+                  title={stat.displayProperties.name}
+                  src={stat.displayProperties.icon}
+                  width={20}
+                  height={20}
+                />
+              );
+            }
+          }
+        },
+        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
+        filter: (statHash) => {
+          const statName = invert(statHashByName)[statHash!];
+          return `tertiarystat:${statName}`;
+        },
+      }),
+    destinyVersion === 2 &&
+      isArmor &&
       !isSpreadsheet &&
       c({
         id: 'intrinsics',
         className: styles.perkLike,
-        header: t('Organizer.Columns.Intrinsics'),
+        header: t('Organizer.Columns.Perks'),
         value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => (
           <PerksCell
@@ -614,48 +680,12 @@ export function getColumns(
         sort: perkStringSort,
         filter: perkStringFilter,
       }),
-    c({
-      id: 'perks',
-      className: styles.perks,
-      header:
-        destinyVersion === 2
-          ? isWeapon
-            ? t('Organizer.Columns.OtherPerks')
-            : t('Organizer.Columns.PerksMods')
-          : t('Organizer.Columns.Perks'),
-      value: (item) => perkString(getSocketsByType(item, 'all')),
-      cell: (_val, item) =>
-        isD1Item(item) ? (
-          <D1PerksCell item={item} />
-        ) : (
-          <PerksCell
-            item={item}
-            sockets={getSocketsByType(item, 'all')}
-            onPlugClicked={onPlugClicked}
-          />
-        ),
-      sort: perkStringSort,
-      filter: perkStringFilter,
-      csv: (_value, item) => {
-        // This could go on any of the perks columns, since it computes a very
-        // different view of perks, but I just picked one.
-        const perks =
-          isD1Item(item) && item.talentGrid
-            ? buildNodeNames(item.talentGrid.nodes)
-            : item.sockets
-              ? buildSocketNames(item)
-              : [];
-
-        // Return multiple columns
-        return [`Perks`, perks];
-      },
-    }),
     destinyVersion === 2 &&
       isWeapon &&
       !isSpreadsheet &&
       c({
         id: 'traits',
-        className: styles.perks,
+        className: styles.perkLike,
         header: t('Organizer.Columns.Traits'),
         value: (item) => perkString(getSocketsByType(item, 'traits')),
         cell: (_val, item) => (
@@ -668,7 +698,49 @@ export function getColumns(
         sort: perkStringSort,
         filter: perkStringFilter,
       }),
+    (isWeapon || isSpreadsheet) &&
+      c({
+        id: 'perks',
+        className: styles.perks,
+        header:
+          destinyVersion === 2
+            ? isWeapon
+              ? t('Organizer.Columns.OtherPerks')
+              : t('Organizer.Columns.Mods')
+            : t('Organizer.Columns.Perks'),
+        value: (item) =>
+          perkString(
+            getSocketsByType(item, isSpreadsheet || destinyVersion === 1 ? 'perks' : 'components'),
+          ),
+        cell: (_val, item) =>
+          isD1Item(item) ? (
+            <D1PerksCell item={item} />
+          ) : (
+            <PerksCell
+              item={item}
+              sockets={getSocketsByType(
+                item,
+                isSpreadsheet || destinyVersion === 1 ? 'perks' : 'components',
+              )}
+              onPlugClicked={onPlugClicked}
+            />
+          ),
+        sort: perkStringSort,
+        filter: perkStringFilter,
+        csv: (_value, item) => {
+          // This could go on any of the perks columns, since it computes a very
+          // different view of perks, but I just picked one.
+          const perks =
+            isD1Item(item) && item.talentGrid
+              ? buildNodeNames(item.talentGrid.nodes)
+              : item.sockets
+                ? buildSocketNames(item)
+                : [];
 
+          // Return multiple columns
+          return [`Perks`, perks];
+        },
+      }),
     destinyVersion === 2 &&
       isWeapon &&
       !isSpreadsheet &&
@@ -690,14 +762,31 @@ export function getColumns(
     destinyVersion === 2 &&
       !isSpreadsheet &&
       c({
-        id: 'shaders',
+        id: 'mods',
         className: styles.perkLike,
-        header: t('Organizer.Columns.Shaders'),
-        value: (item) => perkString(getSocketsByType(item, 'shaders')),
+        header: t('Organizer.Columns.Mods'),
+        value: (item) => perkString(getSocketsByType(item, 'mods')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
-            sockets={getSocketsByType(item, 'shaders')}
+            sockets={getSocketsByType(item, 'mods')}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        sort: perkStringSort,
+        filter: perkStringFilter,
+      }),
+    destinyVersion === 2 &&
+      !isSpreadsheet &&
+      c({
+        id: 'shaders',
+        className: styles.perkLike,
+        header: t('Organizer.Columns.Shaders'),
+        value: (item) => perkString(getSocketsByType(item, 'cosmetics')),
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getSocketsByType(item, 'cosmetics')}
             onPlugClicked={onPlugClicked}
           />
         ),
@@ -713,9 +802,6 @@ export function getColumns(
         undefined,
         tl('Organizer.Columns.PerksGrid'),
       ),
-    !isSpreadsheet &&
-      destinyVersion === 2 &&
-      modsColumn(styles.perksGrid, styles.perks, isWeapon, onPlugClicked),
     ...statColumns,
     ...baseStatColumns,
     ...d1ArmorQualityByStat,
@@ -731,7 +817,6 @@ export function getColumns(
       }),
     ...(destinyVersion === 2 && isArmor ? customStats : []),
     destinyVersion === 2 &&
-      isWeapon &&
       c({
         id: 'masterworkTier',
         header: t('Organizer.Columns.MasterworkTier'),
@@ -1330,12 +1415,11 @@ export function perkString(sockets: DimSocket[]): string | undefined {
 export function getIntrinsicSockets(item: DimItem): DimSocket[] {
   const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
   const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
-  const archetypeSocket = getArmorArchetypeSocket(item);
   return intrinsicSocket &&
     // artifice already shows up in the "modslot" column
     !isArtificeSocket(intrinsicSocket)
-    ? [intrinsicSocket, ...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])]
-    : [...extraIntrinsicSockets, ...(archetypeSocket ? [archetypeSocket] : [])];
+    ? [intrinsicSocket, ...extraIntrinsicSockets]
+    : extraIntrinsicSockets;
 }
 
 /**

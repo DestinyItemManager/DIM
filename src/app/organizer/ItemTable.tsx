@@ -213,12 +213,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const filteredColumns = useMemo(
     () =>
       compact(
-        enabledColumns.flatMap((id) =>
-          columns.filter(
-            (column) =>
-              id === getColumnSelectionId(column) &&
-              (column.limitToClass === undefined || column.limitToClass === classIfAny),
-          ),
+        columns.filter(
+          (column) =>
+            enabledColumns.includes(getColumnSelectionId(column)) &&
+            (column.limitToClass === undefined || column.limitToClass === classIfAny),
         ),
       ),
     [columns, enabledColumns, classIfAny],
