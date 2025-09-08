@@ -370,8 +370,8 @@ export default function ItemTypeSelector({
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
-                    className={clsx(styles.button, {
-                      [styles.checked]: selection[depth + 1] === subCategory,
+                    className={clsx('dim-button', {
+                      selected: selection[depth + 1] === subCategory,
                     })}
                   >
                     <input

@@ -21,14 +21,10 @@
   text-decoration: none;
 
   @include interactive($hover: true, $focus: true) {
+    outline: none;
     border-color: var(--theme-accent-primary);
     color: var(--theme-accent-primary);
     background-color: rgb(255, 255, 255, 0.1);
-  }
-
-  &:focus,
-  &:active {
-    outline: none;
   }
 }
 

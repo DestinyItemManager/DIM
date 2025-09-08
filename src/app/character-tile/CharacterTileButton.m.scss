@@ -1,16 +1,5 @@
 @use '../variables.scss' as *;
 
-@mixin selected-highlight {
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    inset: -4px;
-    border: 1px solid white;
-    pointer-events: none;
-  }
-}
-
 .character {
   composes: resetButton from '../dim-ui/common.m.scss';
   composes: flexRow from '../dim-ui/common.m.scss';
@@ -21,15 +10,15 @@
   max-width: $emblem-width;
 
   // Display an outline when hovering characters
-  @media (hover: hover) {
-    @include interactive($hover: true, $active: true) {
-      @include selected-highlight;
-    }
-  }
-
-  &:focus-visible {
+  @include interactive($hover: true, $active: true, $focus: true) {
     outline: none;
-
-    @include selected-highlight;
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: -4px;
+      border: 1px solid white;
+      pointer-events: none;
+    }
   }
 }

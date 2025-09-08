@@ -6,7 +6,7 @@ interface CssExports {
   'comparisonModeHint': string;
   'comparisonModeInfo': string;
   'comparisonModebutton': string;
-  'invertedIcon': string;
+  'modIcon': string;
   'options': string;
   'organizerLink': string;
   'scroller': string;

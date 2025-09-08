@@ -9,7 +9,7 @@ export default {
   roots: ['<rootDir>'],
   modulePaths: [tsconfig.compilerOptions.baseUrl],
   moduleNameMapper: {
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)(\\?react)?$':
       '<rootDir>/src/__mocks__/fileMock.js',
     // Automatically include paths from tsconfig
     ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths),

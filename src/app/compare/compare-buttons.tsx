@@ -67,11 +67,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       )
         ?.map((intrinsic) => ({
           buttonLabel: [
-            <BungieImage
-              key="1"
-              className={clsx(styles.intrinsicIcon, 'dontInvert')}
-              src={intrinsic.icon}
-            />,
+            <BungieImage key="1" src={intrinsic.icon} />,
             intrinsic.name,
             exampleItem.rarity === 'Legendary' ? (
               // eslint-disable-next-line @eslint-react/no-duplicate-key
@@ -134,10 +130,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItemIntrinsic && {
         buttonLabel: [
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
-            <BungieImage
-              className={clsx(styles.intrinsicIcon, 'dontInvert')}
-              src={exampleItemIntrinsic.icon}
-            />
+            <BungieImage className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
           </PressTip>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -150,7 +143,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItem.rarity === 'Legendary' &&
       archetype && {
         buttonLabel: [
-          <img key="1" className={clsx(styles.intrinsicIcon, 'dontInvert')} src={archetypeIcon} />,
+          <img key="1" src={archetypeIcon} />,
           <span key="2">{t('Compare.Archetype')}</span>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -162,11 +155,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     exampleItem.destinyVersion === 2 &&
       archetype && {
         buttonLabel: [
-          <BungieImage
-            key="1"
-            className={clsx(styles.intrinsicIcon, 'dontInvert')}
-            src={archetype.displayProperties.icon}
-          />,
+          <BungieImage key="1" src={archetype.displayProperties.icon} />,
           <span key="2">{archetype.displayProperties.name}</span>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
@@ -179,7 +168,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         buttonLabel: focusedStatsDisplayProperties.map((s, index) => (
           <React.Fragment key={s.name}>
             {index > 0 && '+'}
-            <BungieImage className={clsx(styles.statIconAdjust, 'dontInvert')} src={s.icon} />
+            <BungieImage className={clsx(styles.statIconAdjust)} src={s.icon} />
           </React.Fragment>
         )),
         query: `is:armor3.0 is:${exampleItem.rarity} ${focusedStats.map((h) => `basestat:${realD2ArmorStatSearchByHash[h]}:>0`).join(' ')}`,
@@ -191,16 +180,12 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       tertiaryStat &&
       tertiaryStatDisplayProperties && {
         buttonLabel: [
-          <BungieImage
-            key="1"
-            className={clsx(styles.intrinsicIcon, 'dontInvert')}
-            src={archetype.displayProperties.icon}
-          />,
+          <BungieImage key="1" src={archetype.displayProperties.icon} />,
           <span key="2">{archetype.displayProperties.name}</span>,
           '+',
           <BungieImage
             key="tertiary"
-            className={clsx(styles.statIconAdjust, 'dontInvert')}
+            className={clsx(styles.statIconAdjust)}
             src={tertiaryStatDisplayProperties.icon}
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -290,7 +275,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <ElementIcon
           key={exampleItem.id}
           element={exampleItem.element}
-          className={styles.inlineImageIcon}
+          className={clsx(styles.inlineImageIcon, 'dontInvert')}
         />,
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],

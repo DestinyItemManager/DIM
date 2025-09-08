@@ -2,11 +2,23 @@
 
 /* Button */
 
+@mixin drop-shadow {
+  filter: drop-shadow(0 0 1px rgb(0, 0, 0, 0.25));
+  filter: drop-shadow(
+    0 0 1px color-mix(in srgb, var(--theme-accent-primary), rgb(0, 0, 0, 0.5) 70%)
+  );
+}
+
 @layer base {
   .dim-button {
     cursor: pointer;
     padding: 4px 10px;
-    display: inline-block;
+    min-height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
     background-color: var(--theme-button-bg);
     color: var(--theme-button-txt);
     font-size: 12px;
@@ -14,57 +26,51 @@
     font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
     text-shadow: 1px 1px 3px rgb(0, 0, 0, 0.25);
     border: 1px solid transparent;
-    transition: all 150ms ease-out;
     box-sizing: border-box;
     text-align: center;
 
+    // Slightly bigger hit targets on mobile
     @include phone-portrait {
       font-size: 14px;
       line-height: calc(18 / 14);
       padding: 8px 16px;
     }
 
-    @include interactive($hover: true, $active: true) {
+    @include interactive($hover: true, $active: true, $selectedClass: '.selected') {
       background-color: var(--theme-accent-primary) !important;
       color: var(--theme-text-invert) !important;
-      img {
-        filter: invert(1) drop-shadow(0 0 1px black);
+      text-shadow: none;
+      // Invert images on buttons to match text color, unless they have the dontInvert class
+      // (e.g. colored icons in organizer/compare)
+      img:not(.dontInvert) {
+        filter: invert(1);
+      }
+      img,
+      svg {
+        &.dontInvert {
+          @include drop-shadow;
+        }
       }
     }
-    img {
+
+    img,
+    svg {
+      display: block;
       height: 1.3em;
       width: auto;
       vertical-align: bottom;
-      margin: 0 0.3em;
-      filter: drop-shadow(0 0 1px black);
-      transition: filter 150ms ease-out;
+
       &:only-child {
         margin: 0;
       }
-    }
-
-    &.selected {
-      background-color: var(--theme-accent-primary) !important;
-      color: var(--theme-text-invert) !important;
-      img {
-        filter: invert(1) drop-shadow(0 0 1px black);
+      // Don't invert images/icons on buttons when they're not monochrome
+      // e.g. kinetic slot filters in compare/organizer, or material cost for mod preview
+      &.dontInvert {
+        @include drop-shadow;
       }
     }
 
-    // Don't invert images/icons on buttons when they're not monochrome
-    // e.g. kinetic slot filters in compare/organizer, or material cost for mod preview
-    .dontInvert {
-      filter: invert(0) !important;
-
-      @include interactive($hover: true, $active: true) {
-        filter: invert(0) drop-shadow(0 0 1px black) !important;
-      }
-
-      .selected {
-        filter: invert(0) drop-shadow(0 0 1px black) !important;
-      }
-    }
-
+    // Organizer embeds radio buttons in here
     input {
       display: none;
     }
@@ -73,18 +79,12 @@
       opacity: 0.5;
       cursor: not-allowed;
 
-      @include interactive($hover: true, $active: true) {
-        background-color: var(--theme-button-bg) !important;
-        color: var(--theme-text) !important;
-        img {
-          filter: drop-shadow(0 0 1px black);
-        }
-      }
-      &.selected {
-        background-color: var(--theme-button-bg) !important;
-        color: var(--theme-text) !important;
-        img {
-          filter: drop-shadow(0 0 1px black);
+      @include interactive($hover: true, $active: true, $selectedClass: '.selected') {
+        background-color: var(--theme-button-bg);
+        color: var(--theme-text);
+        img,
+        svg {
+          @include drop-shadow;
         }
       }
     }
@@ -93,21 +93,13 @@
         background-color: $red !important;
       }
     }
+    &.left {
+      justify-content: flex-start;
+    }
     // Set focus styles
-    &:focus {
+    &:focus-visible {
       border-color: var(--theme-accent-primary);
       outline: none;
-    }
-    // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
-    &:focus:not(:focus-visible) {
-      border-color: transparent;
-    }
-
-    & .app-icon {
-      margin-right: 4px;
-      &:only-child {
-        margin-right: unset;
-      }
     }
   }
 
@@ -116,7 +108,7 @@
   }
 
   .dim-button-primary {
-    background-color: rgb(255, 255, 255, 0.3);
+    background-color: var(--theme-button-bg-primary);
     font-weight: bold;
   }
 }

@@ -25,7 +25,7 @@ import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import modificationsIcon from 'destiny-icons/general/modifications.svg';
+import ModificationsIcon from 'destiny-icons/general/modifications.svg?react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
@@ -225,11 +225,10 @@ export default function Compare({ session }: { session: CompareSession }) {
         <>
           <span className={styles.comparisonModeHint}>
             <AppIcon icon={settingsIcon} />
-            <img src={modificationsIcon} className={styles.invertedIcon} />
+            <ModificationsIcon className={styles.modIcon} />
           </span>
           <div className={styles.comparisonModeInfo}>
-            <img src={modificationsIcon} className={styles.invertedIcon} />{' '}
-            {t('Compare.CurrentStats')}
+            <ModificationsIcon className={styles.modIcon} /> {t('Compare.CurrentStats')}
             <span className={styles.comparisonModeDescription}>
               {t('Compare.CurrentStatsDescription')}
             </span>
