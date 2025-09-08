@@ -1,5 +1,9 @@
 ## Next
 
+* In Compare and Organizer, there are now separate columns/rows for archetype and perks.
+* Added armor masterwork tier, tertiary stat, and tuning stat columns to Organizer and CSV output.
+* Reorganized weapons columns in Organizer a bit.
+
 ## 8.89.0 <span class="changelog-date">(2025-09-07)</span>
 
 * Reduced how much items are dimmed out in the Item Feed when they don't match the current search.
