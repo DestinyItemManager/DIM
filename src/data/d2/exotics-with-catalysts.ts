@@ -33,6 +33,8 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1594120904, // No Time to Explain
   1665952087, // The Fourth Horseman
   1681583613, // Ergo Sum
+  1736135946, // New Malpais
+  1753923263, // Wolfsbane
   1763584999, // Grand Overture
   1802135586, // Touch of Malice
   1833195496, // Ager's Scepter

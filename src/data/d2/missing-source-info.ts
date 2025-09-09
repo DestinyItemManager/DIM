@@ -91,6 +91,8 @@ const missingSources: { [key: string]: number[] } = {
     397654099, // Wastelander Vest
     402937789, // Shadow Specter
     406995961, // Stagnatious Rebuke
+    407150808, // Ribbontail
+    407150809, // Ribbontail
     407150810, // Ribbontail
     407150811, // Ribbontail
     411014648, // Solar Ammo Generation
@@ -306,6 +308,8 @@ const missingSources: { [key: string]: number[] } = {
     2739875972, // RPC Valiant
     2742930797, // Fatum Praevaricator
     2745108287, // War Mantis
+    2765451288, // Synanceia
+    2765451289, // Synanceia
     2765451290, // Synanceia
     2765451291, // Synanceia
     2771425787, // Melee Font
@@ -328,6 +332,8 @@ const missingSources: { [key: string]: number[] } = {
     2886651369, // Renegade Plate
     2888021252, // Trachinus
     2888021253, // Trachinus
+    2888021254, // Trachinus
+    2888021255, // Trachinus
     2888195476, // Void Targeting
     2893448006, // Farseeker's March
     2930768301, // Wastelander Wraps
@@ -415,6 +421,8 @@ const missingSources: { [key: string]: number[] } = {
     3798468567, // Arc Holster
     3804242792, // Phoneutria Fera
     3804242793, // Phoneutria Fera
+    3804242794, // Phoneutria Fera
+    3804242795, // Phoneutria Fera
     3808902618, // Weapons Mod
     3812037372, // Aspirant Gloves
     3846931924, // Solar Resistance
@@ -894,14 +902,22 @@ const missingSources: { [key: string]: number[] } = {
     4288623897, // TM-Earp Custom Vest
   ],
   edgeoffate: [
+    407150808, // Ribbontail
+    407150809, // Ribbontail
     407150810, // Ribbontail
     407150811, // Ribbontail
+    2765451288, // Synanceia
+    2765451289, // Synanceia
     2765451290, // Synanceia
     2765451291, // Synanceia
     2888021252, // Trachinus
     2888021253, // Trachinus
+    2888021254, // Trachinus
+    2888021255, // Trachinus
     3804242792, // Phoneutria Fera
     3804242793, // Phoneutria Fera
+    3804242794, // Phoneutria Fera
+    3804242795, // Phoneutria Fera
   ],
   edz: [
     10307688, // Wildwood Plate
@@ -1022,9 +1038,11 @@ const missingSources: { [key: string]: number[] } = {
     1683482799, // Solstice Mark (Drained)
     1706764072, // Quilted Winter Mark
     1706874193, // Inaugural Revelry Greaves
+    1724104236, // Submersion
     1752648948, // Sublime Sleeves
     1775707016, // Solstice Grasps (Majestic)
     1812385587, // Festive Winter Bond
+    1813474267, // Arcane Embrace
     1845372864, // Albedo Wing
     1845978721, // Avalanche
     1862324869, // Solstice Boots (Majestic)
@@ -1082,6 +1100,7 @@ const missingSources: { [key: string]: number[] } = {
     3232831379, // Sublime Mask
     3236510875, // Solstice Grasps (Resplendent)
     3240434620, // Something New
+    3328019216, // Arcane Embrace
     3329514528, // Sublime Gauntlets
     3400256755, // Zephyr
     3558681245, // BrayTech Werewolf
