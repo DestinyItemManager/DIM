@@ -400,4 +400,4 @@ export const D2SeasonInfo: Record<
 };
 
 export const D2CalculatedSeason = 27;
-export const D2SeasonPassActiveList = 0;
+export const D2SeasonPassActiveList = 1;
