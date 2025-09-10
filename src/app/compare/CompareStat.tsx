@@ -1,7 +1,7 @@
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import RecoilStat, { recoilValue } from 'app/item-popup/RecoilStat';
 import { getCompareColor, percent } from 'app/shell/formatters';
-import { AppIcon, tuningStatIcon } from 'app/shell/icons';
+import { AppIcon, tunedStatIcon } from 'app/shell/icons';
 import { artificeIcon } from 'app/shell/icons/custom/Artifice';
 import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -39,7 +39,7 @@ export default function CompareStat({
   const syntheticStat = Boolean(stat?.statHash && stat.statHash < 0);
   // If this is Artifice armor and a custom or Total stat
   const showArtificeIcon = isArtifice(item) && syntheticStat;
-  const extraIcon = showTunerIcon ? tuningStatIcon : showArtificeIcon ? artificeIcon : undefined;
+  const extraIcon = showTunerIcon ? tunedStatIcon : showArtificeIcon ? artificeIcon : undefined;
   const showBar = stat?.bar && item.bucket.inArmor;
 
   return (
@@ -60,8 +60,8 @@ export default function CompareStat({
                 [styles.smaller]: showArtificeIcon,
               })}
             >
-              {(showArtificeIcon || relevantStatHashes) && <sup>+</sup>}
               <AppIcon icon={extraIcon} />
+              {showArtificeIcon && <sup>+</sup>}
             </span>
           )}
           {showBar && (

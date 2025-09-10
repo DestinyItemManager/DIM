@@ -52,13 +52,12 @@
   color: #fff;
   position: absolute;
   left: 0;
-  transform: scale(-1, 1);
   background-color: transparent !important;
   line-height: 1;
   white-space: pre;
   sup {
     position: absolute;
-    right: 100%;
+    left: 100%;
   }
 }
 
