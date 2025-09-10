@@ -1,5 +1,7 @@
 ## Next
 
+* Updated tuned stat icon.
+
 ## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
 
 * In Compare and Organizer, there are now separate columns/rows for archetype and perks.
