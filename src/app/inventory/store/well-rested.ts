@@ -74,7 +74,7 @@ export function isWellRested(
  * How much XP was required to achieve the given level?
  */
 function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefinition) {
-  const stepIndex = clamp(level, 0, progressDef.steps.length - 1);
+  const stepIndex = clamp(level, 1, progressDef.steps.length - 1);
   return progressDef.steps[stepIndex].progressTotal;
 }
 
