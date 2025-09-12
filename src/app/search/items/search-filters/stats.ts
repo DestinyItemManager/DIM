@@ -12,6 +12,7 @@ import {
   est,
   estStatNames,
   searchableArmorStatNames,
+  searchableD2ArmorStatHashByName,
   statHashByName,
   statOrdinals,
   weaponStatNames,
@@ -167,14 +168,34 @@ const statFilters: ItemFilterDefinition[] = [
     keywords: 'tunedstat',
     description: tl('Filter.TunedStat'),
     format: 'query',
-    suggestions: Object.keys(realD2ArmorStatHashByName),
+    suggestions: searchableD2ArmorStatHashByName,
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const seekingStatHash = realD2ArmorStatHashByName[filterValue];
-      if (!seekingStatHash) {
+      const validStatHash = searchableD2ArmorStatHashByName.includes(filterValue);
+      if (!validStatHash) {
         throw Error(`invalid stat name: "${filterValue}"`);
       }
-      return (item) => getArmor3TuningStat(item) === seekingStatHash;
+      return (item) => {
+        const stats = getArmor3StatFocus(item);
+        const tunedStat = getArmor3TuningStat(item);
+
+        if (!tunedStat) {
+          return false;
+        }
+
+        const statIndexMap: Record<string, number> = {
+          primary: 0,
+          secondary: 1,
+          tertiary: 2,
+        };
+
+        const expectedStat =
+          statIndexMap[filterValue] !== undefined
+            ? stats[statIndexMap[filterValue]]
+            : realD2ArmorStatHashByName[filterValue];
+
+        return tunedStat === expectedStat;
+      };
     },
   },
 ];
