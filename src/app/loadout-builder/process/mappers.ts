@@ -135,7 +135,7 @@ export function mapDimItemToProcessItem({
             // This is dumping the stat we want to dump
             (defaultDumpStat && dumpStatHash === defaultDumpStat) ||
             // The maximum is low enough that we might actually want to dump this stat to benefit others
-            (0 < desiredMax && desiredMax <= 175)
+            (desiredMax > 0 && desiredMax <= 175)
           ) {
             processItems.push({ ...processItem, includedTuningMod: def.hash, stats: tunedStats });
           }
