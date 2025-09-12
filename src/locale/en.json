@@ -242,6 +242,7 @@
     "DupeSetBonus": "Groups armor with the same set bonus.",
     "DupeStats": "Shows armor with identical base stats, and matching stat adjustment mods like Artifice or Tuners.",
     "DupeTertiary": "Groups armor with the same tertiary stat.",
+    "DupeTraits": "Weapons whose traits are either a duplicate of, or a subset of, another weapon of the same type.",
     "DupeTunedStat": "Groups armor with the same Tuned stat.",
     "DupeUntunedStats": "Groups armor with identical base stats, ignoring stat adjustment mods.",
     "DupeZeroStats": "Groups armor with the same 3 non-zero base stats.",

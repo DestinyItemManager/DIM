@@ -2025,11 +2025,6 @@ export const symbolData: {
   {
     codepoint: 61233,
     glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 3602718766,
-      fromRichText: false,
-    },
   },
   {
     codepoint: 57667,
@@ -2385,7 +2380,7 @@ export const symbolData: {
     glyph: '󰃇',
     source: {
       tableName: 'Objective',
-      hash: 550810786,
+      hash: 212548630,
       fromRichText: false,
     },
   },
@@ -2456,8 +2451,8 @@ export const symbolData: {
     codepoint: 983164,
     glyph: '󰁼',
     source: {
-      tableName: 'ActivityMode',
-      hash: 1826469369,
+      tableName: 'InventoryItem',
+      hash: 3388529809,
       fromRichText: false,
     },
   },
@@ -2576,7 +2571,7 @@ export type TranslateManually =
 
 /*
  * Could not find a source for (did the definitions disappear?): 
-
+ * Rocket Tracers
 
  * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game): 
  * [Aim Down Sights]

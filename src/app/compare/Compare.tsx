@@ -19,7 +19,7 @@ import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { Settings } from 'app/settings/initial-settings';
-import { AppIcon, faList, settingsIcon, tuningStatIcon } from 'app/shell/icons';
+import { AppIcon, faList, settingsIcon, statBarsIcon } from 'app/shell/icons';
 import { masterworkHammer } from 'app/shell/icons/custom/MasterworkHammer';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -243,10 +243,10 @@ export default function Compare({ session }: { session: CompareSession }) {
         <>
           <span className={styles.comparisonModeHint}>
             <AppIcon icon={settingsIcon} />
-            <AppIcon icon={tuningStatIcon} />
+            <AppIcon icon={statBarsIcon} />
           </span>
           <div className={styles.comparisonModeInfo}>
-            <AppIcon icon={tuningStatIcon} /> {t('Organizer.Columns.BaseStats')}
+            <AppIcon icon={statBarsIcon} /> {t('Organizer.Columns.BaseStats')}
             <span className={styles.comparisonModeDescription}>
               {t('Compare.BaseStatsDescription')}
             </span>

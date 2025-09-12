@@ -21,6 +21,7 @@
   flex: 1;
   padding: 4px;
   gap: 3px;
+  text-wrap: balance;
   background-color: var(--theme-item-popup-panel-bg);
   &.justCircle {
     --set-bonus-icon-size: 16px;

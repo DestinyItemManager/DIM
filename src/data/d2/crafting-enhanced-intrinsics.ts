@@ -128,18 +128,20 @@ const enhancedIntrinsics = new Set<number>([
   1891876363, // MIDA Synergy
   2470575005, // MIDA Synergy
   2670025099, // MIDA Synergy
+  368110299, // Micro-Missile Frame
+  651554065, // Micro-Missile Frame
+  687584589, // Micro-Missile Frame
+  1225770249, // Micro-Missile Frame
+  2100231191, // Micro-Missile Frame
+  3178379945, // Micro-Missile Frame
   540070330, // Micro-Missile Frame
   745725302, // Micro-Missile Frame
   1278053348, // Micro-Missile Frame
   4024789138, // Micro-Missile Frame
-  846472617, // Pinpoint Slug Frame
   878620401, // Pinpoint Slug Frame
-  1714663217, // Pinpoint Slug Frame
-  1966150207, // Pinpoint Slug Frame
   2410819063, // Pinpoint Slug Frame
   2426674025, // Pinpoint Slug Frame
   2897981193, // Pinpoint Slug Frame
-  3260675681, // Pinpoint Slug Frame
   1827389998, // Precision Frame
   3114731754, // Precision Frame
   3252839262, // Precision Frame
@@ -221,12 +223,6 @@ const enhancedIntrinsics = new Set<number>([
   217816625, // Rapid-Fire Glaive
   694879972, // Rapid-Fire Glaive
   2479787361, // Rapid-Fire Glaive
-  368110299, // Rocket-Assisted Frame
-  651554065, // Rocket-Assisted Frame
-  687584589, // Rocket-Assisted Frame
-  1225770249, // Rocket-Assisted Frame
-  2100231191, // Rocket-Assisted Frame
-  3178379945, // Rocket-Assisted Frame
   156358224, // Support Frame
   840061228, // Support Frame
   1535085486, // Support Frame

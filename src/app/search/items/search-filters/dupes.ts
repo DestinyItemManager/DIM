@@ -127,8 +127,22 @@ const dupeTypeLookupRaw: Record<
       items = items.filter((i) =>
         i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible),
       );
-
       const perksSet = new PerksSet(items);
+      return items.filter((i) => perksSet.hasPerkDupes(i));
+    },
+  },
+
+  // Finds items with all the same traits or which contain a subset that comprises another item's traits.
+  traits: {
+    keyGenerator: (item) =>
+      item.bucket.inWeapons
+        ? `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.typeName}`
+        : undefined,
+    confirmItemsInGroup: (items) => {
+      items = items.filter((i) =>
+        i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible),
+      );
+      const perksSet = new PerksSet(items, 'traits');
       return items.filter((i) => perksSet.hasPerkDupes(i));
     },
   },
@@ -220,7 +234,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       'dupe:archetype+tertiarystat',
       'dupe:nonzerostats',
       'dupe:setbonus+statlower',
-      'dupe:perks',
+      'dupe:traits',
       'dupe:statlower',
       'dupe:customstatlower',
     ],
@@ -234,6 +248,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       tunedstat: tl('Filter.DupeTunedStat'),
       setbonus: tl('Filter.DupeSetBonus'),
       perks: tl('Filter.DupePerks'),
+      traits: tl('Filter.DupeTraits'),
       statlower: tl('Filter.StatLower'),
       customstatlower: tl('Filter.CustomStatLower'),
     },
