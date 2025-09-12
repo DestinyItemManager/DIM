@@ -48,7 +48,7 @@ export const searchableArmorStatNames = [...Object.keys(dimArmorStatHashByName),
 /** armor stat hashes to check for the "any" keyword */
 export const armorAnyStatHashes = armorStats;
 
-/** armor 3.0 stat hashes including primary secondary and tertiary for filterting */
+/** armor 3.0 stat names including "primary" "secondary" and "tertiary" for filtering */
 export const searchableD2ArmorStatHashByName = [
   ...Object.keys(realD2ArmorStatHashByName),
   'primary',
