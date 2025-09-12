@@ -6,13 +6,14 @@ import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadout
 import { realD2ArmorStatHashByName } from 'app/search/d2-known-values';
 import {
   allAtomicStats,
+  armor3OrdinalIndexByName,
   armorAnyStatHashes,
   armorStatHashes,
   dimArmorStatHashByName,
   est,
   estStatNames,
   searchableArmorStatNames,
-  searchableD2ArmorStatHashByName,
+  searchableD2Armor3StatNames,
   statHashByName,
   statOrdinals,
   weaponStatNames,
@@ -168,10 +169,10 @@ const statFilters: ItemFilterDefinition[] = [
     keywords: 'tunedstat',
     description: tl('Filter.TunedStat'),
     format: 'query',
-    suggestions: searchableD2ArmorStatHashByName,
+    suggestions: searchableD2Armor3StatNames,
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const validStatHash = searchableD2ArmorStatHashByName.includes(filterValue);
+      const validStatHash = searchableD2Armor3StatNames.includes(filterValue);
       if (!validStatHash) {
         throw Error(`invalid stat name: "${filterValue}"`);
       }
@@ -183,15 +184,9 @@ const statFilters: ItemFilterDefinition[] = [
           return false;
         }
 
-        const statIndexMap: Record<string, number> = {
-          primary: 0,
-          secondary: 1,
-          tertiary: 2,
-        };
-
         const expectedStat =
-          statIndexMap[filterValue] !== undefined
-            ? stats[statIndexMap[filterValue]]
+          armor3OrdinalIndexByName[filterValue] !== undefined
+            ? stats[armor3OrdinalIndexByName[filterValue]]
             : realD2ArmorStatHashByName[filterValue];
 
         return tunedStat === expectedStat;

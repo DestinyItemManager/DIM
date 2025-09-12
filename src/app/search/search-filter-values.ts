@@ -49,12 +49,18 @@ export const searchableArmorStatNames = [...Object.keys(dimArmorStatHashByName),
 export const armorAnyStatHashes = armorStats;
 
 /** armor 3.0 stat names including "primary" "secondary" and "tertiary" for filtering */
-export const searchableD2ArmorStatHashByName = [
+export const searchableD2Armor3StatNames = [
   ...Object.keys(realD2ArmorStatHashByName),
   'primary',
   'secondary',
   'tertiary',
 ];
+
+export const armor3OrdinalIndexByName: StringLookup<number> = {
+  primary: 0,
+  secondary: 1,
+  tertiary: 2,
+};
 
 /** stat hashes to calculate max values for */
 export const armorStatHashes = Object.values(dimArmorStatHashByName) as number[];
