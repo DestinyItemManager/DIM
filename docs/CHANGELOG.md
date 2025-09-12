@@ -1,8 +1,13 @@
 ## Next
 
+* Updated tuned stat icon.
+
+## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
+
 * In Compare and Organizer, there are now separate columns/rows for archetype and perks.
 * Added armor masterwork tier, tertiary stat, and tuning stat columns to Organizer and CSV output.
 * Reorganized weapons columns in Organizer a bit.
+* Added `dupe:traits` for finding weapons with duplicate traits.
 
 ## 8.89.0 <span class="changelog-date">(2025-09-07)</span>
 

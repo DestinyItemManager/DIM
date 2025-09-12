@@ -675,6 +675,7 @@ export function getArmor3TuningSocket(item: DimItem): DimSocket | undefined {
 // TODO: Use these functions other places in DIM where sockets are identified.
 //
 
+// TODO: This is wrong/insufficient. This would also find "Aggressive Frame." Upstream filtering is the only thing keeping this "correct".
 /**
  * Identifies a Trait. Think "Rampage" or "Subsistence".
  */

@@ -9,7 +9,7 @@ import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-
 import { statsMs } from 'app/inventory/store/stats';
 import { TOTAL_STAT_HASH, armorStats, statfulOrnaments } from 'app/search/d2-known-values';
 import { getD1QualityColor, percent } from 'app/shell/formatters';
-import { AppIcon, helpIcon, tuningStatIcon } from 'app/shell/icons';
+import { AppIcon, helpIcon, tunedStatIcon } from 'app/shell/icons';
 import { userGuideUrl } from 'app/shell/links';
 import { sumBy } from 'app/utils/collections';
 import { compareBy, reverseComparator } from 'app/utils/comparators';
@@ -164,7 +164,7 @@ export default function ItemStat({
         title={stat.displayProperties.description}
       >
         {stat.statHash === itemStatInfo?.tunedStatHash && (
-          <AppIcon icon={tuningStatIcon} className={styles.tunableSymbol} />
+          <AppIcon icon={tunedStatIcon} className={styles.tunableSymbol} />
         )}{' '}
         {stat.statHash in statLabels
           ? t(statLabels[stat.statHash as StatHashes]!)
