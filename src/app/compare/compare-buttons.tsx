@@ -185,7 +185,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           '+',
           <BungieImage
             key="tertiary"
-            className={clsx(styles.statIconAdjust)}
+            className={styles.statIconAdjust}
             src={tertiaryStatDisplayProperties.icon}
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
