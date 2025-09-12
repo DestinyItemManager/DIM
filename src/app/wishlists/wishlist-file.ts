@@ -8,12 +8,12 @@ const TAG = 'wishlist';
  * The title should follow the following format:
  * title:This Is My Source File Title.
  */
-const titleLabel = /^@?title:(.*?)\s*$/;
+const titleLabel = /^@?title:(.+)$/;
 /**
  * The description should follow the following format:
  * description:This Is My Source File Description And Maybe It Is Longer.
  */
-const descriptionLabel = /^@?description:(.*?)\s*$/;
+const descriptionLabel = /^@?description:(.+)$/;
 /**
  * Notes apply to all rolls until an empty line or comment.
  */
@@ -56,10 +56,10 @@ export function toWishList(files: [url: string | undefined, contents: string][])
         } else if ((match = titleLabel.exec(line))) {
           title = match[1];
           if (!info.title) {
-            info.title = title;
+            info.title = title.trim();
           }
         } else if ((match = descriptionLabel.exec(line))) {
-          description = match[1];
+          description = match[1].trim();
           if (!info.description) {
             info.description = description;
           }

@@ -168,7 +168,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         buttonLabel: focusedStatsDisplayProperties.map((s, index) => (
           <React.Fragment key={s.name}>
             {index > 0 && '+'}
-            <BungieImage className={clsx(styles.statIconAdjust)} src={s.icon} />
+            <BungieImage className={styles.statIconAdjust} src={s.icon} />
           </React.Fragment>
         )),
         query: `is:armor3.0 is:${exampleItem.rarity} ${focusedStats.map((h) => `basestat:${realD2ArmorStatSearchByHash[h]}:>0`).join(' ')}`,
