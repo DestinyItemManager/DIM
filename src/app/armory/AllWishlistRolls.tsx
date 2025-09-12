@@ -119,10 +119,10 @@ function WishlistRolls({
 
   // TODO: group by making a tree of least cardinality -> most?
 
-  const usedTitles = new Set<string>();
-  function useTitle(roll: WishListRoll) {
-    if (roll.title && !usedTitles.has(roll.title)) {
-      usedTitles.add(roll.title);
+  const spentTitles = new Set<string>();
+  function spendTitle(roll: WishListRoll) {
+    if (roll.title && !spentTitles.has(roll.title)) {
+      spentTitles.add(roll.title);
       const url = wishlistInfos?.[roll.sourceWishListIndex ?? -1]?.url;
       return (
         <>
@@ -140,7 +140,7 @@ function WishlistRolls({
 
         return (
           <div key={notes} className={styles.rollGroup}>
-            {useTitle(rolls[0])}
+            {spendTitle(rolls[0])}
             <p className={styles.notes}>{notes}</p>
             <ul>
               {consolidatedRolls.map((cr) => {
