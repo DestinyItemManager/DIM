@@ -85,6 +85,7 @@ jobs:
         run: pnpm lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
+        id: eslint-continue
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         run: pnpm lint-report:cached
         continue-on-error: true
@@ -96,3 +97,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           report-json: "eslint.results.json"
           fail-on-warning: true
+
+      - name: Check If ESLint Failed
+        if : steps.eslint-continue.outcome == 'failure'
+        run: exit 1
