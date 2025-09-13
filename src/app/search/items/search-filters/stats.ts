@@ -176,20 +176,20 @@ const statFilters: ItemFilterDefinition[] = [
       if (!validStatHash) {
         throw Error(`invalid stat name: "${filterValue}"`);
       }
+      // Check if we are looking for generic 'primary', 'secondary', or 'tertiary'
+      const ordinalIdx = armor3OrdinalIndexByName[filterValue];
+      const constantExpected =
+        ordinalIdx === undefined ? realD2ArmorStatHashByName[filterValue] : undefined;
       return (item) => {
-        const stats = getArmor3StatFocus(item);
         const tunedStat = getArmor3TuningStat(item);
-
-        if (!tunedStat) {
+        if (tunedStat === undefined) {
           return false;
         }
-
         const expectedStat =
-          armor3OrdinalIndexByName[filterValue] !== undefined
-            ? stats[armor3OrdinalIndexByName[filterValue]]
-            : realD2ArmorStatHashByName[filterValue];
-
-        return tunedStat === expectedStat;
+          ordinalIdx === undefined
+            ? constantExpected
+            : (getArmor3StatFocus(item)?.[ordinalIdx] ?? null);
+        return expectedStat !== null && tunedStat === expectedStat;
       };
     },
   },
