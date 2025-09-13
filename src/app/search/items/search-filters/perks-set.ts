@@ -1,4 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
+import { normalizeEnhancedness } from 'app/utils/perk-utils';
 import { getSocketsByType } from 'app/utils/socket-utils';
 
 type PerkType = Parameters<typeof getSocketsByType>[1];
@@ -49,6 +50,6 @@ export class PerksSet {
 
 function makePerksSet(item: DimItem, perkType?: PerkType) {
   return getSocketsByType(item, perkType).map(
-    (s) => new Set(s.plugOptions.map((p) => p.plugDef.hash)),
+    (s) => new Set(s.plugOptions.map((p) => normalizeEnhancedness(p.plugDef.hash))),
   );
 }
