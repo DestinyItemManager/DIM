@@ -37,6 +37,7 @@
     "TrashlistedRolls_one": "Roll Lista degli Scarti",
     "TrashlistedRolls_other": "{{count, number}} Roll Lista degli Scarti",
     "Unknown": "Oggetto Sconosciuto",
+    "UnknownPerkHash": "L'hash peculiarità {{hash}} non compare su questo oggetto, perciò questo roll Lista Desideri non è valido. Contatta l'autore della Lista Desideri per correggerlo. Nota che le Liste Desideri dovrebbero sempre specificare le versioni non migliorate delle peculiarità.",
     "WishlistedRolls_one": "Roll Lista dei Desideri",
     "WishlistedRolls_other": "{{count, number}} Roll Lista dei Desideri",
     "YourItems": "I tuoi oggetti"
@@ -241,6 +242,7 @@
     "DupeSetBonus": "Raggruppa le armature con lo stesso bonus set.",
     "DupeStats": "Mostra le armature con statistiche di base identiche e modifiche di regolazione statistiche corrispondenti come Artificio o di calibrazione.",
     "DupeTertiary": "Raggruppa le armature con la stessa statistica terziaria.",
+    "DupeTraits": "Armi le quali caratteristiche sono duplicate o un sottoinsieme di un'altra arma dello stesso tipo.",
     "DupeTunedStat": "Raggruppa le armature con la stessa statistica calibrata.",
     "DupeUntunedStats": "Raggruppa le armature con statistiche di base identiche, ignorando le modifiche di aggiustamento statistiche.",
     "DupeZeroStats": "Raggruppa le armature con le stesse 3 statistiche di base non-zero.",
@@ -639,8 +641,12 @@
       "Name": "Modifiche obsolete"
     },
     "InvalidSearchQuery": {
-      "Description": "Questa dotazione è stata creata con una query di ricerca nell'Ottimizzatore di Dotazioni che non è più valida o non include l'armatura in questa dotazione.",
+      "Description": "Questa dotazione è stata creata con una query di ricerca non valida nell'Ottimizzatore di Dotazioni.",
       "Name": "Query di ricerca non valida"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "Questa dotazione è stata creata con una query di ricerca nell'Ottimizzatore di Dotazioni, e quella query di ricerca esclude almeno uno degli oggetti nella dotazione.",
+      "Name": "Ricerca esclude oggetti"
     },
     "MissingItems": {
       "Description": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
@@ -1074,10 +1080,10 @@
       "Event": "Evento",
       "Featured": "Nuovi equipaggiamenti",
       "Foundry": "Fonderia",
+      "Frame": "Telaio",
       "Harmonizable": "Armonizzabile",
       "Holofoil": "Ololamina",
       "Icon": "Icona",
-      "Intrinsics": "Intrinseche",
       "ItemTier": "Grado",
       "KillTracker": "Uccisioni",
       "Level": "Livello",
@@ -1092,11 +1098,10 @@
       "New": "Nuovo",
       "Notes": "Note",
       "OriginTraits": "Peculiarità originale",
-      "OtherPerks": "Altre peculiarità",
+      "OtherPerks": "Componenti arma",
       "PercentComplete": "% Completato",
       "Perks": "Perks",
       "PerksGrid": "Griglia peculiarità",
-      "PerksMods": "Peculiarità & modifiche",
       "Power": "Potere",
       "Quality": "Qualità %",
       "Recency": "In possesso da",
@@ -1107,8 +1112,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Statistiche",
       "Tag": "Etichetta",
+      "TertiaryStat": "3a statistica",
       "Tier": "Rarità",
       "Traits": "Caratteristiche Arma",
+      "TuningStat": "Calibratore",
       "WishList": "Lista dei desideri",
       "WishListNotes": "Note Lista Desideri",
       "Year": "Anno"

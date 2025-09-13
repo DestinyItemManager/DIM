@@ -37,6 +37,7 @@
     "TrashlistedRolls_one": "Arme indésirable",
     "TrashlistedRolls_other": "{{count, number}} Armes indésirables",
     "Unknown": "Object inconnu",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_one": "Arme souhaitée",
     "WishlistedRolls_other": "{{count, number}} Armes souhaitées",
     "YourItems": "Vos objets"
@@ -241,6 +242,7 @@
     "DupeSetBonus": "Groups armor with the same set bonus.",
     "DupeStats": "Shows armor with identical base stats, and matching stat adjustment mods like Artifice or Tuners.",
     "DupeTertiary": "Groups armor with the same tertiary stat.",
+    "DupeTraits": "Weapons whose traits are either a duplicate of, or a subset of, another weapon of the same type.",
     "DupeTunedStat": "Groups armor with the same Tuned stat.",
     "DupeUntunedStats": "Groups armor with identical base stats, ignoring stat adjustment mods.",
     "DupeZeroStats": "Groups armor with the same 3 non-zero base stats.",
@@ -639,8 +641,12 @@
       "Name": "Mods obsolètes"
     },
     "InvalidSearchQuery": {
-      "Description": "Cet équipement a été créé avec une recherche, dans l'optimiseur d'équipement, qui n'est plus valide, ou qui ne contient pas les armures de cet équipement.",
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is not valid.",
       "Name": "Recherche invalide"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer, and that search query excludes at least one of the items in the loadout.",
+      "Name": "Search Excludes Items"
     },
     "MissingItems": {
       "Description": "Certains objets de cet équipement ne sont plus dans votre inventaire.",
@@ -1074,10 +1080,10 @@
       "Event": "Evènement",
       "Featured": "Nouveaux équipements",
       "Foundry": "Fabricant",
+      "Frame": "Frame",
       "Harmonizable": "Harmonisable",
       "Holofoil": "Holofoil",
       "Icon": "Icône",
-      "Intrinsics": "Intrinsèque",
       "ItemTier": "Palier",
       "KillTracker": "Frags",
       "Level": "Niveau",
@@ -1092,11 +1098,10 @@
       "New": "Nouveau",
       "Notes": "Notes",
       "OriginTraits": "Attribut d'origine",
-      "OtherPerks": "Autres attributs",
+      "OtherPerks": "Weapon Components",
       "PercentComplete": "% Complet",
       "Perks": "Compétences",
       "PerksGrid": "Grille d'attributs",
-      "PerksMods": "Attributs & Mods",
       "Power": "Puissance",
       "Quality": "Qualité %",
       "Recency": "Récence",
@@ -1107,8 +1112,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Statistiques",
       "Tag": "Étiqueter",
+      "TertiaryStat": "3rd Stat",
       "Tier": "Rareté",
       "Traits": "Caractéristiques de l'Arme",
+      "TuningStat": "Tuner",
       "WishList": "Liste de souhaits",
       "WishListNotes": "Notes de la liste de souhaits",
       "Year": "Année"

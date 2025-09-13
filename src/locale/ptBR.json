@@ -37,6 +37,7 @@
     "TrashlistedRolls_one": "Valores indesejáveis",
     "TrashlistedRolls_other": "{{count, number}} valores indesejáveis",
     "Unknown": "Item desconhecido",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_one": "Valores desejáveis",
     "WishlistedRolls_other": "{{count, number}} valores desejáveis",
     "YourItems": "Seus itens"
@@ -241,6 +242,7 @@
     "DupeSetBonus": "Groups armor with the same set bonus.",
     "DupeStats": "Shows armor with identical base stats, and matching stat adjustment mods like Artifice or Tuners.",
     "DupeTertiary": "Groups armor with the same tertiary stat.",
+    "DupeTraits": "Weapons whose traits are either a duplicate of, or a subset of, another weapon of the same type.",
     "DupeTunedStat": "Groups armor with the same Tuned stat.",
     "DupeUntunedStats": "Groups armor with identical base stats, ignoring stat adjustment mods.",
     "DupeZeroStats": "Groups armor with the same 3 non-zero base stats.",
@@ -639,8 +641,12 @@
       "Name": "Mods Descontinuados"
     },
     "InvalidSearchQuery": {
-      "Description": "Este set foi criado com uma pesquisa no Otimizador de Set que não é mais válida, ou que não inclui as armaduras deste set.",
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is not valid.",
       "Name": "Pesquisa Inválida"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer, and that search query excludes at least one of the items in the loadout.",
+      "Name": "Search Excludes Items"
     },
     "MissingItems": {
       "Description": "Alguns itens deste set não estão mais em seu inventário.",
@@ -1074,10 +1080,10 @@
       "Event": "Evento",
       "Featured": "New Gear",
       "Foundry": "Fundição",
+      "Frame": "Frame",
       "Harmonizable": "Harmonizável",
       "Holofoil": "Holofoil",
       "Icon": "Ícone",
-      "Intrinsics": "Intrínseco",
       "ItemTier": "Tier",
       "KillTracker": "Kills",
       "Level": "Nível",
@@ -1092,11 +1098,10 @@
       "New": "Novo",
       "Notes": "Anotações",
       "OriginTraits": "Característica de Origem",
-      "OtherPerks": "Outros Perks",
+      "OtherPerks": "Weapon Components",
       "PercentComplete": "% Completo",
       "Perks": "Perks",
       "PerksGrid": "Perks Grid",
-      "PerksMods": "Perks & Mods",
       "Power": "Poder",
       "Quality": "Qualidade %",
       "Recency": "Recência",
@@ -1107,8 +1112,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Atributos",
       "Tag": "Etiqueta",
+      "TertiaryStat": "3rd Stat",
       "Tier": "Rarity",
       "Traits": "Atributos de Arma",
+      "TuningStat": "Tuner",
       "WishList": "Lista de Desejos",
       "WishListNotes": "Anotações da lista de desejos",
       "Year": "Ano"

@@ -36,6 +36,7 @@
     "Season": "{{year}} 年目、シーズン {{season}}",
     "TrashlistedRolls_other": "{{count, number}} 個のウイッシュリストのロール",
     "Unknown": "不明のアイテム",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_other": "{{count, number}} 個のウィッシュリストと一致しました",
     "YourItems": "所持品"
   },
@@ -226,6 +227,7 @@
     "DupeSetBonus": "Groups armor with the same set bonus.",
     "DupeStats": "Shows armor with identical base stats, and matching stat adjustment mods like Artifice or Tuners.",
     "DupeTertiary": "Groups armor with the same tertiary stat.",
+    "DupeTraits": "Weapons whose traits are either a duplicate of, or a subset of, another weapon of the same type.",
     "DupeTunedStat": "Groups armor with the same Tuned stat.",
     "DupeUntunedStats": "Groups armor with identical base stats, ignoring stat adjustment mods.",
     "DupeZeroStats": "Groups armor with the same 3 non-zero base stats.",
@@ -622,8 +624,12 @@
       "Name": "廃止済みMOD"
     },
     "InvalidSearchQuery": {
-      "Description": "このロードアウトは、アーマーを含まないもしくは無効な検索フィルターを使用して作成されました。",
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is not valid.",
       "Name": "無効な検索フィルター"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer, and that search query excludes at least one of the items in the loadout.",
+      "Name": "Search Excludes Items"
     },
     "MissingItems": {
       "Description": "このロードアウトに含まれる装備の一部は所持品にありません。",
@@ -1045,10 +1051,10 @@
       "Event": "イベント",
       "Featured": "新しい装備",
       "Foundry": "武器メーカー",
+      "Frame": "Frame",
       "Harmonizable": "共振武器",
       "Holofoil": "ホロフォイル",
       "Icon": "アイコン",
-      "Intrinsics": "内在特性",
       "ItemTier": "レベル",
       "KillTracker": "倒した数",
       "Level": "レベル",
@@ -1063,11 +1069,10 @@
       "New": "New",
       "Notes": "メモ",
       "OriginTraits": "起源特性",
-      "OtherPerks": "他パーク",
+      "OtherPerks": "Weapon Components",
       "PercentComplete": "% 達成",
       "Perks": "パーク",
       "PerksGrid": "パーク一覧",
-      "PerksMods": "パークMod",
       "Power": "パワー",
       "Quality": "クオリティ %",
       "Recency": "直近",
@@ -1078,8 +1083,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "補正後ステータス値",
       "Tag": "タグ",
+      "TertiaryStat": "3rd Stat",
       "Tier": "レア度",
       "Traits": "武器パーク",
+      "TuningStat": "Tuner",
       "WishList": "ウィッシュリスト",
       "WishListNotes": "ウィッシュリストのメモ",
       "Year": "年"
@@ -1230,7 +1237,7 @@
     "SortCustom": "カスタムソート",
     "SortName": "名前",
     "Theme": "テーマ",
-    "Troubleshooting": "Troubleshooting",
+    "Troubleshooting": "トラブルシューティング",
     "VaultArmorGroupingStyle": "アーマーをクラスごとに水平線で区切る",
     "VaultGroupingNone": "無し",
     "VaultWeaponGroupingStyle": "武器を種別ごとに水平線で区切る",

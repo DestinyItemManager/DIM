@@ -36,6 +36,7 @@
     "Season": "年 {{year}}，第 {{season}} 赛季",
     "TrashlistedRolls_other": "{{count, number}} 个垃圾列表特性组合",
     "Unknown": "未知物品",
+    "UnknownPerkHash": "特性 hash {{hash}} 未出现在此物品上，故该愿望单组合无效。请联系愿望单作者更正。注意：愿望单仅会显示未强化版的特性。",
     "WishlistedRolls_other": "{{count, number}} 个愿望清单特性组合",
     "YourItems": "你的物品"
   },
@@ -226,6 +227,7 @@
     "DupeSetBonus": "聚合搜索具有同类套装加成的护甲。",
     "DupeStats": "显示具有相同基础属性和属性调整器的护甲，属性调整器包含诡计模组和调整模组。",
     "DupeTertiary": "聚合搜索具有同类最高属性的护甲。",
+    "DupeTraits": "显示特性重复或已被其他同类武器所包含的武器。",
     "DupeTunedStat": "聚合搜索具有同类调整属性的护甲。",
     "DupeUntunedStats": "聚合搜索具有同类基础属性的护甲，不含属性调整模组。",
     "DupeZeroStats": "聚合搜索具有相同 3 个非零属性的护甲。",
@@ -622,8 +624,12 @@
       "Name": "已弃用的模组"
     },
     "InvalidSearchQuery": {
-      "Description": "该配装由配装优化器的搜索条件生成，但该搜索条件已不再有效，或不包括该配装中的护甲。",
+      "Description": "此配装通过配装优化器中的无效搜索查询创建。",
       "Name": "搜索条件无效"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "此配装通过配装优化器中的搜索查询创建，且搜索查询至少排除了一个在配装中的物品。",
+      "Name": "搜索要排除的物品"
     },
     "MissingItems": {
       "Description": "该配装中部分物品已不在你的背包中。",
@@ -1045,10 +1051,10 @@
       "Event": "活动",
       "Featured": "新装备",
       "Foundry": "铸造厂",
+      "Frame": "框架",
       "Harmonizable": "可协调",
       "Holofoil": "全息箔",
       "Icon": "图标",
-      "Intrinsics": "框架",
       "ItemTier": "阶级",
       "KillTracker": "击杀数",
       "Level": "等级",
@@ -1063,11 +1069,10 @@
       "New": "新",
       "Notes": "备注",
       "OriginTraits": "原始特性",
-      "OtherPerks": "其他特性",
+      "OtherPerks": "武器组件",
       "PercentComplete": "% 已完成",
       "Perks": "特性",
       "PerksGrid": "特性表格",
-      "PerksMods": "特性和模组",
       "Power": "光等",
       "Quality": "质量 %",
       "Recency": "新旧",
@@ -1078,8 +1083,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "属性",
       "Tag": "标签",
+      "TertiaryStat": "第三属性",
       "Tier": "稀有度",
       "Traits": "武器特性",
+      "TuningStat": "调整",
       "WishList": "愿望清单",
       "WishListNotes": "愿望清单备注",
       "Year": "年"

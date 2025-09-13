@@ -39,6 +39,7 @@
     "TrashlistedRolls_one": "Мусорный ролл",
     "TrashlistedRolls_other": "{{count, number}} мусорных роллов",
     "Unknown": "Неизвестный предмет",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_few": "{{count, number}} в списке Желанных Роллов",
     "WishlistedRolls_many": "{{count, number}} в списке Желанных Роллов",
     "WishlistedRolls_one": "Желанный Ролл",
@@ -271,6 +272,7 @@
     "DupeSetBonus": "Groups armor with the same set bonus.",
     "DupeStats": "Shows armor with identical base stats, and matching stat adjustment mods like Artifice or Tuners.",
     "DupeTertiary": "Groups armor with the same tertiary stat.",
+    "DupeTraits": "Weapons whose traits are either a duplicate of, or a subset of, another weapon of the same type.",
     "DupeTunedStat": "Groups armor with the same Tuned stat.",
     "DupeUntunedStats": "Groups armor with identical base stats, ignoring stat adjustment mods.",
     "DupeZeroStats": "Groups armor with the same 3 non-zero base stats.",
@@ -673,8 +675,12 @@
       "Name": "Устаревшие Модификаторы"
     },
     "InvalidSearchQuery": {
-      "Description": "Этот комплект был создан с помощью поискового запроса в Оптимизаторе Наборов, который более не является верным, или не включает в данный комплект броню.",
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is not valid.",
       "Name": "Неверный Поисковый Запрос"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer, and that search query excludes at least one of the items in the loadout.",
+      "Name": "Search Excludes Items"
     },
     "MissingItems": {
       "Description": "Некоторые предметы из этого комплекта больше не находятся в вашем инвентаре.",
@@ -1132,10 +1138,10 @@
       "Event": "Мероприятие",
       "Featured": "New Gear",
       "Foundry": "Производитель",
+      "Frame": "Frame",
       "Harmonizable": "Гармонизируемое",
       "Holofoil": "Holofoil",
       "Icon": "Значок",
-      "Intrinsics": "Изначальные свойства",
       "ItemTier": "Tier",
       "KillTracker": "Kills",
       "Level": "Уровень",
@@ -1150,11 +1156,10 @@
       "New": "Новый",
       "Notes": "Заметки",
       "OriginTraits": "Исходная Особенность",
-      "OtherPerks": "Другие Перки",
+      "OtherPerks": "Weapon Components",
       "PercentComplete": "% Выполнения",
       "Perks": "Бонусы",
       "PerksGrid": "Perks Grid",
-      "PerksMods": "Перки и Моды",
       "Power": "Сила",
       "Quality": "Качество %",
       "Recency": "Новизна",
@@ -1165,8 +1170,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Характеристики",
       "Tag": "Тэг",
+      "TertiaryStat": "3rd Stat",
       "Tier": "Rarity",
       "Traits": "Бонусы оружия",
+      "TuningStat": "Tuner",
       "WishList": "Wish List",
       "WishListNotes": "Заметки к Списку Желаний",
       "Year": "Год"

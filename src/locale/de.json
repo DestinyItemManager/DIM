@@ -37,6 +37,7 @@
     "TrashlistedRolls_one": "Mülllisten-Roll",
     "TrashlistedRolls_other": "{{count, number}} Mülllisten-Rolls",
     "Unknown": "Unbekannter Gegenstand",
+    "UnknownPerkHash": "Der Perk Hash {{hash}} erscheint nicht auf diesem Element, daher ist dieser Wunschlisten-Roll ungültig. Bitte kontaktiere den Autor der Wunschliste, um dies zu korrigieren. Bitte beachte, dass Wunschlisten immer die nicht verbesserte Version von Perks angeben sollten.",
     "WishlistedRolls_one": "Wunschlisten-Roll",
     "WishlistedRolls_other": "{{count, number}} Wunschlisten-Rolls",
     "YourItems": "Deine Gegenstände"
@@ -241,6 +242,7 @@
     "DupeSetBonus": "Gruppiert Rüstung mit dem gleichen Stats-Archetyp.",
     "DupeStats": "Zeigt Rüstungen mit identischen Basis-Stats, einschließlich Stat-Verstellern wie Kunstvoll und Tuning-Mods.",
     "DupeTertiary": "Gruppiert Rüstungen mit dem gleichen tertiären Stat.",
+    "DupeTraits": "Waffen, deren Eigenschaften entweder ein Duplikat oder eine Teilmenge einer Waffe desselben Typs sind.",
     "DupeTunedStat": "Gruppiert Rüstung mit dem gleichen Tuning-Stat.",
     "DupeUntunedStats": "Gruppiert Rüstungen mit identischen Basis-Stats, ignoriert Tuning-Mods.",
     "DupeZeroStats": "Gruppiert Rüstung mit den gleichen 3 Nicht-Null-Basis-Stats.",
@@ -408,7 +410,7 @@
     "LaunchDIMAlone": "Separates Fenster",
     "MaterialCounts": "Materialanzahl",
     "Menu": "Menü",
-    "ProfileAge": "Die Destiny-Server haben ihre Daten zuletzt vor {{age}} aktualisiert.\nWenn du DIM aktualisierst, könntest du neuere Daten erhalten, aber Bungie.net könnte auch veraltete Informationen wiederholen.",
+    "ProfileAge": "Die Destiny-Server haben ihre Daten zuletzt vor {{age}} aktualisiert.\nWenn du DIM aktualisierst, könntest du neuere Daten erhalten, aber Bungie.net könnte auch veraltete Informationen zurückgeben.",
     "Refresh": "Aktualisiere Destiny Daten [R]",
     "ReloadApp": "App neu laden",
     "ReportBug": "Fehler melden",
@@ -639,8 +641,12 @@
       "Name": "Veraltete Mods"
     },
     "InvalidSearchQuery": {
-      "Description": "Dieses Loadout wurde mit einer Suchanfrage im Loadout-Optimierer erzeugt, die nicht mehr gültig ist oder die Rüstung in diesem Loadout nicht enthält.",
+      "Description": "Dieses Loadout wurde mit einer ungültigen Suchanfrage im Loadout-Optimierer erstellt.",
       "Name": "Ungültige Suchanfrage"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "Dieses Loadout wurde mit einer Suchanfrage im Loadout-Optimierer erstellt und diese Suchanfrage schließt mindestens eines der Gegenstände im Loadout aus.",
+      "Name": "Suche schließt Gegenstände aus"
     },
     "MissingItems": {
       "Description": "Einige der Gegenstände in diesem Loadout befinden sich nicht mehr in deinem Inventar.",
@@ -1074,10 +1080,10 @@
       "Event": "Event",
       "Featured": "Neue Ausrüstung",
       "Foundry": "Schmiede",
+      "Frame": "Rahmen",
       "Harmonizable": "Harmonisierbar",
       "Holofoil": "Holofoil",
       "Icon": "Icon",
-      "Intrinsics": "Intrinsisch",
       "ItemTier": "Tier",
       "KillTracker": "Eleminierungen",
       "Level": "Level",
@@ -1092,11 +1098,10 @@
       "New": "Neu",
       "Notes": "Notizen",
       "OriginTraits": "Ursprungsmerkmal",
-      "OtherPerks": "Andere Perks",
+      "OtherPerks": "Waffenkomponenten",
       "PercentComplete": "% Abgeschlossen",
       "Perks": "Perks",
       "PerksGrid": "Perks Raster",
-      "PerksMods": "Perks & Mods",
       "Power": "Power",
       "Quality": "Qualität %",
       "Recency": "Neuheit",
@@ -1107,8 +1112,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Stats",
       "Tag": "Markierung",
+      "TertiaryStat": "3. Stat",
       "Tier": "Seltenheit",
       "Traits": "Waffeneigenschaften",
+      "TuningStat": "Tuner",
       "WishList": "Wunschliste",
       "WishListNotes": "Wunschlisten-Notizen",
       "Year": "Jahr"
@@ -1147,7 +1154,7 @@
     "NoEventChallenges": "Du hast alle Event-Herausforderungen abgeschlossen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge so viele wie du möchtest in DIM.",
     "PaleHeartPathfinder": "Bleiches Herz Pfadfinder",
-    "PercentMax": "{{pct}}% bis Maximum",
+    "PercentMax": "{{pct}}% des Maximums",
     "PercentPrestige": "{{pct}}% des max. Rangs",
     "PointsUsed_one": "1 Punkt verwendet",
     "PointsUsed_other": "{{count}} Punkte verwendet",

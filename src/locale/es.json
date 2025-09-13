@@ -37,6 +37,7 @@
     "TrashlistedRolls_one": "Tirada en Lista de Basura",
     "TrashlistedRolls_other": "{{count, number}} Tiradas en Lista de Basura",
     "Unknown": "Objeto Desconocido",
+    "UnknownPerkHash": "El hash de la ventaja {{hash}} no aparece en este objeto, así que esta tirada de la lista de deseos no es válida. Por favor contacta con el autor de la lista de deseos para corregir esto. Ten en cuenta que las listas de deseos siempre debería especificar la versiones no mejoradas de las ventajas.",
     "WishlistedRolls_one": "Tirada en Lista de Deseos",
     "WishlistedRolls_other": "{{count, number}} Tiradas en Lista de Deseos",
     "YourItems": "Tus Objetos"
@@ -241,6 +242,7 @@
     "DupeSetBonus": "Agrupa armadura con la misma bonificación de conjunto.",
     "DupeStats": "Muestra armadura con estadísticas base idénticas, y modificadores de estadísticas de ajuste coincidentes como Artificiosa o de Ajuste.",
     "DupeTertiary": "Agrupa armadura con la misma estadística terciaria.",
+    "DupeTraits": "Armas cuyos rasgos ya sean un duplicado de (o un subconjunto de) otro arma del mismo tipo.",
     "DupeTunedStat": "Agrupa armadura con la misma estadística Ajusta.",
     "DupeUntunedStats": "Agrupa armadura con las mismas estadísticas idénticas, ignorando modificadores de ajuste de estadísticas.",
     "DupeZeroStats": "Agrupa armadura con las 3 mismas estadísticas base que no sean cero.",
@@ -639,8 +641,12 @@
       "Name": "Modificadores Obsoletos"
     },
     "InvalidSearchQuery": {
-      "Description": "Esta equipación fue creada con una consulta de búsqueda en el Optimizador de Equipaciones que ya no es válida, o no incluye la armadura en esta equipación.",
+      "Description": "Esta equipación fue creada con una consulta de búsqueda en el Optimizador de Equipaciones que no es válida.",
       "Name": "Consulta de Búsqueda Inválida"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "Esta equipación fue creada con una consulta de búsqueda en el Optimizador de Equipaciones, y esa consulta de búsqueda excluye al menos uno de los objetos en la equipación.",
+      "Name": "La Búsqueda Excluye Objetos"
     },
     "MissingItems": {
       "Description": "Algunos de los objetos en esta equipación ya no están en tu inventario.",
@@ -1074,10 +1080,10 @@
       "Event": "Evento",
       "Featured": "Equipamiento Nuevo",
       "Foundry": "Fundición",
+      "Frame": "Armazón",
       "Harmonizable": "Armonizable",
       "Holofoil": "Holometalizadas",
       "Icon": "Icono",
-      "Intrinsics": "Intrínseco",
       "ItemTier": "Nivel",
       "KillTracker": "Bajas",
       "Level": "Nivel",
@@ -1092,11 +1098,10 @@
       "New": "Nuevo",
       "Notes": "Notas",
       "OriginTraits": "Rasgo Original",
-      "OtherPerks": "Otras Ventajas",
+      "OtherPerks": "Componentes de Arma",
       "PercentComplete": "% Completo",
       "Perks": "Ventajas",
       "PerksGrid": "Cuadrícula de Ventajas",
-      "PerksMods": "Ventajas y Modificadores",
       "Power": "Poder",
       "Quality": "% Calidad",
       "Recency": "Novedad",
@@ -1107,8 +1112,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Estadísticas",
       "Tag": "Etiqueta",
+      "TertiaryStat": "3ª Estadística",
       "Tier": "Rareza",
       "Traits": "Rasgos de Armas",
+      "TuningStat": "Afinador",
       "WishList": "Lista de Deseos",
       "WishListNotes": "Notas de la Lista de Deseos",
       "Year": "Año"
