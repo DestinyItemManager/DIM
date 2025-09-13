@@ -122,7 +122,7 @@ const dupeTypeLookupRaw: Record<
   // Finds items with all the same perks or which contain a subset that comprises another item's perks.
   perks: {
     keyGenerator: (item) =>
-      `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.typeName}`,
+      `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.ammoType}|${item.typeName}`,
     confirmItemsInGroup: (items) => {
       items = items.filter((i) =>
         i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible),
@@ -136,7 +136,7 @@ const dupeTypeLookupRaw: Record<
   traits: {
     keyGenerator: (item) =>
       item.bucket.inWeapons
-        ? `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.typeName}`
+        ? `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.ammoType}|${item.typeName}`
         : undefined,
     confirmItemsInGroup: (items) => {
       items = items.filter((i) =>
