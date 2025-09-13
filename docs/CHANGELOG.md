@@ -1,6 +1,7 @@
 ## Next
 
 * Updated tuned stat icon.
+* `dupe:perks` and `dupe:traits` will ignore perks' enhancement status.
 
 ## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
 
