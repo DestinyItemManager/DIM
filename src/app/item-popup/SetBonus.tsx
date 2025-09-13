@@ -187,7 +187,6 @@ function ContributingArmor({
 }) {
   const defs = useD2Definitions()!;
   const setBonusStatus = useCurrentSetBonus(store.id);
-  const satisfying = setBonus.setItems;
 
   return (
     defs && (
@@ -196,7 +195,10 @@ function ContributingArmor({
           <BungieImage
             key={i.hash}
             src={i.icon}
-            className={clsx(styles.gearListIcon, satisfying.includes(i.hash) || styles.unsatisfied)}
+            className={clsx(
+              styles.gearListIcon,
+              setBonus.setItems.includes(i.hash) || styles.unsatisfied,
+            )}
           />
         ))}
       </div>
