@@ -1,14 +1,23 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
+import {
+  isPlugStatActive,
+  mapAndFilterInvestmentStats,
+} from 'app/inventory/store/stats-conditional';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy, isAssumedArtifice } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
+  MAX_STAT,
 } from 'app/loadout/known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { filterMap, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { getArmor3TuningSocket } from 'app/utils/socket-utils';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
+import { StatHashes } from 'data/d2/generated-enums';
+import { minBy } from 'es-toolkit';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
@@ -18,10 +27,10 @@ import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../proces
 import {
   ArmorEnergyRules,
   ArmorSet,
-  AutoModDefs,
-  ItemGroup,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
+  AutoModDefs,
+  DesiredStatRange,
   generalSocketReusablePlugSetHash,
   majorStatBoost,
   minorStatBoost,
@@ -52,11 +61,13 @@ export function mapDimItemToProcessItem({
   dimItem,
   armorEnergyRules,
   modsForSlot,
+  desiredStatRanges,
 }: {
   dimItem: DimItem;
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
-}): ProcessItem {
+  desiredStatRanges: DesiredStatRange[];
+}): ProcessItem[] {
   const { id, hash, name, isExotic, power, setBonus } = dimItem;
 
   const stats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
@@ -68,7 +79,7 @@ export function mapDimItemToProcessItem({
 
   const assumeArtifice = isAssumedArtifice(dimItem, armorEnergyRules);
 
-  return {
+  const processItem: ProcessItem = {
     id,
     hash,
     name,
@@ -80,16 +91,71 @@ export function mapDimItemToProcessItem({
     compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
     setBonus: setBonus?.hash,
   };
+
+  const tuningSocket = getArmor3TuningSocket(dimItem);
+
+  // Make a version of the item for each possible tuning mod that could be applied.
+  if (tuningSocket?.reusablePlugItems?.length) {
+    const processItems: ProcessItem[] = [];
+    const allPlugs = tuningSocket.plugSet?.plugs;
+    // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums
+    const defaultDumpStat =
+      desiredStatRanges.findLast((r) => r.maxStat === 0)?.statHash ??
+      minBy(Array.from(desiredStatRanges.entries()), ([i, r]) => r.maxStat * 1000 - i)?.[1]
+        .statHash;
+
+    for (const { plugItemHash, enabled } of tuningSocket.reusablePlugItems) {
+      if (!enabled || emptyPlugHashes.has(plugItemHash)) {
+        continue;
+      }
+      const plug = allPlugs?.find((p) => p.plugDef.hash === plugItemHash);
+      if (plug) {
+        const def = plug.plugDef;
+        if (isPluggableItem(def) && def.investmentStats?.length) {
+          const tunedStats = { ...stats };
+          let dumpStatHash: StatHashes | undefined = undefined;
+          for (const { statTypeHash, activationRule, value } of mapAndFilterInvestmentStats(def)) {
+            if (
+              armorStats.includes(statTypeHash) &&
+              isPlugStatActive(activationRule, { item: dimItem, statHash: statTypeHash })
+            ) {
+              tunedStats[statTypeHash] = Math.min(MAX_STAT, tunedStats[statTypeHash] + value);
+              if (value < 0) {
+                dumpStatHash = statTypeHash;
+              }
+            }
+          }
+          const desiredMax = dumpStatHash
+            ? desiredStatRanges.find((r) => r.statHash === dumpStatHash)!.maxStat
+            : 0;
+          // If we are dumping
+          if (
+            // This is balanced tuning
+            dumpStatHash === undefined ||
+            // This is dumping the stat we want to dump
+            (defaultDumpStat && dumpStatHash === defaultDumpStat) ||
+            // The maximum is low enough that we might actually want to dump this stat to benefit others
+            (desiredMax > 0 && desiredMax <= 175)
+          ) {
+            processItems.push({ ...processItem, includedTuningMod: def.hash, stats: tunedStats });
+          }
+        }
+      }
+    }
+    return processItems;
+  }
+
+  return [processItem];
 }
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: Map<string, ItemGroup>,
+  itemsById: Map<string, DimItem>,
 ): ArmorSet {
-  const armor: DimItem[][] = [];
+  const armor: DimItem[] = [];
 
   for (const itemId of processed.armor) {
-    armor.push(itemsById.get(itemId)!.items);
+    armor.push(itemsById.get(itemId)!);
   }
 
   return {
@@ -105,11 +171,9 @@ export function mapAutoMods(defs: AutoModDefs): AutoModData {
     hash: def.hash,
     cost: def.plug.energyCost?.energyCost ?? 0,
   });
-  const defToArtificeMod = (def: PluggableInventoryItemDefinition) => ({
-    hash: def.hash,
-  });
+  const defToHash = (def: PluggableInventoryItemDefinition) => def.hash;
   return {
-    artificeMods: mapValues(defs.artificeMods, defToArtificeMod),
+    artificeMods: mapValues(defs.artificeMods, defToHash),
     generalMods: mapValues(defs.generalMods, (modsForStat) => mapValues(modsForStat, defToAutoMod)),
   };
 }

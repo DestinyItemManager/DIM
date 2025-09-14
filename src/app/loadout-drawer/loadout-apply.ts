@@ -1241,7 +1241,9 @@ function applyLoadoutMods(
       }
     }
 
-    // given limited time, slow API, impatient teammates, we'll plug all mods into all armor pieces, *then* all fashion
+    // Given limited time, slow API, impatient teammates, we'll plug all mods
+    // into all armor pieces, *then* all fashion. We do each item in parallel
+    // though, subject to the rate limit for the API.
     for (const assignGroup of [modAssigns, fashionAssigns]) {
       await Promise.all(
         assignGroup.map(({ item, actions }) =>

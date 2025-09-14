@@ -7,6 +7,7 @@ import {
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
@@ -121,7 +122,7 @@ export const characterVendorItemsSelector = createSelector(
       vendorGroups
         .flatMap((vg) => vg.vendors)
         .concat(Object.values(subVendors))
-        .flatMap((vs) => vs.items.map((vi) => vi.item))
+        .flatMap((vs) => vs.items.filter((vi) => vi.canBeSold).map((vi) => vi.item))
         .filter((i) => !i?.itemCategoryHashes.includes(ItemCategoryHashes.Dummies)),
     );
   },
@@ -150,14 +151,15 @@ export const vendorItemFilterSelector = currySelector(
     querySelector,
     searchFilterSelector,
     settingSelector<'vendorsHideSilverItems'>('vendorsHideSilverItems'),
-    (ownedItemHashes, showUnacquiredOnly, subVendors, query, itemFilter, hideSilver) => {
+    d2ManifestSelector,
+    (ownedItemHashes, showUnacquiredOnly, subVendors, query, itemFilter, hideSilver, defs) => {
       const filters: VendorFilterFunction[] = [];
       const silverFilter = filterToNoSilver();
       if (hideSilver) {
         filters.push(silverFilter);
       }
       if (showUnacquiredOnly) {
-        filters.push(filterToUnacquired(ownedItemHashes));
+        filters.push(filterToUnacquired(ownedItemHashes, defs));
       }
       if (query.length) {
         filters.push(filterToSearch(query, itemFilter));

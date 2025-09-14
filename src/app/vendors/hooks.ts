@@ -18,7 +18,7 @@ export function useLoadVendors(
   const dispatch = useThunkDispatch();
   useEffect(() => {
     if (storeId && active) {
-      dispatch(loadAllVendors(account, storeId));
+      loadingTracker.addPromise(dispatch(loadAllVendors(account, storeId)));
     }
   }, [account, storeId, dispatch, active]);
 

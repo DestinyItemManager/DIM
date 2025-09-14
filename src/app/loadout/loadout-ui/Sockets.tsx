@@ -119,7 +119,7 @@ function Sockets({
           plug={plugDef}
           onClick={onSocketClick ? () => onSocketClick(plugDef, whitelist) : undefined}
           automaticallyPicked={automaticallyPicked}
-          forClassType={item.classType}
+          item={item}
         />
       ))}
       {item.vendor && <VendorItemPlug item={item} />}

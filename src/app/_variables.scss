@@ -138,7 +138,13 @@ $tempContainerZindex: 1000;
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }
 
-@mixin interactive($hover: false, $focus: false, $focusWithin: false, $active: false) {
+@mixin interactive(
+  $hover: false,
+  $focus: false,
+  $focusWithin: false,
+  $active: false,
+  $selectedClass: ''
+) {
   // Declares hover rules only if a device can hover over elements. This avoids issues on mobile
   // browsers where tapping an element triggers and persists its hover state.
   @if $hover == true {
@@ -163,6 +169,12 @@ $tempContainerZindex: 1000;
 
   @if $active == true {
     &:active {
+      @content;
+    }
+  }
+
+  @if $selectedClass != '' {
+    &#{$selectedClass} {
       @content;
     }
   }

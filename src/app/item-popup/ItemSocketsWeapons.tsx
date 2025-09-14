@@ -3,6 +3,7 @@ import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
@@ -34,7 +35,10 @@ export default function ItemSocketsWeapons({
 }) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
-  const [listPerksSetting, setListPerks] = useSetting('perkList');
+  const isPhonePortrait = useIsPhonePortrait();
+  const [listPerksSetting, setListPerks] = useSetting(
+    isPhonePortrait ? 'perkList' : 'perkListDesktop',
+  );
   const listPerks = forceGrid === undefined ? listPerksSetting : !forceGrid;
 
   if (!item.sockets || !defs) {

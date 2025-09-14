@@ -3,7 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { ArmorStatHashes } from 'app/loadout-builder/types';
 import { invert } from 'app/utils/collections';
 import { HashLookup, StringLookup } from 'app/utils/util-types';
-import { TierType } from 'bungie-api-ts/destiny2';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 
 import {
   BreakerTypeHashes,
@@ -245,8 +245,9 @@ export const DEEPSIGHT_HARMONIZER = 2228452164;
 // For loadout mods obliterated from the defs, we instead return this def
 export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
 
-// used in displaying the component segments on item stats
-export const weaponParts = new Set<PlugCategoryHashes | undefined>([
+// Weapon components, like barrels, mags, etc.
+// Plugs that contribute to a weapon's stats, but aren't its base stats, traits, or mods.
+export const weaponComponentPCHs = new Set<PlugCategoryHashes | undefined>([
   PlugCategoryHashes.Bowstrings,
   PlugCategoryHashes.Batteries,
   PlugCategoryHashes.Blades,
@@ -333,6 +334,7 @@ export const enum VendorHashes {
   Failsafe = 1576276905,
   RivensWishesExotics = 2388521577,
   XurLegendaryItems = 3751514131, // Vendor "Strange Gear Offers"
+  VanguardArms = 153857624, // "Weekly: Vanguard Arms Rewards"
 }
 
 // See coreSettingsLoaded reducer action for details. And remove this if/when we no longer perform that hack.
@@ -442,3 +444,12 @@ export const tuningModToTunedStathash: Record<number, StatHashes> = {
   4164883102: StatHashes.Melee,
   4210715468: StatHashes.Melee,
 };
+
+export const destinyClasses = [DestinyClass.Hunter, DestinyClass.Titan, DestinyClass.Warlock];
+
+export const customStatClasses = [
+  DestinyClass.Hunter,
+  DestinyClass.Titan,
+  DestinyClass.Warlock,
+  DestinyClass.Unknown,
+];

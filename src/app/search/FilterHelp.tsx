@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
+import { FilterDescription, filterDescriptionText } from './filter-description';
 import {
   ItemFilterDefinition,
   ItemSearchConfig,
@@ -45,18 +46,19 @@ export default function FilterHelp({ searchType = SearchType.Item }: { searchTyp
   const searchLower = search.toLowerCase();
   const filters = search
     ? searchConfig.allFilters.filter((filter) => {
+        if (filter.deprecated) {
+          return false;
+        }
         const keywordsArr = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
         if (keywordsArr.some((k) => k.includes(searchLower))) {
           return true;
         }
 
-        const localDesc: string = Array.isArray(filter.description)
-          ? t(...filter.description)
-          : t(filter.description);
+        const localDesc = filterDescriptionText(filter.description);
 
-        return localDesc.toLowerCase().includes(searchLower);
+        return localDesc?.toLowerCase().includes(searchLower);
       })
-    : searchConfig.allFilters.filter((s) => !s.deprecated);
+    : searchConfig.allFilters.filter((f) => !f.deprecated);
 
   return (
     <StaticPage className={styles.filterView}>
@@ -113,10 +115,6 @@ function FilterExplanation({
     suggestions = suggestions.slice(0, 5);
   }
 
-  const localDesc: string = Array.isArray(filter.description)
-    ? t(...filter.description)
-    : t(filter.description);
-
   const applySuggestion = (e: React.MouseEvent<HTMLAnchorElement>, k: string) => {
     e.preventDefault();
     dispatch(toggleSearchQueryComponent(k));
@@ -144,7 +142,9 @@ function FilterExplanation({
           </div>
         ))}
       </td>
-      <td>{localDesc}</td>
+      <td>
+        <FilterDescription description={filter.description} />
+      </td>
     </tr>
   );
 }

@@ -251,6 +251,7 @@ export class LoadoutBackgroundAnalyzer {
           [LoadoutFinding.UsesSeasonalMods]: new Set(),
           [LoadoutFinding.DoesNotSatisfyStatConstraints]: new Set(),
           [LoadoutFinding.InvalidSearchQuery]: new Set(),
+          [LoadoutFinding.ItemsDoNotMatchSearchQuery]: new Set(),
         },
       };
 

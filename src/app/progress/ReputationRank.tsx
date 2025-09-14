@@ -113,9 +113,11 @@ function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
             transform="rotate(-90)"
             className={styles.crucibleRankProgress}
             strokeWidth="3"
-            strokeDasharray={`${
-              (circumference * progress.progressToNextLevel) / progress.nextLevelAt
-            } ${circumference}`}
+            strokeDasharray={
+              progress.progressToNextLevel >= progress.nextLevelAt
+                ? 'none'
+                : `${(circumference * progress.progressToNextLevel) / progress.nextLevelAt} ${circumference}`
+            }
             stroke={strokeColor}
           />
         )}
@@ -127,9 +129,11 @@ function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
             transform="rotate(-90)"
             className={styles.crucibleRankTotalProgress}
             strokeWidth="3"
-            strokeDasharray={`${
-              (circumference2 * progress.currentProgress) / rankTotal
-            } ${circumference2}`}
+            strokeDasharray={
+              progress.currentProgress >= rankTotal
+                ? 'none'
+                : `${(circumference2 * progress.currentProgress) / rankTotal} ${circumference2}`
+            }
           />
         )}
         <image xlinkHref={bungieNetPath(step.icon)} width="40" height="40" x="7" y="7" />

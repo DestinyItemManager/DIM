@@ -130,7 +130,7 @@ function useScheduledAutoRefresh() {
   useEffect(() => {
     startTimer();
     return () => clearTimer();
-  }, [startTimer]);
+  }, [startTimer, autoRefresh /* start/stop the timer if autorefresh changes */]);
 
   return startTimer;
 }

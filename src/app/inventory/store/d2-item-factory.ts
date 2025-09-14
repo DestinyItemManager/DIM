@@ -516,7 +516,7 @@ export function makeItem(
     classTypeNameLocalized: getClassTypeNameLocalized(defs)(classType),
     element,
     energy: itemInstanceData.energy ?? null,
-    lockable: normalBucket.hash !== BucketHashes.Finishers ? item.lockable : true,
+    lockable: item.lockable,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),

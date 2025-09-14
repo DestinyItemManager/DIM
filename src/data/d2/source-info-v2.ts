@@ -353,6 +353,7 @@ const D2Sources: {
   desertperpetual: {
     sourceHashes: [
       596084342, // Source: "The Desert Perpetual" Raid
+      2127551856, // Source: "The Desert Perpetual" Epic Raid
     ],
   },
   do: {
@@ -523,6 +524,7 @@ const D2Sources: {
       1666677522, // Source: Solstice
       1677921161, // Source: Festival of the Lost 2018.
       1919933822, // Source: Festival of the Lost 2020
+      1953779156, // Source: Events
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
       2045032171, // Source: Arms Week Event
@@ -763,22 +765,12 @@ const D2Sources: {
   ironbanner: {
     itemHashes: [
       231533811, // Iron Strength
-      487361141, // Gunnora's Axe
-      540880995, // Dark Decider
-      888872889, // Point of the Stag
-      1161561386, // The Guiding Sight
       1162929425, // The Golden Standard
       1448664466, // Iron Bone
       1448664467, // Iron Gold
       1661191199, // Grizzled Wolf
-      1764868900, // Riiswalker
-      1968711238, // Warlord's Spear
       1987234560, // Iron Ruby
-      1999697514, // The Wizened Rebuke
-      2189073092, // Lethal Abundance
       2448092902, // Rusted Iron
-      2488587246, // The Hero's Burden
-      4009352833, // Roar of the Bear
     ],
     sourceHashes: [
       561111210, // Source: Iron Banner Salvager's Salvo Armament
@@ -789,6 +781,11 @@ const D2Sources: {
       2520862847, // Source: Iron Banner Iron-Handed Diplomacy
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
+    ],
+  },
+  kepler: {
+    sourceHashes: [
+      4284811963, // Source: Exploring Kepler
     ],
   },
   kingsfall: {
@@ -1139,6 +1136,7 @@ const D2Sources: {
       1897187034, // Source: "Crota's End" Raid
       2065138144, // Source: "Vault of Glass" Raid
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
+      2127551856, // Source: "The Desert Perpetual" Epic Raid
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2455011338, // Source: Last Wish raid.
       2653618435, // Source: Leviathan raid.

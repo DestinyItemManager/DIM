@@ -128,12 +128,15 @@ export function filterItems({
   }
   const requiredModTagsArray = Array.from(requiredModTags).sort();
 
-  // If the user has locked an exotic, AND they have asked for set bonuses that
-  // require 4 items, we can filter down to just items that have that set bonus.
-  let setBonusHashes: number[] = [];
+  // Currently set bonuses take 2 or 4 pieces. Exotics are 1 item. Armor is 5 pieces total.
+  // 2 + 2 + 1 = 4 + 1 = 5
+  // If the user has locked an exotic, AND they have asked for set bonus(es) that require 4 items,
+  // either 4 of the same set, or 2 each of 2 sets, then  filter legendaries items to those sets.
+
+  /** If set, only use items with these set bonuses. */
+  let includeOnlySetBonusHashes: undefined | number[];
   if (setBonuses && sum(Object.values(setBonuses)) >= 4 && lockedExoticDef) {
-    // If the user has set bonuses, we can filter down to just items that have that set bonus.
-    setBonusHashes = Object.keys(setBonuses).map(Number);
+    includeOnlySetBonusHashes = Object.keys(setBonuses).map(Number);
   }
 
   for (const bucket of ArmorBucketHashes) {
@@ -187,9 +190,9 @@ export function filterItems({
     }
 
     // If every non-exotic requires set bonuses...
-    if (setBonusHashes.length && !lockedExoticApplicable) {
+    if (includeOnlySetBonusHashes && !lockedExoticApplicable) {
       firstPassFilteredItems = firstPassFilteredItems.filter(
-        (item) => item.setBonus && setBonusHashes.includes(item.setBonus.hash),
+        (item) => item.setBonus && includeOnlySetBonusHashes.includes(item.setBonus.hash),
       );
     }
 
@@ -250,6 +253,15 @@ export function filterItems({
             statHash: -3, // ←↑ Dummy/temp stat hashes. Just need to not match real armor stat hashes.
             value: compatibleModSeasons?.includes(tag) ? 1 : 0,
           })),
+          // Add a comparison stat for each required set bonus. An item that has that bonus scores 1, others score zero.
+          // Statlower will make sure any matching set bonus item won't lose to an item without it.
+          ...Object.keys(setBonuses || {}).map((h) => {
+            const setBonusHash = parseInt(h, 10);
+            return {
+              statHash: -10 - setBonusHash,
+              value: item.setBonus?.hash === setBonusHash ? 1 : 0,
+            };
+          }),
         ];
       };
 

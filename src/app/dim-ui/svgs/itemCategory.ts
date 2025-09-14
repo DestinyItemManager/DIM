@@ -1,48 +1,49 @@
 import { DimItem } from 'app/inventory/item-types';
 import { LookupTable } from 'app/utils/util-types';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import legs from 'destiny-icons/armor_types/boots.svg';
-import chest from 'destiny-icons/armor_types/chest.svg';
-import classItem from 'destiny-icons/armor_types/class.svg';
-import gauntlets from 'destiny-icons/armor_types/gloves.svg';
-import helmet from 'destiny-icons/armor_types/helmet.svg';
-import heavyAmmo from 'destiny-icons/general/ammo-heavy.svg';
-import hunter from 'destiny-icons/general/class_hunter.svg';
-import titan from 'destiny-icons/general/class_titan.svg';
-import warlock from 'destiny-icons/general/class_warlock.svg';
-import emblem from 'destiny-icons/general/emblem.svg';
-import ghost from 'destiny-icons/general/ghost.svg';
-import ship from 'destiny-icons/general/ship.svg';
-import sparrow from 'destiny-icons/general/sparrow.svg';
-import autoRifle from 'destiny-icons/weapons/auto_rifle.svg';
-import traceRifle from 'destiny-icons/weapons/beam_weapon.svg';
-import bow from 'destiny-icons/weapons/bow.svg';
-import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg';
-import glaive from 'destiny-icons/weapons/glaive.svg';
-import gLauncher_special from 'destiny-icons/weapons/grenade_launcher-field_forged.svg';
-import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg';
-import handCannon from 'destiny-icons/weapons/hand_cannon.svg';
-import machinegun from 'destiny-icons/weapons/machinegun.svg';
-import pulseRifle from 'destiny-icons/weapons/pulse_rifle.svg';
-import rLauncher from 'destiny-icons/weapons/rocket_launcher.svg';
-import scoutRifle from 'destiny-icons/weapons/scout_rifle.svg';
-import shotgun from 'destiny-icons/weapons/shotgun.svg';
-import sidearm from 'destiny-icons/weapons/sidearm.svg';
-import smg from 'destiny-icons/weapons/smg.svg';
-import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
-import sword from 'destiny-icons/weapons/sword_heavy.svg';
-import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
-import energyWeaponSlot from 'images/weapon-slot-energy.svg';
-import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
+import legs from 'destiny-icons/armor_types/boots.svg?react';
+import chest from 'destiny-icons/armor_types/chest.svg?react';
+import classItem from 'destiny-icons/armor_types/class.svg?react';
+import gauntlets from 'destiny-icons/armor_types/gloves.svg?react';
+import helmet from 'destiny-icons/armor_types/helmet.svg?react';
+import heavyAmmo from 'destiny-icons/general/ammo-heavy.svg?react';
+import hunter from 'destiny-icons/general/class_hunter.svg?react';
+import titan from 'destiny-icons/general/class_titan.svg?react';
+import warlock from 'destiny-icons/general/class_warlock.svg?react';
+import emblem from 'destiny-icons/general/emblem.svg?react';
+import ghost from 'destiny-icons/general/ghost.svg?react';
+import ship from 'destiny-icons/general/ship.svg?react';
+import sparrow from 'destiny-icons/general/sparrow.svg?react';
+import autoRifle from 'destiny-icons/weapons/auto_rifle.svg?react';
+import traceRifle from 'destiny-icons/weapons/beam_weapon.svg?react';
+import bow from 'destiny-icons/weapons/bow.svg?react';
+import fusionRifle from 'destiny-icons/weapons/fusion_rifle.svg?react';
+import glaive from 'destiny-icons/weapons/glaive.svg?react';
+import gLauncher_special from 'destiny-icons/weapons/grenade_launcher-field_forged.svg?react';
+import gLauncher from 'destiny-icons/weapons/grenade_launcher.svg?react';
+import handCannon from 'destiny-icons/weapons/hand_cannon.svg?react';
+import machinegun from 'destiny-icons/weapons/machinegun.svg?react';
+import pulseRifle from 'destiny-icons/weapons/pulse_rifle.svg?react';
+import rLauncher from 'destiny-icons/weapons/rocket_launcher.svg?react';
+import scoutRifle from 'destiny-icons/weapons/scout_rifle.svg?react';
+import shotgun from 'destiny-icons/weapons/shotgun.svg?react';
+import sidearm from 'destiny-icons/weapons/sidearm.svg?react';
+import smg from 'destiny-icons/weapons/smg.svg?react';
+import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg?react';
+import sword from 'destiny-icons/weapons/sword_heavy.svg?react';
+import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg?react';
+import energyWeaponSlot from 'images/weapon-slot-energy.svg?react';
+import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg?react';
+import React from 'react';
 
 export interface ItemCategoryIcon {
-  svg: string;
+  svg: React.FC<React.SVGProps<SVGSVGElement>>;
   colorized: boolean;
 }
-function monochrome(svg: string): ItemCategoryIcon {
+function monochrome(svg: React.FC<React.SVGProps<SVGSVGElement>>): ItemCategoryIcon {
   return { svg, colorized: false };
 }
-function colorized(svg: string): ItemCategoryIcon {
+function colorized(svg: React.FC<React.SVGProps<SVGSVGElement>>): ItemCategoryIcon {
   return { svg, colorized: true };
 }
 

@@ -46,7 +46,7 @@ export function doShowTriage(item: DimItem) {
   return (
     item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
-      (item.bucket.sort === 'Weapons' && // there's some reason not to use inWeapons
+      (item.bucket.inWeapons &&
         item.bucket.hash !== BucketHashes.SeasonalArtifact &&
         item.bucket.hash !== BucketHashes.Subclass))
   );

@@ -23,7 +23,7 @@ import styles from './Highlights.m.scss';
  * Some useful details about an item, meant to be shown in a summary tile on views like the Item Feed or Item Picker.
  */
 export default function Highlights({ item }: { item: DimItem }) {
-  if (item.bucket.sort === 'Weapons' && item.sockets) {
+  if (item.bucket.inWeapons && item.sockets) {
     // Don't ask me why Traits are called "Frames" but it does work.
     const perkSockets = item.sockets.allSockets.filter(
       (s) =>
@@ -52,14 +52,14 @@ export default function Highlights({ item }: { item: DimItem }) {
                   tooltip={() => <DimPlugTooltip item={item} plug={p} />}
                   className={styles.perk}
                 >
-                  <DefItemIcon itemDef={p.plugDef} borderless={true} />
-                  <span
+                  <div
                     className={clsx({
                       [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
                     })}
                   >
-                    {p.plugDef.displayProperties.name}
-                  </span>
+                    <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                  </div>
+                  {p.plugDef.displayProperties.name}
                 </PressTip>
               ))}
             </div>
@@ -67,7 +67,7 @@ export default function Highlights({ item }: { item: DimItem }) {
         </div>
       </>
     );
-  } else if (item.bucket.sort === 'Armor') {
+  } else if (item.bucket.inArmor) {
     const renderStat = (stat: DimStat) => (
       <div key={stat.statHash} className="stat">
         {stat.displayProperties.hasIcon ? (

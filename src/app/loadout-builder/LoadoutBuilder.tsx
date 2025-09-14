@@ -23,7 +23,6 @@ import {
   LoadoutEditSubclassSection,
 } from 'app/loadout/loadout-edit/LoadoutEdit';
 import { Loadout } from 'app/loadout/loadout-types';
-import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -34,6 +33,7 @@ import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shel
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { getMaxParallelCores } from 'app/utils/parallel-cores';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -74,6 +74,7 @@ import {
   ArmorEnergyRules,
   LOCKED_EXOTIC_ANY_EXOTIC,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
   loDefaultArmorEnergyRules,
 } from './types';
 import useEquippedHashes from './useEquippedHashes';
@@ -266,7 +267,7 @@ export default memo(function LoadoutBuilder({
     );
 
   // Run the actual loadout generation process in a web worker
-  const { result, processing } = useProcess({
+  const { result, processing, totalCombos, completedCombos } = useProcess({
     selectedStore,
     filteredItems,
     setBonuses,
@@ -383,6 +384,7 @@ export default memo(function LoadoutBuilder({
         setLoadout={setLoadout}
         className={styles.subclassSection}
       />
+      <div className={styles.fineprint}>{t('LoadoutBuilder.PinnedItemsFinePrint')}</div>
       <LoadoutOptimizerPinnedItems
         chooseItem={chooseItem}
         selectedStore={selectedStore}
@@ -438,11 +440,14 @@ export default memo(function LoadoutBuilder({
           {processing ? (
             <span className={styles.speedReport} role="status">
               <AppIcon icon={refreshIcon} spinning={true} />
-              <span>
-                {t('LoadoutBuilder.ProcessingSets', {
-                  character: selectedStore.name,
-                })}
-              </span>
+              <div className={styles.speedReportInner}>
+                <span>
+                  {t('LoadoutBuilder.ProcessingSets', {
+                    character: selectedStore.name,
+                  })}
+                </span>
+                <progress value={completedCombos} max={totalCombos || 1} />
+              </div>
             </span>
           ) : (
             result && (
@@ -450,6 +455,7 @@ export default memo(function LoadoutBuilder({
                 {t('LoadoutBuilder.SpeedReport', {
                   combos: result.combos,
                   time: (result.processTime / 1000).toFixed(2),
+                  cpus: getMaxParallelCores(),
                 })}
               </span>
             )

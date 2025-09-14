@@ -1,15 +1,12 @@
 @use '../variables.scss' as *;
 
-.tagButton {
-  composes: dim-button from global;
-  flex: 1;
-  padding-left: 0;
-  padding-right: 0;
-}
-
 .tagButtons {
   composes: flexRow from '../dim-ui/common.m.scss';
   margin-top: 4px;
   gap: 4px;
   width: 100%;
+  > * {
+    flex: 1;
+    padding: 0;
+  }
 }

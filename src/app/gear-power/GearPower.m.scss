@@ -47,6 +47,7 @@
       margin: 0;
       vertical-align: text-bottom;
       filter: none !important;
+      display: inline-block;
     }
   }
   :global(.selected) {
@@ -154,7 +155,7 @@
         opacity: 0.6;
       }
       .neutral {
-        opacity: 0.3;
+        opacity: 0.6;
       }
       .positive {
         color: $green;

@@ -1,3 +1,6 @@
+@use 'sass:color';
+@use '../variables.scss' as *;
+
 .roll {
   display: flex;
   flex-direction: row;
@@ -8,4 +11,39 @@
   border: 1px solid #333;
   border-radius: calc((16 / 50 * var(--item-size)) + 2px);
   padding: 2px;
+}
+
+.notes {
+  max-width: 50em;
+  line-height: 1.4;
+  text-wrap: pretty;
+  white-space: pre-wrap;
+}
+
+.invalidPlug {
+  color: $red;
+  border: 1px solid $red;
+  background: color.scale($red, $lightness: -90%);
+  border-radius: 100%;
+  height: calc(30 / 50 * var(--item-size));
+  width: calc(30 / 50 * var(--item-size));
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1px;
+}
+
+.rollGroup {
+  h3 {
+    &:has(+ .subtitle) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.subtitle {
+  color: var(--theme-text-secondary);
+  margin-top: 0.1em;
+  margin-bottom: 0.5em;
 }

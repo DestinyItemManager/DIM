@@ -40,7 +40,8 @@
     "NoNotes": "No Notes",
     "YourItems": "Your Items",
     "Unknown": "Unknown Item",
-    "Season": "Season {{season}}, Year {{year}}"
+    "Season": "Season {{season}}, Year {{year}}",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks."
   },
   "Browsercheck": {
     "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work.",
@@ -102,7 +103,11 @@
     "Archetype": "Archetype",
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
+    "BaseStatsDescription": "Base stats, without Masterwork or Mods",
     "AssumeMasterworked": "Assume Masterworked",
+    "AssumeMasterworkedDescription": "Stats if fully Masterworked, without current Mods",
+    "CurrentStats": "Current Stats",
+    "CurrentStatsDescription": "Current stats, including Mods and Masterwork level",
     "InitialItem": "This is the item the Compare tool was launched from",
     "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it.",
     "Error": {
@@ -242,7 +247,14 @@
     "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",
     "DupePerks": "Shows items whose perks are either a duplicate of, or a subset of, another item of the same type.",
-    "DupeStats": "Shows armor with identical base stats, including stat adjusters like Artifice and Tuning mods.",
+    "DupeTraits": "Weapons whose traits are either a duplicate of, or a subset of, another weapon of the same type.",
+    "DupeStats": "Shows armor with identical base stats, and matching stat adjustment mods like Artifice or Tuners.",
+    "DupeUntunedStats": "Groups armor with identical base stats, ignoring stat adjustment mods.",
+    "DupeTunedStat": "Groups armor with the same Tuned stat.",
+    "DupeArchetype": "Groups armor with the same stat Archetype.",
+    "DupeTertiary": "Groups armor with the same tertiary stat.",
+    "DupeSetBonus": "Groups armor with the same set bonus.",
+    "DupeZeroStats": "Groups armor with the same 3 non-zero base stats.",
     "Energy": "Shows items that use the Armor 2.0 mod system introduced in Shadowkeep.",
     "EnergyCapacity": "Shows items based on their current energy capacity.",
     "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
@@ -317,7 +329,7 @@
     "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
-    "Release": "Available from release <i>{{release}}</i>",
+    "Release": "Shows items available from a specific release or event.",
     "Holofoil": "Shows holofoil weapons.",
     "Weapon": "Shows items that are weapons.",
     "Armor": "Shows items that are armor.",
@@ -623,6 +635,7 @@
   },
   "LoadoutBuilder": {
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
+    "AlwaysAutoMods": "Artifice and Tuning mods will always be chosen automatically.",
     "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "AutoStatMods": "Automatically add stat mods",
     "All": "All",
@@ -648,13 +661,15 @@
     "ExcludedItems": "Excluded Items",
     "Exotic": "Exotic Armor",
     "MwExotic": "Exotic",
-    "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
+    "ExcludeVendors": "Search \"not:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExistingLoadout": "Existing Loadout",
+    "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Special",
     "Filter": "Settings",
     "Legendary": "Legendary",
     "LockItem": "Pin item",
     "PinnedItems": "Pinned Items",
+    "PinnedItemsFinePrint": "Search filters are saved with Loadout Optimizer settings, but pinned and excluded items are not. Pins and exclusions will be ignored when DIM checks existing Loadouts for better stat builds.",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
     "NoBuildsFoundExplainer": {
@@ -670,10 +685,8 @@
       "MaybeAllowMoreItems": "Consider allowing other items:",
       "BadSlot": "In the {{bucketName}} slot, none of the allowed items could accommodate these mods:",
       "LowerBoundsFailed": "Many sets did not meet minimum stat requirements",
-      "UpperBoundsFailed": "Many sets did not meet maximum stat requirements",
       "ModAssignmentFailed": "Many sets could not accommodate all requested mods",
       "MaybeDecreaseLowerBounds": "Consider reducing minimum stat requirements",
-      "MaybeIncreaseUpperBounds": "Consider increasing maximum stat requirements",
       "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods",
       "SetBonuses": "You have chosen some set bonuses, maybe you don't have the right items to use them.",
       "RemoveSetBonuses": "Consider removing some set bonuses"
@@ -692,7 +705,7 @@
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
     "SetBonus": "Set Bonuses",
-    "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
+    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores.",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
     "StatMin": "Min",
@@ -903,6 +916,8 @@
     "Succeeded": "Loadout succeeded",
     "Failed": "Loadout failed to apply completely",
     "Update": "Save Changes",
+    "TuningMods": "Tuning Mods",
+    "SalvationsEdgeMods": "Salvation's Edge Mods",
     "CancelEditing": "Cancel Editing"
   },
   "LoadoutAnalysis": {
@@ -955,7 +970,11 @@
     },
     "InvalidSearchQuery": {
       "Name": "Invalid Search Query",
-      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout."
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is not valid."
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Name": "Search Excludes Items",
+      "Description": "This loadout was created with a search query in Loadout Optimizer, and that search query excludes at least one of the items in the loadout."
     }
   },
   "Manifest": {
@@ -1087,7 +1106,6 @@
       "Foundry": "Foundry",
       "Featured": "New Gear",
       "Holofoil": "Holofoil",
-      "Intrinsics": "Intrinsic",
       "OriginTraits": "Origin Trait",
       "Shaders": "Cosmetics",
       "Locked": "Locked",
@@ -1110,9 +1128,12 @@
       "Event": "Event",
       "ModSlot": "Mod Slot",
       "Archetype": "Archetype",
+      "Frame": "Frame",
       "PerksMods": "Perks & Mods",
-      "OtherPerks": "Other Perks",
+      "OtherPerks": "Weapon Components",
       "Traits": "Weapon Traits",
+      "TertiaryStat": "3rd Stat",
+      "TuningStat": "Tuner",
       "CustomTotal": "Custom Total",
       "MasterworkTier": "MW Tier",
       "MasterworkStat": "MW Stat",
@@ -1139,6 +1160,8 @@
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
+    "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
+    "RewardPassEndsIn": "Reward Pass ends in ",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",
@@ -1188,6 +1211,7 @@
     "Loadout": "Loadout Searches"
   },
   "Settings": {
+    "Appearance": "Appearance",
     "AutoLockTagged": "Sync item lock state with tag",
     "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
@@ -1228,15 +1252,12 @@
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
     "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
-    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Item Display",
     "Language": "Language",
-    "LoadoutSort": "Loadout order:",
     "LogOut": "Log out",
     "Masterworked": "Masterworked",
-    "PerkDisplay": "Perk display in item popup",
-    "PerkList": "List",
-    "PerkGrid": "Grid",
+    "MaxParallelCores": "Maximum cores for parallel tasks",
+    "MaxParallelCoresExplanation": "Controls how many CPU cores DIM can use for intensive tasks like Loadout Optimizer and Loadout Analyzer. Higher values may improve performance but use more system resources.",
     "ResetToDefault": "Reset",
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
@@ -1266,9 +1287,8 @@
     "SortByWeaponElement": "Damage Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
-    "SpacesSize_one": "{{count}} space",
-    "SpacesSize_other": "{{count}} spaces",
     "Theme": "Theme",
+    "Troubleshooting": "Troubleshooting",
     "VaultGroupingNone": "None",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
     "WishlistRefreshNotificationTitle": "Wishlists Reloaded"

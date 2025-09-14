@@ -33,7 +33,6 @@ import { count, isEmpty, reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy, shuffle } from 'es-toolkit';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
@@ -44,6 +43,7 @@ import {
   ExcludedItems,
   PinnedItems,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
 } from './types';
 
 interface LoadoutBuilderUI {
@@ -207,11 +207,11 @@ const lbConfigInit = ({
     }
   }
 
-  // Also delete artifice mods -- artifice mods are always picked automatically
+  // Also delete always-auto-assigned mods since they are picked automatically
   // per set. In contrast we remove stat mods dynamically depending on the auto
   // stat mods setting.
   if (loadoutParameters.mods) {
-    loadoutParameters.mods = stripArtificeMods(defs, loadoutParameters.mods);
+    loadoutParameters.mods = stripAlwaysAutoAssignedMods(defs, loadoutParameters.mods);
   }
 
   loadout = { ...loadout, parameters: loadoutParameters };
@@ -227,17 +227,17 @@ const lbConfigInit = ({
 };
 
 /**
- * We never want to include artifice mods in the list of mods for a loadout
- * being edited by LO - they should be chosen by LO itself, and only re-added
- * when the loadout is saved.
+ * We never want to include always-auto-assigned mods in the list of mods for a
+ * loadout being edited by LO - they should be chosen by LO itself, and only
+ * re-added when the loadout is saved.
  */
-function stripArtificeMods(defs: D2ManifestDefinitions, mods: number[]) {
+function stripAlwaysAutoAssignedMods(defs: D2ManifestDefinitions, mods: number[]) {
   return mods.filter((modHash) => {
     const def = defs.InventoryItem.get(modHash);
     return (
-      !def ||
-      !isPluggableItem(def) ||
-      def.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice
+      def &&
+      isPluggableItem(def) &&
+      !autoAssignmentPCHs.some((h) => def.plug.plugCategoryHash === h)
     );
   });
 }
@@ -319,7 +319,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
 
           // Always check to make sure Artifice mods haven't snuck in - if they have, remove them
           const originalMods = updatedLoadout.parameters?.mods ?? [];
-          const strippedMods = stripArtificeMods(defs, originalMods);
+          const strippedMods = stripAlwaysAutoAssignedMods(defs, originalMods);
           if (strippedMods.length !== originalMods.length) {
             return updateMods(strippedMods)(updatedLoadout);
           }

@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { isClassCompatible } from 'app/utils/item-utils';
+import { isArmor3, isClassCompatible } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/memoize';
 import {
   DestinyInventoryItemDefinition,
@@ -30,10 +30,11 @@ import { makeCustomStat } from './stats-custom';
  *
  * buildStats(stats) {
  *   stats = buildInvestmentStats(stats) // based on information from an item's inherent stats
- *   applyPlugsToStats(stats)            // mutates stats. adds values provided by sockets (intrinsic armor stats&gun parts)
+ *   applyPlugsToStats(stats)            // mutates stats. adds values provided by sockets (intrinsic armor stats & weapon components)
  *   if (is armor) {
  *     if (any armor stat is missing) fill in missing stats with 0s
  *     synthesize totalStat and add it
+ *     synthesize customStat and add it
  *   }
  * }
  */
@@ -136,7 +137,7 @@ export function buildStats(
   // functions to speed up display info lookups
   const statDisplaysByStatHash = memoStatDisplaysByStatHash(statGroup);
 
-  // We only use the raw "investment" stats to calculate all item stats.
+  // We use the raw "investment" stats to calculate all item stats (instead of API-reported stats).
   const investmentStats =
     buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
@@ -144,6 +145,7 @@ export function buildStats(
   applyPlugsToStats(investmentStats, createdItem, statDisplaysByStatHash);
 
   if (createdItem.bucket.inArmor) {
+    generateAssumedMasterworkStats(investmentStats, createdItem);
     // synthesize the "Total" stat for armor
     // it's effectively just a custom total with 6 stats evenly weighted
     const tStat = makeCustomStat(
@@ -344,12 +346,10 @@ function applyPlugsToStats(
 
         // check special conditionals
         if (
-          !isPlugStatActive(
-            pluggedInvestmentStat.activationRule,
-            createdItem,
-            undefined,
+          !isPlugStatActive(pluggedInvestmentStat.activationRule, {
+            item: createdItem,
             existingStat,
-          )
+          })
         ) {
           continue;
         }
@@ -378,6 +378,32 @@ function applyPlugsToStats(
   );
   for (const socket of sortedSockets) {
     attachPlugStats(createdItem, socket, existingStatsByHash, statDisplaysByStatHash);
+  }
+}
+
+/**
+ * Add a baseMasterworked value to armor stats, projecting what they would be if masterworked.
+ * This assumes base stat values are already set.
+ */
+function generateAssumedMasterworkStats(
+  existingStats: DimStat[], // values in this array are mutated
+  createdItem: DimItem,
+) {
+  // The presence of mod energy identifies armor 2.0 and armor 3.0.
+  if (createdItem.bucket.inArmor && createdItem.energy) {
+    const statsToModify = existingStats.filter((s) => armorStats.includes(s.statHash));
+    if (isArmor3(createdItem)) {
+      for (const existingStat of statsToModify) {
+        // Armor 3.0 gets a +5 in stats with a base of 0.
+        existingStat.baseMasterworked = existingStat.base || existingStat.base + 5;
+      }
+    } else if (createdItem.energy) {
+      for (const existingStat of statsToModify) {
+        // Armor 2.0 gets 2 stat points in each stat when masterworked
+        existingStat.baseMasterworked = existingStat.base + 2;
+      }
+    }
+    // TODO: What happens to Armor <2?
   }
 }
 
@@ -431,7 +457,7 @@ function attachPlugStats(
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(activePlug.plugDef)) {
       const existingStat = statsByHash[plugInvestmentStat.statTypeHash];
       if (
-        !isPlugStatActive(plugInvestmentStat.activationRule, createdItem, undefined, existingStat)
+        !isPlugStatActive(plugInvestmentStat.activationRule, { item: createdItem, existingStat })
       ) {
         continue;
       }
@@ -476,11 +502,16 @@ function attachPlugStats(
     const plugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of mapAndFilterInvestmentStats(plug.plugDef)) {
-      if (!isPlugStatActive(plugInvestmentStat.activationRule, createdItem)) {
+      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
+      if (
+        !isPlugStatActive(plugInvestmentStat.activationRule, {
+          item: createdItem,
+          existingStat: itemStat,
+        })
+      ) {
         continue;
       }
       const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
-      const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
       let plugStatValue = plugStatInvestmentValue;

@@ -4,7 +4,6 @@ import { StoreObserver } from 'app/store/observerMiddleware';
 import { errorLog } from 'app/utils/log';
 import { debounce } from 'es-toolkit';
 import { shallowEqual } from 'fast-equals';
-import { newItemsSelector } from './selectors';
 
 interface SaveInfosObservedState {
   key: string | undefined;
@@ -22,7 +21,7 @@ export function createSaveItemInfosObserver(): StoreObserver<SaveInfosObservedSt
       const account = currentAccountSelector(rootState);
       return {
         key: account && `newItems-m${account.membershipId}-d${account.destinyVersion}`,
-        newItems: newItemsSelector(rootState),
+        newItems: rootState.inventory.newItems,
       };
     },
     sideEffect: debounce(async ({ current }: { current: SaveInfosObservedState }) => {

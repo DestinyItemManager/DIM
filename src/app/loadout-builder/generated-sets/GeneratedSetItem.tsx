@@ -1,17 +1,19 @@
 import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
-import { useItemPicker } from 'app/item-picker/item-picker';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
-import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
+import { toggleSearchQueryComponent } from 'app/shell/actions';
+import { AppIcon, pinIcon } from 'app/shell/icons';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { autoAssignmentPCHs } from '../types';
 import styles from './GeneratedSetItem.m.scss';
 
 /**
@@ -39,7 +41,6 @@ export function EnergySwap({ energy }: { energy: { energyCapacity: number; energ
 export default function GeneratedSetItem({
   item,
   pinned,
-  itemOptions,
   assignedMods,
   autoStatMods,
   automaticallyPickedMods,
@@ -48,7 +49,6 @@ export default function GeneratedSetItem({
 }: {
   item: DimItem;
   pinned: boolean;
-  itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
   autoStatMods: boolean;
   automaticallyPickedMods?: number[];
@@ -57,20 +57,7 @@ export default function GeneratedSetItem({
 }) {
   const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
   const unpinItem = () => lbDispatch({ type: 'unpinItem', item });
-  const showItemPicker = useItemPicker();
-
-  const chooseReplacement = async () => {
-    const ids = new Set(itemOptions.map((i) => i.id));
-
-    const item = await showItemPicker({
-      prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
-      filterItems: (item: DimItem) => ids.has(item.id),
-    });
-
-    if (item) {
-      pinItem(item);
-    }
-  };
+  const dispatch = useThunkDispatch();
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
@@ -82,11 +69,13 @@ export default function GeneratedSetItem({
       // Legendary armor can have intrinsic perks and it might be
       // nice to provide a convenient user interface for those,
       // but the exotic picker is not the way to do it.
-      if (item.isExotic) {
+      if (item.isExotic && item.bucket.hash !== BucketHashes.ClassArmor) {
         lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
+      } else {
+        dispatch(toggleSearchQueryComponent(`exactperk:"${plugDef.displayProperties.name}"`));
       }
     } else if (
-      plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
+      !autoAssignmentPCHs.includes(plugCategoryHash) &&
       (!autoStatMods || plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General)
     ) {
       lbDispatch({
@@ -108,23 +97,14 @@ export default function GeneratedSetItem({
             energy={energy}
             item={item}
           />
-          {itemOptions.length > 1 ? (
-            <button
-              type="button"
-              className={styles.swapButton}
-              title={t('LoadoutBuilder.ChooseAlternateTitle')}
-              onClick={chooseReplacement}
-            >
-              <AppIcon icon={faRandom} />
-            </button>
-          ) : pinned ? (
+          {pinned ? (
             <button
               type="button"
               className={styles.swapButton}
               title={t('LoadoutBuilder.UnlockItem')}
               onClick={unpinItem}
             >
-              <AppIcon icon={lockIcon} />
+              <AppIcon icon={pinIcon} />
             </button>
           ) : (
             archetype && (

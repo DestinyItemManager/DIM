@@ -1,7 +1,7 @@
 import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { DimCharacterStat } from 'app/inventory/store-types';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
 
@@ -51,8 +51,8 @@ export interface ArmorSet {
   readonly stats: Readonly<ArmorStats>;
   /** The assumed stats from the armor items themselves only. */
   readonly armorStats: Readonly<ArmorStats>;
-  /** For each armor type (see ArmorBucketHashes), this is the list of items that could interchangeably be put into this loadout. */
-  readonly armor: readonly DimItem[][];
+  /** For each armor type (see ArmorBucketHashes), this is the list of items in the loadout. */
+  readonly armor: DimItem[];
   /** Which stat mods were added? */
   readonly statMods: number[];
 }
@@ -109,6 +109,12 @@ export type ArmorStatHashes =
 export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxStat };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
+/** Do not allow the user to choose artifice/tuning mods manually in Loadout Optimizer since we're supposed to be doing that */
+export const autoAssignmentPCHs = [
+  PlugCategoryHashes.EnhancementsArtifice,
+  PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods,
+];
+
 /**
  * The reusablePlugSetHash from armour 2.0's general socket.
  * TODO: Find a way to generate this in d2ai.
@@ -121,6 +127,13 @@ export const generalSocketReusablePlugSetHash = 731468111;
  */
 export const artificeSocketReusablePlugSetHash = 4285066582;
 
+/**
+ * The reusablePlugSetHash for the tuning socket, which lets you trade off two
+ * stats.
+ * TODO: Find a way to generate this in d2ai.
+ */
+export const tuningSocketReusablePlugSetHash = 1155052024;
+
 /** Bonus to a single stat given by plugs in artifice armor's exclusive mod slot */
 export const artificeStatBoost = 3;
 /** Bonus to a single stat given by the "half tier mods" plugs in all armor's general mod slot */
@@ -131,6 +144,11 @@ export const minorStatBoost = 5;
  * is fairly engrained in some of the algorithms, so it wouldn't be quite trivial to change this.
  */
 export const majorStatBoost = 10;
+
+/** Bonus/sacrifice made to a stat when using a tuning mod. */
+export const tuningStatBoost = 5;
+/** Bonus to the three lowest stats when using "Balanced Tuning" */
+export const balancedTuningStatBoost = 1;
 
 /**
  * Special value for lockedExoticHash indicating the user would not like any exotics included in their loadouts.

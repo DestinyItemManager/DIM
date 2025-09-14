@@ -9,6 +9,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { filterItems } from 'app/loadout-builder/item-filter';
 import { resolveStatConstraints } from 'app/loadout-builder/loadout-params';
+import { ProcessInputs } from 'app/loadout-builder/process-worker/process';
 import type { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import {
   ArmorEnergyRules,
@@ -16,6 +17,7 @@ import {
   LOCKED_EXOTIC_NO_EXOTIC,
   MIN_LO_ITEM_ENERGY,
   ResolvedStatConstraint,
+  autoAssignmentPCHs,
   inGameArmorEnergyRules,
 } from 'app/loadout-builder/types';
 import {
@@ -47,6 +49,12 @@ import {
   blockAnalysisFindings,
 } from './types';
 import { mergeStrictUpgradeStatConstraints } from './utils';
+
+// TODO: This cache should be part of the loadout analyzer state, not global.
+const resultsCache = new WeakMap<
+  Loadout,
+  { hasStrictUpgrade: boolean; lastInput: ProcessInputs }
+>();
 
 export async function analyzeLoadout(
   {
@@ -254,7 +262,7 @@ export async function analyzeLoadout(
           const modsToUse = originalLoadoutMods.filter(
             (mod) =>
               // drop artifice mods (always picked automatically per set)
-              mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
+              !autoAssignmentPCHs.includes(mod.resolvedMod.plug.plugCategoryHash) &&
               // drop general mods if picked automatically
               (!loadoutParameters?.autoStatMods ||
                 mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General),
@@ -281,20 +289,25 @@ export async function analyzeLoadout(
             searchFilter: itemFilter,
             setBonuses: loadoutParameters.setBonuses,
           });
-          // If the item filter loadout armor that was previously included,
-          // this is due to the search filter since we've previously established
-          // that mods fit and the exotic matches.
+          // If filterItems does not include the armor currently in the loadout,
+          // this is maybe due to the search filter since we've previously
+          // established that mods fit and the exotic matches. Or, it's due to
+          // the inherent statlower check done in filterItems.
           if (
             loadoutParameters.query &&
             loadoutArmor.some(
               (item) =>
+                // The item exists in inventory
                 armorForThisClass.some((allItem) => allItem === item) &&
+                // But is not in the candidate items
                 !Object.values(filteredItems)
                   .flat()
                   .some((filteredItem) => filteredItem === item),
             )
           ) {
-            findings.add(LoadoutFinding.InvalidSearchQuery);
+            // Either the search filter excluded these items, OR they were
+            // strictly worse than some other item.
+            findings.add(LoadoutFinding.ItemsDoNotMatchSearchQuery);
           }
 
           const modStatChanges = getTotalModStatChanges(
@@ -321,7 +334,10 @@ export async function analyzeLoadout(
             );
 
           try {
-            const { resultPromise } = worker({
+            const { hasStrictUpgrade: lastHasStrictUpgrade, lastInput } =
+              resultsCache.get(loadout) ?? {};
+
+            const processInfo = worker({
               anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
               armorEnergyRules,
               autoModDefs,
@@ -333,12 +349,24 @@ export async function analyzeLoadout(
               desiredStatRanges: mergedDesiredStatRanges,
               stopOnFirstSet: true,
               strictUpgrades: !mergedConstraintsImplyStrictUpgrade,
-              lastInput: undefined, // TODO: it would be nice to memoize these inputs too
-            })!;
+              lastInput,
+            });
+            if (processInfo === undefined) {
+              // If the inputs are the same as last time, we can skip the worker and just
+              // reuse the last result.
+              hasStrictUpgrade = Boolean(lastHasStrictUpgrade);
+            } else {
+              const { resultPromise, input } = processInfo;
+              hasStrictUpgrade = Boolean((await resultPromise).sets.length);
+              resultsCache.set(loadout, { hasStrictUpgrade, lastInput: input });
+            }
 
-            hasStrictUpgrade = Boolean((await resultPromise).sets.length);
             if (hasStrictUpgrade) {
               findings.add(LoadoutFinding.BetterStatsAvailable);
+              // Also *remove* the "items don't match" finding - it was likely
+              // caused by stat-lower filtering, and even if not, the better
+              // stats available finding is more important.
+              findings.delete(LoadoutFinding.ItemsDoNotMatchSearchQuery);
             }
           } catch (e) {
             errorLog('loadout analyzer', 'internal error', e);

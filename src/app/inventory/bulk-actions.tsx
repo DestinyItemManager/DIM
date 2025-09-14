@@ -110,6 +110,9 @@ export function bulkTagItems(
  */
 export function bulkLockItems(items: DimItem[], locked: boolean): ThunkResult {
   return async (dispatch, getState) => {
+    // Filter out items that can't be locked
+    items = items.filter((item) => item.lockable);
+
     // Don't change lock state for items that are having their lock state synced to their tag
     const autoLockTagged = settingSelector('autoLockTagged')(getState());
     items = autoLockTagged

@@ -164,6 +164,7 @@ exports[`buildSearchConfig generates a reasonable filter map: key-value filters 
   "count",
   "deepsight",
   "description",
+  "dupe",
   "energycapacity",
   "enhanced",
   "enhancedperk",

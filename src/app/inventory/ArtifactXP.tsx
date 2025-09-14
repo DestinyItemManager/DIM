@@ -5,7 +5,7 @@ import {
   ObjectiveText,
 } from 'app/progress/Objective';
 import { DestinyCharacterProgressionComponent } from 'bungie-api-ts/destiny2';
-import xpIcon from '../../images/xpIcon.svg';
+import XPIcon from '../../images/xpIcon.svg?react';
 import styles from './ArtifactXP.m.scss';
 
 export function ArtifactXP({
@@ -35,7 +35,7 @@ export function ArtifactXP({
           completionValue={nextLevelAt}
         />
         <ObjectiveDescription
-          icon={<img src={xpIcon} className={styles.xpIcon} />}
+          icon={<XPIcon className={styles.xpIcon} />}
           description={(level + 1).toLocaleString()}
         />
         <ObjectiveText>

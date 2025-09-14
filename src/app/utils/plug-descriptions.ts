@@ -299,12 +299,13 @@ function getPerkDescriptions(
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
   classType: DestinyClass | undefined,
+  item: DimItem | undefined,
 ) {
   return mapAndFilterInvestmentStats(plugDef)
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isPlugStatActive(stat.activationRule, undefined, classType)),
+        isPlugStatActive(stat.activationRule, { classType, item, statHash: stat.statTypeHash }),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,

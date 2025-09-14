@@ -1,5 +1,8 @@
 import { DimItem } from 'app/inventory/item-types';
+import { normalizeEnhancedness } from 'app/utils/perk-utils';
+import { getSocketsByType } from 'app/utils/socket-utils';
 
+type PerkType = Parameters<typeof getSocketsByType>[1];
 /**
  * A PerksSet can be populated with a bunch of items, and can then answer questions
  * such as:
@@ -12,13 +15,25 @@ import { DimItem } from 'app/inventory/item-types';
 export class PerksSet {
   // A map from item ID to a list of columns, each of which has a set of perkHashes
   mapping = new Map<string, Set<number>[]>();
+  perkType: PerkType = 'perks';
+
+  constructor(items?: DimItem[], perkType?: PerkType) {
+    if (perkType) {
+      this.perkType = perkType;
+    }
+    if (items) {
+      for (const i of items) {
+        this.insert(i);
+      }
+    }
+  }
 
   insert(item: DimItem) {
-    this.mapping.set(item.id, makePerksSet(item));
+    this.mapping.set(item.id, makePerksSet(item, this.perkType));
   }
 
   hasPerkDupes(item: DimItem) {
-    const perksSet = makePerksSet(item);
+    const perksSet = makePerksSet(item, this.perkType);
 
     for (const [id, set] of this.mapping) {
       if (id === item.id) {
@@ -33,8 +48,8 @@ export class PerksSet {
   }
 }
 
-function makePerksSet(item: DimItem) {
-  return item
-    .sockets!.allSockets.filter((s) => s.isPerk && s.socketDefinition.defaultVisible)
-    .map((s) => new Set(s.plugOptions.map((p) => p.plugDef.hash)));
+function makePerksSet(item: DimItem, perkType?: PerkType) {
+  return getSocketsByType(item, perkType).map(
+    (s) => new Set(s.plugOptions.map((p) => normalizeEnhancedness(p.plugDef.hash))),
+  );
 }

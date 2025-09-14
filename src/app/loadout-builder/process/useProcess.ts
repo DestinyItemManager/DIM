@@ -1,6 +1,6 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -42,6 +42,8 @@ interface ProcessState {
     // What the actual process did to remove some sets.
     processInfo: ProcessStatistics | undefined;
   } | null;
+  totalCombos: number;
+  completedCombos: number;
 }
 
 /**
@@ -70,12 +72,13 @@ export function useProcess({
   autoStatMods: boolean;
   strictUpgrades: boolean;
 }) {
-  const [{ result, processing }, setState] = useState<ProcessState>({
+  const [{ result, processing, totalCombos, completedCombos }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStore.id,
     result: null,
+    totalCombos: 0,
+    completedCombos: 0,
   });
-  const getUserItemTag = useSelector(getTagSelector);
   const autoModDefs = useAutoMods(selectedStore.id);
   const firstTime = result === null;
 
@@ -96,6 +99,14 @@ export function useProcess({
 
   useEffect(() => {
     const doProcess = async () => {
+      const handleProgress = (completed: number, total: number) => {
+        setState((state) => ({
+          ...state,
+          totalCombos: total,
+          completedCombos: completed,
+        }));
+      };
+
       const processInfo = runProcess({
         autoModDefs,
         filteredItems,
@@ -106,10 +117,10 @@ export function useProcess({
         desiredStatRanges,
         anyExotic,
         autoStatMods,
-        getUserItemTag,
         stopOnFirstSet: false,
         strictUpgrades,
         lastInput: inputsRef.current,
+        onProgress: handleProgress,
       });
       if (processInfo === undefined) {
         infoLog('loadout optimizer', 'Inputs were equal to the previous run, not recalculating');
@@ -125,6 +136,8 @@ export function useProcess({
         processing: true,
         resultStoreId: selectedStore.id,
         result: selectedStore.id === state.resultStoreId ? state.result : null,
+        totalCombos: 0,
+        completedCombos: 0,
       }));
 
       try {
@@ -168,14 +181,13 @@ export function useProcess({
     autoStatMods,
     lockedModMap,
     setBonuses,
-    getUserItemTag,
     modStatChanges,
     autoModDefs,
     strictUpgrades,
     firstTime,
   ]);
 
-  return { result, processing };
+  return { result, processing, totalCombos, completedCombos };
 }
 
 /**

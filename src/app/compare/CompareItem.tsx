@@ -101,7 +101,7 @@ export default memo(function CompareItem({
   return (
     <>
       {itemHeader}
-      {filteredColumns.map((column, i) => (
+      {filteredColumns.map((column) => (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
@@ -111,7 +111,6 @@ export default memo(function CompareItem({
             column.id === 'name' && {
               'compare-findable': isFindable,
             },
-            i === filteredColumns.length - 1 && styles.lastRow,
           )}
           role="cell"
           onPointerEnter={() => setHighlight(column.id)}
@@ -172,7 +171,7 @@ export function CompareHeaders({
         />
       ))}
       <div key="spacer-2" className={styles.spacer} />
-      {filteredColumns.map((column, i) => {
+      {filteredColumns.map((column) => {
         const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
         return (
           <div
@@ -186,7 +185,6 @@ export function CompareHeaders({
                   : styles.sortAsc
                 : undefined,
               {
-                [styles.lastRow]: i === filteredColumns.length - 1,
                 [styles.highlighted]: highlight === column.id,
               },
             )}

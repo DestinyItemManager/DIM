@@ -45,10 +45,16 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
 
+  const focusedStats = isArmor3(exampleItem) && getArmor3StatFocus(exampleItem);
+  const tertiaryStatHash = focusedStats && focusedStats[2];
+  focusedStats && focusedStats.sort();
+
+  const focusedStatsDisplayProperties =
+    focusedStats &&
+    focusedStats.map((h) => exampleItem.stats!.find((s) => s.statHash === h)!.displayProperties);
   const archetype = getArmorArchetype(exampleItem);
-  const tertiaryStatHash = isArmor3(exampleItem) && getArmor3StatFocus(exampleItem)?.[2];
   const tertiaryStat = tertiaryStatHash && realD2ArmorStatSearchByHash[tertiaryStatHash];
-  const tertiaryStatDisplay =
+  const tertiaryStatDisplayProperties =
     tertiaryStatHash &&
     exampleItem.stats!.find((s) => s.statHash === tertiaryStatHash)!.displayProperties;
 
@@ -61,11 +67,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       )
         ?.map((intrinsic) => ({
           buttonLabel: [
-            <BungieImage
-              key="1"
-              className={clsx(styles.intrinsicIcon, 'dontInvert')}
-              src={intrinsic.icon}
-            />,
+            <BungieImage key="1" src={intrinsic.icon} />,
             intrinsic.name,
             exampleItem.rarity === 'Legendary' ? (
               // eslint-disable-next-line @eslint-react/no-duplicate-key
@@ -128,10 +130,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItemIntrinsic && {
         buttonLabel: [
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
-            <BungieImage
-              className={clsx(styles.intrinsicIcon, 'dontInvert')}
-              src={exampleItemIntrinsic.icon}
-            />
+            <BungieImage className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
           </PressTip>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -144,7 +143,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItem.rarity === 'Legendary' &&
       archetype && {
         buttonLabel: [
-          <img key="1" className={clsx(styles.intrinsicIcon, 'dontInvert')} src={archetypeIcon} />,
+          <img key="1" src={archetypeIcon} />,
           <span key="2">{t('Compare.Archetype')}</span>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -156,11 +155,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     exampleItem.destinyVersion === 2 &&
       archetype && {
         buttonLabel: [
-          <BungieImage
-            key="1"
-            className={clsx(styles.intrinsicIcon, 'dontInvert')}
-            src={archetype.displayProperties.icon}
-          />,
+          <BungieImage key="1" src={archetype.displayProperties.icon} />,
           <span key="2">{archetype.displayProperties.name}</span>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
@@ -169,21 +164,29 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // Try to make a group of armors 3.0 with the exact same 3 stats focused. This is an easy win for identifying better/worse armor.
     exampleItem.destinyVersion === 2 &&
+      focusedStatsDisplayProperties && {
+        buttonLabel: focusedStatsDisplayProperties.map((s, index) => (
+          <React.Fragment key={s.name}>
+            {index > 0 && '+'}
+            <BungieImage className={styles.statIconAdjust} src={s.icon} />
+          </React.Fragment>
+        )),
+        query: `is:armor3.0 is:${exampleItem.rarity} ${focusedStats.map((h) => `basestat:${realD2ArmorStatSearchByHash[h]}:>0`).join(' ')}`,
+      },
+
+    // Try to make a group of armors 3.0 with the exact same 3 stats focused and the same archetype. This is an easy win for identifying better/worse armor.
+    exampleItem.destinyVersion === 2 &&
       archetype &&
       tertiaryStat &&
-      tertiaryStatDisplay && {
+      tertiaryStatDisplayProperties && {
         buttonLabel: [
-          <BungieImage
-            key="1"
-            className={clsx(styles.intrinsicIcon, 'dontInvert')}
-            src={archetype.displayProperties.icon}
-          />,
+          <BungieImage key="1" src={archetype.displayProperties.icon} />,
           <span key="2">{archetype.displayProperties.name}</span>,
           '+',
           <BungieImage
             key="tertiary"
-            className={clsx(styles.statIconAdjust, 'dontInvert')}
-            src={tertiaryStatDisplay.icon}
+            className={styles.statIconAdjust}
+            src={tertiaryStatDisplayProperties.icon}
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
@@ -272,7 +275,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <ElementIcon
           key={exampleItem.id}
           element={exampleItem.element}
-          className={styles.inlineImageIcon}
+          className={clsx(styles.inlineImageIcon, 'dontInvert')}
         />,
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],

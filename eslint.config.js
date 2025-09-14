@@ -278,7 +278,7 @@ export default tseslint.config(
       'prefer-promise-reject-errors': 'error',
       'prefer-spread': 'error',
       radix: 'error',
-      yoda: 'error',
+      yoda: ['error', 'never', { exceptRange: true }],
       'prefer-template': 'error',
       'class-methods-use-this': ['error', { exceptMethods: ['render'] }],
       'no-unmodified-loop-condition': 'error',
@@ -436,6 +436,13 @@ export default tseslint.config(
     files: ['src/**/*.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
+    // The process-worker needs to be extra fast, so we disable a few rules here.
+    files: ['src/app/loadout-builder/process-worker/**/*.ts'],
+    rules: {
+      '@typescript-eslint/prefer-for-of': 'off',
     },
   },
   {

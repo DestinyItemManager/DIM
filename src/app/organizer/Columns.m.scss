@@ -100,10 +100,6 @@
   color: #d14334;
 }
 
-.perkLike {
-  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
-}
-
 .modPerks {
   composes: flexColumn from '../dim-ui/common.m.scss';
   break-inside: avoid;
@@ -111,12 +107,8 @@
   padding-left: 3px;
 }
 
-.perks {
-  composes: perkLike;
-  columns: 2;
-  height: 100%;
-  box-sizing: border-box;
-  column-gap: 8px;
+.perkLike {
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
   > *:nth-last-child(n + 2) {
     margin-bottom: 4px;
   }
@@ -126,6 +118,14 @@
     flex-basis: 160px;
     padding-left: 3px;
   }
+}
+
+.perks {
+  composes: perkLike;
+  columns: 2;
+  height: 100%;
+  box-sizing: border-box;
+  column-gap: 8px;
 }
 .isPerk {
   margin-left: 0;
@@ -140,7 +140,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   composes: noWrap;
   align-items: flex-start;
-  gap: 3px;
+  gap: 2px;
 }
 .miniPerkContainer {
   --item-size: 18px;
@@ -162,17 +162,20 @@
 .perkSelectable {
   cursor: pointer;
 }
-// copy pasted from src/app/item-popup/PlugTooltip.m.scss
+// copy pasted from src/app/item-popup/PlugTooltip.m.scss with spacing tweaks
 .enhancedArrow {
-  &::before {
+  width: 25px;
+  display: flex;
+  &::after {
     content: '';
     display: inline-block;
-    width: 9px;
-    height: 16px;
+    width: 6px;
+    height: 11px;
     vertical-align: text-bottom;
     mask-image: url('images/enhancedArrow.svg');
     background-color: $enhancedYellow;
-    margin-right: 3px;
+    margin-left: 1px;
+    margin-top: 3px;
   }
 }
 

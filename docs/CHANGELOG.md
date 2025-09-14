@@ -1,8 +1,77 @@
 ## Next
 
+* Updated tuned stat icon.
+* `dupe:perks` and `dupe:traits` will ignore perks' enhancement status.
+
+## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
+
+* In Compare and Organizer, there are now separate columns/rows for archetype and perks.
+* Added armor masterwork tier, tertiary stat, and tuning stat columns to Organizer and CSV output.
+* Reorganized weapons columns in Organizer a bit.
+* Added `dupe:traits` for finding weapons with duplicate traits.
+
+## 8.89.0 <span class="changelog-date">(2025-09-07)</span>
+
+* Reduced how much items are dimmed out in the Item Feed when they don't match the current search.
+* BETA: Option to compare by base masterworked stats in Compare feature. This allows a fair comparison between Armor 2.0 and Armor 3.0.
+* Added a setting to control how many CPU cores can be used by Loadout Optimizer/Analyzer.
+* Reorganized the Settings page.
+* Loadout Optimizer no longer excludes pieces with the requested Set Bonus, even if their stats are terrible.
+* Fix wishlists not properly matching some new enhanced perks
+* The perk list vs. grid setting is now saved independently for mobile and desktop views.
+* Un-deprecated the `is:infusionfodder` filter.
+* Removed redundant holofoil overlay.
+* Compare/Organizer sorting now takes Tuning Mods and Artifice armor into account when sorting Totals or Custom Stats.
+* Totals and Custom stats in Compare/Organizer have an indicator when Tuners or Artifice mods can contribute.
+* Invalid wish list rolls are now shown in Armory with a tooltip that explains them.
+* Loadout analyzer is more precise about calling out invalid search queries vs. loadouts whose search query excludes some of its armor.
+* Added wishlist title/description and link to source to the Armory page.
+
+## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
+
+* Tuning mods can be chosen manually in the loadout editor, and will be assigned to compatible items when the loadout is applied. The equipped loadout and any snapshotted in-game loadouts will retain their tuning mods.
+* Loadout Optimizer will no longer collapse sets with items that have the exact same stats. Now you'll see a separate set for each copy.
+* Combine the set bonus tooltips for items of the same set in character status
+* Adjust enhanced perk arrow when perk name takes up more than 1 line
+* Loadout Optimizer now automatically assigns Tier 5 tuning mods where available. This can make major differences in what stats you can achieve!
+* Loadout Optimizer will now utilize multiple CPU cores.
+* Bulk locking/unlocking items will skip over items that cannot be locked.
+* `is:locked` and `is:unlocked` searches will never match items that cannot be locked.
+* Finishers are no longer lockable (Bungie doesn't allow it)
+* In Compare and Organizer, when you hold shift and click a column to change its sorting, we now remove the sort entirely on the third click.
+* Fixed a case where some old searches could not be unsaved. Remember that you can also *delete* searches from the Search History page or by clicking the X in the autocomplete dropdown.
+* Improve autocomplete for the new `dupe:` filter.
+* Loadout Optimizer and Compare will only show vendor items that you can actually buy.
+* Fixed Progress tab season pass counter double counting levels 101-110
+
+## 8.87.0 <span class="changelog-date">(2025-08-24)</span>
+
+* Fix Xur showing exotic catalysts you have already acquired while "Only show uncollected items" is enabled.
+* Add `source:kepler`
+* `is:modded` can match items other than armor
+* `year:8` now correctly matches Edge of Fate items.
+* Fixes well rested XP counter from counting ranks 101-110 as 1 level instead of 5
+* Fixed the display of Seasonal Progress and Well-Rested on mobile.
+* Include Vanguard Arms Rewards in the items considered in Loadout Optimizer
+* Sped up loadout analyzer when loadouts and inventory haven't changed.
+* Deprecated `is:dupelower` filter.
+* Deprecated `is:infusionfodder` filter.
+* Deprecated `is:wishlistdupe` filter. Use `is:dupe is:wishlist` to find dupes with a wishlist match.
+* Deprecated `is:crafteddupe` filter. Use `is:dupe is:patternunlocked` to find dupes you may replace with a crafted item.
+* A new `dupe:` filter has been added, which can find duplicates of combined factors.
+  * Try `dupe:archetype+tertiarystat` to find duplicate armors with the same armor Archetype *and* tertiary stat.
+* The `dupe:` filter can look for lower stats *within* a group of similar items.
+  * Try `dupe:setbonus+statlower` to look inside each armor set for pieces with worse stats.
+  * Try `dupe:setbonus+stats` to look for identical rolls on identical armor.
+* Check out Filters Help at the bottom of the search dropdown, for more dupe filter keywords.
+* In the future, the `dupe:` filter will replace `is:dupeperks`, `is:statdupe`, `is:statlower`, `is:customstatlower`.
+* `dupe:customstatlower` will more accurately narrow matches, checking **all* applicable custom stats against items. `is:customstatlower` is not recommended.
+* Add a button to Compare to find all Armor 3.0 with the same 3 non-zero stats, even if they have a different Archetype.
+* The loading spinner will always spin when loading vendors.
+
 ## 8.86.1 <span class="changelog-date">(2025-08-19)</span>
 
-* Fix Organizer shift-click filter behavior for perks
+* Fix Organizer shift-click filter behavior for perks.
 * Fixed confusing Tuned Stat symbol placement in the Organizer.
 
 ## 8.86.0 <span class="changelog-date">(2025-08-17)</span>

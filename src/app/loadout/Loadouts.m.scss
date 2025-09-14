@@ -17,6 +17,10 @@
     padding-left: 10px;
     padding-right: 10px;
   }
+
+  > :global(.dim-button) {
+    justify-content: flex-start;
+  }
 }
 
 .menuButton {

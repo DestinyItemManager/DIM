@@ -70,10 +70,23 @@
 }
 
 .speedReport {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
   user-select: text;
+  gap: 0.5em;
   flex: 1;
-  > :global(.app-icon) {
-    margin-right: 0.5em;
+}
+
+.speedReportInner {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 1em;
+  flex: 1;
+
+  @include phone-portrait {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
   }
 }
 
@@ -121,4 +134,11 @@
     width: 24px;
     font-size: 24px;
   }
+}
+
+.fineprint {
+  font-size: 0.85em;
+  color: var(--theme-text-secondary);
+  text-wrap: pretty;
+  margin-top: 4px;
 }
