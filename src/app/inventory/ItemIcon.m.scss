@@ -10,6 +10,7 @@ $commonBg: #366f42;
 // The image within the overall item. Global because it's referenced by other styles.
 :global(.item-img) {
   display: block;
+  position: relative;
   width: var(--item-size);
   height: var(--item-size);
   box-sizing: border-box;
@@ -25,6 +26,16 @@ $commonBg: #366f42;
   // Used by vendors
   &:global(.transparent) {
     border-color: transparent;
+  }
+
+  > * {
+    position: absolute;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    height: 100%;
+    width: 100%;
   }
 }
 
@@ -54,12 +65,34 @@ $commonBg: #366f42;
     content: '';
     position: absolute;
     box-sizing: border-box;
-    height: calc(var(--item-size) - ($item-border-width * 2));
-    width: calc(var(--item-size) - ($item-border-width * 2));
-    top: $item-border-width;
-    left: $item-border-width;
+    inset: $item-border-width;
     border: 2px solid $deepsight-border-color;
   }
+}
+
+.animatedBackground {
+  display: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.item):hover & {
+      display: block;
+    }
+  }
+}
+
+// This is the same size as the item image but shifted up and left by 1px to overlap the border
+.shiftedLayer {
+  top: -1 * $item-border-width;
+  left: -1 * $item-border-width;
+}
+
+.adjustOpacity {
+  opacity: 0.5;
+}
+
+.craftedLayer {
+  top: 1 * $item-border-width;
+  left: -1 * $item-border-width;
 }
 
 // Completed items or capped stackables image
@@ -72,33 +105,23 @@ $commonBg: #366f42;
   border-color: transparent;
 }
 
-// The teal "featured" flag and season icon. This is two background images, one
-// for the season icon and one for the featured flag.
 .seasonIcon {
+  top: calc((1 / 50) * var(--item-size));
+  left: calc((1 / 50) * var(--item-size));
+  height: calc((10 / 50) * var(--item-size));
+  width: calc((10 / 50) * var(--item-size));
+  &.featuredIcon {
+    left: 1px;
+  }
+}
+
+.craftedIcon {
   top: 0;
   left: 0;
   height: calc(var(--item-size) - (2 / 50) * var(--item-size));
   width: calc(var(--item-size) - (2 / 50) * var(--item-size));
-  background-repeat: no-repeat;
-  background-size:
-    calc((10 / 50) * var(--item-size)),
-    calc((12 / 50) * var(--item-size)) 50%;
-  background-position:
-    calc((2 / 50) * var(--item-size)) calc((2 / 50) * var(--item-size)),
-    1px 1px;
-  position: absolute;
-  pointer-events: none;
-
-  &.featuredIcon {
-    background-size:
-      calc((10 / 50) * var(--item-size)),
-      cover,
-      calc((12 / 50) * var(--item-size)) 50%;
-    background-position:
-      calc((2 / 50) * var(--item-size)) calc((2 / 50) * var(--item-size)),
-      center,
-      1px 1px;
-  }
+  background-size: calc((10 / 50) * var(--item-size));
+  background-position: calc((2 / 50) * var(--item-size)) calc((2 / 50) * var(--item-size));
 }
 
 .iconOverlay {
@@ -125,7 +148,7 @@ $commonBg: #366f42;
 
 .energyCostOverlay {
   position: absolute;
-  inset: $item-border-width $item-border-width $item-border-width $item-border-width;
+  inset: $item-border-width;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -134,7 +157,7 @@ $commonBg: #366f42;
 
 .energyCost {
   position: absolute;
-  inset: $item-border-width $item-border-width $item-border-width $item-border-width;
+  inset: $item-border-width;
   pointer-events: none;
 
   > text {

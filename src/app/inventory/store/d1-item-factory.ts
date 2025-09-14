@@ -371,7 +371,6 @@ function makeItem(
     tier: 0,
     adept: false,
     holofoil: false,
-    ornamented: false,
   };
 
   // *able

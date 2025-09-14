@@ -20,7 +20,6 @@ import {
   DestinyAmmunitionType,
   DestinyClass,
   DestinyDisplayPropertiesDefinition,
-  DestinyIconDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
@@ -454,15 +453,10 @@ export function makeItem(
         DestinyClass.Unknown;
   }
 
-  let iconDef: DestinyIconDefinition | undefined;
-  if (overrideStyleItem) {
-    iconDef = overrideStyleItem?.displayProperties?.iconHash
-      ? defs.Icon.get(overrideStyleItem.displayProperties.iconHash)
-      : undefined;
-  }
-  if (!iconDef && displayProperties.iconHash) {
-    iconDef = defs.Icon.get(displayProperties.iconHash);
-  }
+  let iconDef = displayProperties.iconHash ? defs.Icon.get(displayProperties.iconHash) : undefined;
+  let ornamentIconDef = overrideStyleItem?.displayProperties.iconHash
+    ? defs.Icon.get(overrideStyleItem.displayProperties.iconHash)
+    : undefined;
   const isExotic = itemDef.inventory!.tierType === TierType.Exotic;
 
   const createdItem: DimItem = {
@@ -483,10 +477,8 @@ export function makeItem(
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
-    ornamented: Boolean(
-      normalBucket.inArmor && !isExotic && overrideStyleItem?.displayProperties.icon,
-    ),
     iconDef,
+    ornamentIconDef,
     notransfer: Boolean(
       itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable,
     ),
