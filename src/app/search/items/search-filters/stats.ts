@@ -6,12 +6,14 @@ import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadout
 import { realD2ArmorStatHashByName } from 'app/search/d2-known-values';
 import {
   allAtomicStats,
+  armor3OrdinalIndexByName,
   armorAnyStatHashes,
   armorStatHashes,
   dimArmorStatHashByName,
   est,
   estStatNames,
   searchableArmorStatNames,
+  searchableD2Armor3StatNames,
   statHashByName,
   statOrdinals,
   weaponStatNames,
@@ -167,14 +169,28 @@ const statFilters: ItemFilterDefinition[] = [
     keywords: 'tunedstat',
     description: tl('Filter.TunedStat'),
     format: 'query',
-    suggestions: Object.keys(realD2ArmorStatHashByName),
+    suggestions: searchableD2Armor3StatNames,
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const seekingStatHash = realD2ArmorStatHashByName[filterValue];
-      if (!seekingStatHash) {
+      const validStatHash = searchableD2Armor3StatNames.includes(filterValue);
+      if (!validStatHash) {
         throw Error(`invalid stat name: "${filterValue}"`);
       }
-      return (item) => getArmor3TuningStat(item) === seekingStatHash;
+      // Check if we are looking for generic 'primary', 'secondary', or 'tertiary'
+      const ordinalIdx = armor3OrdinalIndexByName[filterValue];
+      const constantExpected =
+        ordinalIdx === undefined ? realD2ArmorStatHashByName[filterValue] : undefined;
+      return (item) => {
+        const tunedStat = getArmor3TuningStat(item);
+        if (tunedStat === undefined) {
+          return false;
+        }
+        const expectedStat =
+          ordinalIdx === undefined
+            ? constantExpected
+            : (getArmor3StatFocus(item)?.[ordinalIdx] ?? null);
+        return expectedStat !== null && tunedStat === expectedStat;
+      };
     },
   },
 ];
