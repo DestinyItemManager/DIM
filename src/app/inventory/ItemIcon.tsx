@@ -14,6 +14,7 @@ import {
   PlugCategoryHashes,
   TraitHashes,
 } from 'data/d2/generated-enums';
+import holofoilAnim from 'images/holofoil-anim.apng';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
@@ -106,7 +107,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
 
   const animatedBackground =
     item.holofoil && !item.traitHashes?.includes(TraitHashes.ReleasesV730Season)
-      ? itemConstants.holofoil900AnimatedBackgroundOverlayPath
+      ? holofoilAnim
       : undefined;
 
   // The actual item icon. Use the ornamented version where available.
@@ -152,10 +153,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ) : (
         <div style={bungieBackgroundStyles(backgrounds)} className={itemImageStyles}>
           {animatedBackground && (
-            <div
-              style={bungieBackgroundStyle(animatedBackground)}
-              className={styles.animatedBackground}
-            />
+            <img src={animatedBackground} className={styles.animatedBackground} />
           )}
           {ornamentBackground && (
             <div

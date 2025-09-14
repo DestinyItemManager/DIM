@@ -112,15 +112,6 @@ $commonBg: #366f42;
   width: calc((10 / 50) * var(--item-size));
 }
 
-.craftedIcon {
-  top: 0;
-  left: 0;
-  height: calc(var(--item-size) - (2 / 50) * var(--item-size));
-  width: calc(var(--item-size) - (2 / 50) * var(--item-size));
-  background-size: calc((10 / 50) * var(--item-size));
-  background-position: calc((2 / 50) * var(--item-size)) calc((2 / 50) * var(--item-size));
-}
-
 .iconOverlay {
   // TODO: In Edge of Fate this overlay changed, but it's actually rendered at
   // the incorrect size vs. in-game.
@@ -141,15 +132,6 @@ $commonBg: #366f42;
     height: var(--item-size);
     width: var(--item-size);
   }
-}
-
-.energyCostOverlay {
-  position: absolute;
-  inset: $item-border-width;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  pointer-events: none;
 }
 
 .energyCost {

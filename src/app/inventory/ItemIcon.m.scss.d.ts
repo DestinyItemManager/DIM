@@ -7,11 +7,9 @@ interface CssExports {
   'borderless': string;
   'common': string;
   'complete': string;
-  'craftedIcon': string;
   'craftedLayer': string;
   'deepsight': string;
   'energyCost': string;
-  'energyCostOverlay': string;
   'exotic': string;
   'highlightedObjective': string;
   'iconOverlay': string;
