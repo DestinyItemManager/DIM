@@ -2,6 +2,7 @@
 
 * Updated tuned stat icon.
 * `dupe:perks` and `dupe:traits` will ignore perks' enhancement status.
+* Fixed icons displaying too large on the gear power tooltip.
 
 ## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
 
