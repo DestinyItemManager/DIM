@@ -53,7 +53,7 @@
 }
 
 .archetype {
-  --item-size-mod: calc(24 / 50 * var(--item-size));
+  --item-size-mod: calc(#{dim-item-px(24)});
   composes: noWrap;
   height: var(--item-size-mod) !important;
   padding-top: 4px;
@@ -63,7 +63,7 @@
 // Perks in the perk/mod columns
 
 .perks {
-  --mod-size: calc(24 / 50 * var(--item-size));
+  --mod-size: calc(#{dim-item-px(24)});
   padding-top: 4px;
   padding-bottom: 4px;
 

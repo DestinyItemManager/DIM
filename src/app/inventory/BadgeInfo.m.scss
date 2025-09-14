@@ -34,13 +34,13 @@
 }
 
 .shapedIcon {
-  width: calc((8 / 50) * var(--item-size));
-  height: calc((8 / 50) * var(--item-size));
+  width: calc(#{dim-item-px(8)});
+  height: calc(#{dim-item-px(8)});
   margin-right: auto;
   color: var(--theme-item-shaped-icon);
   &.enhancedIcon {
-    width: calc((10 / 50) * var(--item-size));
-    height: calc((10 / 50) * var(--item-size));
+    width: calc(#{dim-item-px(10)});
+    height: calc(#{dim-item-px(10)});
   }
 }
 
@@ -82,7 +82,7 @@
 
 .energyCapacity {
   font-weight: bold;
-  font-size: calc((9 / 50) * var(--item-size)); // 9px at default 50px item size
+  font-size: calc(#{dim-item-px(9)}); // 9px at default 50px item size
   margin-right: auto;
 }
 

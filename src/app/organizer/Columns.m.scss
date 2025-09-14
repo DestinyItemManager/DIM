@@ -180,8 +180,8 @@
 }
 
 .perksGrid {
-  --mod-size: calc(28 / 50 * var(--item-size));
-  --perk-size: calc(28 / 50 * var(--item-size));
+  --mod-size: calc(#{dim-item-px(28)});
+  --perk-size: calc(#{dim-item-px(28)});
   padding-top: 4px !important;
   padding-bottom: 4px;
 

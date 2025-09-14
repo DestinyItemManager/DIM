@@ -1,6 +1,8 @@
+@use '../variables.scss' as *;
+
 .element {
-  width: calc((8 / 50) * var(--item-size));
-  height: calc((8 / 50) * var(--item-size));
+  width: calc(#{dim-item-px(8)});
+  height: calc(#{dim-item-px(8)});
   margin-right: 1px;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -10,7 +12,7 @@
   // The D1 icons are a bit too small in the item badge, so we'll make them a
   // bit bigger
   &.d1Badge {
-    width: calc((10 / 50) * var(--item-size));
-    height: calc((10 / 50) * var(--item-size));
+    width: calc(#{dim-item-px(10)});
+    height: calc(#{dim-item-px(10)});
   }
 }
