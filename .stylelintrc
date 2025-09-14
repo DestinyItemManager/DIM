@@ -1,6 +1,11 @@
 {
-  "plugins": ["stylelint-order"],
-  "extends": ["stylelint-config-standard-scss", "stylelint-config-css-modules"],
+  "plugins": [
+    "stylelint-order"
+  ],
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-css-modules"
+  ],
   "rules": {
     "alpha-value-notation": "number",
     "shorthand-property-no-redundant-values": null,
@@ -23,30 +28,57 @@
     "scss/at-rule-no-unknown": true,
     "media-feature-name-no-unknown": null,
     "selector-not-notation": null,
-    "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["horizontal", "global"] }],
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": [
+          "horizontal",
+          "global"
+        ]
+      }
+    ],
     "hue-degree-notation": "number",
     "selector-id-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
     "selector-class-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[A-Za-z0-9]+)*$)",
     "scss/dollar-variable-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
-    "value-no-vendor-prefix": [true, { "ignoreValues": ["box"] }],
+    "value-no-vendor-prefix": [
+      true,
+      {
+        "ignoreValues": [
+          "box"
+        ]
+      }
+    ],
     "color-no-invalid-hex": true,
     "unit-no-unknown": true,
     "no-duplicate-selectors": true,
     "declaration-block-no-duplicate-properties": [
       true,
-      { "ignore": ["consecutive-duplicates-with-different-values"] }
+      {
+        "ignore": [
+          "consecutive-duplicates-with-different-values"
+        ]
+      }
     ],
     "declaration-block-no-redundant-longhand-properties": [
       true,
-      { "ignoreShorthands": ["/grid-template/"] }
+      {
+        "ignoreShorthands": [
+          "/grid-template/"
+        ]
+      }
     ],
     "scss/function-no-unknown": [
       true,
-      { "ignoreFunctions": "/^dim-([a-z][a-z0-9]*)(-[a-z0-9]+)*$/" }
+      {
+        "ignoreFunctions": "/^dim-([a-z][a-z0-9]*)(-[a-z0-9]+)*$/"
+      }
     ],
     "scss/at-function-pattern": [
       "^dim-([a-z][a-z0-9]*)(-[a-z0-9]+)*$",
-      { "message": "Expected function name to be kebab-case and prefixed with 'dim-'" }
+      {
+        "message": "Expected function name to be kebab-case and prefixed with 'dim-'"
+      }
     ],
     "scss/load-partial-extension": null,
     "order/order": [
@@ -68,6 +100,17 @@
       },
       "rules"
     ],
-    "declaration-block-no-shorthand-property-overrides": true
+    "declaration-block-no-shorthand-property-overrides": true,
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": [
+          "size",
+          "min-size",
+          "max-size",
+          "composes"
+        ]
+      }
+    ]
   }
 }

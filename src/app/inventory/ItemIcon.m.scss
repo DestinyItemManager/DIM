@@ -10,8 +10,7 @@ $commonBg: #366f42;
 // The image within the overall item. Global because it's referenced by other styles.
 :global(.item-img) {
   display: block;
-  width: var(--item-size);
-  height: var(--item-size);
+  size: var(--item-size);
   box-sizing: border-box;
   border: $item-border-width solid var(--theme-item-polaroid);
   background-size: contain;
@@ -65,8 +64,7 @@ $commonBg: #366f42;
 .backgroundOverlay {
   position: absolute;
   box-sizing: border-box;
-  height: calc(var(--item-size) - ($item-border-width * 2));
-  width: calc(var(--item-size) - ($item-border-width * 2));
+  size: calc(var(--item-size) - ($item-border-width * 2));
   top: $item-border-width;
   left: $item-border-width;
 }
@@ -155,8 +153,7 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
   // the incorrect size vs. in-game.
   top: 0;
   left: 0;
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
+  size: calc(var(--item-size) - #{2 * $item-border-width});
   background-size: contain;
   position: absolute;
   pointer-events: none;
@@ -184,8 +181,7 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 .highlightedObjective {
   position: absolute;
   display: block;
-  width: calc((var(--item-size) + 1px) / 2) !important;
-  height: calc((var(--item-size) + 1px) / 2) !important;
+  size: calc((var(--item-size) + 1px) / 2) !important;
   right: 0;
   top: calc(var(--item-size) - ((var(--item-size) + 1px) / 2) - 1px);
   // Seems to fix https://github.com/DestinyItemManager/DIM/issues/7974

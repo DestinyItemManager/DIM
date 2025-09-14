@@ -40,8 +40,7 @@ $touchPadding: 2px; // A bit of extra hit area
     &::after {
       content: '';
       position: absolute;
-      width: $dotSize - 4px;
-      height: $dotSize - 4px;
+      size: $dotSize - 4px;
       border-radius: 50%;
       background-color: white;
       transition:

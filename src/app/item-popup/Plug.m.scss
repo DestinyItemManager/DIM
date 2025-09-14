@@ -3,8 +3,7 @@
 .perkCircle {
   display: block;
   -webkit-touch-callout: none;
-  height: var(--item-size);
-  width: var(--item-size);
+  size: var(--item-size);
   border: none;
 
   @include interactive($hover: true) {

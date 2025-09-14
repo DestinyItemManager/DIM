@@ -27,8 +27,7 @@
 
   > img {
     margin-right: 10px;
-    height: 48px;
-    width: 48px;
+    size: 48px;
   }
 
   h1:first-child {
@@ -131,8 +130,7 @@
 }
 
 .itemImage {
-  height: 40px;
-  width: 40px;
+  size: 40px;
   margin: 0 5px;
   border: 1px solid #ddd;
   cursor: pointer;
@@ -159,8 +157,7 @@
 }
 
 .bucketImage {
-  height: 22px;
-  width: 22px;
+  size: 22px;
   margin-top: 2px;
   opacity: 0.6;
 }

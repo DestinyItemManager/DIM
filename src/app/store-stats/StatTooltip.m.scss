@@ -6,8 +6,7 @@
   align-items: center;
   gap: 4px;
   > img {
-    height: 24px;
-    width: 24px;
+    size: 24px;
   }
   > *:last-child {
     margin-left: auto;
@@ -26,8 +25,7 @@
 }
 
 .icon {
-  width: 14px;
-  height: 14px;
+  size: 14px;
   padding-left: 2px;
   padding-right: 2px;
 }

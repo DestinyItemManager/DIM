@@ -1,8 +1,7 @@
 @use '../../variables.scss' as *;
 
 .empty {
-  width: var(--item-size);
-  height: var(--item-size);
+  size: var(--item-size);
   border: 1px solid #ddd;
   box-sizing: border-box;
 
@@ -15,8 +14,7 @@
   composes: item from global;
   opacity: 0.3;
   object-fit: contain;
-  width: 100%;
-  height: 100%;
+  size: 100%;
   padding: 12px;
 }
 

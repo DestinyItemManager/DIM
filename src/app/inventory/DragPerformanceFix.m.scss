@@ -8,8 +8,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  size: 100%;
 
   z-index: 8;
 
@@ -29,8 +28,7 @@
 
     // to test, set a nonzero opacity and a background color
     opacity: 0;
-    width: 100%;
-    height: 100%;
+    size: 100%;
     position: absolute;
 
     z-index: 9;

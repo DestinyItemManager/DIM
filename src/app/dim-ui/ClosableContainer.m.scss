@@ -6,8 +6,7 @@
 
 .close {
   z-index: 1;
-  width: calc(var(--item-size) / 3);
-  height: calc(var(--item-size) / 3);
+  size: calc(var(--item-size) / 3);
   background-size: calc(var(--item-size) / 3);
   display: none;
   position: absolute;

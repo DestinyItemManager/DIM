@@ -21,8 +21,7 @@
 /* this width keeps the span aligned right (short text appears on right side of polaroid)
      but if the text is too long, it will overflow(hidden) off the right side instead of left. */
 .badgeContent {
-  max-width: 100%;
-  max-height: 100%;
+  max-size: 100%;
 }
 
 .engram {
@@ -34,13 +33,11 @@
 }
 
 .shapedIcon {
-  width: calc(#{dim-item-px(8)});
-  height: calc(#{dim-item-px(8)});
+  size: calc(#{dim-item-px(8)});
   margin-right: auto;
   color: var(--theme-item-shaped-icon);
   &.enhancedIcon {
-    width: calc(#{dim-item-px(10)});
-    height: calc(#{dim-item-px(10)});
+    size: calc(#{dim-item-px(10)});
   }
 }
 

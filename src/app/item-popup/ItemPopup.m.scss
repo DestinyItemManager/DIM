@@ -7,8 +7,7 @@
 @use '../variables.scss' as *;
 
 .arrow {
-  width: $theme-tooltip-arrow-size;
-  height: $theme-tooltip-arrow-size;
+  size: $theme-tooltip-arrow-size;
   border-style: solid;
   position: absolute;
   border-width: $theme-tooltip-arrow-size;
@@ -39,16 +38,14 @@
   }
 
   &[data-popper-placement^='top'] .arrow {
-    width: 0;
-    height: 0;
+    size: 0;
     border-bottom-width: 0;
     border-top-color: var(--theme-item-popup-arrow);
     bottom: calc(-1 * $theme-tooltip-arrow-size);
   }
 
   &[data-popper-placement^='bottom'] .arrow {
-    width: 0;
-    height: 0;
+    size: 0;
     border-top-width: 0;
     border-bottom-color: var(--theme-item-popup-arrow);
     top: calc(-1 * $theme-tooltip-arrow-size);
@@ -70,15 +67,13 @@
     }
   }
   &[data-popper-placement^='right'] .arrow {
-    width: 0;
-    height: 0;
+    size: 0;
     border-left-width: 0;
     border-right-color: var(--theme-item-popup-arrow);
     left: calc(-1 * $theme-tooltip-arrow-size);
   }
   &[data-popper-placement^='left'] .arrow {
-    width: 0;
-    height: 0;
+    size: 0;
     border-right-width: 0;
     border-left-color: var(--theme-item-popup-arrow);
     right: calc(-1 * $theme-tooltip-arrow-size);

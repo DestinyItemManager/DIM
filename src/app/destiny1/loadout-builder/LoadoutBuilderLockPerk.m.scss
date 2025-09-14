@@ -10,8 +10,7 @@
 }
 
 .itemSized {
-  width: var(--item-size);
-  height: var(--item-size);
+  size: var(--item-size);
 }
 
 .emptyItem {
@@ -21,8 +20,7 @@
   cursor: pointer;
 
   > img {
-    width: 100%;
-    height: 100%;
+    size: 100%;
   }
 }
 
@@ -30,8 +28,7 @@
   composes: flexColumn from '../../dim-ui/common.m.scss';
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
+  size: 100%;
   opacity: 0;
 
   @include interactive($hover: true) {

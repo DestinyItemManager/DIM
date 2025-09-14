@@ -67,8 +67,7 @@
 @media screen and (max-width: 540px) {
   .item {
     /* smaller since double width tier column margins */
-    max-width: 15vw;
-    max-height: 15vw;
+    max-size: 15vw;
   }
   .stat {
     max-width: 100%;

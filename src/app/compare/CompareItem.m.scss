@@ -14,8 +14,7 @@
   z-index: 2;
   border-right: 1px solid #f5f5f540;
   img {
-    height: 16px;
-    width: 16px;
+    size: 16px;
     vertical-align: bottom;
   }
 }
@@ -96,8 +95,7 @@
 // The "dismiss" button in the item header
 .close {
   composes: resetButton from '../dim-ui/common.m.scss';
-  width: 32px;
-  height: 32px;
+  size: 32px;
   background-size: 16px;
   background-image: url('images/close.png');
   background-position: center;

@@ -39,16 +39,14 @@ $image: (
 );
 
 .container {
-  width: 5 * $square-size;
-  height: 5 * $square-size;
+  size: 5 * $square-size;
   position: relative;
   transform: rotate(45deg);
   margin: 60px 0;
 }
 
 .square {
-  width: $square-size;
-  height: $square-size;
+  size: $square-size;
   background: #fff;
   position: absolute;
   transform: scale(0) rotate(0);

@@ -100,15 +100,13 @@
 .emblem {
   grid-area: emblem;
   place-self: center;
-  width: 32px;
-  height: 32px;
+  size: 32px;
 }
 
 .vaultEmblem {
   grid-area: emblem;
   place-self: center;
-  height: 40px;
-  width: 40px;
+  size: 40px;
 }
 
 .vaultName {

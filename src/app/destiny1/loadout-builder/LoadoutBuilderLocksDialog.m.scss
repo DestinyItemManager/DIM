@@ -19,8 +19,7 @@ $and-color: #814bcf;
   }
 
   img {
-    width: var(--item-size);
-    height: var(--item-size);
+    size: var(--item-size);
     display: block;
     margin: auto;
   }

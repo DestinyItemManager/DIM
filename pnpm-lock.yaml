@@ -409,6 +409,9 @@ devDependencies:
   postcss-loader:
     specifier: ^8.2.0
     version: 8.2.0(postcss@8.5.6)(typescript@5.9.2)(webpack@5.101.3)
+  postcss-size:
+    specifier: ^5.0.0
+    version: 5.0.0(postcss@8.5.6)
   postcss-sort-media-queries:
     specifier: ^5.2.0
     version: 5.2.0(postcss@8.5.6)
@@ -12384,6 +12387,15 @@ packages:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
+    dev: true
+
+  /postcss-size@5.0.0(postcss@8.5.6):
+    resolution: {integrity: sha512-FCDVT8YrdtzJFqzfpDM2gy/uUk3F2UkOtatIjrDeTJgadmOtL/X9jN6iD6YIepK4eK4NoJtAPZ/ZPXIDNdabfQ==}
+    engines: {node: '>=18.0'}
+    peerDependencies:
+      postcss: ^8.1.0
+    dependencies:
+      postcss: 8.5.6
     dev: true
 
   /postcss-sort-media-queries@5.2.0(postcss@8.5.6):

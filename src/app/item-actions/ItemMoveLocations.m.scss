@@ -32,14 +32,11 @@
   display: flex;
   place-content: center;
   align-items: center;
-  height: 36px;
-  width: 36px;
+  size: 36px;
 
   @include phone-portrait {
-    width: calc((100vw - 40px - 5 * 5px) / 7);
-    height: calc((100vw - 40px - 5 * 5px) / 7);
-    max-width: 55px;
-    max-height: 55px;
+    size: calc((100vw - 40px - 5 * 5px) / 7);
+    max-size: 55px;
   }
 
   @include interactive($hover: true, $focus: true) {
@@ -57,15 +54,13 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
-    width: 100%;
+    size: 100%;
     object-fit: cover;
   }
 
   :global(.app-icon) {
     position: absolute;
-    height: 60%;
-    width: 60%;
+    size: 60%;
     top: 7px;
     left: 7px;
     filter: drop-shadow(1px 1px 2px black);

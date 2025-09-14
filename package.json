@@ -161,6 +161,7 @@
     "postcss": "^8.5.6",
     "postcss-assets-webpack-plugin": "^4.1.2",
     "postcss-loader": "^8.2.0",
+    "postcss-size": "^5.0.0",
     "postcss-sort-media-queries": "^5.2.0",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",

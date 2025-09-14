@@ -19,8 +19,7 @@
 .crucibleRankIcon {
   margin: 2px 10px -2px 2px;
   position: relative;
-  width: 64px;
-  height: 64px;
+  size: 64px;
 }
 
 .gridLayout {
@@ -70,8 +69,7 @@
     --objective-checkbox-color: #409a80;
   }
   & > * {
-    height: 14px;
-    width: 14px;
+    size: 14px;
     margin: 0;
   }
 }

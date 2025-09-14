@@ -72,8 +72,7 @@
   align-items: center;
   color: var(--theme-text);
   img {
-    width: 16px;
-    height: 16px;
+    size: 16px;
     margin-right: 8px;
   }
 }
@@ -86,8 +85,7 @@
 }
 
 .checkbox {
-  width: 17px;
-  height: 17px;
+  size: 17px;
   border: 1px solid #999;
   margin-right: 4px;
   box-sizing: border-box;
@@ -97,8 +95,7 @@
     content: '';
     display: block;
     margin: 2px;
-    height: calc(100% - 4px);
-    width: calc(100% - 4px);
+    size: calc(100% - 4px);
     background-color: var(--objective-checkbox-color, $xp);
   }
 }

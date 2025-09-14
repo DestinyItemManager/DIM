@@ -88,8 +88,7 @@
 }
 
 .inlineIcon {
-  height: 14px;
-  width: 14px;
+  size: 14px;
   margin-right: 0;
 }
 
@@ -148,13 +147,11 @@
   position: relative;
   contain: layout paint style;
   box-sizing: border-box;
-  height: 18px;
-  width: 18px;
+  size: 18px;
   margin-left: -1px;
   flex-shrink: 0;
   > img {
-    height: var(--item-size);
-    width: var(--item-size);
+    size: var(--item-size);
   }
 }
 .perkSelected {
@@ -204,15 +201,13 @@
   align-items: flex-start;
   img {
     margin-right: 4px;
-    height: 16px;
-    width: 16px;
+    size: 16px;
   }
 }
 
 $modslotSize: 24px;
 .modslotIcon {
-  height: $modslotSize;
-  width: $modslotSize;
+  size: $modslotSize;
 }
 
 .modslot {
@@ -228,8 +223,7 @@ $modslotSize: 24px;
 .loadout {
   composes: noWrap;
   img {
-    height: 16px;
-    width: 16px;
+    size: 16px;
     margin-right: 4px;
     vertical-align: middle;
   }

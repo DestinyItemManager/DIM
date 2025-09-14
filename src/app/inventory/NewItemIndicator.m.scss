@@ -2,8 +2,7 @@
 
 .newItem {
   display: block;
-  width: calc(var(--item-size) * 0.08);
-  height: calc(var(--item-size) * 0.08);
+  size: calc(var(--item-size) * 0.08);
   border: calc(var(--item-size) * 0.08) solid $new-notification-dot;
   position: absolute;
   top: $item-border-width + 2px;

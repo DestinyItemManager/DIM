@@ -1,8 +1,7 @@
 @use '../../variables.scss' as *;
 
 .classIcon {
-  width: calc(var(--item-size) / 4) !important;
-  height: calc(var(--item-size) / 4) !important;
+  size: calc(var(--item-size) / 4) !important;
   color: white;
   position: absolute;
   left: 3px;

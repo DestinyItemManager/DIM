@@ -1,8 +1,7 @@
 @use '../variables.scss' as *;
 
 .progressIcon {
-  height: calc(var(--item-size) / 2);
-  width: calc(var(--item-size) / 2);
+  size: calc(var(--item-size) / 2);
   z-index: 1;
   border-radius: 50%;
   background-color: rgb(0, 0, 0, 0.5);
@@ -11,8 +10,7 @@
   justify-content: center;
   place-self: center;
   :global(.app-icon) {
-    height: calc(-4px + var(--item-size) / 2);
-    width: calc(-4px + var(--item-size) / 2);
+    size: calc(-4px + var(--item-size) / 2);
     font-size: calc(-4px + var(--item-size) / 2);
   }
 }

@@ -143,8 +143,7 @@
     flex-grow: 1;
   }
   img {
-    height: 16px;
-    width: 16px;
+    size: 16px;
   }
 }
 
@@ -163,16 +162,14 @@
   top: -3px !important;
   right: 0 !important;
   display: inline-block;
-  height: 8px;
-  width: 8px;
+  size: 8px;
   margin: -3px 0;
   margin-left: 2px;
 }
 
 .inLoadout {
   filter: invert(1);
-  height: 18px;
-  width: 18px;
+  size: 18px;
   position: relative;
   display: inline-block;
   margin: -3px 0;
@@ -199,8 +196,7 @@
 }
 
 .factorIcon {
-  height: 20px;
-  width: 20px;
+  size: 20px;
 }
 
 .artificeExplanation {

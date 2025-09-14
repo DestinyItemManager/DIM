@@ -39,8 +39,7 @@
 
 .ownedIcon,
 .acquiredIcon {
-  width: calc(var(--item-size) / 4) !important;
-  height: calc(var(--item-size) / 4) !important;
+  size: calc(var(--item-size) / 4) !important;
   font-size: calc(var(--item-size) / 6) !important;
   border-radius: 50%;
   padding: 3px;

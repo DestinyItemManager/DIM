@@ -39,8 +39,7 @@
       align-items: center;
       max-width: var(--item-size);
       .milestone-img {
-        width: var(--item-size);
-        height: var(--item-size);
+        size: var(--item-size);
       }
       span {
         font-size: 10px;

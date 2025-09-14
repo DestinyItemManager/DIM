@@ -33,8 +33,7 @@
 .icon {
   margin-left: 4px;
   img {
-    height: 12px;
-    width: 12px;
+    size: 12px;
     vertical-align: bottom;
     filter: drop-shadow(0 0 0 white);
   }
@@ -48,8 +47,7 @@
 .barContainer {
   background-color: #333;
   display: flex;
-  width: 100%;
-  height: 100%;
+  size: 100%;
 
   :global(.armory) & {
     background: rgb(0, 0, 0, 0.5);
@@ -228,8 +226,7 @@
   grid-column: -3 / -1;
   margin-left: 4px;
   img {
-    height: 12px !important;
-    width: 12px !important;
+    size: 12px !important;
     vertical-align: bottom;
   }
 }
