@@ -34,8 +34,7 @@ $commonBg: #366f42;
     background-position: center;
     background-repeat: no-repeat;
     pointer-events: none;
-    height: 100%;
-    width: 100%;
+    inset: 0;
   }
 }
 
@@ -65,7 +64,7 @@ $commonBg: #366f42;
     content: '';
     position: absolute;
     box-sizing: border-box;
-    inset: $item-border-width;
+    inset: 0;
     border: 2px solid $deepsight-border-color;
   }
 }
@@ -110,9 +109,6 @@ $commonBg: #366f42;
   left: calc((1 / 50) * var(--item-size));
   height: calc((10 / 50) * var(--item-size));
   width: calc((10 / 50) * var(--item-size));
-  &.featuredIcon {
-    left: 1px;
-  }
 }
 
 .craftedIcon {

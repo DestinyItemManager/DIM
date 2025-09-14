@@ -183,10 +183,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             />
           )}
           {seasonIcon && (
-            <div
-              style={bungieBackgroundStyle(seasonIcon)}
-              className={clsx(styles.seasonIcon, { [styles.featuredIcon]: item.featured })}
-            />
+            <div style={bungieBackgroundStyle(seasonIcon)} className={clsx(styles.seasonIcon)} />
           )}
         </div>
       )}

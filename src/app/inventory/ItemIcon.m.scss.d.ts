@@ -13,7 +13,6 @@ interface CssExports {
   'energyCost': string;
   'energyCostOverlay': string;
   'exotic': string;
-  'featuredIcon': string;
   'highlightedObjective': string;
   'iconOverlay': string;
   'inverted': string;
