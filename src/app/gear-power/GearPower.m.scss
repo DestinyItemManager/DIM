@@ -1,11 +1,10 @@
 @use '../variables.scss' as *;
 .gearPowerSheet {
   width: 100%;
-  max-width: fit-content;
   margin: 0 auto;
 
-  @include phone-portrait {
-    max-width: unset;
+  @include desktop {
+    max-width: fit-content;
   }
 
   .gearPowerSheetContent {

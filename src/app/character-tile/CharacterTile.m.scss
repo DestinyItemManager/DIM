@@ -118,10 +118,6 @@
   overflow: hidden;
   color: white;
   min-width: 0; // prevents expanding beyond the grid cell with long contents
-
-  @include phone-portrait {
-    font-size: 16px;
-  }
 }
 
 // The class name (Hunter, Titan, etc)

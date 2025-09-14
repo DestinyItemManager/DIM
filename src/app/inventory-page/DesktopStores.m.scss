@@ -41,10 +41,8 @@
 
 .inventoryContainer {
   :global(.issue-banner-shown) & {
-    padding-bottom: $issue-banner-height;
-
-    @include phone-portrait {
-      padding-bottom: 0;
+    @include desktop {
+      padding-bottom: $issue-banner-height;
     }
   }
 }
