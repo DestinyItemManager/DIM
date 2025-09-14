@@ -459,10 +459,6 @@ export function makeItem(
     iconDef = overrideStyleItem?.displayProperties?.iconHash
       ? defs.Icon.get(overrideStyleItem.displayProperties.iconHash)
       : undefined;
-    if (!iconDef) {
-      // Some icon hashes aren't set, but the icon hashes and the inventory item hash match.
-      iconDef = defs.Icon.get(overrideStyleItem.hash);
-    }
   }
   if (!iconDef && displayProperties.iconHash) {
     iconDef = defs.Icon.get(displayProperties.iconHash);
@@ -487,7 +483,7 @@ export function makeItem(
     hiddenOverlay,
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
-    universalOrnamented: Boolean(
+    ornamented: Boolean(
       normalBucket.inArmor && !isExotic && overrideStyleItem?.displayProperties.icon,
     ),
     iconDef,

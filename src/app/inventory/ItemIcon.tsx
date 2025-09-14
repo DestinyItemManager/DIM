@@ -78,7 +78,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           // In game the masterwork glow is in front of the icon but I think that looks bad.
           item.masterwork && itemConstants.masterworkOverlayPath,
           item.holofoil && itemConstants.holofoil900AnimatedBackgroundOverlayPath,
-          item.universalOrnamented && itemConstants.universalOrnamentBackgroundOverlayPath,
+          item.ornamented && itemConstants.universalOrnamentBackgroundOverlayPath,
         ])
       : [item.icon];
 

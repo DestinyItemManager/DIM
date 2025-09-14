@@ -86,7 +86,7 @@ export interface DimItem {
   /** Some items have a full icon definition attached which provides layered icon assets. */
   iconDef?: DestinyIconDefinition;
   /** Whether this has a universal ornament applied. */
-  universalOrnamented: boolean;
+  ornamented: boolean;
   /** Whether we can pull this item from the postmaster */
   canPullFromPostmaster: boolean;
   /** Is this "equipment" (items that can be equipped). */
