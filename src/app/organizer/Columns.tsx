@@ -252,13 +252,16 @@ export function getColumns(
     {
       isArmor,
       isSpreadsheet,
+      className: styles.stats,
+      headerClassName: styles.statsHeader,
     },
-    styles.stats,
-    styles.statsHeader,
   );
   const customStats = isSpreadsheet
     ? []
-    : createCustomStatColumns(customStatDefs, styles.stats, styles.statsHeader);
+    : createCustomStatColumns(customStatDefs, {
+        className: styles.stats,
+        headerClassName: styles.statsHeader,
+      });
 
   const columns: ColumnDefinition[] = compact([
     !isSpreadsheet &&
@@ -1000,13 +1003,18 @@ export function getStatColumns(
     isArmor,
     isSpreadsheet = false,
     showStatLabel = false,
+    extraStatInfo = false,
+    className,
+    headerClassName,
   }: {
     isArmor: boolean;
     isSpreadsheet?: boolean;
     showStatLabel?: boolean;
+    /** Whether to show extra stat info icons (e.g. that the total includes tuners, or that the stat is tuned) and stat bars. */
+    extraStatInfo?: boolean;
+    className?: string;
+    headerClassName?: string;
   },
-  className?: string,
-  headerClassName?: string,
 ) {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -1071,6 +1079,7 @@ export function getStatColumns(
             stat={stat}
             item={item}
             value={stat.value}
+            extraStatInfo={extraStatInfo}
           />
         );
       },
@@ -1140,6 +1149,7 @@ export function getStatColumns(
                 stat={stat}
                 item={item}
                 value={stat.base}
+                extraStatInfo={extraStatInfo}
               />
             );
           },
@@ -1179,6 +1189,7 @@ export function getStatColumns(
                 stat={stat}
                 item={item}
                 value={val}
+                extraStatInfo={extraStatInfo}
               />
             );
           },
