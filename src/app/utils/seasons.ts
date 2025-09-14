@@ -1,16 +1,27 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { currentSeasonPassHashSelector } from 'app/manifest/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
+import { useSelector } from 'react-redux';
 
-export function getCurrentSeasonInfo(
+export function useCurrentSeasonInfo(
   defs: D2ManifestDefinitions,
-  profileInfo: DestinyProfileResponse,
+  profileInfo: DestinyProfileResponse | undefined,
 ) {
+  const currentSeasonPassHash = useSelector(currentSeasonPassHashSelector);
+
+  if (!defs || !profileInfo) {
+    return { season: undefined, seasonPass: undefined, seasonPassStartEnd: undefined };
+  }
+
   const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassList[D2SeasonPassActiveList]?.seasonPassHash
-    ? defs.SeasonPass.get(season.seasonPassList[D2SeasonPassActiveList].seasonPassHash)
-    : undefined;
-  return { season, seasonPass };
+  const seasonPass = currentSeasonPassHash ? defs.SeasonPass.get(currentSeasonPassHash) : undefined;
+  return {
+    season,
+    seasonPass,
+    seasonPassStartEnd: season?.seasonPassList.find(
+      (s) => s.seasonPassHash === currentSeasonPassHash,
+    ),
+  };
 }

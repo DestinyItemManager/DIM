@@ -5,11 +5,10 @@ import { findItemsByBucket, getArtifactBonus } from 'app/inventory/stores-helper
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { currentSeasonPassHashSelector, d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import { BucketHashes } from 'data/d2/generated-enums';
 
 // find and get the quantity of a specif item type
@@ -67,11 +66,12 @@ function getCurrentSeason(
   profile: DestinyProfileResponse | undefined,
 ): [number?, number?, string?] {
   const defs = d2ManifestSelector(state);
+  const currentSeasonPassHash = currentSeasonPassHashSelector(state);
   const season = profile?.profile?.data?.currentSeasonHash
     ? defs?.Season.get(profile.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassList[D2SeasonPassActiveList]?.seasonPassHash
-    ? defs?.SeasonPass.get(season.seasonPassList[D2SeasonPassActiveList].seasonPassHash)
+  const seasonPass = currentSeasonPassHash
+    ? defs?.SeasonPass.get(currentSeasonPassHash)
     : undefined;
   if (!season) {
     return [];
