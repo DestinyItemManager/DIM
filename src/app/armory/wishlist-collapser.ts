@@ -1,14 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
-import { invert } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { enhancedVersion, unenhancedVersion } from 'app/utils/perk-utils';
 import { WishListRoll } from 'app/wishlists/types';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { partition } from 'es-toolkit';
-
-export const enhancedToPerk = invert(perkToEnhanced, Number);
 
 interface Roll {
   /** rampage, outlaw, etc. */
@@ -156,7 +153,7 @@ export function consolidateRollsForOneWeapon(
   // roll doesn't specify them
   for (const roll of Object.values(rollsGroupedByPrimaryPerks)) {
     for (const perk of roll.commonPrimaryPerks) {
-      const enhancedPerk = perkToEnhanced[perk];
+      const enhancedPerk = enhancedVersion(perk);
       if (enhancedPerk && !roll.commonPrimaryPerks.includes(enhancedPerk)) {
         const socketIndex = socketIndexByPerkHash[perk];
         if (
@@ -260,17 +257,17 @@ interface PerkMeta {
 export type PerkColumnsMeta = PerkMeta[][];
 
 function getBaseEnhancedPerkPair(perkHash: number) {
-  let base = enhancedToPerk[perkHash];
-  let enhanced = perkToEnhanced[perkHash];
+  let base = unenhancedVersion(perkHash);
+  let enhanced = enhancedVersion(perkHash);
   if (!base && !enhanced) {
     return;
   }
 
   if (!enhanced) {
-    enhanced = perkToEnhanced[base]!;
+    enhanced = enhancedVersion(base!)!;
   }
   if (!base) {
-    base = enhancedToPerk[enhanced];
+    base = unenhancedVersion(enhanced)!;
   }
 
   return { base, enhanced };
