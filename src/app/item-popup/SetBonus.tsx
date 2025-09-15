@@ -98,8 +98,9 @@ export function SetBonusesStatus({
           tooltip={
             <>
               <Tooltip.Header text={sb!.setBonus.displayProperties.name} />
-              {Object.values(sb!.activePerks).map((p) => (
+              {Object.values(sb!.activePerks).map((p, i) => (
                 <React.Fragment key={p.def.hash}>
+                  {i !== 0 && <hr />}
                   <strong>{`${t('Item.SetBonus.NPiece', { count: p.requirement })} | ${p.def.displayProperties.name}`}</strong>
                   <br />
                   {p.def.displayProperties.description}
