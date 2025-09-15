@@ -49,6 +49,11 @@ export class PerksSet {
 }
 
 function makePerksSet(item: DimItem, perkType?: PerkType) {
+  if (perkType === 'perks') {
+    return item
+      .sockets!.allSockets.filter((s) => s.isPerk && s.socketDefinition.defaultVisible)
+      .map((s) => new Set(s.plugOptions.map((p) => p.plugDef.hash)));
+  }
   return getSocketsByType(item, perkType).map(
     (s) => new Set(s.plugOptions.map((p) => normalizeEnhancedness(p.plugDef.hash))),
   );
