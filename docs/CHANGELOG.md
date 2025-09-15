@@ -4,6 +4,8 @@
 * `dupe:perks` and `dupe:traits` will ignore perks' enhancement status.
 * Fixed icons displaying too large on the gear power tooltip.
 * Loadout Optimizer result sets now show which set bonuses they activate.
+* Added `tunedstat:primary`, `tunedstat:secondary`, and `tunedstat:tertiary`.
+* Distinguish between special and primary ammo sidearms/pulse rifles in `dupe:traits` and `dupe:perks` comparison.
 
 ## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
 
