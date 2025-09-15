@@ -18,7 +18,7 @@ import React from 'react';
 import styles from './SetBonus.m.scss';
 
 /** Information about set bonuses currently/hypothetically provided by  a collection of armor pieces. */
-interface ActiveSetBonusInfo {
+export interface ActiveSetBonusInfo {
   // Returned as a convenience for downstream display, to avoid repeat filtering and sorting armor.
   equippedArmor: DimItem[];
   possibleBonusSets: Record<number, DimItem[]>;
@@ -91,22 +91,27 @@ export function SetBonusesStatus({
   store?: DimStore;
 }) {
   return (
-    <div>
+    <div className={styles.setBonusesStatus}>
       {Object.values(setBonusStatus.activeSetBonuses).map((sb) => (
         <PressTip
           key={sb!.setBonus.hash}
           tooltip={
             <>
               <Tooltip.Header text={sb!.setBonus.displayProperties.name} />
-              {Object.values(sb!.activePerks).map((p) => (
+              {Object.values(sb!.activePerks).map((p, i) => (
                 <React.Fragment key={p.def.hash}>
+                  {i !== 0 && <hr />}
                   <strong>{`${t('Item.SetBonus.NPiece', { count: p.requirement })} | ${p.def.displayProperties.name}`}</strong>
                   <br />
                   {p.def.displayProperties.description}
-                  <hr />
                 </React.Fragment>
               ))}
-              {store && <ContributingArmor store={store} setBonus={sb!.setBonus} />}
+              {store && (
+                <>
+                  <hr />
+                  <ContributingArmor store={store} setBonus={sb!.setBonus} />
+                </>
+              )}
             </>
           }
           placement="top"
