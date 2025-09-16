@@ -103,7 +103,7 @@ function metrics(state: RootState) {
     : seasonProgress?.level;
 
   return {
-    gunsmith: progression[1471185389].currentProgress,
+    gunsmith: progression[1471185389]?.currentProgress ?? 0,
     triumphs: lifetimeScore ?? 0,
     triumphsActive: activeScore ?? 0,
     battlePass: battlePassHash ? seasonalRank : 0,
