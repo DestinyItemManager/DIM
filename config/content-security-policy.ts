@@ -1,5 +1,5 @@
 import builder from 'content-security-policy-builder';
-import { FeatureFlags } from './feature-flags';
+import { type FeatureFlags } from './feature-flags.ts';
 
 const SELF = "'self'";
 
