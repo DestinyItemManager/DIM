@@ -28,7 +28,7 @@ import {
   DestinyProfileResponse,
 } from 'node_modules/bungie-api-ts/destiny2/interfaces';
 import { classStatModHash } from 'testing/test-item-utils';
-import { getTestDefinitions, getTestProfile, getTestStores } from 'testing/test-utils';
+import { fetchTestProfile, getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { analyzeLoadout } from './analysis';
 import { LoadoutAnalysisContext, LoadoutFinding } from './types';
 
@@ -76,7 +76,7 @@ beforeAll(async () => {
   [defs, stores, profileResponse] = await Promise.all([
     getTestDefinitions(),
     getTestStores(),
-    getTestProfile(),
+    fetchTestProfile(),
   ]);
   allItems = stores.flatMap((store) => store.items);
   store = stores.find((s) => s.classType === DestinyClass.Hunter)!;
