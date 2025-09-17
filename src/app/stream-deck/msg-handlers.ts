@@ -42,7 +42,7 @@ import { delay } from 'app/utils/promises';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { streamDeckSelection } from './actions';
 import { sendToStreamDeck } from './async-module';
-import packager, { streamDeckClearId } from './util/packager';
+import { perks, streamDeckClearId } from './util/packager';
 
 // Calc location path
 function routeTo(state: RootState, path: string) {
@@ -215,7 +215,7 @@ function requestPerksHandler(): ThunkResult {
   return async (_, getState) => {
     sendToStreamDeck({
       action: 'perks',
-      data: packager.perks(getState()),
+      data: perks(getState()),
     });
   };
 }

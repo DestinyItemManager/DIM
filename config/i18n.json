@@ -1444,6 +1444,10 @@
       "ExtensionIssue": "Extensions Issue",
       "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection."
     },
+    "Error": {
+      "Title": "Stream Deck Plugin Error",
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}"
+    },
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
