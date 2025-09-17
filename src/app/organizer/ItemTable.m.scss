@@ -12,129 +12,134 @@ $content-cells: 5;
   --item-table-toolbar-height: 0;
 }
 
-.table {
-  display: grid;
-  margin: 8px 0 16px 0;
+// Put these on their own layer so they can be overridden easily
+@layer itemtable {
+  .table {
+    display: grid;
+    margin: 8px 0 16px 0;
 
-  [role='cell'] {
-    z-index: $content-cells;
-  }
-}
-
-.toolbar {
-  grid-column: 1 / -1;
-  z-index: $toolbar;
-  box-sizing: border-box;
-
-  top: var(--header-height);
-  padding: 8px 8px !important;
-  border-bottom: none !important;
-  background-color: var(--theme-organizer-row-odd-bg);
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: sticky;
-  left: env(safe-area-inset-left);
-  // Reserve space for always-on scrollbars :-(
-  width: calc(
-    100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
-  );
-  gap: 4px;
-}
-
-.importButton {
-  @media (max-width: 1000px) {
-    display: none;
-  }
-}
-
-// Column headers
-.header {
-  vertical-align: bottom;
-  text-align: left;
-  border-bottom: 1px solid #ddd !important;
-  background: #313233;
-  padding: 4px 8px;
-  white-space: nowrap;
-  padding-top: 4px !important;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end !important;
-
-  img {
-    height: 16px;
-    width: 16px;
-    vertical-align: bottom;
-  }
-}
-
-.sorter {
-  margin-left: 2px;
-}
-
-.selection {
-  background-color: var(--org-row-bg);
-  padding-left: 8px !important;
-  padding-right: 2px !important;
-  min-width: 20px;
-  left: env(safe-area-inset-left);
-  position: sticky;
-  top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
-  z-index: $header-cells !important;
-  &.header {
-    top: calc(var(--header-height) + var(--item-table-toolbar-height));
-  }
-}
-
-// Indicate cells that can be filtered on shift-click
-.shiftHeld {
-  .hasFilter {
-    @include interactive($hover: true) {
-      background-color: var(--theme-accent-primary) !important;
-      cursor: pointer;
+    // Lower specificity to allow overrides
+    :where([role='cell']) {
+      display: flex;
+      flex-direction: row;
+      z-index: $content-cells;
     }
   }
-}
 
-.noItems {
-  text-align: center;
-  grid-column: 1 / -1;
-  padding: 2em !important;
-}
+  .toolbar {
+    grid-column: 1 / -1;
+    z-index: $toolbar;
+    box-sizing: border-box;
 
-.row {
-  --org-row-bg: var(--theme-organizer-row-odd-bg);
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-  background-color: var(--org-row-bg);
+    top: var(--header-height);
+    padding: 8px;
+    background-color: var(--theme-organizer-row-odd-bg);
 
-  > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: sticky;
+    left: env(safe-area-inset-left);
+    // Reserve space for always-on scrollbars :-(
+    width: calc(
+      100vw - var(--scrollbar-width) - env(safe-area-inset-left) - env(safe-area-inset-right)
+    );
+    gap: 4px;
+  }
+
+  .importButton {
+    @media (max-width: 1000px) {
+      display: none;
+    }
+  }
+
+  // Column headers
+  .header {
+    vertical-align: bottom;
+    text-align: left;
+    border-bottom: 1px solid #ddd !important;
+    background: #313233;
+    padding: 4px 8px;
+    white-space: nowrap;
+    padding-top: 4px !important;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end !important;
+
+    img {
+      height: 16px;
+      width: 16px;
+      vertical-align: bottom;
+    }
+  }
+
+  .sorter {
+    margin-left: 2px;
+  }
+
+  .selection {
+    background-color: var(--org-row-bg);
+    padding-left: 8px !important;
+    padding-right: 2px !important;
+    min-width: 20px;
+    left: env(safe-area-inset-left);
+    position: sticky;
+    top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
+    z-index: $header-cells;
+    &.header {
+      top: calc(var(--header-height) + var(--item-table-toolbar-height));
+    }
+  }
+
+  // Indicate cells that can be filtered on shift-click
+  .shiftHeld {
+    .hasFilter {
+      @include interactive($hover: true) {
+        background-color: var(--theme-accent-primary) !important;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .noItems {
+    text-align: center;
+    grid-column: 1 / -1;
+    padding: 2em !important;
+  }
+
+  .row {
+    --org-row-bg: var(--theme-organizer-row-odd-bg);
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    background-color: var(--org-row-bg);
+
+    &:nth-of-type(2n) {
+      --org-row-bg: var(--theme-organizer-row-even-bg);
+    }
+
+    &:hover {
+      background-color: rgb(255, 255, 255, 0.1);
+    }
+  }
+  :where(.row > div) {
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
   }
-  &:nth-of-type(2n) {
-    --org-row-bg: var(--theme-organizer-row-even-bg);
-  }
 
-  &:hover {
-    background-color: rgb(255, 255, 255, 0.1);
-  }
-}
+  .headerRow {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    background: #313233;
+    position: sticky;
+    z-index: $header-cells + 1;
 
-.headerRow {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-  background: #313233;
-  position: sticky;
-  z-index: $header-cells + 1;
+    top: calc(var(--header-height) + var(--item-table-toolbar-height));
 
-  top: calc(var(--header-height) + var(--item-table-toolbar-height));
-
-  > * {
-    background-color: var(--theme-organizer-row-odd-bg);
+    > * {
+      background-color: var(--theme-organizer-row-odd-bg);
+    }
   }
 }

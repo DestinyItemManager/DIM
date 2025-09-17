@@ -935,6 +935,7 @@ export function getColumns(
     c({
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
+      className: styles.loadouts,
       value: (item) => {
         const loadouts = loadoutsByItem[item.id];
         // The raw comparison value compares by number of loadouts first,
