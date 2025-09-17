@@ -172,7 +172,7 @@
     "style-loader": "^4.0.0",
     "stylelint": "^16.24.0",
     "stylelint-config-css-modules": "^4.5.1",
-    "stylelint-config-standard-scss": "^15.0.1",
+    "stylelint-config-standard-scss": "^16.0.0",
     "stylelint-order": "^7.0.0",
     "svgo": "^4.0.0",
     "svgo-loader": "^4.0.0",
