@@ -170,7 +170,7 @@
     "sonda": "^0.9.0",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
-    "stylelint": "^16.23.1",
+    "stylelint": "^16.24.0",
     "stylelint-config-css-modules": "^4.5.1",
     "stylelint-config-standard-scss": "^16.0.0",
     "stylelint-order": "^7.0.0",

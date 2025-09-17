@@ -437,17 +437,17 @@ devDependencies:
     specifier: ^4.0.0
     version: 4.0.0(webpack@5.101.3)
   stylelint:
-    specifier: ^16.23.1
-    version: 16.23.1(typescript@5.9.2)
+    specifier: ^16.24.0
+    version: 16.24.0(typescript@5.9.2)
   stylelint-config-css-modules:
     specifier: ^4.5.1
-    version: 4.5.1(stylelint@16.23.1)
+    version: 4.5.1(stylelint@16.24.0)
   stylelint-config-standard-scss:
     specifier: ^16.0.0
-    version: 16.0.0(postcss@8.5.6)(stylelint@16.23.1)
+    version: 16.0.0(postcss@8.5.6)(stylelint@16.24.0)
   stylelint-order:
     specifier: ^7.0.0
-    version: 7.0.0(stylelint@16.23.1)
+    version: 7.0.0(stylelint@16.24.0)
   svgo:
     specifier: ^4.0.0
     version: 4.0.0
@@ -2016,6 +2016,26 @@ packages:
     resolution: {integrity: sha512-pW3l7xy9xxL9rC2fuojXTuzpWtijdpdwCmopn58YxgGcfAkmps0ZMYW+mQwkFbh5Y6ELXCLPXO/+scMqIE4JrQ==}
     dev: false
 
+  /@cacheable/memoize@2.0.1:
+    resolution: {integrity: sha512-WBLH37SynkCa39S6IrTSMQF3Wdv4/51WxuU5TuCNEqZcLgLGHme8NUxRTcDIO8ZZFXlslWbh9BD3DllixgPg6Q==}
+    dependencies:
+      '@cacheable/utils': 2.0.1
+    dev: true
+
+  /@cacheable/memory@2.0.1:
+    resolution: {integrity: sha512-Ufc7iQnRKFC8gjZVGOTOsMwM/vZtmsw3LafvctVXPm835ElgK3DpMe1U5i9sd6OieSkyJhXbAT2Q2FosXBBbAQ==}
+    dependencies:
+      '@cacheable/memoize': 2.0.1
+      '@cacheable/utils': 2.0.1
+      '@keyv/bigmap': 1.0.0
+      hookified: 1.12.0
+      keyv: 5.5.1
+    dev: true
+
+  /@cacheable/utils@2.0.1:
+    resolution: {integrity: sha512-sxHjO6wKn4/0wHCFYbh6tljj+ciP9BKgyBi09NLsor3sN+nu/Rt3FwLw6bYp7bp8usHpmcwUozrB/u4RuSw/eg==}
+    dev: true
+
   /@csstools/color-helpers@5.1.0:
     resolution: {integrity: sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==}
     engines: {node: '>=18'}
@@ -2883,8 +2903,15 @@ packages:
       tslib: 2.8.1
     dev: true
 
-  /@keyv/serialize@1.1.0:
-    resolution: {integrity: sha512-RlDgexML7Z63Q8BSaqhXdCYNBy/JQnqYIwxofUrNLGCblOMHp+xux2Q8nLMLlPpgHQPoU0Do8Z6btCpRBEqZ8g==}
+  /@keyv/bigmap@1.0.0:
+    resolution: {integrity: sha512-N2UsRSXlWwbvYKdFVS7sKqj6oXGegELh+zr9VripWDc8grsq8KBNp8JHI+9AQuUEFiM1S7+tm6lLp/lmbBCqCw==}
+    engines: {node: '>= 20'}
+    dependencies:
+      hookified: 1.12.0
+    dev: true
+
+  /@keyv/serialize@1.1.1:
+    resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
     dev: true
 
   /@leichtgewicht/ip-codec@2.0.5:
@@ -6575,11 +6602,14 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /cacheable@1.10.3:
-    resolution: {integrity: sha512-M6p10iJ/VT0wT7TLIGUnm958oVrU2cUK8pQAVU21Zu7h8rbk/PeRtRWrvHJBql97Bhzk3g1N6+2VKC+Rjxna9Q==}
+  /cacheable@2.0.1:
+    resolution: {integrity: sha512-MSKxcybpxB5kcWKpj+1tPBm2os4qKKGxDovsZmLhZmWIDYp8EgtC45C5zk1fLe1IC9PpI4ZE4eyryQH0N10PKA==}
     dependencies:
-      hookified: 1.11.0
-      keyv: 5.5.0
+      '@cacheable/memoize': 2.0.1
+      '@cacheable/memory': 2.0.1
+      '@cacheable/utils': 2.0.1
+      hookified: 1.12.0
+      keyv: 5.5.1
     dev: true
 
   /call-bind-apply-helpers@1.0.2:
@@ -8675,10 +8705,10 @@ packages:
       picomatch: 4.0.3
     dev: true
 
-  /file-entry-cache@10.1.3:
-    resolution: {integrity: sha512-D+w75Ub8T55yor7fPgN06rkCAUbAYw2vpxJmmjv/GDAcvCnv9g7IvHhIZoxzRZThrXPFI2maeY24pPbtyYU7Lg==}
+  /file-entry-cache@10.1.4:
+    resolution: {integrity: sha512-5XRUFc0WTtUbjfGzEwXc42tiGxQHBmtbUG1h9L2apu4SulCGN3Hqm//9D6FAolf8MYNL7f/YlJl9vy08pj5JuA==}
     dependencies:
-      flat-cache: 6.1.12
+      flat-cache: 6.1.14
     dev: true
 
   /file-entry-cache@8.0.0:
@@ -8773,12 +8803,12 @@ packages:
       keyv: 4.5.4
     dev: true
 
-  /flat-cache@6.1.12:
-    resolution: {integrity: sha512-U+HqqpZPPXP5d24bWuRzjGqVqUcw64k4nZAbruniDwdRg0H10tvN7H6ku1tjhA4rg5B9GS3siEvwO2qjJJ6f8Q==}
+  /flat-cache@6.1.14:
+    resolution: {integrity: sha512-ExZSCSV9e7v/Zt7RzCbX57lY2dnPdxzU/h3UE6WJ6NtEMfwBd8jmi1n4otDEUfz+T/R+zxrFDpICFdjhD3H/zw==}
     dependencies:
-      cacheable: 1.10.3
+      cacheable: 2.0.1
       flatted: 3.3.3
-      hookified: 1.11.0
+      hookified: 1.12.0
     dev: true
 
   /flat@5.0.2:
@@ -9304,8 +9334,8 @@ packages:
       react-is: 18.3.1
     dev: false
 
-  /hookified@1.11.0:
-    resolution: {integrity: sha512-aDdIN3GyU5I6wextPplYdfmWCo+aLmjjVbntmX6HLD5RCi/xKsivYEBhnRD+d9224zFf008ZpLMPlWF0ZodYZw==}
+  /hookified@1.12.0:
+    resolution: {integrity: sha512-hMr1Y9TCLshScrBbV2QxJ9BROddxZ12MX9KsCtuGGy/3SmmN5H1PllKerrVlSotur9dlE8hmUKAOSa3WDzsZmQ==}
     dev: true
 
   /hpack.js@2.1.6:
@@ -10862,10 +10892,10 @@ packages:
       json-buffer: 3.0.1
     dev: true
 
-  /keyv@5.5.0:
-    resolution: {integrity: sha512-QG7qR2tijh1ftOvClut4YKKg1iW6cx3GZsKoGyJPxHkGWK9oJhG9P3j5deP0QQOGDowBMVQFaP+Vm4NpGYvmIQ==}
+  /keyv@5.5.1:
+    resolution: {integrity: sha512-eF3cHZ40bVsjdlRi/RvKAuB0+B61Q1xWvohnrJrnaQslM3h1n79IV+mc9EGag4nrA9ZOlNyr3TUzW5c8uy8vNA==}
     dependencies:
-      '@keyv/serialize': 1.1.0
+      '@keyv/serialize': 1.1.1
     dev: true
 
   /kind-of@6.0.3:
@@ -13769,17 +13799,17 @@ packages:
       postcss-selector-parser: 7.1.0
     dev: true
 
-  /stylelint-config-css-modules@4.5.1(stylelint@16.23.1):
+  /stylelint-config-css-modules@4.5.1(stylelint@16.24.0):
     resolution: {integrity: sha512-xRMvAOVWa8h3Dw2NmanJHuPqMUInmMoBy14kkJDT2xs2xevxl7WnQOe/nDAMvgf9NkodzKrhKZ97E61yQOKkDA==}
     peerDependencies:
       stylelint: ^14.5.1 || ^15.0.0 || ^16.0.0 || ^16.0.2
     dependencies:
-      stylelint: 16.23.1(typescript@5.9.2)
+      stylelint: 16.24.0(typescript@5.9.2)
     optionalDependencies:
-      stylelint-scss: 6.12.1(stylelint@16.23.1)
+      stylelint-scss: 6.12.1(stylelint@16.24.0)
     dev: true
 
-  /stylelint-config-recommended-scss@16.0.1(postcss@8.5.6)(stylelint@16.23.1):
+  /stylelint-config-recommended-scss@16.0.1(postcss@8.5.6)(stylelint@16.24.0):
     resolution: {integrity: sha512-wfpU6kmTUwPEHMACYdpt5wLM/aS44+sqE8yk82LkOkA7yVpAuTZDwd3m9762d0mRnNCn0JMUx4XfDVDmbb8hTA==}
     engines: {node: '>=20'}
     peerDependencies:
@@ -13791,21 +13821,21 @@ packages:
     dependencies:
       postcss: 8.5.6
       postcss-scss: 4.0.9(postcss@8.5.6)
-      stylelint: 16.23.1(typescript@5.9.2)
-      stylelint-config-recommended: 17.0.0(stylelint@16.23.1)
-      stylelint-scss: 6.12.1(stylelint@16.23.1)
+      stylelint: 16.24.0(typescript@5.9.2)
+      stylelint-config-recommended: 17.0.0(stylelint@16.24.0)
+      stylelint-scss: 6.12.1(stylelint@16.24.0)
     dev: true
 
-  /stylelint-config-recommended@17.0.0(stylelint@16.23.1):
+  /stylelint-config-recommended@17.0.0(stylelint@16.24.0):
     resolution: {integrity: sha512-WaMSdEiPfZTSFVoYmJbxorJfA610O0tlYuU2aEwY33UQhSPgFbClrVJYWvy3jGJx+XW37O+LyNLiZOEXhKhJmA==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
       stylelint: ^16.23.0 || ^16.0.2
     dependencies:
-      stylelint: 16.23.1(typescript@5.9.2)
+      stylelint: 16.24.0(typescript@5.9.2)
     dev: true
 
-  /stylelint-config-standard-scss@16.0.0(postcss@8.5.6)(stylelint@16.23.1):
+  /stylelint-config-standard-scss@16.0.0(postcss@8.5.6)(stylelint@16.24.0):
     resolution: {integrity: sha512-/FHECLUu+med/e6OaPFpprG86ShC4SYT7Tzb2PTVdDjJsehhFBOioSlWqYFqJxmGPIwO3AMBxNo+kY3dxrbczA==}
     engines: {node: '>=20'}
     peerDependencies:
@@ -13816,22 +13846,22 @@ packages:
         optional: true
     dependencies:
       postcss: 8.5.6
-      stylelint: 16.23.1(typescript@5.9.2)
-      stylelint-config-recommended-scss: 16.0.1(postcss@8.5.6)(stylelint@16.23.1)
-      stylelint-config-standard: 39.0.0(stylelint@16.23.1)
+      stylelint: 16.24.0(typescript@5.9.2)
+      stylelint-config-recommended-scss: 16.0.1(postcss@8.5.6)(stylelint@16.24.0)
+      stylelint-config-standard: 39.0.0(stylelint@16.24.0)
     dev: true
 
-  /stylelint-config-standard@39.0.0(stylelint@16.23.1):
+  /stylelint-config-standard@39.0.0(stylelint@16.24.0):
     resolution: {integrity: sha512-JabShWORb8Bmc1A47ZyJstran60P3yUdI1zWMpGYPeFiC6xzHXJMkpKAd8EjIhq3HPUplIWWMDJ/xu0AiPd+kA==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
       stylelint: ^16.23.0 || ^16.0.2
     dependencies:
-      stylelint: 16.23.1(typescript@5.9.2)
-      stylelint-config-recommended: 17.0.0(stylelint@16.23.1)
+      stylelint: 16.24.0(typescript@5.9.2)
+      stylelint-config-recommended: 17.0.0(stylelint@16.24.0)
     dev: true
 
-  /stylelint-order@7.0.0(stylelint@16.23.1):
+  /stylelint-order@7.0.0(stylelint@16.24.0):
     resolution: {integrity: sha512-rSWxx0KscYfxU02wEskKXES9lkRzuuONMMNkZ7SUc6uiF3tDKm7e+sE0Ax/SBlG4TUf1sp1R6f3/SlsPGmzthg==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
@@ -13839,10 +13869,10 @@ packages:
     dependencies:
       postcss: 8.5.6
       postcss-sorting: 9.1.0(postcss@8.5.6)
-      stylelint: 16.23.1(typescript@5.9.2)
+      stylelint: 16.24.0(typescript@5.9.2)
     dev: true
 
-  /stylelint-scss@6.12.1(stylelint@16.23.1):
+  /stylelint-scss@6.12.1(stylelint@16.24.0):
     resolution: {integrity: sha512-UJUfBFIvXfly8WKIgmqfmkGKPilKB4L5j38JfsDd+OCg2GBdU0vGUV08Uw82tsRZzd4TbsUURVVNGeOhJVF7pA==}
     engines: {node: '>=18.12.0'}
     requiresBuild: true
@@ -13857,11 +13887,11 @@ packages:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.0
       postcss-value-parser: 4.2.0
-      stylelint: 16.23.1(typescript@5.9.2)
+      stylelint: 16.24.0(typescript@5.9.2)
     dev: true
 
-  /stylelint@16.23.1(typescript@5.9.2):
-    resolution: {integrity: sha512-dNvDTsKV1U2YtiUDfe9d2gp902veFeo3ecCWdGlmLm2WFrAV0+L5LoOj/qHSBABQwMsZPJwfC4bf39mQm1S5zw==}
+  /stylelint@16.24.0(typescript@5.9.2):
+    resolution: {integrity: sha512-7ksgz3zJaSbTUGr/ujMXvLVKdDhLbGl3R/3arNudH7z88+XZZGNLMTepsY28WlnvEFcuOmUe7fg40Q3lfhOfSQ==}
     engines: {node: '>=18.12.0'}
     hasBin: true
     dependencies:
@@ -13878,7 +13908,7 @@ packages:
       debug: 4.4.1
       fast-glob: 3.3.3
       fastest-levenshtein: 1.0.16
-      file-entry-cache: 10.1.3
+      file-entry-cache: 10.1.4
       global-modules: 2.0.0
       globby: 11.1.0
       globjoin: 0.1.4
