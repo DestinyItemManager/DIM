@@ -135,6 +135,8 @@ export const testAccount = {
 
 export const getTestProfile = () =>
   (profile as unknown as ServerResponse<DestinyProfileResponse>).Response;
+export const fetchTestProfile = async () =>
+  (profile as unknown as ServerResponse<DestinyProfileResponse>).Response;
 export const getTestVendors = () =>
   (vendors as unknown as ServerResponse<DestinyVendorsResponse>).Response;
 

@@ -1,178 +1,186 @@
 @use '../variables.scss' as *;
+
+.sheetContents {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  align-items: center;
+}
+
 .gearPowerSheet {
   width: 100%;
+  max-width: 360px;
   margin: 0 auto;
 
   @include desktop {
     max-width: fit-content;
   }
+}
 
-  .gearPowerSheetContent {
-    margin: 0 20px 20px;
-    width: min-content;
-    white-space: pre-wrap;
-  }
+.gearPowerSheetContent {
+  margin: 0 20px 20px;
+  white-space: pre-wrap;
+}
 
-  .gearPowerHeader {
-    display: flex;
+.gearPowerHeader {
+  display: flex;
+  margin-right: 10px;
+  align-items: center;
+
+  > img {
     margin-right: 10px;
-    align-items: center;
-
-    > img {
-      margin-right: 10px;
-      height: 48px;
-      width: 48px;
-    }
-
-    h1:first-child {
-      margin-bottom: 4px;
-    }
-    h1:last-child {
-      margin-bottom: 0;
-    }
+    height: 48px;
+    width: 48px;
   }
 
-  .powerLevel {
-    color: $power;
-    font-size: 1.4em;
-    :global(.app-icon) {
-      font-size: 60%;
-      vertical-align: 45%;
-      margin-right: 2px;
-    }
-    img {
-      height: 1.2em;
-      width: auto;
-      margin: 0;
-      vertical-align: text-bottom;
-      filter: none !important;
-      display: inline-block;
-    }
+  h1:first-child {
+    margin-bottom: 4px;
   }
-  :global(.selected) {
-    .powerLevel {
-      color: black;
-    }
+  h1:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.powerLevel {
+  color: $power;
+  font-size: 1.4em;
+  :global(.app-icon) {
+    font-size: 60%;
+    vertical-align: 45%;
+    margin-right: 2px;
+  }
+  img {
+    height: 1.2em;
+    width: auto;
+    margin: 0;
+    vertical-align: text-bottom;
+    filter: none !important;
+    display: inline-block;
+  }
+  :global(.selected) & {
+    color: black;
+  }
+}
+
+.toggle {
+  padding: 10px 10px 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.powerToggleButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gearGrid {
+  width: max-content;
+  margin: 10px auto;
+  display: grid;
+  gap: 4px 10px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+}
+
+.kinetic,
+.energy,
+.power {
+  grid-column-start: 1;
+}
+
+.helmet,
+.gauntlets,
+.chest,
+.leg,
+.classItem {
+  grid-column-start: 2;
+
+  &.gearItem,
+  .gearItemInfo > div {
+    flex-direction: row-reverse;
+  }
+}
+
+.kinetic {
+  grid-row-start: 3;
+}
+.energy {
+  grid-row-start: 5;
+}
+.power {
+  grid-row-start: 7;
+}
+.helmet {
+  grid-row-start: 1;
+}
+.gauntlets {
+  grid-row-start: 3;
+}
+.chest {
+  grid-row-start: 5;
+}
+.leg {
+  grid-row-start: 7;
+}
+.classItem {
+  grid-row-start: 9;
+}
+
+.gearItem {
+  grid-row-end: span 2;
+  display: flex;
+}
+
+.itemImage {
+  height: 40px;
+  width: 40px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.gearItemInfo {
+  display: flex;
+  flex-direction: column;
+
+  .power {
+    font-size: 16px;
+    line-height: 1;
+  }
+  .statMeta {
+    font-size: 24px;
+    line-height: 26px;
   }
 
-  .toggle {
-    margin: 10px 10px 15px;
-  }
-
-  .powerToggleButton {
+  /* stylelint-disable-next-line no-descending-specificity */
+  & > div {
     display: flex;
-    flex-direction: column;
-    align-items: center;
   }
+}
 
-  .gearGrid {
-    width: max-content;
-    margin: 10px auto;
-    display: grid;
-    gap: 4px 10px;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+.bucketImage {
+  height: 22px;
+  width: 22px;
+  margin-top: 2px;
+  opacity: 0.6;
+}
+.neutral {
+  opacity: 0.6;
+}
+.positive {
+  color: $green;
+}
+.negative {
+  color: $red;
+}
+.neutral,
+.positive,
+.negative {
+  margin: 0 3px;
+}
 
-    .kinetic,
-    .energy,
-    .power {
-      grid-column-start: 1;
-    }
-
-    .helmet,
-    .gauntlets,
-    .chest,
-    .leg,
-    .classItem {
-      grid-column-start: 2;
-
-      &.gearItem,
-      .gearItemInfo > div {
-        flex-direction: row-reverse;
-      }
-    }
-
-    .kinetic {
-      grid-row-start: 3;
-    }
-    .energy {
-      grid-row-start: 5;
-    }
-    .power {
-      grid-row-start: 7;
-    }
-    .helmet {
-      grid-row-start: 1;
-    }
-    .gauntlets {
-      grid-row-start: 3;
-    }
-    .chest {
-      grid-row-start: 5;
-    }
-    .leg {
-      grid-row-start: 7;
-    }
-    .classItem {
-      grid-row-start: 9;
-    }
-
-    .gearItem {
-      grid-row-end: span 2;
-      display: flex;
-
-      .itemImage {
-        height: 40px;
-        width: 40px;
-        margin: 0 5px;
-        border: 1px solid #ddd;
-        cursor: pointer;
-        pointer-events: auto;
-      }
-      .gearItemInfo {
-        display: flex;
-        flex-direction: column;
-
-        .power {
-          font-size: 16px;
-          line-height: 1;
-        }
-        .statMeta {
-          font-size: 24px;
-          line-height: 26px;
-        }
-
-        & > div {
-          display: flex;
-        }
-      }
-
-      .bucketImage {
-        height: 22px;
-        width: 22px;
-        margin-top: 2px;
-        opacity: 0.6;
-      }
-      .neutral {
-        opacity: 0.6;
-      }
-      .positive {
-        color: $green;
-      }
-      .negative {
-        color: $red;
-      }
-      .neutral,
-      .positive,
-      .negative {
-        margin: 0 3px;
-      }
-    }
-  }
-
-  .footNote {
-    margin: 10px auto 0;
-    color: #999;
-    max-width: 400px;
-  }
+.footNote {
+  margin: 10px auto 0;
+  color: #999;
+  max-width: 400px;
 }

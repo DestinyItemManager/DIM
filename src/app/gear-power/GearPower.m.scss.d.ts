@@ -23,6 +23,7 @@ interface CssExports {
   'power': string;
   'powerLevel': string;
   'powerToggleButton': string;
+  'sheetContents': string;
   'statMeta': string;
   'toggle': string;
 }

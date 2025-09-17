@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
+import { getSetBonusStatus } from 'app/item-popup/SetBonus';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
@@ -158,6 +159,7 @@ export default memo(function GeneratedSet({
   });
 
   const canCompareLoadouts = loadouts.length > 0;
+  const setBonusStatus = getSetBonusStatus(defs, set.armor);
 
   return (
     <>
@@ -169,6 +171,7 @@ export default memo(function GeneratedSet({
         boostedStats={boostedStats}
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
+        setBonusStatus={setBonusStatus}
       />
       <div className={styles.build}>
         <div className={styles.items}>

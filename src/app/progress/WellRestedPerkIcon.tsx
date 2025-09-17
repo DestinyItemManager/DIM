@@ -3,7 +3,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { WELL_RESTED_PERK } from 'app/search/d2-known-values';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import BungieImage from '../dim-ui/BungieImage';
-import { isWellRested } from '../inventory/store/well-rested';
+import { useIsWellRested } from '../inventory/store/well-rested';
 
 export default function WellRestedPerkIcon({
   profileInfo,
@@ -11,7 +11,7 @@ export default function WellRestedPerkIcon({
   profileInfo: DestinyProfileResponse;
 }) {
   const defs = useD2Definitions()!;
-  const wellRestedInfo = isWellRested(defs, profileInfo);
+  const wellRestedInfo = useIsWellRested(defs, profileInfo);
 
   if (!wellRestedInfo.wellRested) {
     return null;

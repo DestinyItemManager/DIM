@@ -90,10 +90,4 @@
   display: flex;
   flex-direction: row-reverse;
   gap: 4px;
-  & > div {
-    display: flex;
-    & > div {
-      display: flex;
-    }
-  }
 }

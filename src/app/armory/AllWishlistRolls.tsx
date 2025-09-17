@@ -7,17 +7,14 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { faExclamationTriangle } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
+import { isEnhancedPerkHash } from 'app/utils/perk-utils';
 import { wishListInfosSelector, wishListRollsForItemHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';
 import { partition } from 'es-toolkit';
 import { useSelector } from 'react-redux';
 import styles from './AllWishlistRolls.m.scss';
 import { getCraftingTemplate } from './crafting-utils';
-import {
-  consolidateRollsForOneWeapon,
-  consolidateSecondaryPerks,
-  enhancedToPerk,
-} from './wishlist-collapser';
+import { consolidateRollsForOneWeapon, consolidateSecondaryPerks } from './wishlist-collapser';
 
 /**
  * List out all the known wishlist rolls for a given item.
@@ -159,7 +156,7 @@ function WishlistRolls({
                 const primaryBundles = cr.rolls[0].primarySocketIndices.map((socketIndex) =>
                   primariesGroupedByColumn[socketIndex ?? -1].sort(
                     // establish a consistent base -> enhanced perk order
-                    compareBy((h) => (h in enhancedToPerk ? 1 : 0)),
+                    compareBy((h) => Number(isEnhancedPerkHash(h))),
                   ),
                 );
 

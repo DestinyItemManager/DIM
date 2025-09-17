@@ -1,5 +1,5 @@
 import { getSeasonPassStatus } from 'app/progress/SeasonalRank';
-import { getCurrentSeasonInfo } from 'app/utils/seasons';
+import { useCurrentSeasonInfo } from 'app/utils/seasons';
 import { DestinyProfileResponse, DestinyProgressionDefinition } from 'bungie-api-ts/destiny2';
 import { clamp } from 'es-toolkit';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -9,7 +9,7 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
  * for the first 5 season levels each week. Ideally this would just come back in the response,
  * but instead we have to calculate it from the weekly XP numbers.
  */
-export function isWellRested(
+export function useIsWellRested(
   defs: D2ManifestDefinitions,
   profileInfo: DestinyProfileResponse,
 ): {
@@ -17,7 +17,7 @@ export function isWellRested(
   weeklyProgress?: number;
   requiredXP?: number;
 } {
-  const { season, seasonPass } = getCurrentSeasonInfo(defs, profileInfo);
+  const { season, seasonPass } = useCurrentSeasonInfo(defs, profileInfo);
   if (!season) {
     return {
       wellRested: false,

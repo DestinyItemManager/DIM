@@ -9,6 +9,9 @@ export const destiny2CoreSettingsSelector = (state: RootState) =>
 export const rankProgressionHashesSelector = (state: RootState): number[] =>
   state.manifest.destiny2CoreSettings?.currentRankProgressionHashes ?? emptyArray<number>();
 
+export const currentSeasonPassHashSelector = (state: RootState): number | undefined =>
+  state.manifest.destiny2CoreSettings?.currentSeasonPassHash;
+
 const d1ManifestSelector = (state: RootState) => state.manifest.d1Manifest;
 export const d2ManifestSelector = (state: RootState) => state.manifest.d2Manifest;
 

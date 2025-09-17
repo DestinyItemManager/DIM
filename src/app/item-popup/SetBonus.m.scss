@@ -52,3 +52,10 @@
 .unsatisfied {
   opacity: 0.4;
 }
+
+.setBonusesStatus {
+  display: flex;
+  & > div {
+    display: flex;
+  }
+}
