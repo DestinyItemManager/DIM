@@ -22,7 +22,7 @@ function getCurrency(currencies: AccountCurrency[], hash: number) {
 }
 
 // create the postmaster update data
-function postmaster(store: DimStore) {
+export function postmaster(store: DimStore) {
   const items = findItemsByBucket(store, BucketHashes.LostItems);
   return {
     total: totalPostmasterItems(store),
@@ -33,7 +33,7 @@ function postmaster(store: DimStore) {
 }
 
 // create the max power update data
-function maxPower(store: DimStore, state: RootState) {
+export function maxPower(store: DimStore, state: RootState) {
   const allItems = allItemsSelector(state);
   const maxLight = getLight(store, maxLightItemSet(allItems, store).equippable);
   const artifact = getArtifactBonus(store);
@@ -46,7 +46,7 @@ function maxPower(store: DimStore, state: RootState) {
 }
 
 // create the vault update data
-function vault(state: RootState) {
+export function vault(state: RootState) {
   const vault = vaultSelector(state);
   if (!vault) {
     return;
@@ -86,7 +86,7 @@ function getCurrentSeason(
 }
 
 // create the metrics update data
-function metrics(state: RootState) {
+export function metrics(state: RootState) {
   const profile = state.inventory.profileResponse;
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
   const { lifetimeScore, activeScore } = profile?.profileRecords?.data || {};
@@ -115,11 +115,11 @@ export function streamDeckClearId(id: string) {
   return id.replace(/-.*/, '');
 }
 
-function equippedItems(store?: DimStore) {
+export function equippedItems(store?: DimStore) {
   return store?.items.filter((it) => it.equipment).map((it) => streamDeckClearId(it.index)) ?? [];
 }
 
-function inventoryCounters(state?: RootState) {
+export function inventoryCounters(state?: RootState) {
   return state?.inventory.stores
     .flatMap((it) => it.items)
     .filter((it) => it.bucket.inInventory)
@@ -137,7 +137,7 @@ function inventoryCounters(state?: RootState) {
     );
 }
 
-function character(store: DimStore) {
+export function character(store: DimStore) {
   return {
     class: store.classType,
     icon: store.icon,
@@ -158,7 +158,7 @@ interface PerkDefinition {
   image: string;
 }
 
-function perks(state: RootState) {
+export function perks(state: RootState) {
   const perks = new Map<string, PerkDefinition>();
   const items = allItemsSelector(state);
   for (const item of items) {
@@ -198,14 +198,3 @@ function perks(state: RootState) {
 
   return Array.from(perks.values());
 }
-
-export default {
-  character,
-  perks,
-  metrics,
-  vault,
-  maxPower,
-  postmaster,
-  equippedItems,
-  inventoryCounters,
-};
