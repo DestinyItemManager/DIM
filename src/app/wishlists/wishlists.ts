@@ -1,4 +1,4 @@
-import { normalizeToUnenhanced } from 'app/utils/perk-utils';
+import { normalizeToEnhanced, normalizeToUnenhanced } from 'app/utils/perk-utils';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import { DimWishList, WishListRoll } from './types';
@@ -101,7 +101,12 @@ export function isWishListPlug(
     ('recommendedPerks' in wishListRoll
       ? wishListRoll.recommendedPerks
       : wishListRoll.wishListPerks);
-  return Boolean(perks?.has(normalizeToUnenhanced(plug.plugDef.hash)));
+  return Boolean(
+    perks &&
+      // Either the enhanced or unenhanced version of the perk is present
+      (perks.has(normalizeToUnenhanced(plug.plugDef.hash)) ||
+        perks.has(normalizeToEnhanced(plug.plugDef.hash))),
+  );
 }
 
 /** Get all of the plugs for this item that match the wish list roll. */
@@ -138,7 +143,11 @@ function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolea
       outer: for (const s of item.sockets!.allSockets) {
         if (s.plugOptions) {
           for (const plug of s.plugOptions) {
-            if (normalizeToUnenhanced(plug.plugDef.hash) === recommendedPerk) {
+            if (
+              // Either the enhanced or unenhanced version of the perk is present
+              normalizeToUnenhanced(plug.plugDef.hash) === recommendedPerk ||
+              normalizeToEnhanced(plug.plugDef.hash) === recommendedPerk
+            ) {
               included = true;
               break outer;
             }
