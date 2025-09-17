@@ -114,7 +114,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             excludeStandardD2ModSockets
             className={styles.inlineImageIcon}
             key="1"
-            lowRes
             item={exampleItem}
           />,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,

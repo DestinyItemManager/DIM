@@ -17,6 +17,7 @@ import {
   DestinyEventCardDefinition,
   DestinyFactionDefinition,
   DestinyGenderDefinition,
+  DestinyIconDefinition,
   DestinyInventoryBucketDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
@@ -90,6 +91,7 @@ export const allTables: ManifestTablesShort[] = [
   'Faction',
   'ActivityMode',
   'EquipableItemSet',
+  'Icon',
 ];
 
 export interface DefinitionTable<T> {
@@ -144,6 +146,7 @@ export interface D2ManifestDefinitions {
   LoadoutColor: DefinitionTable<DestinyLoadoutColorDefinition>;
   LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;
   EquipableItemSet: DefinitionTable<DestinyEquipableItemSetDefinition>;
+  Icon: DefinitionTable<DestinyIconDefinition>;
   /** Check if these defs are from D2. Inside an if statement, these defs will be narrowed to type D2ManifestDefinitions. */
   readonly isDestiny2: true;
 }
