@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed some cases where the enhanced version of perks would not match wishlists that specified the unenhanced version.
+* Replaced empty or mismatched mod slot icons with ones that match the activity they're used in.
 
 ## 8.90.0 <span class="changelog-date">(2025-09-14)</span>
 
