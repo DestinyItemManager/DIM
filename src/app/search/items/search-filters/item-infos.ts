@@ -20,7 +20,7 @@ const itemInfosFilters: ItemFilterDefinition[] = [
     filter:
       ({ filterValue, getTag }) =>
       (item) =>
-        (getTag(item) || (item.taggable ? 'none' : undefined)) === filterValue,
+       item.taggable && (getTag(item) || 'none') === filterValue,
   },
   {
     keywords: 'hasnotes',
