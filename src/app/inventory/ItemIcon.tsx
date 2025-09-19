@@ -86,11 +86,12 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
 
   const backgrounds = compact([
     // The ornament knot background
-    item.ornamentIconDef && item.rarity === 'Exotic'
-      ? itemConstants.universalOrnamentExoticBackgroundOverlayPath
-      : item.rarity === 'Legendary'
-        ? itemConstants.universalOrnamentLegendaryBackgroundOverlayPath
-        : itemConstants.universalOrnamentBackgroundOverlayPath,
+    item.ornamentIconDef &&
+      (item.rarity === 'Exotic'
+        ? itemConstants.universalOrnamentExoticBackgroundOverlayPath
+        : item.rarity === 'Legendary'
+          ? itemConstants.universalOrnamentLegendaryBackgroundOverlayPath
+          : itemConstants.universalOrnamentBackgroundOverlayPath),
     // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
     item.holofoil
       ? item.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
