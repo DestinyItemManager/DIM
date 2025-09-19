@@ -4,7 +4,9 @@ interface CssExports {
   'hasBadge': string;
   'icon': string;
   'icons': string;
+  'modSlotIcon': string;
   'searchHidden': string;
+  'statFocus': string;
   'subclass': string;
   'subclassBase': string;
   'subclassSuperIcon': string;

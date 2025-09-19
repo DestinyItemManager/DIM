@@ -111,3 +111,26 @@
   pointer-events: none;
   filter: drop-shadow(0 0 2px rgb(0, 0, 0, 0.8));
 }
+
+.statFocus {
+  display: block;
+  width: calc(#{dim-item-px(13)});
+  height: calc(#{dim-item-px(13)});
+  position: absolute;
+  top: calc(#{$item-border-width} - #{dim-item-px(0.5)});
+  right: calc(#{$item-border-width} - #{dim-item-px(0.5)});
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px black);
+  background-size: contain;
+}
+
+.modSlotIcon {
+  display: block;
+  width: calc(#{dim-item-px(18)});
+  height: calc(#{dim-item-px(18)});
+  position: absolute;
+  top: calc(var(--item-size) - #{dim-item-px(20)});
+  left: calc(#{$item-border-width});
+  pointer-events: none;
+  filter: drop-shadow(0 0 1px black);
+}
