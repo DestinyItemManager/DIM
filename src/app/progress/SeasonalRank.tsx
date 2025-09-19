@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { isClassCompatible } from 'app/utils/item-utils';
-import { getCurrentSeasonInfo } from 'app/utils/seasons';
+import { useCurrentSeasonInfo } from 'app/utils/seasons';
 import {
   DestinyClass,
   DestinyProfileResponse,
@@ -13,10 +13,10 @@ import {
   DestinyProgressionRewardItemQuantity,
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
+  DestinySeasonPassReference,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import brightEngramsBonus from 'data/d2/bright-engram-bonus.json';
-import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
@@ -30,7 +30,7 @@ export default function SeasonalRank({
   profileInfo: DestinyProfileResponse;
 }) {
   const defs = useD2Definitions()!;
-  const { season, seasonPass } = getCurrentSeasonInfo(defs, profileInfo);
+  const { season, seasonPass, seasonPassStartEnd } = useCurrentSeasonInfo(defs, profileInfo);
   if (!season || !seasonPass) {
     return null;
   }
@@ -98,7 +98,7 @@ export default function SeasonalRank({
     return null;
   }
 
-  const rewardPassEnd = season.seasonPassList[D2SeasonPassActiveList].seasonPassEndDate;
+  const rewardPassEnd = seasonPassStartEnd?.seasonPassEndDate;
 
   return !prestigeMode ? (
     <div
@@ -161,16 +161,23 @@ export default function SeasonalRank({
       </div>
     </div>
   ) : (
-    <SeasonPrestigeRank season={season} progress={prestigeProgression} isProgressRanks />
+    <SeasonPrestigeRank
+      seasonPass={seasonPass}
+      seasonPassStartEnd={seasonPassStartEnd}
+      progress={prestigeProgression}
+      isProgressRanks
+    />
   );
 }
 
 export function SeasonPrestigeRank({
-  season,
+  seasonPass,
+  seasonPassStartEnd,
   progress,
   isProgressRanks,
 }: {
-  season: DestinySeasonDefinition;
+  seasonPass: DestinySeasonPassDefinition;
+  seasonPassStartEnd: DestinySeasonPassReference | undefined;
   progress: DestinyProgression;
   isProgressRanks?: boolean;
 }) {
@@ -182,10 +189,8 @@ export function SeasonPrestigeRank({
   const brightEngramBonus = defs.InventoryItem.get(
     brightEngramsBonus[brightEngramsBonus.length - 1],
   );
-  const rewardPassEnd = season.seasonPassList[D2SeasonPassActiveList].seasonPassEndDate;
-  const rewardPassSeasonName = defs.SeasonPass.get(
-    season.seasonPassList[D2SeasonPassActiveList].seasonPassHash,
-  ).displayProperties.name;
+  const rewardPassEnd = seasonPassStartEnd?.seasonPassEndDate;
+  const rewardPassSeasonName = seasonPass.displayProperties.name;
   return (
     <div
       className={clsx(styles.activityRank, { [styles.gridLayout]: isProgressRanks })}

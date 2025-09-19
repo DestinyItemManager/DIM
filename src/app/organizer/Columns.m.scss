@@ -46,12 +46,13 @@
 }
 
 .centered {
-  text-align: center !important;
+  text-align: center;
+  justify-content: center;
 }
 
 .dmg {
   composes: centered;
-  padding-top: calc(var(--item-size) * 0.75 * 0.5 - 2px) !important;
+  padding-top: calc(var(--item-size) * 0.75 * 0.5 - 2px);
 }
 .dmgHeader {
   composes: centered;
@@ -61,12 +62,12 @@
 .icon {
   --icon-item-size: calc(var(--item-size) * 0.75);
   composes: centered;
-  padding-top: 4px !important;
+  padding-top: 4px;
   min-width: calc(var(--item-size) * 0.75);
   left: calc(30px + env(safe-area-inset-left));
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
-  z-index: table.$header-cells !important;
+  z-index: table.$header-cells;
   background: var(--org-row-bg);
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
@@ -108,7 +109,7 @@
 }
 
 .perkLike {
-  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
+  padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px);
   > *:nth-last-child(n + 2) {
     margin-bottom: 4px;
   }
@@ -180,9 +181,9 @@
 }
 
 .perksGrid {
-  --mod-size: calc(28 / 50 * var(--item-size));
-  --perk-size: calc(28 / 50 * var(--item-size));
-  padding-top: 4px !important;
+  --mod-size: calc(#{dim-item-px(28)});
+  --perk-size: calc(#{dim-item-px(28)});
+  padding-top: 4px;
   padding-bottom: 4px;
 
   @include phone-portrait {
@@ -208,7 +209,7 @@
   }
 }
 
-$modslotSize: 30px;
+$modslotSize: 24px;
 .modslotIcon {
   height: $modslotSize;
   width: $modslotSize;
@@ -216,7 +217,12 @@ $modslotSize: 30px;
 
 .modslot {
   composes: centered;
-  padding-top: calc(4px + (var(--item-size) * 0.75 - #{$modslotSize}) / 2) !important;
+  padding-top: calc(4px + (var(--item-size) * 0.75 - #{$modslotSize}) / 2);
+}
+
+.loadouts {
+  flex-direction: column;
+  gap: 4px;
 }
 
 .loadout {

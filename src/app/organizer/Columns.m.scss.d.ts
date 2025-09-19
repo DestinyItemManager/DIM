@@ -14,6 +14,7 @@ interface CssExports {
   'inlineIcon': string;
   'isPerk': string;
   'loadout': string;
+  'loadouts': string;
   'locationCell': string;
   'miniPerkContainer': string;
   'modPerk': string;

@@ -12,6 +12,7 @@ import {
   getSpecialtySocketMetadatas,
   modSlotTags,
 } from 'app/utils/item-utils';
+import { enhancedVersion } from 'app/utils/perk-utils';
 import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
@@ -26,7 +27,6 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 import { patternIsUnlocked } from './known-values';
 
@@ -322,7 +322,7 @@ const socketFilters: ItemFilterDefinition[] = [
       }
       if (item.crafted === 'crafted') {
         return item.sockets?.allSockets.some((s) => {
-          const enhancedPerk = perkToEnhanced[s.plugged?.plugDef.hash || 0] || 0;
+          const enhancedPerk = enhancedVersion(s.plugged?.plugDef.hash || 0) || 0;
           return (
             enhancedPerk &&
             s.plugSet?.plugHashesThatCanRoll.includes(enhancedPerk) &&

@@ -97,6 +97,14 @@ $tempContainerZindex: 1000;
   }
 }
 
+// The opposite of phone-portrait, for when you want to default to mobile styles
+// and only override on larger screens.
+@mixin desktop {
+  @media (min-width: 541px) {
+    @content;
+  }
+}
+
 // Position something directly below the header
 @mixin below-header {
   top: var(--header-height);
@@ -110,10 +118,8 @@ $tempContainerZindex: 1000;
 }
 
 @mixin draggable-hover-border {
-  outline: 1px solid var(--theme-item-polaroid-hover-border);
-
-  @include phone-portrait {
-    outline: none;
+  @include desktop {
+    outline: 1px solid var(--theme-item-polaroid-hover-border);
   }
 }
 
@@ -136,6 +142,14 @@ $tempContainerZindex: 1000;
 // Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.
 @function dim-rgb-values-to-rgba($values, $alpha: 1) {
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
+}
+
+// Converts a pixel value into a size that scales with the item size setting.
+// The px value should be in terms of the default item size of 50px. This lets
+// you design styles with your setting set to the default, but then it'll work
+// for other sizes. This should be used within calc().
+@function dim-item-px($px) {
+  @return #{'(' + $px + ' / 50) * var(--item-size)'};
 }
 
 @mixin interactive(

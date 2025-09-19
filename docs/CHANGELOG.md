@@ -1,7 +1,20 @@
 ## Next
 
+## 8.90.1 <span class="changelog-date">(2025-09-18)</span>
+
+* Fixed some cases where the enhanced version of perks would not match wishlists that specified the unenhanced version.
+* Replaced empty or mismatched mod slot icons with ones that match the activity they're used in.
+* Fixed a crash using the Streamdeck plugin.
+* `tag:none` no longer selects untaggable objects like materials and abilities
+
+## 8.90.0 <span class="changelog-date">(2025-09-14)</span>
+
 * Updated tuned stat icon.
 * `dupe:perks` and `dupe:traits` will ignore perks' enhancement status.
+* Fixed icons displaying too large on the gear power tooltip.
+* Loadout Optimizer result sets now show which set bonuses they activate.
+* Added `tunedstat:primary`, `tunedstat:secondary`, and `tunedstat:tertiary`.
+* Distinguish between special and primary ammo sidearms/pulse rifles in `dupe:traits` and `dupe:perks` comparison.
 
 ## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
 

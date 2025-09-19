@@ -2,7 +2,7 @@ import type { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { getSeasonPassStatus } from 'app/progress/SeasonalRank';
 import { sumBy } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
-import { getCurrentSeasonInfo } from 'app/utils/seasons';
+import { useCurrentSeasonInfo } from 'app/utils/seasons';
 import type { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import type { DimItem } from './item-types';
 import type { DimStore } from './store-types';
@@ -17,11 +17,21 @@ const maxPowerLevel = 550; // Not expected to change, but should be moved to the
 // multiplied by a combination of its Newness/Featuredness and Season Pass bonuses.
 // 10,000 * C * ( ( G + A + 1 ) * ( ( P - 90 ) * ( 9 / 460 ) + 1 ) )
 
-export function getRewardMultiplier(
+export function useRewardMultiplier(
   defs: D2ManifestDefinitions,
-  profileInfo: DestinyProfileResponse,
+  profileInfo: DestinyProfileResponse | undefined,
   gear: DimStore | DimItem[],
 ) {
+  //  Activity score boosts come from the season pass
+  const { season, seasonPass } = useCurrentSeasonInfo(defs, profileInfo);
+  if (!profileInfo) {
+    return null;
+  }
+  if (!season || !seasonPass) {
+    errorLog('RewardMultiplier', `getRewardMultiplier called with no season/pass available?`);
+    return null;
+  }
+
   const equippedGear =
     'id' in gear
       ? gear?.items.filter((i) => i.equipped && (i.bucket.inWeapons || i.bucket.inArmor))
@@ -38,13 +48,6 @@ export function getRewardMultiplier(
   // 2% additional bonus for using all featured gear.
   if (gearMultiplier === 8) {
     gearMultiplier = 10;
-  }
-
-  //  Activity score boosts come from the season pass
-  const { season, seasonPass } = getCurrentSeasonInfo(defs, profileInfo);
-  if (!season || !seasonPass) {
-    errorLog('RewardMultiplier', `getRewardMultiplier called with no season/pass available?`);
-    return null;
   }
 
   const { seasonPassLevel, seasonProgressionDef } = getSeasonPassStatus(
