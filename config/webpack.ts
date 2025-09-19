@@ -260,7 +260,7 @@ export default (env: Env) => {
           ],
         },
         {
-          test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          test: /\.(jpg|gif|a?png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           type: 'asset',
           parser: {
             dataUrlCondition: {
@@ -612,7 +612,7 @@ export default (env: Env) => {
 
       // Generate a service worker
       new InjectManifest({
-        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
+        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(a?png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
           // Ignore both the webapp manifest and the d1-manifest files

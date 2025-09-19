@@ -19,6 +19,7 @@ import {
   DestinyGenderDefinition,
   DestinyIconDefinition,
   DestinyInventoryBucketDefinition,
+  DestinyInventoryItemConstantsDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
   DestinyLoadoutColorDefinition,
@@ -92,6 +93,7 @@ export const allTables: ManifestTablesShort[] = [
   'ActivityMode',
   'EquipableItemSet',
   'Icon',
+  'InventoryItemConstants',
 ];
 
 export interface DefinitionTable<T> {
@@ -147,6 +149,7 @@ export interface D2ManifestDefinitions {
   LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;
   EquipableItemSet: DefinitionTable<DestinyEquipableItemSetDefinition>;
   Icon: DefinitionTable<DestinyIconDefinition>;
+  InventoryItemConstants: DestinyInventoryItemConstantsDefinition;
   /** Check if these defs are from D2. Inside an if statement, these defs will be narrowed to type D2ManifestDefinitions. */
   readonly isDestiny2: true;
 }
@@ -174,13 +177,27 @@ export function getDefinitions(force = false): ThunkResult<D2ManifestDefinitions
   };
 }
 
+/**
+ * These are useful constants (mostly item images) that are in the manifest.
+ * This is reassigned to a global because it will never change once loaded, and
+ * we don't want every item image to gain a subscription to the manifest.
+ */
+export let itemConstants: DestinyInventoryItemConstantsDefinition | undefined;
+
 export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   enhanceDBWithFakeEntries(db);
   const defs: { [table: string]: any; isDestiny2: true } = {
     isDestiny2: true,
   };
 
+  defs.InventoryItemConstants = itemConstants = db.DestinyInventoryItemConstantsDefinition[1];
+
   for (const tableShort of allTables) {
+    if (tableShort === 'InventoryItemConstants') {
+      // InventoryItemConstants is a special case, it is not a table but a single entry in the
+      // DestinyInventoryItemConstantsDefinition table.
+      continue;
+    }
     const table = `Destiny${tableShort}Definition` as const;
     const dbTable = db[table];
     if (!dbTable) {

@@ -36,7 +36,7 @@
 
 <IfModule mod_setenvif.c>
     <IfModule mod_headers.c>
-        <FilesMatch "\.(bmp|cur|gif|ico|jpe?g|png|svgz?|webp)$">
+        <FilesMatch "\.(bmp|cur|gif|ico|jpe?g|a?png|svgz?|webp)$">
             SetEnvIf Origin ":" IS_CORS
             Header set Access-Control-Allow-Origin "*" env=IS_CORS
         </FilesMatch>
@@ -274,7 +274,7 @@ AddDefaultCharset utf-8
     # the `X-Frame-Options` response header should be send only for
     # HTML documents and not for the other resources.
 
-    <FilesMatch "\.(appcache|atom|bbaw|bmp|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)(\.(gz|br))?$">
+    <FilesMatch "\.(appcache|atom|bbaw|bmp|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|a?png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)(\.(gz|br))?$">
         Header unset X-Frame-Options
     </FilesMatch>
 
@@ -313,7 +313,7 @@ AddDefaultCharset utf-8
     # the `Content-Security-Policy` response header should be send
     # only for HTML documents and not for the other resources.
 
-    <FilesMatch "\.(appcache|atom|bbaw|bmp|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|htc|ico|jpe?g|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)(\.(gz|br))?$">
+    <FilesMatch "\.(appcache|atom|bbaw|bmp|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|htc|ico|jpe?g|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|a?png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)(\.(gz|br))?$">
         Header unset Content-Security-Policy
         #Header unset Cross-Origin-Embedder-Policy
         #Header unset Cross-Origin-Opener-Policy
@@ -481,7 +481,7 @@ AddEncoding br .br
     # Redirect unknown paths to index.html
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !\.(json|wasm|js|css|png|jpg|map)(\.(gz|br))?$
+    RewriteCond %{REQUEST_URI} !\.(json|wasm|js|css|a?png|jpg|map)(\.(gz|br))?$
     RewriteRule (.*) <%= publicPath %>index.html [QSA,L]
 </IfModule>
 
@@ -625,6 +625,7 @@ AddEncoding br .br
     ExpiresByType image/gif                             "access plus 1 year"
     ExpiresByType image/jpeg                            "access plus 1 year"
     ExpiresByType image/png                             "access plus 1 year"
+    ExpiresByType image/apng                            "access plus 1 year"
     ExpiresByType image/svg+xml                         "access plus 1 year"
     ExpiresByType image/webp                            "access plus 1 year"
     ExpiresByType video/mp4                             "access plus 1 year"
@@ -667,7 +668,7 @@ AddEncoding br .br
 
 <IfModule mod_headers.c>
 
-    <FilesMatch "\.(json|wasm|js|css|png|jpg)(\.(gz|br))?$">
+    <FilesMatch "\.(json|wasm|js|css|a?png|jpg)(\.(gz|br))?$">
         Header merge Cache-Control "immutable"
     </FilesMatch>
 

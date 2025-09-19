@@ -1,12 +1,20 @@
-import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
+import { itemConstants } from 'app/destiny2/d2-definitions';
+import BungieImage, { bungieBackgroundStyle, bungieBackgroundStyles } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
+import { compact } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { isArmorArchetypePlug, isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import {
+  BucketHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  TraitHashes,
+} from 'data/d2/generated-enums';
+import holofoilAnim from 'images/holofoil-anim.apng';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
@@ -38,12 +46,13 @@ export function getItemImageStyles(item: DimItem, className?: string) {
       (item.bucket.hash === BucketHashes.Subclass ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Packages))) ||
     item.isEngram;
+
   const itemImageStyles = clsx('item-img', className, {
     [styles.complete]: item.complete || isCapped,
     [styles.borderless]: borderless,
     [styles.masterwork]: item.masterwork,
     [styles.deepsight]: item.deepsightInfo,
-    [itemTierStyles[item.rarity]]: !borderless && !item.plug,
+    [itemTierStyles[item.rarity]]: !borderless,
   });
   return itemImageStyles;
 }
@@ -54,11 +63,88 @@ export function getItemImageStyles(item: DimItem, className?: string) {
  * with respect to masterwork, season icons, mod overlays, etc.
  *
  * This renders just a fragment - it always needs to be rendered inside another div with class "item".
+ *
+ * Since this is used a *lot*, it should not use any hooks, subscriptions, etc.
  */
 export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
   const classifiedPlaceholder =
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
+  if (!itemConstants) {
+    return null; // this won't happen, it just lets us avoid a bunch of ! in the rest of the code
+  }
+
+  // Sadly we can't just layer all the backgrounds into a single div because:
+  // 1) Some of them need to be offset a bit because we display the whole image
+  //    while in-game they display a border over the icon.
+  // 2) Some of the backgrounds like the masterwork glow and season stripe need
+  //    to be lower opacity to match the in-game look.
+  // 3) We want to show the animated holofoil effect only on hover (and even
+  //    then only if the user allows animation).
+  // Keep in mind that CSS multiple backgrounds go from front to back, so that's
+  // how these arrays are.
+
+  const backgrounds = compact([
+    // The ornament knot background
+    item.ornamentIconDef &&
+      (item.rarity === 'Exotic'
+        ? itemConstants.universalOrnamentExoticBackgroundOverlayPath
+        : item.rarity === 'Legendary'
+          ? itemConstants.universalOrnamentLegendaryBackgroundOverlayPath
+          : itemConstants.universalOrnamentBackgroundOverlayPath),
+    // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
+    item.holofoil
+      ? item.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
+        item.traitHashes?.includes(TraitHashes.ReleasesV820Season)
+        ? itemConstants.holofoilBackgroundOverlayPath
+        : itemConstants.holofoil900BackgroundOverlayPath
+      : undefined,
+    item.iconDef?.specialBackground, // I don't think any icon defines this
+    // So far this is only a solid color, which we already handle. Can
+    // uncomment if it ever becomes interesting.
+    // item.iconDef?.background,
+  ]);
+
+  const animatedBackground =
+    item.holofoil && !item.traitHashes?.includes(TraitHashes.ReleasesV730Season)
+      ? holofoilAnim
+      : undefined;
+
+  // The actual item icon. Use the ornamented version where available.
+  const foreground = (item.ornamentIconDef ?? item.iconDef)?.foreground ?? item.icon;
+
+  // This needs to be shown at half opacity to match the in-game look
+  const masterworkGlow =
+    item.masterwork &&
+    (item.isExotic
+      ? itemConstants.masterworkExoticOverlayPath
+      : itemConstants.masterworkOverlayPath);
+
+  //  Backdrop for season/featured icon is also shown at much lower opacity in game than the images Bungie
+  // gave us. These are aligned with the border, not the image.
+  const halfOpacitySeasonOverlay =
+    item.iconDef?.secondaryBackground && itemConstants.watermarkDropShadowPath;
+
+  const craftedOverlays = compact([
+    // The crafted/enhanced icon
+    item.crafted === 'crafted'
+      ? itemConstants.craftedOverlayPath
+      : item.crafted === 'enhanced'
+        ? itemConstants.enhancedItemOverlayPath
+        : undefined,
+    // Crafted item background
+    item.crafted ? itemConstants.craftedBackgroundPath : undefined,
+  ]);
+  // These are aligned with the border, not the image
+  const fullOpacitySeasonOverlays = compact([
+    // Featured flags
+    item.featured ? itemConstants.featuredItemFlagPath : undefined,
+    // Tier pips
+    item.tier > 0 && itemConstants.gearTierOverlayImagePaths[item.tier - 1],
+  ]);
+
+  const seasonIcon = item.iconDef?.secondaryBackground;
+
   return (
     <>
       {classifiedPlaceholder ? (
@@ -69,38 +155,41 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           })}
         />
       ) : (
-        <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
-      )}
-      {(item.masterwork || item.deepsightInfo) && (
-        <div
-          className={clsx(styles.backgroundOverlay, {
-            [styles.legendaryMasterwork]: item.masterwork && !item.isExotic,
-            [styles.exoticMasterwork]: item.masterwork && item.isExotic,
-            [styles.deepsightBorder]: item.deepsightInfo,
-          })}
-        />
-      )}
-      {item.iconOverlay && (
-        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
-      )}
-      {item.tier > 1 ? (
-        <div className={styles.tierPipContainer}>
-          {Array(item.tier)
-            .fill(0)
-            .map((_, i) => (
-              <div key={i} className={styles.tierPip} />
-            ))}
+        <div style={bungieBackgroundStyles(backgrounds)} className={itemImageStyles}>
+          {animatedBackground && (
+            <img src={animatedBackground} className={styles.animatedBackground} />
+          )}
+          {masterworkGlow && (
+            <div style={bungieBackgroundStyle(masterworkGlow)} className={styles.adjustOpacity} />
+          )}
+          {foreground && <div style={bungieBackgroundStyle(foreground)} />}
+          {halfOpacitySeasonOverlay && (
+            <div
+              style={bungieBackgroundStyle(halfOpacitySeasonOverlay)}
+              className={styles.shiftedLayer}
+            />
+          )}
+          {craftedOverlays.length > 0 && (
+            <div style={bungieBackgroundStyles(craftedOverlays)} className={styles.craftedLayer} />
+          )}
+          {fullOpacitySeasonOverlays.length > 0 && (
+            <div
+              style={bungieBackgroundStyles(fullOpacitySeasonOverlays)}
+              className={styles.shiftedLayer}
+            />
+          )}
+          {seasonIcon && (
+            <div style={bungieBackgroundStyle(seasonIcon)} className={styles.seasonIcon} />
+          )}
         </div>
-      ) : null}
+      )}
+
       {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
-        <>
-          <div className={styles.energyCostOverlay} />
-          <svg viewBox="0 0 100 100" className={styles.energyCost}>
-            <text x="87" y="26" fontSize="18px" textAnchor="end">
-              {item.plug.energyCost}
-            </text>
-          </svg>
-        </>
+        <svg viewBox="0 0 100 100" className={styles.energyCost}>
+          <text x="87" y="26" fontSize="18px" textAnchor="end">
+            {item.plug.energyCost}
+          </text>
+        </svg>
       )}
       {item.highlightedObjective && !item.deepsightInfo && (
         <img className={styles.highlightedObjective} src={pursuitComplete} />
@@ -153,16 +242,19 @@ export function DefItemIcon({
   return (
     <>
       <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
-      {iconOverlay && <BungieImage src={iconOverlay} className={styles.iconOverlay} alt="" />}
+      {iconOverlay && (
+        <BungieImage
+          src={iconOverlay}
+          className={clsx(styles.iconOverlay, { [styles.plugOverlay]: itemDef.plug })}
+          alt=""
+        />
+      )}
       {energyCost !== undefined && energyCost > 0 && (
-        <>
-          <div className={styles.energyCostOverlay} />
-          <svg viewBox="0 0 100 100" className={styles.energyCost}>
-            <text x="87" y="26" fontSize="18px" textAnchor="end">
-              {energyCost}
-            </text>
-          </svg>
-        </>
+        <svg viewBox="0 0 100 100" className={styles.energyCost}>
+          <text x="87" y="26" fontSize="18px" textAnchor="end">
+            {energyCost}
+          </text>
+        </svg>
       )}
     </>
   );
