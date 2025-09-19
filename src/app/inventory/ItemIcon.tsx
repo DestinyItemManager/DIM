@@ -120,10 +120,8 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       ? itemConstants.masterworkExoticOverlayPath
       : itemConstants.masterworkOverlayPath);
 
-  //  Backdrop for season/featured icon is also shown at much lower opacity in game than the images Bungie
-  // gave us. These are aligned with the border, not the image.
-  const halfOpacitySeasonOverlay =
-    item.iconDef?.secondaryBackground && itemConstants.watermarkDropShadowPath;
+  // These are aligned with the border, not the image.
+  const seasonBanner = item.iconDef?.secondaryBackground && itemConstants.watermarkDropShadowPath;
 
   const craftedOverlays = compact([
     // The crafted/enhanced icon
@@ -136,7 +134,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     item.crafted ? itemConstants.craftedBackgroundPath : undefined,
   ]);
   // These are aligned with the border, not the image
-  const fullOpacitySeasonOverlays = compact([
+  const seasonAndPips = compact([
     // Featured flags
     item.featured ? itemConstants.featuredItemFlagPath : undefined,
     // Tier pips
@@ -163,20 +161,14 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             <div style={bungieBackgroundStyle(masterworkGlow)} className={styles.adjustOpacity} />
           )}
           {foreground && <div style={bungieBackgroundStyle(foreground)} />}
-          {halfOpacitySeasonOverlay && (
-            <div
-              style={bungieBackgroundStyle(halfOpacitySeasonOverlay)}
-              className={styles.shiftedLayer}
-            />
+          {seasonBanner && (
+            <div style={bungieBackgroundStyle(seasonBanner)} className={styles.shiftedLayer} />
           )}
           {craftedOverlays.length > 0 && (
             <div style={bungieBackgroundStyles(craftedOverlays)} className={styles.craftedLayer} />
           )}
-          {fullOpacitySeasonOverlays.length > 0 && (
-            <div
-              style={bungieBackgroundStyles(fullOpacitySeasonOverlays)}
-              className={styles.shiftedLayer}
-            />
+          {seasonAndPips.length > 0 && (
+            <div style={bungieBackgroundStyles(seasonAndPips)} className={styles.shiftedLayer} />
           )}
           {seasonIcon && (
             <div style={bungieBackgroundStyle(seasonIcon)} className={styles.seasonIcon} />
