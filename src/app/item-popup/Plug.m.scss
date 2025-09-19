@@ -16,7 +16,7 @@
 }
 
 .plug {
-  --item-size-adjusted: calc(32 / 50 * var(--item-size));
+  --item-size-adjusted: calc(#{dim-item-px(32)});
   position: relative; // to position the thumbs-up correctly
   display: flex;
   flex-direction: row;

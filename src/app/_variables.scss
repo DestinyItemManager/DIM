@@ -144,6 +144,14 @@ $tempContainerZindex: 1000;
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }
 
+// Converts a pixel value into a size that scales with the item size setting.
+// The px value should be in terms of the default item size of 50px. This lets
+// you design styles with your setting set to the default, but then it'll work
+// for other sizes. This should be used within calc().
+@function dim-item-px($px) {
+  @return #{'(' + $px + ' / 50) * var(--item-size)'};
+}
+
 @mixin interactive(
   $hover: false,
   $focus: false,
