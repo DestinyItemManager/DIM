@@ -33,17 +33,6 @@
   padding: 0 4px;
 }
 
-.shapedIcon {
-  width: calc(#{dim-item-px(8)});
-  height: calc(#{dim-item-px(8)});
-  margin-right: auto;
-  color: var(--theme-item-shaped-icon);
-  &.enhancedIcon {
-    width: calc(#{dim-item-px(10)});
-    height: calc(#{dim-item-px(10)});
-  }
-}
-
 .quality {
   display: none;
   margin-right: auto;

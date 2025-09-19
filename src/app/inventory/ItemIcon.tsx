@@ -166,7 +166,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           {halfOpacitySeasonOverlay && (
             <div
               style={bungieBackgroundStyle(halfOpacitySeasonOverlay)}
-              className={clsx(styles.shiftedLayer, styles.adjustOpacity)}
+              className={styles.shiftedLayer}
             />
           )}
           {craftedOverlays.length > 0 && (
@@ -179,7 +179,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             />
           )}
           {seasonIcon && (
-            <div style={bungieBackgroundStyle(seasonIcon)} className={clsx(styles.seasonIcon)} />
+            <div style={bungieBackgroundStyle(seasonIcon)} className={styles.seasonIcon} />
           )}
         </div>
       )}
