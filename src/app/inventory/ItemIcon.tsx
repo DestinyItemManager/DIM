@@ -85,9 +85,16 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   // how these arrays are.
 
   const backgrounds = compact([
+    // The ornament knot background
+    item.ornamentIconDef && item.rarity === 'Exotic'
+      ? itemConstants.universalOrnamentExoticBackgroundOverlayPath
+      : item.rarity === 'Legendary'
+        ? itemConstants.universalOrnamentLegendaryBackgroundOverlayPath
+        : itemConstants.universalOrnamentBackgroundOverlayPath,
     // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
     item.holofoil
-      ? item.traitHashes?.includes(TraitHashes.ReleasesV730Season)
+      ? item.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
+        item.traitHashes?.includes(TraitHashes.ReleasesV820Season)
         ? itemConstants.holofoilBackgroundOverlayPath
         : itemConstants.holofoil900BackgroundOverlayPath
       : undefined,
@@ -97,24 +104,20 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     // item.iconDef?.background,
   ]);
 
-  if (backgrounds[0] === itemConstants.holofoilBackgroundOverlayPath) {
-    console.warn('Using deprecated holofoil background overlay', item);
-  }
-
-  // The ornament knot background
-  const ornamentBackground =
-    item.ornamentIconDef && itemConstants.universalOrnamentBackgroundOverlayPath;
-
   const animatedBackground =
     item.holofoil && !item.traitHashes?.includes(TraitHashes.ReleasesV730Season)
       ? holofoilAnim
       : undefined;
 
   // The actual item icon. Use the ornamented version where available.
-  const foreground = (item.ornamentIconDef ?? item.iconDef)?.foreground;
+  const foreground = (item.ornamentIconDef ?? item.iconDef)?.foreground ?? item.icon;
 
   // This needs to be shown at half opacity to match the in-game look
-  const masterworkGlow = item.masterwork && itemConstants.masterworkOverlayPath;
+  const masterworkGlow =
+    item.masterwork &&
+    (item.isExotic
+      ? itemConstants.masterworkExoticOverlayPath
+      : itemConstants.masterworkOverlayPath);
 
   //  Backdrop for season/featured icon is also shown at much lower opacity in game than the images Bungie
   // gave us. These are aligned with the border, not the image.
@@ -155,16 +158,10 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           {animatedBackground && (
             <img src={animatedBackground} className={styles.animatedBackground} />
           )}
-          {ornamentBackground && (
-            <div
-              style={bungieBackgroundStyle(ornamentBackground)}
-              className={styles.adjustOpacity}
-            />
-          )}
-          {foreground && <div style={bungieBackgroundStyle(foreground)} />}
           {masterworkGlow && (
             <div style={bungieBackgroundStyle(masterworkGlow)} className={styles.adjustOpacity} />
           )}
+          {foreground && <div style={bungieBackgroundStyle(foreground)} />}
           {halfOpacitySeasonOverlay && (
             <div
               style={bungieBackgroundStyle(halfOpacitySeasonOverlay)}

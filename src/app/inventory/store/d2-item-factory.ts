@@ -453,8 +453,10 @@ export function makeItem(
         DestinyClass.Unknown;
   }
 
-  let iconDef = displayProperties.iconHash ? defs.Icon.get(displayProperties.iconHash) : undefined;
-  let ornamentIconDef = overrideStyleItem?.displayProperties.iconHash
+  const iconDef = displayProperties.iconHash
+    ? defs.Icon.get(displayProperties.iconHash)
+    : undefined;
+  const ornamentIconDef = overrideStyleItem?.displayProperties.iconHash
     ? defs.Icon.get(overrideStyleItem.displayProperties.iconHash)
     : undefined;
   const isExotic = itemDef.inventory!.tierType === TierType.Exotic;

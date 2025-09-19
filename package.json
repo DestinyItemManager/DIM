@@ -206,7 +206,7 @@
     "@textcomplete/core": "^0.1.13",
     "@textcomplete/textarea": "^0.1.13",
     "@textcomplete/utils": "^0.1.13",
-    "bungie-api-ts": "^5.8.0",
+    "bungie-api-ts": "^5.9.0",
     "caniuse-lite": "^1.0.30001741",
     "clsx": "^2.1.1",
     "comlink": "^4.4.2",

@@ -87,7 +87,8 @@ $commonBg: #366f42;
 }
 
 .adjustOpacity {
-  opacity: 0.5;
+  // Bungie said they darkened the overlay "by 40%" so let's un-darken it that much
+  opacity: math.div(1, 1.4);
 }
 
 .craftedLayer {
