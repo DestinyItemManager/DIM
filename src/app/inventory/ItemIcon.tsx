@@ -58,6 +58,9 @@ export function getItemImageStyles(item: DimItem, className?: string) {
   return itemImageStyles;
 }
 
+// BRAVE and Rite of the Nine holofoils have a different background
+const oldShinyTraitHashes = [TraitHashes.ReleasesV730Season, TraitHashes.ReleasesV820Season];
+
 /**
  * This is just the icon part of the inventory tile - without the bottom stats bar, tag icons, etc.
  * This exists because we have to do a fair bit of work to make the icon look like it does in game
@@ -93,8 +96,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           : itemConstants?.universalOrnamentBackgroundOverlayPath),
     // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
     item.holofoil
-      ? item.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
-        item.traitHashes?.includes(TraitHashes.ReleasesV820Season)
+      ? oldShinyTraitHashes.some((h) => item.traitHashes?.includes(h))
         ? itemConstants?.holofoilBackgroundOverlayPath
         : itemConstants?.holofoil900BackgroundOverlayPath
       : undefined,
@@ -105,11 +107,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   ]);
 
   const animatedBackground =
-    item.holofoil &&
-    !(
-      item.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
-      item.traitHashes?.includes(TraitHashes.ReleasesV820Season)
-    )
+    item.holofoil && !oldShinyTraitHashes.some((h) => item.traitHashes?.includes(h))
       ? holofoilAnim
       : undefined;
 
@@ -241,7 +239,8 @@ export function DefItemIcon({
   const needsStrandColorFix =
     itemDef.plug && strandWrongColorPlugCategoryHashes.includes(itemDef.plug.plugCategoryHash);
 
-  const isMod = isPluggableItem(itemDef);
+  const isMasterworkMod =
+    isPluggableItem(itemDef) && itemDef.plug.plugCategoryIdentifier.includes('.masterworks.stat.');
 
   const itemImageStyles = clsx(
     'item-img',
@@ -270,10 +269,7 @@ export function DefItemIcon({
           : itemConstants.universalOrnamentBackgroundOverlayPath),
     // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
     itemDef.isHolofoil
-      ? !(
-          itemDef.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
-          itemDef.traitHashes?.includes(TraitHashes.ReleasesV820Season)
-        )
+      ? oldShinyTraitHashes.some((h) => itemDef.traitHashes?.includes(h))
         ? itemConstants.holofoilBackgroundOverlayPath
         : itemConstants.holofoil900BackgroundOverlayPath
       : undefined,
@@ -281,13 +277,15 @@ export function DefItemIcon({
   ]);
 
   const animatedBackground =
-    itemDef.isHolofoil && !itemDef.traitHashes?.includes(TraitHashes.ReleasesV730Season)
+    itemDef.isHolofoil && !oldShinyTraitHashes.some((h) => itemDef.traitHashes?.includes(h))
       ? holofoilAnim
       : undefined;
 
   // The actual item icon. Use the ornamented version where available.
   const foreground = compact([
-    isMod && iconDef?.secondaryBackground,
+    // When the icon is a masterwork mod, the season background is actually a full
+    // size overlay that has the level.
+    isMasterworkMod && iconDef?.secondaryBackground,
     iconDef?.foreground ?? itemDef.displayProperties.icon,
   ]);
 
@@ -300,11 +298,12 @@ export function DefItemIcon({
   const seasonAndPips = compact([
     // Featured flags
     itemDef.isFeaturedItem ? itemConstants.featuredItemFlagPath : undefined,
-    iconDef?.secondaryBackground && !isMod && itemConstants.watermarkDropShadowPath,
+    iconDef?.secondaryBackground && !isMasterworkMod && itemConstants.watermarkDropShadowPath,
   ]);
 
-  // TODO: When the icon is a mod, the season background is actually a full size overlay that has the cost or whatever. Also they don't need the watermarkDropShadow!
-  const seasonIcon = !isMod && iconDef?.secondaryBackground;
+  // When the icon is a masterwork mod, the season background is actually a full
+  // size overlay that has the level.
+  const seasonIcon = !isMasterworkMod && iconDef?.secondaryBackground;
 
   return (
     <>

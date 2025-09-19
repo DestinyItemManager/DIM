@@ -107,10 +107,10 @@ $commonBg: #366f42;
 }
 
 .seasonIcon {
-  top: calc((0.5 / 50) * var(--item-size));
-  left: calc((0.5 / 50) * var(--item-size));
-  height: calc((11 / 50) * var(--item-size));
-  width: calc((11 / 50) * var(--item-size));
+  top: calc(#{dim-item-px(0.5)});
+  left: calc(#{dim-item-px(0.5)});
+  height: calc(#{dim-item-px(11)});
+  width: calc(#{dim-item-px(11)});
 }
 
 .energyCost {
