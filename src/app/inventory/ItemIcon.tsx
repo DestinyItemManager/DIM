@@ -70,9 +70,6 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   const classifiedPlaceholder =
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
-  if (!itemConstants) {
-    return null; // this won't happen, it just lets us avoid a bunch of ! in the rest of the code
-  }
 
   // Sadly we can't just layer all the backgrounds into a single div because:
   // 1) Some of them need to be offset a bit because we display the whole image
@@ -88,16 +85,16 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     // The ornament knot background
     item.ornamentIconDef &&
       (item.rarity === 'Exotic'
-        ? itemConstants.universalOrnamentExoticBackgroundOverlayPath
+        ? itemConstants?.universalOrnamentExoticBackgroundOverlayPath
         : item.rarity === 'Legendary'
-          ? itemConstants.universalOrnamentLegendaryBackgroundOverlayPath
-          : itemConstants.universalOrnamentBackgroundOverlayPath),
+          ? itemConstants?.universalOrnamentLegendaryBackgroundOverlayPath
+          : itemConstants?.universalOrnamentBackgroundOverlayPath),
     // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
     item.holofoil
       ? item.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
         item.traitHashes?.includes(TraitHashes.ReleasesV820Season)
-        ? itemConstants.holofoilBackgroundOverlayPath
-        : itemConstants.holofoil900BackgroundOverlayPath
+        ? itemConstants?.holofoilBackgroundOverlayPath
+        : itemConstants?.holofoil900BackgroundOverlayPath
       : undefined,
     item.iconDef?.specialBackground, // I don't think any icon defines this
     // So far this is only a solid color, which we already handle. Can
@@ -117,28 +114,28 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   const masterworkGlow =
     item.masterwork &&
     (item.isExotic
-      ? itemConstants.masterworkExoticOverlayPath
-      : itemConstants.masterworkOverlayPath);
+      ? itemConstants?.masterworkExoticOverlayPath
+      : itemConstants?.masterworkOverlayPath);
 
   // These are aligned with the border, not the image.
-  const seasonBanner = item.iconDef?.secondaryBackground && itemConstants.watermarkDropShadowPath;
+  const seasonBanner = item.iconDef?.secondaryBackground && itemConstants?.watermarkDropShadowPath;
 
   const craftedOverlays = compact([
     // The crafted/enhanced icon
     item.crafted === 'crafted'
-      ? itemConstants.craftedOverlayPath
+      ? itemConstants?.craftedOverlayPath
       : item.crafted === 'enhanced'
-        ? itemConstants.enhancedItemOverlayPath
+        ? itemConstants?.enhancedItemOverlayPath
         : undefined,
     // Crafted item background
-    item.crafted ? itemConstants.craftedBackgroundPath : undefined,
+    item.crafted ? itemConstants?.craftedBackgroundPath : undefined,
   ]);
   // These are aligned with the border, not the image
   const seasonAndPips = compact([
     // Featured flags
-    item.featured ? itemConstants.featuredItemFlagPath : undefined,
+    item.featured ? itemConstants?.featuredItemFlagPath : undefined,
     // Tier pips
-    item.tier > 0 && itemConstants.gearTierOverlayImagePaths[item.tier - 1],
+    item.tier > 0 && itemConstants?.gearTierOverlayImagePaths[item.tier - 1],
   ]);
 
   const seasonIcon = item.iconDef?.secondaryBackground;
@@ -152,6 +149,8 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             [styles.inverted]: !classifiedPlaceholder.colorized,
           })}
         />
+      ) : !item.iconDef ? (
+        <div style={bungieBackgroundStyle(item.icon)} className={itemImageStyles} />
       ) : (
         <div style={bungieBackgroundStyles(backgrounds)} className={itemImageStyles}>
           {animatedBackground && (
