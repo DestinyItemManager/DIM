@@ -8,7 +8,7 @@ interface CssExports {
   'comparisonModebutton': string;
   'modIcon': string;
   'options': string;
-  'organizerLink': string;
+  'rightMarginButtons': string;
   'scroller': string;
 }
 export const cssExports: CssExports;

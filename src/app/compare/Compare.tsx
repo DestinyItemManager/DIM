@@ -304,12 +304,29 @@ export default function Compare({ session }: { session: CompareSession }) {
         />
       )}
       {exampleItem && <CompareSuggestions exampleItem={exampleItem} onQueryChanged={updateQuery} />}
-      {organizerLink && (
-        <Link className={styles.organizerLink} to={organizerLink}>
-          <AppIcon icon={faList} />
-          <span>{t('Organizer.OpenIn')}</span>
-        </Link>
-      )}
+      <div className={styles.rightMarginButtons}>
+        
+        <button
+          type="button"
+          className='dim-button'
+          title={t("Organizer.ClearUnselected")}
+          onClick={() => {
+            for (const item of compareItems) {
+              if (item !== initialItem) {
+                remove(item)
+              }
+            }
+          }}
+        >
+          {t("Organizer.ClearUnselected")}
+        </button>
+        {organizerLink && (
+          <Link className='dim-button' to={organizerLink}>
+            <AppIcon icon={faList} />
+            <span>{t('Organizer.OpenIn')}</span>
+          </Link>
+        )}
+      </div>
     </div>
   );
 

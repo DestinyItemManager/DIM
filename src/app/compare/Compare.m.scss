@@ -1,8 +1,9 @@
 @use '../variables' as *;
 
-.organizerLink {
-  composes: dim-button from global;
+.rightMarginButtons {
   margin-left: auto;
+  display: flex;
+  gap: 4px;
 
   @include phone-portrait {
     margin-left: 0;
