@@ -33,17 +33,6 @@
   padding: 0 4px;
 }
 
-.shapedIcon {
-  width: calc((8 / 50) * var(--item-size));
-  height: calc((8 / 50) * var(--item-size));
-  margin-right: auto;
-  color: var(--theme-item-shaped-icon);
-  &.enhancedIcon {
-    width: calc((10 / 50) * var(--item-size));
-    height: calc((10 / 50) * var(--item-size));
-  }
-}
-
 .quality {
   display: none;
   margin-right: auto;
@@ -78,12 +67,6 @@
   border-left: 1px solid $deepsight-border-color;
   border-right: 1px solid $deepsight-border-color;
   padding: 0 1px;
-}
-
-.energyCapacity {
-  font-weight: bold;
-  font-size: calc((9 / 50) * var(--item-size)); // 9px at default 50px item size
-  margin-right: auto;
 }
 
 /* some elements icons (arc / void / strand) don't show up well on polaroid white. we darken these. */

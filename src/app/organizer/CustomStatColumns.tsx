@@ -9,10 +9,20 @@ import { ColumnDefinition, SortDirection } from './table-types';
 
 export function createCustomStatColumns(
   customStatDefs: CustomStatDef[],
-  className?: string,
-  headerClassName?: string,
-  hideFormula = false,
-  withMasterwork = false,
+  {
+    hideFormula = false,
+    withMasterwork = false,
+    extraStatInfo = false,
+    className,
+    headerClassName,
+  }: {
+    hideFormula?: boolean;
+    withMasterwork?: boolean;
+    /** Whether to show extra stat info icons (e.g. that the total includes tuners, or that the stat is tuned) and stat bars. */
+    extraStatInfo?: boolean;
+    className?: string;
+    headerClassName?: string;
+  } = {},
 ): ColumnDefinition[] {
   return customStatDefs.map((c): ColumnDefinition => {
     const { class: guardianClass, label, shortLabel, statHash, weights } = c;
@@ -49,6 +59,7 @@ export function createCustomStatColumns(
             item={item}
             value={val}
             relevantStatHashes={relevantStatHashes}
+            extraStatInfo={extraStatInfo}
           />
         );
       },

@@ -1,12 +1,24 @@
 // async module
+import { t } from 'app/i18next-t';
 import { currentStoreSelector } from 'app/inventory/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { observe, unobserve } from 'app/store/observerMiddleware';
 import { RootState, ThunkResult } from 'app/store/types';
 import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
-import packager from 'app/stream-deck/util/packager';
+import { errorMessage } from 'app/utils/errors';
+import { reportException } from 'app/utils/sentry';
 import useSelection from './useStreamDeckSelection';
+import {
+  character,
+  equippedItems,
+  inventoryCounters,
+  maxPower,
+  metrics,
+  postmaster,
+  vault,
+} from './util/packager';
 
 const STREAM_DECK_FARMING_OBSERVER_ID = 'stream-deck-farming-observer';
 
@@ -24,23 +36,38 @@ export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
   }
 }
 
+let errorNotified = false;
+
 // collect and send data to the stream deck
 function refreshStreamDeck(state: RootState) {
   if (websocket.readyState === WebSocket.OPEN) {
-    const store = currentStoreSelector(state);
-    store &&
-      sendToStreamDeck({
-        action: 'state',
-        data: {
-          character: packager.character(store),
-          postmaster: packager.postmaster(store),
-          metrics: packager.metrics(state),
-          vault: packager.vault(state),
-          inventory: packager.inventoryCounters(state),
-          maxPower: packager.maxPower(store, state),
-          equippedItems: packager.equippedItems(store),
-        },
-      });
+    try {
+      const store = currentStoreSelector(state);
+      store &&
+        sendToStreamDeck({
+          action: 'state',
+          data: {
+            character: character(store),
+            postmaster: postmaster(store),
+            metrics: metrics(state),
+            vault: vault(state),
+            inventory: inventoryCounters(state),
+            maxPower: maxPower(store, state),
+            equippedItems: equippedItems(store),
+          },
+        });
+    } catch (e) {
+      reportException('streamdeck', e);
+      if (!errorNotified) {
+        showNotification({
+          type: 'error',
+          title: t('StreamDeck.Error.Title'),
+          body: t('StreamDeck.Error.Body', { error: errorMessage(e) }),
+          duration: 10000,
+        });
+        errorNotified = true;
+      }
+    }
   }
 }
 

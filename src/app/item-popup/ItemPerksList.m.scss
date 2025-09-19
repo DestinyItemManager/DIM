@@ -44,7 +44,7 @@
 
 .perkIconWrapper {
   // Change the size of the perk icons
-  --item-size-adjusted: calc(30 / 50 * var(--item-size));
+  --item-size-adjusted: calc(#{dim-item-px(30)});
   grid-area: icon;
   align-self: flex-start;
   position: relative; // to position the thumbs-up correctly

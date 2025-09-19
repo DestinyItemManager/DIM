@@ -118,7 +118,6 @@ export default function InventoryItem({
             {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}
-        (
         {(nonPullablePostmasterItem(item) && <AlertIcon className={styles.warningIcon} />) ||
           ($featureFlags.newItems && isNew && <NewItemIndicator />)}
       </>

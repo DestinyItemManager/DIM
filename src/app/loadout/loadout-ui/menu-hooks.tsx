@@ -297,7 +297,6 @@ export function FashionIcon({ className }: { className: string }) {
         className={clsx(className, styles.fashionIcon)}
         style={bungieBackgroundStyleAdvanced(
           defs.InventoryItem.get(DEFAULT_ORNAMENTS[2])?.displayProperties.icon,
-          undefined,
           2,
         )}
       />

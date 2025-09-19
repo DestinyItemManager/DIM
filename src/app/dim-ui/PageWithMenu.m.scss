@@ -25,21 +25,18 @@
 
 .contents {
   flex: 1;
-  margin-top: 12px; // 8px to match the menu, plus 4px to match the padding
   width: 100%;
   box-sizing: border-box;
 
-  @include phone-portrait {
-    margin-top: 0;
+  @include desktop {
+    margin-top: 12px; // 8px to match the menu, plus 4px to match the padding
   }
   h2:first-child {
     margin-top: 0;
   }
   :global(.issue-banner-shown) & {
-    padding-bottom: $issue-banner-height;
-
-    @include phone-portrait {
-      padding-bottom: 0;
+    @include desktop {
+      padding-bottom: $issue-banner-height;
     }
   }
 }

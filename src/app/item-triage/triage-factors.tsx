@@ -106,7 +106,6 @@ const itemFactors: Record<string, Factor> = {
           key="specialty"
           className={styles.modSlotIcon}
           item={item}
-          lowRes
           excludeStandardD2ModSockets
         />
       );

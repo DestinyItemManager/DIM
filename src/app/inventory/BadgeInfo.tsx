@@ -1,7 +1,5 @@
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getD1QualityColor } from 'app/shell/formatters';
-import { enhancedIcon, shapedIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
@@ -73,13 +71,8 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       item.element.enumValue === DamageType.Strand);
 
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
-  const summaryIcon = item.crafted ? (
-    <AppIcon
-      className={clsx(styles.shapedIcon, item.crafted === 'enhanced' && styles.enhancedIcon)}
-      icon={item.crafted === 'enhanced' ? enhancedIcon : shapedIcon}
-    />
-  ) : (
-    wishlistRollIcon !== undefined && <RatingIcon uiWishListRoll={wishlistRollIcon} />
+  const summaryIcon = wishlistRollIcon !== undefined && (
+    <RatingIcon uiWishListRoll={wishlistRollIcon} />
   );
 
   return (
@@ -101,18 +94,14 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
         </div>
       )}
       {summaryIcon}
-      {item.energy ? (
-        <span className={styles.energyCapacity}>{item.energy.energyCapacity}</span>
-      ) : (
-        item.element &&
+      {item.element &&
         !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
           <ElementIcon
             element={item.element}
             className={clsx({ [styles.fixContrast]: fixContrast })}
             d1Badge={item.destinyVersion === 1}
           />
-        )
-      )}
+        )}
       <span className={styles.badgeContent}>{badgeContent}</span>
     </div>
   );

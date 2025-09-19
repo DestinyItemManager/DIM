@@ -1,6 +1,8 @@
+@use '../variables' as *;
+
 .mod {
   // Change the perk image to be a bit larger
-  --mod-size: var(--archetype-size, calc(34 / 50 * var(--item-size)));
+  --mod-size: var(--archetype-size, calc(#{dim-item-px(34)}));
 }
 
 .row {

@@ -7,6 +7,7 @@ import {
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
   DestinyEquipableItemSetDefinition,
+  DestinyIconDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
   DestinyItemInvestmentStatDefinition,
@@ -74,14 +75,24 @@ export interface DimItem {
   name: string;
   /** Localized description of the item. */
   description: string;
-  /** Icon path for the item. */
+  /**
+   * Icon path for the item.
+   * @deprecated for display - use iconDef instead.
+   */
   icon: string;
-  /** Hidden Icon overlay path for the item. Currently used to assess event data and seasons for some items when no overlay is shown */
+  /** Hidden Icon overlay path for the item. Only used to figure out what season/event an item is from in some edge cases. */
   hiddenOverlay?: string;
-  /** Icon overlay path for the item. Currently used to correct old season icons into new ones for reissued items */
+  /**
+   * Icon overlay path for the item. Currently used to correct old season icons into new ones for reissued items
+   * @deprecated for display - use iconDef instead.
+   */
   iconOverlay?: string;
   /** Some items have a secondary icon, namely Emblems. */
   secondaryIcon?: string;
+  /** Some items have a full icon definition attached which provides layered icon assets. */
+  iconDef?: DestinyIconDefinition;
+  /** If the item has an ornament applied, this is the icon info for that ornament. */
+  ornamentIconDef?: DestinyIconDefinition;
   /** Whether we can pull this item from the postmaster */
   canPullFromPostmaster: boolean;
   /** Is this "equipment" (items that can be equipped). */

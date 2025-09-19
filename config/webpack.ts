@@ -6,7 +6,6 @@ import { execSync } from 'child_process';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import ForkTsCheckerNotifierWebpackPlugin from 'fork-ts-checker-notifier-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import fs from 'fs';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
@@ -18,7 +17,6 @@ import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
 import SondaWebpackPlugin from 'sonda/webpack';
 import TerserPlugin from 'terser-webpack-plugin';
 import 'webpack-dev-server';
-import WebpackNotifierPlugin from 'webpack-notifier';
 import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
@@ -260,7 +258,7 @@ export default (env: Env) => {
           ],
         },
         {
-          test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          test: /\.(jpg|gif|a?png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           type: 'asset',
           parser: {
             dataUrlCondition: {
@@ -534,28 +532,6 @@ export default (env: Env) => {
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     plugins.push(new ForkTsCheckerWebpackPlugin());
-
-    // TODO: maybe reintroduce https://webpack.js.org/plugins/eslint-webpack-plugin/
-
-    if (process.env.SNORETOAST_DISABLE) {
-      console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");
-    } else {
-      plugins.push(
-        new WebpackNotifierPlugin({
-          title: 'DIM',
-          excludeWarnings: false,
-          alwaysNotify: true,
-          contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-        }),
-      );
-      plugins.push(
-        new ForkTsCheckerNotifierWebpackPlugin({
-          title: 'DIM TypeScript',
-          excludeWarnings: false,
-        }),
-      );
-    }
-
     plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
   } else {
     // env.beta and env.release
@@ -612,7 +588,7 @@ export default (env: Env) => {
 
       // Generate a service worker
       new InjectManifest({
-        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
+        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(a?png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
           // Ignore both the webapp manifest and the d1-manifest files

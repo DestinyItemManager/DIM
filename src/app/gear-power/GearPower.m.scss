@@ -10,8 +10,8 @@
   max-width: 360px;
   margin: 0 auto;
 
-  @include phone-portrait {
-    max-width: unset;
+  @include desktop {
+    max-width: fit-content;
   }
 }
 

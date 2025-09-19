@@ -33,20 +33,26 @@ export function bungieBackgroundStyle(src: BungieImagePath) {
     backgroundImage: `url("${bungieNetPath(src)}")`,
   };
 }
+
+/**
+ * Produce a style object that sets the background image to an image on bungie.net.
+ */
+export function bungieBackgroundStyles(src: BungieImagePath[]) {
+  if (src.length === 0) {
+    return {};
+  }
+  return {
+    backgroundImage: src.map((src) => `url("${bungieNetPath(src)}")`).join(', '),
+  };
+}
+
 /**
  * Produce a style object that sets the background image to an image on bungie.net.
  *
  * Has extra settings because sometimes life throws bad CSS choices your way
  */
-export function bungieBackgroundStyleAdvanced(
-  src: BungieImagePath,
-  additionalBackground?: string,
-  stacks = 1,
-) {
+export function bungieBackgroundStyleAdvanced(src: BungieImagePath, stacks = 1) {
   const backgrounds = Array(stacks).fill(`url("${bungieNetPath(src)}")`);
-  if (additionalBackground) {
-    backgrounds.push(additionalBackground);
-  }
 
   return {
     backgroundImage: backgrounds.join(', '),
