@@ -2,10 +2,9 @@
 
 .body {
   padding: 10px;
-  max-height: 50vh;
 
-  @include phone-portrait {
-    max-height: unset;
+  @include desktop {
+    max-height: 50vh;
   }
 }
 

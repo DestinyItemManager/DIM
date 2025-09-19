@@ -97,6 +97,14 @@ $tempContainerZindex: 1000;
   }
 }
 
+// The opposite of phone-portrait, for when you want to default to mobile styles
+// and only override on larger screens.
+@mixin desktop {
+  @media (min-width: 541px) {
+    @content;
+  }
+}
+
 // Position something directly below the header
 @mixin below-header {
   top: var(--header-height);
@@ -110,10 +118,8 @@ $tempContainerZindex: 1000;
 }
 
 @mixin draggable-hover-border {
-  outline: 1px solid var(--theme-item-polaroid-hover-border);
-
-  @include phone-portrait {
-    outline: none;
+  @include desktop {
+    outline: 1px solid var(--theme-item-polaroid-hover-border);
   }
 }
 
