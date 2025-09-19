@@ -1,12 +1,13 @@
 import { itemConstants } from 'app/destiny2/d2-definitions';
-import BungieImage, { bungieBackgroundStyle, bungieBackgroundStyles } from 'app/dim-ui/BungieImage';
+import { bungieBackgroundStyle, bungieBackgroundStyles } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
 import { compact } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { isArmorArchetypePlug, isModCostVisible } from 'app/utils/socket-utils';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import {
   BucketHashes,
@@ -57,6 +58,9 @@ export function getItemImageStyles(item: DimItem, className?: string) {
   return itemImageStyles;
 }
 
+// BRAVE and Rite of the Nine holofoils have a different background
+const oldShinyTraitHashes = [TraitHashes.ReleasesV730Season, TraitHashes.ReleasesV820Season];
+
 /**
  * This is just the icon part of the inventory tile - without the bottom stats bar, tag icons, etc.
  * This exists because we have to do a fair bit of work to make the icon look like it does in game
@@ -83,7 +87,8 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
 
   const backgrounds = compact([
     // The ornament knot background
-    item.ornamentIconDef &&
+    (item.ornamentIconDef ||
+      (item.vendor && item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament))) &&
       (item.rarity === 'Exotic'
         ? itemConstants?.universalOrnamentExoticBackgroundOverlayPath
         : item.rarity === 'Legendary'
@@ -91,8 +96,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           : itemConstants?.universalOrnamentBackgroundOverlayPath),
     // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
     item.holofoil
-      ? item.traitHashes?.includes(TraitHashes.ReleasesV730Season) ||
-        item.traitHashes?.includes(TraitHashes.ReleasesV820Season)
+      ? oldShinyTraitHashes.some((h) => item.traitHashes?.includes(h))
         ? itemConstants?.holofoilBackgroundOverlayPath
         : itemConstants?.holofoil900BackgroundOverlayPath
       : undefined,
@@ -103,12 +107,17 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   ]);
 
   const animatedBackground =
-    item.holofoil && !item.traitHashes?.includes(TraitHashes.ReleasesV730Season)
+    item.holofoil && !oldShinyTraitHashes.some((h) => item.traitHashes?.includes(h))
       ? holofoilAnim
       : undefined;
 
   // The actual item icon. Use the ornamented version where available.
-  const foreground = (item.ornamentIconDef ?? item.iconDef)?.foreground ?? item.icon;
+  let foreground = (item.ornamentIconDef ?? item.iconDef)?.foreground ?? item.icon;
+
+  if (!animatedBackground) {
+    backgrounds.unshift(foreground);
+    foreground = '';
+  }
 
   // This needs to be shown at half opacity to match the in-game look
   const masterworkGlow =
@@ -118,7 +127,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       : itemConstants?.masterworkOverlayPath);
 
   // These are aligned with the border, not the image.
-  const seasonBanner = item.iconDef?.secondaryBackground && itemConstants?.watermarkDropShadowPath;
+  let seasonBanner = item.iconDef?.secondaryBackground && itemConstants?.watermarkDropShadowPath;
 
   const craftedOverlays = compact([
     // The crafted/enhanced icon
@@ -137,6 +146,11 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     // Tier pips
     item.tier > 0 && itemConstants?.gearTierOverlayImagePaths[item.tier - 1],
   ]);
+
+  if (craftedOverlays.length === 0 && seasonBanner) {
+    seasonAndPips.push(seasonBanner);
+    seasonBanner = '';
+  }
 
   const seasonIcon = item.iconDef?.secondaryBackground;
 
@@ -174,7 +188,6 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           )}
         </div>
       )}
-
       {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
         <svg viewBox="0 0 100 100" className={styles.energyCost}>
           <text x="87" y="26" fontSize="18px" textAnchor="end">
@@ -201,10 +214,21 @@ export function DefItemIcon({
   className?: string;
   borderless?: boolean;
 }) {
+  const defs = useD2Definitions()!;
   if (!itemDef) {
     errorLog('temp-deficon', new Error('DefItemIcon was called with a missing def'));
     return null;
   }
+  // This is only ever used in D2
+  if (!itemConstants) {
+    return null;
+  }
+  const classifiedPlaceholder =
+    (!itemDef.displayProperties.icon || itemDef.displayProperties.icon === d2MissingIcon) &&
+    itemDef.redacted &&
+    itemDef.inventory &&
+    getBucketSvgIcon(itemDef.inventory.bucketTypeHash);
+
   const itemCategoryHashes = itemDef.itemCategoryHashes || [];
   borderless ||=
     itemDef.plug?.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
@@ -214,6 +238,9 @@ export function DefItemIcon({
 
   const needsStrandColorFix =
     itemDef.plug && strandWrongColorPlugCategoryHashes.includes(itemDef.plug.plugCategoryHash);
+
+  const isMasterworkMod =
+    isPluggableItem(itemDef) && itemDef.plug.plugCategoryIdentifier.includes('.masterworks.stat.');
 
   const itemImageStyles = clsx(
     'item-img',
@@ -228,17 +255,83 @@ export function DefItemIcon({
   );
   const energyCost = getModCostInfo(itemDef);
 
-  const iconOverlay = itemDef.iconWatermark || itemDef.iconWatermarkShelved || undefined;
+  const iconDef = itemDef.displayProperties.iconHash
+    ? defs.Icon.get(itemDef.displayProperties.iconHash)
+    : null;
+
+  const backgrounds = compact([
+    // The ornament knot background
+    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Ornament) &&
+      (itemDef.inventory?.tierType === TierType.Exotic
+        ? itemConstants.universalOrnamentExoticBackgroundOverlayPath
+        : itemDef.inventory?.tierType === TierType.Superior
+          ? itemConstants.universalOrnamentLegendaryBackgroundOverlayPath
+          : itemConstants.universalOrnamentBackgroundOverlayPath),
+    // Holofoil background (two types for some reason, BRAVE weapons have one with stripes)
+    itemDef.isHolofoil
+      ? oldShinyTraitHashes.some((h) => itemDef.traitHashes?.includes(h))
+        ? itemConstants.holofoilBackgroundOverlayPath
+        : itemConstants.holofoil900BackgroundOverlayPath
+      : undefined,
+    iconDef?.background,
+  ]);
+
+  const animatedBackground =
+    itemDef.isHolofoil && !oldShinyTraitHashes.some((h) => itemDef.traitHashes?.includes(h))
+      ? holofoilAnim
+      : undefined;
+
+  // The actual item icon. Use the ornamented version where available.
+  const foreground = compact([
+    // When the icon is a masterwork mod, the season background is actually a full
+    // size overlay that has the level.
+    isMasterworkMod && iconDef?.secondaryBackground,
+    iconDef?.foreground ?? itemDef.displayProperties.icon,
+  ]);
+
+  if (!animatedBackground) {
+    backgrounds.unshift(...foreground);
+    foreground.splice(0, foreground.length);
+  }
+
+  // These are aligned with the border, not the image
+  const seasonAndPips = compact([
+    // Featured flags
+    itemDef.isFeaturedItem ? itemConstants.featuredItemFlagPath : undefined,
+    iconDef?.secondaryBackground && !isMasterworkMod && itemConstants.watermarkDropShadowPath,
+  ]);
+
+  // When the icon is a masterwork mod, the season background is actually a full
+  // size overlay that has the level.
+  const seasonIcon = !isMasterworkMod && iconDef?.secondaryBackground;
 
   return (
     <>
-      <BungieImage src={itemDef.displayProperties.icon} className={itemImageStyles} alt="" />
-      {iconOverlay && (
-        <BungieImage
-          src={iconOverlay}
-          className={clsx(styles.iconOverlay, { [styles.plugOverlay]: itemDef.plug })}
-          alt=""
+      {classifiedPlaceholder ? (
+        <BucketIcon
+          icon={classifiedPlaceholder}
+          className={clsx(itemImageStyles, {
+            [styles.inverted]: !classifiedPlaceholder.colorized,
+          })}
         />
+      ) : !iconDef ? (
+        <div
+          style={bungieBackgroundStyle(itemDef.displayProperties.icon)}
+          className={itemImageStyles}
+        />
+      ) : (
+        <div style={bungieBackgroundStyles(backgrounds)} className={itemImageStyles}>
+          {animatedBackground && (
+            <img src={animatedBackground} className={styles.animatedBackground} />
+          )}
+          {foreground.length > 0 && <div style={bungieBackgroundStyles(foreground)} />}
+          {seasonAndPips.length > 0 && (
+            <div style={bungieBackgroundStyles(seasonAndPips)} className={styles.shiftedLayer} />
+          )}
+          {seasonIcon && (
+            <div style={bungieBackgroundStyle(seasonIcon)} className={styles.seasonIcon} />
+          )}
+        </div>
       )}
       {energyCost !== undefined && energyCost > 0 && (
         <svg viewBox="0 0 100 100" className={styles.energyCost}>

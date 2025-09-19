@@ -142,14 +142,14 @@ $iconOverlayScale: math.div(65, 96);
   align-items: center;
   top: 0;
   left: 0;
-  width: round(28px * $iconOverlayScale);
-  height: round(96px * $iconOverlayScale);
+  width: math.round(28px * $iconOverlayScale);
+  height: math.round(96px * $iconOverlayScale);
   background-size: cover;
   background-repeat: no-repeat;
   pointer-events: none;
-  padding-top: round(3px * $iconOverlayScale);
+  padding-top: math.round(3px * $iconOverlayScale);
 
   > img {
-    width: round(22px * $iconOverlayScale);
+    width: math.round(22px * $iconOverlayScale);
   }
 }

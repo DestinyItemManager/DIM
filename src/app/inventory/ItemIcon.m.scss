@@ -107,32 +107,10 @@ $commonBg: #366f42;
 }
 
 .seasonIcon {
-  top: calc((0.5 / 50) * var(--item-size));
-  left: calc((0.5 / 50) * var(--item-size));
-  height: calc((11 / 50) * var(--item-size));
-  width: calc((11 / 50) * var(--item-size));
-}
-
-.iconOverlay {
-  // TODO: In Edge of Fate this overlay changed, but it's actually rendered at
-  // the incorrect size vs. in-game.
-  top: 1px;
-  left: 1px;
-  height: calc(var(--item-size) - (2 / 50) * var(--item-size));
-  width: calc(var(--item-size) - (2 / 50) * var(--item-size));
-  background-size: var(--item-size);
-  background-position: calc((-2 / 50) * var(--item-size));
-  position: absolute;
-  pointer-events: none;
-
-  &.plugOverlay {
-    top: 0;
-    left: 0;
-    background-size: cover;
-    background-position: center;
-    height: var(--item-size);
-    width: var(--item-size);
-  }
+  top: calc(#{dim-item-px(0.5)});
+  left: calc(#{dim-item-px(0.5)});
+  height: calc(#{dim-item-px(11)});
+  width: calc(#{dim-item-px(11)});
 }
 
 .energyCost {
