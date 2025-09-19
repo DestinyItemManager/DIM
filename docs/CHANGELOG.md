@@ -1,5 +1,7 @@
 ## Next
 
+* Updated item tiles to more closely match in-game tiles, with higher quality images.
+
 ## 8.90.1 <span class="changelog-date">(2025-09-18)</span>
 
 * Fixed some cases where the enhanced version of perks would not match wishlists that specified the unenhanced version.
