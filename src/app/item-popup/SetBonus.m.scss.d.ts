@@ -8,6 +8,7 @@ interface CssExports {
   'perk': string;
   'perkIcon': string;
   'setBonus': string;
+  'setBonusesStatus': string;
   'unsatisfied': string;
 }
 export const cssExports: CssExports;

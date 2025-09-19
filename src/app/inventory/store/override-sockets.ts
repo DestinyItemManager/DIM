@@ -2,7 +2,7 @@ import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { isEmpty } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import { enhancedVersion } from 'app/utils/perk-utils';
 import { produce } from 'immer';
 import { useCallback, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../item-types';
@@ -49,7 +49,7 @@ export function applySocketOverrides(
       if (s.isPerk) {
         newPlug =
           plugOptions.find((p) => p.plugDef.hash === override) ??
-          plugOptions.find((p) => perkToEnhanced[p.plugDef.hash] === override);
+          plugOptions.find((p) => enhancedVersion(p.plugDef.hash) === override);
         actuallyPlugged = plugOptions.find((p) => p.plugDef.hash === s.plugged?.plugDef.hash);
       } else {
         // This is likely a mod selection!

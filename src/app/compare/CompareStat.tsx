@@ -16,6 +16,7 @@ export default function CompareStat({
   item,
   value,
   relevantStatHashes,
+  extraStatInfo = false,
 }: {
   stat?: DimStat | D1Stat;
   item: DimItem;
@@ -24,6 +25,8 @@ export default function CompareStat({
   max: number;
   /** If this represents a custom stat, these are the real stats that custom stat includes. */
   relevantStatHashes?: number[];
+  /** Whether to show extra stat info icons (e.g. that the total includes tuners, or that the stat is tuned) and stat bars. */
+  extraStatInfo?: boolean;
 }) {
   const isMasterworkStat = Boolean(
     item?.bucket.inWeapons &&
@@ -51,7 +54,7 @@ export default function CompareStat({
           [styles.noMinWidth]: !stat || stat.statHash === StatHashes.AnyEnergyTypeCost,
         })}
       />
-      {item.bucket.inArmor && (
+      {item.bucket.inArmor && extraStatInfo && (
         <span className={clsx(styles.statBarArea, showBar && styles.statBarContainer)}>
           {extraIcon && (
             <span

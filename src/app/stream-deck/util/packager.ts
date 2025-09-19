@@ -5,11 +5,10 @@ import { findItemsByBucket, getArtifactBonus } from 'app/inventory/stores-helper
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { d2ManifestSelector } from 'app/manifest/selectors';
+import { currentSeasonPassHashSelector, d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { D2SeasonPassActiveList } from 'data/d2/d2-season-info';
 import { BucketHashes } from 'data/d2/generated-enums';
 
 // find and get the quantity of a specif item type
@@ -23,7 +22,7 @@ function getCurrency(currencies: AccountCurrency[], hash: number) {
 }
 
 // create the postmaster update data
-function postmaster(store: DimStore) {
+export function postmaster(store: DimStore) {
   const items = findItemsByBucket(store, BucketHashes.LostItems);
   return {
     total: totalPostmasterItems(store),
@@ -34,7 +33,7 @@ function postmaster(store: DimStore) {
 }
 
 // create the max power update data
-function maxPower(store: DimStore, state: RootState) {
+export function maxPower(store: DimStore, state: RootState) {
   const allItems = allItemsSelector(state);
   const maxLight = getLight(store, maxLightItemSet(allItems, store).equippable);
   const artifact = getArtifactBonus(store);
@@ -47,7 +46,7 @@ function maxPower(store: DimStore, state: RootState) {
 }
 
 // create the vault update data
-function vault(state: RootState) {
+export function vault(state: RootState) {
   const vault = vaultSelector(state);
   if (!vault) {
     return;
@@ -67,11 +66,12 @@ function getCurrentSeason(
   profile: DestinyProfileResponse | undefined,
 ): [number?, number?, string?] {
   const defs = d2ManifestSelector(state);
+  const currentSeasonPassHash = currentSeasonPassHashSelector(state);
   const season = profile?.profile?.data?.currentSeasonHash
     ? defs?.Season.get(profile.profile.data.currentSeasonHash)
     : undefined;
-  const seasonPass = season?.seasonPassList[D2SeasonPassActiveList]?.seasonPassHash
-    ? defs?.SeasonPass.get(season.seasonPassList[D2SeasonPassActiveList].seasonPassHash)
+  const seasonPass = currentSeasonPassHash
+    ? defs?.SeasonPass.get(currentSeasonPassHash)
     : undefined;
   if (!season) {
     return [];
@@ -86,7 +86,7 @@ function getCurrentSeason(
 }
 
 // create the metrics update data
-function metrics(state: RootState) {
+export function metrics(state: RootState) {
   const profile = state.inventory.profileResponse;
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
   const { lifetimeScore, activeScore } = profile?.profileRecords?.data || {};
@@ -103,7 +103,7 @@ function metrics(state: RootState) {
     : seasonProgress?.level;
 
   return {
-    gunsmith: progression[1471185389].currentProgress,
+    gunsmith: progression[1471185389]?.currentProgress ?? 0,
     triumphs: lifetimeScore ?? 0,
     triumphsActive: activeScore ?? 0,
     battlePass: battlePassHash ? seasonalRank : 0,
@@ -115,11 +115,11 @@ export function streamDeckClearId(id: string) {
   return id.replace(/-.*/, '');
 }
 
-function equippedItems(store?: DimStore) {
+export function equippedItems(store?: DimStore) {
   return store?.items.filter((it) => it.equipment).map((it) => streamDeckClearId(it.index)) ?? [];
 }
 
-function inventoryCounters(state?: RootState) {
+export function inventoryCounters(state?: RootState) {
   return state?.inventory.stores
     .flatMap((it) => it.items)
     .filter((it) => it.bucket.inInventory)
@@ -137,7 +137,7 @@ function inventoryCounters(state?: RootState) {
     );
 }
 
-function character(store: DimStore) {
+export function character(store: DimStore) {
   return {
     class: store.classType,
     icon: store.icon,
@@ -158,7 +158,7 @@ interface PerkDefinition {
   image: string;
 }
 
-function perks(state: RootState) {
+export function perks(state: RootState) {
   const perks = new Map<string, PerkDefinition>();
   const items = allItemsSelector(state);
   for (const item of items) {
@@ -198,14 +198,3 @@ function perks(state: RootState) {
 
   return Array.from(perks.values());
 }
-
-export default {
-  character,
-  perks,
-  metrics,
-  vault,
-  maxPower,
-  postmaster,
-  equippedItems,
-  inventoryCounters,
-};

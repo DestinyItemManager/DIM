@@ -4,9 +4,10 @@ import {
   GhostActivitySocketTypeHashes,
   weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
-import { filterMap, invert } from 'app/utils/collections';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
+import { unenhancedVersion } from 'app/utils/perk-utils';
 import {
   eventArmorRerollSocketIdentifiers,
   isEnhancedPerk,
@@ -34,7 +35,6 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { partition } from 'es-toolkit';
 import {
   DimItem,
@@ -53,8 +53,6 @@ import { exoticClassItemPlugs } from './exotic-class-item';
 //
 // This is called from within d2-item-factory.service.ts
 //
-
-const enhancedToPerk = invert(perkToEnhanced, Number);
 
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
@@ -502,7 +500,7 @@ function buildPlug(
     : '';
 
   const enabled = destinyItemPlug ? plug.enabled : plug.isEnabled;
-  const unenhancedVersion = enhancedToPerk[plugDef.hash];
+  const unenhanced = unenhancedVersion(plugDef.hash);
   return {
     plugDef,
     enabled: enabled && (!destinyItemPlug || plug.canInsert),
@@ -511,7 +509,7 @@ function buildPlug(
     stats: null,
     cannotCurrentlyRoll:
       plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash) &&
-      !plugSet?.plugHashesThatCanRoll.includes(unenhancedVersion),
+      (!unenhanced || !plugSet?.plugHashesThatCanRoll.includes(unenhanced)),
   };
 }
 

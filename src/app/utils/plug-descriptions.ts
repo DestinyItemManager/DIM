@@ -13,11 +13,10 @@ import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { useSelector } from 'react-redux';
 import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
-import { invert } from './collections';
 import { compareBy } from './comparators';
+import { unenhancedVersion } from './perk-utils';
 import { isArmorArchetypePlug } from './socket-utils';
 import { LookupTable } from './util-types';
 
@@ -40,8 +39,6 @@ const statNameAliases: LookupTable<StatHashes, string[]> = {
   [StatHashes.AmmoCapacity]: ['Magazine Stat'],
   [StatHashes.ReloadSpeed]: ['Reload'],
 };
-
-const enhancedPerkToRegularPerk = invert(perkToEnhanced, Number);
 
 export function usePlugDescriptions(
   plug?: PluggableInventoryItemDefinition,
@@ -103,7 +100,7 @@ export function usePlugDescriptions(
 
     // if we couldn't find a Clarity description for this perk, fall back to the non-enhanced perk variant
     if (!clarityPerk) {
-      const regularPerkHash = enhancedPerkToRegularPerk[plug.hash];
+      const regularPerkHash = unenhancedVersion(plug.hash);
       if (regularPerkHash) {
         clarityPerk = allClarityDescriptions[regularPerkHash];
       }
