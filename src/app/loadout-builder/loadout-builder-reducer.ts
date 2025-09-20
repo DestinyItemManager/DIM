@@ -528,7 +528,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           setLoadoutParameters({ exoticArmorHash: undefined, perks: [] }),
         );
       case 'updatePerks': {
-        const { added, removed } = action;
+        const { removed, added } = action;
         return updateLoadout(state, setLoadoutPerks(removed, added));
       }
       case 'autoStatModsChanged':
