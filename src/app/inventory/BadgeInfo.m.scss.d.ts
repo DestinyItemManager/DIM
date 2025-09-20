@@ -5,7 +5,6 @@ interface CssExports {
   'badgeContent': string;
   'capped': string;
   'deepsight': string;
-  'energyCapacity': string;
   'engram': string;
   'fixContrast': string;
   'fullstack': string;

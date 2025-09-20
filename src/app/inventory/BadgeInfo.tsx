@@ -94,18 +94,14 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
         </div>
       )}
       {summaryIcon}
-      {item.energy ? (
-        <span className={styles.energyCapacity}>{item.energy.energyCapacity}</span>
-      ) : (
-        item.element &&
+      {item.element &&
         !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
           <ElementIcon
             element={item.element}
             className={clsx({ [styles.fixContrast]: fixContrast })}
             d1Badge={item.destinyVersion === 1}
           />
-        )
-      )}
+        )}
       <span className={styles.badgeContent}>{badgeContent}</span>
     </div>
   );

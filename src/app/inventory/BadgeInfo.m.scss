@@ -69,12 +69,6 @@
   padding: 0 1px;
 }
 
-.energyCapacity {
-  font-weight: bold;
-  font-size: calc(#{dim-item-px(9)}); // 9px at default 50px item size
-  margin-right: auto;
-}
-
 /* some elements icons (arc / void / strand) don't show up well on polaroid white. we darken these. */
 .fixContrast {
   filter: brightness(var(--theme-item-polaroid-element-adjust-brightness)) saturate(2.5);

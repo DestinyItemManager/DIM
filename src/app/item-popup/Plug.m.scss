@@ -27,7 +27,7 @@
 
   // Mods and intrinsic perks are all images, while perks are SVGs.
   // You can adjust the size of mods/intrinsics by setting --mod-size.
-  img {
+  :global(.item-img) {
     --item-size: var(--mod-size, var(--item-size-adjusted));
   }
   .perkCircle {

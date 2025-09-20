@@ -12,11 +12,9 @@ interface CssExports {
   'energyCost': string;
   'exotic': string;
   'highlightedObjective': string;
-  'iconOverlay': string;
   'inverted': string;
   'legendary': string;
   'masterwork': string;
-  'plugOverlay': string;
   'rare': string;
   'seasonIcon': string;
   'shiftedLayer': string;

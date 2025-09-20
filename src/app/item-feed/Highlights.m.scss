@@ -31,7 +31,7 @@
   flex-direction: row;
   align-items: center;
   gap: 2px;
-  img {
+  :global(.item-img) {
     height: 24px;
     width: 24px;
     margin-left: -1px;
