@@ -60,7 +60,6 @@ export async function analyzeLoadout(
   {
     allItems,
     autoModDefs,
-    savedLoStatConstraintsByClass,
     itemCreationContext,
     unlockedPlugs,
     validateQuery,
@@ -85,10 +84,8 @@ export async function analyzeLoadout(
   const originalLoadoutMods = resolvedLoadout.resolvedMods;
   const originalModDefs = originalLoadoutMods.map((mod) => mod.resolvedMod);
 
-  const statOrderForClass = savedLoStatConstraintsByClass[classType];
   const loadoutParameters: LoadoutParameters = {
     ...defaultLoadoutParameters,
-    ...(statOrderForClass && { statConstraints: statOrderForClass }),
     ...loadout.parameters,
   };
 
