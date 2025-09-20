@@ -2,6 +2,7 @@
 
 * Updated item tiles to more closely match in-game tiles, with higher quality images.
 * Remove armor energy capacity from the item tile. It's just not that interesting these days.
+* Added Max power loadout to Loadouts tab
 
 ## 8.90.1 <span class="changelog-date">(2025-09-18)</span>
 
