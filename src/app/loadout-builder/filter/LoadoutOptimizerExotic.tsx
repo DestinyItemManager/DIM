@@ -106,7 +106,10 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
       {showExoticPerkPicker && (
         <ExoticPerkPicker
           lockedExoticHash={lockedExoticHash}
-          onSelected={(perk1, perk2) => lbDispatch({ type: 'lockExoticPerks', perk1, perk2 })}
+          onSelected={(perk1, perk2) =>
+            // TODO properly handle removing perks
+            lbDispatch({ type: 'updatePerks', removed: [], added: [perk1, perk2] })
+          }
           onClose={() => setShowExoticPerkPicker(false)}
         />
       )}
