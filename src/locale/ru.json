@@ -1463,6 +1463,10 @@
   "StreamDeck": {
     "Authorize": "Подключить приложение",
     "Enable": "Плагин Stream Deck",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "Активировать соединение с плагином Stream Deck для DIM. Этот плагин — отдельный проект, который не был написан командой DIM и не поддерживается ею.",
     "Install": "Установить плагин",
     "MissingAuthorization": "Вы должны авторизовать приложение Stream Deck для подключения к DIM. Перейдите в настройки и нажмите «Подключить приложение».",

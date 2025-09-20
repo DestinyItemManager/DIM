@@ -1463,6 +1463,10 @@
   "StreamDeck": {
     "Authorize": "Połącz aplikację",
     "Enable": "Wtyczka Stream Deck",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "Włącz połączenie ze wtyczką DIM Stream Deck. Ta wtyczka jest osobnym projektem, który nie jest napisany ani nie jest wspierany przez zespół DIM.",
     "Install": "Zainstaluj wtyczkę",
     "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",

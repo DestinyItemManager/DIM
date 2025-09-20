@@ -1367,6 +1367,10 @@
   "StreamDeck": {
     "Authorize": "连接应用程序",
     "Enable": "直播控制台插件",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "启用与DIM Stream Deck插件的连接。这个插件是一个独立的项目，既不是由DIM团队编写的，也不是由DIM团队支持的。",
     "Install": "安装插件",
     "MissingAuthorization": "您必须授权 Stream Deck 应用程序连接 DIM。请在设置中点击“连接应用程序”。",

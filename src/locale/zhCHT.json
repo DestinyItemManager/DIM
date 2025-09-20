@@ -1367,6 +1367,10 @@
   "StreamDeck": {
     "Authorize": "Connect application",
     "Enable": "Stream Deck 插件",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "啓用與 DIM Stream Deck 插件的連接。該插件是獨立的項目，既不是由 DIM 團隊編寫，也不是由 DIM 團隊提供支持。",
     "Install": "安裝插件",
     "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",

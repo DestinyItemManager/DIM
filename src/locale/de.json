@@ -1080,7 +1080,7 @@
       "Event": "Event",
       "Featured": "Neue Ausrüstung",
       "Foundry": "Schmiede",
-      "Frame": "Rahmen",
+      "Frame": "Gehäuse",
       "Harmonizable": "Harmonisierbar",
       "Holofoil": "Holofoil",
       "Icon": "Icon",
@@ -1399,6 +1399,10 @@
   "StreamDeck": {
     "Authorize": "Anwendung verbinden",
     "Enable": "Stream Deck Plugin",
+    "Error": {
+      "Body": "Beim Senden der Daten an das Stream-Deck-Plugin ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Plugin Entwickler. {{error}}",
+      "Title": "Stream-Deck-Plugin-Fehler"
+    },
     "FinePrint": "Aktiviere die Verbindung mit dem DIM Stream Deck Plugin. Dieses Plugin ist ein separates Projekt, das weder vom DIM-Team geschrieben noch unterstützt wird.",
     "Install": "Plugin installieren",
     "MissingAuthorization": "Du musst die Stream Deck App autorisieren, um sie mit DIM zu verbinden. Gehe zu den Einstellungen und klicke auf \"Anwendung verbinden\".",
