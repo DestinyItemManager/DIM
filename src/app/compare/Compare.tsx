@@ -308,7 +308,6 @@ export default function Compare({ session }: { session: CompareSession }) {
         <button
           type="button"
           className="dim-button"
-          title={t('Organizer.ClearUnselected')}
           onClick={() => {
             for (const item of compareItems) {
               if (item !== initialItem) {
