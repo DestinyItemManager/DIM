@@ -1086,6 +1086,7 @@
     "BulkMove": "Move To",
     "BulkTag": "Tag",
     "BulkMoveLoadoutName": "Selected in Organizer",
+    "ClearUnselected": "Clear all unselected",
     "SelectItem": "Select or unselect {{name}}",
     "SelectAll": "Select All",
     "Lock": "Lock",
