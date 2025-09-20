@@ -21,7 +21,7 @@ import { minBy } from 'es-toolkit';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
+  getSpecialtySocketMetadata,
 } from '../../utils/item-utils';
 import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
@@ -72,7 +72,7 @@ export function mapDimItemToProcessItem({
 
   const stats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
   const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
-  const modMetadatas = getSpecialtySocketMetadatas(dimItem);
+  const compatibleActivityMod = getSpecialtySocketMetadata(dimItem)?.slotTag;
   const modsCost = modsForSlot
     ? sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost ?? 0)
     : 0;
@@ -88,7 +88,7 @@ export function mapDimItemToProcessItem({
     power,
     stats,
     remainingEnergyCapacity: capacity - modsCost,
-    compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
+    compatibleActivityMod: compatibleActivityMod === 'artifice' ? undefined : compatibleActivityMod,
     setBonus: setBonus?.hash,
   };
 

@@ -16,7 +16,7 @@ import { emptyArray } from 'app/utils/empty';
 import {
   getArmor3TuningStat,
   getModTypeTagByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
+  getSpecialtySocketMetadata,
   isArtifice,
 } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
@@ -335,7 +335,7 @@ export function fitMostMods({
   // combat and activity mods can be slotted into an item.
   const itemSocketMetadata = mapValues(
     keyBy(items, (item) => item.id),
-    (item) => getSpecialtySocketMetadatas(item),
+    (item) => getSpecialtySocketMetadata(item),
   );
 
   const {
@@ -940,15 +940,13 @@ export function createPluggingStrategy(
 
 function isActivityModValid(
   activityMod: PluggableInventoryItemDefinition,
-  itemSocketMetadata: ModSocketMetadata[] | undefined,
+  itemSocketMetadata: ModSocketMetadata | undefined,
   itemEnergy: ItemEnergy,
 ) {
   const modTag = getModTypeTagByPlugCategoryHash(activityMod.plug.plugCategoryHash);
 
   return (
-    isModEnergyValid(itemEnergy, activityMod) &&
-    modTag &&
-    itemSocketMetadata?.some((metadata) => metadata.slotTag === modTag)
+    isModEnergyValid(itemEnergy, activityMod) && modTag && itemSocketMetadata?.slotTag === modTag
   );
 }
 

@@ -5,7 +5,7 @@ import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/
 import { ItemFilter } from 'app/search/filter-types';
 import { classFilter, itemTypeFilter } from 'app/search/items/search-filters/known-values';
 import { quoteFilterString } from 'app/search/query-parser';
-import { getInterestingSocketMetadatas, isArtifice, isClassCompatible } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, isArtifice, isClassCompatible } from 'app/utils/item-utils';
 import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { partition } from 'es-toolkit';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
@@ -134,12 +134,10 @@ export function getBetterWorseItems(
     }
   }
 
-  const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
+  const exampleItemModSlotTag = getSpecialtySocketMetadata(exampleItem)?.slotTag;
 
   // if defined, this is a filter string that perfectly matches the modslots of the example item
-  const modSlotFilter =
-    exampleItemModSlotMetadatas &&
-    `(${exampleItemModSlotMetadatas.map((m) => `modslot:${m.slotTag || 'none'}`).join(' ')})`;
+  const modSlotFilter = exampleItemModSlotTag ? `(modslot:${exampleItemModSlotTag})` : undefined;
 
   // the intrinsic that the example item has, if it has one
   const exampleItemIntrinsic =
