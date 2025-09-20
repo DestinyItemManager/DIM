@@ -273,6 +273,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'lockExotic'; lockedExoticHash: number | undefined }
   | { type: 'removeLockedExotic' }
+  | { type: 'lockExoticPerks'; perk1: number; perk2: number }
   | { type: 'dismissComparisonStats' }
   | { type: 'setSearchQuery'; query: string };
 
@@ -521,7 +522,14 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: lockedExoticHash }));
       }
       case 'removeLockedExotic':
-        return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: undefined }));
+        return updateLoadout(
+          state,
+          setLoadoutParameters({ exoticArmorHash: undefined, perks: [] }),
+        );
+      case 'lockExoticPerks': {
+        const { perk1, perk2 } = action;
+        return updateLoadout(state, setLoadoutParameters({ perks: [perk1, perk2] }));
+      }
       case 'autoStatModsChanged':
         return updateLoadout(state, setLoadoutParameters({ autoStatMods: action.autoStatMods }));
       case 'dismissComparisonStats':
