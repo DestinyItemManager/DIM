@@ -8,10 +8,9 @@ import { infoLog } from 'app/utils/log';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { ProcessInputs } from '../process-worker/process';
-import { ProcessStatistics } from '../process-worker/types';
+import { ProcessArmorSet, ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
-  ArmorSet,
   DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
@@ -24,7 +23,7 @@ interface ProcessState {
   processing: boolean;
   resultStoreId: string;
   result: {
-    sets: ArmorSet[];
+    sets: ProcessArmorSet[];
     /**
      * The mods and rules used to generate the sets above. The sets
      * are guaranteed (modulo bugs in worker) to fit these mods given

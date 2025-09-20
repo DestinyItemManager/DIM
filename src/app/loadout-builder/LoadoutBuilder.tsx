@@ -68,10 +68,12 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
+import { ProcessArmorSet } from './process-worker/types';
 import { useProcess } from './process/useProcess';
 import {
   ArmorBucketHashes,
   ArmorEnergyRules,
+  ArmorSet,
   LOCKED_EXOTIC_ANY_EXOTIC,
   ResolvedStatConstraint,
   autoAssignmentPCHs,
@@ -282,10 +284,25 @@ export default memo(function LoadoutBuilder({
 
   const resultSets = result?.sets;
 
-  const sortedSets = useMemo(
-    () => resultSets && sortGeneratedSets(resultSets, desiredStatRanges),
-    [desiredStatRanges, resultSets],
-  );
+  const sortedSets = useMemo(() => {
+    const itemsById = new Map<string, DimItem>();
+    for (const item of Object.values(filteredItems).flat()) {
+      itemsById.set(item.id, item);
+    }
+    function hydrateArmorSet(processed: ProcessArmorSet): ArmorSet {
+      const armor: DimItem[] = [];
+      for (const itemId of processed.armor) {
+        armor.push(itemsById.get(itemId)!);
+      }
+      return {
+        armor,
+        stats: processed.stats,
+        armorStats: processed.armorStats,
+        statMods: processed.statMods,
+      };
+    }
+    return resultSets && sortGeneratedSets(resultSets.map(hydrateArmorSet), desiredStatRanges);
+  }, [desiredStatRanges, resultSets, filteredItems]);
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
 
