@@ -33,7 +33,7 @@ import {
   PlugCategoryHashes,
   StatHashes,
 } from 'data/d2/generated-enums';
-import { filterMap, objectifyArray } from './collections';
+import { objectifyArray } from './collections';
 import { getArmor3TuningSocket } from './socket-utils';
 
 // damage is a mess!
@@ -66,10 +66,10 @@ const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
   (modMetadata) => modMetadata.compatiblePlugCategoryHashes,
 );
 
-/** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
-const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
+/** verifies an item is d2 armor and returns its specialty mod socket if any */
+const getSpecialtySocket = (item?: DimItem): DimSocket | undefined => {
   if (item?.bucket.inArmor) {
-    const specialtySockets = item.sockets?.allSockets.filter(
+    return item.sockets?.allSockets.find(
       (socket) =>
         // check plugged -- non-artifice GoA armor still has the socket but nothing in it
         socket.plugged &&
@@ -77,21 +77,16 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
         socket.visibleInGame &&
         specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash),
     );
-    if (specialtySockets?.length) {
-      return specialtySockets;
-    }
   }
 };
 
 /** returns ModMetadatas if the item has one or more specialty mod slots */
-export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const metadatas = filterMap(
-    getSpecialtySockets(item) ?? [],
-    (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash],
-  );
-  if (metadatas?.length) {
-    return metadatas;
+export const getSpecialtySocketMetadata = (item?: DimItem): ModSocketMetadata | undefined => {
+  const specialtySocket = getSpecialtySocket(item);
+  if (!specialtySocket) {
+    return;
   }
+  return modMetadataBySocketTypeHash[specialtySocket.socketDefinition.socketTypeHash];
 };
 
 /**

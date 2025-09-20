@@ -47,7 +47,7 @@ import {
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
-  getSpecialtySocketMetadatas,
+  getSpecialtySocketMetadata,
   isArmor3,
   isArtifice,
   isArtificeSocket,
@@ -521,30 +521,11 @@ export function getColumns(
         header: t('Organizer.Columns.ModSlot'),
         className: styles.modslot,
         // TODO: only show if there are mod slots
-        value: (item) =>
-          getSpecialtySocketMetadatas(item)
-            ?.map((m) => m.slotTag)
-            .join(','),
+        value: (item) => getSpecialtySocketMetadata(item)?.slotTag,
         cell: (value, item) =>
-          value && (
-            <SpecialtyModSlotIcon
-              className={styles.modslotIcon}
-              item={item}
-              excludeStandardD2ModSockets
-            />
-          ),
-        filter: (value) =>
-          value !== undefined
-            ? value
-                .split(',')
-                .map((m) => `modslot:${m}`)
-                .join(' ')
-            : ``,
-        csv: (value) => [
-          'Seasonal Mod',
-          // Yes, this is an array most of the time, or an empty string
-          value?.split(',') ?? '',
-        ],
+          value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
+        filter: (value) => (value !== undefined ? `modslot:${value}` : ''),
+        csv: (value) => ['Seasonal Mod', value ?? ''],
       }),
     destinyVersion === 1 &&
       c({

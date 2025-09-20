@@ -1,7 +1,7 @@
 import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { PressTip } from './PressTip';
 import styles from './SpecialtyModSlotIcon.m.scss';
@@ -11,47 +11,41 @@ import styles from './SpecialtyModSlotIcon.m.scss';
  * more elements wrapped in a fragment. they'll probably
  * need a flex/something wrapper to display right
  */
-export function SpecialtyModSlotIcon({
-  item,
-  className,
-}: {
-  item: DimItem;
-  className?: string;
-  excludeStandardD2ModSockets?: boolean;
-}) {
+export function SpecialtyModSlotIcon({ item, className }: { item: DimItem; className?: string }) {
   const defs = useD2Definitions()!;
-  const modMetadatas = getSpecialtySocketMetadatas(item);
+  const modMetadata = getSpecialtySocketMetadata(item);
 
-  if (!modMetadatas) {
+  if (!modMetadata) {
     return null;
   }
   return (
     <>
-      {modMetadatas.map((m) => {
-        const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
-        let background: string;
-        if (m.milestoneHash) {
-          const milestone = defs.Milestone.get(m.milestoneHash);
-          background = milestone.displayProperties.icon;
-        } else if (m.activityModeHash) {
-          const activityMode = defs.ActivityMode.get(m.activityModeHash);
-          background = activityMode.displayProperties.icon;
-        } else if (m.iconHash) {
-          const icon = defs.Icon.get(m.iconHash);
-          background = icon.foreground;
-        } else {
-          background = emptySlotItem.displayProperties.icon;
-        }
-        return (
-          <PressTip
-            minimal
-            tooltip={emptySlotItem.itemTypeDisplayName}
-            key={emptySlotItem.hash}
-            className={clsx(className, styles.specialtyModIcon)}
-            style={bungieBackgroundStyle(background)}
-          />
-        );
-      })}
+      {modMetadata &&
+        ((m) => {
+          const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
+          let background: string;
+          if (m.milestoneHash) {
+            const milestone = defs.Milestone.get(m.milestoneHash);
+            background = milestone.displayProperties.icon;
+          } else if (m.activityModeHash) {
+            const activityMode = defs.ActivityMode.get(m.activityModeHash);
+            background = activityMode.displayProperties.icon;
+          } else if (m.iconHash) {
+            const icon = defs.Icon.get(m.iconHash);
+            background = icon.foreground;
+          } else {
+            background = emptySlotItem.displayProperties.icon;
+          }
+          return (
+            <PressTip
+              minimal
+              tooltip={emptySlotItem.itemTypeDisplayName}
+              key={emptySlotItem.hash}
+              className={clsx(className, styles.specialtyModIcon)}
+              style={bungieBackgroundStyle(background)}
+            />
+          );
+        })(modMetadata)}
     </>
   );
 }
