@@ -88,7 +88,8 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   const backgrounds = compact([
     // The ornament knot background
     (item.ornamentIconDef ||
-      (item.vendor && item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament))) &&
+      item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament) ||
+      item.itemCategoryHashes.includes(ItemCategoryHashes.WeaponModsOrnaments)) &&
       (item.rarity === 'Exotic'
         ? itemConstants?.universalOrnamentExoticBackgroundOverlayPath
         : item.rarity === 'Legendary'
@@ -261,7 +262,8 @@ export function DefItemIcon({
 
   const backgrounds = compact([
     // The ornament knot background
-    itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Ornament) &&
+    (itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Ornament) ||
+      itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOrnaments)) &&
       (itemDef.inventory?.tierType === TierType.Exotic
         ? itemConstants.universalOrnamentExoticBackgroundOverlayPath
         : itemDef.inventory?.tierType === TierType.Superior
