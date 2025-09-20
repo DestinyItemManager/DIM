@@ -5,7 +5,7 @@ import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/
 import { ItemFilter } from 'app/search/filter-types';
 import { classFilter, itemTypeFilter } from 'app/search/items/search-filters/known-values';
 import { quoteFilterString } from 'app/search/query-parser';
-import { getInterestingSocketMetadatas, isArtifice, isClassCompatible } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadatas, isArtifice, isClassCompatible } from 'app/utils/item-utils';
 import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { partition } from 'es-toolkit';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
@@ -134,7 +134,7 @@ export function getBetterWorseItems(
     }
   }
 
-  const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
+  const exampleItemModSlotMetadatas = getSpecialtySocketMetadatas(exampleItem);
 
   // if defined, this is a filter string that perfectly matches the modslots of the example item
   const modSlotFilter =

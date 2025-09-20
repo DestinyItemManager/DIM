@@ -29,7 +29,8 @@ export interface ProcessItem {
   remainingEnergyCapacity: number;
   power: number;
   stats: { [statHash: number]: number };
-  compatibleModSeasons?: string[];
+  /** The activity (raid) mod type that can be slotted on this item, if any. */
+  compatibleActivityMod?: string;
   setBonus?: number;
   /**
    * This is a pre-set tuning mod on the item. This hash should be passed along

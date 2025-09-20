@@ -7,11 +7,7 @@ import {
   emptySocketHashes,
 } from 'app/search/d2-known-values';
 import { plainString } from 'app/search/text-utils';
-import {
-  getInterestingSocketMetadatas,
-  getSpecialtySocketMetadatas,
-  modSlotTags,
-} from 'app/utils/item-utils';
+import { getSpecialtySocketMetadatas, modSlotTags } from 'app/utils/item-utils';
 import { enhancedVersion } from 'app/utils/perk-utils';
 import {
   countEnhancedPerks,
@@ -34,17 +30,14 @@ export const modslotFilter = {
   keywords: 'modslot',
   description: tl('Filter.ModSlot'),
   format: 'query',
-  suggestions: modSlotTags.concat(['any', 'none', 'activity']),
+  suggestions: modSlotTags.concat(['none', 'activity']),
   destinyVersion: 2,
   filter:
     ({ filterValue }) =>
     (item) => {
-      const metadatas =
-        filterValue === 'activity'
-          ? getInterestingSocketMetadatas(item)
-          : getSpecialtySocketMetadatas(item);
-
-      const modSocketTags = metadatas?.map((m) => m.slotTag);
+      const modSocketTags = getSpecialtySocketMetadatas(item)
+        ?.map((m) => m.slotTag)
+        .filter((t) => t !== 'artifice');
 
       return (
         (filterValue === 'none' && !modSocketTags) ||
@@ -56,7 +49,7 @@ export const modslotFilter = {
     },
   fromItem: (item) => {
     const modSocketTags =
-      getInterestingSocketMetadatas(item)?.map((m) => `modslot:${m.slotTag}`) ?? [];
+      getSpecialtySocketMetadatas(item)?.map((m) => `modslot:${m.slotTag}`) ?? [];
     return modSocketTags.join(' ');
   },
 } satisfies ItemFilterDefinition;

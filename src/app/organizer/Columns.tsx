@@ -43,11 +43,11 @@ import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparator
 import {
   getArmor3StatFocus,
   getArmor3TuningStat,
-  getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  getSpecialtySocketMetadatas,
   isArmor3,
   isArtifice,
   isArtificeSocket,
@@ -522,7 +522,7 @@ export function getColumns(
         className: styles.modslot,
         // TODO: only show if there are mod slots
         value: (item) =>
-          getInterestingSocketMetadatas(item)
+          getSpecialtySocketMetadatas(item)
             ?.map((m) => m.slotTag)
             .join(','),
         cell: (value, item) =>

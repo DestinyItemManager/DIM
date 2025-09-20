@@ -95,17 +95,6 @@ export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[]
 };
 
 /**
- * combat and legacy slots are boring now. everything has them.
- * this focuses on narrower stuff: raid & nightmare modslots
- */
-export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const specialtySockets = getSpecialtySocketMetadatas(item)?.filter((m) => m.slotTag !== 'legacy');
-  if (specialtySockets?.length) {
-    return specialtySockets;
-  }
-};
-
-/**
  * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
  */
 export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>

@@ -73,12 +73,12 @@ function modifyMod({
 function modifyItem({
   item,
   remainingEnergyCapacity,
-  compatibleModSeasons,
+  compatibleActivityMod,
   isArtifice,
 }: {
   item: ProcessItem;
   remainingEnergyCapacity?: number;
-  compatibleModSeasons?: string[];
+  compatibleActivityMod?: string;
   isArtifice?: boolean;
 }) {
   const newItem = { ...item };
@@ -87,8 +87,8 @@ function modifyItem({
     newItem.remainingEnergyCapacity = remainingEnergyCapacity;
   }
 
-  if (compatibleModSeasons !== undefined) {
-    newItem.compatibleModSeasons = compatibleModSeasons;
+  if (compatibleActivityMod !== undefined) {
+    newItem.compatibleActivityMod = compatibleActivityMod;
   }
 
   if (isArtifice !== undefined) {
@@ -244,7 +244,7 @@ describe('process-utils mod assignment', () => {
       modifyItem({
         item,
         remainingEnergyCapacity: activityMod.energyCost,
-        compatibleModSeasons: [tag],
+        compatibleActivityMod: tag,
       }),
     );
     // sanity check
@@ -258,7 +258,7 @@ describe('process-utils mod assignment', () => {
         modifyItem({
           item,
           remainingEnergyCapacity: 2,
-          compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
+          compatibleActivityMod: i === itemIndex ? activityMod.tag! : undefined,
         }),
       );
       expect(canTakeSlotIndependentMods([], [activityMod], modifiedItems)).toBe(true);
@@ -270,7 +270,7 @@ describe('process-utils mod assignment', () => {
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
       remainingEnergyCapacity: 6,
-      compatibleModSeasons: [activityMod.tag!],
+      compatibleActivityMod: activityMod.tag!,
     });
 
     const modifiedGeneralMod = modifyMod({
@@ -292,7 +292,7 @@ describe('process-utils mod assignment', () => {
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
       remainingEnergyCapacity: 1,
-      compatibleModSeasons: [activityMod.tag!],
+      compatibleActivityMod: activityMod.tag!,
     });
 
     const modifiedGeneralMod = modifyMod({
@@ -316,7 +316,7 @@ describe('process-utils mod assignment', () => {
       modifiedItems[4] = modifyItem({
         item: modifiedItems[4],
         remainingEnergyCapacity: 1,
-        compatibleModSeasons: [activityMod.tag!],
+        compatibleActivityMod: activityMod.tag!,
       });
 
       const modifiedGeneralMod = modifyMod({
@@ -455,7 +455,7 @@ describe('process-utils auto mods', () => {
 
   it.skip('activity mod cannot go into the other item if we want to hit stats', () => {
     const ourItems = [...items];
-    ourItems[1] = modifyItem({ item: items[3], compatibleModSeasons: [] });
+    ourItems[1] = modifyItem({ item: items[3] });
     expect(
       pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4),
     ).toBe(undefined);

@@ -10,8 +10,8 @@ import { quoteFilterString } from 'app/search/query-parser';
 import { compact, filterMap } from 'app/utils/collections';
 import {
   getArmor3StatFocus,
-  getInterestingSocketMetadatas,
   getItemDamageShortName,
+  getSpecialtySocketMetadatas,
   isArmor3,
 } from 'app/utils/item-utils';
 import {
@@ -40,7 +40,7 @@ const modernArmor = 'is:armor2.0 or is:armor3.0';
  * Generate possible comparisons for armor, given a reference item.
  */
 export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
-  const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
+  const exampleItemModSlotMetadatas = getSpecialtySocketMetadatas(exampleItem);
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;

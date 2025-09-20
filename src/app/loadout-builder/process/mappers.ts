@@ -88,7 +88,8 @@ export function mapDimItemToProcessItem({
     power,
     stats,
     remainingEnergyCapacity: capacity - modsCost,
-    compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
+    compatibleActivityMod:
+      modMetadatas?.[0].slotTag === 'artifice' ? undefined : modMetadatas?.[0].slotTag,
     setBonus: setBonus?.hash,
   };
 
