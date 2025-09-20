@@ -561,6 +561,33 @@ export function setLoadoutParameters(params: Partial<LoadoutParameters>): Loadou
 }
 
 /**
+ * Updates the loadout's selected perks, first removing any specified by 'removed' and then adding any specified by 'added'.
+ * For multiple copies of the same perk, include it the relevant param multiple times.
+ *
+ * @param removed list of perks to remove from the loadout; to remove all instances of a perk, include it 5 times
+ * @param added list of perks to add to the loadout
+ * @returns a LoadoutUpdateFunction that applies the given perk changes
+ */
+export function setLoadoutPerks(removed: number[], added: number[]): LoadoutUpdateFunction {
+  return (loadout) => {
+    const perks = [...(loadout.parameters?.perks ?? [])];
+    for (const r of removed) {
+      const index = perks.indexOf(r);
+      if (index !== -1) {
+        perks.splice(index, 1);
+      }
+    }
+    return {
+      ...loadout,
+      parameters: {
+        ...loadout.parameters,
+        ...perks.concat(added),
+      },
+    };
+  };
+}
+
+/**
  * Replace the mods in this loadout with all the mods currently on this character's equipped armor.
  */
 export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
