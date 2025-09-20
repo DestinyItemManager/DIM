@@ -4,7 +4,7 @@ import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import styles from './BadgeInfo.m.scss';
@@ -21,13 +21,15 @@ interface Props {
 export function shouldShowBadge(item: DimItem) {
   const isBounty = Boolean(!item.primaryStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
-  const isGeneric = !isBounty && !isStackable;
+  const isArtifact = item.itemCategoryHashes.includes(ItemCategoryHashes.SeasonalArtifacts);
+  const isGeneric = !isBounty && !isStackable && !isArtifact;
 
   const hideBadge = Boolean(
     item.location.hash === BucketHashes.Subclass ||
       (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
       (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
+      isArtifact ||
       (isGeneric && !item.primaryStat?.value && !item.classified),
   );
 
@@ -37,7 +39,8 @@ export function shouldShowBadge(item: DimItem) {
 export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const isBounty = Boolean(!item.primaryStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
-  const isGeneric = !isBounty && !isStackable;
+  const isArtifact = item.itemCategoryHashes.includes(ItemCategoryHashes.SeasonalArtifacts);
+  const isGeneric = !isBounty && !isStackable && !isArtifact;
   // For vendor armor that reports stats (thus often randomized),
   // show the total points as a means to indicate whether it's worth picking up
   const totalArmorStat =
@@ -50,6 +53,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
       (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
+      isArtifact ||
       (isGeneric && !item.primaryStat?.value && !item.classified),
   );
 

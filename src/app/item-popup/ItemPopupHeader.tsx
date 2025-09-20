@@ -39,6 +39,7 @@ export default function ItemPopupHeader({
   const showElementIcon = Boolean(item.element);
 
   const linkToArmory = !noLink && item.destinyVersion === 2;
+  const isArtifact = item.itemCategoryHashes.includes(ItemCategoryHashes.SeasonalArtifacts);
 
   return (
     <button
@@ -69,7 +70,7 @@ export default function ItemPopupHeader({
 
         <div className={styles.details}>
           {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
-          <div className={styles.power}>{item.primaryStat?.value}</div>
+          {!isArtifact && <div className={styles.power}>{item.primaryStat?.value}</div>}
           {item.maxStackSize > 1 &&
             !item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament) && (
               <div className={styles.itemType}>
