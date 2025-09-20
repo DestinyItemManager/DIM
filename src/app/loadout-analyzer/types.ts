@@ -1,4 +1,4 @@
-import { LoadoutParameters, Settings } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { AutoModDefs, ResolvedStatConstraint } from 'app/loadout-builder/types';
@@ -82,7 +82,6 @@ export const blockAnalysisFindings: LoadoutFinding[] = [
 export interface LoadoutAnalysisContext {
   unlockedPlugs: Set<number>;
   itemCreationContext: ItemCreationContext;
-  savedLoStatConstraintsByClass: Settings['loStatConstraintsByClass'];
   allItems: DimItem[];
   autoModDefs: AutoModDefs;
   validateQuery: (query: string) => { valid: boolean };

@@ -1,5 +1,4 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import {
   allItemsSelector,
   createItemContextSelector,
@@ -44,7 +43,6 @@ const autoOptimizationContextSelector = currySelector(
   createSelector(
     createItemContextSelector,
     unlockedPlugSetItemsSelector.selector,
-    savedLoStatConstraintsByClassSelector,
     autoModSelector,
     allItemsSelector,
     loVendorItemsSelector.selector,
@@ -53,7 +51,6 @@ const autoOptimizationContextSelector = currySelector(
     (
       itemCreationContext,
       unlockedPlugs,
-      savedLoStatConstraintsByClass,
       autoModDefs,
       inventoryItems,
       vendorItems,
@@ -67,7 +64,6 @@ const autoOptimizationContextSelector = currySelector(
         ({
           itemCreationContext,
           unlockedPlugs,
-          savedLoStatConstraintsByClass,
           autoModDefs,
           allItems,
           filterFactory,
