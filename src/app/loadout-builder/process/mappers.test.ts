@@ -2,7 +2,7 @@ import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { getTestStores } from 'testing/test-utils';
 import { loDefaultArmorEnergyRules, MIN_LO_ITEM_ENERGY } from '../types';
-import { mapDimItemToProcessItem } from './mappers';
+import { mapDimItemToProcessItems } from './mappers';
 
 describe('lo process mappers', () => {
   let classItem: DimItem;
@@ -21,7 +21,7 @@ describe('lo process mappers', () => {
   });
 
   test('mapped energy capacity is 10 when assumed masterwork is used', () => {
-    const mappedItem = mapDimItemToProcessItem({
+    const mappedItem = mapDimItemToProcessItems({
       dimItem: classItem,
       armorEnergyRules: {
         ...loDefaultArmorEnergyRules,
@@ -40,7 +40,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyCapacity: 9 },
     };
-    const mappedItem = mapDimItemToProcessItem({
+    const mappedItem = mapDimItemToProcessItems({
       dimItem: modifiedItem,
       armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
@@ -56,7 +56,7 @@ describe('lo process mappers', () => {
       ...classItem,
       energy: { ...classItem.energy!, energyCapacity: 2 },
     };
-    const mappedItem = mapDimItemToProcessItem({
+    const mappedItem = mapDimItemToProcessItems({
       dimItem: modifiedItem,
       armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],

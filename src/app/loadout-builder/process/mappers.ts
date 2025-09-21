@@ -57,7 +57,7 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
  * This may return multiple variations on the item, each with a different tuning mod plugged in.
  * This requires that bucket specific mods have been validated before.
  */
-export function mapDimItemToProcessItem({
+export function mapDimItemToProcessItems({
   dimItem,
   armorEnergyRules,
   modsForSlot,

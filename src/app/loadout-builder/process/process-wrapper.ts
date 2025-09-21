@@ -26,11 +26,7 @@ import {
   ModStatChanges,
   StatRanges,
 } from '../types';
-import {
-  mapArmor2ModToProcessMod,
-  mapAutoMods,
-  mapDimItemToProcessItem as mapDimItemToProcessItems,
-} from './mappers';
+import { mapArmor2ModToProcessMod, mapAutoMods, mapDimItemToProcessItems } from './mappers';
 
 interface MappedItem {
   dimItem: DimItem;

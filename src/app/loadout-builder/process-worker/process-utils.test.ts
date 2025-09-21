@@ -18,7 +18,7 @@ import {
   getAutoMods,
   mapArmor2ModToProcessMod,
   mapAutoMods,
-  mapDimItemToProcessItem,
+  mapDimItemToProcessItems,
 } from '../process/mappers';
 import {
   ArmorStatHashes,
@@ -123,7 +123,7 @@ describe('process-utils mod assignment', () => {
     for (const store of stores) {
       for (const storeItem of store.items) {
         if (!helmet && isArmor2Helmet(storeItem)) {
-          helmet = mapDimItemToProcessItem({
+          helmet = mapDimItemToProcessItems({
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
@@ -131,7 +131,7 @@ describe('process-utils mod assignment', () => {
           })[0];
         }
         if (!arms && isArmor2Arms(storeItem)) {
-          arms = mapDimItemToProcessItem({
+          arms = mapDimItemToProcessItems({
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
@@ -139,7 +139,7 @@ describe('process-utils mod assignment', () => {
           })[0];
         }
         if (!chest && isArmor2Chest(storeItem)) {
-          chest = mapDimItemToProcessItem({
+          chest = mapDimItemToProcessItems({
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
@@ -147,7 +147,7 @@ describe('process-utils mod assignment', () => {
           })[0];
         }
         if (!legs && isArmor2Legs(storeItem)) {
-          legs = mapDimItemToProcessItem({
+          legs = mapDimItemToProcessItems({
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
@@ -155,7 +155,7 @@ describe('process-utils mod assignment', () => {
           })[0];
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
-          classItem = mapDimItemToProcessItem({
+          classItem = mapDimItemToProcessItems({
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
