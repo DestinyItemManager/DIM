@@ -286,13 +286,17 @@ export default memo(function LoadoutBuilder({
 
   const sortedSets = useMemo(() => {
     const itemsById = new Map<string, DimItem>();
-    for (const item of Object.values(filteredItems).flat()) {
+    for (const item of armorItems) {
       itemsById.set(item.id, item);
     }
     function hydrateArmorSet(processed: ProcessArmorSet): ArmorSet {
       const armor: DimItem[] = [];
       for (const itemId of processed.armor) {
-        armor.push(itemsById.get(itemId)!);
+        const item = itemsById.get(itemId);
+        if (!item) {
+          throw new Error(`Couldn't find item ${itemId} in filtered items`);
+        }
+        armor.push(item);
       }
       return {
         armor,
@@ -302,7 +306,7 @@ export default memo(function LoadoutBuilder({
       };
     }
     return resultSets && sortGeneratedSets(resultSets.map(hydrateArmorSet), desiredStatRanges);
-  }, [desiredStatRanges, resultSets, filteredItems]);
+  }, [desiredStatRanges, resultSets, armorItems]);
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
 
