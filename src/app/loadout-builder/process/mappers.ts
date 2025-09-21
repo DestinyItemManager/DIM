@@ -23,10 +23,9 @@ import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadata,
 } from '../../utils/item-utils';
-import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
+import { AutoModData, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
   ArmorEnergyRules,
-  ArmorSet,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
   AutoModDefs,
@@ -146,24 +145,6 @@ export function mapDimItemToProcessItem({
   }
 
   return [processItem];
-}
-
-export function hydrateArmorSet(
-  processed: ProcessArmorSet,
-  itemsById: Map<string, DimItem>,
-): ArmorSet {
-  const armor: DimItem[] = [];
-
-  for (const itemId of processed.armor) {
-    armor.push(itemsById.get(itemId)!);
-  }
-
-  return {
-    armor,
-    stats: processed.stats,
-    armorStats: processed.armorStats,
-    statMods: processed.statMods,
-  };
 }
 
 export function mapAutoMods(defs: AutoModDefs): AutoModData {
