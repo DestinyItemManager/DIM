@@ -175,7 +175,11 @@ function initialCompareQuery(item: DimItem) {
       factors.push(`exactperk:${quoteFilterString(intrinsicName)}`);
     }
 
-    const modSlotMetadata = getSpecialtySocketMetadata(item);
+    let modSlotMetadata = getSpecialtySocketMetadata(item);
+    if (modSlotMetadata?.slotTag === 'artifice') {
+      modSlotMetadata = undefined;
+    }
+
     if (modSlotMetadata) {
       factors.push(`modslot:${modSlotMetadata.slotTag}`);
     }
