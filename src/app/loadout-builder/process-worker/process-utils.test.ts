@@ -127,6 +127,7 @@ describe('process-utils mod assignment', () => {
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
+            autoStatMods: true,
           })[0];
         }
         if (!arms && isArmor2Arms(storeItem)) {
@@ -134,6 +135,7 @@ describe('process-utils mod assignment', () => {
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
+            autoStatMods: true,
           })[0];
         }
         if (!chest && isArmor2Chest(storeItem)) {
@@ -141,6 +143,7 @@ describe('process-utils mod assignment', () => {
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
+            autoStatMods: true,
           })[0];
         }
         if (!legs && isArmor2Legs(storeItem)) {
@@ -148,6 +151,7 @@ describe('process-utils mod assignment', () => {
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
+            autoStatMods: true,
           })[0];
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
@@ -155,6 +159,7 @@ describe('process-utils mod assignment', () => {
             dimItem: storeItem,
             armorEnergyRules,
             desiredStatRanges: [],
+            autoStatMods: true,
           })[0];
         }
 

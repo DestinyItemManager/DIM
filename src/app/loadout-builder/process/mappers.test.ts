@@ -29,6 +29,7 @@ describe('lo process mappers', () => {
       },
       modsForSlot: [],
       desiredStatRanges: [],
+      autoStatMods: true,
     })[0];
 
     expect(mappedItem.remainingEnergyCapacity).toBe(10);
@@ -44,6 +45,7 @@ describe('lo process mappers', () => {
       armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
       desiredStatRanges: [],
+      autoStatMods: true,
     })[0];
 
     expect(mappedItem.remainingEnergyCapacity).toBe(modifiedItem.energy?.energyCapacity);
@@ -59,6 +61,7 @@ describe('lo process mappers', () => {
       armorEnergyRules: loDefaultArmorEnergyRules,
       modsForSlot: [],
       desiredStatRanges: [],
+      autoStatMods: true,
     })[0];
 
     expect(mappedItem.remainingEnergyCapacity).toBe(MIN_LO_ITEM_ENERGY);
