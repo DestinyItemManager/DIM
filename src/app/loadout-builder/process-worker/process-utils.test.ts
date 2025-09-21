@@ -73,12 +73,12 @@ function modifyMod({
 function modifyItem({
   item,
   remainingEnergyCapacity,
-  compatibleModSeasons,
+  compatibleActivityMod,
   isArtifice,
 }: {
   item: ProcessItem;
   remainingEnergyCapacity?: number;
-  compatibleModSeasons?: string[];
+  compatibleActivityMod?: string;
   isArtifice?: boolean;
 }) {
   const newItem = { ...item };
@@ -87,8 +87,8 @@ function modifyItem({
     newItem.remainingEnergyCapacity = remainingEnergyCapacity;
   }
 
-  if (compatibleModSeasons !== undefined) {
-    newItem.compatibleModSeasons = compatibleModSeasons;
+  if (compatibleActivityMod !== undefined) {
+    newItem.compatibleActivityMod = compatibleActivityMod;
   }
 
   if (isArtifice !== undefined) {
@@ -244,7 +244,7 @@ describe('process-utils mod assignment', () => {
       modifyItem({
         item,
         remainingEnergyCapacity: activityMod.energyCost,
-        compatibleModSeasons: [tag],
+        compatibleActivityMod: tag,
       }),
     );
     // sanity check
@@ -258,7 +258,7 @@ describe('process-utils mod assignment', () => {
         modifyItem({
           item,
           remainingEnergyCapacity: 2,
-          compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
+          compatibleActivityMod: i === itemIndex ? activityMod.tag! : undefined,
         }),
       );
       expect(canTakeSlotIndependentMods([], [activityMod], modifiedItems)).toBe(true);
@@ -270,7 +270,7 @@ describe('process-utils mod assignment', () => {
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
       remainingEnergyCapacity: 6,
-      compatibleModSeasons: [activityMod.tag!],
+      compatibleActivityMod: activityMod.tag!,
     });
 
     const modifiedGeneralMod = modifyMod({
@@ -292,7 +292,7 @@ describe('process-utils mod assignment', () => {
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
       remainingEnergyCapacity: 1,
-      compatibleModSeasons: [activityMod.tag!],
+      compatibleActivityMod: activityMod.tag!,
     });
 
     const modifiedGeneralMod = modifyMod({
@@ -316,7 +316,7 @@ describe('process-utils mod assignment', () => {
       modifiedItems[4] = modifyItem({
         item: modifiedItems[4],
         remainingEnergyCapacity: 1,
-        compatibleModSeasons: [activityMod.tag!],
+        compatibleActivityMod: activityMod.tag!,
       });
 
       const modifiedGeneralMod = modifyMod({
@@ -375,8 +375,8 @@ describe('process-utils auto mods', () => {
       artifice: boolean,
       index: number,
       energyCapacity: number,
-      seasons: string[],
-    ) => ({
+      season: string | undefined,
+    ): ProcessItem => ({
       hash: index,
       id: index.toString(),
       isArtifice: artifice,
@@ -384,14 +384,14 @@ describe('process-utils auto mods', () => {
       name: `Item ${index}`,
       power: 1500,
       stats: [0, 0, 0, 0, 0, 0],
-      compatibleModSeasons: seasons,
+      compatibleActivityMod: season,
       remainingEnergyCapacity: energyCapacity,
     });
-    helmet = makeItem(true, 1, 3, []);
-    arms = makeItem(true, 2, 4, ['deepstonecrypt']);
-    chest = makeItem(false, 3, 1, []);
-    legs = makeItem(true, 4, 3, ['deepstonecrypt']);
-    classItem = makeItem(true, 5, 4, []);
+    helmet = makeItem(true, 1, 3, undefined);
+    arms = makeItem(true, 2, 4, 'deepstonecrypt');
+    chest = makeItem(false, 3, 1, undefined);
+    legs = makeItem(true, 4, 3, 'deepstonecrypt');
+    classItem = makeItem(true, 5, 4, undefined);
     generalMod = mapArmor2ModToProcessMod(
       defs.InventoryItem.get(classStatModHash) as PluggableInventoryItemDefinition,
     );
@@ -455,7 +455,7 @@ describe('process-utils auto mods', () => {
 
   it.skip('activity mod cannot go into the other item if we want to hit stats', () => {
     const ourItems = [...items];
-    ourItems[1] = modifyItem({ item: items[3], compatibleModSeasons: [] });
+    ourItems[1] = modifyItem({ item: items[3] });
     expect(
       pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4),
     ).toBe(undefined);
@@ -484,7 +484,7 @@ describe('process-utils optimal mods', () => {
 
   beforeAll(async () => {
     const defs = await getTestDefinitions();
-    const makeItem = (index: number) => ({
+    const makeItem = (index: number): ProcessItem => ({
       hash: index,
       id: index.toString(),
       isArtifice: false,
@@ -492,7 +492,7 @@ describe('process-utils optimal mods', () => {
       name: `Item ${index}`,
       power: 1500,
       stats: [0, 0, 0, 0, 0, 0],
-      compatibleModSeasons: [],
+      compatibleActivityMod: undefined,
       remainingEnergyCapacity: 10,
     });
     helmet = makeItem(1);
@@ -618,7 +618,7 @@ describe('process-utils optimal mods', () => {
 test('process-utils activity mods', async () => {
   const defs = await getTestDefinitions();
 
-  const makeItem = (index: number, remainingEnergyCapacity: number) => ({
+  const makeItem = (index: number, remainingEnergyCapacity: number): ProcessItem => ({
     hash: index,
     id: index.toString(),
     isArtifice: false,
@@ -626,7 +626,7 @@ test('process-utils activity mods', async () => {
     name: `Item ${index}`,
     power: 1500,
     stats: [0, 0, 0, 0, 0, 0],
-    compatibleModSeasons: index === 2 ? [] : ['nightmare'],
+    compatibleActivityMod: index === 2 ? undefined : 'nightmare',
     remainingEnergyCapacity,
   });
 

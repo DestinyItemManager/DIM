@@ -11,7 +11,6 @@ const createMockArmor = (id: string, power: number): ProcessItem => ({
   remainingEnergyCapacity: 10,
   power,
   stats: {},
-  compatibleModSeasons: [],
 });
 
 /**
