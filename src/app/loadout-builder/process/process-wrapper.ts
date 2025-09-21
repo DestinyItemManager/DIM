@@ -26,7 +26,7 @@ import {
   ModStatChanges,
   StatRanges,
 } from '../types';
-import { mapArmor2ModToProcessMod, mapAutoMods, mapDimItemToProcessItem } from './mappers';
+import { mapArmor2ModToProcessMod, mapAutoMods, mapDimItemToProcessItems } from './mappers';
 
 interface MappedItem {
   dimItem: DimItem;
@@ -111,11 +111,12 @@ export function runProcess({
     processItems[bucketHash] = [];
 
     const mappedItems: MappedItem[] = items.flatMap((dimItem) =>
-      mapDimItemToProcessItem({
+      mapDimItemToProcessItems({
         dimItem,
         armorEnergyRules,
         desiredStatRanges,
         modsForSlot: bucketSpecificMods[bucketHash] || [],
+        autoStatMods,
       }).map((processItem) => ({
         dimItem,
         processItem,

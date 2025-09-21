@@ -53,19 +53,22 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
 
 /**
  * Turns a real DimItem, armor upgrade rules, and bucket specific mods into the bits of
- * information relevant for LO. This requires that bucket specific mods have been validated
- * before.
+ * information relevant for LO.
+ * This may return multiple variations on the item, each with a different tuning mod plugged in.
+ * This requires that bucket specific mods have been validated before.
  */
-export function mapDimItemToProcessItem({
+export function mapDimItemToProcessItems({
   dimItem,
   armorEnergyRules,
   modsForSlot,
   desiredStatRanges,
+  autoStatMods,
 }: {
   dimItem: DimItem;
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
   desiredStatRanges: DesiredStatRange[];
+  autoStatMods: boolean;
 }): ProcessItem[] {
   const { id, hash, name, isExotic, power, setBonus } = dimItem;
 
@@ -94,7 +97,7 @@ export function mapDimItemToProcessItem({
   const tuningSocket = getArmor3TuningSocket(dimItem);
 
   // Make a version of the item for each possible tuning mod that could be applied.
-  if (tuningSocket?.reusablePlugItems?.length) {
+  if (autoStatMods && tuningSocket?.reusablePlugItems?.length) {
     const processItems: ProcessItem[] = [];
     const allPlugs = tuningSocket.plugSet?.plugs;
     // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums

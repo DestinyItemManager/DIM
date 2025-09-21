@@ -232,7 +232,7 @@ export function filterItems({
       // more energy capacity or more relevant slots, it will be kept. Since we
       // reuse the logic from `is:statlower`, this also takes into account
       // artifice/tuning mods.
-      // This duplicates some logic from mapDimItemToProcessItem, but it's
+      // This duplicates some logic from mapDimItemToProcessItems, but it's
       // easier to filter items out here than to do it later.
       const getStats = (item: DimItem) => {
         // Masterwork them up to the assumed masterwork level
