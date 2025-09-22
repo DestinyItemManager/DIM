@@ -162,7 +162,7 @@
     "postcss-loader": "^8.2.0",
     "postcss-sort-media-queries": "^5.2.0",
     "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.2.0",
+    "prettier-plugin-organize-imports": "^4.3.0",
     "react-refresh": "^0.17.0",
     "sass": "^1.92.1",
     "sass-loader": "^16.0.5",
