@@ -96,8 +96,8 @@ dependencies:
     specifier: ^6.0.0
     version: 6.0.0
   motion:
-    specifier: ^12.23.12
-    version: 12.23.12(react-dom@19.1.1)(react@19.1.1)
+    specifier: ^12.23.18
+    version: 12.23.18(react-dom@19.1.1)(react@19.1.1)
   papaparse:
     specifier: ^5.5.3
     version: 5.5.3
@@ -9094,8 +9094,8 @@ packages:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
     dev: true
 
-  /framer-motion@12.23.12(react-dom@19.1.1)(react@19.1.1):
-    resolution: {integrity: sha512-6e78rdVtnBvlEVgu6eFEAgG9v3wLnYEboM8I5O5EXvfKC8gxGQB8wXJdhkMy10iVcn05jl6CNw7/HTsTCfwcWg==}
+  /framer-motion@12.23.18(react-dom@19.1.1)(react@19.1.1):
+    resolution: {integrity: sha512-HBVXBL5x3nk/0WrYM5G4VgjBey99ytVYET5AX17s/pcnlH90cyaxVUqgoN8cpF4+PqZRVOhwWsv28F+hxA9Tzg==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -9108,7 +9108,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      motion-dom: 12.23.12
+      motion-dom: 12.23.18
       motion-utils: 12.23.6
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
@@ -11530,8 +11530,8 @@ packages:
     hasBin: true
     dev: true
 
-  /motion-dom@12.23.12:
-    resolution: {integrity: sha512-RcR4fvMCTESQBD/uKQe49D5RUeDOokkGRmz4ceaJKDBgHYtZtntC/s2vLvY38gqGaytinij/yi3hMcWVcEF5Kw==}
+  /motion-dom@12.23.18:
+    resolution: {integrity: sha512-9piw3uOcP6DpS0qpnDF95bLDzmgMxLOg/jghLnHwYJ0YFizzuvbH/L8106dy39JNgHYmXFUTztoP9JQvUqlBwQ==}
     dependencies:
       motion-utils: 12.23.6
     dev: false
@@ -11540,8 +11540,8 @@ packages:
     resolution: {integrity: sha512-eAWoPgr4eFEOFfg2WjIsMoqJTW6Z8MTUCgn/GZ3VRpClWBdnbjryiA3ZSNLyxCTmCQx4RmYX6jX1iWHbenUPNQ==}
     dev: false
 
-  /motion@12.23.12(react-dom@19.1.1)(react@19.1.1):
-    resolution: {integrity: sha512-8jCD8uW5GD1csOoqh1WhH1A6j5APHVE15nuBkFeRiMzYBdRwyAHmSP/oXSuW0WJPZRXTFdBoG4hY9TFWNhhwng==}
+  /motion@12.23.18(react-dom@19.1.1)(react@19.1.1):
+    resolution: {integrity: sha512-uzcEs9eInMnOL2Tm8z6Akje/vETSFUzAlGQyKV58+8vlEFDOKx8jNR/asKei4ETi+8wH6vTyf6gCKgu580x4+w==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -11554,7 +11554,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      framer-motion: 12.23.12(react-dom@19.1.1)(react@19.1.1)
+      framer-motion: 12.23.18(react-dom@19.1.1)(react@19.1.1)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       tslib: 2.8.1
