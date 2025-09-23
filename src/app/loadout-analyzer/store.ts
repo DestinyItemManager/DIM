@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import { Loadout } from 'app/loadout/loadout-types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
@@ -342,26 +343,39 @@ async function analysisTask(cancelToken: CancelToken, analyzer: LoadoutBackgroun
       continue;
     }
 
-    let result: LoadoutAnalysisResult;
-    try {
-      result = await analyzeLoadout(
-        task.analysisContext,
-        task.storeId,
-        task.classType,
-        task.loadout,
-        runProcess,
-      );
-    } catch (e) {
-      // Report to sentry, but still set a dummy result so that we don't end up
-      // showing a "busy" spinner or try this and crash over and over again.
-      errorLog('loadout analysis', 'internal error', e);
-      reportException('loadout analysis', e);
-      result = {
-        findings: [],
-        armorResults: undefined,
-        betterStatsAvailableFontNote: false,
-      };
+    // A default stub result with nothing interesting.
+    let result: LoadoutAnalysisResult = {
+      findings: [],
+      armorResults: undefined,
+      betterStatsAvailableFontNote: false,
+    };
+
+    // Reasons not to bother processing a loadout:
+    if (
+      !(
+        // If it's the automatic "Max Power" loadout
+        (
+          task.loadout.name === t('Loadouts.MaximizePower') ||
+          task.loadout.name === t('Loadouts.MaximizeLight')
+        )
+      )
+    ) {
+      try {
+        result = await analyzeLoadout(
+          task.analysisContext,
+          task.storeId,
+          task.classType,
+          task.loadout,
+          runProcess,
+        );
+      } catch (e) {
+        // Report to sentry, but still set a dummy result so that we don't end up
+        // showing a "busy" spinner or try this and crash over and over again.
+        errorLog('loadout analysis', 'internal error', e);
+        reportException('loadout analysis', e);
+      }
     }
+
     analyzer.setAnalysisResult(task.storeId, task.loadout, task.generationNumber, result);
   }
 }

@@ -63,6 +63,10 @@ export default function LoadoutItemCategorySection({
   const analysis = useAnalyzeLoadout(loadout, store, /* active */ !hideOptimizeArmor);
   const itemsByBucket = Map.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
+  // For this automatic loadout, don't show certain elements.
+  const minimal =
+    loadout.name === t('Loadouts.MaximizePower') || loadout.name === t('Loadouts.MaximizeLight');
+
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
@@ -110,6 +114,7 @@ export default function LoadoutItemCategorySection({
               bucketHash={bucket.hash}
               items={itemsByBucket.get(bucket.hash) ?? emptyArray()}
               modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
+              hideFashion={minimal}
             />
           ))}
         </div>
@@ -131,7 +136,7 @@ export default function LoadoutItemCategorySection({
             />
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          {!hideOptimizeArmor && (
+          {!hideOptimizeArmor && !minimal && (
             <OptimizerButton
               loadout={optimizeLoadout}
               storeId={store.id}
@@ -150,15 +155,17 @@ function ItemBucket({
   storeId,
   items,
   modsForBucket,
+  hideFashion,
 }: {
   bucketHash: number;
   storeId?: string;
   items: ResolvedLoadoutItem[];
   modsForBucket: number[];
+  hideFashion?: boolean;
 }) {
   const [equipped, unequipped] = partition(items, (li) => li.loadoutItem.equip);
 
-  const showFashion = ArmorBucketHashes.includes(bucketHash);
+  const showFashion = !hideFashion && ArmorBucketHashes.includes(bucketHash);
 
   // TODO: should these be draggable? so you can drag them into other loadouts?
 
