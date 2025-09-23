@@ -1,5 +1,7 @@
 ## Next
 
+* Reduced the height of the automatic Max Light loadout on the Loadouts page.
+
 ## 8.91.0 <span class="changelog-date">(2025-09-21)</span>
 
 * Updated item tiles to more closely match in-game tiles, with higher quality images.
