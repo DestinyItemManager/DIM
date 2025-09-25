@@ -13,7 +13,6 @@
   gap: var(--item-margin);
   width: 100%;
 }
-
 .itemBucket {
   display: flex;
   flex-direction: column;
@@ -48,9 +47,15 @@
 .categoryWeapons {
   width: calc(3 * var(--item-size) + 2 * var(--item-margin));
 }
+
 .categoryArmor {
   width: calc(5 * var(--item-size) + 4 * var(--item-margin));
+  align-items: start;
+  &.hasSetBonus {
+    width: calc(6 * var(--item-size) + 5 * var(--item-margin));
+  }
 }
+
 .categoryGeneral {
   width: calc(2 * var(--item-size) + 1 * var(--item-margin));
 }
@@ -79,5 +84,26 @@
 
   @include phone-portrait {
     display: none;
+  }
+}
+
+.armorSubInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--item-margin);
+
+  width: 100%;
+  max-width: calc(5 * var(--item-size) + 4 * var(--item-margin));
+  :global(.dim-button) {
+    width: fit-content;
+    margin: auto;
+  }
+}
+
+.setBonusWrapper {
+  --set-bonus-icon-size: calc(var(--item-size) * 0.58);
+  align-self: start;
+  * {
+    flex-direction: column;
   }
 }
