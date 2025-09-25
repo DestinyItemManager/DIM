@@ -1,7 +1,7 @@
 @use '../../variables' as *;
 
 .container {
-  --set-bonus-icon-size: 27px;
+  --set-bonus-icon-size: 34px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(504px, 1fr));
   padding: 10px 10px 16px 10px;
@@ -13,6 +13,7 @@
 }
 
 .setBonuses {
+  --set-bonus-icon-size: 27px;
   composes: flexColumn from '../../dim-ui/common.m.scss';
   gap: 8px;
   margin-bottom: 8px;
@@ -44,5 +45,6 @@
 
 .selectedBonuses {
   --item-size: 32px;
+  --set-bonus-icon-size: 27px;
   gap: 10px;
 }
