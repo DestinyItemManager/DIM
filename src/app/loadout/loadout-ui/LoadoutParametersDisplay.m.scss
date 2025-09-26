@@ -10,8 +10,6 @@
 
 .loStats {
   composes: flexRow from '../../dim-ui/common.m.scss';
-  align-items: center;
-  width: 100%;
   gap: 8px;
 }
 
@@ -61,14 +59,19 @@
   }
 }
 
+.setBonuses {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 4px;
+}
+
 .setBonus {
   composes: flexRow from '../../dim-ui/common.m.scss';
   gap: 4px;
 }
 
 .perk {
-  --set-bonus-icon-size: 10px;
+  --set-bonus-icon-size: 16px;
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
-  gap: 3px;
+  gap: 4px;
 }
