@@ -286,6 +286,12 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       buttonLabel: [adeptStripped],
       query: compareNameQuery(exampleItem),
     },
+    // Exact weapon based on ID
+    exampleItem.id !== '0' && {
+      // Remove this option for D1 items
+      buttonLabel: [t('Triage.ThisItem')],
+      query: `id:${exampleItem.id}`,
+    },
   ]);
 
   comparisonSets = comparisonSets.reverse();
