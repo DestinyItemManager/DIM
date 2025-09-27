@@ -44,8 +44,12 @@ export default memo(function CompareSuggestions({
     if (!nextCompareButton) {
       return !keptPenultimateButton;
     }
-    // skip empty buttons or buttons that only contain the example item (except the first item-specific button)
-    if (compareButton.items.length < 2 && !compareButton.query.includes('name:')) {
+    // skip empty buttons or buttons that only contain the example item (except the first item-specific button and the example item specific button)
+    if (
+      compareButton.items.length < 2 &&
+      !compareButton.query.includes('name:') &&
+      !compareButton.query.includes('id:')
+    ) {
       return false;
     }
     // if the next button has [all of, & only] the exact same items in it
