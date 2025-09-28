@@ -1399,6 +1399,10 @@
   "StreamDeck": {
     "Authorize": "Conectar aplicativo",
     "Enable": "Plugin do Stream Deck",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "Permite a conexão com o plugin DIM Stream Deck. Este plugin pertence a um projeto independente que não foi escrito e nem é suportado pela equipe DIM.",
     "Install": "Instalar plugin",
     "MissingAuthorization": "Você deve autorizar o aplicativo Stream Deck para se conectar ao DIM. Vá para configurações e clique em \"Conectar aplicativo\".",

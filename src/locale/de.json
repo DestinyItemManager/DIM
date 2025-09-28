@@ -555,7 +555,7 @@
     "FilterSets": "Sets filtern",
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
-      "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen der Ausrüstung angezeigt werden.",
+      "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden.",
       "Discipline": "Disziplin beschleunigt die Granaten-Aufladezeit",
       "DragAndDrop": "Klicke und ziehe Gegenstände in die Felder, um Sets aus nur dieser Ausrüstung zu erstellen",
       "Help": "Brauchst du Hilfe?",
@@ -805,7 +805,7 @@
     "ClearUnsetMods": "Andere Mods entfernen",
     "ClearingSpace": "Verschiebe andere Gegenstände",
     "CopyAndEdit": "Kopie bearbeiten",
-    "Create": "Ausrüstung erstellen",
+    "Create": "Loadout erstellen",
     "CurrentlyEquipped": "Zurzeit ausgerüstet",
     "Deequip": "Lege Gegenstände von anderen Charakteren ab",
     "Delete": "Löschen",
@@ -1080,7 +1080,7 @@
       "Event": "Event",
       "Featured": "Neue Ausrüstung",
       "Foundry": "Schmiede",
-      "Frame": "Rahmen",
+      "Frame": "Gehäuse",
       "Harmonizable": "Harmonisierbar",
       "Holofoil": "Holofoil",
       "Icon": "Icon",
@@ -1399,6 +1399,10 @@
   "StreamDeck": {
     "Authorize": "Anwendung verbinden",
     "Enable": "Stream Deck Plugin",
+    "Error": {
+      "Body": "Beim Senden der Daten an das Stream-Deck-Plugin ist ein Fehler aufgetreten. Bitte kontaktieren Sie den Plugin Entwickler. {{error}}",
+      "Title": "Stream-Deck-Plugin-Fehler"
+    },
     "FinePrint": "Aktiviere die Verbindung mit dem DIM Stream Deck Plugin. Dieses Plugin ist ein separates Projekt, das weder vom DIM-Team geschrieben noch unterstützt wird.",
     "Install": "Plugin installieren",
     "MissingAuthorization": "Du musst die Stream Deck App autorisieren, um sie mit DIM zu verbinden. Gehe zu den Einstellungen und klicke auf \"Anwendung verbinden\".",

@@ -62,8 +62,10 @@
 
 .toggle {
   padding: 10px 10px 15px;
-  width: 100%;
   box-sizing: border-box;
+  :global(.dim-button) {
+    padding: 4px 20px;
+  }
 }
 
 .powerToggleButton {

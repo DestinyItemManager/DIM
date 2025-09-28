@@ -3,7 +3,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { buildDefinedPlug } from 'app/inventory/store/sockets';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import { count } from 'app/utils/collections';
-import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { produce } from 'immer';
 import {
@@ -98,7 +98,7 @@ describe('mod-assignment-utils plugging strategy', () => {
     defs = defs_;
     foundItem: for (const store of stores) {
       for (const storeItem of store.items) {
-        if (isArmor2ClassItem(storeItem) && !getInterestingSocketMetadatas(storeItem)) {
+        if (isArmor2ClassItem(storeItem) && !getSpecialtySocketMetadata(storeItem)) {
           classItem = storeItem;
           break foundItem;
         }

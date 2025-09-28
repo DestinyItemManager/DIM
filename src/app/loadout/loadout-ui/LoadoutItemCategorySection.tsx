@@ -6,6 +6,7 @@ import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { getSetBonusStatus, SetBonusesStatus } from 'app/item-popup/SetBonus';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
 import { ArmorBucketHashes, ResolvedStatConstraint } from 'app/loadout-builder/types';
 import {
@@ -29,7 +30,7 @@ import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
 import styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
-import { OptimizerButton, armorItemsMissing } from './OptimizerButton';
+import { armorItemsMissing, OptimizerButton } from './OptimizerButton';
 
 const categoryStyles: LookupTable<D2BucketCategory, string> = {
   Weapons: styles.categoryWeapons,
@@ -63,6 +64,10 @@ export default function LoadoutItemCategorySection({
   const analysis = useAnalyzeLoadout(loadout, store, /* active */ !hideOptimizeArmor);
   const itemsByBucket = Map.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
+  // For this automatic loadout, don't show certain elements.
+  const minimal =
+    loadout.name === t('Loadouts.MaximizePower') || loadout.name === t('Loadouts.MaximizeLight');
+
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
@@ -99,8 +104,18 @@ export default function LoadoutItemCategorySection({
     return null;
   }
 
+  const setBonusStatus = getSetBonusStatus(defs, equippedItems);
+  const hasSetBonus = !isEmpty(setBonusStatus.activeSetBonuses);
+
   return (
-    <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
+    <div
+      key={category}
+      className={clsx(
+        styles.itemCategory,
+        categoryStyles[category],
+        hasSetBonus && styles.hasSetBonus,
+      )}
+    >
       {items || hasFashion ? (
         <div className={styles.itemsInCategory}>
           {bucketOrder.map((bucket) => (
@@ -110,8 +125,14 @@ export default function LoadoutItemCategorySection({
               bucketHash={bucket.hash}
               items={itemsByBucket.get(bucket.hash) ?? emptyArray()}
               modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
+              hideFashion={minimal}
             />
           ))}
+          {hasSetBonus && (
+            <div className={styles.setBonusWrapper}>
+              <SetBonusesStatus setBonusStatus={setBonusStatus} />
+            </div>
+          )}
         </div>
       ) : (
         <>
@@ -122,23 +143,27 @@ export default function LoadoutItemCategorySection({
       )}
       {items && isArmor && (
         <>
-          {equippedItems.length === 5 && (
-            <LoadoutCharacterStats
-              loadout={loadout}
-              subclass={subclass}
-              allMods={allMods}
-              items={items}
-            />
-          )}
-          {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          {!hideOptimizeArmor && (
-            <OptimizerButton
-              loadout={optimizeLoadout}
-              storeId={store.id}
-              missingArmor={armorItemsMissing(items)}
-              strictUpgradeStatConstraints={constraints}
-            />
-          )}
+          <div className={styles.armorSubInfo}>
+            {equippedItems.length === 5 && (
+              <LoadoutCharacterStats
+                loadout={loadout}
+                subclass={subclass}
+                allMods={allMods}
+                items={items}
+              />
+            )}
+            {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
+            {!hideOptimizeArmor && !minimal && (
+              <div>
+                <OptimizerButton
+                  loadout={optimizeLoadout}
+                  storeId={store.id}
+                  missingArmor={armorItemsMissing(items)}
+                  strictUpgradeStatConstraints={constraints}
+                />
+              </div>
+            )}
+          </div>
         </>
       )}
     </div>
@@ -150,15 +175,17 @@ function ItemBucket({
   storeId,
   items,
   modsForBucket,
+  hideFashion,
 }: {
   bucketHash: number;
   storeId?: string;
   items: ResolvedLoadoutItem[];
   modsForBucket: number[];
+  hideFashion?: boolean;
 }) {
   const [equipped, unequipped] = partition(items, (li) => li.loadoutItem.equip);
 
-  const showFashion = ArmorBucketHashes.includes(bucketHash);
+  const showFashion = !hideFashion && ArmorBucketHashes.includes(bucketHash);
 
   // TODO: should these be draggable? so you can drag them into other loadouts?
 

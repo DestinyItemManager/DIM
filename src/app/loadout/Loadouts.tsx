@@ -9,12 +9,17 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { VirtualListRef, WindowVirtualList } from 'app/dim-ui/VirtualList';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
-import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  artifactUnlocksSelector,
+  sortedStoresSelector,
+} from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import {
   MakeLoadoutAnalysisAvailable,
   useUpdateLoadoutAnalysisContext,
 } from 'app/loadout-analyzer/hooks';
+import { maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import {
   getLoadoutSeason,
@@ -119,6 +124,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [artifactUnlocks, selectedStore],
   );
 
+  const allItems = useSelector(allItemsSelector);
+  const maxLight = useMemo(
+    () => maxLightLoadout(allItems, selectedStore),
+    [allItems, selectedStore],
+  );
+
   useUpdateLoadoutAnalysisContext(selectedStore.id);
 
   const [showSnapshot, setShowSnapshot] = useState(false);
@@ -158,6 +169,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     loadoutSort,
   );
   if (!filteringLoadouts) {
+    loadouts.unshift(maxLight);
     loadouts.unshift(currentLoadout);
   }
 

@@ -15,7 +15,7 @@ import {
 } from 'app/search/items/search-filters/known-values';
 import { modslotFilter } from 'app/search/items/search-filters/sockets';
 import { quoteFilterString } from 'app/search/query-parser';
-import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import {
   getIntrinsicArmorPerkSocket,
   getWeaponArchetype,
@@ -80,8 +80,7 @@ const itemFactors: Record<string, Factor> = {
   },
   specialtySocket: {
     id: 'specialtySocket',
-    runIf: (i) =>
-      getInterestingSocketMetadatas(i) || (!i.isExotic && getIntrinsicArmorPerkSocket(i)),
+    runIf: (i) => getSpecialtySocketMetadata(i) || (!i.isExotic && getIntrinsicArmorPerkSocket(i)),
     render: (item) => {
       const found: JSX.Element[] = [];
 
@@ -102,12 +101,7 @@ const itemFactors: Record<string, Factor> = {
       }
 
       const specialty = (
-        <SpecialtyModSlotIcon
-          key="specialty"
-          className={styles.modSlotIcon}
-          item={item}
-          excludeStandardD2ModSockets
-        />
+        <SpecialtyModSlotIcon key="specialty" className={styles.modSlotIcon} item={item} />
       );
       if (specialty) {
         found.push(specialty);

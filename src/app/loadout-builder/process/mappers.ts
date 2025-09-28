@@ -21,12 +21,11 @@ import { minBy } from 'es-toolkit';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
+  getSpecialtySocketMetadata,
 } from '../../utils/item-utils';
-import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
+import { AutoModData, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
   ArmorEnergyRules,
-  ArmorSet,
   artificeSocketReusablePlugSetHash,
   artificeStatBoost,
   AutoModDefs,
@@ -54,25 +53,28 @@ export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition):
 
 /**
  * Turns a real DimItem, armor upgrade rules, and bucket specific mods into the bits of
- * information relevant for LO. This requires that bucket specific mods have been validated
- * before.
+ * information relevant for LO.
+ * This may return multiple variations on the item, each with a different tuning mod plugged in.
+ * This requires that bucket specific mods have been validated before.
  */
-export function mapDimItemToProcessItem({
+export function mapDimItemToProcessItems({
   dimItem,
   armorEnergyRules,
   modsForSlot,
   desiredStatRanges,
+  autoStatMods,
 }: {
   dimItem: DimItem;
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
   desiredStatRanges: DesiredStatRange[];
+  autoStatMods: boolean;
 }): ProcessItem[] {
   const { id, hash, name, isExotic, power, setBonus } = dimItem;
 
   const stats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
   const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
-  const modMetadatas = getSpecialtySocketMetadatas(dimItem);
+  const compatibleActivityMod = getSpecialtySocketMetadata(dimItem)?.slotTag;
   const modsCost = modsForSlot
     ? sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost ?? 0)
     : 0;
@@ -88,14 +90,14 @@ export function mapDimItemToProcessItem({
     power,
     stats,
     remainingEnergyCapacity: capacity - modsCost,
-    compatibleModSeasons: modMetadatas?.map((m) => m.slotTag),
+    compatibleActivityMod: compatibleActivityMod === 'artifice' ? undefined : compatibleActivityMod,
     setBonus: setBonus?.hash,
   };
 
   const tuningSocket = getArmor3TuningSocket(dimItem);
 
   // Make a version of the item for each possible tuning mod that could be applied.
-  if (tuningSocket?.reusablePlugItems?.length) {
+  if (autoStatMods && tuningSocket?.reusablePlugItems?.length) {
     const processItems: ProcessItem[] = [];
     const allPlugs = tuningSocket.plugSet?.plugs;
     // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums
@@ -146,24 +148,6 @@ export function mapDimItemToProcessItem({
   }
 
   return [processItem];
-}
-
-export function hydrateArmorSet(
-  processed: ProcessArmorSet,
-  itemsById: Map<string, DimItem>,
-): ArmorSet {
-  const armor: DimItem[] = [];
-
-  for (const itemId of processed.armor) {
-    armor.push(itemsById.get(itemId)!);
-  }
-
-  return {
-    armor,
-    stats: processed.stats,
-    armorStats: processed.armorStats,
-    statMods: processed.statMods,
-  };
 }
 
 export function mapAutoMods(defs: AutoModDefs): AutoModData {
