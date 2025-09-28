@@ -4,7 +4,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
 import {
   getArmor3StatFocus,
-  getInterestingSocketMetadatas,
+  getSpecialtySocketMetadata,
   isArmor3,
   nonPullablePostmasterItem,
 } from 'app/utils/item-utils';
@@ -86,7 +86,7 @@ export default function InventoryItem({
 
   const statFocusHash =
     item.bucket.inArmor && isArmor3(item) ? getArmor3StatFocus(item)?.[0] : undefined;
-  const hasInterestingModSlots = item.bucket.inArmor && getInterestingSocketMetadatas(item);
+  const hasInterestingModSlots = item.bucket.inArmor && getSpecialtySocketMetadata(item);
 
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
   const contents = useMemo(() => {
@@ -129,13 +129,12 @@ export default function InventoryItem({
             {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}
-        {statFocusHash !== undefined && <StatFocus statHash={statFocusHash} />}
-        {hasInterestingModSlots && (
-          <SpecialtyModSlotIcon
-            className={styles.modSlotIcon}
-            item={item}
-            excludeStandardD2ModSockets
-          />
+        {statFocusHash !== undefined ? (
+          <StatFocus statHash={statFocusHash} />
+        ) : (
+          hasInterestingModSlots && (
+            <SpecialtyModSlotIcon className={styles.statFocus} item={item} />
+          )
         )}
         {(nonPullablePostmasterItem(item) && <AlertIcon className={styles.warningIcon} />) ||
           ($featureFlags.newItems && isNew && <NewItemIndicator />)}
