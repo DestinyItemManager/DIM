@@ -11,7 +11,9 @@
 * Remove armor energy capacity from the item tile. It's just not that interesting these days.
 * Added Max power loadout to Loadouts tab
 * Items in loadout optimizer sets will now reflect changes like lock/unlock or being masterworked in-game.
-* hide artifact power since artifact power has been removed
+* Hide artifact power on its tile since artifact power has been removed.
+* Fix tuner mods being automatically assigned in Optimizer even when auto-mods was switched off.
+* Removed item Tier pips from engrams.
 
 ## 8.90.1 <span class="changelog-date">(2025-09-18)</span>
 
