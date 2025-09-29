@@ -190,10 +190,29 @@ function normalizeRecency(timestamp: number) {
   return Math.pow(2, -days / halfLife);
 }
 
+/** helpers to do case-insensitive matching safely (protects undefined) */
+function includesCaseInsensitive(haystack?: string, needle?: string) {
+  if (!needle) return true;
+  if (!haystack) return false;
+  return haystack.toLowerCase().includes(needle.toLowerCase());
+}
+
+function indexOfCaseInsensitive(haystack?: string, needle?: string) {
+  if (!needle) return -1;
+  if (!haystack) return -1;
+  return haystack.toLowerCase().indexOf(needle.toLowerCase());
+}
+
+function equalQueryCI(a?: string, b?: string) {
+  return (a ?? '').toLowerCase() === (b ?? '').toLowerCase();
+}
+
 export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
   const recentSearchesForQuery = query
-    ? recentSearches.filter((s) => s.query !== query && s.query.includes(query))
+    ? recentSearches.filter(
+        (s) => !equalQueryCI(s.query, query) && includesCaseInsensitive(s.query, query),
+      )
     : Array.from(recentSearches);
   return recentSearchesForQuery.sort(recentSearchComparator).map((s) => {
     const ast = parseQuery(s.query);
@@ -214,7 +233,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
     // highlight the matched range of the query
     if (query) {
       if (result.query.header) {
-        const index = result.query.header.indexOf(query);
+        const index = indexOfCaseInsensitive(result.query.header, query);
         if (index !== -1) {
           result.highlightRange = {
             section: 'header',
@@ -223,7 +242,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
         }
       }
       if (!result.highlightRange) {
-        const index = result.query.body.indexOf(query);
+        const index = indexOfCaseInsensitive(result.query.body, query);
         if (index !== -1) {
           result.highlightRange = {
             section: 'body',
