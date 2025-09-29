@@ -555,7 +555,7 @@
     "FilterSets": "Sets filtern",
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
-      "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen der Ausrüstung angezeigt werden.",
+      "ChangeNodes": "Verändere Intellekt, Disziplin oder Stärke im Spiel auf die Werte, die beim Erstellen des Loadouts angezeigt werden.",
       "Discipline": "Disziplin beschleunigt die Granaten-Aufladezeit",
       "DragAndDrop": "Klicke und ziehe Gegenstände in die Felder, um Sets aus nur dieser Ausrüstung zu erstellen",
       "Help": "Brauchst du Hilfe?",
@@ -805,7 +805,7 @@
     "ClearUnsetMods": "Andere Mods entfernen",
     "ClearingSpace": "Verschiebe andere Gegenstände",
     "CopyAndEdit": "Kopie bearbeiten",
-    "Create": "Ausrüstung erstellen",
+    "Create": "Loadout erstellen",
     "CurrentlyEquipped": "Zurzeit ausgerüstet",
     "Deequip": "Lege Gegenstände von anderen Charakteren ab",
     "Delete": "Löschen",
