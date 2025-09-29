@@ -451,6 +451,12 @@ export async function process(
 
             // Add on any tuning mods that were preset on the items.
             mods.push(
+              // It's important that we keep the order of these tuning mods in
+              // the order of the armor (even when we assign mods dynamically,
+              // later), so that when we assign them in fitMostMods they get
+              // assigned to the same item. Otherwise, we could end up swapping
+              // between one balanced mod and one tuning mod, and the balanced
+              // mod's stat bonuses could be slightly different.
               ...compact([
                 helm.includedTuningMod,
                 gaunt.includedTuningMod,
