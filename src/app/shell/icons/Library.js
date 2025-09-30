@@ -95,3 +95,4 @@ export const lessThanIcon = 'fas fa-less-than-equal';
 export const equalsIcon = 'fas fa-equals';
 export const stackIcon = 'fas fa-layer-group';
 export const slashIcon = 'fas fa-slash';
+export const stepBackward = 'fas fa-step-backward';

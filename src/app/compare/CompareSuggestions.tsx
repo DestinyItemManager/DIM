@@ -87,7 +87,7 @@ export default memo(function CompareSuggestions({
           onClick={() => onQueryChanged(query)}
         >
           {buttonLabel.map((l) => (typeof l === 'string' ? <span key={l}>{l}</span> : l))}
-          <span key="itemcount">({items.length})</span>
+          {!query.includes('id:') && <span>({items.length})</span>}
         </button>
       ))}
     </>
