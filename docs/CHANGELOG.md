@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed an issue where loadouts might assign tuning mods in a different order than they were shown in Loadout Optimizer, resulting in different stats.
+* Added "Clear all unselected" button to compare menu.
 
 ## 8.92.0 <span class="changelog-date">(2025-09-28)</span>
 
