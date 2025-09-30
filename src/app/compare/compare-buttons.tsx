@@ -202,7 +202,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
       query: compareNameQuery(exampleItem),
     },
-    // Exact weapon based on ID
+    // Exact armor based on ID
     {
       buttonLabel: [<AppIcon key="icon" icon={stepBackward} />],
       query: `id:${exampleItem.id}`,
@@ -319,7 +319,7 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
       buttonLabel: [exampleItem.name],
       query: compareNameQuery(exampleItem),
     },
-    // Exact weapon based on ID
+    // Exact item based on ID
     {
       buttonLabel: [<AppIcon key="icon" icon={stepBackward} />],
       query: `id:${exampleItem.id}`,
