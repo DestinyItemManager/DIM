@@ -7,7 +7,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
-import { AppIcon, stepBackward } from 'app/shell/icons';
+import { AppIcon, clearIcon } from 'app/shell/icons';
 import { compact, filterMap } from 'app/utils/collections';
 import {
   getArmor3StatFocus,
@@ -204,7 +204,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     },
     // Exact armor based on ID
     {
-      buttonLabel: [<AppIcon key="icon" icon={stepBackward} />],
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
       query: `id:${exampleItem.id}`,
     },
   ]).reverse();
@@ -294,7 +294,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     },
     // Exact weapon based on ID
     {
-      buttonLabel: [<AppIcon key="icon" icon={stepBackward} />],
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
       query: `id:${exampleItem.id}`,
     },
   ]);
@@ -321,7 +321,7 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
     },
     // Exact item based on ID
     {
-      buttonLabel: [<AppIcon key="icon" icon={stepBackward} />],
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
       query: `id:${exampleItem.id}`,
     },
   ];
