@@ -1,6 +1,7 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { compact, filterMap, uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { partition } from 'es-toolkit';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { filterDescriptionText } from './filter-description';
 import { canonicalFilterFormats } from './filter-types';
@@ -433,15 +434,19 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
       // For multiquery filters, if the user has typed a + (or hasn't typed
       // anything) they're looking to add another query term, so offer to append
       // one.
-      const existingTerms = new Set(
-        (typedSegments[1] || '')
-          .split('+')
-          .filter((t) => multiqueryTermsLookup[possibleKeyword]!.includes(t)),
+      const typedArgs = (typedSegments[1] || '').split('+');
+      // Existing, complete terms
+      const [existingTerms, possiblyIncompleteTerms] = partition(typedArgs, (t) =>
+        multiqueryTermsLookup[possibleKeyword]!.includes(t),
       );
-      const stem = `${typedSegments[0]}:${[...existingTerms].join('+')}${existingTerms.size ? '+' : ''}`;
+      const stem = `${typedSegments[0]}:${[...existingTerms].join('+')}${existingTerms.length ? '+' : ''}`;
       suggestions.push(
         ...filterMap(multiqueryTermsLookup[possibleKeyword], (t) => {
-          if (!existingTerms.has(t)) {
+          if (
+            !existingTerms.includes(t) &&
+            (possiblyIncompleteTerms.length === 0 ||
+              possiblyIncompleteTerms.some((arg) => t.includes(arg)))
+          ) {
             const newTerm = stem + t;
             return {
               rawText: newTerm,
