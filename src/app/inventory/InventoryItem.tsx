@@ -113,12 +113,12 @@ export default function InventoryItem({
     const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
     return (
       <>
+        <ItemIcon item={item} />
         {item.percentComplete > 0 && !item.complete && (
           <div className={styles.xpBar}>
             <div className={styles.xpBarAmount} style={{ width: percent(item.percentComplete) }} />
           </div>
         )}
-        <ItemIcon item={item} />
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || hasNotes) && (
           <div className={styles.icons}>
