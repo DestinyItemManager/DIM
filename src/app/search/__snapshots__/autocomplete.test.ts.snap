@@ -378,6 +378,7 @@ exports[`filterComplete autocomplete terms for |stat| 1`] = `
   "tunedstat:primary",
   "tunedstat:secondary",
   "tunedstat:tertiary",
+  "tunedstat:unfocused",
   "stat:rpm:",
   "stat:rof:",
   "stat:charge:",

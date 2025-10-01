@@ -58,6 +58,7 @@ export const armor3OrdinalIndexByName: StringLookup<number> = {
 export const searchableD2Armor3StatNames = [
   ...Object.keys(realD2ArmorStatHashByName),
   ...Object.keys(armor3OrdinalIndexByName),
+  'unfocused',
 ];
 
 /** stat hashes to calculate max values for */
