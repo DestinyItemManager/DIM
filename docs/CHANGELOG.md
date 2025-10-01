@@ -7,6 +7,7 @@
 * Fixed stat bars in Compare getting squished when the icon size setting is large.
 * Restored the setting for how many spaces to clear in Farming Mode.
 * Removed the "new item" dot and tracking. This has been gone in Beta for a while now, and the recommendation is to use the Item Feed and tagging to keep tabs on your loot as it drops.
+* Fixed a case where some old searches could not be deleted/unsaved.
 
 ## 8.92.0 <span class="changelog-date">(2025-09-28)</span>
 
