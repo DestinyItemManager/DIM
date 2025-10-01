@@ -205,6 +205,10 @@ export default function SettingsPage() {
     value: num,
     name: t('Settings.ColumnSize', { num }),
   }));
+  const numberOfSpacesOptions = range(1, 10).map((count) => ({
+    value: count,
+    name: t('Settings.SpacesSize', { count }),
+  }));
   const vaultColOptions = range(5, 21).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
@@ -416,6 +420,15 @@ export default function SettingsPage() {
                 onChange={onBadgePostmasterChanged}
               />
               <div className={styles.fineprint}>{t('Settings.BadgePostmasterExplanation')}</div>
+            </div>
+            <div className={styles.setting}>
+              <Select
+                label={t('Settings.InventoryNumberOfSpacesToClear')}
+                name="inventoryClearSpaces"
+                value={settings.inventoryClearSpaces}
+                options={numberOfSpacesOptions}
+                onChange={onChangeNumeric}
+              />
             </div>
           </section>
 
