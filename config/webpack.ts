@@ -124,6 +124,7 @@ export default (env: Env) => {
           },
           client: {
             overlay: false,
+            logging: "none", // we don't need to see build errors in the console log
           },
           historyApiFallback: true,
           hot: 'only',
