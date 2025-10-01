@@ -4,6 +4,7 @@
 * Added "Clear all unselected" button to compare menu.
 * Added the stat archetype (or mod slot) to the top right corner of armor item tiles.
 * Restore progress bars on incomplete D1 items.
+* Fixed stat bars in Compare getting squished when the icon size setting is large.
 
 ## 8.92.0 <span class="changelog-date">(2025-09-28)</span>
 
