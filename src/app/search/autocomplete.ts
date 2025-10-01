@@ -190,30 +190,26 @@ function normalizeRecency(timestamp: number) {
   return Math.pow(2, -days / halfLife);
 }
 
-/** helpers to do case-insensitive matching safely (protects undefined) */
-function includesCaseInsensitive(haystack?: string, needle?: string) {
-  if (!needle) return true;
-  if (!haystack) return false;
-  return haystack.toLowerCase().includes(needle.toLowerCase());
-}
-
 function indexOfCaseInsensitive(haystack?: string, needle?: string) {
-  if (!needle) return -1;
-  if (!haystack) return -1;
+  if (!needle) {
+    return -1;
+  }
+  if (!haystack) {
+    return -1;
+  }
   return haystack.toLowerCase().indexOf(needle.toLowerCase());
-}
-
-function equalQueryCI(a?: string, b?: string) {
-  return (a ?? '').toLowerCase() === (b ?? '').toLowerCase();
 }
 
 export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
+  const qLower = query.toLowerCase();
   const recentSearchesForQuery = query
-    ? recentSearches.filter(
-        (s) => !equalQueryCI(s.query, query) && includesCaseInsensitive(s.query, query),
-      )
+    ? recentSearches.filter((s) => {
+        const sQueryLower = (s.query ?? '').toLowerCase();
+        return sQueryLower !== qLower && sQueryLower.includes(qLower);
+      })
     : Array.from(recentSearches);
+
   return recentSearchesForQuery.sort(recentSearchComparator).map((s) => {
     const ast = parseQuery(s.query);
     const topLevelComment = ast.comment && makeCommentString(ast.comment);
