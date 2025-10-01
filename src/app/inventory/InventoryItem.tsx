@@ -1,10 +1,17 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
+import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
-import { nonPullablePostmasterItem } from 'app/utils/item-utils';
+import {
+  getArmor3StatFocus,
+  getSpecialtySocketMetadata,
+  isArmor3,
+  nonPullablePostmasterItem,
+} from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
-import BungieImage from '../dim-ui/BungieImage';
+import BungieImage, { bungieBackgroundStyle } from '../dim-ui/BungieImage';
 import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
@@ -77,6 +84,10 @@ export default function InventoryItem({
   // Subtitle for engram powerlevel vs regular item type
   const subtitle = item.destinyVersion === 2 && item.isEngram ? item.power : item.typeName;
 
+  const statFocusHash =
+    item.bucket.inArmor && isArmor3(item) ? getArmor3StatFocus(item)?.[0] : undefined;
+  const hasInterestingModSlots = item.bucket.inArmor && getSpecialtySocketMetadata(item);
+
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
   const contents = useMemo(() => {
     // Subclasses have limited, but customized, display. They can't be new, or tagged, or locked, etc.
@@ -118,11 +129,28 @@ export default function InventoryItem({
             {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}
+        {statFocusHash !== undefined ? (
+          <StatFocus statHash={statFocusHash} />
+        ) : (
+          hasInterestingModSlots && (
+            <SpecialtyModSlotIcon className={styles.statFocus} item={item} />
+          )
+        )}
         {(nonPullablePostmasterItem(item) && <AlertIcon className={styles.warningIcon} />) ||
           ($featureFlags.newItems && isNew && <NewItemIndicator />)}
       </>
     );
-  }, [isNew, item, hasNotes, subclassIconInfo, tag, wishlistRoll, autoLockTagged]);
+  }, [
+    isNew,
+    item,
+    hasNotes,
+    subclassIconInfo,
+    tag,
+    wishlistRoll,
+    autoLockTagged,
+    statFocusHash,
+    hasInterestingModSlots,
+  ]);
 
   return (
     <div
@@ -137,5 +165,20 @@ export default function InventoryItem({
         {contents}
       </ItemIconPlaceholder>
     </div>
+  );
+}
+
+function StatFocus({ statHash }: { statHash: number }) {
+  const defs = useD2Definitions()!;
+  const icon = defs.Stat.get(statHash).displayProperties.icon;
+  return (
+    defs && (
+      <BungieImage
+        className={styles.statFocus}
+        src={icon}
+        style={bungieBackgroundStyle(icon)}
+        alt=""
+      />
+    )
   );
 }
