@@ -254,11 +254,15 @@ const caretEndRegex = /[\s)]|$/;
  *
  * @returns the start indexes of various points that could be incomplete filters
  */
-function findLastFilter(queryUpToCaret: string): number[] | null {
+function findLastFilter<I, FilterCtx, SuggestionsCtx>(
+  queryUpToCaret: string,
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
+): number[] | null {
   // Find the indexes where any incomplete filter starts. For example if the query is:
   // name:"foo" bar baz
   // then the open keywords are "bar baz" and "baz"
   let incompleteFilterIndices: number[] = [];
+  let lastWasFreeform = false;
   try {
     // We can use the query lexer for this to scan through tokens in the query without parsing the whole AST.
     for (const token of lexer(queryUpToCaret)) {
@@ -269,7 +273,14 @@ function findLastFilter(queryUpToCaret: string): number[] | null {
             // Ignore complete quoted tokens, they're definitively finished.
             !token.quoted
           ) {
+            // If the last filter wasn't freeform, close it off and start a new one.
+            if (!lastWasFreeform) {
+              incompleteFilterIndices = [];
+            }
             incompleteFilterIndices.push(token.startIndex);
+            lastWasFreeform = canonicalFilterFormats(
+              searchConfig.filtersMap.kvFilters[token.keyword]?.format,
+            ).includes('freeform');
           } else {
             incompleteFilterIndices = [];
           }
@@ -314,7 +325,7 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
   const queryUpToCaret = query.slice(0, caretIndex);
-  const lastFilters = findLastFilter(queryUpToCaret);
+  const lastFilters = findLastFilter(queryUpToCaret, searchConfig);
   if (!lastFilters) {
     return [];
   }
