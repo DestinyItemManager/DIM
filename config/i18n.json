@@ -220,6 +220,7 @@
     "AmmoType": "Shows items based on their ammo type.",
     "ArmorCategory": "Shows armors based on their category.",
     "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
+    "Artifice": "Shows Artifice armor.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Unascended": "Shows items that have an ascend node which have not been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",

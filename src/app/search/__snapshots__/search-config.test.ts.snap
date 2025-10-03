@@ -11,6 +11,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "armor3.0",
   "armorintrinsic",
   "armormod",
+  "artifice",
   "autorifle",
   "blue",
   "bow",

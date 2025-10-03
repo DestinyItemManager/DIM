@@ -46,7 +46,7 @@ export const modTypeTagByPlugCategoryHash: LookupTable<PlugCategoryHashes, strin
   [PlugCategoryHashes.EnhancementsRaidV800]: 'salvationsedge',
 };
 
-const modSocketMetadata: ModSocketMetadata[] = [
+export const modSocketMetadata: ModSocketMetadata[] = [
   {
     slotTag: 'lastwish',
     socketTypeHashes: [1444083081],
@@ -117,13 +117,9 @@ const modSocketMetadata: ModSocketMetadata[] = [
     emptyModSocketHash: 1180997867,
     activityModeHash: 332181804,
   },
-  {
-    slotTag: 'artifice',
-    socketTypeHashes: [1719555937, 2770223926, 3642670483, 2831858578, 4096670123, 3136585661],
-    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsArtifice],
-    emptyModSocketHash: 4173924323,
-    iconHash: 3727270518,
-  },
 ];
 
-export default modSocketMetadata;
+export const artificeDisplayStub = {
+  emptyModSocketHash: 4173924323,
+  iconHash: 3727270518,
+} as ModSocketMetadata;

@@ -20,7 +20,8 @@ import {
   tuningModToTunedStathash,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import modSocketMetadata, {
+import {
+  modSocketMetadata,
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
@@ -80,7 +81,11 @@ const getSpecialtySocket = (item?: DimItem): DimSocket | undefined => {
   }
 };
 
-/** returns ModMetadatas if the item has one or more specialty mod slots */
+/**
+ * Returns ModMetadatas if the item has one or more specialty mod slots.
+ *
+ * This no longer includes artifice. Use isArtifice function for that.
+ */
 export const getSpecialtySocketMetadata = (item?: DimItem): ModSocketMetadata | undefined => {
   const specialtySocket = getSpecialtySocket(item);
   if (!specialtySocket) {
