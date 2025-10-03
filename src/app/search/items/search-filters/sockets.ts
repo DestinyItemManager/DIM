@@ -7,7 +7,7 @@ import {
   emptySocketHashes,
 } from 'app/search/d2-known-values';
 import { plainString } from 'app/search/text-utils';
-import { getSpecialtySocketMetadata, modSlotTags } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, isArtifice, modSlotTags } from 'app/utils/item-utils';
 import { enhancedVersion } from 'app/utils/perk-utils';
 import {
   countEnhancedPerks,
@@ -35,10 +35,7 @@ export const modslotFilter = {
   filter:
     ({ filterValue }) =>
     (item) => {
-      let modSocketTag = getSpecialtySocketMetadata(item)?.slotTag;
-      if (modSocketTag === 'artifice') {
-        modSocketTag = undefined;
-      }
+      const modSocketTag = getSpecialtySocketMetadata(item)?.slotTag;
 
       return Boolean(
         (filterValue === 'none' && !modSocketTag) ||
@@ -54,6 +51,12 @@ export const modslotFilter = {
 
 const socketFilters: ItemFilterDefinition[] = [
   modslotFilter,
+  {
+    keywords: 'artifice',
+    description: tl('Filter.Artifice'),
+    destinyVersion: 2,
+    filter: () => (item) => isArtifice(item),
+  },
   {
     keywords: 'randomroll',
     description: tl('Filter.RandomRoll'),

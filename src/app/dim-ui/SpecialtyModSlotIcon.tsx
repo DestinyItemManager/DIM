@@ -1,7 +1,8 @@
 import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { artificeDisplayStub } from 'app/search/specialty-modslots';
+import { getSpecialtySocketMetadata, isArtifice } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { PressTip } from './PressTip';
 import styles from './SpecialtyModSlotIcon.m.scss';
@@ -13,8 +14,10 @@ import styles from './SpecialtyModSlotIcon.m.scss';
  */
 export function SpecialtyModSlotIcon({ item, className }: { item: DimItem; className?: string }) {
   const defs = useD2Definitions()!;
-  const modMetadata = getSpecialtySocketMetadata(item);
-
+  const modMetadata = isArtifice(item) ? artificeDisplayStub : getSpecialtySocketMetadata(item);
+  if (item.id === '6917529983910005561') {
+    console.log('isartifice', isArtifice(item), 'modMetadata', modMetadata);
+  }
   if (!modMetadata) {
     return null;
   }

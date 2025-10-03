@@ -210,6 +210,7 @@
     "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "Shows armors based on their category.",
     "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
+    "Artifice": "Shows Artifice armor.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
     "BulkClear_one": "Removed tag from 1 item.",

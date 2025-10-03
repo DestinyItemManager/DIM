@@ -6,6 +6,7 @@ import {
   getArmor3StatFocus,
   getSpecialtySocketMetadata,
   isArmor3,
+  isArtifice,
   nonPullablePostmasterItem,
 } from 'app/utils/item-utils';
 import clsx from 'clsx';
@@ -86,7 +87,8 @@ export default function InventoryItem({
 
   const statFocusHash =
     item.bucket.inArmor && isArmor3(item) ? getArmor3StatFocus(item)?.[0] : undefined;
-  const hasInterestingModSlots = item.bucket.inArmor && getSpecialtySocketMetadata(item);
+  const hasInterestingModSlots =
+    item.bucket.inArmor && (getSpecialtySocketMetadata(item) || isArtifice(item));
 
   // Memoize the contents of the item - most of the time if this is re-rendering it's for a search, or a new item
   const contents = useMemo(() => {
