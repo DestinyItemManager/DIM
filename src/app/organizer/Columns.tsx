@@ -521,7 +521,8 @@ export function getColumns(
         header: t('Organizer.Columns.ModSlot'),
         className: styles.modslot,
         // TODO: only show if there are mod slots
-        value: (item) => getSpecialtySocketMetadata(item)?.slotTag,
+        value: (item) =>
+          isArtifice(item) ? 'artifice' : getSpecialtySocketMetadata(item)?.slotTag,
         cell: (value, item) =>
           value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
         filter: (value) => (value !== undefined ? `modslot:${value}` : ''),

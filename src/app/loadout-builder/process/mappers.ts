@@ -90,7 +90,7 @@ export function mapDimItemToProcessItems({
     power,
     stats,
     remainingEnergyCapacity: capacity - modsCost,
-    compatibleActivityMod: compatibleActivityMod === 'artifice' ? undefined : compatibleActivityMod,
+    compatibleActivityMod: compatibleActivityMod,
     setBonus: setBonus?.hash,
   };
 
