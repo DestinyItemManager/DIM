@@ -58,9 +58,9 @@ export function useIsWellRested(
   }
 
   const requiredXP =
-    prestigeMode && prestigeProgression.level >= wellRestedLevels
-      ? xpRequiredForLevel(0, prestigeProgressionDef) * wellRestedLevels
-      : xpTotalRequiredForLevel(seasonPassLevel, seasonProgressionDef, wellRestedLevels);
+    (prestigeMode && prestigeProgression.level >= wellRestedLevels
+      ? xpRequiredForLevel(0, prestigeProgressionDef)
+      : xpRequiredForLevel(seasonPassLevel, seasonProgressionDef)) * wellRestedLevels;
 
   // Have you gained XP equal to three full levels worth of XP?
   return {
@@ -76,16 +76,4 @@ export function useIsWellRested(
 function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefinition) {
   const stepIndex = clamp(level, 0, progressDef.steps.length - 1);
   return progressDef.steps[stepIndex].progressTotal;
-}
-
-function xpTotalRequiredForLevel(
-  totalLevel: number,
-  seasonProgressDef: DestinyProgressionDefinition,
-  WELL_RESTED_LEVELS: number,
-) {
-  let totalXP = 0;
-  for (let i = 0; i < WELL_RESTED_LEVELS; i++) {
-    totalXP += xpRequiredForLevel(totalLevel - i, seasonProgressDef);
-  }
-  return totalXP;
 }
