@@ -190,16 +190,6 @@ function normalizeRecency(timestamp: number) {
   return Math.pow(2, -days / halfLife);
 }
 
-function indexOfCaseInsensitive(haystack?: string, needle?: string) {
-  if (!needle) {
-    return -1;
-  }
-  if (!haystack) {
-    return -1;
-  }
-  return haystack.toLowerCase().indexOf(needle.toLowerCase());
-}
-
 export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
   const qLower = query.toLowerCase();
@@ -229,7 +219,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
     // highlight the matched range of the query
     if (query) {
       if (result.query.header) {
-        const index = indexOfCaseInsensitive(result.query.header, query);
+        const index = result.query.header.toLowerCase().indexOf(qLower);
         if (index !== -1) {
           result.highlightRange = {
             section: 'header',
@@ -238,7 +228,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
         }
       }
       if (!result.highlightRange) {
-        const index = indexOfCaseInsensitive(result.query.body, query);
+        const index = result.query.body.toLowerCase().indexOf(qLower);
         if (index !== -1) {
           result.highlightRange = {
             section: 'body',
