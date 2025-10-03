@@ -15,9 +15,6 @@ import styles from './SpecialtyModSlotIcon.m.scss';
 export function SpecialtyModSlotIcon({ item, className }: { item: DimItem; className?: string }) {
   const defs = useD2Definitions()!;
   const modMetadata = isArtifice(item) ? artificeDisplayStub : getSpecialtySocketMetadata(item);
-  if (item.id === '6917529983910005561') {
-    console.log('isartifice', isArtifice(item), 'modMetadata', modMetadata);
-  }
   if (!modMetadata) {
     return null;
   }
