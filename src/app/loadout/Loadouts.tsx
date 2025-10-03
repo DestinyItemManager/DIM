@@ -246,14 +246,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        {!filteringLoadouts && (
-          <InGameLoadoutStrip
-            store={selectedStore}
-            onEdit={setEditingInGameLoadout}
-            onShare={setSharedLoadout}
-            onShowDetails={setViewingInGameLoadout}
-          />
-        )}
+        <InGameLoadoutStrip
+          store={selectedStore}
+          onEdit={setEditingInGameLoadout}
+          onShare={setSharedLoadout}
+          onShowDetails={setViewingInGameLoadout}
+        />
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
         <WindowVirtualList
