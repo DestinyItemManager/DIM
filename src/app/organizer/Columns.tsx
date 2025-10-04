@@ -595,10 +595,11 @@ export function getColumns(
         className: styles.centered,
         header: t('Organizer.Columns.TertiaryStat'),
         csv: 'Tertiary Stat',
-        value: (item) => (isArmor3(item) ? getArmor3StatFocus(item)[2] : undefined),
-        cell: (statHash, item) => {
-          if (statHash) {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
+        value: (item) =>
+          isArmor3(item) ? invert(statHashByName)[getArmor3StatFocus(item)[2]] : undefined,
+        cell: (statName, item) => {
+          if (statName) {
+            const stat = item.stats?.find((s) => s.statHash === statHashByName[statName]);
             if (stat) {
               return (
                 <BungieImage
@@ -611,11 +612,7 @@ export function getColumns(
             }
           }
         },
-        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
-        filter: (statHash) => {
-          const statName = invert(statHashByName)[statHash!];
-          return `tertiarystat:${statName}`;
-        },
+        filter: (statName) => `tertiarystat:${statName}`,
       }),
     destinyVersion === 2 &&
       isArmor &&
@@ -624,10 +621,11 @@ export function getColumns(
         className: styles.centered,
         header: t('Organizer.Columns.TuningStat'),
         csv: 'Tuning Stat',
-        value: (item) => (isArmor3(item) ? getArmor3TuningStat(item) : undefined),
-        cell: (statHash, item) => {
-          if (statHash) {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
+        value: (item) =>
+          isArmor3(item) ? invert(statHashByName)[getArmor3TuningStat(item)!] : undefined,
+        cell: (statName, item) => {
+          if (statName) {
+            const stat = item.stats?.find((s) => s.statHash === statHashByName[statName]);
             if (stat) {
               return (
                 <BungieImage
@@ -640,11 +638,7 @@ export function getColumns(
             }
           }
         },
-        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
-        filter: (statHash) => {
-          const statName = invert(statHashByName)[statHash!];
-          return `tertiarystat:${statName}`;
-        },
+        filter: (statName) => `tertiarystat:${statName}`,
       }),
     destinyVersion === 2 &&
       isArmor &&
