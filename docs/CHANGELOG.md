@@ -1,5 +1,7 @@
 ## Next
 
+## 8.93.0 <span class="changelog-date">(2025-10-05)</span>
+
 * Fixed an issue where loadouts might assign tuning mods in a different order than they were shown in Loadout Optimizer, resulting in different stats.
 * Added "Clear all unselected" button to compare menu.
 * Added the stat archetype (or mod slot) to the top right corner of armor item tiles.
