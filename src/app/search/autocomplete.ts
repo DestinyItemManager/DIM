@@ -195,7 +195,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   const qLower = query.toLowerCase();
   const recentSearchesForQuery = query
     ? recentSearches.filter((s) => {
-        const sQueryLower = (s.query ?? '').toLowerCase();
+        const sQueryLower = s.query.toLowerCase();
         return sQueryLower !== qLower && sQueryLower.includes(qLower);
       })
     : Array.from(recentSearches);
