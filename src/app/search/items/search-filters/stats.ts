@@ -185,17 +185,16 @@ const statFilters: ItemFilterDefinition[] = [
         if (tunedStat === undefined) {
           return false;
         }
-        // Standard tunedstat:statname handling
-        if (!isUnfocused && ordinalIdx === undefined) {
-          return armorStatHash !== null && tunedStat === armorStatHash;
-        }
-        const statFocus = getArmor3StatFocus(item);
         // Looking for tunedstat:unfocused
         if (isUnfocused) {
-          return !statFocus.includes(tunedStat);
+          return !getArmor3StatFocus(item).includes(tunedStat);
+        }
+        // Standard tunedstat:statname handling
+        if (ordinalIdx === undefined) {
+          return armorStatHash !== null && tunedStat === armorStatHash;
         }
         // Looking for tunedstat: 'primary', 'secondary', or 'tertiary'
-        const expectedStat = statFocus?.[ordinalIdx!] ?? null;
+        const expectedStat = getArmor3StatFocus(item)?.[ordinalIdx] ?? null;
         return expectedStat !== null && tunedStat === expectedStat;
       };
     },
