@@ -1,5 +1,7 @@
 ## Next
 
+* Change Organizer to display Tertiary Stat, and Tuning Stats with stat names instead of stat hashes in armor.csv export
+
 ## 8.93.0 <span class="changelog-date">(2025-10-05)</span>
 
 * Fixed an issue where loadouts might assign tuning mods in a different order than they were shown in Loadout Optimizer, resulting in different stats.
