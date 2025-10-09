@@ -105,7 +105,7 @@ export default function LoadoutItemCategorySection({
   }
 
   const setBonusStatus = getSetBonusStatus(defs, equippedItems);
-  const hasSetBonus = !isEmpty(setBonusStatus.activeSetBonuses);
+  const hasSetBonus = setBonusStatus.activePerks.size > 0;
 
   return (
     <div
