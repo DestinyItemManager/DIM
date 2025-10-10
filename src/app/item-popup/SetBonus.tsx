@@ -2,7 +2,6 @@ import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
-import pressTipStyles from 'app/dim-ui/PressTip.m.scss';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -15,7 +14,10 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
+// eslint-disable-next-line css-modules/no-unused-class
+import pressTipStyles from '../dim-ui/PressTip.m.scss';
 import styles from './SetBonus.m.scss';
+
 /** Given some equipped items, returns info about what set bonuses are active */
 export function getSetBonusStatus(defs: D2ManifestDefinitions, items: DimItem[]) {
   // You could provide incorrect or unrealistic information to this function, like 10 helmets,
