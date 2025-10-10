@@ -41,7 +41,6 @@
 .gearList {
   composes: flexRow from '../dim-ui/common.m.scss';
   gap: 2px;
-  margin-top: 1em;
 }
 
 .gearListIcon {
@@ -58,5 +57,15 @@
   gap: 4px;
   & > div {
     display: flex;
+  }
+}
+
+.perkNameSubheader {
+  --set-bonus-icon-size: 18px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  img {
+    margin: -1px 0;
   }
 }
