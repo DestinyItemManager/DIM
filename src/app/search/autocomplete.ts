@@ -398,6 +398,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
       }
     }
   }
+  const searchCollator = cachedSearchCollator(searchConfig.language);
 
   // TODO: also search filter descriptions
   return (typed: string): string[] => {
@@ -433,6 +434,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
     // and "stat" matches "stat:" and "basestat:"
     const matchType = !mustStartWith && typedPlain.includes(':') ? 'startsWith' : 'includes';
 
+    // TODO: Instead of using the plaintext, use the intl cached search collator?
     let suggestions = searchConfig.suggestions
       .filter(
         (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain),
@@ -440,6 +442,8 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
       .filter(filterLowPrioritySuggestions);
 
     // TODO: sort this first?? it depends on term in one place
+
+    // TODO: We want to support is:gun autocompleting to is:shotgun
 
     if (multiqueryTermsLookup[possibleKeyword] && filterNames.includes(possibleKeyword)) {
       // For multiquery filters, if the user has typed a + (or hasn't typed
