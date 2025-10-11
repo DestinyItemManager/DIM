@@ -178,17 +178,23 @@ const statFilters: ItemFilterDefinition[] = [
       }
       // Check if we are looking for generic 'primary', 'secondary', or 'tertiary'
       const ordinalIdx = armor3OrdinalIndexByName[filterValue];
-      const constantExpected =
-        ordinalIdx === undefined ? realD2ArmorStatHashByName[filterValue] : undefined;
+      const armorStatHash = realD2ArmorStatHashByName[filterValue];
+      const isUnfocused = filterValue === 'unfocused';
       return (item) => {
         const tunedStat = getArmor3TuningStat(item);
         if (tunedStat === undefined) {
           return false;
         }
-        const expectedStat =
-          ordinalIdx === undefined
-            ? constantExpected
-            : (getArmor3StatFocus(item)?.[ordinalIdx] ?? null);
+        // Looking for tunedstat:unfocused
+        if (isUnfocused) {
+          return !getArmor3StatFocus(item).includes(tunedStat);
+        }
+        // Standard tunedstat:statname handling
+        if (ordinalIdx === undefined) {
+          return armorStatHash !== null && tunedStat === armorStatHash;
+        }
+        // Looking for tunedstat: 'primary', 'secondary', or 'tertiary'
+        const expectedStat = getArmor3StatFocus(item)?.[ordinalIdx] ?? null;
         return expectedStat !== null && tunedStat === expectedStat;
       };
     },
