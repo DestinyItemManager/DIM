@@ -133,16 +133,41 @@ function Control({
                 {Boolean(customization.subheader) && <h3>{customization.subheader}</h3>}
               </div>
             )}
-            <div className={styles.content}>
-              <TooltipContext value={customizeTooltip}>
-                {typeof tooltip === 'function' ? tooltip() : tooltip}
-              </TooltipContext>
-            </div>
+            {containsContentStyle(tooltip) ? (
+              tooltip
+            ) : (
+              <div className={styles.content}>
+                <TooltipContext value={customizeTooltip}>
+                  {typeof tooltip === 'function' ? tooltip() : tooltip}
+                </TooltipContext>
+              </div>
+            )}
+
             <div className={styles.arrow} />
           </div>,
           pressTipRoot.current || tempContainer,
         )}
     </Component>
+  );
+}
+
+/**
+ * This checks to see if a tooltip already contains a "content" classname element.
+ * If so we can treat it as raw input rather than wrapping it in another copy of
+ * the default tooltip content wrapper.
+ */
+function containsContentStyle(tooltip: unknown): tooltip is React.ReactNode {
+  return Boolean(
+    tooltip &&
+      typeof tooltip === 'object' &&
+      ((Array.isArray(tooltip) && tooltip.some(containsContentStyle)) ||
+        ('props' in tooltip &&
+          tooltip.props &&
+          typeof tooltip.props === 'object' &&
+          (('className' in tooltip.props && tooltip.props.className === styles.content) ||
+            ('children' in tooltip.props &&
+              Array.isArray(tooltip.props.children) &&
+              tooltip.props.children.some(containsContentStyle))))),
   );
 }
 

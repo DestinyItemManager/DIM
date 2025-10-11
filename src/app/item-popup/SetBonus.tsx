@@ -14,6 +14,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
+// eslint-disable-next-line css-modules/no-unused-class
+import pressTipStyles from '../dim-ui/PressTip.m.scss';
 import styles from './SetBonus.m.scss';
 
 /** Given some equipped items, returns info about what set bonuses are active */
@@ -86,40 +88,46 @@ export function SetBonusesStatus({
   store?: DimStore;
 }) {
   return (
-    <div className={styles.setBonusesStatus}>
-      {displayIterable.map(({ bonusDef, activePerks }) => (
-        <PressTip
-          key={bonusDef.hash}
-          tooltip={
-            <>
-              <Tooltip.Header text={bonusDef.displayProperties.name} />
-              {activePerks.map(({ requiredSetCount, perkDef }, i) => {
+    <PressTip
+      className={styles.setBonusesStatus}
+      tooltip={
+        <>
+          {displayIterable.map(({ bonusDef, activePerks }) => (
+            <React.Fragment key={bonusDef.hash}>
+              <div className={pressTipStyles.header}>
+                <h2>{bonusDef.displayProperties.name}</h2>
+              </div>
+              {activePerks.map(({ requiredSetCount, perkDef }) => {
                 const { displayProperties, hash } = perkDef;
                 return (
                   <React.Fragment key={hash}>
-                    {i !== 0 && <hr />}
-                    <strong>{`${t('Item.SetBonus.NPiece', { count: requiredSetCount })} | ${displayProperties.name}`}</strong>
-                    <br />
-                    {displayProperties.description}
+                    <div className={pressTipStyles.header}>
+                      <h3 className={styles.perkNameSubheader}>
+                        <SetPerkIcon perkDef={perkDef} active />
+                        {`${t('Item.SetBonus.NPiece', { count: requiredSetCount })} | ${displayProperties.name}`}
+                      </h3>
+                    </div>
+                    <div className={pressTipStyles.content}>{displayProperties.description}</div>
                   </React.Fragment>
                 );
               })}
               {store && (
-                <>
-                  <hr />
+                <div className={pressTipStyles.content}>
                   <ContributingArmor store={store} setBonus={bonusDef} />
-                </>
+                </div>
               )}
-            </>
-          }
-          placement="top"
-        >
-          {activePerks.map(({ perkDef }) => (
-            <SetPerkIcon key={perkDef.hash} perkDef={perkDef} active={true} />
+            </React.Fragment>
           ))}
-        </PressTip>
-      ))}
-    </div>
+        </>
+      }
+      placement="top"
+    >
+      {displayIterable.flatMap((b) =>
+        b.activePerks.map(({ perkDef }) => (
+          <SetPerkIcon key={perkDef.hash} perkDef={perkDef} active={true} />
+        )),
+      )}
+    </PressTip>
   );
 }
 
