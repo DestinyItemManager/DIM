@@ -2,6 +2,7 @@
 
 * Change Organizer to display Tertiary Stat, and Tuning Stats with stat names instead of stat hashes in armor.csv export
 * Allowed stripping Combat Flair mods with the Strip Sockets feature.
+* Added `tunedstat:unfocused` filter to match items whose tuning stat is not one of the focused stats.
 
 ## 8.93.0 <span class="changelog-date">(2025-10-05)</span>
 
