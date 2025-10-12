@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import ItemTable from './ItemTable';
 import ItemTypeSelector, { ItemCategoryTreeNode, getSelectionTree } from './ItemTypeSelector';
-import styles from './Organizer.m.scss';
+import * as styles from './Organizer.m.scss';
 
 interface Props {
   account: DestinyAccount;

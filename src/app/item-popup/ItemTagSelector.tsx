@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { TagInfo, TagValue, itemTagSelectorList } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
-import styles from './ItemTagSelector.m.scss';
+import * as styles from './ItemTagSelector.m.scss';
 
 interface Props {
   item: DimItem;
@@ -59,7 +59,7 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
 function TagOption({ tagOption, hideKeys }: { tagOption: TagInfo; hideKeys?: boolean }) {
   return (
     <div className={styles.item}>
-      {tagOption.icon ? <AppIcon icon={tagOption.icon} /> : <div className={styles.null} />}
+      {tagOption.icon ? <AppIcon icon={tagOption.icon} /> : <div className={styles.noTag} />}
       <span>{t(tagOption.label)}</span>
       {!hideKeys && tagOption.hotkey && (
         <KeyHelp combo={tagOption.hotkey} className={styles.keyHelp} />

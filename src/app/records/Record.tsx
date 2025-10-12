@@ -29,7 +29,7 @@ import ishtarIcon from '../../images/ishtar-collective.svg';
 import BungieImage from '../dim-ui/BungieImage';
 import ExternalLink from '../dim-ui/ExternalLink';
 import Objective from '../progress/Objective';
-import styles from './Record.m.scss';
+import * as styles from './Record.m.scss';
 import { makeItemForCatalystRecord } from './catalysts';
 import { DimRecord } from './presentation-nodes';
 

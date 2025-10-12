@@ -7,7 +7,7 @@ import { filterMap } from 'app/utils/collections';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsWithStyle } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import styles from './WishListEntry.m.scss';
+import * as styles from './WishListEntry.m.scss';
 
 /**
  * Add a control for people to copy out the wish list line for the currently configured roll.

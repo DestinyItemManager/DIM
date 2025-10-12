@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import { streamDeckEnabled } from '../actions';
 import { streamDeckEnabledSelector } from '../selectors';
 import { streamDeckAuthorizationInit } from '../util/authorization';
-import styles from './StreamDeckSettings.m.scss';
+import * as styles from './StreamDeckSettings.m.scss';
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();

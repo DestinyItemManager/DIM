@@ -6,7 +6,7 @@ import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { stopFarming } from './actions';
-import styles from './Farming.m.scss';
+import * as styles from './Farming.m.scss';
 import { farmingStoreSelector } from './selectors';
 
 const animateVariants: Variants = {

@@ -49,7 +49,7 @@ import {
 } from '../inventory/selectors';
 import ModPicker from '../loadout/ModPicker';
 import { isLoadoutBuilderItem } from '../loadout/loadout-item-utils';
-import styles from './LoadoutBuilder.m.scss';
+import * as styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import { exampleLOSearch } from './example-search';
 import EnergyOptions from './filter/EnergyOptions';

@@ -6,7 +6,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { partition } from 'es-toolkit';
 import React from 'react';
 import { AddButton } from './Buttons';
-import styles from './LoadoutDrawerBucket.m.scss';
+import * as styles from './LoadoutDrawerBucket.m.scss';
 import LoadoutDrawerItem from './LoadoutDrawerItem';
 
 export default function LoadoutDrawerBucket({

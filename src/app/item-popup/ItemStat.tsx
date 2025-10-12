@@ -24,7 +24,7 @@ import {
   getWeaponComponentSockets,
   socketContainsIntrinsicPlug,
 } from '../utils/socket-utils';
-import styles from './ItemStat.m.scss';
+import * as styles from './ItemStat.m.scss';
 import RecoilStat from './RecoilStat';
 
 // used in displaying the modded segments on item stats

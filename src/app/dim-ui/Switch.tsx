@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import styles from './Switch.m.scss';
+import * as styles from './Switch.m.scss';
 
 export default function Switch<K extends string>({
   checked,
@@ -20,7 +20,7 @@ export default function Switch<K extends string>({
   };
 
   return (
-    <div className={clsx(styles.switch, className)}>
+    <div className={clsx(styles.switchComponent, className)}>
       <input
         type="checkbox"
         id={name}

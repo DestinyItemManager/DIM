@@ -23,7 +23,7 @@ import {
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import React, { JSX } from 'react';
-import styles from './TriageFactors.m.scss';
+import * as styles from './TriageFactors.m.scss';
 
 /**
  * A factor is something of interest about an item, that might help you decide to keep it.

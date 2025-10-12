@@ -13,7 +13,7 @@ import { useMemo } from 'react';
 import { getSubclassPlugs } from '../loadout-item-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import EmptySubclass from './EmptySubclass';
-import styles from './LoadoutSubclassSection.m.scss';
+import * as styles from './LoadoutSubclassSection.m.scss';
 import PlugDef from './PlugDef';
 
 /** The subclass section used in the loadouts page and drawer */

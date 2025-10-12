@@ -2,7 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import styles from './Cost.m.scss';
+import * as styles from './Cost.m.scss';
 
 /**
  * Display a single item + quantity as a "cost".

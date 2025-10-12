@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './CharacterTile.m.scss';
+import * as styles from './CharacterTile.m.scss';
 
 const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
 
@@ -41,7 +41,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
       {store.destinyVersion === 1 && (
         <img className={styles.emblem} src={store.icon} height={40} width={40} />
       )}
-      <div className={styles.class}>{store.className}</div>
+      <div className={styles.className}>{store.className}</div>
       <div className={styles.bottom}>
         {store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}
       </div>

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { memo, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
-import styles from './ItemSockets.m.scss';
+import * as styles from './ItemSockets.m.scss';
 import ItemSocketsGeneral from './ItemSocketsGeneral';
 import ItemSocketsWeapons from './ItemSocketsWeapons';
 import SocketDetails from './SocketDetails';

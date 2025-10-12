@@ -32,7 +32,7 @@ import { Link } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy } from '../utils/comparators';
-import styles from './Compare.m.scss';
+import * as styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
 import CompareItem, { CompareHeaders } from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';

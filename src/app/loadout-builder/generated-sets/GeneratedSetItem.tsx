@@ -14,7 +14,7 @@ import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { autoAssignmentPCHs } from '../types';
-import styles from './GeneratedSetItem.m.scss';
+import * as styles from './GeneratedSetItem.m.scss';
 
 /**
  * Shows how we recommend the energy of this armor be changed in order to fit its mods.

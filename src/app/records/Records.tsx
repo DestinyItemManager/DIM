@@ -22,7 +22,7 @@ import {
 } from '../inventory/selectors';
 import { UNIVERSAL_ORNAMENTS_NODE } from '../search/d2-known-values';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import styles from './Records.m.scss';
+import * as styles from './Records.m.scss';
 import UniversalOrnaments from './universal-ornaments/UniversalOrnaments';
 
 interface Props {

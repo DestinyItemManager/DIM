@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import ClarityCharacterStat from './ClarityCharacterStat';
-import styles from './StatTooltip.m.scss';
+import * as styles from './StatTooltip.m.scss';
 
 /**
  * A rich tooltip for character-level stats like Mobility, Intellect, etc.

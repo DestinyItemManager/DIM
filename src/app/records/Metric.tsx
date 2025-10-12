@@ -2,7 +2,7 @@ import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ObjectiveValue } from 'app/progress/Objective';
 import clsx from 'clsx';
-import styles from './Metric.m.scss';
+import * as styles from './Metric.m.scss';
 import MetricBanner from './MetricBanner';
 import { DimMetric } from './presentation-nodes';
 

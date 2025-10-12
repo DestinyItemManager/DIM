@@ -17,7 +17,7 @@ import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/u
 import { useShiftHeld } from 'app/utils/hooks';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './SearchHistory.m.scss';
+import * as styles from './SearchHistory.m.scss';
 
 function comparatorFor(id: string): Comparator<Search> {
   switch (id) {

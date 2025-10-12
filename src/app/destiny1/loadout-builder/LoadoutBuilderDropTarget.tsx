@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { DimItem } from '../../inventory/item-types';
-import styles from './LoadoutBuilderDropTarget.m.scss';
+import * as styles from './LoadoutBuilderDropTarget.m.scss';
 
 export default function LoadoutBucketDropTarget({
   bucketHash,

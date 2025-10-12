@@ -4,7 +4,7 @@ import { Observable } from 'app/utils/observable';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { MaterialCounts } from './MaterialCounts';
-import styles from './MaterialCountsWrappers.m.scss';
+import * as styles from './MaterialCountsWrappers.m.scss';
 
 /**
  * The currently selected store for showing gear power.

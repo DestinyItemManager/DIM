@@ -26,7 +26,7 @@ import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { count } from 'app/utils/collections';
-import styles from './CustomStatsSettings.m.scss';
+import * as styles from './CustomStatsSettings.m.scss';
 import { useSetSetting } from './hooks';
 
 /**

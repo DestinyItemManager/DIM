@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { Dispatch, useCallback, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { loDefaultArmorEnergyRules } from '../types';
-import styles from './EnergyOptions.m.scss';
+import * as styles from './EnergyOptions.m.scss';
 
 export default function EnergyOptions({
   assumeArmorMasterwork,

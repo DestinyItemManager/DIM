@@ -23,7 +23,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import LoadoutDrawerBucket from './LoadoutDrawerBucket';
-import styles from './LoadoutDrawerContents.m.scss';
+import * as styles from './LoadoutDrawerContents.m.scss';
 
 const loadoutTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Subclass,

@@ -15,7 +15,7 @@ import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { itemSorterSelector } from '../settings/item-sort';
-import styles from './ItemPicker.m.scss';
+import * as styles from './ItemPicker.m.scss';
 import { ItemPickerState } from './item-picker';
 
 export default function ItemPicker({

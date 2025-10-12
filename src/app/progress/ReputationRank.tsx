@@ -7,7 +7,7 @@ import { DestinyProgression } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ObjectiveCheckbox, ObjectiveRow } from './Objective';
-import styles from './ReputationRank.m.scss';
+import * as styles from './ReputationRank.m.scss';
 
 /**
  * displays a single reputation rank for the account

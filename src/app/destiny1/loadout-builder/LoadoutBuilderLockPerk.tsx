@@ -6,7 +6,7 @@ import { D1GridNode, DimItem } from '../../inventory/item-types';
 import { AppIcon, plusIcon } from '../../shell/icons';
 import LoadoutBucketDropTarget from './LoadoutBuilderDropTarget';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
-import styles from './LoadoutBuilderLockPerk.m.scss';
+import * as styles from './LoadoutBuilderLockPerk.m.scss';
 import LoadoutBuilderLocksDialog from './LoadoutBuilderLocksDialog';
 import { ArmorTypes, D1ItemWithNormalStats, LockedPerkHash, PerkCombination } from './types';
 

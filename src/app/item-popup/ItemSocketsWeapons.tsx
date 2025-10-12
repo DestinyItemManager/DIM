@@ -16,7 +16,7 @@ import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';
 import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
-import styles from './ItemSocketsWeapons.m.scss';
+import * as styles from './ItemSocketsWeapons.m.scss';
 import Socket from './Socket';
 import SocketDetails from './SocketDetails';
 

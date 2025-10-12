@@ -12,7 +12,7 @@ import { wishListInfosSelector, wishListRollsForItemHashSelector } from 'app/wis
 import { WishListRoll } from 'app/wishlists/types';
 import { partition } from 'es-toolkit';
 import { useSelector } from 'react-redux';
-import styles from './AllWishlistRolls.m.scss';
+import * as styles from './AllWishlistRolls.m.scss';
 import { getCraftingTemplate } from './crafting-utils';
 import { consolidateRollsForOneWeapon, consolidateSecondaryPerks } from './wishlist-collapser';
 

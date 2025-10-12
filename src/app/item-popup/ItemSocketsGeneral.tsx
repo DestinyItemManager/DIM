@@ -17,7 +17,7 @@ import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
 import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
-import styles from './ItemSocketsGeneral.m.scss';
+import * as styles from './ItemSocketsGeneral.m.scss';
 import { SetBonus } from './SetBonus';
 import Socket from './Socket';
 

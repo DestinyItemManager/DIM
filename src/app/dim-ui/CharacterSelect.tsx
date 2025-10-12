@@ -7,7 +7,7 @@ import { animate, motion, PanInfo, Transition, useMotionValue, useTransform } fr
 import { useEffect, useRef } from 'react';
 import CharacterTileButton from '../character-tile/CharacterTileButton';
 import { DimStore } from '../inventory/store-types';
-import styles from './CharacterSelect.m.scss';
+import * as styles from './CharacterSelect.m.scss';
 
 const spring: Transition<number> = {
   type: 'spring',

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { storesSelector } from '../../inventory/selectors';
 import SingleVendor from './SingleVendor';
-import styles from './SingleVendorPage.m.scss';
+import * as styles from './SingleVendorPage.m.scss';
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.

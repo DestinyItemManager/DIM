@@ -1,4 +1,4 @@
-import styles from './FractionalPowerLevel.m.scss';
+import * as styles from './FractionalPowerLevel.m.scss';
 
 export default function FractionalPowerLevel({ power }: { power: number }) {
   const numerator = (power * 8) % 8;

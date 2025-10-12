@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEEPSIGHT_HARMONIZER } from 'app/search/d2-known-values';
-import styles from './DeepSightHarmonizerIcon.m.scss';
+import * as styles from './DeepSightHarmonizerIcon.m.scss';
 
 export function DeepsightHarmonizerIcon({ item }: { item: DimItem }) {
   return (

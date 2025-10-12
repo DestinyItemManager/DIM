@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { PressTip } from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
-import styles from './Plug.m.scss';
+import * as styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
 
 interface PlugStatuses {

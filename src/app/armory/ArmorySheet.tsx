@@ -4,7 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { filterMap } from 'app/utils/collections';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import { Suspense, useMemo } from 'react';
-import styles from './ArmorySheet.m.scss';
+import * as styles from './ArmorySheet.m.scss';
 import Armory from './LazyArmory';
 
 export default function ArmorySheet({

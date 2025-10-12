@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Select.m.scss';
+import * as styles from './Select.m.scss';
 import { Settings } from './initial-settings';
 
 export default function Select({

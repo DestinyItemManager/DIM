@@ -18,7 +18,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-import styles from './Objective.m.scss';
+import * as styles from './Objective.m.scss';
 
 /**
  * Display an Objective given Destiny Objective information. This will figure
@@ -143,7 +143,7 @@ export function ObjectiveRow({
 }) {
   const classes = clsx(className, styles.objective, {
     [styles.objectiveComplete]: complete,
-    [styles.boolean]: boolean,
+    [styles.booleanValue]: boolean,
   });
 
   return <div className={classes}>{children}</div>;

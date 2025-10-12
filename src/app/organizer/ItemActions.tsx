@@ -17,7 +17,7 @@ import {
 } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useCallback, useMemo } from 'react';
-import styles from './ItemActions.m.scss';
+import * as styles from './ItemActions.m.scss';
 
 export interface TagCommandInfo {
   type?: TagCommand;

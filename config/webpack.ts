@@ -124,7 +124,7 @@ export default (env: Env) => {
           },
           client: {
             overlay: false,
-            logging: "none", // we don't need to see build errors in the console log
+            logging: 'none', // we don't need to see build errors in the console log
           },
           historyApiFallback: true,
           hot: 'only',
@@ -273,9 +273,12 @@ export default (env: Env) => {
           use: [
             env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
-              loader: 'css-modules-typescript-loader',
+              loader: 'css-modules-dts-loader',
               options: {
                 mode: process.env.CI ? 'verify' : 'emit',
+                namedExport: true,
+                sort: true,
+                camelCase: true,
               },
             },
             {
@@ -286,11 +289,6 @@ export default (env: Env) => {
                     ? '[name]_[local]-[contenthash:base64:8]'
                     : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
-                  // TODO: It's possible that setting this to true would allow
-                  // us to eliminate some original CSS names that still get into
-                  // the bundle, but it breaks css-modules-typescript-loader so
-                  // we'd need to fork/replace it.
-                  namedExport: false,
                 },
                 importLoaders: 2,
               },
