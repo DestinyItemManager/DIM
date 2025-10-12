@@ -111,7 +111,7 @@ declare module '*.html' {
 
 declare module '*.m.scss' {
   const value: { [className: string]: string };
-  export default value;
+  export = value;
 }
 
 declare module '*.scss' {
