@@ -32,6 +32,6 @@ jobs:
         run: pnpm i18n
 
       - name: Commit files
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: Apply i18n updates
