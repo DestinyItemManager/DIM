@@ -34,6 +34,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { getMaxParallelCores } from 'app/utils/parallel-cores';
+import { timerDurationFromMs } from 'app/utils/time';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -269,7 +270,7 @@ export default memo(function LoadoutBuilder({
     );
 
   // Run the actual loadout generation process in a web worker
-  const { result, processing, totalCombos, completedCombos } = useProcess({
+  const { result, processing, totalCombos, completedCombos, startTime } = useProcess({
     selectedStore,
     filteredItems,
     setBonuses,
@@ -437,6 +438,10 @@ export default memo(function LoadoutBuilder({
   );
 
   // TODO: replace character select with horizontal choice?
+  const elapsed = Date.now() - startTime;
+  const speed = completedCombos / elapsed;
+  const remainingCombos = (totalCombos || 1) - completedCombos;
+  const eta = remainingCombos / speed;
 
   return (
     <PageWithMenu className={styles.page}>
@@ -468,6 +473,17 @@ export default memo(function LoadoutBuilder({
                   })}
                 </span>
                 <progress value={completedCombos} max={totalCombos || 1} />
+                {elapsed > 5000 &&
+                  completedCombos > 1 &&
+                  elapsed + eta > 10000 && ( // Show an ETA when expected time >10s and there's been a few sec to measure speed.
+                    <span>
+                      {timerDurationFromMs(
+                        ((totalCombos || 1) - completedCombos) /
+                          (completedCombos / (Date.now() - startTime)),
+                        2,
+                      )}
+                    </span>
+                  )}
               </div>
             </span>
           ) : (
