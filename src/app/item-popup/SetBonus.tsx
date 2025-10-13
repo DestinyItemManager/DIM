@@ -97,7 +97,7 @@ export function SetBonusesStatus({
               <div className={pressTipStyles.header}>
                 <h2>{bonusDef.displayProperties.name}</h2>
               </div>
-              {activePerks.map(({ requiredSetCount, perkDef }) => {
+              {activePerks.map(({ requiredSetCount, perkDef }, i) => {
                 const { displayProperties, hash } = perkDef;
                 return (
                   <React.Fragment key={hash}>
@@ -107,15 +107,15 @@ export function SetBonusesStatus({
                         {`${t('Item.SetBonus.NPiece', { count: requiredSetCount })} | ${displayProperties.name}`}
                       </h3>
                     </div>
-                    <div className={pressTipStyles.content}>{displayProperties.description}</div>
+                    <div className={pressTipStyles.content}>
+                      {displayProperties.description}
+                      {i === activePerks.length - 1 && store && (
+                        <ContributingArmor store={store} setBonus={bonusDef} />
+                      )}
+                    </div>
                   </React.Fragment>
                 );
               })}
-              {store && (
-                <div className={pressTipStyles.content}>
-                  <ContributingArmor store={store} setBonus={bonusDef} />
-                </div>
-              )}
             </React.Fragment>
           ))}
         </>
