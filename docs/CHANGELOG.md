@@ -1,5 +1,7 @@
 ## Next
 
+* Show a simple ETA countdown for long Loadout Optimizer jobs.
+
 ## 8.94.0 <span class="changelog-date">(2025-10-12)</span>
 
 * Change Organizer to display Tertiary Stat, and Tuning Stats with stat names instead of stat hashes in armor.csv export
