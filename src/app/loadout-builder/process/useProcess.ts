@@ -21,6 +21,7 @@ import { runProcess } from './process-wrapper';
 
 interface ProcessState {
   processing: boolean;
+  startTime: number;
   resultStoreId: string;
   result: {
     sets: ProcessArmorSet[];
@@ -44,6 +45,8 @@ interface ProcessState {
   totalCombos: number;
   completedCombos: number;
 }
+
+let lastProgress = 0;
 
 /**
  * Hook to process all the stat groups for LO in a web worker.
@@ -71,13 +74,15 @@ export function useProcess({
   autoStatMods: boolean;
   strictUpgrades: boolean;
 }) {
-  const [{ result, processing, totalCombos, completedCombos }, setState] = useState<ProcessState>({
-    processing: false,
-    resultStoreId: selectedStore.id,
-    result: null,
-    totalCombos: 0,
-    completedCombos: 0,
-  });
+  const [{ result, processing, totalCombos, completedCombos, startTime }, setState] =
+    useState<ProcessState>({
+      processing: false,
+      startTime: 0,
+      resultStoreId: selectedStore.id,
+      result: null,
+      totalCombos: 0,
+      completedCombos: 0,
+    });
   const autoModDefs = useAutoMods(selectedStore.id);
   const firstTime = result === null;
 
@@ -99,11 +104,16 @@ export function useProcess({
   useEffect(() => {
     const doProcess = async () => {
       const handleProgress = (completed: number, total: number) => {
-        setState((state) => ({
-          ...state,
-          totalCombos: total,
-          completedCombos: completed,
-        }));
+        const now = Date.now();
+        // Save some UI recomputation cycles and prevent flickering, by updating the progress display at most every half second
+        if (now - lastProgress > 500 || total === completed) {
+          setState((state) => ({
+            ...state,
+            totalCombos: total,
+            completedCombos: completed,
+          }));
+          lastProgress = now;
+        }
       };
 
       const processInfo = runProcess({
@@ -133,6 +143,7 @@ export function useProcess({
 
       setState((state) => ({
         processing: true,
+        startTime: Date.now(),
         resultStoreId: selectedStore.id,
         result: selectedStore.id === state.resultStoreId ? state.result : null,
         totalCombos: 0,
@@ -186,7 +197,7 @@ export function useProcess({
     firstTime,
   ]);
 
-  return { result, processing, totalCombos, completedCombos };
+  return { result, processing, startTime, totalCombos, completedCombos };
 }
 
 /**
