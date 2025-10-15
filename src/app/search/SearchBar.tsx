@@ -47,7 +47,7 @@ import {
   unTrackedIcon,
 } from '../shell/icons';
 import HighlightedText from './HighlightedText';
-import styles from './SearchBar.m.scss';
+import * as styles from './SearchBar.m.scss';
 import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import { searchConfigSelector, validateQuerySelector } from './items/item-search-filter';

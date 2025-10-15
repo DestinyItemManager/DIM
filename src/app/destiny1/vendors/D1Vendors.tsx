@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { D1Store } from '../../inventory/store-types';
 import D1Vendor from './D1Vendor';
-import styles from './D1Vendors.m.scss';
+import * as styles from './D1Vendors.m.scss';
 import { Vendor, countCurrencies, loadVendors } from './vendor.service';
 
 /**

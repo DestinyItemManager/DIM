@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { BucketSortType, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import clsx from 'clsx';
-import styles from './CategoryStrip.m.scss';
+import * as styles from './CategoryStrip.m.scss';
 
 /**
  * The selector at the bottom of the mobile interface that allows us to select weapons, armor, etc.

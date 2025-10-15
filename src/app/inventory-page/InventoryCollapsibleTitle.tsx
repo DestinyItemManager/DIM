@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
-import styles from './InventoryCollapsibleTitle.m.scss';
+import * as styles from './InventoryCollapsibleTitle.m.scss';
 
 export default function InventoryCollapsibleTitle({
   sectionId,

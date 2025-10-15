@@ -26,7 +26,7 @@ import {
 } from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import styles from './CompareColumns.m.scss';
+import * as styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
 
 /**

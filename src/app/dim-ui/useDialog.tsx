@@ -1,4 +1,4 @@
-import styles from './useDialog.m.scss';
+import * as styles from './useDialog.m.scss';
 
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';

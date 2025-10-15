@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet } from '../types';
 import { updateLoadoutWithArmorSet } from '../updated-loadout';
-import styles from './GeneratedSetButtons.m.scss';
+import * as styles from './GeneratedSetButtons.m.scss';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set

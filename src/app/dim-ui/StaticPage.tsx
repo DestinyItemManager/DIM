@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import styles from './StaticPage.m.scss';
+import * as styles from './StaticPage.m.scss';
 
 /**
  * Styled wrapper for "static pages" - e.g. informational pages like About.

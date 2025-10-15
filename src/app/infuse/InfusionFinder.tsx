@@ -24,7 +24,7 @@ import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-util
 import { showNotification } from '../notifications/notifications';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import styles from './InfusionFinder.m.scss';
+import * as styles from './InfusionFinder.m.scss';
 import { showInfuse$ } from './infuse';
 
 const itemComparator = chainComparator(

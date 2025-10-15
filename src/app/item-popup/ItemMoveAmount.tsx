@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { clamp } from 'es-toolkit';
 import React from 'react';
-import styles from './ItemMoveAmount.m.scss';
+import * as styles from './ItemMoveAmount.m.scss';
 
 /** An editor for selecting how much of a stackable item you want. */
 export default function ItemMoveAmount({

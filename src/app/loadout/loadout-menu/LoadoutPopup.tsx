@@ -75,7 +75,7 @@ import {
   searchAndSortLoadoutsByQuery,
   useLoadoutFilterPills,
 } from '../loadout-ui/menu-hooks';
-import styles from './LoadoutPopup.m.scss';
+import * as styles from './LoadoutPopup.m.scss';
 import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
 import MaxlightButton from './MaxlightButton';
 

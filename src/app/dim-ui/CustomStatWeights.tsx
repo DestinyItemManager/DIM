@@ -7,7 +7,7 @@ import { filterMap } from 'app/utils/collections';
 import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import styles from './CustomStatWeights.m.scss';
+import * as styles from './CustomStatWeights.m.scss';
 
 export function CustomStatWeightsFromHash({
   customStatHash,

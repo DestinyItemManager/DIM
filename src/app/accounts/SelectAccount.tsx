@@ -6,7 +6,7 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router';
 import Account from './Account';
-import styles from './SelectAccount.m.scss';
+import * as styles from './SelectAccount.m.scss';
 import { logOut } from './platforms';
 import { accountsSelector } from './selectors';
 

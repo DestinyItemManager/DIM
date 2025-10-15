@@ -24,7 +24,7 @@ import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import { intersection } from 'es-toolkit/compat';
 import { useEffect, useMemo, useState } from 'react';
-import styles from './menu-hooks.m.scss';
+import * as styles from './menu-hooks.m.scss';
 
 const loadoutSpecializations = [tl('Loadouts.FashionOnly'), tl('Loadouts.ModsOnly')] as const;
 type LoadoutSpecialization = (typeof loadoutSpecializations)[number];

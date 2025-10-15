@@ -3,7 +3,7 @@ import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import Countdown from '../dim-ui/Countdown';
-import styles from './Vendor.m.scss';
+import * as styles from './Vendor.m.scss';
 import VendorItems from './VendorItems';
 import { D2Vendor } from './d2-vendors';
 

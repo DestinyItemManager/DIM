@@ -17,7 +17,7 @@ import Sockets from '../loadout-ui/Sockets';
 import { fitMostMods } from '../mod-assignment-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import ModPicker from '../ModPicker';
-import styles from './ModAssignmentDrawer.m.scss';
+import * as styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmorAndSubclass, useLoadoutMods } from './selectors';
 
 function Header({

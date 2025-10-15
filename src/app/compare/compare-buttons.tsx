@@ -26,7 +26,7 @@ import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import archetypeIcon from 'images/armorArchetype.png';
 import React from 'react';
-import styles from './CompareButtons.m.scss';
+import * as styles from './CompareButtons.m.scss';
 import { compareNameQuery, stripAdept } from './compare-utils';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */

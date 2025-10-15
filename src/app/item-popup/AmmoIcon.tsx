@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import heavy from 'destiny-icons/general/ammo-heavy.svg';
 import primary from 'destiny-icons/general/ammo-primary.svg';
 import special from 'destiny-icons/general/ammo-special.svg';
-import styles from './AmmoIcon.m.scss';
+import * as styles from './AmmoIcon.m.scss';
 
 const ammoIcons: LookupTable<DestinyAmmunitionType, string> = {
   [DestinyAmmunitionType.Primary]: primary,

@@ -19,7 +19,7 @@ import { errorMessage } from 'app/utils/errors';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
-import styles from './DimApiSettings.m.scss';
+import * as styles from './DimApiSettings.m.scss';
 import ImportExport from './ImportExport';
 import LocalStorageInfo from './LocalStorageInfo';
 import { exportBackupData, exportLocalData } from './export-data';

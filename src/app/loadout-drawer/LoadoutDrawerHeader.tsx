@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Loadout } from '../loadout/loadout-types';
 import { loadoutsHashtagsSelector } from '../loadout/selectors';
-import styles from './LoadoutDrawerHeader.m.scss';
+import * as styles from './LoadoutDrawerHeader.m.scss';
 
 export default function LoadoutDrawerHeader({
   loadout,

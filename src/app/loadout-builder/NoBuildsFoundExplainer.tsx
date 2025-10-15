@@ -10,7 +10,7 @@ import { AppIcon, banIcon } from 'app/shell/icons';
 import { compact, filterMap, uniqBy } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Dispatch } from 'react';
-import styles from './NoBuildsFoundExplainer.m.scss';
+import * as styles from './NoBuildsFoundExplainer.m.scss';
 import ExoticArmorChoice from './filter/ExoticArmorChoice';
 import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';

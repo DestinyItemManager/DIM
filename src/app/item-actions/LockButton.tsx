@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, lockIcon, trackedIcon, unlockedIcon, unTrackedIcon } from '../shell/icons';
 import ActionButton from './ActionButton';
-import styles from './LockButton.m.scss';
+import * as styles from './LockButton.m.scss';
 
 export default function LockButton({
   type,

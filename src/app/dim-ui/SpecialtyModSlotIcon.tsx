@@ -5,7 +5,7 @@ import { artificeDisplayStub } from 'app/search/specialty-modslots';
 import { getSpecialtySocketMetadata, isArtifice } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { PressTip } from './PressTip';
-import styles from './SpecialtyModSlotIcon.m.scss';
+import * as styles from './SpecialtyModSlotIcon.m.scss';
 
 /**
  * if an item has specialty modslots, this returns one or

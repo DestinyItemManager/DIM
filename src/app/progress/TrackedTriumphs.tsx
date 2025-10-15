@@ -8,7 +8,7 @@ import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyPresentationNodeDefinition, DestinyRecordDefinition } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
-import styles from './TrackedTriumphs.m.scss';
+import * as styles from './TrackedTriumphs.m.scss';
 
 export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
   const defs = useD2Definitions()!;

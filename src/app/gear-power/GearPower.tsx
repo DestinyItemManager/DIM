@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { storesSelector } from '../inventory/selectors';
-import styles from './GearPower.m.scss';
+import * as styles from './GearPower.m.scss';
 import { showGearPower$ } from './gear-power';
 
 const bucketClassNames: LookupTable<BucketHashes, string> = {

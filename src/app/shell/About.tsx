@@ -9,7 +9,7 @@ import logo from 'images/dimlogo.svg';
 import { useEffect } from 'react';
 import { Link } from 'react-router';
 import ExternalLink from '../dim-ui/ExternalLink';
-import styles from './About.m.scss';
+import * as styles from './About.m.scss';
 import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon } from './icons';
 import { discordLink, userGuideLink } from './links';
 

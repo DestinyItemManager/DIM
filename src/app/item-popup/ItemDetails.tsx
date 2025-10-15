@@ -24,7 +24,7 @@ import EmblemPreview from './EmblemPreview';
 import EnergyMeter from './EnergyMeter';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDescription from './ItemDescription';
-import styles from './ItemDetails.m.scss';
+import * as styles from './ItemDetails.m.scss';
 import ItemExpiration from './ItemExpiration';
 import ItemPerks from './ItemPerks';
 import './ItemPopupBody.scss';

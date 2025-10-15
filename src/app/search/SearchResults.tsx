@@ -12,7 +12,7 @@ import Sheet from '../dim-ui/Sheet';
 import '../inventory-page/StoreBucket.scss';
 import { DimItem } from '../inventory/item-types';
 import { itemSorterSelector } from '../settings/item-sort';
-import styles from './SearchResults.m.scss';
+import * as styles from './SearchResults.m.scss';
 
 /**
  * This displays all the items that match the given search - it is shown by default when a search is active

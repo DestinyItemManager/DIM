@@ -6,7 +6,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import React from 'react';
-import styles from './ExoticTile.m.scss';
+import * as styles from './ExoticTile.m.scss';
 
 export interface LockedExoticWithPlugs {
   def: DestinyInventoryItemDefinition;

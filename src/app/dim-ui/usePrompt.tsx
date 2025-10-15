@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { isWindows } from 'app/utils/browsers';
 import { useCallback, useState } from 'react';
 import useDialog, { Body, Buttons, Title } from './useDialog';
-import styles from './usePrompt.m.scss';
+import * as styles from './usePrompt.m.scss';
 
 export interface PromptOpts {
   defaultValue?: string;

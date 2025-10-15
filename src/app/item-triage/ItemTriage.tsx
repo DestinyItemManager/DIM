@@ -31,8 +31,8 @@ import React, { JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import { DimItem } from '../inventory/item-types';
-import popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class
-import styles from './ItemTriage.m.scss';
+import * as popupStyles from '../item-popup/ItemDescription.m.scss';
+import * as styles from './ItemTriage.m.scss';
 import { Factor } from './triage-factors';
 import {
   getBetterWorseItems,

@@ -25,7 +25,7 @@ import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import { FashionMods } from '../loadout-ui/FashionMods';
 import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
 import { OptimizerButton, armorItemsMissing } from '../loadout-ui/OptimizerButton';
-import styles from './LoadoutEditBucket.m.scss';
+import * as styles from './LoadoutEditBucket.m.scss';
 import { useEquipDropTargets } from './useEquipDropTargets';
 
 export type EditableCategories = 'Weapons' | 'Armor' | 'General';

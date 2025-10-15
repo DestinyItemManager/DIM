@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import styles from './ItemPop.m.scss';
+import * as styles from './ItemPop.m.scss';
 
 /**
  * Cross browser safe scrollTo implementation.

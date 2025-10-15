@@ -1,7 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Metric from './Metric';
-import styles from './Metrics.m.scss';
+import * as styles from './Metrics.m.scss';
 import { DimMetric, getMetricTimeScope } from './presentation-nodes';
 
 export default function Metrics({ metrics }: { metrics: DimMetric[] }) {

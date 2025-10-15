@@ -7,7 +7,7 @@ import noInGameLoadoutIdentifiers from 'images/no-loadout-identifiers.svg';
 import { useState } from 'react';
 import EditInGameLoadoutIdentifiers from './EditInGameLoadoutIdentifiers';
 import { InGameLoadoutIconFromIdentifiers } from './InGameLoadoutIcon';
-import styles from './InGameLoadoutIdentifiersSelectButton.m.scss';
+import * as styles from './InGameLoadoutIdentifiersSelectButton.m.scss';
 
 export default function InGameLoadoutIdentifiersSelectButton({
   loadout,

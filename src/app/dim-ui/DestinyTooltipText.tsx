@@ -3,7 +3,7 @@ import { AppIcon, faClock, shapedIcon } from 'app/shell/icons';
 import { DestinyItemTooltipNotification } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import styles from './DestinyTooltipText.m.scss';
+import * as styles from './DestinyTooltipText.m.scss';
 import RichDestinyText from './destiny-symbols/RichDestinyText';
 
 export function DestinyTooltipText({ item }: { item: DimItem }) {

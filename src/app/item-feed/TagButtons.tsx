@@ -6,7 +6,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compareBy } from 'app/utils/comparators';
-import styles from './TagButtons.m.scss';
+import * as styles from './TagButtons.m.scss';
 
 /**
  * A row of compact buttons for quick-tagging items.

@@ -5,7 +5,7 @@ import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './FilterHelp.m.scss';
+import * as styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
 import { FilterDescription, filterDescriptionText } from './filter-description';
 import {

@@ -7,7 +7,7 @@ import { toPresentationNodeTree } from 'app/records/presentation-nodes';
 import { filterMap } from 'app/utils/collections';
 import { DestinyPresentationNodeDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
-import styles from './Pathfinder.m.scss';
+import * as styles from './Pathfinder.m.scss';
 import Pursuit from './Pursuit';
 import { recordToPursuitItem } from './milestone-items';
 

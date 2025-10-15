@@ -20,7 +20,7 @@ import { clearWishLists } from '../wishlists/actions';
 import { wishListsLastFetchedSelector, wishListsSelector } from '../wishlists/selectors';
 import Checkbox from './Checkbox';
 import { fineprintClass, horizontalClass, settingClass } from './SettingsPage';
-import styles from './WishListSettings.m.scss';
+import * as styles from './WishListSettings.m.scss';
 import { Settings } from './initial-settings';
 
 export default function WishListSettings() {

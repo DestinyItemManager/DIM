@@ -12,7 +12,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { count } from 'app/utils/collections';
 import { convertToError } from 'app/utils/errors';
 import React, { useEffect, useState } from 'react';
-import styles from './LoadoutShareSheet.m.scss';
+import * as styles from './LoadoutShareSheet.m.scss';
 
 // Cache shares to loadouts weakly, to cut down on creating shares
 const loadoutShares = new WeakMap<Loadout, string>();

@@ -3,7 +3,7 @@ import NotificationButton from 'app/notifications/NotificationButton';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, faCheck } from 'app/shell/icons';
 import React from 'react';
-import styles from './api-permission-prompt.m.scss';
+import * as styles from './api-permission-prompt.m.scss';
 
 /**
  * This asks the user if they want to use DIM Sync. It will stay up until a choice is made.

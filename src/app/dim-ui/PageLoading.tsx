@@ -4,7 +4,7 @@ import { Transition, Variants, motion } from 'motion/react';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Loading } from './Loading';
-import styles from './PageLoading.m.scss';
+import * as styles from './PageLoading.m.scss';
 
 const messageSelector = (state: RootState) => state.shell.loadingMessages.at(-1);
 

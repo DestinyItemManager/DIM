@@ -13,7 +13,7 @@ import { percentWithSingleDecimal } from 'app/shell/formatters';
 import { AppIcon, enhancedIcon, shapedIcon } from 'app/shell/icons';
 import { filterMap } from 'app/utils/collections';
 import { isKillTrackerSocket, plugToKillTracker } from 'app/utils/item-utils';
-import styles from './WeaponCraftedInfo.m.scss';
+import * as styles from './WeaponCraftedInfo.m.scss';
 
 /**
  * A progress bar that shows weapon crafting info like the game does.

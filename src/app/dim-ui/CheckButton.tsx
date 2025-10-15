@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import styles from './CheckButton.m.scss';
+import * as styles from './CheckButton.m.scss';
 import Switch from './Switch';
 
 export default function CheckButton({

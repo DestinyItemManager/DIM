@@ -5,7 +5,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
-import styles from './Reward.m.scss';
+import * as styles from './Reward.m.scss';
 import { getEngramPowerBonus } from './engrams';
 import { getXPValue } from './xp';
 

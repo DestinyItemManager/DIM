@@ -14,9 +14,8 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
-// eslint-disable-next-line css-modules/no-unused-class
-import pressTipStyles from '../dim-ui/PressTip.m.scss';
-import styles from './SetBonus.m.scss';
+import * as pressTipStyles from '../dim-ui/PressTip.m.scss';
+import * as styles from './SetBonus.m.scss';
 
 /** Given some equipped items, returns info about what set bonuses are active */
 export function getSetBonusStatus(defs: D2ManifestDefinitions, items: DimItem[]) {

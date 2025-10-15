@@ -3,7 +3,7 @@ import Sheet, { SheetContent } from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useState } from 'react';
-import styles from './EditInGameLoadoutIdentifiers.m.scss';
+import * as styles from './EditInGameLoadoutIdentifiers.m.scss';
 import SelectInGameLoadoutIdentifiers, {
   useIdentifierValues,
 } from './SelectInGameLoadoutIdentifiers';

@@ -36,7 +36,7 @@ import {
   unlockedIcon,
 } from '../shell/icons';
 import { loadingTracker } from '../shell/loading-tracker';
-import styles from './ItemActionsDropdown.m.scss';
+import * as styles from './ItemActionsDropdown.m.scss';
 
 /**
  * Various actions that can be performed on an item

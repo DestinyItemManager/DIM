@@ -1,5 +1,5 @@
 import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
-import styles from './Loading.m.scss';
+import * as styles from './Loading.m.scss';
 
 const containerAnimateVariants: Variants = {
   initial: { opacity: 0 },

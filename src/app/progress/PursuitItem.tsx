@@ -17,7 +17,7 @@ import pursuitExpired from 'images/pursuitExpired.svg';
 import trackedIcon from 'images/trackedIcon.svg';
 import React from 'react';
 import { showPursuitAsExpired } from './Pursuit';
-import styles from './PursuitItem.m.scss';
+import * as styles from './PursuitItem.m.scss';
 
 export default function PursuitItem({
   item,

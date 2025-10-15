@@ -16,7 +16,7 @@ import clsx from 'clsx';
 import React, { JSX } from 'react';
 import { useSelector } from 'react-redux';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
-import styles from './InGameLoadoutStrip.m.scss';
+import * as styles from './InGameLoadoutStrip.m.scss';
 import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
 import { FullyResolvedLoadout, inGameLoadoutsWithMetadataSelector } from './selectors';
 

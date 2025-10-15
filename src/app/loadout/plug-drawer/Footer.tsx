@@ -5,7 +5,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
-import styles from './Footer.m.scss';
+import * as styles from './Footer.m.scss';
 import { PlugSelectionType, PlugSet } from './types';
 
 export default function Footer({

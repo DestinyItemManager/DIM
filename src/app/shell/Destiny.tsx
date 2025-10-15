@@ -36,7 +36,7 @@ import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
-import styles from './Destiny.m.scss';
+import * as styles from './Destiny.m.scss';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.

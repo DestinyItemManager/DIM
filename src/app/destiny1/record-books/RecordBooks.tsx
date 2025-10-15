@@ -18,7 +18,7 @@ import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1ObjectiveProgress, D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
-import styles from './RecordBooks.m.scss';
+import * as styles from './RecordBooks.m.scss';
 
 interface RecordBook {
   hash: number;

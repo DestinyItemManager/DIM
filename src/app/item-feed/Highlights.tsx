@@ -17,7 +17,7 @@ import {
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import '../store-stats/CharacterStats.m.scss';
-import styles from './Highlights.m.scss';
+import * as styles from './Highlights.m.scss';
 
 /**
  * Some useful details about an item, meant to be shown in a summary tile on views like the Item Feed or Item Picker.

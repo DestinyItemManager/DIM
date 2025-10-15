@@ -55,7 +55,7 @@ import { errorMessage } from 'app/utils/errors';
 import { DimLanguage } from 'app/i18n';
 import { localizedSorter } from 'app/utils/intl';
 
-import styles from './ItemTable.m.scss';
+import * as styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection, TableContext } from './table-types';
 

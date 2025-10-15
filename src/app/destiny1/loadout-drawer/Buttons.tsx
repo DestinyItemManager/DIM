@@ -1,6 +1,6 @@
 import { addIcon, AppIcon } from 'app/shell/icons';
 import clsx from 'clsx';
-import styles from './Buttons.m.scss';
+import * as styles from './Buttons.m.scss';
 
 interface AddButtonProps {
   /** An additional className to be passed to the component. */

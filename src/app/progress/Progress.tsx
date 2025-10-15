@@ -23,7 +23,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { Event } from './Event';
 import Milestones from './Milestones';
 import Pathfinder from './Pathfinder';
-import styles from './Progress.m.scss';
+import * as styles from './Progress.m.scss';
 import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';

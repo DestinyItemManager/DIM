@@ -4,7 +4,7 @@ import { convertToError } from 'app/utils/errors';
 import clsx from 'clsx';
 import { motion, MotionProps, Transition } from 'motion/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import styles from './Notification.m.scss';
+import * as styles from './Notification.m.scss';
 import NotificationButton from './NotificationButton';
 import { NotificationError, NotificationType, Notify } from './notifications';
 

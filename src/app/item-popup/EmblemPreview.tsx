@@ -3,7 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ObjectiveValue } from 'app/progress/Objective';
 import MetricBanner from 'app/records/MetricBanner';
-import styles from './EmblemPreview.m.scss';
+import * as styles from './EmblemPreview.m.scss';
 
 export default function EmblemPreview({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;

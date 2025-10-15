@@ -8,7 +8,7 @@ import { isAppStoreVersion } from 'app/utils/browsers';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
-import styles from './Login.m.scss';
+import * as styles from './Login.m.scss';
 
 export const dimApiHelpLink = userGuideUrl('DIM-Sync');
 const loginHelpLink = userGuideUrl('Accounts-and-Login');

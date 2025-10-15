@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
-import styles from './MenuBadge.m.scss';
+import * as styles from './MenuBadge.m.scss';
 import { pollForBungieAlerts } from './alerts';
 import { AppIcon, updateIcon } from './icons';
 import { refresh$ } from './refresh-events';

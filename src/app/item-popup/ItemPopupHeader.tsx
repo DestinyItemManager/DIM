@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { AmmoIcon } from './AmmoIcon';
 import BreakerType from './BreakerType';
-import styles from './ItemPopupHeader.m.scss';
+import * as styles from './ItemPopupHeader.m.scss';
 
 const rarityClassName: LookupTable<ItemRarityName, string> = {
   Common: styles.common,

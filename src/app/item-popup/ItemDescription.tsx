@@ -5,7 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import styles from './ItemDescription.m.scss';
+import * as styles from './ItemDescription.m.scss';
 import NotesArea from './NotesArea';
 
 export default function ItemDescription({ item }: { item: DimItem }) {

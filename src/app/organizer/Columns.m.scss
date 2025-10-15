@@ -10,7 +10,7 @@
   font-weight: bold;
 }
 
-.new {
+.newItem {
   composes: flexColumn from '../dim-ui/common.m.scss';
   align-items: center;
   > div {

@@ -5,7 +5,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
 import { useMemo } from 'react';
 import { RadioButton } from './RadioButton';
-import styles from './SelectInGameLoadoutIdentifiers.m.scss';
+import * as styles from './SelectInGameLoadoutIdentifiers.m.scss';
 
 /** Selection controls for choosing an in-game loadout identifier (name, color,
  * icon). A controlled component. */

@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { JSX } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './ClarityCharacterStat.m.scss';
+import * as styles from './ClarityCharacterStat.m.scss';
 
 const statHashToClarityName: { [key: number]: keyof ClarityCharacterStats } = {
   [StatHashes.Weapons]: 'Mobility',
