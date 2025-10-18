@@ -1166,6 +1166,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "將物品鎖定狀態與標記同步.",
     "AutoLockTaggedExplanation": "DIM 將自動鎖定和解鎖物品以匹配它們的標簽。製作獲得的武器將不會鎖定，以便你進行重塑。當啓用此設置時，鎖定圖標不會顯示在帶標簽的物品圖標上。",
     "BadgePostmaster": "在 App 圖標上顯示當前角色的郵政官物品數量",

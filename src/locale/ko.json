@@ -719,7 +719,7 @@
     "NoExotic": "경이 없음",
     "NoExoticDescription": "검색 창에서 \"not:exotic\"를 검색하는 것과 동일함 - 장비 조합이 경이 방어구를 사용하지 않음.",
     "NoExoticPreference": "경이 장비가 선택되지 않음",
-    "NoExoticPreferenceDescription": "경이 방어구가 능력치를 최대화하는 경우 선택됩니다.",
+    "NoExoticPreferenceDescription": "능력치를 최대화하기 위해 경이 방어구가 사용됩니다.",
     "NoLoadoutsToCompare": "비교할 로드아웃 없음",
     "None": "없음",
     "OptimizerExplanationGuide": "사용 설명서에서 더 자세한 정보나 비디오 튜토리얼을 찾을 수 있습니다.",
@@ -1166,6 +1166,7 @@
   },
   "Settings": {
     "Appearance": "모양",
+    "ArmorArchetypeModslot": "방어구 유형 / 개조 부품 슬롯",
     "AutoLockTagged": "태그와 아이템 잠금 상태 동기화",
     "AutoLockTaggedExplanation": "DIM이 자동으로 아이템을 태그에 따라 잠그거나 해제합니다. 제작된 아이템은 재형성을 위해 잠금 해제된 상태로 유지됩니다. 이 설정이 활성화되면 태그된 아이템에 잠금 아이콘이 표시되지 않습니다.",
     "BadgePostmaster": "앱 아이콘에 현재 캐릭터의 우편 담당자 아이템 수 표시",

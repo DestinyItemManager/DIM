@@ -1197,6 +1197,7 @@
   },
   "Settings": {
     "Appearance": "Darstellung",
+    "ArmorArchetypeModslot": "Rüstung Archetyp / Mod-Slot",
     "AutoLockTagged": "Sperrstatus mit Markierung synchronisieren",
     "AutoLockTaggedExplanation": "DIM wird Gegenstände automatisch je nach Markierung sperren oder entsperren. Hergestellte Gegenstände bleiben freigeschaltet, um eine Umformung zu ermöglichen. Wenn diese Einstellung aktiviert ist, wird das Schloss-Symbol nicht auf Gegenständen mit einer Markierung angezeigt.",
     "BadgePostmaster": "Zeige die Anzahl der Poststellen-Gegenstände für den aktuellen Charakter auf dem App-Symbol",

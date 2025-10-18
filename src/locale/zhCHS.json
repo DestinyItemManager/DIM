@@ -1166,6 +1166,7 @@
   },
   "Settings": {
     "Appearance": "外观",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "将物品锁定状态与标签同步",
     "AutoLockTaggedExplanation": "DIM 将自动锁定和解锁物品以匹配它们的标签。制作获得的武器将不会锁定，以便你进行重塑。当启用此设置时，锁定图标不会显示在带标签的物品图标上。",
     "BadgePostmaster": "在 App 图标上显示当前角色的邮政官物品数量",

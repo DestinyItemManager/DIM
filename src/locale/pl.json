@@ -1259,6 +1259,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "Zsynchronizuj stan blokady przedmiotu z tagiem",
     "AutoLockTaggedExplanation": "DIM będzie automatycznie blokował i odblokowywał przedmioty, aby dopasować je do ich tagów. Stworzone przedmioty pozostaną odblokowane, aby umożliwić przemodelowanie. Gdy to ustawienie jest włączone, ikona blokady nie będzie wyświetlana na kafelku przedmiotu dla otagowanych przedmiotów.",
     "BadgePostmaster": "Pokarz liczbę przedmiotów u kuriera dla obecnej postaci w ikonie aplikacji",

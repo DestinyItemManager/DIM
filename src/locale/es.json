@@ -1197,6 +1197,7 @@
   },
   "Settings": {
     "Appearance": "Apariencia",
+    "ArmorArchetypeModslot": "Arquetipo de Armadura / Ranura para Mdificador",
     "AutoLockTagged": "Sincronizar el estado de bloqueo del objeto con la etiqueta",
     "AutoLockTaggedExplanation": "DIM automáticamente bloqueará y desbloqueará objetos que coincidan con su etiqueta. Los objetos fabricados se mantendrán desbloqueados para permitir reformarse. Cuando esta configuración esté habilitada, el icono de bloqueo no se mostrará en el mosaico para los objetos etiquetados.",
     "BadgePostmaster": "Muestra el número de objetos en Administración para el personaje actual en el icono de la app",

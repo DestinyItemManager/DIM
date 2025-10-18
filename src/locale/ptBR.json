@@ -1197,6 +1197,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "Sincronizar estado de bloqueio de item com etiqueta",
     "AutoLockTaggedExplanation": "DIM irá travar e destravar automaticamente os itens para que combinem com suas etiquetas. Itens criados permanecerão desbloqueados para permitir sua remodelagem. Quando esta configuração estiver ativada, o ícone de bloqueio não será mostrado na imagem do item para itens marcados.",
     "BadgePostmaster": "Exibir a quantidade de itens disponíveis com o Chefe do Correio do personagem atual no ícone do aplicativo",

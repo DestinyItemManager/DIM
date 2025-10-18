@@ -1197,6 +1197,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "Synchroniser l'état de verrouillage des objets avec leur étiquette",
     "AutoLockTaggedExplanation": "DIM verrouillera et déverrouillera automatiquement les objets pour correspondre à leur étiquette. Les objets façonnés resteront déverrouillés pour permettre le refaçonnage. Lorsque ce paramètre est activé, l'icône de verrouillage ne sera pas affichée sur l'icône des objets étiquetés.",
     "BadgePostmaster": "Afficher le nombre d'objets au commis des postes pour le personnage actuel sur l'icône de l'application",

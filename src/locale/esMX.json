@@ -906,7 +906,7 @@
     "PullFromPostmasterNotification_male_other": "Extrayendo {{count}} objetos de Administración a {{store}}.",
     "PullFromPostmasterNotification_one": "Extrayendo 1 objeto de Administración a {{store}}.",
     "PullFromPostmasterNotification_other": "Extrayendo {{count}} objetos de Administración a {{store}}.",
-    "PullFromPostmasterPopupTitle": "Retirar de la Administración",
+    "PullFromPostmasterPopupTitle": "Extraer de la Administración",
     "Random": "Aleatorio",
     "Randomize": "Aleatorizar Equipamiento",
     "RandomizeButton": "Aleatorizar",
@@ -939,8 +939,8 @@
       "Notes": "Notas",
       "NumItems_one": "{{count}} objeto - el recipiente será preguntado para seleccionar a un objeto comparable de su inventario",
       "NumItems_other": "{{count}} objetos - los recipientes serán preguntados para seleccionar objetos comparables en su inventario",
-      "NumMods_one": "{{count}} modificador",
-      "NumMods_other": "{{count}} modificadores",
+      "NumMods_one": "{{count}} mod",
+      "NumMods_other": "{{count}} mods",
       "Placeholder": "Cargando enlace compartido",
       "Subclass": "Personalización de subclase",
       "Summary": "Compartir este equipamiento que contiene:",
@@ -1014,7 +1014,7 @@
     "Infuse": "Infundir",
     "InfuseTitle": "Abrir el buscador de objetos de infusión",
     "IntrinsicBreaker": "Esta arma tiene intrínsicamente {{breaker}}.",
-    "LoadingSockets": "Los perks y los detalles de estadísticas no han cargado todavía para este objeto.",
+    "LoadingSockets": "Los perks y los detalles de estadísticas no se han cargado todavía para este objeto.",
     "LockUnlock": {
       "AutoLock": "El estado de bloqueo se sincronizó con la etiqueta de este objeto",
       "Lock": "Bloquear {{itemType}}",
@@ -1164,7 +1164,7 @@
     "Progress": "Progreso",
     "QueryFilteredTrackedTriumphs": "Ninguno de tus triunfos ha seguir coincidió con la búsqueda",
     "QuestExpired": "Caducado",
-    "QuestExpires": "Expira en ",
+    "QuestExpires": "Caduca en ",
     "Quests": "Aventuras",
     "Rank": "{{name}} {{rank}}",
     "RecordValue": "{{value}}pts",
@@ -1173,11 +1173,11 @@
     "RewardPassEndsIn": "El Pase de Recompensas termina en ",
     "RewardPassPrestigeRank": "Rango de Prestigio {{rank}}",
     "SeasonalHub": "Centro de Operaciones de la Temporada",
-    "StatTrackers": "Rastreadores de estadísticas",
+    "StatTrackers": "Analizadores Estadísticos",
     "TrackedTriumphs": "Triunfos seguidos"
   },
   "RecordBooks": {
-    "HideCompleted": "Ocultar registros completados",
+    "HideCompleted": "Ocultar hazañas completadas",
     "RecordBooks": "Libros de Hazañas"
   },
   "Records": {
@@ -1197,6 +1197,7 @@
   },
   "Settings": {
     "Appearance": "Apariencia",
+    "ArmorArchetypeModslot": "Arquetipo de Armadura / Ranura para Mods",
     "AutoLockTagged": "Sincronizar el estado de bloqueo del objeto con la etiqueta",
     "AutoLockTaggedExplanation": "DIM automáticamente bloqueará y desbloqueará objetos que coincidan con su etiqueta. Los objetos fabricados se mantendrán desbloqueados para permitir reformarse. Cuando esta configuración esté habilitada, el icono de bloqueo no se mostrará en el mosaico para los objetos etiquetados.",
     "BadgePostmaster": "Muestra el número de objetos en la Administración para el personaje actual en el icono de la app",
@@ -1334,7 +1335,7 @@
     "Percentage": "%",
     "PowerModifier": "Poder otorgado por la progresión de experiencia de temporada",
     "Prestige": "Nivel de Prestigio: {{level}}\n{{exp}}xp para 5 motas de luz.",
-    "Quality": "Calificación de Calidad",
+    "Quality": "Calidad de las Estadísticas",
     "ShieldHP": "HP de Escudo",
     "StrafingSpeed": "Movimiento lateral",
     "Strength": "Fuerza",
@@ -1474,7 +1475,7 @@
     "YourBestItem": "Tu mejor objeto"
   },
   "Triumphs": {
-    "GildingTriumph": "Triunfo para Dorado",
+    "GildingTriumph": "Triunfo Dorado",
     "HideCompleted": "Ocultar triunfos completados",
     "RevealRedacted": "Revelar triunfos clasificados",
     "SortRecords": "Ordenar triunfos por compleción"
@@ -1537,8 +1538,8 @@
     }
   },
   "WishListRoll": {
-    "BestRatedTip_one": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de deseos.",
-    "BestRatedTip_other": "Estas ventajas coinciden exactamente con una tirada de arma de tu lista de deseos.",
+    "BestRatedTip_one": "Esta perk coincide exactamente con una tirada de arma en tu lista de deseos.",
+    "BestRatedTip_other": "Estas perks coinciden exactamente con una tirada de arma de tu lista de deseos.",
     "Clear": "Limpiar Lista de Deseos",
     "CopiedLine": "Lista de deseos de rolls copiada al portapapeles",
     "CopyLine": "Copiar los perks seleccionados como lista de deseos de rolls",
