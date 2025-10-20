@@ -1,5 +1,7 @@
 ## Next
 
+## 8.95.0 <span class="changelog-date">(2025-10-19)</span>
+
 * Show a simple ETA countdown for long Loadout Optimizer jobs.
 * Added inventory sorting by armor archetype or special modslot.
 
