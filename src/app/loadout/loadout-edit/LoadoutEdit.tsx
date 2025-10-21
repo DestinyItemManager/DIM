@@ -65,7 +65,7 @@ import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import { includesRuntimeStatMods } from '../stats';
-import styles from './LoadoutEdit.m.scss';
+import * as styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
 import LoadoutEditSubclass from './LoadoutEditSubclass';

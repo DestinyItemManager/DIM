@@ -10,7 +10,7 @@ import { DimStore } from '../inventory/store-types';
 import { AppIcon, kebabIcon } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
 import CharacterTileButton from './CharacterTileButton';
-import styles from './StoreHeading.m.scss';
+import * as styles from './StoreHeading.m.scss';
 
 // Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar
 function CharacterHeader({

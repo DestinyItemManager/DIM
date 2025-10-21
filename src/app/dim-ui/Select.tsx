@@ -5,7 +5,7 @@ import { useSelect } from 'downshift';
 
 import { useHeightFromViewportBottom } from 'app/utils/hooks';
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
-import styles from './Select.m.scss';
+import * as styles from './Select.m.scss';
 import { usePopper } from './usePopper';
 
 export interface Option<T> {

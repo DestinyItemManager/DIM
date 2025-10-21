@@ -7,7 +7,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { errorMessage } from 'app/utils/errors';
 import { useEffect, useState } from 'react';
-import styles from './LoadoutImportSheet.m.scss';
+import * as styles from './LoadoutImportSheet.m.scss';
 import { decodeShareUrl, getDecodedLoadout } from './loadout-import';
 
 const placeHolder = `https://dim.gg/bwipb2a/, https://app.destinyitemmanager.com/loadouts?loadout=...`;

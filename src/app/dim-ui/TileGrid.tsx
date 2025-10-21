@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './TileGrid.m.scss';
+import * as styles from './TileGrid.m.scss';
 
 /**
  * A grid of tiles with an optional header, e.g. the mod picker, exotic picker,

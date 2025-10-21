@@ -23,7 +23,7 @@ import {
   vendorsByCharacterSelector,
 } from '../selectors';
 import ArtifactUnlocks from './ArtifactUnlocks';
-import styles from './SingleVendor.m.scss';
+import * as styles from './SingleVendor.m.scss';
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.

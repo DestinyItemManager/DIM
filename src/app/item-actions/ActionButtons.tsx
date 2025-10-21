@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
 import d2Infuse from '../../images/d2infuse.png';
-import styles from './ActionButtons.m.scss';
+import * as styles from './ActionButtons.m.scss';
 
 interface ActionButtonProps {
   item: DimItem;

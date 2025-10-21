@@ -23,7 +23,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './LoadoutView.m.scss';
+import * as styles from './LoadoutView.m.scss';
 import { InGameLoadoutIconFromIdentifiers } from './ingame/InGameLoadoutIcon';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
 import { LoadoutArtifactUnlocks, LoadoutMods } from './loadout-ui/LoadoutMods';

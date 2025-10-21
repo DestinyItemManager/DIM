@@ -2,7 +2,7 @@ import useResizeObserver from '@react-hook/resize-observer';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import ErrorBoundary from './ErrorBoundary';
-import styles from './PageWithMenu.m.scss';
+import * as styles from './PageWithMenu.m.scss';
 
 function PageWithMenu({ children, className }: { children: React.ReactNode; className?: string }) {
   return <div className={clsx(className, styles.page)}>{children}</div>;

@@ -11,7 +11,7 @@ import { infoLog } from 'app/utils/log';
 import clsx from 'clsx';
 import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './ArtifactUnlocks.m.scss';
+import * as styles from './ArtifactUnlocks.m.scss';
 
 const ArtifactMod = memo(function ArtifactMod({
   ref,

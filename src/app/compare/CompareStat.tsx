@@ -7,7 +7,7 @@ import { getArmor3TuningStat, isArtifice } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { D1Stat, DimItem, DimStat } from '../inventory/item-types';
-import styles from './CompareStat.m.scss';
+import * as styles from './CompareStat.m.scss';
 
 export default function CompareStat({
   min,

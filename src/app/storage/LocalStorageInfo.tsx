@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import styles from './LocalStorageInfo.m.scss';
+import * as styles from './LocalStorageInfo.m.scss';
 
 export default function LocalStorageInfo({
   showDetails,

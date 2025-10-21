@@ -3,7 +3,7 @@ import { isEmpty } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { useSelector } from 'react-redux';
 import BungieImage from '../../dim-ui/BungieImage';
-import styles from '../../vendors/VendorItems.m.scss';
+import * as styles from '../../vendors/VendorItems.m.scss';
 import D1VendorItem from './D1VendorItem';
 import { Vendor, VendorCost } from './vendor.service';
 

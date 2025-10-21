@@ -19,7 +19,7 @@ import ModPicker from '../ModPicker';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import { createGetModRenderKey } from '../mod-utils';
-import styles from './LoadoutMods.m.scss';
+import * as styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
 const LoadoutMod = memo(function LoadoutMod({

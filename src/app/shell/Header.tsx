@@ -28,7 +28,7 @@ import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilter from '../search/SearchFilter';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import AppInstallBanner from './AppInstallBanner';
-import styles from './Header.m.scss';
+import * as styles from './Header.m.scss';
 import MenuBadge from './MenuBadge';
 import PostmasterWarningBanner from './PostmasterWarningBanner';
 import RefreshButton from './RefreshButton';

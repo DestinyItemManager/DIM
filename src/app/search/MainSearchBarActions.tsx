@@ -7,7 +7,7 @@ import { motion } from 'motion/react';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import styles from './MainSearchBarActions.m.scss';
+import * as styles from './MainSearchBarActions.m.scss';
 import { searchButtonAnimateVariants } from './SearchBar';
 import SearchResults from './SearchResults';
 import { filteredItemsSelector, queryValidSelector } from './items/item-search-filter';

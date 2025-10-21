@@ -4,7 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getSeasonalBreakerTypeHash } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import styles from './BreakerType.m.scss';
+import * as styles from './BreakerType.m.scss';
 
 export default function BreakerType({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;

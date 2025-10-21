@@ -2,7 +2,7 @@ import { getArmor3StatFocus, getArmor3TuningStat, isArmor3, isD1Item } from 'app
 import clsx from 'clsx';
 import { DimItem, DimStat } from '../inventory/item-types';
 import ItemStat, { D1QualitySummaryStat, isD1Stat } from './ItemStat';
-import styles from './ItemStats.m.scss';
+import * as styles from './ItemStats.m.scss';
 
 export default function ItemStats({
   stats,

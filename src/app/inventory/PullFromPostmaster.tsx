@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout-drawer/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';
 import { queueAction } from '../utils/action-queue';
-import styles from './PullFromPostmaster.m.scss';
+import * as styles from './PullFromPostmaster.m.scss';
 import { storesSelector } from './selectors';
 import { DimStore } from './store-types';
 

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import styles from './FilterPills.m.scss';
+import * as styles from './FilterPills.m.scss';
 
 export interface Option<T> {
   readonly key: string;

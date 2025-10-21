@@ -19,7 +19,7 @@ import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import styles from './VaultCapacity.m.scss';
+import * as styles from './VaultCapacity.m.scss';
 
 const bucketIcons: LookupTable<BucketHashes, string> = {
   [BucketHashes.Modifications]: modificationsIcon,

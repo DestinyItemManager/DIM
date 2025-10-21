@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { userGuideUrl } from 'app/shell/links';
 import { isWindows } from 'app/utils/browsers';
 import React, { useCallback, useState } from 'react';
-import styles from './LoadoutPopupRandomize.m.scss';
+import * as styles from './LoadoutPopupRandomize.m.scss';
 
 export interface RandomLoadoutOptions {
   subclass: boolean;

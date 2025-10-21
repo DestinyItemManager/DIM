@@ -17,7 +17,7 @@ import { countBy, sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import styles from './LoadoutOptimizerSetBonus.m.scss';
+import * as styles from './LoadoutOptimizerSetBonus.m.scss';
 
 const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
   storeId,

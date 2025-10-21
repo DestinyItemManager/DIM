@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { usePageTitle } from 'app/utils/hooks';
 import { Suspense, lazy } from 'react';
-import styles from './ItemFeedPage.m.scss';
+import * as styles from './ItemFeedPage.m.scss';
 
 const ItemFeed = lazy(() => import(/* webpackChunkName: "item-feed" */ './ItemFeed'));
 

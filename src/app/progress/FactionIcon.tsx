@@ -5,7 +5,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import DiamondProgress from '../dim-ui/DiamondProgress';
-import styles from './FactionIcon.m.scss';
+import * as styles from './FactionIcon.m.scss';
 
 export default function FactionIcon({
   factionProgress,

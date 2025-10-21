@@ -17,7 +17,7 @@ import {
   ObjectiveProgress,
   ObjectiveRow,
 } from './Objective';
-import styles from './RaidDisplay.m.scss';
+import * as styles from './RaidDisplay.m.scss';
 
 /**
  * Outer wrapper of a Raid type (example: EoW) with icon

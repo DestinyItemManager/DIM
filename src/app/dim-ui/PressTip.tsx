@@ -11,7 +11,7 @@ import React, {
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
-import styles from './PressTip.m.scss';
+import * as styles from './PressTip.m.scss';
 import { usePopper } from './usePopper';
 
 /**

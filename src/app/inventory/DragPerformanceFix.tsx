@@ -1,4 +1,4 @@
-import styles from './DragPerformanceFix.m.scss';
+import * as styles from './DragPerformanceFix.m.scss';
 
 /**
  * This is a workaround for sluggish dragging in Chrome on Windows. It may or

@@ -4,7 +4,7 @@ import { bungieAlertsSelector } from 'app/shell/selectors';
 import { GlobalAlertLevel } from 'bungie-api-ts/core';
 import { useSelector } from 'react-redux';
 import ExternalLink from '../dim-ui/ExternalLink';
-import styles from './BungieAlerts.m.scss';
+import * as styles from './BungieAlerts.m.scss';
 
 // http://destinydevs.github.io/BungieNetPlatform/docs/Enums
 export const GlobalAlertLevelsToToastLevels = [

@@ -7,7 +7,7 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import styles from './D1CharacterStats.m.scss';
+import * as styles from './D1CharacterStats.m.scss';
 
 export function D1StoreCharacterStats({ store }: { store: DimStore }) {
   const subclass = findItemsByBucket(store, BucketHashes.Subclass).find((i) => i.equipped);

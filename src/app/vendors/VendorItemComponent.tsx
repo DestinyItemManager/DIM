@@ -11,7 +11,7 @@ import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
 import { AppIcon, faCheck, lockIcon } from '../shell/icons';
 import Cost from './Cost';
-import styles from './VendorItem.m.scss';
+import * as styles from './VendorItem.m.scss';
 import { SingleVendorSheetContext } from './single-vendor/SingleVendorSheetContainer';
 import { VendorItem } from './vendor-item';
 

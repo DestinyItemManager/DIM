@@ -4,7 +4,7 @@ import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-conver
 import { InGameLoadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
-import styles from './InGameLoadoutIcon.m.scss';
+import * as styles from './InGameLoadoutIcon.m.scss';
 
 export default function InGameLoadoutIcon({
   loadout,

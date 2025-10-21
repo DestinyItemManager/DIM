@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React, { useCallback, useRef } from 'react';
-import styles from './SheetHorizontalScrollContainer.m.scss';
+import * as styles from './SheetHorizontalScrollContainer.m.scss';
 
 // After this many pixels of dragging in either direction, we consider ourselves to be part of a scrolling gesture.
 const HORIZ_SCROLL_DRAG_THRESHOLD = 20;

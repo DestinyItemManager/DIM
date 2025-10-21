@@ -2,7 +2,7 @@ import { compareBy } from 'app/utils/comparators';
 import { BungieMembershipType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { AppIcon } from '../shell/icons';
-import styles from './Account.m.scss';
+import * as styles from './Account.m.scss';
 import { DestinyAccount, PLATFORM_ICONS, PLATFORM_LABELS } from './destiny-account';
 
 /**

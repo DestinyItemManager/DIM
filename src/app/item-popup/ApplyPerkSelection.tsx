@@ -9,7 +9,7 @@ import { errorMessage } from 'app/utils/errors';
 import { wishListSelector } from 'app/wishlists/selectors';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './ApplyPerkSelection.m.scss';
+import * as styles from './ApplyPerkSelection.m.scss';
 
 export default function ApplyPerkSelection({
   item,

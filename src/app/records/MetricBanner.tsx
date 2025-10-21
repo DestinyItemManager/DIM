@@ -4,7 +4,7 @@ import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import masterworkOverlay from 'images/masterwork-metric.png';
 import BungieImage from '../dim-ui/BungieImage';
-import styles from './MetricBanner.m.scss';
+import * as styles from './MetricBanner.m.scss';
 import { getMetricTimeScope } from './presentation-nodes';
 
 interface Props {

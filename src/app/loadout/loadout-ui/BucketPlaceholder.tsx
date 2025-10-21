@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import styles from './BucketPlaceholder.m.scss';
+import * as styles from './BucketPlaceholder.m.scss';
 
 const badgeLessBuckets = [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships];
 

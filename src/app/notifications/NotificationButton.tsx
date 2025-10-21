@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './NotificationButton.m.scss';
+import * as styles from './NotificationButton.m.scss';
 
 /**
  * an independent element fed into showNotification({body:

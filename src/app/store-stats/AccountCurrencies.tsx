@@ -6,7 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './AccountCurrencies.m.scss';
+import * as styles from './AccountCurrencies.m.scss';
 
 /** The account currencies (glimmer, shards, etc.) */
 export default memo(function AccountCurrency() {

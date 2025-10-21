@@ -12,7 +12,7 @@ import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers
 import CategoryStrip from './CategoryStrip';
 import D1ReputationSection from './D1ReputationSection';
 import HeaderShadowDiv from './HeaderShadowDiv';
-import styles from './PhoneStores.m.scss';
+import * as styles from './PhoneStores.m.scss';
 import PhoneStoresHeader from './PhoneStoresHeader';
 import { StoreBuckets } from './StoreBuckets';
 import './Stores.scss';

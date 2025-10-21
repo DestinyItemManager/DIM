@@ -1,7 +1,7 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { DimStore } from 'app/inventory/store-types';
 import clsx from 'clsx';
-import styles from './StoreIcon.m.scss';
+import * as styles from './StoreIcon.m.scss';
 
 /**
  * Show both the store emblem and class icon for a given store.

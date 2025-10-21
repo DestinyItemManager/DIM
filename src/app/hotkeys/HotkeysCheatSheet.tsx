@@ -5,7 +5,7 @@ import { Observable } from 'app/utils/observable';
 import React, { memo } from 'react';
 import { useSubscription } from 'use-subscription';
 import GlobalHotkeys from './GlobalHotkeys';
-import styles from './HotkeysCheatSheet.m.scss';
+import * as styles from './HotkeysCheatSheet.m.scss';
 import { getAllHotkeys } from './hotkeys';
 import { useHotkey } from './useHotkey';
 

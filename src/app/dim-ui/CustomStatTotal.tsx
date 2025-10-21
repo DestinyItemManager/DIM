@@ -5,7 +5,7 @@ import { useSetting } from 'app/settings/hooks';
 import { addDividers } from 'app/utils/react';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import styles from './CustomStatTotal.m.scss';
+import * as styles from './CustomStatTotal.m.scss';
 
 export type StatHashListsKeyedByDestinyClass = Record<number, number[]>;
 

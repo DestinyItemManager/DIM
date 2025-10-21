@@ -1,7 +1,7 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { Link } from 'react-router';
-import styles from './Privacy.m.scss';
+import * as styles from './Privacy.m.scss';
 
 export default function Privacy() {
   return (

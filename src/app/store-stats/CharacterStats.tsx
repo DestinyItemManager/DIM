@@ -25,7 +25,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
-import styles from './CharacterStats.m.scss';
+import * as styles from './CharacterStats.m.scss';
 import StatTooltip from './StatTooltip';
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {

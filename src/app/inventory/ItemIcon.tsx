@@ -18,7 +18,7 @@ import {
 import holofoilAnim from 'images/holofoil-anim.apng';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import { DimItem } from './item-types';
-import styles from './ItemIcon.m.scss';
+import * as styles from './ItemIcon.m.scss';
 import { isPluggableItem } from './store/sockets';
 
 const itemTierStyles: Record<ItemRarityName, string> = {

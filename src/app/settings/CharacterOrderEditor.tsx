@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
-import styles from './CharacterOrderEditor.m.scss';
+import * as styles from './CharacterOrderEditor.m.scss';
 
 /**
  * An editor for character orders, with drag and drop.

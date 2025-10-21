@@ -5,7 +5,7 @@ import { featuredBannerIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { querySelector } from 'app/shell/selectors';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './NewFeaturedGearFilter.m.scss';
+import * as styles from './NewFeaturedGearFilter.m.scss';
 
 const newFeaturedGearTerms = ['is:featured', 'is:newgear'];
 

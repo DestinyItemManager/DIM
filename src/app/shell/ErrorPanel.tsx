@@ -5,7 +5,7 @@ import { DimError } from 'app/utils/dim-error';
 import BungieAlerts from 'app/whats-new/BungieAlerts';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { AppIcon, helpIcon, mastodonIcon, refreshIcon } from '../shell/icons';
-import styles from './ErrorPanel.m.scss';
+import * as styles from './ErrorPanel.m.scss';
 import { bungieHelpAccount, bungieHelpLink, troubleshootingLink } from './links';
 
 function Socials() {

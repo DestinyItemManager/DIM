@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import { hideDragFixOverlay, showDragFixOverlay } from './DragPerformanceFix';
-import styles from './DraggableInventoryItem.m.scss';
+import * as styles from './DraggableInventoryItem.m.scss';
 import { isDragging$ } from './drag-events';
 import { DimItem } from './item-types';
 

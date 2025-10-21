@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import './StoreBucket.scss';
-import styles from './StoreBucketDropTarget.m.scss';
+import * as styles from './StoreBucketDropTarget.m.scss';
 
 interface Props {
   bucket: InventoryBucket;

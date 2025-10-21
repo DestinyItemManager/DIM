@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './ConfirmButton.m.scss';
+import * as styles from './ConfirmButton.m.scss';
 
 /**
  * a button that requests confirmation, and requires a second

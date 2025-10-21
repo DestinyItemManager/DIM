@@ -4,7 +4,7 @@ import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { PressTip } from '../dim-ui/PressTip';
 import { D1Store } from '../inventory/store-types';
-import styles from './CharacterHeaderXP.m.scss';
+import * as styles from './CharacterHeaderXP.m.scss';
 
 function getLevelBar(store: D1Store) {
   const prestige = store.progressions.find(

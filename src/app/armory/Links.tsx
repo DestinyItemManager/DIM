@@ -14,7 +14,7 @@ import foundry from 'images/foundry.png';
 import ishtarLogo from 'images/ishtar-collective.svg';
 import lightgg from 'images/lightgg.png';
 import { useSelector } from 'react-redux';
-import styles from './Links.m.scss';
+import * as styles from './Links.m.scss';
 
 export default function Links({ item }: { item: DimItem }) {
   const language = useSelector(languageSelector);

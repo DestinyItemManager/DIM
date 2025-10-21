@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import styles from './ExpandableTextBlock.m.scss';
+import * as styles from './ExpandableTextBlock.m.scss';
 
 /**
  * wrapped around some inline content, this crops to a specified number of lines

@@ -1,13 +1,13 @@
 import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { DimCustomSymbols } from 'data/font/dim-custom-symbols';
-import styles from './ColorDestinySymbols.m.scss';
+import * as styles from './ColorDestinySymbols.m.scss';
 
 const iconPlaceholder = /([\uE000-\uF8FF\u{F0000}-\u{F1000}])/u;
 
 const styleTable = {
   [String.fromCodePoint(FontGlyphs.thermal)]: styles.thermal,
   [String.fromCodePoint(FontGlyphs.arc)]: styles.arc,
-  [String.fromCodePoint(FontGlyphs.void)]: styles.void,
+  [String.fromCodePoint(FontGlyphs.void)]: styles.voidColor,
   [String.fromCodePoint(FontGlyphs.stasis)]: styles.stasis,
   [String.fromCodePoint(FontGlyphs.strand_kill)]: styles.strand,
   [String.fromCodePoint(DimCustomSymbols.prismatic)]: styles.prismatic,

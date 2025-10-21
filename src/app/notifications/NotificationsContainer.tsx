@@ -2,7 +2,7 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { AnimatePresence, Transition, Variants } from 'motion/react';
 import { useCallback, useState } from 'react';
 import Notification from './Notification';
-import styles from './NotificationsContainer.m.scss';
+import * as styles from './NotificationsContainer.m.scss';
 import { Notify, notifications$ } from './notifications';
 
 const spring: Transition<number> = { type: 'spring', bounce: 0, duration: 0.3 };

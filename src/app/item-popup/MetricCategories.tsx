@@ -1,6 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
-import styles from './MetricCategories.m.scss';
+import * as styles from './MetricCategories.m.scss';
 
 export default function MetricCategories({
   availableMetricCategoryNodeHashes,

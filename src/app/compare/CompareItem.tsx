@@ -27,7 +27,7 @@ import {
   faExclamationTriangle,
   shoppingCart,
 } from '../shell/icons';
-import styles from './CompareItem.m.scss';
+import * as styles from './CompareItem.m.scss';
 
 export default memo(function CompareItem({
   item,

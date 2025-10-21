@@ -121,7 +121,7 @@
 }
 
 // The class name (Hunter, Titan, etc)
-.class {
+.className {
   composes: bigText;
   grid-area: class;
   text-overflow: ellipsis;

@@ -21,7 +21,7 @@ import { D1Store } from '../../inventory/store-types';
 import { AppIcon, starIcon } from '../../shell/icons';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1ActivityComponent, D1ActivityTier, D1ObjectiveProgress } from '../d1-manifest-types';
-import styles from './Activities.m.scss';
+import * as styles from './Activities.m.scss';
 
 interface Skull {
   displayName: string;

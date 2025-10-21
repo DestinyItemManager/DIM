@@ -8,7 +8,7 @@ import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
-import styles from './VendorItems.m.scss';
+import * as styles from './VendorItems.m.scss';
 import { D2Vendor } from './d2-vendors';
 
 // ignore what i think is the loot pool preview on some tower vendors?

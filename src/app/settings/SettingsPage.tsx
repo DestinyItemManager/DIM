@@ -34,7 +34,7 @@ import Checkbox from './Checkbox';
 import { CustomStatsSettings } from './CustomStatsSettings';
 import LanguageSetting from './LanguageSetting';
 import Select, { mapToOptions } from './Select';
-import styles from './SettingsPage.m.scss';
+import * as styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';

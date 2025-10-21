@@ -8,7 +8,7 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
-import styles from './FashionMods.m.scss';
+import * as styles from './FashionMods.m.scss';
 import PlugDef from './PlugDef';
 
 // TODO: Consolidate with the one in FashionDrawer
