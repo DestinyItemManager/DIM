@@ -50,13 +50,7 @@ export default tseslint.config(
     rules: { 'css-modules/no-unused-class': ['error', { camelCase: true }] },
   },
   { name: 'sonarjs/recommended', ...sonarjs.configs.recommended },
-  {
-    name: 'react-hooks',
-    plugins: {
-      'react-hooks': fixupPluginRules(reactHooks),
-    },
-    rules: reactHooks.configs.recommended.rules,
-  },
+  reactHooks.configs.flat.recommended,
   {
     // We want to choose which rules to enable from the github plugin, not use a preset.
     name: 'github',
@@ -329,6 +323,13 @@ export default tseslint.config(
           ],
         },
       ],
+      // eslint-plugin-react-hooks decided to include a ton of (buggy) rules about React Compiler
+      'react-hooks/refs': 'off', // for now
+      'react-hooks/set-state-in-effect': 'off', // for now
+      'react-hooks/purity': 'off', // for now
+      'react-hooks/preserve-manual-memoization': 'off', // for now
+      'react-hooks/immutability': 'off', // for now
+      'react-hooks/incompatible-library': 'off', // for now
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/no-misused-promises': [
         'error',

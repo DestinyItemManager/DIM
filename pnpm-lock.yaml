@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@types/react': 19.2.0
+  '@types/react': 19.2.2
   react-redux: ^9.2.0
   redux: ^5.0.1
   react-is: ^18.3.1
@@ -109,7 +109,7 @@ dependencies:
     version: 3.44.0(react-dom@19.2.0)(react@19.2.0)
   react-dnd:
     specifier: ^16.0.1
-    version: 16.0.1(@types/node@22.0.2)(@types/react@19.2.0)(react@19.2.0)
+    version: 16.0.1(@types/node@22.0.2)(@types/react@19.2.2)(react@19.2.0)
   react-dnd-html5-backend:
     specifier: ^16.0.1
     version: 16.0.1
@@ -127,13 +127,13 @@ dependencies:
     version: 14.3.8(react@19.2.0)
   react-redux:
     specifier: ^9.2.0
-    version: 9.2.0(@types/react@19.2.0)(react@19.2.0)(redux@5.0.1)
+    version: 9.2.0(@types/react@19.2.2)(react@19.2.0)(redux@5.0.1)
   react-router:
     specifier: ^7.9.3
     version: 7.9.3(react-dom@19.2.0)(react@19.2.0)
   react-textarea-autosize:
     specifier: ^8.5.9
-    version: 8.5.9(@types/react@19.2.0)(react@19.2.0)
+    version: 8.5.9(@types/react@19.2.2)(react@19.2.0)
   redux:
     specifier: ^5.0.1
     version: 5.0.1
@@ -213,7 +213,7 @@ devDependencies:
     version: 8.1.0(typescript@5.9.3)
   '@testing-library/react':
     specifier: ^16.3.0
-    version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.0)(@types/react@19.2.0)(react-dom@19.2.0)(react@19.2.0)
+    version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.0)(@types/react@19.2.2)(react-dom@19.2.0)(react@19.2.0)
   '@types/dom-chromium-installation-events':
     specifier: ^101.0.4
     version: 101.0.4
@@ -236,11 +236,11 @@ devDependencies:
     specifier: ^15.7.15
     version: 15.7.15
   '@types/react':
-    specifier: 19.2.0
-    version: 19.2.0
+    specifier: 19.2.2
+    version: 19.2.2
   '@types/react-dom':
     specifier: ^19.2.0
-    version: 19.2.0(@types/react@19.2.0)
+    version: 19.2.0(@types/react@19.2.2)
   '@types/ua-parser-js':
     specifier: ^0.7.39
     version: 0.7.39
@@ -5000,12 +5000,12 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react@16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.0)(@types/react@19.2.0)(react-dom@19.2.0)(react@19.2.0):
+  /@testing-library/react@16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.0)(@types/react@19.2.2)(react-dom@19.2.0)(react@19.2.0):
     resolution: {integrity: sha512-kFSyxiEDwv1WLl2fgsq6pPBbw5aWKrsY2/noi1Id0TK0UParSF62oFQFGHXIyaG4pp2tEub/Zlel+fjjZILDsw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@testing-library/dom': ^10.0.0
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       '@types/react-dom': ^18.0.0 || ^19.0.0
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -5017,8 +5017,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.28.4
       '@testing-library/dom': 10.4.1
-      '@types/react': 19.2.0
-      '@types/react-dom': 19.2.0(@types/react@19.2.0)
+      '@types/react': 19.2.2
+      '@types/react-dom': 19.2.0(@types/react@19.2.2)
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
     dev: true
@@ -5271,16 +5271,16 @@ packages:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
     dev: true
 
-  /@types/react-dom@19.2.0(@types/react@19.2.0):
+  /@types/react-dom@19.2.0(@types/react@19.2.2):
     resolution: {integrity: sha512-brtBs0MnE9SMx7px208g39lRmC5uHZs96caOJfTjFcYSLHNamvaSMfJNagChVNkup2SdtOxKX1FDBkRSJe1ZAg==}
     peerDependencies:
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
     dependencies:
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
     dev: true
 
-  /@types/react@19.2.0:
-    resolution: {integrity: sha512-1LOH8xovvsKsCBq1wnT4ntDUdCJKmnEakhsuoUSy6ExlHCkGP2hqnatagYTgFk6oeL0VU31u7SNjunPN+GchtA==}
+  /@types/react@19.2.2:
+    resolution: {integrity: sha512-6mDvHUFSjyT2B2yeNx2nUgMxh9LtOWvkhIU3uePn2I2oyNymUAX1NIsdgviM4CH+JSrp2D2hsMvJOkxY+0wNRA==}
     dependencies:
       csstype: 3.1.3
 
@@ -12687,7 +12687,7 @@ packages:
       dnd-core: 16.0.1
       dnd-multi-backend: 9.0.0(dnd-core@16.0.1)
       react: 19.2.0
-      react-dnd: 16.0.1(@types/node@22.0.2)(@types/react@19.2.0)(react@19.2.0)
+      react-dnd: 16.0.1(@types/node@22.0.2)(@types/react@19.2.2)(react@19.2.0)
       react-dnd-preview: 9.0.0(react-dnd@16.0.1)(react@19.2.0)
       react-dom: 19.2.0(react@19.2.0)
     dev: false
@@ -12699,7 +12699,7 @@ packages:
       react-dnd: ^16.0.1
     dependencies:
       react: 19.2.0
-      react-dnd: 16.0.1(@types/node@22.0.2)(@types/react@19.2.0)(react@19.2.0)
+      react-dnd: 16.0.1(@types/node@22.0.2)(@types/react@19.2.2)(react@19.2.0)
     dev: false
 
   /react-dnd-touch-backend@16.0.1:
@@ -12709,12 +12709,12 @@ packages:
       dnd-core: 16.0.1
     dev: false
 
-  /react-dnd@16.0.1(@types/node@22.0.2)(@types/react@19.2.0)(react@19.2.0):
+  /react-dnd@16.0.1(@types/node@22.0.2)(@types/react@19.2.2)(react@19.2.0):
     resolution: {integrity: sha512-QeoM/i73HHu2XF9aKksIUuamHPDvRglEwdHL4jsp784BgUuWcg6mzfxT0QDdQz8Wj0qyRKx2eMg8iZtWvU4E2Q==}
     peerDependencies:
       '@types/hoist-non-react-statics': '>= 3.3.1'
       '@types/node': '>= 12'
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       react: '>= 16.14'
     peerDependenciesMeta:
       '@types/hoist-non-react-statics':
@@ -12727,7 +12727,7 @@ packages:
       '@react-dnd/invariant': 4.0.2
       '@react-dnd/shallowequal': 4.0.2
       '@types/node': 22.0.2
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       dnd-core: 16.0.1
       fast-deep-equal: 3.1.3
       hoist-non-react-statics: 3.3.2
@@ -12757,10 +12757,10 @@ packages:
   /react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  /react-redux@9.2.0(@types/react@19.2.0)(react@19.2.0)(redux@5.0.1):
+  /react-redux@9.2.0(@types/react@19.2.2)(react@19.2.0)(redux@5.0.1):
     resolution: {integrity: sha512-ROY9fvHhwOD9ySfrF0wmvu//bKCQ6AeZZq1nJNtbDC+kk5DuSuNX/n6YWYF/SYy7bSba4D4FSz8DJeKY/S/r+g==}
     peerDependencies:
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       react: ^18.0 || ^19
       redux: ^5.0.1
     peerDependenciesMeta:
@@ -12769,7 +12769,7 @@ packages:
       redux:
         optional: true
     dependencies:
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       '@types/use-sync-external-store': 0.0.6
       react: 19.2.0
       redux: 5.0.1
@@ -12797,7 +12797,7 @@ packages:
       set-cookie-parser: 2.7.1
     dev: false
 
-  /react-textarea-autosize@8.5.9(@types/react@19.2.0)(react@19.2.0):
+  /react-textarea-autosize@8.5.9(@types/react@19.2.2)(react@19.2.0):
     resolution: {integrity: sha512-U1DGlIQN5AwgjTyOEnI1oCcMuEr1pv1qOtklB2l4nyMGbHzWrI0eFsYK0zos2YWqAolJyG0IWJaqWmWj5ETh0A==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -12805,8 +12805,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.28.4
       react: 19.2.0
-      use-composed-ref: 1.4.0(@types/react@19.2.0)(react@19.2.0)
-      use-latest: 1.3.0(@types/react@19.2.0)(react@19.2.0)
+      use-composed-ref: 1.4.0(@types/react@19.2.2)(react@19.2.0)
+      use-latest: 1.3.0(@types/react@19.2.2)(react@19.2.0)
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -14721,7 +14721,7 @@ packages:
       punycode: 2.3.1
     dev: true
 
-  /use-composed-ref@1.4.0(@types/react@19.2.0)(react@19.2.0):
+  /use-composed-ref@1.4.0(@types/react@19.2.2)(react@19.2.0):
     resolution: {integrity: sha512-djviaxuOOh7wkj0paeO1Q/4wMZ8Zrnag5H6yBvzN7AKKe8beOaED9SF5/ByLqsku8NP4zQqsvM2u3ew/tJK8/w==}
     peerDependencies:
       '@types/react': '*'
@@ -14730,11 +14730,11 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       react: 19.2.0
     dev: false
 
-  /use-isomorphic-layout-effect@1.2.0(@types/react@19.2.0)(react@19.2.0):
+  /use-isomorphic-layout-effect@1.2.0(@types/react@19.2.2)(react@19.2.0):
     resolution: {integrity: sha512-q6ayo8DWoPZT0VdG4u3D3uxcgONP3Mevx2i2b0434cwWBoL+aelL1DzkXI6w3PhTZzUeR2kaVlZn70iCiseP6w==}
     peerDependencies:
       '@types/react': '*'
@@ -14743,11 +14743,11 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       react: 19.2.0
     dev: false
 
-  /use-latest@1.3.0(@types/react@19.2.0)(react@19.2.0):
+  /use-latest@1.3.0(@types/react@19.2.2)(react@19.2.0):
     resolution: {integrity: sha512-mhg3xdm9NaM8q+gLT8KryJPnRFOz1/5XPBhmDEVZK1webPzDjrPk7f/mbpeLqTgB9msytYWANxgALOCJKnLvcQ==}
     peerDependencies:
       '@types/react': '*'
@@ -14756,9 +14756,9 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@types/react': 19.2.0
+      '@types/react': 19.2.2
       react: 19.2.0
-      use-isomorphic-layout-effect: 1.2.0(@types/react@19.2.0)(react@19.2.0)
+      use-isomorphic-layout-effect: 1.2.0(@types/react@19.2.2)(react@19.2.0)
     dev: false
 
   /use-subscription@1.12.0(react@19.2.0):
