@@ -7,6 +7,7 @@ interface CssExports {
   'light': string;
   'loadoutName': string;
   'nonActiveStat': string;
+  'statBarWarningIcon': string;
   'statIcon': string;
   'statSegment': string;
   'tier': string;

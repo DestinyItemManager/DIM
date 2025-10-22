@@ -1,5 +1,5 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
-import { MAX_STAT } from 'app/loadout/known-values';
+import { fotlWildcardHashes, MAX_STAT } from 'app/loadout/known-values';
 import { compact, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { sum } from 'es-toolkit';
@@ -180,7 +180,7 @@ export async function process(
   const hasMods = Boolean(activityMods.length || generalMods.length);
 
   const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
-  const setBonusCounts = Object.values(setBonuses);
+  const setBonusCounts = Object.values(setBonuses) as number[]; // TS won't figure this out itself?
 
   interface Scheduler {
     scheduler?: { yield: () => Promise<void> };
@@ -243,17 +243,27 @@ export async function process(
             }
 
             // Check set bonus requirements
+            let wildcardAvailable = true;
             for (let i = 0; i < setBonusHashes.length; i++) {
               const setHash = setBonusHashes[i];
+              const setNeededCount = setBonusCounts[i];
               const setCount =
                 Number(helm.setBonus === setHash) +
                 Number(gaunt.setBonus === setHash) +
                 Number(chest.setBonus === setHash) +
                 Number(leg.setBonus === setHash) +
                 Number(classItem.setBonus === setHash);
-              if (setCount < setBonusCounts[i]) {
-                setStatistics.skipReasons.insufficientSetBonus += 1;
-                continue innerloop;
+              if (setCount < setNeededCount) {
+                if (
+                  wildcardAvailable &&
+                  fotlWildcardHashes.has(helm.hash!) &&
+                  setCount + 1 === setNeededCount
+                ) {
+                  wildcardAvailable = false;
+                } else {
+                  setStatistics.skipReasons.insufficientSetBonus += 1;
+                  continue innerloop;
+                }
               }
             }
 

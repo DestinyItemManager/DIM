@@ -46,3 +46,6 @@ export const edgeOfFateReleased = D2CalculatedSeason >= 27;
 // MAX_STAT (which is the Edge of Fate value) to allow folks to theorycraft a
 // bit before it releases. Afterwards they will be the same.
 export const EFFECTIVE_MAX_STAT = edgeOfFateReleased ? MAX_STAT : 10 * MAX_TIER;
+
+/** These 3 helmets can be configured to contribute to any set bonus */
+export const fotlWildcardHashes = new Set([4095816113, 2462335932, 2390807586]);
