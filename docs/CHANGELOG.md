@@ -1,5 +1,7 @@
 ## Next
 
+* Loadout Optimizer allows Festival of the Lost masks to complete a set bonus. You'll still need to plug the right mod in.
+
 ## 8.95.0 <span class="changelog-date">(2025-10-19)</span>
 
 * Show a simple ETA countdown for long Loadout Optimizer jobs.
