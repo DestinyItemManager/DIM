@@ -3,6 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
+import { fotlWildcardHashes } from 'app/loadout/known-values';
 import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
@@ -192,7 +193,9 @@ export function filterItems({
     // If every non-exotic requires set bonuses...
     if (includeOnlySetBonusHashes && !lockedExoticApplicable) {
       firstPassFilteredItems = firstPassFilteredItems.filter(
-        (item) => item.setBonus && includeOnlySetBonusHashes.includes(item.setBonus.hash),
+        (item) =>
+          (item.setBonus && includeOnlySetBonusHashes.includes(item.setBonus.hash)) ||
+          fotlWildcardHashes.has(item.hash),
       );
     }
 
