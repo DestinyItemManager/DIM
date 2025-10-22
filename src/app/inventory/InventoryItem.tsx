@@ -195,10 +195,9 @@ function WeaponFrame({ item }: { item: DimItem }) {
     const frame = getWeaponArchetype(item);
     return (
       frame && (
-        <BungieImage
+        <div
           className={clsx(styles.topRight, styles.weaponFrame, isErgoSum && styles.ergoSum)}
-          src={frame.displayProperties.icon}
-          alt=""
+          style={bungieBackgroundStyle(frame.displayProperties.icon)}
         />
       )
     );

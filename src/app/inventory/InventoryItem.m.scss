@@ -117,6 +117,7 @@
   top: $item-border-width;
   right: $item-border-width;
   pointer-events: none;
+  background: no-repeat center;
   background-size: contain;
 }
 
@@ -125,11 +126,22 @@
 }
 
 .weaponFrame {
+  width: calc(#{dim-item-px(11)});
+  height: calc(#{dim-item-px(11)});
   background-color: #222;
-  border-radius: calc(#{dim-item-px(2)});
+  background-size: 122%;
+  top: calc($item-border-width * 2);
+  right: calc($item-border-width * 2);
+  border-radius: calc(#{dim-item-px(1.5)});
+  filter: drop-shadow(0 0 1px rgb(0, 0, 0, 1)) drop-shadow(0 0 0.5px rgb(0, 0, 0, 1));
 }
 
 .ergoSum {
+  top: $item-border-width;
+  right: $item-border-width;
+  width: calc(#{dim-item-px(13)});
+  height: calc(#{dim-item-px(13)});
   background-color: #555;
   border-radius: 50%;
+  filter: none;
 }
