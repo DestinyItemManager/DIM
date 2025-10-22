@@ -136,7 +136,7 @@ export default function InventoryItem({
         {statFocusHash !== undefined ? (
           <StatFocus statHash={statFocusHash} />
         ) : hasInterestingModSlots ? (
-          <SpecialtyModSlotIcon className={styles.statFocus} item={item} />
+          <SpecialtyModSlotIcon className={clsx(styles.topRight, styles.statFocus)} item={item} />
         ) : (
           item.bucket.inWeapons && <WeaponFrame item={item} />
         )}
@@ -178,7 +178,7 @@ function StatFocus({ statHash }: { statHash: number }) {
   return (
     defs && (
       <BungieImage
-        className={styles.statFocus}
+        className={clsx(styles.topRight, styles.statFocus)}
         src={icon}
         style={bungieBackgroundStyle(icon)}
         alt=""
@@ -196,7 +196,7 @@ function WeaponFrame({ item }: { item: DimItem }) {
     return (
       frame && (
         <BungieImage
-          className={clsx(styles.weaponFrame, isErgoSum && styles.ergoSum)}
+          className={clsx(styles.topRight, styles.weaponFrame, isErgoSum && styles.ergoSum)}
           src={frame.displayProperties.icon}
           alt=""
         />

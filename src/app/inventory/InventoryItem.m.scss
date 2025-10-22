@@ -109,7 +109,7 @@
   filter: drop-shadow(0 0 2px rgb(0, 0, 0, 0.8));
 }
 
-.statFocus {
+.topRight {
   display: block;
   width: calc(#{dim-item-px(13)});
   height: calc(#{dim-item-px(13)});
@@ -118,22 +118,18 @@
   right: $item-border-width;
   pointer-events: none;
   background-size: contain;
+}
+
+.statFocus {
   filter: drop-shadow(0 0 1px rgb(0, 0, 0, 1)) drop-shadow(0 0 0.5px rgb(0, 0, 0, 1));
 }
 
 .weaponFrame {
-  display: block;
-  width: calc(#{dim-item-px(13)});
-  height: calc(#{dim-item-px(13)});
-  position: absolute;
-  top: $item-border-width;
-  right: $item-border-width;
-  pointer-events: none;
-  background-color: #444;
+  background-color: #222;
   border-radius: calc(#{dim-item-px(2)});
-  // filter: drop-shadow(0 0 1px rgb(0, 0, 0, 1)) drop-shadow(0 0 0.5px rgb(0, 0, 0, 1));
 }
+
 .ergoSum {
-  background-color: #fff;
+  background-color: #555;
   border-radius: 50%;
 }

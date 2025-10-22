@@ -10,6 +10,7 @@ interface CssExports {
   'subclass': string;
   'subclassBase': string;
   'subclassSuperIcon': string;
+  'topRight': string;
   'warningIcon': string;
   'weaponFrame': string;
   'xpBar': string;
