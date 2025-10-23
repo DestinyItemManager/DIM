@@ -21,6 +21,7 @@ import {
   clearSubclass,
   removeMod,
   setLoadoutParameters,
+  setLoadoutPerks,
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
@@ -273,6 +274,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'lockExotic'; lockedExoticHash: number | undefined }
   | { type: 'removeLockedExotic' }
+  | { type: 'updatePerks'; removed: number[]; added: number[] }
   | { type: 'dismissComparisonStats' }
   | { type: 'setSearchQuery'; query: string };
 
@@ -521,7 +523,14 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: lockedExoticHash }));
       }
       case 'removeLockedExotic':
-        return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: undefined }));
+        return updateLoadout(
+          state,
+          setLoadoutParameters({ exoticArmorHash: undefined, perks: [] }),
+        );
+      case 'updatePerks': {
+        const { removed, added } = action;
+        return updateLoadout(state, setLoadoutPerks(removed, added));
+      }
       case 'autoStatModsChanged':
         return updateLoadout(state, setLoadoutParameters({ autoStatMods: action.autoStatMods }));
       case 'dismissComparisonStats':
