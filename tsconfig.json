@@ -25,5 +25,5 @@
       "docs/*": ["docs/*"]
     }
   },
-  "include": ["./src/**/*", "config/feature-flags.ts"]
+  "include": ["./src/**/*", "./server/**/*", "config/feature-flags.ts"]
 }

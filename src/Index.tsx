@@ -27,6 +27,9 @@ import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { createWishlistObserver } from './app/wishlists/observers';
 import { observe } from 'app/store/observerMiddleware';
+import { getToken } from './app/bungie-api/oauth-tokens';
+import { syncTokensToMCP } from './app/bungie-api/mcp-token-sync';
+
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`,
@@ -57,6 +60,12 @@ const i18nPromise = initi18n();
       </Provider>,
     );
     return;
+  }
+
+  // Sync existing tokens to MCP server (for local development)
+  const existingTokens = getToken();
+  if (existingTokens) {
+    syncTokensToMCP(existingTokens);
   }
 
   if ($featureFlags.wishLists) {

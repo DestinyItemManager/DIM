@@ -1,3 +1,6 @@
+// Register TypeScript path aliases for Node.js module resolution
+import './register-paths.cjs';
+
 import webpack from 'webpack';
 
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
@@ -31,6 +34,7 @@ const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 import packageJson from '../package.json';
 import createWebAppManifest from './manifest-webapp';
+import { setupMCPMiddleware } from './mcp-middleware';
 
 import cssnano from 'cssnano';
 import sortMediaQueries from 'postcss-sort-media-queries';
@@ -124,7 +128,7 @@ export default (env: Env) => {
           },
           client: {
             overlay: false,
-            logging: "none", // we don't need to see build errors in the console log
+            logging: 'none', // we don't need to see build errors in the console log
           },
           historyApiFallback: true,
           hot: 'only',
@@ -147,6 +151,10 @@ export default (env: Env) => {
                 : {};
 
             return headers;
+          },
+          // Setup MCP server middleware
+          setupMiddlewares: (middlewares, devServer) => {
+            return setupMCPMiddleware(middlewares, devServer);
           },
         }
       : undefined,

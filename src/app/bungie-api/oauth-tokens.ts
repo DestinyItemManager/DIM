@@ -1,5 +1,7 @@
 /* Helpers for storing and retrieving our OAuth tokens from localStorage */
 
+import { syncTokensToMCP } from './mcp-token-sync';
+
 /**
  * An OAuth token, either authorization or refresh.
  */
@@ -42,6 +44,8 @@ export function getToken(): Tokens | null {
  */
 export function setToken(token: Tokens) {
   localStorage.setItem(localStorageKey, JSON.stringify(token));
+  // Sync to MCP server
+  syncTokensToMCP(token);
 }
 
 /**
