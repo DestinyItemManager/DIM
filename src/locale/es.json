@@ -705,6 +705,7 @@
     "Exotic": "Armadura Exótica",
     "ExoticClassItemPerks": "Si quieres ventajas específicas, usa búsquedas como exactperk:\"spirit of verity\". Haz clic en las ventajas de los resultados del Optimizador para añadirlas o eliminarlas del filtro de objetos.",
     "ExoticSpecialCategory": "Especial",
+    "FOTLWildcardWarning": "Este conjunto contiene una máscara de La Fiesta de las Almas Perdidas. Aplica manualmente el modificador correcto para activar los bonificadores de conjunto.",
     "Filter": "Configuración",
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se fabriquen equipaciones",
     "IncreaseStatPriority": "Incrementar prioridad a las estadísticas",

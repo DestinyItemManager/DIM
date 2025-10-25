@@ -739,6 +739,7 @@
     "Exotic": "Экзотическая Броня",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Специальные",
+    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
     "Filter": "Настройки",
     "IgnoreStat": "Если не отмечено, Оптимизатор Комплекта будет притворяться, что этой характеристики не существует при создании наборов",
     "IncreaseStatPriority": "Повысить приоритет характеристики",

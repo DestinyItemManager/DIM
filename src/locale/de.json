@@ -705,6 +705,7 @@
     "Exotic": "Exotische Rüstung",
     "ExoticClassItemPerks": "Wenn du bestimmte Perks möchtest, verwende Suchanfragen wie exactperk:\"seele der wahrheit\". Klicke auf Perks in den Optimierer-Ergebnissen, um diese hinzuzufügen oder aus dem Filter zu entfernen.",
     "ExoticSpecialCategory": "Spezial",
+    "FOTLWildcardWarning": "Dieses Set enthält ein Festival der verlorenen Maske. Benutze manuell den richtigen Mod um die gewünschten Set-Boni zu aktivieren.",
     "Filter": "Einstellungen",
     "IgnoreStat": "Wenn nicht ausgewählt, wird der Loadout-Optimierer diesen Stat beim Zusammenstellen von Sets nicht beachten",
     "IncreaseStatPriority": "Erhöhe Stat-Priorität",

@@ -705,6 +705,7 @@
     "Exotic": "Armatura Esotica",
     "ExoticClassItemPerks": "Se vuoi peculiarità specifiche, utilizza ricerche come exactperk:\"spirito della verità\". Clicca sulle peculiarità nei risultati dell'Ottimizzatore per aggiungerle o rimuoverle dal filtro oggetti.",
     "ExoticSpecialCategory": "Speciale",
+    "FOTLWildcardWarning": "Questo set contiene una maschera della Festa delle Anime Perdute. Applica manualmente la modifica corretta per attivare il bonus set desiderato.",
     "Filter": "Impostazioni",
     "IgnoreStat": "Se non selezionata, l'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
     "IncreaseStatPriority": "Aumenta la priorità della statistica",

@@ -688,6 +688,7 @@
     "Exotic": "경이 방어구",
     "ExoticClassItemPerks": "특정 특성을 원하시면, exactperk:\"진리의 정신\"과 같이 검색해보세요. 로드아웃 최적화에서 특성을 클릭하여 아이템 필터에 추가하거나 제거할 수 있습니다.",
     "ExoticSpecialCategory": "특수",
+    "FOTLWildcardWarning": "이 세트는 가면 축제의 가면을 포함하고 있습니다. 원하는 세트 보너스를 활성화하려면 수동으로 개조 부품을 적용하세요.",
     "Filter": "설정",
     "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
     "IncreaseStatPriority": "능력치 우선도 증가",
