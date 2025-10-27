@@ -19,7 +19,7 @@ jobs:
       - uses: pnpm/action-setup@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -41,7 +41,7 @@ jobs:
         env:
           CLEAN_MANIFEST_CACHE: true
 
-      - uses: actions/upload-artifact@v4  # upload test results
+      - uses: actions/upload-artifact@v5  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
@@ -55,7 +55,7 @@ jobs:
       - uses: pnpm/action-setup@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
