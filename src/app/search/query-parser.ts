@@ -19,6 +19,7 @@
 */
 
 import { convertToError } from 'app/utils/errors';
+import { normalizeQuoteChars } from 'app/utils/strings';
 
 /* **** Parser **** */
 
@@ -353,10 +354,7 @@ export class QueryLexerOpenQuotesError extends QueryLexerError {
  */
 export function* lexer(query: string): Generator<Token> {
   query = query.toLowerCase();
-
-  // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
-  query = query.replace(/[\u2018-\u201A]/g, "'");
-  query = query.replace(/[\u201C-\u201E]/g, '"');
+  query = normalizeQuoteChars(query);
 
   let match: string | undefined;
   let i = 0;

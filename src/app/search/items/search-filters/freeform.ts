@@ -4,6 +4,7 @@ import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import {
   matchText,
+  normalizeItemName,
   plainString,
   startWordRegexp,
   testStringsFromDisplayProperties,
@@ -44,7 +45,7 @@ const getUniqueItemNamesFromManifest = memoizeOne(
 
         return isArmor || i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon);
       })
-      .map((i) => i.displayProperties.name.toLowerCase());
+      .map((i) => i.displayProperties.name);
     return [...new Set(itemNames)];
   },
 );
@@ -60,12 +61,11 @@ const nameFilter = {
           (i) =>
             i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral || i.bucket.inInventory,
         )
-        .map((i) => i.name.toLowerCase());
-      // favor items we actually own
+        .map((i) => i.name); // favor items we actually own
       const allItemNames = getUniqueItemNamesFromManifest(d2Definitions.InventoryItem.getAll());
       return Array.from(
         new Set([...myItemNames, ...allItemNames]),
-        (s) => `exactname:${quoteFilterString(s)}`,
+        (s) => `exactname:${quoteFilterString(normalizeItemName(s))}`,
       );
     }
   },
@@ -73,7 +73,7 @@ const nameFilter = {
     const test = matchText(filterValue, language, /* exact */ lhs === 'exactname');
     return (item) => test(item.name);
   },
-  fromItem: (item) => `exactname:${quoteFilterString(item.name)}`,
+  fromItem: (item) => `exactname:${quoteFilterString(normalizeItemName(item.name))}`,
 } satisfies ItemFilterDefinition;
 
 const freeformFilters: ItemFilterDefinition[] = [
