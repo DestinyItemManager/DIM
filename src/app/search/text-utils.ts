@@ -1,6 +1,7 @@
 /* Utilities for text matching in filters. */
 
 import { DIM_LANG_INFOS, DimLanguage } from 'app/i18n';
+import { normalizeQuoteChars } from 'app/utils/strings';
 
 /** global language bool. "latin" character sets are the main driver of string processing changes */
 const isLatinBased = (language: DimLanguage) => DIM_LANG_INFOS[language].latinBased;
@@ -25,17 +26,21 @@ export function startWordRegexp(s: string, language: DimLanguage) {
 export const plainString = (s: string, language: DimLanguage): string =>
   latinize(s, language).toLowerCase();
 
+export function normalizeItemName(str: string) {
+  return normalizeQuoteChars(str).toLowerCase().replace(/"/g, '');
+}
+
 /**
  * Create a case-/diacritic-insensitive matching predicate for name / perkname filters.
  * Requires an exact match if `exact`, otherwise partial.
  */
 export function matchText(value: string, language: DimLanguage, exact: boolean) {
-  const normalized = plainString(value, language);
+  const normalized = normalizeItemName(plainString(value, language));
   if (exact) {
-    return (s: string) => normalized === plainString(s, language);
+    return (s: string) => normalized === normalizeItemName(plainString(s, language));
   } else {
     const startWord = startWordRegexp(normalized, language);
-    return (s: string) => startWord.test(plainString(s, language));
+    return (s: string) => startWord.test(normalizeItemName(plainString(s, language)));
   }
 }
 
