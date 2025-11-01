@@ -201,7 +201,8 @@ function removeCompareItem(state: CompareState, item: DimItem): CompareState {
   const newQuery = (
     state.session.query.includes(addedQuery)
       ? state.session.query.replace(addedQuery, '')
-      : `${state.session.query} -id:${item.id}`
+      : // Quote this string because vendor item IDs can contain complex characters
+        `${state.session.query} -id:"${item.id}"`
   )
     .replace(/\s+/, ' ')
     .trim();
