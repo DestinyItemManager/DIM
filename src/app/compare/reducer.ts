@@ -195,13 +195,19 @@ function removeCompareItem(state: CompareState, item: DimItem): CompareState {
     throw new Error("Programmer error: Can't remove item with no session");
   }
 
+  // Sanitize query to remove any trailing 'or' ex. `query or'
+  // Preventing `query or -id:item`
+  const sanitizedQuery = state.session.query.endsWith(' or')
+    ? state.session.query.slice(0, -3)
+    : state.session.query;
+
   // Add `-id` filter to the right to avoid mixing it with
   // `or` filters from item addition (see `addCompareItem`).
   const addedQuery = `id:${item.id} or`;
   const newQuery = (
-    state.session.query.includes(addedQuery)
-      ? state.session.query.replace(addedQuery, '')
-      : `${state.session.query} -id:${item.id}`
+    sanitizedQuery.includes(addedQuery)
+      ? sanitizedQuery.replace(addedQuery, '')
+      : `${sanitizedQuery} -id:${item.id}`
   )
     .replace(/\s+/, ' ')
     .trim();
