@@ -688,7 +688,7 @@
     "Exotic": "エキゾチックアーマー",
     "ExoticClassItemPerks": "特定のパークを探す場合は、exactperk:\"ベリティの精神\"のようなワードで検索してください。 パークをクリックするとアイテムフィルタからロードアウト最適化に追加または削除します。",
     "ExoticSpecialCategory": "スペシャル",
-    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
+    "FOTLWildcardWarning": "このセットには、死者の祭りのマスクが含まれています。手動で適切なMODを選択して、希望するセットボーナスを有効にします。",
     "Filter": "設定",
     "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
     "IncreaseStatPriority": "ステータス優先度を上げる",
