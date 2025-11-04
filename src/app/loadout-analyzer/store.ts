@@ -202,8 +202,7 @@ export class LoadoutBackgroundAnalyzer {
     // React uses referential identity to determine whether to re-render, so the return
     // value must be different if properties are different.
     if (
-      !result.cachedReturnObject ||
-      result.cachedReturnObject.outdated !== isOutdated ||
+      result.cachedReturnObject?.outdated !== isOutdated ||
       result.cachedReturnObject.result !== result.result
     ) {
       result.cachedReturnObject = { outdated: isOutdated, result: result.result };

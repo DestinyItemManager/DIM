@@ -58,7 +58,7 @@ export function startFarming(storeId: string): ThunkResult {
     dispatch(actions.start(storeId));
     const farmingStore = farmingStoreSelector(getState());
 
-    if (!farmingStore || farmingStore.id !== storeId) {
+    if (farmingStore?.id !== storeId) {
       return;
     }
 
@@ -86,7 +86,7 @@ export function startFarming(storeId: string): ThunkResult {
         sideEffect: ({ current: farmingStore }) => {
           const [cancelToken, cancel] = withCancel();
 
-          if (!farmingStore || farmingStore.id !== storeId) {
+          if (farmingStore?.id !== storeId) {
             dispatch(unobserve(FARMING_OBSERVER_ID));
             cancel();
             return;
