@@ -1,5 +1,7 @@
 ## Next
 
+## 8.98.0 <span class="changelog-date">(2025-11-09)</span>
+
 ## 8.97.0 <span class="changelog-date">(2025-11-02)</span>
 
 * Fix being able to remove vendor items individually from Compare.
