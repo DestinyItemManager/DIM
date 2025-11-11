@@ -158,7 +158,7 @@ $iconOverlayScale: math.div(65, 96);
   position: absolute;
   top: calc(#{math.round(29px * $iconOverlayScale)});
   left: calc(#{math.round(6px * $iconOverlayScale)});
-  font-size: calc(#{math.round(24px * $iconOverlayScale)});
+  font-size: calc(#{math.round(25px * $iconOverlayScale)});
   font-weight: bold;
   color: white;
   pointer-events: none;
