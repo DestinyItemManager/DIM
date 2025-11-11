@@ -183,9 +183,11 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           )}
           {seasonAndPips.length > 0 && (
             <div style={bungieBackgroundStyles(seasonAndPips)} className={styles.shiftedLayer}>
-              {item.tier > 0 && !itemConstants?.gearTierOverlayImagePaths[item.tier - 1] && (
-                <span className={styles.tierNumber}>{item.tier}</span>
-              )}
+              {item.tier > 0 &&
+                !item.isEngram &&
+                !itemConstants?.gearTierOverlayImagePaths[item.tier - 1] && (
+                  <span className={styles.tierNumber}>{item.tier}</span>
+                )}
             </div>
           )}
           {seasonIcon && (
