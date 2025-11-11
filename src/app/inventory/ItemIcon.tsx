@@ -145,9 +145,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     // Featured flags
     item.featured ? itemConstants?.featuredItemFlagPath : undefined,
     // Tier pips
-    item.tier > 0 &&
-      !item.isEngram &&
-      itemConstants?.gearTierOverlayImagePaths[Math.min(item.tier - 1, 4)],
+    item.tier > 0 && !item.isEngram && itemConstants?.gearTierOverlayImagePaths[item.tier - 1],
   ]);
 
   if (craftedOverlays.length === 0 && seasonBanner) {
@@ -184,7 +182,11 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
             <div style={bungieBackgroundStyles(craftedOverlays)} className={styles.craftedLayer} />
           )}
           {seasonAndPips.length > 0 && (
-            <div style={bungieBackgroundStyles(seasonAndPips)} className={styles.shiftedLayer} />
+            <div style={bungieBackgroundStyles(seasonAndPips)} className={styles.shiftedLayer}>
+              {item.tier > 0 && !itemConstants?.gearTierOverlayImagePaths[item.tier - 1] && (
+                <span className={styles.tierNumber}>{item.tier}</span>
+              )}
+            </div>
           )}
           {seasonIcon && (
             <div style={bungieBackgroundStyle(seasonIcon)} className={styles.seasonIcon} />
