@@ -549,7 +549,7 @@ export function makeItem(
     infusionCategoryHashes: null,
     tooltipNotifications,
     featured: itemDef.isFeaturedItem,
-    tier: itemInstanceData.gearTier ?? 0,
+    tier: Math.min(itemInstanceData.gearTier ?? 0, 5),
     traitHashes: itemDef.traitHashes,
     adept: itemDef.isAdept,
     holofoil: itemDef.isHolofoil,
