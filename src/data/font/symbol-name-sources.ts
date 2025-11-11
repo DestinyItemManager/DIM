@@ -2460,8 +2460,8 @@ export const symbolData: {
     codepoint: 983173,
     glyph: '󰂅',
     source: {
-      tableName: 'InventoryItem',
-      hash: 1524010549,
+      tableName: 'SandboxPerk',
+      hash: 2133645639,
       fromRichText: false,
     },
   },
