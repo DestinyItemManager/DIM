@@ -145,7 +145,9 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
     // Featured flags
     item.featured ? itemConstants?.featuredItemFlagPath : undefined,
     // Tier pips
-    item.tier > 0 && !item.isEngram && itemConstants?.gearTierOverlayImagePaths[item.tier - 1],
+    item.tier > 0 &&
+      !item.isEngram &&
+      itemConstants?.gearTierOverlayImagePaths[Math.min(item.tier - 1, 4)],
   ]);
 
   if (craftedOverlays.length === 0 && seasonBanner) {
