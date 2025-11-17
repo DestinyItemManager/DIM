@@ -1,5 +1,7 @@
 ## Next
 
+## 8.99.0 <span class="changelog-date">(2025-11-16)</span>
+
 ## 8.98.1 <span class="changelog-date">(2025-11-11)</span>
 
 * Display 5 tier pips (instead of none) for bugged Call to Arms Tier 6 holofoil weapons, so there are no misunderstandings.
