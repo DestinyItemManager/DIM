@@ -12,6 +12,8 @@ interface CssExports {
   'energyCost': string;
   'exotic': string;
   'highlightedObjective': string;
+  'hoverFadeIn': string;
+  'hoverFadeOut': string;
   'inverted': string;
   'legendary': string;
   'masterwork': string;
