@@ -9,7 +9,6 @@ import {
   TOTAL_STAT_HASH,
   armorStats,
   realD2ArmorStatHashByName,
-  swordStatsByName,
 } from './d2-known-values';
 
 // ✨ magic values ✨
@@ -67,13 +66,12 @@ export const armorStatHashes = Object.values(dimArmorStatHashByName) as number[]
 /** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName: Record<string, number> = {
   ...D2WeaponStatHashByName,
-  ...swordStatsByName,
   ...dimArmorStatHashByName,
 };
-export const weaponStatNames = [
-  ...Object.keys(D2WeaponStatHashByName),
-  ...Object.keys(swordStatsByName),
-];
+
+/** Lowercase, sometimes-abbreviated stat names, used in search filters. */
+export const weaponStatNames = Object.keys(D2WeaponStatHashByName);
+
 /** all-stat list, to generate filters from */
 export const allStatNames = [...Object.keys(statHashByName), 'any'];
 
