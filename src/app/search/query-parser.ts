@@ -548,14 +548,19 @@ const quoteNeedingCharacters = /[\s()]/;
  * quoteFilterString("foo\"bar") => foobar"
  */
 export function quoteFilterString(arg: string) {
-  arg = arg.replaceAll('\\', '\\\\');
-
   const hasSingle = unescapedSingleQuoteCharacters.test(arg);
   const hasDouble = unescapedDoubleQuoteCharacters.test(arg);
   const hasOthers = quoteNeedingCharacters.test(arg);
   if (!hasSingle && !hasDouble && !hasOthers) {
     return arg;
   }
+
+  // When text is wrapped in quotes, the lexer begins watching for these escape sequences:
+  // \" \' \\
+  // and throws an error on anything else following a backslash.
+  // Now that quoteFilterString is committed to adding quotes,
+  // it escapes existing backslashes so they are treated as just backslashes.
+  arg = arg.replaceAll('\\', '\\\\');
 
   let quoteChar = '';
   // As long as one quote type is safe to add, wrapping the string with it defuses everything, including Other symbols

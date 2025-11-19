@@ -3,7 +3,6 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import {
-  escapeQuotes,
   matchText,
   plainString,
   startWordRegexp,
@@ -50,7 +49,7 @@ const getUniqueItemNamesFromManifest = memoizeOne(
 );
 
 function itemNameToExactSearch(str: string) {
-  return `exactname:${quoteFilterString(escapeQuotes(str.toLowerCase()))}`;
+  return `exactname:${quoteFilterString(str.toLowerCase())}`;
 }
 
 const nameFilter = {
