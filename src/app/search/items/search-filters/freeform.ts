@@ -3,6 +3,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import {
+  escapeQuotes,
   matchText,
   plainString,
   startWordRegexp,
@@ -29,25 +30,28 @@ const getPerkNamesFromManifest = memoizeOne(
 
 const getUniqueItemNamesFromManifest = memoizeOne(
   (allManifestItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
-    const itemNames = Object.values(allManifestItems)
-      .filter((i) => {
-        if (!i.itemCategoryHashes || !i.displayProperties.name) {
-          return false;
-        }
-
-        const isArmor = i.itemCategoryHashes.includes(ItemCategoryHashes.Armor);
-
-        // there's annoying white armors named stuff like "Gauntlets" that distract from things like is:gauntlets
-        if (isArmor && i.inventory!.tierType === TierType.Basic) {
-          return false;
-        }
-
-        return isArmor || i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon);
-      })
-      .map((i) => i.displayProperties.name.toLowerCase());
-    return [...new Set(itemNames)];
+    const itemNames = new Set<string>();
+    for (const h in allManifestItems) {
+      const item = allManifestItems[h];
+      if (!item.itemCategoryHashes || !item.displayProperties.name) {
+        continue;
+      }
+      const isArmor = item.itemCategoryHashes.includes(ItemCategoryHashes.Armor);
+      // there's annoying white armors named stuff like "Gauntlets" that distract from things like is:gauntlets
+      if (isArmor && item.inventory!.tierType === TierType.Basic) {
+        continue;
+      }
+      if (isArmor || item.itemCategoryHashes.includes(ItemCategoryHashes.Weapon)) {
+        itemNames.add(item.displayProperties.name);
+      }
+    }
+    return itemNames;
   },
 );
+
+function itemNameToExactSearch(str: string) {
+  return `exactname:${quoteFilterString(escapeQuotes(str.toLowerCase()))}`;
+}
 
 const nameFilter = {
   keywords: ['name', 'exactname'],
@@ -55,25 +59,24 @@ const nameFilter = {
   format: 'freeform',
   suggestionsGenerator: ({ d2Definitions, allItems }) => {
     if (d2Definitions && allItems) {
-      const myItemNames = allItems
-        .filter(
-          (i) =>
-            i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral || i.bucket.inInventory,
-        )
-        .map((i) => i.name.toLowerCase());
-      // favor items we actually own
-      const allItemNames = getUniqueItemNamesFromManifest(d2Definitions.InventoryItem.getAll());
-      return Array.from(
-        new Set([...myItemNames, ...allItemNames]),
-        (s) => `exactname:${quoteFilterString(s)}`,
-      );
+      const itemNames = new Set<string>();
+      // Prioritize items the user actually owns, by adding them first in the list
+      for (const i of allItems) {
+        if (i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral || i.bucket.inInventory) {
+          itemNames.add(i.name);
+        }
+      }
+      for (const n of getUniqueItemNamesFromManifest(d2Definitions.InventoryItem.getAll())) {
+        itemNames.add(n);
+      }
+      return Array.from(itemNames, itemNameToExactSearch);
     }
   },
   filter: ({ filterValue, language, lhs }) => {
     const test = matchText(filterValue, language, /* exact */ lhs === 'exactname');
     return (item) => test(item.name);
   },
-  fromItem: (item) => `exactname:${quoteFilterString(item.name)}`,
+  fromItem: (item) => itemNameToExactSearch(item.name),
 } satisfies ItemFilterDefinition;
 
 const freeformFilters: ItemFilterDefinition[] = [

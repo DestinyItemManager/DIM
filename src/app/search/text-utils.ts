@@ -79,3 +79,24 @@ export function testStringsFromDisplayPropertiesMap(
     testStringsFromDisplayProperties(test, d, includeDescription),
   );
 }
+
+// http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
+const singleQuoteLikeCharacters = /[\u2018-\u201A]/g;
+const doubleQuoteLikeCharacters = /[\u201C-\u201E]/g;
+
+// Turn quote variants into their boring ASCII equivalents for parsing.
+export function normalizeQuotes(str: string) {
+  return str.replace(singleQuoteLikeCharacters, "'").replace(doubleQuoteLikeCharacters, '"');
+}
+
+// These aren't global so they aren't stateful, and can be used to repeatedly .test()
+export const unescapedSingleQuoteCharacters = /(?<!\\)[\u2018-\u201A']/;
+export const unescapedDoubleQuoteCharacters = /(?<!\\)[\u201C-\u201E"]/;
+
+export function escapeQuotes(str: string, onlyDouble = false) {
+  if (!onlyDouble) {
+    str = str.replace(new RegExp(unescapedSingleQuoteCharacters, 'g'), '\\$&');
+  }
+  str = str.replace(new RegExp(unescapedDoubleQuoteCharacters, 'g'), '\\$&');
+  return str;
+}
