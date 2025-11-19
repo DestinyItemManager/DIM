@@ -7,11 +7,12 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
+import { AppIcon, clearIcon } from 'app/shell/icons';
 import { compact, filterMap } from 'app/utils/collections';
 import {
   getArmor3StatFocus,
-  getInterestingSocketMetadatas,
   getItemDamageShortName,
+  getSpecialtySocketMetadata,
   isArmor3,
 } from 'app/utils/item-utils';
 import {
@@ -40,7 +41,7 @@ const modernArmor = 'is:armor2.0 or is:armor3.0';
  * Generate possible comparisons for armor, given a reference item.
  */
 export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
-  const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
+  const exampleItemModSlotMetadata = getSpecialtySocketMetadata(exampleItem);
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
@@ -108,20 +109,13 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // above but also the same seasonal mod slot, if it has one
     exampleItem.destinyVersion === 2 &&
-      exampleItemModSlotMetadatas && {
+      exampleItemModSlotMetadata && {
         buttonLabel: [
-          <SpecialtyModSlotIcon
-            excludeStandardD2ModSockets
-            className={styles.inlineImageIcon}
-            key="1"
-            item={exampleItem}
-          />,
+          <SpecialtyModSlotIcon className={styles.inlineImageIcon} key="1" item={exampleItem} />,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `${modernArmor} ${exampleItemModSlotMetadatas
-          .map((m) => `modslot:${m.slotTag || 'none'}`)
-          .join(' ')}`,
+        query: `${modernArmor} modslot:${exampleItemModSlotMetadata.slotTag || 'none'}`,
       },
 
     // above but also the same special intrinsic, if it has one
@@ -200,6 +194,11 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       buttonLabel: [exampleItem.name],
       // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
       query: compareNameQuery(exampleItem),
+    },
+    // Exact armor based on ID
+    {
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
+      query: `id:${exampleItem.id}`,
     },
   ]).reverse();
 }
@@ -286,6 +285,11 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       buttonLabel: [adeptStripped],
       query: compareNameQuery(exampleItem),
     },
+    // Exact weapon based on ID
+    {
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
+      query: `id:${exampleItem.id}`,
+    },
   ]);
 
   comparisonSets = comparisonSets.reverse();
@@ -307,6 +311,11 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [exampleItem.name],
       query: compareNameQuery(exampleItem),
+    },
+    // Exact item based on ID
+    {
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
+      query: `id:${exampleItem.id}`,
     },
   ];
 

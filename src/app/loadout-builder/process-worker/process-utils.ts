@@ -91,10 +91,7 @@ function getRemainingEnergiesPerAssignment(
 
         // The activity mod for this slot won't fit in the item so move on to
         // the next permutation.
-        if (
-          energyCost > item.remainingEnergyCapacity ||
-          !item.compatibleModSeasons?.includes(tag)
-        ) {
+        if (energyCost > item.remainingEnergyCapacity || item.compatibleActivityMod !== tag) {
           continue activityModLoop;
         }
 
@@ -278,7 +275,7 @@ export function pickAndAssignSlotIndependentMods(
     for (const [tag, tagCount] of Object.entries(info.activityTagCounts)) {
       let socketsCount = 0;
       for (const item of items) {
-        if (item.compatibleModSeasons?.includes(tag)) {
+        if (item.compatibleActivityMod === tag) {
           socketsCount++;
         }
       }
@@ -309,7 +306,7 @@ export function pickAndAssignSlotIndependentMods(
       const energyCost = activityMod.energyCost;
 
       // The activity mods won't fit in the item set so move on to the next set of mods
-      if (energyCost > item.remainingEnergyCapacity || !item.compatibleModSeasons?.includes(tag)) {
+      if (energyCost > item.remainingEnergyCapacity || item.compatibleActivityMod !== tag) {
         continue activityModLoop;
       }
     }

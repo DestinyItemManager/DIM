@@ -11,7 +11,7 @@ describe('dim.gg loadout share links parsing', () => {
     ['https://dim.gg/4j5nz4q/Heart-of-Inmost-Light-Arc'],
   ])('valid dim.gg loadout link %s', (arg) => {
     const decoded = decodeShareUrl(arg);
-    if (!decoded || decoded.tag !== 'dimGGShare') {
+    if (decoded?.tag !== 'dimGGShare') {
       throw new Error();
     }
     expect(decoded.shareId).toBe('4j5nz4q');
@@ -36,7 +36,7 @@ describe('dim.gg loadout share links parsing', () => {
     ],
   ])('valid direct loadout link %s', (arg) => {
     const decoded = decodeShareUrl(arg);
-    if (!decoded || decoded.tag !== 'urlLoadout') {
+    if (decoded?.tag !== 'urlLoadout') {
       throw new Error();
     }
     expect(decoded.loadout.parameters!.mods!.length).not.toBe(0);

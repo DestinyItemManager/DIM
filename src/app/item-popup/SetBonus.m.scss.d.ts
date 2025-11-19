@@ -7,6 +7,7 @@ interface CssExports {
   'justCircle': string;
   'perk': string;
   'perkIcon': string;
+  'perkNameSubheader': string;
   'setBonus': string;
   'setBonusesStatus': string;
   'unsatisfied': string;

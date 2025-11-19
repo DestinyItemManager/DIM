@@ -419,10 +419,6 @@ const missingSources: { [key: string]: number[] } = {
     3790903614, // Mechanik 2.1
     3791691774, // Orbs of Restoration
     3798468567, // Arc Holster
-    3804242792, // Phoneutria Fera
-    3804242793, // Phoneutria Fera
-    3804242794, // Phoneutria Fera
-    3804242795, // Phoneutria Fera
     3808902618, // Weapons Mod
     3812037372, // Aspirant Gloves
     3846931924, // Solar Resistance
@@ -914,10 +910,6 @@ const missingSources: { [key: string]: number[] } = {
     2888021253, // Trachinus
     2888021254, // Trachinus
     2888021255, // Trachinus
-    3804242792, // Phoneutria Fera
-    3804242793, // Phoneutria Fera
-    3804242794, // Phoneutria Fera
-    3804242795, // Phoneutria Fera
   ],
   edz: [
     10307688, // Wildwood Plate
@@ -975,6 +967,7 @@ const missingSources: { [key: string]: number[] } = {
     4229161783, // Boots of Feltroc
   ],
   events: [
+    72775246, // Gunburn
     116784191, // Solstice Boots (Renewed)
     140842223, // Solstice Mask (Drained)
     143299650, // Solstice Plate (Renewed)
@@ -1100,15 +1093,19 @@ const missingSources: { [key: string]: number[] } = {
     3232831379, // Sublime Mask
     3236510875, // Solstice Grasps (Resplendent)
     3240434620, // Something New
-    3328019216, // Arcane Embrace
     3329514528, // Sublime Gauntlets
     3400256755, // Zephyr
     3558681245, // BrayTech Werewolf
     3559361670, // The Title
     3573686365, // Glacioclasm
+    3574168117, // Hushed Whisper
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)
     3748622249, // Solstice Hood (Resplendent)
+    3804242792, // Phoneutria Fera
+    3804242793, // Phoneutria Fera
+    3804242794, // Phoneutria Fera
+    3804242795, // Phoneutria Fera
     3809902215, // Sublime Cloak
     3829285960, // Horror Story
     3892841518, // Solstice Gauntlets (Renewed)

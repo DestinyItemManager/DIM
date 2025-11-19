@@ -5,6 +5,7 @@ interface CssExports {
   'icon': string;
   'icons': string;
   'searchHidden': string;
+  'statFocus': string;
   'subclass': string;
   'subclassBase': string;
   'subclassSuperIcon': string;

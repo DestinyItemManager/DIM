@@ -912,6 +912,7 @@ const D2Sources: {
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
       1416471099, // Source: Moments of Triumph 2023
       1462687159, // Reached level 5 in the Ages of Triumph record book.
+      1505938361, // Source: Call to Arms Event
       1568732528, // Source: Guardian Games 2024
       1666677522, // Source: Solstice
       1677921161, // Source: Festival of the Lost 2018.

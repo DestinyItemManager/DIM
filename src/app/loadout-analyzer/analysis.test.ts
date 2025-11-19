@@ -92,9 +92,6 @@ beforeAll(async () => {
       customStats: [],
       itemComponents: undefined,
     },
-    savedLoStatConstraintsByClass: {
-      [DestinyClass.Hunter]: armorStats.map((statHash) => ({ statHash })),
-    },
     autoModDefs: getAutoMods(defs, unlockedPlugs),
     unlockedPlugs,
     // No idea how to test this

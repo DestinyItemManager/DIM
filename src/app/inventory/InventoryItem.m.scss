@@ -108,3 +108,15 @@
   pointer-events: none;
   filter: drop-shadow(0 0 2px rgb(0, 0, 0, 0.8));
 }
+
+.statFocus {
+  display: block;
+  width: calc(#{dim-item-px(13)});
+  height: calc(#{dim-item-px(13)});
+  position: absolute;
+  top: $item-border-width;
+  right: $item-border-width;
+  pointer-events: none;
+  background-size: contain;
+  filter: drop-shadow(0 0 1px rgb(0, 0, 0, 1)) drop-shadow(0 0 0.5px rgb(0, 0, 0, 1));
+}

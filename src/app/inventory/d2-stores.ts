@@ -144,7 +144,7 @@ export function loadStores({
               // TODO: throw here?
               await dispatch(getPlatforms);
               account = currentAccountSelector(getState());
-              if (!account || account.destinyVersion !== 2) {
+              if (account?.destinyVersion !== 2) {
                 return;
               }
             }

@@ -198,6 +198,7 @@
     "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "按照類別顯示防具.",
     "ArmorIntrinsic": "顯示帶有固有特性的傳説防具，例如詭計護甲。",
+    "Artifice": "Shows Artifice armor.",
     "Ascended": "顯示可提升光等且已提升的物品。",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
     "BulkClear_other": "移除 {{count}} 物品標籤",
@@ -687,6 +688,7 @@
     "Exotic": "Exotic Armor",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "特殊",
+    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
     "Filter": "設定",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
@@ -1165,6 +1167,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "將物品鎖定狀態與標記同步.",
     "AutoLockTaggedExplanation": "DIM 將自動鎖定和解鎖物品以匹配它們的標簽。製作獲得的武器將不會鎖定，以便你進行重塑。當啓用此設置時，鎖定圖標不會顯示在帶標簽的物品圖標上。",
     "BadgePostmaster": "在 App 圖標上顯示當前角色的郵政官物品數量",
@@ -1204,6 +1207,7 @@
     "InventoryColumns": "物品欄顯示寬度",
     "InventoryColumnsMobile": "行動裝置物品欄顯示寬度",
     "InventoryColumnsMobileLine2": "將自動調整物品大小以適配當前設置",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "物品顯示",
     "Language": "語言",
     "LogOut": "登出",
@@ -1236,6 +1240,7 @@
     "SortByWeaponElement": "傷害類型",
     "SortCustom": "自訂排序",
     "SortName": "名稱",
+    "SpacesSize_other": "{{count}} spaces",
     "Theme": "主題",
     "Troubleshooting": "Troubleshooting",
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
@@ -1367,6 +1372,10 @@
   "StreamDeck": {
     "Authorize": "Connect application",
     "Enable": "Stream Deck 插件",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "啓用與 DIM Stream Deck 插件的連接。該插件是獨立的項目，既不是由 DIM 團隊編寫，也不是由 DIM 團隊提供支持。",
     "Install": "安裝插件",
     "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",

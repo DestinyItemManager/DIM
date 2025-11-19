@@ -1346,26 +1346,29 @@ function deleteSearch(
   const { canonical } = parseAndValidateQuery(query, filtersMap, {
     customStats: draft.settings.customStats ?? [],
   } as FilterContext);
-  query = canonical;
 
-  const existingSearch = draft.searches[destinyVersion].find((s) => s.query === query);
+  const existingSearches =
+    // Find the canonical match first, then the exact match
+    draft.searches[destinyVersion].filter((s) => s.query === canonical || s.query === query);
 
-  const updateAction: ProfileUpdateWithRollback = {
-    action: 'delete_search',
-    payload: {
-      query,
-      type,
-    },
-    before: {
-      query,
-      saved: existingSearch?.saved ?? false,
-      type,
-    },
-    platformMembershipId: account.membershipId,
-    destinyVersion: account.destinyVersion,
-  };
-  applyUpdateLocally(draft, updateAction);
-  draft.updateQueue.push(updateAction);
+  for (const s of existingSearches) {
+    const updateAction: ProfileUpdateWithRollback = {
+      action: 'delete_search',
+      payload: {
+        query: s.query,
+        type,
+      },
+      before: {
+        query: s.query,
+        saved: s?.saved ?? false,
+        type,
+      },
+      platformMembershipId: account.membershipId,
+      destinyVersion: account.destinyVersion,
+    };
+    applyUpdateLocally(draft, updateAction);
+    draft.updateQueue.push(updateAction);
+  }
 }
 
 function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccount) {

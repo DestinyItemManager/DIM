@@ -24,7 +24,11 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { TOTAL_STAT_HASH, breakerTypeNames } from 'app/search/d2-known-values';
+import {
+  TOTAL_STAT_HASH,
+  breakerTypeNames,
+  realD2ArmorStatSearchByHash,
+} from 'app/search/d2-known-values';
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -43,11 +47,11 @@ import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparator
 import {
   getArmor3StatFocus,
   getArmor3TuningStat,
-  getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  getSpecialtySocketMetadata,
   isArmor3,
   isArtifice,
   isArtificeSocket,
@@ -522,29 +526,11 @@ export function getColumns(
         className: styles.modslot,
         // TODO: only show if there are mod slots
         value: (item) =>
-          getInterestingSocketMetadatas(item)
-            ?.map((m) => m.slotTag)
-            .join(','),
+          isArtifice(item) ? 'artifice' : getSpecialtySocketMetadata(item)?.slotTag,
         cell: (value, item) =>
-          value && (
-            <SpecialtyModSlotIcon
-              className={styles.modslotIcon}
-              item={item}
-              excludeStandardD2ModSockets
-            />
-          ),
-        filter: (value) =>
-          value !== undefined
-            ? value
-                .split(',')
-                .map((m) => `modslot:${m}`)
-                .join(' ')
-            : ``,
-        csv: (value) => [
-          'Seasonal Mod',
-          // Yes, this is an array most of the time, or an empty string
-          value?.split(',') ?? '',
-        ],
+          value && <SpecialtyModSlotIcon className={styles.modslotIcon} item={item} />,
+        filter: (value) => (value !== undefined ? `modslot:${value}` : ''),
+        csv: (value) => ['Seasonal Mod', value ?? ''],
       }),
     destinyVersion === 1 &&
       c({
@@ -614,10 +600,11 @@ export function getColumns(
         className: styles.centered,
         header: t('Organizer.Columns.TertiaryStat'),
         csv: 'Tertiary Stat',
-        value: (item) => (isArmor3(item) ? getArmor3StatFocus(item)[2] : undefined),
-        cell: (statHash, item) => {
-          if (statHash) {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
+        value: (item) =>
+          isArmor3(item) ? realD2ArmorStatSearchByHash[getArmor3StatFocus(item)[2]] : undefined,
+        cell: (statName, item) => {
+          if (statName) {
+            const stat = item.stats?.find((s) => s.statHash === statHashByName[statName]);
             if (stat) {
               return (
                 <BungieImage
@@ -630,11 +617,7 @@ export function getColumns(
             }
           }
         },
-        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
-        filter: (statHash) => {
-          const statName = invert(statHashByName)[statHash!];
-          return `tertiarystat:${statName}`;
-        },
+        filter: (statName) => `tertiarystat:${statName}`,
       }),
     destinyVersion === 2 &&
       isArmor &&
@@ -643,10 +626,11 @@ export function getColumns(
         className: styles.centered,
         header: t('Organizer.Columns.TuningStat'),
         csv: 'Tuning Stat',
-        value: (item) => (isArmor3(item) ? getArmor3TuningStat(item) : undefined),
-        cell: (statHash, item) => {
-          if (statHash) {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
+        value: (item) =>
+          isArmor3(item) ? realD2ArmorStatSearchByHash[getArmor3TuningStat(item)!] : undefined,
+        cell: (statName, item) => {
+          if (statName) {
+            const stat = item.stats?.find((s) => s.statHash === statHashByName[statName]);
             if (stat) {
               return (
                 <BungieImage
@@ -659,11 +643,7 @@ export function getColumns(
             }
           }
         },
-        sort: compareBy((statHash) => invert(statHashByName)[statHash!]),
-        filter: (statHash) => {
-          const statName = invert(statHashByName)[statHash!];
-          return `tertiarystat:${statName}`;
-        },
+        filter: (statName) => `tunedstat:${statName}`,
       }),
     destinyVersion === 2 &&
       isArmor &&

@@ -29,8 +29,8 @@
 }
 
 .menuLoadout > span:not(.app-icon) {
-  text-transform: none;
-  letter-spacing: normal;
+  text-transform: none !important;
+  letter-spacing: normal !important;
 }
 
 .hashtagTip {

@@ -234,6 +234,7 @@
     "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "Показывает броню по категориям.",
     "ArmorIntrinsic": "Показывает легендарную броню, которая имеет изначальный перк, такой как Искусная Броня.",
+    "Artifice": "Shows Artifice armor.",
     "Ascended": "Показывает предметы, которые имеют узел восхождения и получили восхождение.",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
     "BulkClear_few": "Удалены тэги с {{count}} предметов.",
@@ -738,6 +739,7 @@
     "Exotic": "Экзотическая Броня",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Специальные",
+    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
     "Filter": "Настройки",
     "IgnoreStat": "Если не отмечено, Оптимизатор Комплекта будет притворяться, что этой характеристики не существует при создании наборов",
     "IncreaseStatPriority": "Повысить приоритет характеристики",
@@ -1258,6 +1260,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "Синхронизировать состояние блокировки с тегом",
     "AutoLockTaggedExplanation": "DIM будет автоматически блокировать и разблокировать предметы для соответствия с тегом. Изготовленные предметы останутся разблокированными, чтобы было доступно трансформирование. Когда эта настройка активирована, значок блокировки не будет отображен на ячейке с предметом для отмеченных тегом предметов.",
     "BadgePostmaster": "Показать количество предметов в почтмейстере для текущего персонажа на значке приложения",
@@ -1297,6 +1300,7 @@
     "InventoryColumns": "Ширина инвентарей",
     "InventoryColumnsMobile": "Ширина [в предметах] столбца персонажа в мобильной портретной ориентации",
     "InventoryColumnsMobileLine2": "Размер предметов будет изменён, чтобы соответствовать новым настройкам",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Предметы",
     "Language": "Язык",
     "LogOut": "Выйти",
@@ -1329,6 +1333,10 @@
     "SortByWeaponElement": "Тип Урона",
     "SortCustom": "Свой порядок",
     "SortName": "Имя",
+    "SpacesSize_few": "{{count}} spaces",
+    "SpacesSize_many": "{{count}} spaces",
+    "SpacesSize_one": "{{count}} space",
+    "SpacesSize_other": "{{count}} spaces",
     "Theme": "Тема",
     "Troubleshooting": "Troubleshooting",
     "VaultArmorGroupingStyle": "Разделять броню на разные строки по классу",
@@ -1463,6 +1471,10 @@
   "StreamDeck": {
     "Authorize": "Подключить приложение",
     "Enable": "Плагин Stream Deck",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "Активировать соединение с плагином Stream Deck для DIM. Этот плагин — отдельный проект, который не был написан командой DIM и не поддерживается ею.",
     "Install": "Установить плагин",
     "MissingAuthorization": "Вы должны авторизовать приложение Stream Deck для подключения к DIM. Перейдите в настройки и нажмите «Подключить приложение».",

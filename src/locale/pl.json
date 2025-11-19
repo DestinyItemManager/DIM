@@ -234,6 +234,7 @@
     "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "Pokazuje zbroje na podstawie ich kategorii.",
     "ArmorIntrinsic": "Pokazuje legendarny pancerz, który ma Cechy Pancerza, takie jak Pancerz Pomysłowości.",
+    "Artifice": "Shows Artifice armor.",
     "Ascended": "Pokazuje przedmioty, które posiadają węzeł wstępujący i zostały wstąpione.",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
     "BulkClear_few": "Usunięto tagi z {{count}} przedmiotów.",
@@ -738,6 +739,7 @@
     "Exotic": "Egzotyczny pancerz",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Specjalne",
+    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
     "Filter": "Ustawienia",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
@@ -1258,6 +1260,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "Zsynchronizuj stan blokady przedmiotu z tagiem",
     "AutoLockTaggedExplanation": "DIM będzie automatycznie blokował i odblokowywał przedmioty, aby dopasować je do ich tagów. Stworzone przedmioty pozostaną odblokowane, aby umożliwić przemodelowanie. Gdy to ustawienie jest włączone, ikona blokady nie będzie wyświetlana na kafelku przedmiotu dla otagowanych przedmiotów.",
     "BadgePostmaster": "Pokarz liczbę przedmiotów u kuriera dla obecnej postaci w ikonie aplikacji",
@@ -1297,6 +1300,7 @@
     "InventoryColumns": "Szerokość ekwipunku postaci",
     "InventoryColumnsMobile": "Szerokość ekwipunku postaci na mobilnym trybie portretowym",
     "InventoryColumnsMobileLine2": "Elementy zostaną przeskalowane, aby uwzględnić nowe ustawienie",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Wyświetlanie przedmiotu",
     "Language": "Język",
     "LogOut": "Wyloguj się",
@@ -1329,6 +1333,10 @@
     "SortByWeaponElement": "Typ obrażeń",
     "SortCustom": "Sortowanie niestandardowe",
     "SortName": "Nazwa",
+    "SpacesSize_few": "{{count}} spaces",
+    "SpacesSize_many": "{{count}} spaces",
+    "SpacesSize_one": "{{count}} space",
+    "SpacesSize_other": "{{count}} spaces",
     "Theme": "Theme",
     "Troubleshooting": "Troubleshooting",
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
@@ -1463,6 +1471,10 @@
   "StreamDeck": {
     "Authorize": "Połącz aplikację",
     "Enable": "Wtyczka Stream Deck",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "Włącz połączenie ze wtyczką DIM Stream Deck. Ta wtyczka jest osobnym projektem, który nie jest napisany ani nie jest wspierany przez zespół DIM.",
     "Install": "Zainstaluj wtyczkę",
     "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",

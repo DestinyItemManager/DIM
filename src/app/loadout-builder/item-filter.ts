@@ -3,11 +3,12 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
+import { fotlWildcardHashes } from 'app/loadout/known-values';
 import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { sumBy } from 'app/utils/collections';
-import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import { computeStatDupeLower } from 'app/utils/stats';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -192,7 +193,9 @@ export function filterItems({
     // If every non-exotic requires set bonuses...
     if (includeOnlySetBonusHashes && !lockedExoticApplicable) {
       firstPassFilteredItems = firstPassFilteredItems.filter(
-        (item) => item.setBonus && includeOnlySetBonusHashes.includes(item.setBonus.hash),
+        (item) =>
+          (item.setBonus && includeOnlySetBonusHashes.includes(item.setBonus.hash)) ||
+          fotlWildcardHashes.has(item.hash),
       );
     }
 
@@ -232,12 +235,12 @@ export function filterItems({
       // more energy capacity or more relevant slots, it will be kept. Since we
       // reuse the logic from `is:statlower`, this also takes into account
       // artifice/tuning mods.
-      // This duplicates some logic from mapDimItemToProcessItem, but it's
+      // This duplicates some logic from mapDimItemToProcessItems, but it's
       // easier to filter items out here than to do it later.
       const getStats = (item: DimItem) => {
         // Masterwork them up to the assumed masterwork level
         const masterworkedStatValues = calculateAssumedMasterworkStats(item, armorEnergyRules);
-        const compatibleModSeasons = getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag);
+        const compatibleModSeason = getSpecialtySocketMetadata(item)?.slotTag;
         const capacity = calculateAssumedItemEnergy(item, armorEnergyRules);
         const modsCost = lockedModsForPlugCategoryHash
           ? sumBy(lockedModsForPlugCategoryHash, (mod) => mod.plug.energyCost?.energyCost ?? 0)
@@ -251,7 +254,7 @@ export function filterItems({
           { statHash: -2, value: remainingEnergyCapacity },
           ...requiredModTagsArray.map((tag) => ({
             statHash: -3, // ←↑ Dummy/temp stat hashes. Just need to not match real armor stat hashes.
-            value: compatibleModSeasons?.includes(tag) ? 1 : 0,
+            value: compatibleModSeason === tag ? 1 : 0,
           })),
           // Add a comparison stat for each required set bonus. An item that has that bonus scores 1, others score zero.
           // Statlower will make sure any matching set bonus item won't lose to an item without it.

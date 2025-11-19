@@ -3,7 +3,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
 import { quoteFilterString } from 'app/search/query-parser';
-import { getInterestingSocketMetadatas, isD1Item } from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, isD1Item } from 'app/utils/item-utils';
 import { getArmorArchetype } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ActionType, Reducer, getType } from 'typesafe-actions';
@@ -175,11 +175,10 @@ function initialCompareQuery(item: DimItem) {
       factors.push(`exactperk:${quoteFilterString(intrinsicName)}`);
     }
 
-    const modSlotMetadata = getInterestingSocketMetadatas(item);
+    const modSlotMetadata = getSpecialtySocketMetadata(item);
+
     if (modSlotMetadata) {
-      for (const m of modSlotMetadata) {
-        factors.push(`modslot:${m.slotTag}`);
-      }
+      factors.push(`modslot:${modSlotMetadata.slotTag}`);
     }
 
     const archetype = getArmorArchetype(item);
@@ -202,7 +201,8 @@ function removeCompareItem(state: CompareState, item: DimItem): CompareState {
   const newQuery = (
     state.session.query.includes(addedQuery)
       ? state.session.query.replace(addedQuery, '')
-      : `${state.session.query} -id:${item.id}`
+      : // Quote this string because vendor item IDs can contain complex characters
+        `${state.session.query} -id:"${item.id}"`
   )
     .replace(/\s+/, ' ')
     .trim();

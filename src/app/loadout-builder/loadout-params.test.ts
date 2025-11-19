@@ -32,6 +32,18 @@ describe('resolveStatConstraints', () => {
         { statHash: armorStats[5], minStat: 0, maxStat: MAX_STAT, ignored: true },
       ],
     },
+    {
+      name: 'fills in from an empty array',
+      before: [],
+      after: [
+        { statHash: armorStats[0], minStat: 0, maxStat: MAX_STAT, ignored: true },
+        { statHash: armorStats[1], minStat: 0, maxStat: MAX_STAT, ignored: true },
+        { statHash: armorStats[2], minStat: 0, maxStat: MAX_STAT, ignored: true },
+        { statHash: armorStats[3], minStat: 0, maxStat: MAX_STAT, ignored: true },
+        { statHash: armorStats[4], minStat: 0, maxStat: MAX_STAT, ignored: true },
+        { statHash: armorStats[5], minStat: 0, maxStat: MAX_STAT, ignored: true },
+      ],
+    },
   ];
 
   for (const { name, before, after } of cases) {

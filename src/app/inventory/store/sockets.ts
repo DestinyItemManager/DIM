@@ -239,8 +239,7 @@ function isUncraftableEnhancedPerk(
 ) {
   return (
     isEnhancedPerk(built.plugDef) &&
-    craftingRequirements &&
-    craftingRequirements.unlockRequirements.length === 0 &&
+    craftingRequirements?.unlockRequirements.length === 0 &&
     craftingRequirements.materialRequirementHashes.length === 0
   );
 }

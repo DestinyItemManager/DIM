@@ -210,6 +210,7 @@
     "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "Mostrar armaduras baseadas na sua categoria.",
     "ArmorIntrinsic": "Exibe armaduras lendárias que possuem um perk intrínseco, como Armadura de Artífice.",
+    "Artifice": "Shows Artifice armor.",
     "Ascended": "Exibe itens que possuem nódulos ascendentes e que foram ascendidos.",
     "Breaker": "Filtrar por tipo de quebra ou tipo de campeão correspondente. breaker:instrinsic mostra itens com habilidade intrínseca de quebra.",
     "BulkClear_one": "Etiqueta removida de 1 item.",
@@ -704,6 +705,7 @@
     "Exotic": "Armadura Exótica",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Especial",
+    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
     "Filter": "Configurações",
     "IgnoreStat": "Se desmarcado, o Otimizador de Sets vai fingir que este atributo não existe quando construir os sets",
     "IncreaseStatPriority": "Aumenta prioridade de atributo",
@@ -1196,6 +1198,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "Sincronizar estado de bloqueio de item com etiqueta",
     "AutoLockTaggedExplanation": "DIM irá travar e destravar automaticamente os itens para que combinem com suas etiquetas. Itens criados permanecerão desbloqueados para permitir sua remodelagem. Quando esta configuração estiver ativada, o ícone de bloqueio não será mostrado na imagem do item para itens marcados.",
     "BadgePostmaster": "Exibir a quantidade de itens disponíveis com o Chefe do Correio do personagem atual no ícone do aplicativo",
@@ -1235,6 +1238,7 @@
     "InventoryColumns": "Largura do inventário de personagem",
     "InventoryColumnsMobile": "Tamanho do inventário do personagem em dispositivos móveis em modo retrato",
     "InventoryColumnsMobileLine2": "Os itens serão redimensionados para acomodar a nova configuração",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Exibição dos Itens",
     "Language": "Idioma",
     "LogOut": "Sair",
@@ -1267,6 +1271,8 @@
     "SortByWeaponElement": "Tipo de Dano",
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome",
+    "SpacesSize_one": "{{count}} space",
+    "SpacesSize_other": "{{count}} spaces",
     "Theme": "Tema",
     "Troubleshooting": "Troubleshooting",
     "VaultArmorGroupingStyle": "Separe as armaduras em linhas diferentes por classe",
@@ -1399,6 +1405,10 @@
   "StreamDeck": {
     "Authorize": "Conectar aplicativo",
     "Enable": "Plugin do Stream Deck",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "Permite a conexão com o plugin DIM Stream Deck. Este plugin pertence a um projeto independente que não foi escrito e nem é suportado pela equipe DIM.",
     "Install": "Instalar plugin",
     "MissingAuthorization": "Você deve autorizar o aplicativo Stream Deck para se conectar ao DIM. Vá para configurações e clique em \"Conectar aplicativo\".",

@@ -20,7 +20,8 @@ import {
   tuningModToTunedStathash,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
-import modSocketMetadata, {
+import {
+  modSocketMetadata,
   ModSocketMetadata,
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
@@ -33,7 +34,7 @@ import {
   PlugCategoryHashes,
   StatHashes,
 } from 'data/d2/generated-enums';
-import { filterMap, objectifyArray } from './collections';
+import { objectifyArray } from './collections';
 import { getArmor3TuningSocket } from './socket-utils';
 
 // damage is a mess!
@@ -66,10 +67,10 @@ const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
   (modMetadata) => modMetadata.compatiblePlugCategoryHashes,
 );
 
-/** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
-const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
+/** verifies an item is d2 armor and returns its specialty mod socket if any */
+const getSpecialtySocket = (item?: DimItem): DimSocket | undefined => {
   if (item?.bucket.inArmor) {
-    const specialtySockets = item.sockets?.allSockets.filter(
+    return item.sockets?.allSockets.find(
       (socket) =>
         // check plugged -- non-artifice GoA armor still has the socket but nothing in it
         socket.plugged &&
@@ -77,32 +78,20 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
         socket.visibleInGame &&
         specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash),
     );
-    if (specialtySockets?.length) {
-      return specialtySockets;
-    }
-  }
-};
-
-/** returns ModMetadatas if the item has one or more specialty mod slots */
-export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const metadatas = filterMap(
-    getSpecialtySockets(item) ?? [],
-    (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash],
-  );
-  if (metadatas?.length) {
-    return metadatas;
   }
 };
 
 /**
- * combat and legacy slots are boring now. everything has them.
- * this focuses on narrower stuff: raid & nightmare modslots
+ * Returns ModMetadatas if the item has one or more specialty mod slots.
+ *
+ * This no longer includes artifice. Use isArtifice function for that.
  */
-export const getInterestingSocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const specialtySockets = getSpecialtySocketMetadatas(item)?.filter((m) => m.slotTag !== 'legacy');
-  if (specialtySockets?.length) {
-    return specialtySockets;
+export const getSpecialtySocketMetadata = (item?: DimItem): ModSocketMetadata | undefined => {
+  const specialtySocket = getSpecialtySocket(item);
+  if (!specialtySocket) {
+    return;
   }
+  return modMetadataBySocketTypeHash[specialtySocket.socketDefinition.socketTypeHash];
 };
 
 /**
@@ -437,7 +426,7 @@ export function getArmor3StatFocus(item: DimItem): StatHashes[] {
  * Every armor with tuning has Balanced Tuning (3122197216) which provides +1 to several stats,
  * so this seeks an available plug item that's one of the +5/-5 mods.
  */
-export function getArmor3TuningStat(item: DimItem): number | undefined {
+export function getArmor3TuningStat(item: DimItem): StatHashes | undefined {
   const reusablePlugItems = item.bucket.inArmor
     ? getArmor3TuningSocket(item)?.reusablePlugItems
     : undefined;

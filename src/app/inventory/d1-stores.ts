@@ -37,7 +37,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
       if (!account) {
         await dispatch(getPlatforms);
         account = currentAccountSelector(getState());
-        if (!account || account.destinyVersion !== 1) {
+        if (account?.destinyVersion !== 1) {
           return;
         }
       }

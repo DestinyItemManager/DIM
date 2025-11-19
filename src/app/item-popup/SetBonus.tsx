@@ -8,50 +8,33 @@ import { DimStore } from 'app/inventory/store-types';
 import { useCurrentSetBonus } from 'app/inventory/store/hooks';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareByIndex } from 'app/utils/comparators';
-import { LookupTable } from 'app/utils/util-types';
 import {
   DestinyEquipableItemSetDefinition,
   DestinySandboxPerkDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
+// eslint-disable-next-line css-modules/no-unused-class
+import pressTipStyles from '../dim-ui/PressTip.m.scss';
 import styles from './SetBonus.m.scss';
 
-/** Information about set bonuses currently/hypothetically provided by  a collection of armor pieces. */
-export interface ActiveSetBonusInfo {
-  // Returned as a convenience for downstream display, to avoid repeat filtering and sorting armor.
-  equippedArmor: DimItem[];
-  possibleBonusSets: Record<number, DimItem[]>;
-  activeSetBonuses: LookupTable<
-    number,
-    {
-      setBonus: DestinyEquipableItemSetDefinition;
-      activePerks: Record<
-        number,
-        {
-          def: DestinySandboxPerkDefinition;
-          requirement: number;
-        }
-      >;
-    }
-  >;
-}
-
 /** Given some equipped items, returns info about what set bonuses are active */
-export function getSetBonusStatus(
-  defs: D2ManifestDefinitions,
-  items: DimItem[],
-): ActiveSetBonusInfo {
+export function getSetBonusStatus(defs: D2ManifestDefinitions, items: DimItem[]) {
   // You could provide incorrect or unrealistic information to this function, like 10 helmets,
   // but we can at least filter down to armor so this can accept a store's equipped items.
   const equippedArmor = items
     .filter((i) => i.bucket.inArmor)
     .sort(compareByIndex(D2Categories.Armor, (i) => i.bucket.hash));
   const possibleBonusSets: Record<number, DimItem[]> = {};
-  const activeSetBonuses: NodeJS.Dict<{
-    setBonus: DestinyEquipableItemSetDefinition;
-    activePerks: Record<number, { def: DestinySandboxPerkDefinition; requirement: number }>;
-  }> = {};
+
+  // It's easier to build a boolean here than play "is the object empty" downstream.
+  const activeSetBonuses = new Set<DestinyEquipableItemSetDefinition>();
+  const activePerks = new Set<number>();
+  const perkDefs: Record<number, DestinySandboxPerkDefinition> = {};
+
+  // Collect perk defs/display info here, instead of repeatedly
+  // looking it up in JSX consumers of this output.
+  const displayIterable = [];
 
   for (const item of equippedArmor) {
     if (item.setBonus) {
@@ -60,68 +43,91 @@ export function getSetBonusStatus(
   }
 
   for (const h in possibleBonusSets) {
-    const possibleSet = possibleBonusSets[h];
-    const possibleBonus = possibleSet[0].setBonus!;
-    for (const perk of possibleBonus.setPerks) {
-      if (possibleSet.length >= perk.requiredSetCount) {
-        activeSetBonuses[possibleBonus.hash] ??= {
-          setBonus: possibleBonus,
-          activePerks: {},
-        };
-        activeSetBonuses[possibleBonus.hash]!.activePerks[perk.sandboxPerkHash] = {
-          def: defs.SandboxPerk.get(perk.sandboxPerkHash),
-          requirement: perk.requiredSetCount,
-        };
+    const matchingSetItems = possibleBonusSets[h];
+    const possibleBonus = matchingSetItems[0].setBonus!;
+    const info: {
+      bonusDef: DestinyEquipableItemSetDefinition;
+      activePerks: { requiredSetCount: number; perkDef: DestinySandboxPerkDefinition }[];
+    } = { bonusDef: possibleBonus, activePerks: [] };
+
+    for (const { sandboxPerkHash, requiredSetCount } of possibleBonus.setPerks) {
+      const perkDef = defs.SandboxPerk.get(sandboxPerkHash);
+      perkDefs[sandboxPerkHash] = perkDef;
+      if (matchingSetItems.length >= requiredSetCount) {
+        activePerks.add(sandboxPerkHash);
+        activeSetBonuses.add(possibleBonus);
+        info.activePerks.push({ requiredSetCount, perkDef });
       }
     }
+    if (info.activePerks.length) {
+      displayIterable.push(info);
+    }
   }
+
   return {
-    equippedArmor,
-    possibleBonusSets,
+    displayIterable,
     activeSetBonuses,
+    activePerks,
+    equippedArmor,
+    perkDefs,
   };
 }
 
-/** Active set bonuses granted by some equipped or hypothetically equipped armor. */
+/** Information about set bonuses currently/hypothetically provided by  a collection of armor pieces. */
+export type ActiveSetBonusInfo = ReturnType<typeof getSetBonusStatus>;
+
+/**
+ * Active set bonuses granted by some equipped or hypothetically equipped armor,
+ * displayed as 0, 1, or 2 perk circles with a tooltip.
+ */
 export function SetBonusesStatus({
-  setBonusStatus,
+  setBonusStatus: { displayIterable },
   store,
 }: {
   setBonusStatus: ActiveSetBonusInfo;
   store?: DimStore;
 }) {
   return (
-    <div className={styles.setBonusesStatus}>
-      {Object.values(setBonusStatus.activeSetBonuses).map((sb) => (
-        <PressTip
-          key={sb!.setBonus.hash}
-          tooltip={
-            <>
-              <Tooltip.Header text={sb!.setBonus.displayProperties.name} />
-              {Object.values(sb!.activePerks).map((p, i) => (
-                <React.Fragment key={p.def.hash}>
-                  {i !== 0 && <hr />}
-                  <strong>{`${t('Item.SetBonus.NPiece', { count: p.requirement })} | ${p.def.displayProperties.name}`}</strong>
-                  <br />
-                  {p.def.displayProperties.description}
-                </React.Fragment>
-              ))}
-              {store && (
-                <>
-                  <hr />
-                  <ContributingArmor store={store} setBonus={sb!.setBonus} />
-                </>
-              )}
-            </>
-          }
-          placement="top"
-        >
-          {Object.values(sb!.activePerks).map((p) => (
-            <SetPerkIcon key={p.def.hash} perkDef={p.def} active={true} />
+    <PressTip
+      className={styles.setBonusesStatus}
+      tooltip={
+        <>
+          {displayIterable.map(({ bonusDef, activePerks }) => (
+            <React.Fragment key={bonusDef.hash}>
+              <div className={pressTipStyles.header}>
+                <h2>{bonusDef.displayProperties.name}</h2>
+              </div>
+              {activePerks.map(({ requiredSetCount, perkDef }, i) => {
+                const { displayProperties, hash } = perkDef;
+                return (
+                  <React.Fragment key={hash}>
+                    <div className={pressTipStyles.header}>
+                      <h3 className={styles.perkNameSubheader}>
+                        <SetPerkIcon perkDef={perkDef} active />
+                        {`${t('Item.SetBonus.NPiece', { count: requiredSetCount })} | ${displayProperties.name}`}
+                      </h3>
+                    </div>
+                    <div className={pressTipStyles.content}>
+                      {displayProperties.description}
+                      {i === activePerks.length - 1 && store && (
+                        <ContributingArmor store={store} setBonus={bonusDef} />
+                      )}
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+            </React.Fragment>
           ))}
-        </PressTip>
-      ))}
-    </div>
+        </>
+      }
+      placement="top"
+    >
+      {displayIterable.flatMap((b) =>
+        b.activePerks.map(({ perkDef }) => (
+          <SetPerkIcon key={perkDef.hash} perkDef={perkDef} active={true} />
+        )),
+      )}
+    </PressTip>
   );
 }
 
@@ -233,16 +239,14 @@ export function SetBonus({
       <div className={styles.setBonus}>
         {setBonus.setPerks
           .filter((perk) => perk && setCount >= perk.requiredSetCount)
-          .map((p) => (
+          .map(({ sandboxPerkHash, requiredSetCount }) => (
             <SetPerk
-              key={p.sandboxPerkHash}
+              key={sandboxPerkHash}
               store={store}
-              perkDef={defs.SandboxPerk.get(p.sandboxPerkHash)}
+              perkDef={defs.SandboxPerk.get(sandboxPerkHash)}
               setBonus={setBonus}
-              requiredSetCount={p.requiredSetCount}
-              active={Boolean(
-                setBonusStatus.activeSetBonuses[setBonus.hash]?.activePerks[p.sandboxPerkHash],
-              )}
+              requiredSetCount={requiredSetCount}
+              active={setBonusStatus.activePerks.has(sandboxPerkHash)}
             />
           ))}
       </div>

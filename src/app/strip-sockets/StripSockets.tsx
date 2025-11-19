@@ -1,13 +1,12 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
-import { t } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { AppIcon, faCheckCircle, refreshIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { withCancel } from 'app/utils/cancel';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import chestArmorItem from 'destiny-icons/armor_types/chest.svg';
 import ghostIcon from 'destiny-icons/general/ghost.svg';
@@ -21,6 +20,16 @@ import { allItemsSelector } from '../inventory/selectors';
 import styles from './StripSockets.m.scss';
 import { SocketKind, StripAction, collectSocketsToStrip, doStripSockets } from './strip-sockets';
 import { stripSocketsQuery$ } from './strip-sockets-actions';
+
+const i18nKeys: NodeJS.Dict<I18nKey> = {
+  shaders: tl('StripSockets.Shaders'),
+  ornaments: tl('StripSockets.Ornaments'),
+  weaponmods: tl('StripSockets.WeaponMods'),
+  armormods: tl('StripSockets.ArmorMods'),
+  discountedmods: tl('StripSockets.DiscountedMods'),
+  subclass: tl('StripSockets.Subclass'),
+  others: tl('StripSockets.Others'),
+};
 
 /**
  * Error, OK, or still in our worklist
@@ -304,9 +313,8 @@ function StripSocketsChoose({
 
   useEffect(() => {
     reportSockets(
-      socketKinds
-        ?.filter((k) => k.items && activeKinds.includes(k.kind))
-        .flatMap((k) => k.items!) || [],
+      socketKinds?.filter((k) => k.items && activeKinds.includes(k.kind)).flatMap((k) => k.items) ||
+        [],
     );
   }, [reportSockets, socketKinds, activeKinds]);
 
@@ -314,82 +322,76 @@ function StripSocketsChoose({
     socketKinds && (
       <>
         {socketKinds.length ? (
-          socketKinds.map((entry) => {
-            const itemCats = [
-              { icon: handCannonIcon, num: entry.numWeapons },
-              { icon: chestArmorItem, num: entry.numArmor },
-              { icon: ghostIcon, num: entry.numOthers },
-            ];
-            return (
-              <SocketKindButton
-                key={entry.kind}
-                name={t(entry.name, { count: entry.numApplicableSockets })}
-                representativeDef={entry.representativePlug}
-                itemCategories={itemCats}
-                selected={activeKinds.includes(entry.kind)}
-                onClick={() => {
-                  if (activeKinds.includes(entry.kind)) {
-                    setActiveKinds(activeKinds.filter((k) => k !== entry.kind));
-                  } else {
-                    setActiveKinds([...activeKinds, entry.kind]);
-                  }
-                }}
-              />
-            );
-          })
+          socketKinds.map(
+            ({
+              kind,
+              representativePlug,
+              numWeapons,
+              numArmor,
+              numOthers,
+              numApplicableSockets,
+            }) => {
+              const selected = activeKinds.includes(kind);
+
+              const itemCats = [
+                { icon: handCannonIcon, num: numWeapons },
+                { icon: chestArmorItem, num: numArmor },
+                { icon: ghostIcon, num: numOthers },
+              ];
+              const labelKey = i18nKeys[kind];
+              const label =
+                (labelKey && t(labelKey, { count: numApplicableSockets })) ||
+                `${numApplicableSockets}x ${representativePlug.itemTypeDisplayName}`;
+
+              const onClick = () => {
+                if (activeKinds.includes(kind)) {
+                  setActiveKinds(activeKinds.filter((k) => k !== kind));
+                } else {
+                  setActiveKinds([...activeKinds, kind]);
+                }
+              };
+
+              return (
+                <div
+                  key={kind}
+                  className={clsx(styles.socketKindButton, {
+                    [styles.selectedButton]: selected,
+                  })}
+                  onClick={onClick}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className="item" title={label}>
+                    <DefItemIcon itemDef={representativePlug} />
+                  </div>
+                  <div className={styles.buttonInfo}>
+                    <div
+                      className={clsx(styles.buttonTitle, {
+                        [styles.selectedTitle]: selected,
+                      })}
+                    >
+                      {label}
+                    </div>
+                  </div>
+                  <div>
+                    {itemCats.map(
+                      ({ icon, num }, idx) =>
+                        num > 0 && (
+                          <React.Fragment key={idx}>
+                            <img src={icon} className={styles.itemTypeIcon} /> {num}
+                            <br />
+                          </React.Fragment>
+                        ),
+                    )}
+                  </div>
+                </div>
+              );
+            },
+          )
         ) : (
           <div className={styles.noSocketsMessage}>{t('StripSockets.NoSockets')}</div>
         )}
       </>
     )
-  );
-}
-
-function SocketKindButton({
-  name,
-  representativeDef,
-  itemCategories,
-  selected,
-  onClick,
-}: {
-  name: string;
-  representativeDef: DestinyInventoryItemDefinition;
-  itemCategories: { icon: string; num: number }[];
-  selected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <div
-      className={clsx(styles.socketKindButton, {
-        [styles.selectedButton]: selected,
-      })}
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-    >
-      <div className="item" title={name}>
-        <DefItemIcon itemDef={representativeDef} />
-      </div>
-      <div className={styles.buttonInfo}>
-        <div
-          className={clsx(styles.buttonTitle, {
-            [styles.selectedTitle]: selected,
-          })}
-        >
-          {name}
-        </div>
-      </div>
-      <div>
-        {itemCategories.map(
-          ({ icon, num }, idx) =>
-            num > 0 && (
-              <React.Fragment key={idx}>
-                <img src={icon} className={styles.itemTypeIcon} /> {num}
-                <br />
-              </React.Fragment>
-            ),
-        )}
-      </div>
-    </div>
   );
 }

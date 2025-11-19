@@ -59,7 +59,10 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
         </PressTip>
       )}
       {params.setBonuses && (
-        <PressTip tooltip={() => lbParamDesc(t('Loadouts.SetBonusesDesc'))}>
+        <PressTip
+          className={styles.setBonuses}
+          tooltip={() => lbParamDesc(t('Loadouts.SetBonusesDesc'))}
+        >
           <SetBonuses setBonuses={params.setBonuses} />
         </PressTip>
       )}

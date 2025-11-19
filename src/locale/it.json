@@ -210,6 +210,7 @@
     "Armor3": "Mostra gli oggetti che utilizzano il sistema di statistiche Armatura 3.0 introdotto con I Confini del Destino.",
     "ArmorCategory": "Mostra le armature ordinate per categoria.",
     "ArmorIntrinsic": "Mostra le armature leggendarie che hanno una caratteristica intrinseca, come l'Armatura dell'Artificio.",
+    "Artifice": "Mostra armatura dell'Artificio.",
     "Ascended": "Mostra gli oggetti che hanno un potenziamento \"ascensione\" che sono stati ascesi.",
     "Breaker": "Filtra per tipo di anti-campioni o per tipo di campione corrispondente. breaker:intrinsic mostra gli oggetti con abilità anti-campioni intrinseche.",
     "BulkClear_one": "Etichetta rimossa da 1 oggetto.",
@@ -704,6 +705,7 @@
     "Exotic": "Armatura Esotica",
     "ExoticClassItemPerks": "Se vuoi peculiarità specifiche, utilizza ricerche come exactperk:\"spirito della verità\". Clicca sulle peculiarità nei risultati dell'Ottimizzatore per aggiungerle o rimuoverle dal filtro oggetti.",
     "ExoticSpecialCategory": "Speciale",
+    "FOTLWildcardWarning": "Questo set contiene una maschera della Festa delle Anime Perdute. Applica manualmente la modifica corretta per attivare il bonus set desiderato.",
     "Filter": "Impostazioni",
     "IgnoreStat": "Se non selezionata, l'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
     "IncreaseStatPriority": "Aumenta la priorità della statistica",
@@ -1196,6 +1198,7 @@
   },
   "Settings": {
     "Appearance": "Aspetto",
+    "ArmorArchetypeModslot": "Archetipo armatura / slot modifica",
     "AutoLockTagged": "Sincronizza il blocco dell'oggetto con l'etichetta",
     "AutoLockTaggedExplanation": "DIM bloccherà e sbloccherà automaticamente gli oggetti per corrispondere alle loro etichette. Gli oggetti forgiati resteranno sbloccati per consentire la ri-forgiatura. Quando questa impostazione è attiva, l'icona di blocco non sarà mostrata nelle tessere degli oggetti etichettati.",
     "BadgePostmaster": "Mostra il numero degli oggetti dagli Amministratori per il personaggio attuale sull'icona dell'app",
@@ -1235,6 +1238,7 @@
     "InventoryColumns": "Larghezza dell'inventario",
     "InventoryColumnsMobile": "Larghezza inventario personaggio su dispositivi mobili in modalità verticale",
     "InventoryColumnsMobileLine2": "Gli oggetti saranno ridimensionati per adattarsi alla nuova impostazione",
+    "InventoryNumberOfSpacesToClear": "Numero di spazi vuoti da creare quando si utilizza la Modalità Farming",
     "Items": "Aspetto degli oggetti",
     "Language": "Lingua",
     "LogOut": "Disconnetti",
@@ -1267,6 +1271,8 @@
     "SortByWeaponElement": "Tipo di danno",
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome",
+    "SpacesSize_one": "{{count}} spazio",
+    "SpacesSize_other": "{{count}} spazi",
     "Theme": "Tema",
     "Troubleshooting": "Risoluzione problemi",
     "VaultArmorGroupingStyle": "Separa le armature su righe diverse ordinate per classe",
@@ -1399,6 +1405,10 @@
   "StreamDeck": {
     "Authorize": "Connetti applicazione",
     "Enable": "Plugin Stream Deck",
+    "Error": {
+      "Body": "Si è verificato un errore nell'invio dei dati al plugin di Stream Deck. Contatta lo sviluppatore del plugin. {{error}}",
+      "Title": "Errore plugin Stream Deck"
+    },
     "FinePrint": "Abilita la connessione con il plugin dello Stream Deck di DIM. Questo plugin è un progetto separato che non è scritto né supportato dal team di DIM.",
     "Install": "Installa plugin",
     "MissingAuthorization": "Devi autorizzare l'applicazione Stream Deck per connettersi a DIM. Vai nelle Impostazioni e clicca \"Connetti applicazione\".",
