@@ -426,6 +426,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
         (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain),
       )
       .filter(filterLowPrioritySuggestions);
+
     // TODO: sort this first?? it depends on term in one place
 
     if (multiqueryTermsLookup[possibleKeyword] && filterNames.includes(possibleKeyword)) {
