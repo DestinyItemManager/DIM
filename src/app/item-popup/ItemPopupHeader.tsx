@@ -103,7 +103,7 @@ function SeasonTierBanner({ item }: { item: DimItem }) {
     // Featured flags
     item.featured ? itemConstants.featuredItemFlagPath : undefined,
     // Tier pips
-    item.tier > 0 && itemConstants.gearTierOverlayImagePaths[Math.min(item.tier - 1, 4)],
+    item.tier > 0 && itemConstants.gearTierOverlayImagePaths[item.tier - 1],
     // Black stripe
     item.iconDef.secondaryBackground && itemConstants.watermarkDropShadowPath,
   ]);
@@ -113,6 +113,9 @@ function SeasonTierBanner({ item }: { item: DimItem }) {
   return (
     <div className={styles.iconOverlay} style={bungieBackgroundStyles(backgrounds)}>
       {seasonIcon && <BungieImage src={seasonIcon} />}
+      {item.tier > 0 && !itemConstants.gearTierOverlayImagePaths[item.tier - 1] && (
+        <span className={styles.tierNumber}>{item.tier}</span>
+      )}
     </div>
   );
 }
