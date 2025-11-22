@@ -19,6 +19,12 @@
 */
 
 import { convertToError } from 'app/utils/errors';
+import {
+  escapeQuotes,
+  normalizeQuotes,
+  unescapedDoubleQuoteCharacters,
+  unescapedSingleQuoteCharacters,
+} from './text-utils';
 
 /* **** Parser **** */
 
@@ -353,10 +359,7 @@ export class QueryLexerOpenQuotesError extends QueryLexerError {
  */
 export function* lexer(query: string): Generator<Token> {
   query = query.toLowerCase();
-
-  // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
-  query = query.replace(/[\u2018-\u201A]/g, "'");
-  query = query.replace(/[\u201C-\u201E]/g, '"');
+  query = normalizeQuotes(query);
 
   let match: string | undefined;
   let i = 0;
@@ -534,6 +537,7 @@ export function* lexer(query: string): Generator<Token> {
   }
 }
 
+const quoteNeedingCharacters = /[\s()]/;
 /**
  * Quote a string if it's needed.
  *
@@ -544,15 +548,31 @@ export function* lexer(query: string): Generator<Token> {
  * quoteFilterString("foo\"bar") => foobar"
  */
 export function quoteFilterString(arg: string) {
-  const requiresQuotes = /[\s()"']/.test(arg);
-  if (requiresQuotes) {
-    const quoteChar = arg.includes('"') ? "'" : '"';
-    arg = arg.replaceAll('\\', '\\\\');
-    arg = arg.replaceAll(quoteChar, `\\${quoteChar}`);
-    return `${quoteChar}${arg}${quoteChar}`;
-  } else {
+  const hasSingle = unescapedSingleQuoteCharacters.test(arg);
+  const hasDouble = unescapedDoubleQuoteCharacters.test(arg);
+  const hasOthers = quoteNeedingCharacters.test(arg);
+  if (!hasSingle && !hasDouble && !hasOthers) {
     return arg;
   }
+
+  // When text is wrapped in quotes, the lexer begins watching for these escape sequences:
+  // \" \' \\
+  // and throws an error on anything else following a backslash.
+  // Now that quoteFilterString is committed to adding quotes,
+  // it escapes existing backslashes so they are treated as just backslashes.
+  arg = arg.replaceAll('\\', '\\\\');
+
+  let quoteChar = '';
+  // As long as one quote type is safe to add, wrapping the string with it defuses everything, including Other symbols
+  if (!hasDouble || !hasSingle) {
+    quoteChar = hasDouble ? `'` : `"`;
+  } else {
+    // Reaching here means there's both types of quotes. Choose to use double quotes, and escape existing ones.
+    quoteChar = `"`;
+    arg = escapeQuotes(arg, true);
+  }
+
+  return `${quoteChar}${arg}${quoteChar}`;
 }
 
 /**
