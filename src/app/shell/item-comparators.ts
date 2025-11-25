@@ -10,6 +10,7 @@ import {
   isArtifice,
   isD1Item,
 } from 'app/utils/item-utils';
+import { getWeaponArchetype } from 'app/utils/socket-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
@@ -308,6 +309,18 @@ const ITEM_COMPARATORS: {
       return `3 ${specialtySocket}`;
     }
     return '4';
+  }),
+  // non-weapons -> ascending frame rarity -> frame index
+  weaponFrame: compareBy((item) => {
+    if (!item.bucket.inWeapons) {
+      return '0';
+    }
+    const frame = getWeaponArchetype(item);
+    if (frame) {
+      // Tier types to separate e.g. Ergo Sum                       Tiebreak matching names just in case
+      return `1 ${frame.inventory!.tierType} ${frame.displayProperties.name} ${frame.hash}`;
+    }
+    return '2';
   }),
   default: () => 0,
 };
