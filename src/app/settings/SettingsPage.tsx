@@ -185,6 +185,7 @@ export default function SettingsPage() {
     featured: t('Settings.SortByFeatured'),
     tier: t('Settings.SortByTier'),
     armorArchetype: t('Settings.ArmorArchetypeModslot'),
+    weaponFrame: t('Settings.WeaponFrame'),
   };
 
   const vaultWeaponGroupingOptions = mapToOptions({
