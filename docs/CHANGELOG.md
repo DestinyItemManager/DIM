@@ -1,6 +1,7 @@
 ## Next
 
 * Show weapon frame info on item icons.
+* Allow sorting inventory by weapon frame
 
 ## 8.100.0 <span class="changelog-date">(2025-11-23)</span>
 
