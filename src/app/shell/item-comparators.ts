@@ -317,8 +317,8 @@ const ITEM_COMPARATORS: {
     }
     const frame = getWeaponArchetype(item);
     if (frame) {
-      // Tier types to separate e.g. Ergo Sum                                Tiebreak matching names with icons
-      return `1 ${frame.inventory!.tierType} ${frame.displayProperties.name} ${frame.displayProperties.icon}`;
+      // Tier types to separate e.g. Ergo Sum                       Tiebreak matching names just in case
+      return `1 ${frame.inventory!.tierType} ${frame.displayProperties.name} ${frame.hash}`;
     }
     return '2';
   }),
