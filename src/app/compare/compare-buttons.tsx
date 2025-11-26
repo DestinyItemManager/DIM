@@ -280,6 +280,24 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       query: `is:${getItemDamageShortName(exampleItem)}`,
     },
 
+    // same waepon frame and also matching element
+    {
+      buttonLabel: [
+        intrinsicName,
+        <ElementIcon
+          key={exampleItem.id}
+          element={exampleItem.element}
+          className={clsx(styles.inlineImageIcon, 'dontInvert')}
+        />,
+        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
+      ],
+      query: `(is:${getItemDamageShortName(exampleItem)} ${
+        exampleItem.destinyVersion === 2 && intrinsic
+          ? `exactperk:${quoteFilterString(intrinsic.displayProperties.name)}`
+          : `stat:rpm:${getRpm(exampleItem)}`
+      })`,
+    },
+
     // exact same weapon, judging by name. might span multiple expansions.
     {
       buttonLabel: [adeptStripped],
