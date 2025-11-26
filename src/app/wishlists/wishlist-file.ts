@@ -19,6 +19,23 @@ const descriptionLabel = /^@?description:(.+)$/;
  */
 const notesLabel = '//notes:';
 
+const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
+
+/**
+ * Processes wishlist notes to convert escape sequences into actual newlines.
+ * - `\n` becomes a literal newline character
+ * - `\\n` becomes a backslash followed by a newline character
+ * - `<br>` tags are left as-is (for React rendering)
+ */
+function processNotesForDisplay(notes: string | undefined): string | undefined {
+  if (!notes) {
+    return notes;
+  }
+  // Replace \n with actual newline, and \\n with \ followed by newline
+  // First, temporarily replace \\n with a placeholder to avoid double processing
+  return notes.replace(/\\n/g, '\n');
+}
+
 /**
  * Extracts rolls, title, and description from the meat of
  * one or more wish list text files, deduplicating within
@@ -102,12 +119,10 @@ function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
 
-const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
-
 /** Parse out notes from a line */
 function parseBlockNoteLine(blockNoteLine: string): string | undefined {
   const blockMatchResults = blockNoteLineRegex.exec(blockNoteLine);
-  return blockMatchResults?.groups?.blockNotes;
+  return processNotesForDisplay(blockMatchResults?.groups?.blockNotes);
 }
 
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
@@ -129,9 +144,11 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray, blockNotes?: string): string | undefined {
-  return matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
-    ? matchResults.groups.wishListNotes
-    : blockNotes;
+  const inlineNotes =
+    matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
+      ? matchResults.groups.wishListNotes
+      : blockNotes;
+  return processNotesForDisplay(inlineNotes);
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {

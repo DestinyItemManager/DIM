@@ -118,7 +118,9 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
           className={popupStyles.description}
           alreadyOpen={collapsed}
         >
-          <span className={popupStyles.secondaryText}>{wishlistItem.notes}</span>
+          <span className={popupStyles.secondaryText} style={{ whiteSpace: 'pre-wrap' }}>
+            {wishlistItem.notes}
+          </span>
         </ExpandableTextBlock>
       )}
     </CollapsibleTitle>
