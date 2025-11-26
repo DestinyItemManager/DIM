@@ -34,9 +34,7 @@ export default function ItemDescription({ item }: { item: DimItem }) {
       {!$featureFlags.triage && wishlistItem && Boolean(wishlistItem?.notes?.length) && (
         <ExpandableTextBlock linesWhenClosed={3} className={styles.description}>
           <span className={styles.label}>{t('WishListRoll.WishListNotes')}</span>
-          <span className={styles.secondaryText} style={{ whiteSpace: 'pre-wrap' }}>
-            {wishlistItem.notes}
-          </span>
+          <span className={styles.secondaryText}>{wishlistItem.notes}</span>
         </ExpandableTextBlock>
       )}
       <NotesArea item={item} className={styles.description} />

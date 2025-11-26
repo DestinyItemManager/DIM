@@ -23,16 +23,12 @@ const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
 
 /**
  * Processes wishlist notes to convert escape sequences into actual newlines.
- * - `\n` becomes a literal newline character
  * - `\\n` becomes a backslash followed by a newline character
- * - `<br>` tags are left as-is (for React rendering)
  */
 function processNotesForDisplay(notes: string | undefined): string | undefined {
   if (!notes) {
     return notes;
   }
-  // Replace \n with actual newline, and \\n with \ followed by newline
-  // First, temporarily replace \\n with a placeholder to avoid double processing
   return notes.replace(/\\n/g, '\n');
 }
 
