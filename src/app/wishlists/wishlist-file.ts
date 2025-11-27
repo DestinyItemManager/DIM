@@ -19,11 +19,8 @@ const descriptionLabel = /^@?description:(.+)$/;
  */
 const notesLabel = '//notes:';
 
-const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
-
 /**
  * Processes wishlist notes to convert escape sequences into actual newlines.
- * - `\\n` becomes a backslash followed by a newline character
  */
 function processNotesForDisplay(notes: string | undefined): string | undefined {
   if (!notes) {
@@ -114,6 +111,8 @@ export function toWishList(files: [url: string | undefined, contents: string][])
 function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
+
+const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
 
 /** Parse out notes from a line */
 function parseBlockNoteLine(blockNoteLine: string): string | undefined {
