@@ -1,7 +1,7 @@
 import { WishListRoll } from './types';
 import { toWishList } from './wishlist-file';
 
-const cases: [wishlist: string, expectedResult: WishListRoll][] = [
+const cases: [wishlist: string, result: WishListRoll][] = [
   [
     'dimwishlist:item=-69420&perks=2682205016,2402480669#notes:Enh Over, Enh FocuFury',
     {
@@ -45,8 +45,6 @@ dimwishlist:item=-69420&perks=2682205016,2402480669`,
   ],
 ];
 
-describe('toWishList', () => {
-  test.each(cases)('parse wishlist line: %s', (wishlist, expectedResult) => {
-    expect(toWishList([[undefined, wishlist]]).wishListRolls[0]).toStrictEqual(expectedResult);
-  });
+test.each(cases)('parse wishlist line: %s', (wishlist, result) => {
+  expect(toWishList([[undefined, wishlist]]).wishListRolls[0]).toStrictEqual(result);
 });
