@@ -20,16 +20,6 @@ const descriptionLabel = /^@?description:(.+)$/;
 const notesLabel = '//notes:';
 
 /**
- * Processes wishlist notes to convert escape sequences into actual newlines.
- */
-function processNotesForDisplay(notes: string | undefined): string | undefined {
-  if (!notes) {
-    return notes;
-  }
-  return notes.replace(/\\n/g, '\n');
-}
-
-/**
  * Extracts rolls, title, and description from the meat of
  * one or more wish list text files, deduplicating within
  * and between lists.
@@ -117,7 +107,7 @@ const blockNoteLineRegex = /^\/\/notes:(?<blockNotes>[^|]*)/;
 /** Parse out notes from a line */
 function parseBlockNoteLine(blockNoteLine: string): string | undefined {
   const blockMatchResults = blockNoteLineRegex.exec(blockNoteLine);
-  return processNotesForDisplay(blockMatchResults?.groups?.blockNotes);
+  return blockMatchResults?.groups?.blockNotes;
 }
 
 function getPerks(matchResults: RegExpMatchArray): Set<number> {
@@ -143,7 +133,7 @@ function getNotes(matchResults: RegExpMatchArray, blockNotes?: string): string |
     matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
       ? matchResults.groups.wishListNotes
       : blockNotes;
-  return processNotesForDisplay(inlineNotes);
+  return inlineNotes?.replace(/\\n/g, '\n');
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {
