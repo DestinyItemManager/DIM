@@ -3,6 +3,7 @@ import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { THE_FORBIDDEN_BUCKET, VendorHashes } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import {
+  DestinyClass,
   DestinyCollectibleState,
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
@@ -16,6 +17,16 @@ import {
 import { BucketHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-factory';
+
+const SYNTH_BOUNTIES_EXHAUSTED = [1073165367, 2363327331, 2376000422];
+const SYNTH_BOUNTIES_DUMMY = [171866827, 540971012, 3950721485];
+const DestinyClassToSynthTooltipIndex: { [key in DestinyClass]: number } = {
+  [DestinyClass.Titan]: 1,
+  [DestinyClass.Hunter]: 2,
+  [DestinyClass.Warlock]: 0,
+  [DestinyClass.Classified]: -1,
+  [DestinyClass.Unknown]: -1,
+};
 
 /**
  * This represents an item inside a vendor.
@@ -81,6 +92,15 @@ function makeVendorItem(
   const { defs, profileResponse } = context;
 
   const inventoryItem = defs.InventoryItem.get(itemHash);
+  let tooltipNotificationIndexes: number[] = [];
+  if (SYNTH_BOUNTIES_EXHAUSTED.includes(itemHash)) {
+    tooltipNotificationIndexes = [0];
+  } else if (SYNTH_BOUNTIES_DUMMY.includes(itemHash)) {
+    const classType = profileResponse?.characters?.data?.[characterId]?.classType;
+    if (classType !== undefined && DestinyClassToSynthTooltipIndex[classType] > -1) {
+      tooltipNotificationIndexes = [DestinyClassToSynthTooltipIndex[classType]];
+    }
+  }
   const vendorItem: VendorItem = {
     failureStrings,
     vendorItemIndex,
@@ -111,6 +131,7 @@ function makeVendorItem(
       // vendor items are wish list enabled!
       allowWishList: true,
       itemValueVisibility: saleItem?.itemValueVisibility,
+      tooltipNotificationIndexes,
     }),
   };
 
