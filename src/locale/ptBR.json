@@ -1278,6 +1278,7 @@
     "VaultArmorGroupingStyle": "Separe as armaduras em linhas diferentes por classe",
     "VaultGroupingNone": "Nenhum",
     "VaultWeaponGroupingStyle": "Separe grupos de armas em linhas diferentes",
+    "WeaponFrame": "Weapon Frame",
     "WishlistRefreshNotificationBody": "Se você não vê nenhuma atualização, certifique-se de que a fonte (como o GitHub) as reflete!",
     "WishlistRefreshNotificationTitle": "Lista de Desejos Recarregada"
   },

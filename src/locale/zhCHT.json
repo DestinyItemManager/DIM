@@ -1246,6 +1246,7 @@
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultGroupingNone": "無",
     "VaultWeaponGroupingStyle": "Separate weapon groups on different lines",
+    "WeaponFrame": "Weapon Frame",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
     "WishlistRefreshNotificationTitle": "Wishlists Reloaded"
   },

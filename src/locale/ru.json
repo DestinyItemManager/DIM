@@ -1342,6 +1342,7 @@
     "VaultArmorGroupingStyle": "Разделять броню на разные строки по классу",
     "VaultGroupingNone": "Отсутствует",
     "VaultWeaponGroupingStyle": "Разделять группы оружий по разным строкам",
+    "WeaponFrame": "Weapon Frame",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
     "WishlistRefreshNotificationTitle": "Wishlists Reloaded"
   },

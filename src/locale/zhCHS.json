@@ -688,7 +688,7 @@
     "Exotic": "异域护甲",
     "ExoticClassItemPerks": "如果您想要指定特性，请使用形如 exactperk:\"真理之灵\" 的方式搜索。在优化器条目中点击特性来筛选/移除它们。",
     "ExoticSpecialCategory": "特殊",
-    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
+    "FOTLWildcardWarning": "组合中包含英灵节面具。手动应用正确的模组以激活所需的套装加成。",
     "Filter": "设置",
     "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性。",
     "IncreaseStatPriority": "提高属性优先级",
@@ -1246,6 +1246,7 @@
     "VaultArmorGroupingStyle": "将不同职业护甲隔行分开",
     "VaultGroupingNone": "无",
     "VaultWeaponGroupingStyle": "将不同类型武器隔行分开",
+    "WeaponFrame": "武器框架",
     "WishlistRefreshNotificationBody": "如果您没有看到任何更新，请检查愿望清单的来源（例如 GitHub）是否有反应！",
     "WishlistRefreshNotificationTitle": "愿望清单已重载"
   },

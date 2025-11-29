@@ -1246,6 +1246,7 @@
     "VaultArmorGroupingStyle": "직업별로 다른 줄에 방어구 표시",
     "VaultGroupingNone": "없음",
     "VaultWeaponGroupingStyle": "무기 그룹마다 다른 줄로 표시",
+    "WeaponFrame": "무기 프레임",
     "WishlistRefreshNotificationBody": "업데이트가 보이지 않는 경우, 소스(GitHub 등)가 업데이트를 반영하는지 확인해 보세요!",
     "WishlistRefreshNotificationTitle": "희망 아이템 목록 갱신됨"
   },

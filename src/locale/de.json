@@ -1278,6 +1278,7 @@
     "VaultArmorGroupingStyle": "Separiere Rüstung nach Klassen in verschiedene Zeilen",
     "VaultGroupingNone": "Keine",
     "VaultWeaponGroupingStyle": "Separiere Waffengruppen in verschiedene Zeilen",
+    "WeaponFrame": "Waffenrahmen",
     "WishlistRefreshNotificationBody": "Wenn du keine Updates siehst, stelle sicher, dass die Quelle (wie GitHub) sie widerspiegelt!",
     "WishlistRefreshNotificationTitle": "Wunschlisten neu geladen"
   },
