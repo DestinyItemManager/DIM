@@ -93,7 +93,10 @@ export default function ItemPopup({
         (failureString) =>
           failureString.length > 0 && (
             <div className={styles.failureReason} key={failureString}>
-              <RichDestinyText text={failureString} ownerId={item.owner} />
+              <RichDestinyText
+                text={failureString}
+                ownerId={item.vendor?.characterId ?? item.owner}
+              />
             </div>
           ),
       )}

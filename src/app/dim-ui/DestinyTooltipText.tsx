@@ -23,7 +23,10 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
           >
             {isExpirationTooltip(tip) && <AppIcon icon={faClock} />}
             {isPatternTooltip(tip) && <AppIcon className={styles.shapedIcon} icon={shapedIcon} />}
-            <RichDestinyText text={tip.displayString} ownerId={item.owner} />
+            <RichDestinyText
+              text={tip.displayString}
+              ownerId={item.vendor?.characterId ?? item.owner}
+            />
           </div>
         ))}
     </>
