@@ -77,7 +77,10 @@ export default function Pursuit({
               {item.name}
             </span>
             <div className="milestone-description">
-              <RichDestinyText text={item.description} ownerId={item.owner} />
+              <RichDestinyText
+                text={item.description}
+                ownerId={item.vendor?.characterId ?? item.owner}
+              />
             </div>
           </div>
         </button>

@@ -21,12 +21,18 @@ export default function ItemDescription({ item }: { item: DimItem }) {
         <>
           {Boolean(item.description?.length) && (
             <div className={styles.description}>
-              <RichDestinyText text={item.description} ownerId={item.owner} />
+              <RichDestinyText
+                text={item.description}
+                ownerId={item.vendor?.characterId ?? item.owner}
+              />
             </div>
           )}
           {Boolean(item.displaySource?.length) && (
             <div className={clsx(styles.description, styles.secondaryText)}>
-              <RichDestinyText text={item.displaySource} ownerId={item.owner} />
+              <RichDestinyText
+                text={item.displaySource}
+                ownerId={item.vendor?.characterId ?? item.owner}
+              />
             </div>
           )}
         </>
