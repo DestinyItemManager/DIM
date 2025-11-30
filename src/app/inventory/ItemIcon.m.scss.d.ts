@@ -19,6 +19,7 @@ interface CssExports {
   'seasonIcon': string;
   'shiftedLayer': string;
   'strandColorFix': string;
+  'tierNumber': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

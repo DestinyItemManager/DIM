@@ -141,3 +141,13 @@ $commonBg: #366f42;
 .strandColorFix {
   filter: hue-rotate(265deg) brightness(1.3);
 }
+
+.tierNumber {
+  position: absolute;
+  top: calc(#{dim-item-px(13)});
+  left: calc(#{dim-item-px(3)});
+  font-size: calc(#{dim-item-px(13)});
+  font-weight: bold;
+  color: white;
+  pointer-events: none;
+}
