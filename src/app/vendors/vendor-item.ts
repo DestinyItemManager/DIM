@@ -147,6 +147,8 @@ function makeVendorItem(
     // These would normally be false already, but certain rules like "finishers
     // are lockable" mess that up, so we set them explicitly here.
     vendorItem.item.lockable = false;
+    // Some items' tooltips rely on knowing which character they're available for
+    vendorItem.item.owner = characterId;
 
     // since this is sold by a vendor, add vendor information
     vendorItem.item.vendor = { vendorHash, vendorItemIndex, characterId };
