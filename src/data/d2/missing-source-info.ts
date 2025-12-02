@@ -163,6 +163,7 @@ const missingSources: { [key: string]: number[] } = {
     930759851, // Concussive Dampener
     933345182, // Fieldplate Type 10
     965934024, // Firepower
+    974161790, // Tactical
     995248967, // Makeshift Suit
     1012254326, // The Outlander's Steps
     1014677029, // Memory of Cayde
@@ -214,6 +215,7 @@ const missingSources: { [key: string]: number[] } = {
     1561736585, // Kinetic Dexterity
     1578478684, // Refugee Gloves
     1581838479, // Refugee Boots
+    1596513538, // Tactical
     1604394872, // Dynamo
     1611221278, // Prophet Snow
     1616317796, // Prophet Snow
@@ -295,6 +297,7 @@ const missingSources: { [key: string]: number[] } = {
     2519597513, // Minor Super Mod
     2526922422, // Stasis Weapon Surge
     2541019576, // Mark of Confrontation
+    2554933025, // Stunloader
     2562645296, // Melee Damage Resistance
     2567295299, // Cosmic Wind III
     2568808786, // Health Mod
@@ -400,6 +403,7 @@ const missingSources: { [key: string]: number[] } = {
     3539253011, // Arc Resistance
     3544711340, // Memory of Cayde Mark
     3544884935, // Hood of Tallies
+    3550545621, // Stunloader
     3554672786, // Memory of Cayde Cloak
     3556023425, // Scavenger Cloak
     3573886331, // Bond of Chiron
@@ -574,6 +578,7 @@ const missingSources: { [key: string]: number[] } = {
     1245115841, // Wing Theorem
     1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
+    1323862250, // Riptide
     1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
     1381742107, // Biosphere Explorer Helm
@@ -694,6 +699,7 @@ const missingSources: { [key: string]: number[] } = {
     871900124, // Retold Tale
     934704429, // Reverie Dawn Plate
     998096007, // Reverie Dawn Hood
+    1018012078, // Horror's Least
     1452333832, // Reverie Dawn Boots
     1593474975, // Reverie Dawn Hauberk
     1705856569, // Reverie Dawn Grasps
@@ -977,6 +983,7 @@ const missingSources: { [key: string]: number[] } = {
     231432261, // Solstice Bond (Resplendent)
     234970842, // Solstice Boots (Resplendent)
     250513201, // Solstice Greaves (Resplendent)
+    270610849, // Mistral Lift
     327680457, // Sublime Boots
     335763433, // Solstice Plate (Resplendent)
     346065606, // Solstice Cloak (Rekindled)
@@ -984,6 +991,10 @@ const missingSources: { [key: string]: number[] } = {
     391889347, // Solstice Robes (Drained)
     419435523, // Inaugural Revelry Grips
     425681240, // Acosmic
+    437854388, // Action Item
+    437854389, // Action Item
+    437854390, // Action Item
+    437854391, // Action Item
     450844637, // Solstice Robes (Majestic)
     464814870, // Sublime Greaves
     492834021, // Inaugural Revelry Hood
@@ -996,11 +1007,23 @@ const missingSources: { [key: string]: number[] } = {
     574790717, // Solstice Gloves (Drained)
     591672323, // Fortunate Star
     601948197, // Zephyr
+    602331464, // Micromort
+    602331465, // Micromort
+    602331466, // Micromort
+    602331467, // Micromort
+    617566156, // The Heron
+    617566157, // The Heron
+    617566158, // The Heron
+    617566159, // The Heron
     627596132, // Solstice Hood (Drained)
     677939288, // Solstice Helm (Scorched)
     689294985, // Jurassic Green
     721146704, // Solstice Mask (Rekindled)
     784499738, // Solstice Bond (Renewed)
+    784540300, // King Orfeo
+    784540301, // King Orfeo
+    784540302, // King Orfeo
+    784540303, // King Orfeo
     807693916, // Sublime Hood
     830497630, // Solstice Helm (Resplendent)
     929148730, // Solstice Vest (Drained)
@@ -1024,6 +1047,7 @@ const missingSources: { [key: string]: number[] } = {
     1548056407, // Solstice Cloak (Renewed)
     1556831535, // Inaugural Revelry Gauntlets
     1561249470, // Inaugural Revelry Boots
+    1572604081, // Gizmo Weft
     1589318419, // Solstice Strides (Rekindled)
     1609141880, // Sublime Plate
     1649929380, // Solstice Mark (Resplendent)
@@ -1052,6 +1076,7 @@ const missingSources: { [key: string]: number[] } = {
     2261046232, // Jurassic Green
     2287277682, // Solstice Robes (Rekindled)
     2291082292, // Solstice Gauntlets (Majestic)
+    2316331767, // Permafrost
     2328435454, // Inaugural Revelry Helm
     2337290000, // Solstice Bond (Majestic)
     2419100474, // Solstice Grasps (Renewed)
@@ -1066,6 +1091,7 @@ const missingSources: { [key: string]: number[] } = {
     2603335652, // Jurassic Green
     2616697701, // Sublime Robes
     2618313500, // Solstice Greaves (Drained)
+    2645567209, // Fimbulwinter Stitch
     2685001662, // Solstice Gloves (Rekindled)
     2696245301, // Solstice Grasps (Scorched)
     2720534902, // Solstice Grasps (Drained)
@@ -1093,6 +1119,7 @@ const missingSources: { [key: string]: number[] } = {
     3232831379, // Sublime Mask
     3236510875, // Solstice Grasps (Resplendent)
     3240434620, // Something New
+    3328019216, // Arcane Embrace
     3329514528, // Sublime Gauntlets
     3400256755, // Zephyr
     3558681245, // BrayTech Werewolf
@@ -2360,6 +2387,7 @@ const missingSources: { [key: string]: number[] } = {
   nightfall: [
     40394833, // The Militia's Birthright
     47772649, // THE SWARM
+    89693562, // Duty Bound
     192784503, // Pre Astyanax IV
     205225492, // Hung Jury SR4
     267089201, // Warden's Law (Adept)
@@ -2370,6 +2398,7 @@ const missingSources: { [key: string]: number[] } = {
     772231794, // Hung Jury SR4
     852228780, // Uzume RR4 (Adept)
     912150785, // Mindbender's Ambition (Adept)
+    1018012078, // Horror's Least
     1094005544, // Mindbender's Ambition
     1151688091, // Undercurrent
     1821529912, // Warden's Law
@@ -2867,6 +2896,7 @@ const missingSources: { [key: string]: number[] } = {
     1245115841, // Wing Theorem
     1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
+    1323862250, // Riptide
     1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
     1381742107, // Biosphere Explorer Helm
@@ -3254,6 +3284,7 @@ const missingSources: { [key: string]: number[] } = {
     4245441464, // Scorned Baron Robes
   ],
   titan: [
+    89693562, // Duty Bound
     1701005142, // Songbreaker Gloves
     2486041713, // Songbreaker Gauntlets
     3706457515, // Songbreaker Grips
