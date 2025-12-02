@@ -12,7 +12,7 @@ export const D2EventInfo = {
     name: 'The Dawning',
     shortname: 'dawning',
     sources: [464727567, 547767158, 629617846, 2364515524, 3092212681, 3952847349, 4054646289],
-    engram: [1170720694, 3151770741, 3488374611],
+    engram: [1170720694, 3151770741],
   },
   [D2EventEnum.CRIMSON_DAYS]: {
     name: 'Crimson Days',

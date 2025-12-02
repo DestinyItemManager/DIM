@@ -105,6 +105,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   4174431791, // Hierarchy of Needs
   4190156464, // Merciless
   4255268456, // Skyburner's Oath
+  4284533075, // Service of Luzaku
   4289226715, // Vex Mythoclast
   4293613902, // Quicksilver Storm
 ]);

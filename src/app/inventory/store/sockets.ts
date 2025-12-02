@@ -27,7 +27,6 @@ import {
   DestinySocketTypeDefinition,
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
@@ -799,13 +798,9 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
   const defPlugSet = defs.PlugSet.get(plugSetHash);
   let craftingData: DimPlugSet['craftingData'];
   for (const plugEntry of defPlugSet.reusablePlugItems) {
-    // Deprecated mods should not actually be in any PlugSets, but here we are
-    // https://github.com/Bungie-net/api/issues/1801
-    if (!deprecatedMods.includes(plugEntry.plugItemHash)) {
-      const plug = buildDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
-      if (plug) {
-        plugs.push(plug);
-      }
+    const plug = buildDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
+    if (plug) {
+      plugs.push(plug);
     }
     if (
       plugEntry.craftingRequirements &&

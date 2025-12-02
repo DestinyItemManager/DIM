@@ -212,7 +212,7 @@ const D2Sources: {
       1281387702, // Source: Unlock Your Void Subclass
       1701477406, // Source: Flashpoint milestones; Legendary engrams.
       2242939082, // Requires Hunter Class
-      2278847330, // Requires Guardian Rank 5
+      2278847330, // Requires Guardian Rank 3
       2308290458, // Requires 1,000 Warlock Kills
       2552784968, // Requires Guardian Rank 2
       2744321951, // Source: Complete a heroic Public Event.
@@ -876,23 +876,15 @@ const D2Sources: {
   events: {
     itemHashes: [
       425681240, // Acosmic
-      495940989, // Avalanche
       601948197, // Zephyr
       689294985, // Jurassic Green
-      1123433952, // Stay Frosty
-      1183116657, // Glacioclasm
       1280894514, // Mechabre
-      1845372864, // Albedo Wing
-      1845978721, // Avalanche
       2477980485, // Mechabre
       2603335652, // Jurassic Green
-      2812100428, // Stay Frosty
-      2814093983, // Cold Front
       2869466318, // BrayTech Werewolf
       3400256755, // Zephyr
       3558681245, // BrayTech Werewolf
       3559361670, // The Title
-      3573686365, // Glacioclasm
     ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
@@ -1577,6 +1569,7 @@ const D2Sources: {
   },
   'pinnacle-weapon': {
     itemHashes: [
+      444627789, // Oxygen SR3
       578459533, // Wendigo GL3
       654608616, // Revoker
       1050806815, // The Recluse
@@ -1586,6 +1579,7 @@ const D2Sources: {
       3354242550, // The Recluse
       3907337522, // Oxygen SR3
       3962575203, // Hush
+      4104613038, // Oxygen SR3
     ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
@@ -2172,7 +2166,6 @@ const D2Sources: {
       351235593, // Source: Eliminate Prison of Elders escapees found in strikes.
       412991783, // Source: Strikes
       539840256, // Source: Associated Vanguard Quest
-      681989555, // Source: 3 Crossplay Beta Vanguard Strikes
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
@@ -2506,7 +2499,6 @@ const D2Sources: {
       351235593, // Source: Eliminate Prison of Elders escapees found in strikes.
       412991783, // Source: Strikes
       539840256, // Source: Associated Vanguard Quest
-      681989555, // Source: 3 Crossplay Beta Vanguard Strikes
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
