@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { count } from 'app/utils/collections';
 import { isClassCompatible, itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -481,6 +482,11 @@ describe('fillLoadoutFromUnequipped', () => {
   it('fills in unequipped items but does not change an existing item', () => {
     const bucketHash = BucketHashes.KineticWeapons;
 
+    const numUnequipped = count(
+      items,
+      (i) => i.bucket.hash === bucketHash && !i.equipped && i.owner === store.id,
+    );
+
     // Add a single item that's not equipped to the loadout
     const item = items.find(
       (i) => i.bucket.hash === bucketHash && !i.equipped && i.owner === store.id,
@@ -498,12 +504,17 @@ describe('fillLoadoutFromUnequipped', () => {
       equip: true,
       id: item.id,
     });
-    // Only 9 items because one of them was already in the loadout
-    expect(itemsInLoadout.length).toBe(9);
+    // Only numUnequipped items because one of them was already in the loadout
+    expect(itemsInLoadout.length).toBe(numUnequipped);
   });
 
   it('fills in unequipped items for a single category', () => {
     const bucketHash = BucketHashes.KineticWeapons;
+
+    const numUnequipped = count(
+      items,
+      (i) => i.bucket.hash === bucketHash && !i.equipped && i.owner === store.id,
+    );
 
     // Add a single item that's not equipped to the loadout
     const item = items.find((i) => i.bucket.hash === bucketHash && !i.equipped)!;
@@ -520,7 +531,7 @@ describe('fillLoadoutFromUnequipped', () => {
       equip: true,
       id: item.id,
     });
-    expect(itemsInLoadout.length).toBe(9);
+    expect(itemsInLoadout.length).toBe(numUnequipped);
   });
 
   it('fills in unequipped items for a single category without overflow', () => {

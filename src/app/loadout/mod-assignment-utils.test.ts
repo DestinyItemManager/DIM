@@ -98,7 +98,11 @@ describe('mod-assignment-utils plugging strategy', () => {
     defs = defs_;
     foundItem: for (const store of stores) {
       for (const storeItem of store.items) {
-        if (isArmor2ClassItem(storeItem) && !getSpecialtySocketMetadata(storeItem)) {
+        if (
+          isArmor2ClassItem(storeItem) &&
+          !getSpecialtySocketMetadata(storeItem) &&
+          storeItem.rarity === 'Legendary'
+        ) {
           classItem = storeItem;
           break foundItem;
         }

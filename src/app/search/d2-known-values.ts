@@ -244,7 +244,7 @@ export const silverItemHash = 3147280338; // InventoryItem "Silver"
 export const DEEPSIGHT_HARMONIZER = 2228452164;
 
 // For loadout mods obliterated from the defs, we instead return this def
-export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
+export const deprecatedPlaceholderArmorModHash = 444600262; // InventoryItem "Super Mod"
 
 // Weapon components, like barrels, mags, etc.
 // Plugs that contribute to a weapon's stats, but aren't its base stats, traits, or mods.
