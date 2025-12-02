@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed a crash on the Records page caused by Seasonal Challenges being removed from the game.
+
 ## 8.101.0 <span class="changelog-date">(2025-11-30)</span>
 
 * Show weapon frame info on item icons.
