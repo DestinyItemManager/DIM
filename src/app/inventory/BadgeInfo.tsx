@@ -25,10 +25,10 @@ export function shouldShowBadge(item: DimItem) {
 
   const hideBadge = Boolean(
     item.location.hash === BucketHashes.Subclass ||
-      (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
-      (isBounty && (item.complete || item.hidePercentage)) ||
-      (isStackable && item.amount === 1) ||
-      (isGeneric && !item.primaryStat?.value && !item.classified),
+    (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
+    (isBounty && (item.complete || item.hidePercentage)) ||
+    (isStackable && item.amount === 1) ||
+    (isGeneric && !item.primaryStat?.value && !item.classified),
   );
 
   return !hideBadge;
@@ -47,10 +47,10 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
 
   const hideBadge = Boolean(
     item.location.hash === BucketHashes.Subclass ||
-      (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
-      (isBounty && (item.complete || item.hidePercentage)) ||
-      (isStackable && item.amount === 1) ||
-      (isGeneric && !item.primaryStat?.value && !item.classified),
+    (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
+    (isBounty && (item.complete || item.hidePercentage)) ||
+    (isStackable && item.amount === 1) ||
+    (isGeneric && !item.primaryStat?.value && !item.classified),
   );
 
   if (hideBadge) {

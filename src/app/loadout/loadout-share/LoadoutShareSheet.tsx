@@ -80,9 +80,9 @@ export default function LoadoutShareSheet({
   const hasSubclass = loadout.items.some((i) => i.equip && i.socketOverrides);
   const hasLoParams = Boolean(
     loadout.parameters &&
-      (loadout.parameters.query ||
-        loadout.parameters.exoticArmorHash ||
-        loadout.parameters.statConstraints?.length),
+    (loadout.parameters.query ||
+      loadout.parameters.exoticArmorHash ||
+      loadout.parameters.statConstraints?.length),
   );
 
   return (

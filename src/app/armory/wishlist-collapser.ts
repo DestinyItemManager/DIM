@@ -176,9 +176,9 @@ export function consolidateRollsForOneWeapon(
 function isMajorPerk(item?: DestinyInventoryItemDefinition) {
   return Boolean(
     item &&
-      (item.inventory!.tierType === TierType.Common ||
-        item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsFrame) ||
-        item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic)),
+    (item.inventory!.tierType === TierType.Common ||
+      item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsFrame) ||
+      item.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsIntrinsic)),
   );
 }
 

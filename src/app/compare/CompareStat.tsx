@@ -30,8 +30,8 @@ export default function CompareStat({
 }) {
   const isMasterworkStat = Boolean(
     item?.bucket.inWeapons &&
-      stat &&
-      item.masterworkInfo?.stats?.some((s) => s.isPrimary && s.hash === stat.statHash),
+    stat &&
+    item.masterworkInfo?.stats?.some((s) => s.isPrimary && s.hash === stat.statHash),
   );
   const color = getCompareColor(statRange(stat, min, max, value));
   const tunedStatHash = getArmor3TuningStat(item);

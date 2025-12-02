@@ -90,7 +90,7 @@ function makeVendorItem(
     owned: Boolean(
       (!inventoryItem.inventory ||
         inventoryItem.inventory.bucketTypeHash === THE_FORBIDDEN_BUCKET) &&
-        (saleItem?.augments || 0) & DestinyVendorItemState.Owned,
+      (saleItem?.augments || 0) & DestinyVendorItemState.Owned,
     ),
     locked: Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Locked),
     canBeSold: !saleItem || saleItem.failureIndexes.length === 0,

@@ -103,9 +103,9 @@ export function isWishListPlug(
       : wishListRoll.wishListPerks);
   return Boolean(
     perks &&
-      // Either the enhanced or unenhanced version of the perk is present
-      (perks.has(normalizeToUnenhanced(plug.plugDef.hash)) ||
-        perks.has(normalizeToEnhanced(plug.plugDef.hash))),
+    // Either the enhanced or unenhanced version of the perk is present
+    (perks.has(normalizeToUnenhanced(plug.plugDef.hash)) ||
+      perks.has(normalizeToEnhanced(plug.plugDef.hash))),
   );
 }
 
