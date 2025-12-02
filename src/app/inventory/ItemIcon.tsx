@@ -1,11 +1,9 @@
 import { itemConstants } from 'app/destiny2/d2-definitions';
-import { settingsSelector } from 'app/dim-api/selectors';
 import { bungieBackgroundStyle, bungieBackgroundStyles } from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { getBucketSvgIcon } from 'app/dim-ui/svgs/itemCategory';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { d2MissingIcon, ItemRarityMap, ItemRarityName } from 'app/search/d2-known-values';
-import { RootState } from 'app/store/types';
 import { compact } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { isArmorArchetypePlug, isModCostVisible } from 'app/utils/socket-utils';
@@ -19,7 +17,6 @@ import {
 } from 'data/d2/generated-enums';
 import holofoilAnim from 'images/holofoil-anim.apng';
 import pursuitComplete from 'images/pursuitComplete.svg';
-import { useSelector } from 'react-redux';
 import { DimItem } from './item-types';
 import * as styles from './ItemIcon.m.scss';
 import { isPluggableItem } from './store/sockets';
@@ -42,9 +39,6 @@ const strandWrongColorPlugCategoryHashes = [
   PlugCategoryHashes.HunterStrandMovement,
   PlugCategoryHashes.WarlockStrandMovement,
 ];
-
-export const ornamentDisplaySelector = (state: RootState) =>
-  settingsSelector(state).ornamentDisplay === 'all';
 
 export function getItemImageStyles(item: DimItem, className?: string) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
@@ -77,7 +71,6 @@ const oldShinyTraitHashes = [TraitHashes.ReleasesV730Season, TraitHashes.Release
  * Since this is used a *lot*, it should not use any hooks, subscriptions, etc.
  */
 export default function ItemIcon({ item, className }: { item: DimItem; className?: string }) {
-  const displayOrnament = useSelector(ornamentDisplaySelector);
   const classifiedPlaceholder =
     item.icon === d2MissingIcon && item.classified && getBucketSvgIcon(item.bucket.hash);
   const itemImageStyles = getItemImageStyles(item, className);
@@ -123,8 +116,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   let foreground = (item.iconDef?.foreground ?? item.icon) || '';
   let altIcon = '';
   if (item.ornamentIconDef) {
-    altIcon = displayOrnament ? foreground : item.ornamentIconDef.foreground || '';
-    foreground = displayOrnament ? item.ornamentIconDef.foreground : foreground;
+    altIcon = item.ornamentIconDef.foreground;
   }
 
   if (!animatedBackground && !altIcon) {
@@ -191,10 +183,10 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           {foreground && (
             <div
               style={bungieBackgroundStyle(foreground)}
-              className={clsx({ [styles.hoverFadeOut]: Boolean(altIcon) })}
+              className={clsx({ [styles.hasAltIcon]: Boolean(altIcon) })}
             />
           )}
-          {altIcon && <div style={bungieBackgroundStyle(altIcon)} className={styles.hoverFadeIn} />}
+          {altIcon && <div style={bungieBackgroundStyle(altIcon)} className={styles.altIcon} />}
           {seasonBanner && (
             <div style={bungieBackgroundStyle(seasonBanner)} className={styles.shiftedLayer} />
           )}
