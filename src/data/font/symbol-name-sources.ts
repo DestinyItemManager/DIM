@@ -1835,7 +1835,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1213975022,
+      hash: 1368601876,
       fromRichText: true,
     },
   },
@@ -1844,7 +1844,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 515179617,
+      hash: 49530695,
       fromRichText: true,
     },
   },
@@ -1871,7 +1871,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 671993070,
+      hash: 563593850,
       fromRichText: true,
     },
   },
@@ -1916,7 +1916,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 273967510,
+      hash: 215999859,
       fromRichText: true,
     },
   },
@@ -1934,7 +1934,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1089624989,
+      hash: 1351954994,
       fromRichText: true,
     },
   },
@@ -1943,7 +1943,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1047174894,
+      hash: 554293431,
       fromRichText: true,
     },
   },
@@ -1952,7 +1952,7 @@ export const symbolData: {
     glyph: '󰅀',
     source: {
       tableName: 'Objective',
-      hash: 1047174894,
+      hash: 554293431,
       fromRichText: true,
     },
   },
@@ -1979,7 +1979,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1878887814,
+      hash: 1476676901,
       fromRichText: true,
     },
   },
@@ -1997,7 +1997,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1588957719,
+      hash: 172143731,
       fromRichText: true,
     },
   },
@@ -2006,7 +2006,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 116015535,
+      hash: 30510483,
       fromRichText: true,
     },
   },
@@ -2031,7 +2031,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'SandboxPerk',
-      hash: 1637834409,
+      hash: 679036014,
       fromRichText: true,
     },
   },
@@ -2109,8 +2109,8 @@ export const symbolData: {
     codepoint: 983344,
     glyph: '󰄰',
     source: {
-      tableName: 'InventoryItem',
-      hash: 2317325399,
+      tableName: 'SandboxPerk',
+      hash: 627527846,
       fromRichText: false,
     },
   },
@@ -2380,7 +2380,7 @@ export const symbolData: {
     glyph: '󰃇',
     source: {
       tableName: 'Objective',
-      hash: 212548630,
+      hash: 550810786,
       fromRichText: false,
     },
   },
@@ -2389,7 +2389,7 @@ export const symbolData: {
     glyph: '󰂳',
     source: {
       tableName: 'Objective',
-      hash: 1328104731,
+      hash: 518649992,
       fromRichText: false,
     },
   },
@@ -2585,6 +2585,7 @@ export type TranslateManually =
  * [Sprint]
  * [afflicted|burdened|cursed]
  * [Block]
+ * [Reload]
  * [Boost]
  * [Air Move]
  * [Brake]
