@@ -97,6 +97,7 @@
     "@eslint/compat": "^2.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
     "@svgr/webpack": "^8.1.0",
+    "@swc/core": "^1.15.3",
     "@testing-library/react": "^16.3.0",
     "@types/dom-chromium-installation-events": "^101.0.4",
     "@types/dom-screen-wake-lock": "^1.0.3",
