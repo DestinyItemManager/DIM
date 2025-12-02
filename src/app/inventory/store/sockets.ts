@@ -27,7 +27,6 @@ import {
   DestinySocketTypeDefinition,
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
