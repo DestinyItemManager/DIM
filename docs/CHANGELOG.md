@@ -1,5 +1,15 @@
 ## Next
 
+## 8.101.0 <span class="changelog-date">(2025-11-30)</span>
+
+* Show weapon frame info on item icons.
+* Allow sorting inventory by weapon frame
+* support newline escape sequences (\n) in notes
+
+## 8.100.0 <span class="changelog-date">(2025-11-23)</span>
+
+* Fix search/Compare issues with item names containing quotes.
+
 ## 8.99.0 <span class="changelog-date">(2025-11-16)</span>
 
 ## 8.98.1 <span class="changelog-date">(2025-11-11)</span>

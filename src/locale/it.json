@@ -1278,6 +1278,7 @@
     "VaultArmorGroupingStyle": "Separa le armature su righe diverse ordinate per classe",
     "VaultGroupingNone": "Nessuno",
     "VaultWeaponGroupingStyle": "Separa i gruppi di armi su righe diverse",
+    "WeaponFrame": "Telaio arma",
     "WishlistRefreshNotificationBody": "Se non vedi nessun cambiamento, assicurati che la fonte (come GitHub) li rifletta!",
     "WishlistRefreshNotificationTitle": "Lista Desideri ricaricata"
   },

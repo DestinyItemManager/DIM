@@ -426,7 +426,7 @@ export function getArmor3StatFocus(item: DimItem): StatHashes[] {
  * Every armor with tuning has Balanced Tuning (3122197216) which provides +1 to several stats,
  * so this seeks an available plug item that's one of the +5/-5 mods.
  */
-export function getArmor3TuningStat(item: DimItem): number | undefined {
+export function getArmor3TuningStat(item: DimItem): StatHashes | undefined {
   const reusablePlugItems = item.bucket.inArmor
     ? getArmor3TuningSocket(item)?.reusablePlugItems
     : undefined;

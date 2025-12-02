@@ -10443,7 +10443,7 @@ exports[`process stores generates a correct armor CSV export 1`] = `
     "Super": 2,
     "Super (Base)": 0,
     "Tag": undefined,
-    "Tertiary Stat": "discipline",
+    "Tertiary Stat": "grenade",
     "Tier": 0,
     "Total": 69,
     "Total (Base)": 63,

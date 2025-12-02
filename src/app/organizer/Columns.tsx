@@ -24,7 +24,11 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { TOTAL_STAT_HASH, breakerTypeNames } from 'app/search/d2-known-values';
+import {
+  TOTAL_STAT_HASH,
+  breakerTypeNames,
+  realD2ArmorStatSearchByHash,
+} from 'app/search/d2-known-values';
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -597,7 +601,7 @@ export function getColumns(
         header: t('Organizer.Columns.TertiaryStat'),
         csv: 'Tertiary Stat',
         value: (item) =>
-          isArmor3(item) ? invert(statHashByName)[getArmor3StatFocus(item)[2]] : undefined,
+          isArmor3(item) ? realD2ArmorStatSearchByHash[getArmor3StatFocus(item)[2]] : undefined,
         cell: (statName, item) => {
           if (statName) {
             const stat = item.stats?.find((s) => s.statHash === statHashByName[statName]);
@@ -623,7 +627,7 @@ export function getColumns(
         header: t('Organizer.Columns.TuningStat'),
         csv: 'Tuning Stat',
         value: (item) =>
-          isArmor3(item) ? invert(statHashByName)[getArmor3TuningStat(item)!] : undefined,
+          isArmor3(item) ? realD2ArmorStatSearchByHash[getArmor3TuningStat(item)!] : undefined,
         cell: (statName, item) => {
           if (statName) {
             const stat = item.stats?.find((s) => s.statHash === statHashByName[statName]);
@@ -639,7 +643,7 @@ export function getColumns(
             }
           }
         },
-        filter: (statName) => `tertiarystat:${statName}`,
+        filter: (statName) => `tunedstat:${statName}`,
       }),
     destinyVersion === 2 &&
       isArmor &&

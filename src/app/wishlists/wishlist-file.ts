@@ -129,9 +129,11 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray, blockNotes?: string): string | undefined {
-  return matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
-    ? matchResults.groups.wishListNotes
-    : blockNotes;
+  const notes =
+    matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
+      ? matchResults.groups.wishListNotes
+      : blockNotes;
+  return notes?.replace(/\\n/g, '\n');
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {

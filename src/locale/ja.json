@@ -1246,6 +1246,7 @@
     "VaultArmorGroupingStyle": "アーマーをクラスごとに水平線で区切る",
     "VaultGroupingNone": "無し",
     "VaultWeaponGroupingStyle": "武器を種別ごとに水平線で区切る",
+    "WeaponFrame": "武器フレーム",
     "WishlistRefreshNotificationBody": "アップデートしても変更されていない場合は、GitHubなどの元のリポジトリに変更内容がきちんと入っているかチェックしてください。",
     "WishlistRefreshNotificationTitle": "ウィッシュリストを更新しました"
   },

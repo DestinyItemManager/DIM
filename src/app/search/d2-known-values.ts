@@ -128,6 +128,18 @@ export const realD2ArmorStatHashByName: StringLookup<StatHashes> = {
  */
 export const realD2ArmorStatSearchByHash = invert(realD2ArmorStatHashByName);
 
+// We keep the old names for now, both for D1 compatibility and for existing saved
+// searches. In the future we could have a different map for D1 names and D2
+// names.
+const oldArmorStatNames: StringLookup<StatHashes> = {
+  mobility: StatHashes.Weapons,
+  resilience: StatHashes.Health,
+  recovery: StatHashes.Class,
+  discipline: StatHashes.Grenade,
+  intellect: StatHashes.Super,
+  strength: StatHashes.Melee,
+};
+
 /**
  * Lookup with `'weapons' -> StatHashes.Weapons` etc.
  *
@@ -135,15 +147,7 @@ export const realD2ArmorStatSearchByHash = invert(realD2ArmorStatHashByName);
  */
 export const D2ArmorStatHashByName: StringLookup<StatHashes> = {
   ...realD2ArmorStatHashByName,
-  // We keep the old names for now, both for D1 compatibility and for existing saved
-  // searches. In the future we could have a different map for D1 names and D2
-  // names.
-  mobility: StatHashes.Weapons,
-  resilience: StatHashes.Health,
-  recovery: StatHashes.Class,
-  discipline: StatHashes.Grenade,
-  intellect: StatHashes.Super,
-  strength: StatHashes.Melee,
+  ...oldArmorStatNames,
 } as const;
 
 /**
@@ -188,6 +192,12 @@ export const D2WeaponStatHashByName = {
   accuracy: StatHashes.Accuracy,
   ammogen: StatHashes.AmmoGeneration,
   persistence: StatHashes.Persistence,
+  swingspeed: StatHashes.SwingSpeed,
+  guardefficiency: StatHashes.GuardEfficiency,
+  guardresistance: StatHashes.GuardResistance,
+  chargerate: StatHashes.ChargeRate,
+  guardendurance: StatHashes.GuardEndurance,
+  ammocapacity: StatHashes.AmmoCapacity,
 };
 
 export const D2PlugCategoryByStatHash = new Map<StatHashes, PlugCategoryHashes>([
@@ -203,15 +213,6 @@ export const D2PlugCategoryByStatHash = new Map<StatHashes, PlugCategoryHashes>(
   [StatHashes.Velocity, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatProjectileSpeed],
   [StatHashes.ShieldDuration, PlugCategoryHashes.V600PlugsWeaponsMasterworksStatShieldDuration],
 ]);
-
-export const swordStatsByName = {
-  swingspeed: StatHashes.SwingSpeed,
-  guardefficiency: StatHashes.GuardEfficiency,
-  guardresistance: StatHashes.GuardResistance,
-  chargerate: StatHashes.ChargeRate,
-  guardendurance: StatHashes.GuardEndurance,
-  ammocapacity: StatHashes.AmmoCapacity,
-};
 
 //
 // ITEMS / ITEMCATERGORY KNOWN VALUES
