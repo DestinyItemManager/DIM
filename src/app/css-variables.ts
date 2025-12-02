@@ -11,7 +11,7 @@ import { StoreObserver } from './store/observerMiddleware';
 const KEYBOARD_THRESHOLD = 50;
 
 function setCSSVariable(property: string, value: { toString: () => string }) {
-  if (value) {
+  if (value !== undefined && value !== null) {
     document.querySelector('html')!.style.setProperty(property, value.toString());
   }
 }
@@ -31,7 +31,7 @@ export function createOrnamentDisplayObserver(): StoreObserver<number> {
     id: 'ornament-display-observer',
     getObserved: (rs) => settingsSelector(rs).ornamentDisplay,
     sideEffect: ({ current }) => {
-      setCSSVariable('--ornament-display', `${current}`);
+      setCSSVariable('--ornament-display', current);
     },
   };
 }
