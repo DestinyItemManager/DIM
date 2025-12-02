@@ -101,12 +101,12 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   );
   const hasAccessoryControls = Boolean(
     taggable ||
-      lockable ||
-      comparable ||
-      infusable ||
-      loadoutable ||
-      canConsolidate ||
-      canDistribute,
+    lockable ||
+    comparable ||
+    infusable ||
+    loadoutable ||
+    canConsolidate ||
+    canDistribute,
   );
   const hasControls = hasAccessoryControls || hasMoveControls;
 

@@ -83,8 +83,8 @@ function canInsertForFree(
     // Must be reusable or randomized type
     Boolean(
       socket.socketDefinition.reusablePlugItems.length > 0 ||
-        socket.socketDefinition.reusablePlugSetHash ||
-        socket.socketDefinition.randomizedPlugSetHash,
+      socket.socketDefinition.reusablePlugSetHash ||
+      socket.socketDefinition.randomizedPlugSetHash,
     ) &&
     // And have no cost to insert
     !hasInsertionCost(defs, plug) &&

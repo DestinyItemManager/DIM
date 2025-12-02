@@ -109,9 +109,9 @@ export default function VendorItems({
                           item={vendorItem}
                           owned={Boolean(
                             ownedItemHashes?.has(vendorItem.item.hash) ||
-                              vendorItem.owned ||
-                              (vendorItem.item.hash in focusingItemOutputs &&
-                                ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!)),
+                            vendorItem.owned ||
+                            (vendorItem.item.hash in focusingItemOutputs &&
+                              ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!)),
                           )}
                           characterId={characterId}
                         />

@@ -18,12 +18,12 @@ import styles from './LoadoutParametersDisplay.m.scss';
 export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
   return Boolean(
     params &&
-      (params.query ||
-        params.exoticArmorHash ||
-        params.statConstraints?.length ||
-        (params.mods &&
-          includesRuntimeStatMods(params.mods) &&
-          (params.includeRuntimeStatBenefits ?? true))),
+    (params.query ||
+      params.exoticArmorHash ||
+      params.statConstraints?.length ||
+      (params.mods &&
+        includesRuntimeStatMods(params.mods) &&
+        (params.includeRuntimeStatBenefits ?? true))),
   );
 }
 

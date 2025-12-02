@@ -140,17 +140,17 @@ export function itemCanBeEquippedByStoreId(
 ): boolean {
   return Boolean(
     item.equipment &&
-      (item.classified
-        ? // we can't trust the classType of redacted items! they're all marked titan.
-          // let's assume classified weapons are all-class
-          item.bucket.inWeapons ||
-          // if it's equipped by this store, it's obviously equippable to this store!
-          (item.owner === storeId && item.equipped)
-        : // For the right class
-          isClassCompatible(item.classType, storeClassType)) &&
-      // can be moved or is already here
-      (!item.notransfer || item.owner === storeId) &&
-      (allowPostmaster || !item.location.inPostmaster),
+    (item.classified
+      ? // we can't trust the classType of redacted items! they're all marked titan.
+        // let's assume classified weapons are all-class
+        item.bucket.inWeapons ||
+        // if it's equipped by this store, it's obviously equippable to this store!
+        (item.owner === storeId && item.equipped)
+      : // For the right class
+        isClassCompatible(item.classType, storeClassType)) &&
+    // can be moved or is already here
+    (!item.notransfer || item.owner === storeId) &&
+    (allowPostmaster || !item.location.inPostmaster),
   );
 }
 
@@ -304,11 +304,11 @@ export function isArtificeSocket(socket: DimSocket) {
   // exotic armor has the artifice slot all the time, and it's usable when it's reported as visible
   return Boolean(
     socket.visibleInGame &&
-      socket.plugged &&
-      // in a better world, you'd only need to check this, because there's a "empty mod slot" item specifically for artifice slots.
-      (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice ||
-        // but some of those have the *generic* "empty mod slot" item plugged in, so we fall back to keeping an eye out for the intrinsic
-        socket.plugged.plugDef.hash === ARTIFICE_PERK_HASH),
+    socket.plugged &&
+    // in a better world, you'd only need to check this, because there's a "empty mod slot" item specifically for artifice slots.
+    (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice ||
+      // but some of those have the *generic* "empty mod slot" item plugged in, so we fall back to keeping an eye out for the intrinsic
+      socket.plugged.plugDef.hash === ARTIFICE_PERK_HASH),
   );
 }
 

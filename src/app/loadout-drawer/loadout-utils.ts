@@ -631,8 +631,8 @@ export function getResolutionInfo(
   const bucketHash = def.bucketTypeHash || def.inventory?.bucketTypeHash || 0;
   const instanced = Boolean(
     (def.instanced || def.inventory?.isInstanceItem) &&
-      // Subclasses and some other types are technically instanced but should be matched by hash
-      !matchByHash.includes(bucketHash),
+    // Subclasses and some other types are technically instanced but should be matched by hash
+    !matchByHash.includes(bucketHash),
   );
 
   return {
@@ -867,9 +867,9 @@ export function isArmorModsOnly(defs: D2ManifestDefinitions, loadout: Loadout): 
 export function isFashionPlug(modDef: DestinyInventoryItemDefinition | undefined): boolean {
   return Boolean(
     modDef &&
-      (modDef.itemSubType === DestinyItemSubType.Shader ||
-        modDef.itemSubType === DestinyItemSubType.Ornament ||
-        modDef.itemType === DestinyItemType.Armor),
+    (modDef.itemSubType === DestinyItemSubType.Shader ||
+      modDef.itemSubType === DestinyItemSubType.Ornament ||
+      modDef.itemType === DestinyItemType.Armor),
   );
 }
 /**

@@ -462,8 +462,10 @@ export type PlugStatActivationRule =
  * That way we can reuse the plug def's investmentStats array if it has no conditional stats or doesn't
  * require fixup in general, and map to our own format with a PlugStatActivationRule if need be
  */
-export interface DimPlugInvestmentStat
-  extends Omit<DestinyItemInvestmentStatDefinition, 'isConditionallyActive'> {
+export interface DimPlugInvestmentStat extends Omit<
+  DestinyItemInvestmentStatDefinition,
+  'isConditionallyActive'
+> {
   activationRule?: PlugStatActivationRule;
 }
 

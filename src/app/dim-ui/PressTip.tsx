@@ -159,15 +159,15 @@ function Control({
 function containsContentStyle(tooltip: unknown): tooltip is React.ReactNode {
   return Boolean(
     tooltip &&
-      typeof tooltip === 'object' &&
-      ((Array.isArray(tooltip) && tooltip.some(containsContentStyle)) ||
-        ('props' in tooltip &&
-          tooltip.props &&
-          typeof tooltip.props === 'object' &&
-          (('className' in tooltip.props && tooltip.props.className === styles.content) ||
-            ('children' in tooltip.props &&
-              Array.isArray(tooltip.props.children) &&
-              tooltip.props.children.some(containsContentStyle))))),
+    typeof tooltip === 'object' &&
+    ((Array.isArray(tooltip) && tooltip.some(containsContentStyle)) ||
+      ('props' in tooltip &&
+        tooltip.props &&
+        typeof tooltip.props === 'object' &&
+        (('className' in tooltip.props && tooltip.props.className === styles.content) ||
+          ('children' in tooltip.props &&
+            Array.isArray(tooltip.props.children) &&
+            tooltip.props.children.some(containsContentStyle))))),
   );
 }
 

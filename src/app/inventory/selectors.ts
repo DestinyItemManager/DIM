@@ -182,10 +182,9 @@ const userIsPlayingSelector = (state: RootState) =>
   Boolean(
     // the user's playing if their transitory component acts like they're in-game
     state.inventory.profileResponse?.profileTransitoryData?.data ||
-      // or, as a grace period for character swaps, if they've been playing in the last 10 minutes
-      Date.now() -
-        Date.parse(state.inventory.profileResponse?.profile.data?.dateLastPlayed || '0') <
-        10 * 60 * 1000,
+    // or, as a grace period for character swaps, if they've been playing in the last 10 minutes
+    Date.now() - Date.parse(state.inventory.profileResponse?.profile.data?.dateLastPlayed || '0') <
+      10 * 60 * 1000,
   );
 
 /** The time when the currently displayed profile was last refreshed from live game data */

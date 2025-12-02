@@ -558,18 +558,18 @@ export function makeItem(
   // *able
   createdItem.taggable = Boolean(
     createdItem.lockable ||
-      createdItem.classified ||
-      // Shaders can be tagged from collections
-      itemDef.itemSubType === DestinyItemSubType.Shader ||
-      // Mods can be tagged from collections...
-      (createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
-        // ... but not catalysts
-        !itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)),
+    createdItem.classified ||
+    // Shaders can be tagged from collections
+    itemDef.itemSubType === DestinyItemSubType.Shader ||
+    // Mods can be tagged from collections...
+    (createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+      // ... but not catalysts
+      !itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)),
   );
   createdItem.comparable = Boolean(
     createdItem.equipment &&
-      createdItem.lockable &&
-      createdItem.bucket.hash !== BucketHashes.Emblems,
+    createdItem.lockable &&
+    createdItem.bucket.hash !== BucketHashes.Emblems,
   );
 
   if (createdItem.primaryStat) {
@@ -589,9 +589,9 @@ export function makeItem(
 
   createdItem.wishListEnabled = Boolean(
     createdItem.sockets &&
-      (createdItem.bucket.inWeapons ||
-        // Exotic class items can be wishlisted
-        (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
+    (createdItem.bucket.inWeapons ||
+      // Exotic class items can be wishlisted
+      (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
   );
 
   // Extract weapon crafting info from the crafted socket but
