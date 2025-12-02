@@ -510,11 +510,11 @@ export default function SettingsPage() {
               <Checkbox
                 label={t('Settings.OrnamentDisplay')}
                 name="ornamentDisplay"
-                value={settings.ornamentDisplay === 'all'}
-                onChange={(checked, name) => setSetting(name, checked ? 'all' : 'none')}
+                value={Boolean(settings.ornamentDisplay)}
+                onChange={(checked, name) => setSetting(name, checked ? 1 : 0)}
               />
               <div className={styles.fineprint}>
-                {settings.ornamentDisplay === 'all'
+                {settings.ornamentDisplay
                   ? t('Settings.OrnamentDisplayExplanationHide')
                   : t('Settings.OrnamentDisplayExplanationShow')}
               </div>

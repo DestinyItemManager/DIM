@@ -26,6 +26,16 @@ export function createItemSizeObserver(): StoreObserver<number> {
   };
 }
 
+export function createOrnamentDisplayObserver(): StoreObserver<number> {
+  return {
+    id: 'ornament-display-observer',
+    getObserved: (rs) => settingsSelector(rs).ornamentDisplay,
+    sideEffect: ({ current }) => {
+      setCSSVariable('--ornament-display', `${current}`);
+    },
+  };
+}
+
 export function createThemeObserver(): StoreObserver<{ theme: string; isPhonePortrait: boolean }> {
   return {
     id: 'theme-observer',

@@ -82,31 +82,31 @@ $commonBg: #366f42;
   }
 }
 
-.hoverFadeIn {
+.hasAltIcon {
   display: block;
   transition: opacity 0.2s ease-out;
-  opacity: 0;
+  opacity: calc(1 - var(--ornament-display, 1));
 
   @media (prefers-reduced-motion: reduce) {
     transition-duration: 0s;
   }
 
   :global(.item):hover & {
-    opacity: 1;
+    opacity: var(--ornament-display, 1);
   }
 }
 
-.hoverFadeOut {
+.altIcon {
   display: block;
   transition: opacity 0.2s ease-out;
-  opacity: 1;
+  opacity: var(--ornament-display, 1);
 
   @media (prefers-reduced-motion: reduce) {
     transition-duration: 0s;
   }
 
   :global(.item):hover & {
-    opacity: 0;
+    opacity: calc(1 - var(--ornament-display, 1));
   }
 }
 

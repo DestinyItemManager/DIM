@@ -7,7 +7,7 @@ import { defaultLanguage, DimLanguage } from 'app/i18n';
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
   armorCompare: 'current' | 'base' | 'baseMasterwork';
-  ornamentDisplay: 'all' | 'none';
+  ornamentDisplay: number;
 }
 
 export const initialSettingsState: Settings = {
@@ -41,5 +41,5 @@ export const initialSettingsState: Settings = {
   ],
   organizerColumnsGhost: ['icon', 'name', 'tag', 'perks', 'notes'],
   armorCompare: 'baseMasterwork',
-  ornamentDisplay: 'all',
+  ornamentDisplay: 1,
 };

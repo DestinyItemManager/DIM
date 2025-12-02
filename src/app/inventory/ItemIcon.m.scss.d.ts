@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'adjustOpacity': string;
+  'altIcon': string;
   'animatedBackground': string;
   'basic': string;
   'borderless': string;
@@ -11,9 +12,8 @@ interface CssExports {
   'deepsight': string;
   'energyCost': string;
   'exotic': string;
+  'hasAltIcon': string;
   'highlightedObjective': string;
-  'hoverFadeIn': string;
-  'hoverFadeOut': string;
   'inverted': string;
   'legendary': string;
   'masterwork': string;
