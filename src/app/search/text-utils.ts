@@ -66,7 +66,7 @@ export function testStringsFromDisplayProperties(
 
   return Boolean(
     (displayProperties.name && test(displayProperties.name)) ||
-      (includeDescription && displayProperties.description && test(displayProperties.description)),
+    (includeDescription && displayProperties.description && test(displayProperties.description)),
   );
 }
 

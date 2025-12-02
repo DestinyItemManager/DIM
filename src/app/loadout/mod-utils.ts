@@ -57,15 +57,15 @@ export function isInsertableArmor2Mod(
   return Boolean(
     // is the def pluggable (def.plug exists)
     isPluggableItem(def) &&
-      // is the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
-      isArmor2Mod(def) &&
-      // is it actually something relevant
-      !emptyPlugHashes.has(def.hash) &&
-      !deprecatedMods.includes(def.hash) &&
-      // Exclude consumable mods
-      def.inventory?.bucketTypeHash !== BucketHashes.Modifications &&
-      // this rules out classified items
-      def.itemTypeDisplayName !== undefined,
+    // is the plugCategoryHash is in one of our known plugCategoryHashes (relies on d2ai).
+    isArmor2Mod(def) &&
+    // is it actually something relevant
+    !emptyPlugHashes.has(def.hash) &&
+    !deprecatedMods.includes(def.hash) &&
+    // Exclude consumable mods
+    def.inventory?.bucketTypeHash !== BucketHashes.Modifications &&
+    // this rules out classified items
+    def.itemTypeDisplayName !== undefined,
   );
 }
 

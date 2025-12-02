@@ -161,7 +161,7 @@ export function isArmorArchetypePlug(plug: DimPlug | DestinyInventoryItemDefinit
   const plugDef = plug && 'plugDef' in plug ? plug.plugDef : plug;
   return Boolean(
     plugDef?.plug?.plugCategoryHash === PlugCategoryHashes.ArmorArchetypes &&
-      plugDef.displayProperties.name,
+    plugDef.displayProperties.name,
   );
 }
 

@@ -17,8 +17,9 @@ export interface MinMaxStat {
  * stat values. In the API version, stat constraints are simply missing if
  * ignored, and min-0/max-10 is omitted as implied.
  */
-export interface ResolvedStatConstraint
-  extends Required<Omit<StatConstraint, 'minTier' | 'maxTier'>> {
+export interface ResolvedStatConstraint extends Required<
+  Omit<StatConstraint, 'minTier' | 'maxTier'>
+> {
   /**
    * An ignored stat has an effective maximum stat of 0, so that any stats in
    * excess of 0 are deemed worthless.

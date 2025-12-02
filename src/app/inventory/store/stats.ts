@@ -198,8 +198,8 @@ function shouldShowStat(
   return Boolean(
     // Must be on the list of interpolated stats
     statDisplaysByStatHash[statHash] &&
-      // Must be a stat we want to display
-      isAllowedItemStat(statHash),
+    // Must be a stat we want to display
+    isAllowedItemStat(statHash),
   );
 }
 

@@ -39,8 +39,8 @@ export const modslotFilter = {
 
       return Boolean(
         (filterValue === 'none' && !modSocketTag) ||
-          (modSocketTag &&
-            (filterValue === 'any' || filterValue === 'activity' || modSocketTag === filterValue)),
+        (modSocketTag &&
+          (filterValue === 'any' || filterValue === 'activity' || modSocketTag === filterValue)),
       );
     },
   fromItem: (item) => {
@@ -109,8 +109,8 @@ const socketFilters: ItemFilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-            socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
-            socket.plugged.plugDef.hash !== DEFAULT_SHADER,
+          socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
+          socket.plugged.plugDef.hash !== DEFAULT_SHADER,
         ),
       ),
   },
@@ -122,15 +122,15 @@ const socketFilters: ItemFilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-            (socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament ||
-              socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
-                /armor_skins_(titan|warlock|hunter)_(head|arms|chest|legs|class)/,
-              )) &&
-            socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
-            !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
-            !socket.plugged.plugDef.itemCategoryHashes?.includes(
-              ItemCategoryHashes.ArmorModsGlowEffects,
-            ),
+          (socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament ||
+            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
+              /armor_skins_(titan|warlock|hunter)_(head|arms|chest|legs|class)/,
+            )) &&
+          socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
+          !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
+          !socket.plugged.plugDef.itemCategoryHashes?.includes(
+            ItemCategoryHashes.ArmorModsGlowEffects,
+          ),
         ),
       ),
   },
@@ -153,12 +153,12 @@ const socketFilters: ItemFilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-            !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.|v900.weapon.mod_)/,
-            ) &&
-            // enforce that this provides a perk (excludes empty slots)
-            socket.plugged.plugDef.perks.length,
+          !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+          socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
+            /(v400.weapon.mod_(guns|damage|magazine)|enhancements.|v900.weapon.mod_)/,
+          ) &&
+          // enforce that this provides a perk (excludes empty slots)
+          socket.plugged.plugDef.perks.length,
         ),
       ),
   },
@@ -205,8 +205,8 @@ const socketFilters: ItemFilterDefinition[] = [
           : // is:extractable checks for red-borderness
             Boolean(
               item.deepsightInfo &&
-                item.patternUnlockRecord &&
-                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted,
+              item.patternUnlockRecord &&
+              item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted,
             )),
   },
   {
@@ -277,11 +277,11 @@ const socketFilters: ItemFilterDefinition[] = [
     filter: () => (item) =>
       Boolean(
         (item.craftedInfo?.enhancementTier || 0) < 3 &&
-          item.sockets?.allSockets.some(
-            (s) =>
-              s.plugged?.plugDef.plug.plugCategoryHash ===
-              PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
-          ),
+        item.sockets?.allSockets.some(
+          (s) =>
+            s.plugged?.plugDef.plug.plugCategoryHash ===
+            PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
+        ),
       ),
   },
   {

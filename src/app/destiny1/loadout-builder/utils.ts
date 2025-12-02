@@ -166,7 +166,7 @@ export function getBestArmor(
           }
           return Boolean(
             (orPerkHashes.length && orPerkHashes.some(matchNode)) ||
-              (andPerkHashes.length && andPerkHashes.every(matchNode)),
+            (andPerkHashes.length && andPerkHashes.every(matchNode)),
           );
         };
       }
