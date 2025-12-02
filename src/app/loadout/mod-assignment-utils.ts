@@ -564,6 +564,7 @@ function getArmorSocketsAndMods(
     // but the API considers it to be disabled.
     .filter(
       (socket) =>
+        socket.visibleInGame &&
         socket.plugged &&
         // TODO: Edge of Fate: This is a hacky fix for the masterwork socket
         // that has appeared. We should maybe exclude it from the socket list

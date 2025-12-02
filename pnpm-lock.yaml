@@ -57,8 +57,8 @@ dependencies:
     specifier: ^0.1.13
     version: 0.1.13
   bungie-api-ts:
-    specifier: ^5.9.0
-    version: 5.9.0
+    specifier: ^5.10.0
+    version: 5.10.0
   caniuse-lite:
     specifier: ^1.0.30001757
     version: 1.0.30001757
@@ -6574,8 +6574,8 @@ packages:
       run-applescript: 7.1.0
     dev: true
 
-  /bungie-api-ts@5.9.0:
-    resolution: {integrity: sha512-dOU8CJxjkmiU608g+SaopB6WJtuUEFqUgwsGLE2rzbyVO7dMVWKCmH2G1C1KGv6Cb7r3L4c/feovqKg0jXcVTg==}
+  /bungie-api-ts@5.10.0:
+    resolution: {integrity: sha512-3UJCuMJVRrfqUA23mpE/DJ79TWQqhRKuY3hLxUZpcTHQ9wOBWSk6Nyxugx231cIqfPsENnGT0OkBOvIB0s6C5g==}
     engines: {node: '>=13.2.0'}
     dev: false
 
