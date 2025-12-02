@@ -923,8 +923,15 @@ export function resolveLoadoutModHashes(
         mods.push({ originalModHash, resolvedMod: item });
       } else {
         const deprecatedPlaceholderMod = defs.InventoryItem.get(deprecatedPlaceholderArmorModHash);
-        isPluggableItem(deprecatedPlaceholderMod) &&
+        if (isPluggableItem(deprecatedPlaceholderMod)) {
           mods.push({ originalModHash, resolvedMod: deprecatedPlaceholderMod });
+        } else {
+          throw new Error(
+            `Could not find deprecated placeholder mod definition, hash: ${
+              deprecatedPlaceholderArmorModHash
+            }`,
+          );
+        }
       }
     }
   }
