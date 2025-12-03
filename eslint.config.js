@@ -42,9 +42,26 @@ export default tseslint.config(
     },
   },
   { name: 'array-func', ...arrayFunc.configs.all },
-  ...cssModules.configs.recommended,
+  {
+    name: 'css-modules',
+    plugins: {
+      'css-modules': cssModules,
+    },
+    rules: { 'css-modules/no-unused-class': ['error', { camelCase: true }] },
+  },
   { name: 'sonarjs/recommended', ...sonarjs.configs.recommended },
-  reactHooks.configs.flat.recommended,
+  {
+    files: ['**/*.{js,jsx}'],
+    plugins: { 'react-hooks': reactHooks },
+    // ...
+    rules: {
+      // Core hooks rules
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      // TODO: Enable react compiler rules when they are fixed and we are using
+      // react compiler. Until then they are noisy and slow.
+    },
+  },
   {
     // We want to choose which rules to enable from the github plugin, not use a preset.
     name: 'github',
@@ -317,13 +334,6 @@ export default tseslint.config(
           ],
         },
       ],
-      // eslint-plugin-react-hooks decided to include a ton of (buggy) rules about React Compiler
-      'react-hooks/refs': 'off', // for now
-      'react-hooks/set-state-in-effect': 'off', // for now
-      'react-hooks/purity': 'off', // for now
-      'react-hooks/preserve-manual-memoization': 'off', // for now
-      'react-hooks/immutability': 'off', // for now
-      'react-hooks/incompatible-library': 'off', // for now
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/no-misused-promises': [
         'error',
@@ -442,7 +452,7 @@ export default tseslint.config(
   },
   {
     name: 'tests',
-    files: ['**/*.test.ts'],
+    files: ['**/*.test.ts', 'src/testing/**/*.ts'],
     rules: {
       // We don't want to allow importing test modules in app modules, but of course you can do it in other test modules.
       'no-restricted-imports': 'off',

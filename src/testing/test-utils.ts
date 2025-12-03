@@ -4,13 +4,7 @@ import { buildStores } from 'app/inventory/store/d2-store-factory';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
 import { delay } from 'app/utils/promises';
-import {
-  AllDestinyManifestComponents,
-  DestinyManifest,
-  DestinyProfileResponse,
-  DestinyVendorsResponse,
-  ServerResponse,
-} from 'bungie-api-ts/destiny2';
+import { AllDestinyManifestComponents, DestinyManifest } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import { maxBy, once } from 'es-toolkit';
 import i18next from 'i18next';
@@ -30,9 +24,9 @@ import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import profile from 'testing/data/profile-2025-12-02.json';
+import vendors from 'testing/data/vendors-2025-12-02.json';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
-import profile from './data/profile-2025-12-02.json';
-import vendors from './data/vendors-2025-12-02.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
@@ -133,12 +127,9 @@ export const testAccount = {
   lastPlayed: '2021-05-08T03:34:26.000Z',
 };
 
-export const getTestProfile = () =>
-  (profile as unknown as ServerResponse<DestinyProfileResponse>).Response;
-export const fetchTestProfile = async () =>
-  (profile as unknown as ServerResponse<DestinyProfileResponse>).Response;
-export const getTestVendors = () =>
-  (vendors as unknown as ServerResponse<DestinyVendorsResponse>).Response;
+export const getTestProfile = () => profile.Response;
+export const fetchTestProfile = async () => profile.Response;
+export const getTestVendors = () => vendors.Response;
 
 export const getTestStores = once(async () => {
   const manifest = await getTestDefinitions();
