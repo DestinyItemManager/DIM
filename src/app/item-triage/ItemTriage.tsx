@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { compareFilteredItems } from 'app/compare/actions';
 import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -11,7 +12,7 @@ import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
@@ -127,6 +128,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
 
 function LoadoutsTriageSection({ item }: { item: DimItem }) {
   const loadoutsByItem = useSelector(loadoutsByItemSelector);
+  const stores = useSelector(storesSelector);
   const inLoadouts = loadoutsByItem[item.id] || [];
   // We need to build an absolute path rather than a relative one because the loadout editor is mounted higher than the destiny routes.
   const account = useSelector(currentAccountSelector);
@@ -148,12 +150,24 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
         {inLoadouts.map((l) => {
           const loadout = l.loadout;
           const isDimLoadout = !isInGameLoadout(loadout);
+          const character = isDimLoadout
+            ? undefined
+            : stores.find((s) => s.id === loadout.characterId);
+
           return (
             <li className={styles.loadoutRow} key={loadout.id}>
               {isDimLoadout ? (
                 <ClassIcon classType={loadout.classType} className={styles.inlineIcon} />
               ) : (
-                <InGameLoadoutIcon loadout={loadout} />
+                <>
+                  {character && (
+                    <span className={styles.charIcon}>
+                      <StoreIcon useBackground store={character} />
+                    </span>
+                  )}
+                  <InGameLoadoutIcon loadout={loadout} />
+                  <span className={styles.loadoutNumber}>{loadout.index + 1}</span>
+                </>
               )}
               <ColorDestinySymbols text={loadout.name} className={styles.loadoutName} />
               <span className={styles.controls}>
