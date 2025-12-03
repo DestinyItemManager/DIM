@@ -167,7 +167,7 @@ const D2Sources: {
       1281387702, // Source: Unlock Your Void Subclass
       1701477406, // Source: Flashpoint milestones; Legendary engrams.
       2242939082, // Requires Hunter Class
-      2278847330, // Requires Guardian Rank 5
+      2278847330, // Requires Guardian Rank 3
       2308290458, // Requires 1,000 Warlock Kills
       2552784968, // Requires Guardian Rank 2
       2744321951, // Source: Complete a heroic Public Event.
@@ -353,6 +353,7 @@ const D2Sources: {
   desertperpetual: {
     sourceHashes: [
       596084342, // Source: "The Desert Perpetual" Raid
+      2127551856, // Source: "The Desert Perpetual" Epic Raid
     ],
   },
   do: {
@@ -483,23 +484,15 @@ const D2Sources: {
   events: {
     itemHashes: [
       425681240, // Acosmic
-      495940989, // Avalanche
       601948197, // Zephyr
       689294985, // Jurassic Green
-      1123433952, // Stay Frosty
-      1183116657, // Glacioclasm
       1280894514, // Mechabre
-      1845372864, // Albedo Wing
-      1845978721, // Avalanche
       2477980485, // Mechabre
       2603335652, // Jurassic Green
-      2812100428, // Stay Frosty
-      2814093983, // Cold Front
       2869466318, // BrayTech Werewolf
       3400256755, // Zephyr
       3558681245, // BrayTech Werewolf
       3559361670, // The Title
-      3573686365, // Glacioclasm
     ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
@@ -519,10 +512,12 @@ const D2Sources: {
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
       1416471099, // Source: Moments of Triumph 2023
       1462687159, // Reached level 5 in the Ages of Triumph record book.
+      1505938361, // Source: Call to Arms Event
       1568732528, // Source: Guardian Games 2024
       1666677522, // Source: Solstice
       1677921161, // Source: Festival of the Lost 2018.
       1919933822, // Source: Festival of the Lost 2020
+      1953779156, // Source: Events
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
       2045032171, // Source: Arms Week Event
@@ -763,22 +758,12 @@ const D2Sources: {
   ironbanner: {
     itemHashes: [
       231533811, // Iron Strength
-      487361141, // Gunnora's Axe
-      540880995, // Dark Decider
-      888872889, // Point of the Stag
-      1161561386, // The Guiding Sight
       1162929425, // The Golden Standard
       1448664466, // Iron Bone
       1448664467, // Iron Gold
       1661191199, // Grizzled Wolf
-      1764868900, // Riiswalker
-      1968711238, // Warlord's Spear
       1987234560, // Iron Ruby
-      1999697514, // The Wizened Rebuke
-      2189073092, // Lethal Abundance
       2448092902, // Rusted Iron
-      2488587246, // The Hero's Burden
-      4009352833, // Roar of the Bear
     ],
     sourceHashes: [
       561111210, // Source: Iron Banner Salvager's Salvo Armament
@@ -1046,6 +1031,7 @@ const D2Sources: {
   },
   'pinnacle-weapon': {
     itemHashes: [
+      444627789, // Oxygen SR3
       578459533, // Wendigo GL3
       654608616, // Revoker
       1050806815, // The Recluse
@@ -1055,6 +1041,7 @@ const D2Sources: {
       3354242550, // The Recluse
       3907337522, // Oxygen SR3
       3962575203, // Hush
+      4104613038, // Oxygen SR3
     ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
@@ -1144,6 +1131,7 @@ const D2Sources: {
       1897187034, // Source: "Crota's End" Raid
       2065138144, // Source: "Vault of Glass" Raid
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
+      2127551856, // Source: "The Desert Perpetual" Epic Raid
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2455011338, // Source: Last Wish raid.
       2653618435, // Source: Leviathan raid.
@@ -1432,7 +1420,6 @@ const D2Sources: {
       351235593, // Source: Eliminate Prison of Elders escapees found in strikes.
       412991783, // Source: Strikes
       539840256, // Source: Associated Vanguard Quest
-      681989555, // Source: 3 Crossplay Beta Vanguard Strikes
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.

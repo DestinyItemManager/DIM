@@ -1,9 +1,116 @@
 ## Next
 
+## 8.101.1 <span class="changelog-date">(2025-12-02)</span>
+
+* Fixed a crash on the Records page caused by Seasonal Challenges being removed from the game.
+
+## 8.101.0 <span class="changelog-date">(2025-11-30)</span>
+
+* Show weapon frame info on item icons.
+* Allow sorting inventory by weapon frame
+* support newline escape sequences (\n) in notes
+
+## 8.100.0 <span class="changelog-date">(2025-11-23)</span>
+
+* Fix search/Compare issues with item names containing quotes.
+
+## 8.99.0 <span class="changelog-date">(2025-11-16)</span>
+
+## 8.98.1 <span class="changelog-date">(2025-11-11)</span>
+
+* Display 5 tier pips (instead of none) for bugged Call to Arms Tier 6 holofoil weapons, so there are no misunderstandings.
+
+## 8.98.0 <span class="changelog-date">(2025-11-09)</span>
+
+## 8.97.0 <span class="changelog-date">(2025-11-02)</span>
+
+* Fix being able to remove vendor items individually from Compare.
+
+## 8.96.0 <span class="changelog-date">(2025-10-26)</span>
+
+* Loadout Optimizer allows Festival of the Lost masks to complete a set bonus. You'll still need to plug the right mod in.
+
+## 8.95.0 <span class="changelog-date">(2025-10-19)</span>
+
+* Show a simple ETA countdown for long Loadout Optimizer jobs.
+* Added inventory sorting by armor archetype or special modslot.
+
+## 8.94.0 <span class="changelog-date">(2025-10-12)</span>
+
+* Change Organizer to display Tertiary Stat, and Tuning Stats with stat names instead of stat hashes in armor.csv export
+* Allowed stripping Combat Flair mods with the Strip Sockets feature.
+* Added `tunedstat:unfocused` filter to match items whose tuning stat is not one of the focused stats.
+* Removed max light loadout from the Loadouts page because some folks are bothered by it.
+
+## 8.93.0 <span class="changelog-date">(2025-10-05)</span>
+
+* Fixed an issue where loadouts might assign tuning mods in a different order than they were shown in Loadout Optimizer, resulting in different stats.
+* Added "Clear all unselected" button to compare menu.
+* Added the stat archetype (or mod slot) to the top right corner of armor item tiles.
+* Restore progress bars on incomplete D1 items.
+* Fixed stat bars in Compare getting squished when the icon size setting is large.
+* Restored the setting for how many spaces to clear in Farming Mode.
+* Removed the "new item" dot and tracking. This has been gone in Beta for a while now, and the recommendation is to use the Item Feed and tagging to keep tabs on your loot as it drops.
+* Fixed a case where some old searches could not be deleted/unsaved.
+* Added `is:artifice` filter to find Artifice armor.
+* Keep in-game loadouts visible while filtering loadouts
+
+## 8.92.0 <span class="changelog-date">(2025-09-28)</span>
+
+* Reduced the height of the automatic Max Light loadout on the Loadouts page.
+* Fix Loadout names being forced to uppercase.
+* Add supplied set bonuses to loadouts on the Loadouts page.
+* Fixed "Wrong Stat Minimums" showing up on loadouts without stat constraints.
+
+## 8.91.0 <span class="changelog-date">(2025-09-21)</span>
+
+* Updated item tiles to more closely match in-game tiles, with higher quality images.
+* Remove armor energy capacity from the item tile. It's just not that interesting these days.
+* Added Max power loadout to Loadouts tab
+* Items in loadout optimizer sets will now reflect changes like lock/unlock or being masterworked in-game.
+* Hide artifact power on its tile since artifact power has been removed.
+* Fix tuner mods being automatically assigned in Optimizer even when auto-mods was switched off.
+* Removed item Tier pips from engrams.
+
+## 8.90.1 <span class="changelog-date">(2025-09-18)</span>
+
+* Fixed some cases where the enhanced version of perks would not match wishlists that specified the unenhanced version.
+* Replaced empty or mismatched mod slot icons with ones that match the activity they're used in.
+* Fixed a crash using the Streamdeck plugin.
+* `tag:none` no longer selects untaggable objects like materials and abilities
+
+## 8.90.0 <span class="changelog-date">(2025-09-14)</span>
+
+* Updated tuned stat icon.
+* `dupe:perks` and `dupe:traits` will ignore perks' enhancement status.
+* Fixed icons displaying too large on the gear power tooltip.
+* Loadout Optimizer result sets now show which set bonuses they activate.
+* Added `tunedstat:primary`, `tunedstat:secondary`, and `tunedstat:tertiary`.
+* Distinguish between special and primary ammo sidearms/pulse rifles in `dupe:traits` and `dupe:perks` comparison.
+
+## 8.89.1 <span class="changelog-date">(2025-09-09)</span>
+
+* In Compare and Organizer, there are now separate columns/rows for archetype and perks.
+* Added armor masterwork tier, tertiary stat, and tuning stat columns to Organizer and CSV output.
+* Reorganized weapons columns in Organizer a bit.
+* Added `dupe:traits` for finding weapons with duplicate traits.
+
+## 8.89.0 <span class="changelog-date">(2025-09-07)</span>
+
 * Reduced how much items are dimmed out in the Item Feed when they don't match the current search.
 * BETA: Option to compare by base masterworked stats in Compare feature. This allows a fair comparison between Armor 2.0 and Armor 3.0.
 * Added a setting to control how many CPU cores can be used by Loadout Optimizer/Analyzer.
 * Reorganized the Settings page.
+* Loadout Optimizer no longer excludes pieces with the requested Set Bonus, even if their stats are terrible.
+* Fix wishlists not properly matching some new enhanced perks
+* The perk list vs. grid setting is now saved independently for mobile and desktop views.
+* Un-deprecated the `is:infusionfodder` filter.
+* Removed redundant holofoil overlay.
+* Compare/Organizer sorting now takes Tuning Mods and Artifice armor into account when sorting Totals or Custom Stats.
+* Totals and Custom stats in Compare/Organizer have an indicator when Tuners or Artifice mods can contribute.
+* Invalid wish list rolls are now shown in Armory with a tooltip that explains them.
+* Loadout analyzer is more precise about calling out invalid search queries vs. loadouts whose search query excludes some of its armor.
+* Added wishlist title/description and link to source to the Armory page.
 
 ## 8.88.0 <span class="changelog-date">(2025-08-31)</span>
 

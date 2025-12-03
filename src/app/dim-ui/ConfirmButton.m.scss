@@ -1,6 +1,7 @@
 @use '../variables.scss' as *;
 
 .confirmButton {
+  display: inline-block;
   overflow: hidden;
   max-width: 100%;
 

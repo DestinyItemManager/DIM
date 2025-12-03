@@ -1,6 +1,6 @@
 import { symbolize } from 'app/hotkeys/hotkeys';
 import React from 'react';
-import styles from './ActionButton.m.scss';
+import * as styles from './ActionButton.m.scss';
 
 export default function ActionButton({
   disabled,

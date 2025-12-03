@@ -15,10 +15,9 @@ interface CssExports {
   'pursuit': string;
   'rare': string;
   'subtitle': string;
-  'tierPip': string;
   'title': string;
   'type': string;
   'uncommon': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

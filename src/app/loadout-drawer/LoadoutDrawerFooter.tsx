@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { Loadout } from '../loadout/loadout-types';
 import { loadoutsSelector } from '../loadout/loadouts-selector';
-import styles from './LoadoutDrawerFooter.m.scss';
+import * as styles from './LoadoutDrawerFooter.m.scss';
 
 /**
  * Find a loadout with the same name that could overlap with this one

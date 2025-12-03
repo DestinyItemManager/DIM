@@ -90,7 +90,7 @@ function makeVendorItem(
     owned: Boolean(
       (!inventoryItem.inventory ||
         inventoryItem.inventory.bucketTypeHash === THE_FORBIDDEN_BUCKET) &&
-        (saleItem?.augments || 0) & DestinyVendorItemState.Owned,
+      (saleItem?.augments || 0) & DestinyVendorItemState.Owned,
     ),
     locked: Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Locked),
     canBeSold: !saleItem || saleItem.failureIndexes.length === 0,
@@ -119,7 +119,8 @@ function makeVendorItem(
 
     // override the DimItem.id for vendor items, so they are each unique enough to identify
     // (otherwise they'd get their vendor index as an id, which is only unique per-vendor)
-    vendorItem.item.id = `${vendorHash}-${vendorItem.vendorItemIndex}-${nextRefreshDate ?? '0'}`;
+    // Lowercase to match post-parsing filter strings with `id:`
+    vendorItem.item.id = `${vendorHash}-${vendorItem.vendorItemIndex}-${nextRefreshDate?.toLowerCase() ?? '0'}`;
     vendorItem.item.index = vendorItem.item.id;
     vendorItem.item.instanced = false;
     // These would normally be false already, but certain rules like "finishers

@@ -29,6 +29,7 @@
 .light {
   color: $gold;
   white-space: nowrap;
+  margin-right: 0.5em;
 
   :global(.app-icon) {
     vertical-align: 3px;
@@ -84,4 +85,8 @@
 
 .boostedValue {
   color: $stat-modded;
+}
+
+.statBarWarningIcon {
+  font-size: 20px;
 }

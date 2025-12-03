@@ -22,7 +22,7 @@ import {
 } from '../inventory/selectors';
 import { UNIVERSAL_ORNAMENTS_NODE } from '../search/d2-known-values';
 import PresentationNodeRoot from './PresentationNodeRoot';
-import styles from './Records.m.scss';
+import * as styles from './Records.m.scss';
 import UniversalOrnaments from './universal-ornaments/UniversalOrnaments';
 
 interface Props {
@@ -101,14 +101,14 @@ export default function Records({ account }: Props) {
   // We put the hashes we know about from profile first
   const nodeHashes = [...new Set([...profileHashes, ...otherHashes])];
 
+  const presentationNodes = nodeHashes.map((h) => defs.PresentationNode.get(h)).filter(Boolean);
+
   const menuItems = [
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    ...nodeHashes
-      .map((h) => defs.PresentationNode.get(h))
-      .map((nodeDef) => ({
-        id: `p_${nodeDef.hash}`,
-        title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
-      })),
+    ...presentationNodes.filter(Boolean).map((nodeDef) => ({
+      id: `p_${nodeDef.hash}`,
+      title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
+    })),
     { id: 'universalOrnaments', title: universalOrnamentsName },
   ];
 
@@ -151,29 +151,27 @@ export default function Records({ account }: Props) {
             <TrackedTriumphs searchQuery={searchQuery} />
           </CollapsibleTitle>
         </section>
-        {nodeHashes
-          .map((h) => defs.PresentationNode.get(h))
-          .map((nodeDef) => (
-            <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
-              <CollapsibleTitle
-                title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}
-                sectionId={`p_${nodeDef.hash}`}
-              >
-                <PresentationNodeRoot
-                  presentationNodeHash={nodeDef.hash}
-                  profileResponse={profileResponse}
-                  ownedItemHashes={ownedItemHashes.accountWideOwned}
-                  openedPresentationHash={presentationNodeHash}
-                  searchQuery={searchQuery}
-                  searchFilter={searchFilter}
-                  overrideName={overrideTitles[nodeDef.hash]}
-                  isTriumphs={nodeDef.hash === recordsRootHash}
-                  showPlugSets={nodeDef.hash === collectionsRootHash}
-                  completedRecordsHidden={completedRecordsHidden}
-                />
-              </CollapsibleTitle>
-            </section>
-          ))}
+        {presentationNodes.map((nodeDef) => (
+          <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
+            <CollapsibleTitle
+              title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}
+              sectionId={`p_${nodeDef.hash}`}
+            >
+              <PresentationNodeRoot
+                presentationNodeHash={nodeDef.hash}
+                profileResponse={profileResponse}
+                ownedItemHashes={ownedItemHashes.accountWideOwned}
+                openedPresentationHash={presentationNodeHash}
+                searchQuery={searchQuery}
+                searchFilter={searchFilter}
+                overrideName={overrideTitles[nodeDef.hash]}
+                isTriumphs={nodeDef.hash === recordsRootHash}
+                showPlugSets={nodeDef.hash === collectionsRootHash}
+                completedRecordsHidden={completedRecordsHidden}
+              />
+            </CollapsibleTitle>
+          </section>
+        ))}
         <section id="universalOrnaments">
           <CollapsibleTitle title={universalOrnamentsName} sectionId="universalOrnaments">
             <ErrorBoundary name={universalOrnamentsName}>

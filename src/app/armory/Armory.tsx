@@ -43,7 +43,7 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import AllWishlistRolls from './AllWishlistRolls';
-import styles from './Armory.m.scss';
+import * as styles from './Armory.m.scss';
 import ArmorySheet from './ArmorySheet';
 import Links from './Links';
 import WishListEntry from './WishListEntry';

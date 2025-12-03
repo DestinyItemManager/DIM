@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'artificeExplanation': string;
+  'charIcon': string;
   'collapseTitle': string;
   'controls': string;
   'count': string;
@@ -16,6 +17,7 @@ interface CssExports {
   'itemTriagePane': string;
   'loadoutList': string;
   'loadoutName': string;
+  'loadoutNumber': string;
   'loadoutRow': string;
   'popupTabTitle': string;
   'similarItemsTable': string;
@@ -29,4 +31,4 @@ interface CssExports {
   'weaponSvg': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

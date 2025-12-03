@@ -86,14 +86,7 @@
 }
 
 .setBonuses {
-  --set-bonus-icon-size: 18px;
+  --set-bonus-icon-size: 24px;
   display: flex;
   flex-direction: row-reverse;
-  gap: 4px;
-  & > div {
-    display: flex;
-    & > div {
-      display: flex;
-    }
-  }
 }

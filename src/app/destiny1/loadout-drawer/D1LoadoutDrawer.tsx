@@ -25,7 +25,7 @@ import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-util
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
-import styles from './D1LoadoutDrawer.m.scss';
+import * as styles from './D1LoadoutDrawer.m.scss';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 

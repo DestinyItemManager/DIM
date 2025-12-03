@@ -9,7 +9,7 @@ export default {
   roots: ['<rootDir>'],
   modulePaths: [tsconfig.compilerOptions.baseUrl],
   moduleNameMapper: {
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+    '\\.(jpg|jpeg|a?png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)(\\?react)?$':
       '<rootDir>/src/__mocks__/fileMock.js',
     // Automatically include paths from tsconfig
     ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths),
@@ -18,7 +18,9 @@ export default {
   },
   setupFiles: ['./src/testing/jest-setup.cjs'],
   // Babel transform is required to handle some es modules?
-  transformIgnorePatterns: ['node_modules/.pnpm/(?!bungie-api-ts|@popper|@react-hook)'],
+  transformIgnorePatterns: [
+    'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@popper|@react-hook)',
+  ],
   globals: {
     $BROWSERS: [],
     $DIM_FLAVOR: 'test',

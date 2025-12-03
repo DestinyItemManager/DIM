@@ -34,6 +34,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { getMaxParallelCores } from 'app/utils/parallel-cores';
+import { timerDurationFromMs } from 'app/utils/time';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -49,7 +50,7 @@ import {
 } from '../inventory/selectors';
 import ModPicker from '../loadout/ModPicker';
 import { isLoadoutBuilderItem } from '../loadout/loadout-item-utils';
-import styles from './LoadoutBuilder.m.scss';
+import * as styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import { exampleLOSearch } from './example-search';
 import EnergyOptions from './filter/EnergyOptions';
@@ -68,10 +69,12 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
+import { ProcessArmorSet } from './process-worker/types';
 import { useProcess } from './process/useProcess';
 import {
   ArmorBucketHashes,
   ArmorEnergyRules,
+  ArmorSet,
   LOCKED_EXOTIC_ANY_EXOTIC,
   ResolvedStatConstraint,
   autoAssignmentPCHs,
@@ -267,7 +270,7 @@ export default memo(function LoadoutBuilder({
     );
 
   // Run the actual loadout generation process in a web worker
-  const { result, processing, totalCombos, completedCombos } = useProcess({
+  const { result, processing, totalCombos, completedCombos, startTime } = useProcess({
     selectedStore,
     filteredItems,
     setBonuses,
@@ -282,10 +285,29 @@ export default memo(function LoadoutBuilder({
 
   const resultSets = result?.sets;
 
-  const sortedSets = useMemo(
-    () => resultSets && sortGeneratedSets(resultSets, desiredStatRanges),
-    [desiredStatRanges, resultSets],
-  );
+  const sortedSets = useMemo(() => {
+    const itemsById = new Map<string, DimItem>();
+    for (const item of armorItems) {
+      itemsById.set(item.id, item);
+    }
+    function hydrateArmorSet(processed: ProcessArmorSet): ArmorSet {
+      const armor: DimItem[] = [];
+      for (const itemId of processed.armor) {
+        const item = itemsById.get(itemId);
+        if (!item) {
+          throw new Error(`Couldn't find item ${itemId} in filtered items`);
+        }
+        armor.push(item);
+      }
+      return {
+        armor,
+        stats: processed.stats,
+        armorStats: processed.armorStats,
+        statMods: processed.statMods,
+      };
+    }
+    return resultSets && sortGeneratedSets(resultSets.map(hydrateArmorSet), desiredStatRanges);
+  }, [desiredStatRanges, resultSets, armorItems]);
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
 
@@ -416,6 +438,10 @@ export default memo(function LoadoutBuilder({
   );
 
   // TODO: replace character select with horizontal choice?
+  const elapsed = Date.now() - startTime;
+  const speed = completedCombos / elapsed;
+  const remainingCombos = (totalCombos || 1) - completedCombos;
+  const eta = remainingCombos / speed;
 
   return (
     <PageWithMenu className={styles.page}>
@@ -447,6 +473,17 @@ export default memo(function LoadoutBuilder({
                   })}
                 </span>
                 <progress value={completedCombos} max={totalCombos || 1} />
+                {elapsed > 5000 &&
+                  completedCombos > 1 &&
+                  elapsed + eta > 10000 && ( // Show an ETA when expected time >10s and there's been a few sec to measure speed.
+                    <span>
+                      {timerDurationFromMs(
+                        ((totalCombos || 1) - completedCombos) /
+                          (completedCombos / (Date.now() - startTime)),
+                        2,
+                      )}
+                    </span>
+                  )}
               </div>
             </span>
           ) : (

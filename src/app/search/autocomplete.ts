@@ -192,9 +192,14 @@ function normalizeRecency(timestamp: number) {
 
 export function filterSortRecentSearches(query: string, recentSearches: Search[]): SearchItem[] {
   // Recent/saved searches
+  const qLower = query.toLowerCase();
   const recentSearchesForQuery = query
-    ? recentSearches.filter((s) => s.query !== query && s.query.includes(query))
+    ? recentSearches.filter((s) => {
+        const sQueryLower = s.query.toLowerCase();
+        return sQueryLower !== qLower && sQueryLower.includes(qLower);
+      })
     : Array.from(recentSearches);
+
   return recentSearchesForQuery.sort(recentSearchComparator).map((s) => {
     const ast = parseQuery(s.query);
     const topLevelComment = ast.comment && makeCommentString(ast.comment);
@@ -214,7 +219,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
     // highlight the matched range of the query
     if (query) {
       if (result.query.header) {
-        const index = result.query.header.indexOf(query);
+        const index = result.query.header.toLowerCase().indexOf(qLower);
         if (index !== -1) {
           result.highlightRange = {
             section: 'header',
@@ -223,7 +228,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
         }
       }
       if (!result.highlightRange) {
-        const index = result.query.body.indexOf(query);
+        const index = result.query.body.toLowerCase().indexOf(qLower);
         if (index !== -1) {
           result.highlightRange = {
             section: 'body',

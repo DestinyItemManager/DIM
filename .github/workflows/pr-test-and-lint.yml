@@ -14,12 +14,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -41,7 +41,7 @@ jobs:
         env:
           CLEAN_MANIFEST_CACHE: true
 
-      - uses: actions/upload-artifact@v4  # upload test results
+      - uses: actions/upload-artifact@v5  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
@@ -50,12 +50,12 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: pnpm
@@ -85,6 +85,7 @@ jobs:
         run: pnpm lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
+        id: eslint-continue
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         run: pnpm lint-report:cached
         continue-on-error: true
@@ -96,3 +97,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           report-json: "eslint.results.json"
           fail-on-warning: true
+
+      - name: Check If ESLint Failed
+        if : steps.eslint-continue.outcome == 'failure'
+        run: exit 1

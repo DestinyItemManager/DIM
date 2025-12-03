@@ -6,4 +6,4 @@ interface CssExports {
   'pathfinderTree': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

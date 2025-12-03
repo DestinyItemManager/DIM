@@ -20,19 +20,13 @@ import {
 import {
   ArmorBucketHash,
   ArmorEnergyRules,
-  ArmorSet,
   AutoModDefs,
   DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
   StatRanges,
 } from '../types';
-import {
-  hydrateArmorSet,
-  mapArmor2ModToProcessMod,
-  mapAutoMods,
-  mapDimItemToProcessItem,
-} from './mappers';
+import { mapArmor2ModToProcessMod, mapAutoMods, mapDimItemToProcessItems } from './mappers';
 
 interface MappedItem {
   dimItem: DimItem;
@@ -56,7 +50,7 @@ function createWorker() {
 }
 
 export type RunProcessResult = Omit<ProcessResult, 'sets'> & {
-  sets: ArmorSet[];
+  sets: ProcessArmorSet[];
   processTime: number;
 };
 
@@ -112,18 +106,17 @@ export function runProcess({
     [BucketHashes.LegArmor]: [],
     [BucketHashes.ClassArmor]: [],
   };
-  const itemsById = new Map<string, DimItem>();
-
   for (const [bucketHashStr, items] of Object.entries(filteredItems)) {
     const bucketHash = parseInt(bucketHashStr, 10) as ArmorBucketHash;
     processItems[bucketHash] = [];
 
     const mappedItems: MappedItem[] = items.flatMap((dimItem) =>
-      mapDimItemToProcessItem({
+      mapDimItemToProcessItems({
         dimItem,
         armorEnergyRules,
         desiredStatRanges,
         modsForSlot: bucketSpecificMods[bucketHash] || [],
+        autoStatMods,
       }).map((processItem) => ({
         dimItem,
         processItem,
@@ -132,7 +125,6 @@ export function runProcess({
 
     for (const mappedItem of mappedItems) {
       processItems[bucketHash].push(mappedItem.processItem);
-      itemsById.set(mappedItem.dimItem.id, mappedItem.dimItem);
     }
   }
 
@@ -206,9 +198,8 @@ export function runProcess({
     input,
     resultPromise: Promise.all(workerPromises).then((results) => {
       const result = combineResults(results);
-      const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
       const processTime = performance.now() - processStart;
-      return { ...result, sets: hydratedSets, processTime };
+      return { ...result, processTime };
     }),
   };
 }

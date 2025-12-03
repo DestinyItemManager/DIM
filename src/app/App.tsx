@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Suspense, lazy } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
-import styles from './App.m.scss';
+import * as styles from './App.m.scss';
 import Developer from './developer/Developer';
 import AutoRefresh from './dim-ui/AutoRefresh';
 import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';

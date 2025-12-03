@@ -5,14 +5,11 @@ interface CssExports {
   'badgeContent': string;
   'capped': string;
   'deepsight': string;
-  'energyCapacity': string;
   'engram': string;
-  'enhancedIcon': string;
   'fixContrast': string;
   'fullstack': string;
   'masterwork': string;
   'quality': string;
-  'shapedIcon': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

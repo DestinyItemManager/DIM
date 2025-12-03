@@ -13,17 +13,17 @@ import { AppIcon, equalsIcon, greaterThanIcon, lessThanIcon, searchIcon } from '
 import clsx from 'clsx';
 import { MAX_STAT } from '../known-values';
 import { includesRuntimeStatMods } from '../stats';
-import styles from './LoadoutParametersDisplay.m.scss';
+import * as styles from './LoadoutParametersDisplay.m.scss';
 
 export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
   return Boolean(
     params &&
-      (params.query ||
-        params.exoticArmorHash ||
-        params.statConstraints?.length ||
-        (params.mods &&
-          includesRuntimeStatMods(params.mods) &&
-          (params.includeRuntimeStatBenefits ?? true))),
+    (params.query ||
+      params.exoticArmorHash ||
+      params.statConstraints?.length ||
+      (params.mods &&
+        includesRuntimeStatMods(params.mods) &&
+        (params.includeRuntimeStatBenefits ?? true))),
   );
 }
 
@@ -59,7 +59,10 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
         </PressTip>
       )}
       {params.setBonuses && (
-        <PressTip tooltip={() => lbParamDesc(t('Loadouts.SetBonusesDesc'))}>
+        <PressTip
+          className={styles.setBonuses}
+          tooltip={() => lbParamDesc(t('Loadouts.SetBonusesDesc'))}
+        >
           <SetBonuses setBonuses={params.setBonuses} />
         </PressTip>
       )}

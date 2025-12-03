@@ -33,6 +33,8 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1594120904, // No Time to Explain
   1665952087, // The Fourth Horseman
   1681583613, // Ergo Sum
+  1736135946, // New Malpais
+  1753923263, // Wolfsbane
   1763584999, // Grand Overture
   1802135586, // Touch of Malice
   1833195496, // Ager's Scepter
@@ -103,6 +105,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   4174431791, // Hierarchy of Needs
   4190156464, // Merciless
   4255268456, // Skyburner's Oath
+  4284533075, // Service of Luzaku
   4289226715, // Vex Mythoclast
   4293613902, // Quicksilver Storm
 ]);

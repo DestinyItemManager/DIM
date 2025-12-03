@@ -17,6 +17,10 @@
     padding-left: 10px;
     padding-right: 10px;
   }
+
+  > :global(.dim-button) {
+    justify-content: flex-start;
+  }
 }
 
 .menuButton {
@@ -25,8 +29,8 @@
 }
 
 .menuLoadout > span:not(.app-icon) {
-  text-transform: none;
-  letter-spacing: normal;
+  text-transform: none !important;
+  letter-spacing: normal !important;
 }
 
 .hashtagTip {

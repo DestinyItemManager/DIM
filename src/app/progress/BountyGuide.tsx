@@ -20,7 +20,7 @@ import headshot from 'destiny-icons/weapons/headshot.svg';
 import melee from 'destiny-icons/weapons/melee.svg';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import styles from './BountyGuide.m.scss';
+import * as styles from './BountyGuide.m.scss';
 import { xpItems } from './xp';
 
 const enum KillType {
@@ -266,7 +266,7 @@ function PillContent({
     case 'ItemCategory':
       return (
         <>
-          <BucketIcon itemCategoryHash={value} height="16" />
+          <BucketIcon itemCategoryHash={value} />
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );

@@ -42,10 +42,8 @@
 }
 
 .stat {
-  // the goal width is 64px at normal item tile size (50px)
-  // but allow the stat bars to shrink to account for bigger tiles,
-  // so that this doesn't blow out the overall compare width
-  max-width: calc(50px + 64px + 4px - var(--item-size));
+  margin-right: calc(4px + var(--item-size));
+  max-width: 68px;
 }
 
 .noWrap {
@@ -53,9 +51,8 @@
 }
 
 .archetype {
-  --item-size-mod: calc(24 / 50 * var(--item-size));
+  --item-size-mod: calc(#{dim-item-px(24)});
   composes: noWrap;
-  height: var(--item-size-mod) !important;
   padding-top: 4px;
   padding-bottom: 4px;
 }
@@ -63,7 +60,7 @@
 // Perks in the perk/mod columns
 
 .perks {
-  --mod-size: calc(24 / 50 * var(--item-size));
+  --mod-size: calc(#{dim-item-px(24)});
   padding-top: 4px;
   padding-bottom: 4px;
 

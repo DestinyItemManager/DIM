@@ -24,7 +24,7 @@ import noExoticPreferenceIcon from 'images/noExoticPreference.svg';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ArmorBucketHashes, LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
-import styles from './ExoticPicker.m.scss';
+import * as styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
 /**

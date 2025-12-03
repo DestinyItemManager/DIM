@@ -16,7 +16,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
 import { allItemsSelector, bucketsSelector } from '../../inventory/selectors';
-import styles from './InGameLoadoutDetailsSheet.m.scss';
+import * as styles from './InGameLoadoutDetailsSheet.m.scss';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
 import { gameLoadoutCompatibleBuckets, useItemsFromInGameLoadout } from './ingame-loadout-utils';

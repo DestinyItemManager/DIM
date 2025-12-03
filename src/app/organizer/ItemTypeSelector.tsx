@@ -6,7 +6,7 @@ import { count } from 'app/utils/collections';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
-import styles from './ItemTypeSelector.m.scss';
+import * as styles from './ItemTypeSelector.m.scss';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -370,8 +370,8 @@ export default function ItemTypeSelector({
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
-                    className={clsx(styles.button, {
-                      [styles.checked]: selection[depth + 1] === subCategory,
+                    className={clsx('dim-button', {
+                      selected: selection[depth + 1] === subCategory,
                     })}
                   >
                     <input

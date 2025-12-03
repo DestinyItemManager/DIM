@@ -8,22 +8,25 @@ export type Comparator<T> = (a: T, b: T) => -1 | 0 | 1;
  * compareBy((item) => item.power)
  */
 export function compareBy<T>(fn: (arg: T) => number | string | undefined | boolean): Comparator<T> {
-  return (a, b) => {
-    const aVal = fn(a);
-    const bVal = fn(b);
-    // Undefined is neither greater than or less than anything.
-    // This considers it less than everything (except another undefined).
+  return (a, b) => primitiveComparator(fn(a), fn(b));
+}
 
-    return aVal === bVal
-      ? 0 // neither goes first
-      : bVal === undefined
-        ? 1 // b goes first
-        : aVal === undefined || aVal < bVal
-          ? -1 // a goes first
-          : aVal > bVal
-            ? 1 // b goes first
-            : 0; // a fallback that would catch only invalid inputs
-  };
+export function primitiveComparator(
+  aVal: string | number | boolean | undefined,
+  bVal: string | number | boolean | undefined,
+) {
+  // Undefined is neither greater than or less than anything.
+  // This considers it less than everything (except another undefined).
+
+  return aVal === bVal
+    ? 0 // neither goes first
+    : bVal === undefined
+      ? 1 // b goes first
+      : aVal === undefined || aVal < bVal
+        ? -1 // a goes first
+        : aVal > bVal
+          ? 1 // b goes first
+          : 0; // a fallback that would catch only invalid inputs
 }
 
 /**

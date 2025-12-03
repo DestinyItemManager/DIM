@@ -38,7 +38,9 @@
     }
   ],
   "allowCompoundWords": true,
-  "flagWords": ["langauge"],
+  "flagWords": [
+    "langauge"
+  ],
   "ignorePaths": [
     ".vscode/extensions.json",
     ".github/workflows/**",
@@ -75,5 +77,8 @@
     ".gitignore",
     "webpack-stats.json",
     ".stylelintrc"
+  ],
+  "words": [
+    "unenhanced"
   ]
 }

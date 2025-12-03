@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import styles from './PursuitGrid.m.scss';
+import * as styles from './PursuitGrid.m.scss';
 
 /**
  * A grid of pursuits or milestones for the Progress page. Used for the

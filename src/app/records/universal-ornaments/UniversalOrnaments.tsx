@@ -9,7 +9,7 @@ import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './UniversalOrnaments.m.scss';
+import * as styles from './UniversalOrnaments.m.scss';
 import {
   OrnamentStatus,
   OrnamentsSet,

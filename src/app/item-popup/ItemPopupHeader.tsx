@@ -1,10 +1,12 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
-import { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
+import { itemConstants } from 'app/destiny2/d2-definitions';
+import BungieImage, { bungieBackgroundStyles } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import type { ItemRarityName } from 'app/search/d2-known-values';
+import { compact } from 'app/utils/collections';
 import { itemTypeName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
@@ -13,7 +15,7 @@ import { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { AmmoIcon } from './AmmoIcon';
 import BreakerType from './BreakerType';
-import styles from './ItemPopupHeader.m.scss';
+import * as styles from './ItemPopupHeader.m.scss';
 
 const rarityClassName: LookupTable<ItemRarityName, string> = {
   Common: styles.common,
@@ -84,22 +86,33 @@ export default function ItemPopupHeader({
           )}
         </div>
       </div>
-      {item.iconOverlay && (
-        <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)}>
-          {item.tier !== 0 ? (
-            <>
-              {Array(item.tier)
-                .fill(0)
-                .map((_, i) => (
-                  <div key={i} className={styles.tierPip} />
-                ))}
-            </>
-          ) : null}
-        </div>
-      )}
+      {item.iconDef?.secondaryBackground && <SeasonTierBanner item={item} />}
       {showArmory && linkToArmory && (
         <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
       )}
     </button>
+  );
+}
+
+function SeasonTierBanner({ item }: { item: DimItem }) {
+  if (!item.iconDef || !itemConstants) {
+    return null;
+  }
+  const seasonIcon = item.iconDef.secondaryBackground;
+  const backgrounds = compact([
+    // Featured flags
+    item.featured ? itemConstants.featuredItemFlagPath : undefined,
+    // Tier pips
+    item.tier > 0 && itemConstants.gearTierOverlayImagePaths[Math.min(item.tier - 1, 4)],
+    // Black stripe
+    item.iconDef.secondaryBackground && itemConstants.watermarkDropShadowPath,
+  ]);
+  if (!seasonIcon && backgrounds.length === 0) {
+    return null;
+  }
+  return (
+    <div className={styles.iconOverlay} style={bungieBackgroundStyles(backgrounds)}>
+      {seasonIcon && <BungieImage src={seasonIcon} />}
+    </div>
   );
 }

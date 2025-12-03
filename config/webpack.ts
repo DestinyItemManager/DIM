@@ -6,7 +6,6 @@ import { execSync } from 'child_process';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-import ForkTsCheckerNotifierWebpackPlugin from 'fork-ts-checker-notifier-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import fs from 'fs';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
@@ -18,7 +17,6 @@ import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
 import SondaWebpackPlugin from 'sonda/webpack';
 import TerserPlugin from 'terser-webpack-plugin';
 import 'webpack-dev-server';
-import WebpackNotifierPlugin from 'webpack-notifier';
 import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy.ts';
@@ -37,7 +35,6 @@ import createWebAppManifest from './manifest-webapp.ts';
 import cssnano from 'cssnano';
 import sortMediaQueries from 'postcss-sort-media-queries';
 
-import { fileURLToPath } from 'url';
 import splash from '../icons/splash.json' with { type: 'json' };
 
 // https://stackoverflow.com/questions/69584268/what-is-the-type-of-the-webpack-config-function-when-it-comes-to-typescript
@@ -116,7 +113,7 @@ export default (env: Env) => {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
           allowedHosts: 'all',
           server: {
-            type: 'spdy',
+            type: 'https',
             options: {
               key: fs.readFileSync('key.pem'), // Private keys in PEM format.
               cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
@@ -127,6 +124,7 @@ export default (env: Env) => {
           },
           client: {
             overlay: false,
+            logging: 'none', // we don't need to see build errors in the console log
           },
           historyApiFallback: true,
           hot: 'only',
@@ -227,6 +225,7 @@ export default (env: Env) => {
           // Optimize SVGs - mostly for destiny-icons.
           test: /\.svg$/,
           exclude: /data\/webfonts\//,
+          resourceQuery: { not: [/react/] },
           type: 'asset',
           generator: {
             dataUrl: (content: any) => svgToMiniDataURI(content.toString()),
@@ -244,8 +243,23 @@ export default (env: Env) => {
                 },
               ],
         },
+        // Allow importing SVGs as React components if *.svg?react
         {
-          test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          test: /\.svg$/i,
+          issuer: /\.[jt]sx?$/,
+          resourceQuery: /react/, // only create react component if *.svg?react
+          use: [
+            {
+              loader: '@svgr/webpack',
+              options: {
+                memo: true,
+                svgProps: { fill: 'currentColor' },
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(jpg|gif|a?png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           type: 'asset',
           parser: {
             dataUrlCondition: {
@@ -259,7 +273,7 @@ export default (env: Env) => {
           use: [
             env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
-              loader: 'css-modules-typescript-loader',
+              loader: '@bhollis/css-modules-typescript-loader',
               options: {
                 mode: process.env.CI ? 'verify' : 'emit',
               },
@@ -272,11 +286,6 @@ export default (env: Env) => {
                     ? '[name]_[local]-[contenthash:base64:8]'
                     : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
-                  // TODO: It's possible that setting this to true would allow
-                  // us to eliminate some original CSS names that still get into
-                  // the bundle, but it breaks css-modules-typescript-loader so
-                  // we'd need to fork/replace it.
-                  namedExport: false,
                 },
                 importLoaders: 2,
               },
@@ -519,29 +528,6 @@ export default (env: Env) => {
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     plugins.push(new ForkTsCheckerWebpackPlugin());
-
-    // TODO: maybe reintroduce https://webpack.js.org/plugins/eslint-webpack-plugin/
-
-    if (process.env.SNORETOAST_DISABLE) {
-      console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");
-    } else {
-      const __dirname = path.dirname(fileURLToPath(import.meta.url));
-      plugins.push(
-        new WebpackNotifierPlugin({
-          title: 'DIM',
-          excludeWarnings: false,
-          alwaysNotify: true,
-          contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-        }),
-      );
-      plugins.push(
-        new ForkTsCheckerNotifierWebpackPlugin({
-          title: 'DIM TypeScript',
-          excludeWarnings: false,
-        }),
-      );
-    }
-
     plugins.push(new ReactRefreshWebpackPlugin({ overlay: false }));
   } else {
     // env.beta and env.release
@@ -599,7 +585,7 @@ export default (env: Env) => {
 
       // Generate a service worker
       new InjectManifest({
-        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
+        include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(a?png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
           // Ignore both the webapp manifest and the d1-manifest files

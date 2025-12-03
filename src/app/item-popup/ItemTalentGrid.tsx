@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { PressTip, Tooltip } from '../dim-ui/PressTip';
 import { D1GridNode, D1Item } from '../inventory/item-types';
-import styles from './ItemTalentGrid.m.scss';
+import * as styles from './ItemTalentGrid.m.scss';
 
 /**
  * The talent grid was the grid of perks for D1 items. It is not used for any D2 item.
@@ -74,7 +74,7 @@ export default memo(function ItemTalentGrid({
               className={clsx({
                 [styles.activated]: node.activated,
                 [styles.showXp]: !node.activated && node.xpRequired,
-                [styles.default]:
+                [styles.defaultOption]:
                   node.activated && !node.xpRequired && !node.exclusiveInColumn && node.column < 1,
               })}
             >

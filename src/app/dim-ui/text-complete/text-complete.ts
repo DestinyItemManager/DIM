@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { SymbolsMap, symbolsSelector } from '../destiny-symbols/destiny-symbols';
 
 import { tempContainer } from 'app/utils/temp-container';
-import styles from './text-complete.m.scss';
+import * as styles from './text-complete.m.scss';
 
 function createTagsCompleter(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement | null>,

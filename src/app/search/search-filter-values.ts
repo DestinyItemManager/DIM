@@ -8,7 +8,7 @@ import {
   D2WeaponStatHashByName,
   TOTAL_STAT_HASH,
   armorStats,
-  swordStatsByName,
+  realD2ArmorStatHashByName,
 } from './d2-known-values';
 
 // ✨ magic values ✨
@@ -47,19 +47,31 @@ export const searchableArmorStatNames = [...Object.keys(dimArmorStatHashByName),
 /** armor stat hashes to check for the "any" keyword */
 export const armorAnyStatHashes = armorStats;
 
+/** armor 3.0 stat names including "primary" "secondary" and "tertiary" for filtering */
+export const armor3OrdinalIndexByName: StringLookup<number> = {
+  primary: 0,
+  secondary: 1,
+  tertiary: 2,
+};
+
+export const searchableD2Armor3StatNames = [
+  ...Object.keys(realD2ArmorStatHashByName),
+  ...Object.keys(armor3OrdinalIndexByName),
+  'unfocused',
+];
+
 /** stat hashes to calculate max values for */
 export const armorStatHashes = Object.values(dimArmorStatHashByName) as number[];
 
 /** all-stat table, for looking up stat hashes given a queried stat name */
 export const statHashByName: Record<string, number> = {
   ...D2WeaponStatHashByName,
-  ...swordStatsByName,
   ...dimArmorStatHashByName,
 };
-export const weaponStatNames = [
-  ...Object.keys(D2WeaponStatHashByName),
-  ...Object.keys(swordStatsByName),
-];
+
+/** Lowercase, sometimes-abbreviated stat names, used in search filters. */
+export const weaponStatNames = Object.keys(D2WeaponStatHashByName);
+
 /** all-stat list, to generate filters from */
 export const allStatNames = [...Object.keys(statHashByName), 'any'];
 

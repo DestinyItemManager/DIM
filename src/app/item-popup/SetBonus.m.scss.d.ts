@@ -7,8 +7,10 @@ interface CssExports {
   'justCircle': string;
   'perk': string;
   'perkIcon': string;
+  'perkNameSubheader': string;
   'setBonus': string;
+  'setBonusesStatus': string;
   'unsatisfied': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

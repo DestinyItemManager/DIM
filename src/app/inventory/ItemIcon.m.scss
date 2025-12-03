@@ -10,6 +10,7 @@ $commonBg: #366f42;
 // The image within the overall item. Global because it's referenced by other styles.
 :global(.item-img) {
   display: block;
+  position: relative;
   width: var(--item-size);
   height: var(--item-size);
   box-sizing: border-box;
@@ -25,6 +26,16 @@ $commonBg: #366f42;
   // Used by vendors
   &:global(.transparent) {
     border-color: transparent;
+  }
+
+  > * {
+    position: absolute;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    height: 100%;
+    width: 100%;
   }
 }
 
@@ -50,6 +61,39 @@ $commonBg: #366f42;
 }
 .deepsight {
   border-color: $deepsight-border-color;
+  &::after {
+    content: '';
+    position: absolute;
+    box-sizing: border-box;
+    inset: 0;
+    border: 2px solid $deepsight-border-color;
+  }
+}
+
+.animatedBackground {
+  display: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.item):hover & {
+      display: block;
+    }
+  }
+}
+
+// This is the same size as the item image but shifted up and left by 1px to overlap the border
+.shiftedLayer {
+  top: -1 * $item-border-width;
+  left: -1 * $item-border-width;
+}
+
+.adjustOpacity {
+  // Bungie said they darkened the overlay "by 40%" so let's un-darken it that much
+  opacity: math.div(1, 1.4);
+}
+
+.craftedLayer {
+  top: 1 * $item-border-width;
+  left: -1 * $item-border-width;
 }
 
 // Completed items or capped stackables image
@@ -62,192 +106,16 @@ $commonBg: #366f42;
   border-color: transparent;
 }
 
-.backgroundOverlay {
-  position: absolute;
-  box-sizing: border-box;
-  height: calc(var(--item-size) - ($item-border-width * 2));
-  width: calc(var(--item-size) - ($item-border-width * 2));
-  top: $item-border-width;
-  left: $item-border-width;
-}
-
-// Masterwork pattern emulating .src/images/masterwork.png
-$rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
-.legendaryMasterwork {
-  box-shadow: inset 0 0 1px 0 rgb(0, 0, 0, 0.25);
-  background-image:
-    radial-gradient(
-      ellipse at bottom,
-      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.2),
-      transparent 75%
-    ),
-    radial-gradient(
-      ellipse at bottom,
-      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.1),
-      transparent 75%
-    );
-  background-size:
-    125% 30%,
-    50% 50%;
-  background-repeat: no-repeat;
-  background-position: bottom;
-}
-
-.shinyMasterwork {
-  $shiny-stripe-color: #d0b343;
-
-  // look-defining percentages
-  $initial-offset: 69; // left edge of the leftmost stripe
-  $final-offset: 98.5; // right edge of the rightmost stripe
-  $stripe-width: 2.6; // obvious
-  $fuzz: 1.2; // determines blurriness level of stripe edges
-
-  // math
-  $effective-fuzz: math.div($fuzz, 100);
-  $occupied-space: $final-offset - $initial-offset;
-  $stripe-spacing: math.div($occupied-space - (4 * $stripe-width), 3);
-
-  $stripe-1-start: math.div(($initial-offset + ($stripe-width * 0) + ($stripe-spacing * 0)), 100);
-  $stripe-1-ended: math.div(($initial-offset + ($stripe-width * 1) + ($stripe-spacing * 0)), 100);
-
-  $stripe-2-start: math.div(($initial-offset + ($stripe-width * 1) + ($stripe-spacing * 1)), 100);
-  $stripe-2-ended: math.div(($initial-offset + ($stripe-width * 2) + ($stripe-spacing * 1)), 100);
-
-  $stripe-3-start: math.div(($initial-offset + ($stripe-width * 2) + ($stripe-spacing * 2)), 100);
-  $stripe-3-ended: math.div(($initial-offset + ($stripe-width * 3) + ($stripe-spacing * 2)), 100);
-
-  $stripe-4-start: math.div(($initial-offset + ($stripe-width * 3) + ($stripe-spacing * 3)), 100);
-  $stripe-4-ended: math.div(($initial-offset + ($stripe-width * 4) + ($stripe-spacing * 3)), 100);
-
-  opacity: 0.4;
-  left: 1.5px;
-  filter: drop-shadow(0 0 2px #e8a534);
-  background-image:
-    radial-gradient(
-      ellipse at bottom,
-      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.2),
-      transparent 75%
-    ),
-    radial-gradient(
-      ellipse at bottom,
-      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.1),
-      transparent 75%
-    ),
-    linear-gradient(
-      135deg,
-      transparent #{math.percentage($stripe-1-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-1-start + $effective-fuzz)},
-
-      #{$shiny-stripe-color} #{math.percentage($stripe-1-ended)},
-      transparent #{math.percentage($stripe-1-ended + $effective-fuzz)},
-
-      transparent #{math.percentage($stripe-2-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-2-start + $effective-fuzz)},
-
-      #{$shiny-stripe-color} #{math.percentage($stripe-2-ended)},
-      transparent #{math.percentage($stripe-2-ended + $effective-fuzz)},
-
-      transparent #{math.percentage($stripe-3-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-3-start + $effective-fuzz)},
-
-      #{$shiny-stripe-color} #{math.percentage($stripe-3-ended)},
-      transparent #{math.percentage($stripe-3-ended + $effective-fuzz)},
-
-      transparent #{math.percentage($stripe-4-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-4-start + $effective-fuzz)},
-
-      #{$shiny-stripe-color} #{math.percentage($stripe-4-ended)},
-      transparent #{math.percentage($stripe-4-ended + $effective-fuzz)}
-    );
-  background-size:
-    125% 30%,
-    50% 50%,
-    100% 100%;
-  background-repeat: no-repeat;
-  background-position: bottom;
-}
-
-// Exotic Masterwork pattern emulating .src/images/exotic-masterwork.png
-.exoticMasterwork {
-  $light-stripe: rgb(255, 255, 255, 0.003);
-  $dark-stripe: rgb(0, 0, 0, 0.025);
-  box-shadow: inset 0 0 1px 1px rgb(0, 0, 0, 0.15);
-  background:
-    linear-gradient(rgb(0, 0, 0, 0.3) 0%, transparent 20%),
-    radial-gradient(ellipse at center bottom, rgb(255, 255, 255, 0.225), transparent 75%) center
-      bottom,
-    radial-gradient(ellipse at center bottom, rgb(255, 255, 255, 0.15), transparent 75%) center
-      bottom,
-    repeating-linear-gradient(
-        to bottom right,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 12.5%
-      )
-      bottom right,
-    repeating-linear-gradient(
-        to bottom left,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 12.5%
-      )
-      bottom left,
-    repeating-linear-gradient(
-        to top left,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 12.5%
-      )
-      top left,
-    repeating-linear-gradient(
-        to top right,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 12.5%
-      )
-      top right;
-  background-repeat: no-repeat;
-  background-size:
-    100%,
-    125% 30%,
-    50% 50%,
-    50% 50%,
-    50% 50%,
-    50% 50%,
-    50% 50%;
-}
-.deepsightBorder {
-  border: 2px solid $deepsight-border-color;
-}
-
-.iconOverlay {
-  // TODO: In Edge of Fate this overlay changed, but it's actually rendered at
-  // the incorrect size vs. in-game.
-  top: 0;
-  left: 0;
-  height: calc(var(--item-size) - #{2 * $item-border-width});
-  width: calc(var(--item-size) - #{2 * $item-border-width});
-  background-size: contain;
-  position: absolute;
-  pointer-events: none;
-}
-
-.energyCostOverlay {
-  position: absolute;
-  inset: $item-border-width $item-border-width $item-border-width $item-border-width;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  pointer-events: none;
+.seasonIcon {
+  top: calc(#{dim-item-px(0.5)});
+  left: calc(#{dim-item-px(0.5)});
+  height: calc(#{dim-item-px(11)});
+  width: calc(#{dim-item-px(11)});
 }
 
 .energyCost {
   position: absolute;
-  inset: $item-border-width $item-border-width $item-border-width $item-border-width;
+  inset: $item-border-width;
   pointer-events: none;
 
   > text {
@@ -272,23 +140,4 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 
 .strandColorFix {
   filter: hue-rotate(265deg) brightness(1.3);
-}
-
-.tierPipContainer {
-  position: absolute;
-  top: calc(var(--item-size) * 0.29);
-  left: calc(var(--item-size) * 0.11);
-  height: calc(var(--item-size) * 0.42);
-  display: flex;
-  flex-direction: column;
-  gap: 7%;
-}
-
-.tierPip {
-  display: block;
-  height: 14%;
-  aspect-ratio: 1;
-  background: #fffd;
-  rotate: 45deg;
-  outline: black solid 0.1px;
 }

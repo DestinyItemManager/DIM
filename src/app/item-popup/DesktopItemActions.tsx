@@ -14,7 +14,7 @@ import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import styles from './DesktopItemActions.m.scss';
+import * as styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';
 
 export const menuClassName = styles.interaction;

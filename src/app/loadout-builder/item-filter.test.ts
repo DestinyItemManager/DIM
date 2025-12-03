@@ -51,7 +51,7 @@ describe('loadout-builder item-filter', () => {
     [defs, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
     const allItems = stores.flatMap((store) => store.items);
     const isValidItem = (store: DimStore, item: DimItem) =>
-      itemCanBeEquippedBy(item, store) && isLoadoutBuilderItem(item);
+      itemCanBeEquippedBy(item, store) && isLoadoutBuilderItem(item) && item.rarity !== 'Rare';
     store = maxBy(stores, (store) => count(allItems, (item) => isValidItem(store, item)))!;
     items = allItems.filter((item) => isValidItem(store, item));
     noMods = categorizeArmorMods([], items);

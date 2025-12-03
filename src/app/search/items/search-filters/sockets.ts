@@ -7,11 +7,8 @@ import {
   emptySocketHashes,
 } from 'app/search/d2-known-values';
 import { plainString } from 'app/search/text-utils';
-import {
-  getInterestingSocketMetadatas,
-  getSpecialtySocketMetadatas,
-  modSlotTags,
-} from 'app/utils/item-utils';
+import { getSpecialtySocketMetadata, isArtifice, modSlotTags } from 'app/utils/item-utils';
+import { enhancedVersion } from 'app/utils/perk-utils';
 import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
@@ -26,7 +23,6 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 import { patternIsUnlocked } from './known-values';
 
@@ -34,35 +30,33 @@ export const modslotFilter = {
   keywords: 'modslot',
   description: tl('Filter.ModSlot'),
   format: 'query',
-  suggestions: modSlotTags.concat(['any', 'none', 'activity']),
+  suggestions: modSlotTags.concat(['none', 'activity']),
   destinyVersion: 2,
   filter:
     ({ filterValue }) =>
     (item) => {
-      const metadatas =
-        filterValue === 'activity'
-          ? getInterestingSocketMetadatas(item)
-          : getSpecialtySocketMetadatas(item);
+      const modSocketTag = getSpecialtySocketMetadata(item)?.slotTag;
 
-      const modSocketTags = metadatas?.map((m) => m.slotTag);
-
-      return (
-        (filterValue === 'none' && !modSocketTags) ||
-        (modSocketTags &&
-          (filterValue === 'any' ||
-            filterValue === 'activity' ||
-            modSocketTags.includes(filterValue)))
+      return Boolean(
+        (filterValue === 'none' && !modSocketTag) ||
+        (modSocketTag &&
+          (filterValue === 'any' || filterValue === 'activity' || modSocketTag === filterValue)),
       );
     },
   fromItem: (item) => {
-    const modSocketTags =
-      getInterestingSocketMetadatas(item)?.map((m) => `modslot:${m.slotTag}`) ?? [];
-    return modSocketTags.join(' ');
+    const modSocketTag = getSpecialtySocketMetadata(item)?.slotTag;
+    return modSocketTag ? `modslot:${modSocketTag}` : '';
   },
 } satisfies ItemFilterDefinition;
 
 const socketFilters: ItemFilterDefinition[] = [
   modslotFilter,
+  {
+    keywords: 'artifice',
+    description: tl('Filter.Artifice'),
+    destinyVersion: 2,
+    filter: () => (item) => isArtifice(item),
+  },
   {
     keywords: 'randomroll',
     description: tl('Filter.RandomRoll'),
@@ -115,8 +109,8 @@ const socketFilters: ItemFilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-            socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
-            socket.plugged.plugDef.hash !== DEFAULT_SHADER,
+          socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
+          socket.plugged.plugDef.hash !== DEFAULT_SHADER,
         ),
       ),
   },
@@ -128,15 +122,15 @@ const socketFilters: ItemFilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-            (socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament ||
-              socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
-                /armor_skins_(titan|warlock|hunter)_(head|arms|chest|legs|class)/,
-              )) &&
-            socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
-            !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
-            !socket.plugged.plugDef.itemCategoryHashes?.includes(
-              ItemCategoryHashes.ArmorModsGlowEffects,
-            ),
+          (socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament ||
+            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
+              /armor_skins_(titan|warlock|hunter)_(head|arms|chest|legs|class)/,
+            )) &&
+          socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
+          !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
+          !socket.plugged.plugDef.itemCategoryHashes?.includes(
+            ItemCategoryHashes.ArmorModsGlowEffects,
+          ),
         ),
       ),
   },
@@ -159,12 +153,12 @@ const socketFilters: ItemFilterDefinition[] = [
       item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
-            !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.|v900.weapon.mod_)/,
-            ) &&
-            // enforce that this provides a perk (excludes empty slots)
-            socket.plugged.plugDef.perks.length,
+          !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
+          socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
+            /(v400.weapon.mod_(guns|damage|magazine)|enhancements.|v900.weapon.mod_)/,
+          ) &&
+          // enforce that this provides a perk (excludes empty slots)
+          socket.plugged.plugDef.perks.length,
         ),
       ),
   },
@@ -211,8 +205,8 @@ const socketFilters: ItemFilterDefinition[] = [
           : // is:extractable checks for red-borderness
             Boolean(
               item.deepsightInfo &&
-                item.patternUnlockRecord &&
-                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted,
+              item.patternUnlockRecord &&
+              item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted,
             )),
   },
   {
@@ -283,11 +277,11 @@ const socketFilters: ItemFilterDefinition[] = [
     filter: () => (item) =>
       Boolean(
         (item.craftedInfo?.enhancementTier || 0) < 3 &&
-          item.sockets?.allSockets.some(
-            (s) =>
-              s.plugged?.plugDef.plug.plugCategoryHash ===
-              PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
-          ),
+        item.sockets?.allSockets.some(
+          (s) =>
+            s.plugged?.plugDef.plug.plugCategoryHash ===
+            PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
+        ),
       ),
   },
   {
@@ -322,7 +316,7 @@ const socketFilters: ItemFilterDefinition[] = [
       }
       if (item.crafted === 'crafted') {
         return item.sockets?.allSockets.some((s) => {
-          const enhancedPerk = perkToEnhanced[s.plugged?.plugDef.hash || 0] || 0;
+          const enhancedPerk = enhancedVersion(s.plugged?.plugDef.hash || 0) || 0;
           return (
             enhancedPerk &&
             s.plugSet?.plugHashesThatCanRoll.includes(enhancedPerk) &&

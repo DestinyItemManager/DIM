@@ -16,7 +16,7 @@ import { emptyArray } from 'app/utils/empty';
 import {
   getArmor3TuningStat,
   getModTypeTagByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
+  getSpecialtySocketMetadata,
   isArtifice,
 } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
@@ -69,12 +69,9 @@ export interface ModMap {
   artificeMods: PluggableInventoryItemDefinition[];
   /**
    * Like artifice mods, tuning mods are free, but not all tuning mods fit onto
-   * all items with tuning mod sockets. Instead we must line up the mods to the
-   * tuning stat the item rolled with. Balanced mods go under stat hash 0.
+   * all items with tuning mod sockets.
    */
-  tuningMods: {
-    [tuningModStatHash: number]: PluggableInventoryItemDefinition[];
-  };
+  tuningMods: PluggableInventoryItemDefinition[];
 }
 
 /**
@@ -89,7 +86,7 @@ export function categorizeArmorMods(
   const generalMods: PluggableInventoryItemDefinition[] = [];
   const activityMods: PluggableInventoryItemDefinition[] = [];
   const artificeMods: PluggableInventoryItemDefinition[] = [];
-  const tuningMods: { [tuningModStatHash: number]: PluggableInventoryItemDefinition[] } = {};
+  const tuningMods: PluggableInventoryItemDefinition[] = [];
   const bucketSpecificMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
 
   const validMods: PluggableInventoryItemDefinition[] = [];
@@ -124,11 +121,7 @@ export function categorizeArmorMods(
       plannedMod.plug.plugCategoryHash ===
       PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods
     ) {
-      // Find the tuning stat hash, which is the stat that gets +5 when this mod
-      // is applied. For "Balanced Tuning" this should be 0.
-      const tuningStatHash =
-        plannedMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
-      (tuningMods[tuningStatHash] ??= []).push(plannedMod);
+      tuningMods.push(plannedMod);
       validMods.push(plannedMod);
     } else {
       const bucketHash = plugCategoryHashToBucketHash[pch];
@@ -335,7 +328,7 @@ export function fitMostMods({
   // combat and activity mods can be slotted into an item.
   const itemSocketMetadata = mapValues(
     keyBy(items, (item) => item.id),
-    (item) => getSpecialtySocketMetadatas(item),
+    (item) => getSpecialtySocketMetadata(item),
   );
 
   const {
@@ -382,34 +375,30 @@ export function fitMostMods({
     }
   }
 
-  // Same deal for tuning mods, which are also free. Slightly more trouble since
-  // items with a tuning socket can only fit tuning mods with a certain stat.
+  // Tuning mods are also free, but we assign them in exactly the order they
+  // appear in the mods list to the list of armor (assuming armor is ordered
+  // helmet, arms, chest, legs, classitem). We *don't* try to minimize how many
+  // mod changes are made. This is because balanced mods provide different stat
+  // benefits depending on what item they're assigned to (+1 to the three lowest
+  // stats), so if we assigned them in a different order than they were chosen
+  // in the process loop, we might end up with different stats than the user
+  // expected.
   const tuningItems = items.filter((i) => getArmor3TuningStat(i) !== undefined);
-  const tuningStatHashes = Object.keys(tuningMods)
-    .map(Number)
-    // Sort 0 (balanced tuning) last, since any tunable item can take balanced mods
-    .sort((a, b) => b - a);
-  for (const tuningStatHash of tuningStatHashes) {
-    const modsToAssign = tuningMods[tuningStatHash];
-    for (const tuningMod of modsToAssign) {
-      // Try to find an item that already has this mod slotted
-      let targetItemIndex = tuningItems.findIndex((item) =>
-        item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === tuningMod.hash),
-      );
-      if (targetItemIndex === -1) {
-        targetItemIndex = tuningItems.findIndex((i) =>
-          tuningStatHash === 0
-            ? true // Balanced tuning can go on any item with a tuning socket
-            : // Otherwise the item's tuning stat must match the mod's
-              getArmor3TuningStat(i) === tuningStatHash,
-        );
-      }
-      if (targetItemIndex !== -1) {
-        bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
-        tuningItems.splice(targetItemIndex, 1);
-      } else {
-        unassignedMods.push(tuningMod);
-      }
+  for (const tuningMod of tuningMods) {
+    // Find the tuning stat hash, which is the stat that gets +5 when this mod
+    // is applied. For "Balanced Tuning" this should be 0.
+    const tuningStatHash = tuningMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
+    const targetItemIndex = tuningItems.findIndex((i) =>
+      tuningStatHash === 0
+        ? true // Balanced tuning can go on any item with a tuning socket
+        : // Otherwise the item's tuning stat must match the mod's
+          getArmor3TuningStat(i) === tuningStatHash,
+    );
+    if (targetItemIndex !== -1) {
+      bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
+      tuningItems.splice(targetItemIndex, 1);
+    } else {
+      unassignedMods.push(tuningMod);
     }
   }
 
@@ -575,6 +564,7 @@ function getArmorSocketsAndMods(
     // but the API considers it to be disabled.
     .filter(
       (socket) =>
+        socket.visibleInGame &&
         socket.plugged &&
         // TODO: Edge of Fate: This is a hacky fix for the masterwork socket
         // that has appeared. We should maybe exclude it from the socket list
@@ -940,15 +930,13 @@ export function createPluggingStrategy(
 
 function isActivityModValid(
   activityMod: PluggableInventoryItemDefinition,
-  itemSocketMetadata: ModSocketMetadata[] | undefined,
+  itemSocketMetadata: ModSocketMetadata | undefined,
   itemEnergy: ItemEnergy,
 ) {
   const modTag = getModTypeTagByPlugCategoryHash(activityMod.plug.plugCategoryHash);
 
   return (
-    isModEnergyValid(itemEnergy, activityMod) &&
-    modTag &&
-    itemSocketMetadata?.some((metadata) => metadata.slotTag === modTag)
+    isModEnergyValid(itemEnergy, activityMod) && modTag && itemSocketMetadata?.slotTag === modTag
   );
 }
 

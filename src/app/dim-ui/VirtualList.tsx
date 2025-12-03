@@ -1,7 +1,7 @@
 import { Virtualizer, useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 import clsx from 'clsx';
 import { useImperativeHandle, useLayoutEffect, useRef } from 'react';
-import styles from './VirtualList.m.scss';
+import * as styles from './VirtualList.m.scss';
 
 interface VirtualListProps {
   numElements: number;

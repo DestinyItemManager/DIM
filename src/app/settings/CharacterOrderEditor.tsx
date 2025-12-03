@@ -1,11 +1,14 @@
 import { DimStore } from 'app/inventory/store-types';
 import { emptyArray } from 'app/utils/empty';
-import { Reorder } from 'motion/react';
+import { MotionStyle, Reorder, TargetAndTransition } from 'motion/react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
-import styles from './CharacterOrderEditor.m.scss';
+import * as styles from './CharacterOrderEditor.m.scss';
+
+const regularStyle: MotionStyle = { cursor: 'grab' };
+const draggingStyle: TargetAndTransition = { cursor: 'grabbing' };
 
 /**
  * An editor for character orders, with drag and drop.
@@ -53,8 +56,8 @@ export default function CharacterOrderEditor({
           key={character.id}
           value={character}
           className={styles.item}
-          style={{ cursor: 'grab' }}
-          whileDrag={{ cursor: 'grabbing' }}
+          style={regularStyle}
+          whileDrag={draggingStyle}
           onDragEnd={handleDragEnd}
           as="div"
         >

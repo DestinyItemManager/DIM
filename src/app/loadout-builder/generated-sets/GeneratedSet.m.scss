@@ -1,6 +1,8 @@
 @use '../../variables.scss' as *;
 
 .container {
+  --set-bonus-icon-size: 25px;
+
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid rgb(255, 255, 255, 0.3);

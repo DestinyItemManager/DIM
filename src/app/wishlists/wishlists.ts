@@ -1,8 +1,28 @@
-import { enhancedToPerk } from 'app/armory/wishlist-collapser';
+import { normalizeToEnhanced, normalizeToUnenhanced } from 'app/utils/perk-utils';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import { DimWishList, WishListRoll } from './types';
+
+const targetPCHs = [
+  PlugCategoryHashes.Frames,
+  PlugCategoryHashes.Bowstrings,
+  PlugCategoryHashes.Batteries,
+  PlugCategoryHashes.Blades,
+  PlugCategoryHashes.Tubes,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Hafts,
+  PlugCategoryHashes.Stocks,
+  PlugCategoryHashes.Guards,
+  PlugCategoryHashes.Barrels,
+  PlugCategoryHashes.Arrows,
+  PlugCategoryHashes.Grips,
+  PlugCategoryHashes.Scopes,
+  PlugCategoryHashes.Magazines,
+  PlugCategoryHashes.MagazinesGl,
+  PlugCategoryHashes.Rails,
+  PlugCategoryHashes.Bolts,
+  PlugCategoryHashes.Origins,
+];
 
 export const enum UiWishListRoll {
   Good = 1,
@@ -37,7 +57,7 @@ export interface InventoryWishListRoll {
  * and other things (like masterworks) which add more variance than we need.
  */
 function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
-  if (plug.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames) {
+  if (targetPCHs.includes(plug.plugDef.plug.plugCategoryHash)) {
     return true;
   }
 
@@ -83,9 +103,9 @@ export function isWishListPlug(
       : wishListRoll.wishListPerks);
   return Boolean(
     perks &&
-      (perks.has(plug.plugDef.hash) || // if this perk was recommended
-        // or this enhanced perk's base version was recommended
-        perks.has(enhancedToPerk[plug.plugDef.hash])),
+    // Either the enhanced or unenhanced version of the perk is present
+    (perks.has(normalizeToUnenhanced(plug.plugDef.hash)) ||
+      perks.has(normalizeToEnhanced(plug.plugDef.hash))),
   );
 }
 
@@ -124,8 +144,9 @@ function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolea
         if (s.plugOptions) {
           for (const plug of s.plugOptions) {
             if (
-              plug.plugDef.hash === recommendedPerk ||
-              perkToEnhanced[recommendedPerk] === plug.plugDef.hash
+              // Either the enhanced or unenhanced version of the perk is present
+              normalizeToUnenhanced(plug.plugDef.hash) === recommendedPerk ||
+              normalizeToEnhanced(plug.plugDef.hash) === recommendedPerk
             ) {
               included = true;
               break outer;

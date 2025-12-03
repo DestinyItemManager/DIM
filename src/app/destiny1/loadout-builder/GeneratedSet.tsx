@@ -14,7 +14,7 @@ import ItemTalentGrid from '../../item-popup/ItemTalentGrid';
 import { convertToLoadoutItem, newLoadout } from '../../loadout-drawer/loadout-utils';
 import { AppIcon, faMinusSquare, faPlusSquare } from '../../shell/icons';
 import { d1ArmorTypes } from './D1LoadoutBuilder';
-import styles from './GeneratedSet.m.scss';
+import * as styles from './GeneratedSet.m.scss';
 import LoadoutBuilderItem from './LoadoutBuilderItem';
 import { ArmorSet, ArmorTypes, SetType } from './types';
 

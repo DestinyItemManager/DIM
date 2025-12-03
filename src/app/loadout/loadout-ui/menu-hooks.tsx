@@ -24,7 +24,7 @@ import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import { intersection } from 'es-toolkit/compat';
 import { useEffect, useMemo, useState } from 'react';
-import styles from './menu-hooks.m.scss';
+import * as styles from './menu-hooks.m.scss';
 
 const loadoutSpecializations = [tl('Loadouts.FashionOnly'), tl('Loadouts.ModsOnly')] as const;
 type LoadoutSpecialization = (typeof loadoutSpecializations)[number];
@@ -58,7 +58,7 @@ export function useLoadoutFilterPills(
     extra?: React.ReactNode;
   } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  // eslint-disable-next-line @eslint-react/hooks-extra/prefer-use-state-lazy-initialization
+  // eslint-disable-next-line @eslint-react/prefer-use-state-lazy-initialization
   const [selectedFilters, setSelectedFilters] = useState<Option<FilterPillType>[]>(emptyArray());
   const defs = useD2Definitions();
   const analysisSummary = useSummaryLoadoutsAnalysis(
@@ -297,7 +297,6 @@ export function FashionIcon({ className }: { className: string }) {
         className={clsx(className, styles.fashionIcon)}
         style={bungieBackgroundStyleAdvanced(
           defs.InventoryItem.get(DEFAULT_ORNAMENTS[2])?.displayProperties.icon,
-          undefined,
           2,
         )}
       />

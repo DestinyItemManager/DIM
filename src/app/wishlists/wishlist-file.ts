@@ -8,12 +8,12 @@ const TAG = 'wishlist';
  * The title should follow the following format:
  * title:This Is My Source File Title.
  */
-const titleLabel = 'title:';
+const titleLabel = /^@?title:(.+)$/;
 /**
  * The description should follow the following format:
  * description:This Is My Source File Description And Maybe It Is Longer.
  */
-const descriptionLabel = 'description:';
+const descriptionLabel = /^@?description:(.+)$/;
 /**
  * Notes apply to all rolls until an empty line or comment.
  */
@@ -43,7 +43,9 @@ export function toWishList(files: [url: string | undefined, contents: string][])
         dupeRolls: 0,
       };
       let blockNotes: string | undefined = undefined;
-
+      let title: string | undefined = undefined;
+      let description: string | undefined = undefined;
+      let match: RegExpExecArray | null = null;
       const lines = fileText.split('\n');
       for (const line of lines) {
         if (line.startsWith(notesLabel)) {
@@ -51,10 +53,16 @@ export function toWishList(files: [url: string | undefined, contents: string][])
         } else if (line.length === 0 || line.startsWith('//')) {
           // Empty lines and comments reset the block note
           blockNotes = undefined;
-        } else if (!info.title && line.startsWith(titleLabel)) {
-          info.title = line.slice(titleLabel.length);
-        } else if (!info.description && line.startsWith(descriptionLabel)) {
-          info.description = line.slice(descriptionLabel.length);
+        } else if ((match = titleLabel.exec(line))) {
+          title = match[1];
+          if (!info.title) {
+            info.title = title.trim();
+          }
+        } else if ((match = descriptionLabel.exec(line))) {
+          description = match[1].trim();
+          if (!info.description) {
+            info.description = description;
+          }
         } else {
           const roll =
             toDimWishListRoll(line, blockNotes) ||
@@ -73,6 +81,9 @@ export function toWishList(files: [url: string | undefined, contents: string][])
             } else {
               info.dupeRolls++;
             }
+            roll.sourceWishListIndex = wishList.infos.length;
+            roll.title = title;
+            roll.description = description;
           }
         }
       }
@@ -118,9 +129,11 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
 }
 
 function getNotes(matchResults: RegExpMatchArray, blockNotes?: string): string | undefined {
-  return matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
-    ? matchResults.groups.wishListNotes
-    : blockNotes;
+  const notes =
+    matchResults.groups?.wishListNotes && matchResults.groups.wishListNotes.length > 1
+      ? matchResults.groups.wishListNotes
+      : blockNotes;
+  return notes?.replace(/\\n/g, '\n');
 }
 
 function getItemHash(matchResults: RegExpMatchArray): number {

@@ -391,13 +391,27 @@ export const D2SeasonInfo: Record<
     maxLevel: 50,
     powerFloor: 10,
     softCap: 200,
-    powerfulCap: 400,
-    pinnacleCap: 450,
+    powerfulCap: 500,
+    pinnacleCap: 550,
     releaseDate: '2025-07-15',
     resetTime: '17:00:00Z',
     numWeeks: 20,
   },
+  28: {
+    DLCName: 'Renegades',
+    seasonName: 'Lawless',
+    seasonTag: 'lawless',
+    season: 28,
+    maxLevel: 50,
+    powerFloor: 10,
+    softCap: 200,
+    powerfulCap: 500,
+    pinnacleCap: 550,
+    releaseDate: '2025-12-02',
+    resetTime: '17:00:00Z',
+    numWeeks: 33,
+  },
 };
 
-export const D2CalculatedSeason = 27;
+export const D2CalculatedSeason = 28;
 export const D2SeasonPassActiveList = 0;

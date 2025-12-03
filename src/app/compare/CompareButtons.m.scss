@@ -1,8 +1,7 @@
 .svgIcon {
-  filter: drop-shadow(0 0 1px black);
-  img {
+  img,
+  svg {
     height: 1.3em;
-    margin: 2.5px;
   }
 }
 

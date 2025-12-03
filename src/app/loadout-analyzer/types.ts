@@ -1,4 +1,4 @@
-import { LoadoutParameters, Settings } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { AutoModDefs, ResolvedStatConstraint } from 'app/loadout-builder/types';
@@ -62,8 +62,10 @@ export const enum LoadoutFinding {
   ModsDontFit,
   /** The armor set does not match the saved stat constraints. */
   DoesNotSatisfyStatConstraints,
-  /** The loadout parameters search query is invalid or the items don't match them */
+  /** The loadout parameters search query is invalid. */
   InvalidSearchQuery,
+  /** The loadout parameters search query excludes items in the loadout. */
+  ItemsDoNotMatchSearchQuery,
 }
 
 /** These aren't problems per se but they do block further analysis */
@@ -80,7 +82,6 @@ export const blockAnalysisFindings: LoadoutFinding[] = [
 export interface LoadoutAnalysisContext {
   unlockedPlugs: Set<number>;
   itemCreationContext: ItemCreationContext;
-  savedLoStatConstraintsByClass: Settings['loStatConstraintsByClass'];
   allItems: DimItem[];
   autoModDefs: AutoModDefs;
   validateQuery: (query: string) => { valid: boolean };

@@ -7,11 +7,12 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
+import { AppIcon, clearIcon } from 'app/shell/icons';
 import { compact, filterMap } from 'app/utils/collections';
 import {
   getArmor3StatFocus,
-  getInterestingSocketMetadatas,
   getItemDamageShortName,
+  getSpecialtySocketMetadata,
   isArmor3,
 } from 'app/utils/item-utils';
 import {
@@ -25,7 +26,7 @@ import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import archetypeIcon from 'images/armorArchetype.png';
 import React from 'react';
-import styles from './CompareButtons.m.scss';
+import * as styles from './CompareButtons.m.scss';
 import { compareNameQuery, stripAdept } from './compare-utils';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */
@@ -40,7 +41,7 @@ const modernArmor = 'is:armor2.0 or is:armor3.0';
  * Generate possible comparisons for armor, given a reference item.
  */
 export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
-  const exampleItemModSlotMetadatas = getInterestingSocketMetadatas(exampleItem);
+  const exampleItemModSlotMetadata = getSpecialtySocketMetadata(exampleItem);
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
@@ -67,11 +68,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       )
         ?.map((intrinsic) => ({
           buttonLabel: [
-            <BungieImage
-              key="1"
-              className={clsx(styles.intrinsicIcon, 'dontInvert')}
-              src={intrinsic.icon}
-            />,
+            <BungieImage key="1" src={intrinsic.icon} />,
             intrinsic.name,
             exampleItem.rarity === 'Legendary' ? (
               // eslint-disable-next-line @eslint-react/no-duplicate-key
@@ -112,21 +109,13 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // above but also the same seasonal mod slot, if it has one
     exampleItem.destinyVersion === 2 &&
-      exampleItemModSlotMetadatas && {
+      exampleItemModSlotMetadata && {
         buttonLabel: [
-          <SpecialtyModSlotIcon
-            excludeStandardD2ModSockets
-            className={styles.inlineImageIcon}
-            key="1"
-            lowRes
-            item={exampleItem}
-          />,
+          <SpecialtyModSlotIcon className={styles.inlineImageIcon} key="1" item={exampleItem} />,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `${modernArmor} ${exampleItemModSlotMetadatas
-          .map((m) => `modslot:${m.slotTag || 'none'}`)
-          .join(' ')}`,
+        query: `${modernArmor} modslot:${exampleItemModSlotMetadata.slotTag || 'none'}`,
       },
 
     // above but also the same special intrinsic, if it has one
@@ -134,10 +123,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItemIntrinsic && {
         buttonLabel: [
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
-            <BungieImage
-              className={clsx(styles.intrinsicIcon, 'dontInvert')}
-              src={exampleItemIntrinsic.icon}
-            />
+            <BungieImage className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
           </PressTip>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -150,7 +136,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItem.rarity === 'Legendary' &&
       archetype && {
         buttonLabel: [
-          <img key="1" className={clsx(styles.intrinsicIcon, 'dontInvert')} src={archetypeIcon} />,
+          <img key="1" src={archetypeIcon} />,
           <span key="2">{t('Compare.Archetype')}</span>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -162,11 +148,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     exampleItem.destinyVersion === 2 &&
       archetype && {
         buttonLabel: [
-          <BungieImage
-            key="1"
-            className={clsx(styles.intrinsicIcon, 'dontInvert')}
-            src={archetype.displayProperties.icon}
-          />,
+          <BungieImage key="1" src={archetype.displayProperties.icon} />,
           <span key="2">{archetype.displayProperties.name}</span>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
@@ -179,7 +161,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         buttonLabel: focusedStatsDisplayProperties.map((s, index) => (
           <React.Fragment key={s.name}>
             {index > 0 && '+'}
-            <BungieImage className={clsx(styles.statIconAdjust, 'dontInvert')} src={s.icon} />
+            <BungieImage className={styles.statIconAdjust} src={s.icon} />
           </React.Fragment>
         )),
         query: `is:armor3.0 is:${exampleItem.rarity} ${focusedStats.map((h) => `basestat:${realD2ArmorStatSearchByHash[h]}:>0`).join(' ')}`,
@@ -191,16 +173,12 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       tertiaryStat &&
       tertiaryStatDisplayProperties && {
         buttonLabel: [
-          <BungieImage
-            key="1"
-            className={clsx(styles.intrinsicIcon, 'dontInvert')}
-            src={archetype.displayProperties.icon}
-          />,
+          <BungieImage key="1" src={archetype.displayProperties.icon} />,
           <span key="2">{archetype.displayProperties.name}</span>,
           '+',
           <BungieImage
             key="tertiary"
-            className={clsx(styles.statIconAdjust, 'dontInvert')}
+            className={styles.statIconAdjust}
             src={tertiaryStatDisplayProperties.icon}
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
@@ -216,6 +194,11 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       buttonLabel: [exampleItem.name],
       // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
       query: compareNameQuery(exampleItem),
+    },
+    // Exact armor based on ID
+    {
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
+      query: `id:${exampleItem.id}`,
     },
   ]).reverse();
 }
@@ -290,7 +273,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <ElementIcon
           key={exampleItem.id}
           element={exampleItem.element}
-          className={styles.inlineImageIcon}
+          className={clsx(styles.inlineImageIcon, 'dontInvert')}
         />,
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
@@ -301,6 +284,11 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [adeptStripped],
       query: compareNameQuery(exampleItem),
+    },
+    // Exact weapon based on ID
+    {
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
+      query: `id:${exampleItem.id}`,
     },
   ]);
 
@@ -323,6 +311,11 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [exampleItem.name],
       query: compareNameQuery(exampleItem),
+    },
+    // Exact item based on ID
+    {
+      buttonLabel: [<AppIcon key="icon" icon={clearIcon} />],
+      query: `id:${exampleItem.id}`,
     },
   ];
 

@@ -18,7 +18,7 @@ import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import Highlights from './Highlights';
-import styles from './ItemFeed.m.scss';
+import * as styles from './ItemFeed.m.scss';
 import TagButtons from './TagButtons';
 
 const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | undefined }) {
@@ -85,7 +85,7 @@ export default function ItemFeed({ page }: { page?: boolean }) {
       {items.length > 0 && (
         <button
           type="button"
-          className={clsx('dim-button', styles.clearButton)}
+          className={clsx('dim-button', 'left', styles.clearButton)}
           onClick={() => setItemFeedWatermark(allItems[0].id)}
         >
           {t('ItemFeed.ClearFeed')}
@@ -95,7 +95,7 @@ export default function ItemFeed({ page }: { page?: boolean }) {
         <>
           <button
             type="button"
-            className={clsx('dim-button', styles.clearButton)}
+            className={clsx('dim-button', 'left', styles.clearButton)}
             onClick={() => {
               setItemFeedWatermark('0');
             }}

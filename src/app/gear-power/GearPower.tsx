@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { storesSelector } from '../inventory/selectors';
-import styles from './GearPower.m.scss';
+import * as styles from './GearPower.m.scss';
 import { showGearPower$ } from './gear-power';
 
 const bucketClassNames: LookupTable<BucketHashes, string> = {
@@ -61,77 +61,79 @@ export default function GearPower() {
     whichGear === 'drop' ? powerLevel.dropCalcItems : powerLevel.maxEquippablePowerItems;
   return (
     <Sheet onClose={reset} header={header} sheetClassName={styles.gearPowerSheet}>
-      <RadioButtons
-        className={styles.toggle}
-        value={whichGear}
-        onChange={setWhichGear}
-        options={[
-          {
-            label: (
-              <div className={styles.powerToggleButton}>
-                <span>{t('Stats.EquippableGear')}</span>
-                <span className={styles.powerLevel}>
-                  <AppIcon icon={powerActionIcon} />
-                  <FractionalPowerLevel power={powerLevel.maxEquippableGearPower} />
-                </span>
-              </div>
-            ),
-            tooltip: t('Stats.MaxGearPowerOneExoticRule'),
-            value: 'equip',
-          },
-          {
-            label: (
-              <div className={styles.powerToggleButton}>
-                <span>{t('Stats.DropLevel')}</span>
-                <span className={styles.powerLevel}>
-                  <BungieImage src={rarityIcons.Legendary} />
-                  <FractionalPowerLevel power={powerLevel.dropPower} />
-                </span>
-              </div>
-            ),
-            tooltip: t('Stats.DropLevelExplanation1'),
-            value: 'drop',
-          },
-        ]}
-      />
-      <div className={styles.gearPowerSheetContent}>
-        <div className={styles.gearGrid}>
-          {items.map((i) => {
-            const powerDiff = (powerFloor - i.power) * -1;
-            const diffSymbol = powerDiff >= 0 ? '+' : '';
-            const diffClass =
-              powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
-            return (
-              <div
-                key={i.id}
-                className={clsx(bucketClassNames[i.bucket.hash as BucketHashes], styles.gearItem)}
-              >
-                <div onClick={() => locateItem(i)}>
-                  <BungieImage src={i.icon} className={styles.itemImage} />
+      <div className={styles.sheetContents}>
+        <RadioButtons
+          className={styles.toggle}
+          value={whichGear}
+          onChange={setWhichGear}
+          options={[
+            {
+              label: (
+                <div className={styles.powerToggleButton}>
+                  <span>{t('Stats.EquippableGear')}</span>
+                  <span className={styles.powerLevel}>
+                    <AppIcon icon={powerActionIcon} />
+                    <FractionalPowerLevel power={powerLevel.maxEquippableGearPower} />
+                  </span>
                 </div>
-                <div className={styles.gearItemInfo}>
-                  <div className={styles.power}>{i.power}</div>
-                  <div className={styles.statMeta}>
-                    <BucketIcon className={styles.bucketImage} bucketHash={i.bucket.hash} />
-                    <div className={diffClass}>
-                      {diffSymbol}
-                      {powerDiff}
+              ),
+              tooltip: t('Stats.MaxGearPowerOneExoticRule'),
+              value: 'equip',
+            },
+            {
+              label: (
+                <div className={styles.powerToggleButton}>
+                  <span>{t('Stats.DropLevel')}</span>
+                  <span className={styles.powerLevel}>
+                    <BungieImage src={rarityIcons.Legendary} />
+                    <FractionalPowerLevel power={powerLevel.dropPower} />
+                  </span>
+                </div>
+              ),
+              tooltip: t('Stats.DropLevelExplanation1'),
+              value: 'drop',
+            },
+          ]}
+        />
+        <div className={styles.gearPowerSheetContent}>
+          <div className={styles.gearGrid}>
+            {items.map((i) => {
+              const powerDiff = (powerFloor - i.power) * -1;
+              const diffSymbol = powerDiff >= 0 ? '+' : '';
+              const diffClass =
+                powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
+              return (
+                <div
+                  key={i.id}
+                  className={clsx(bucketClassNames[i.bucket.hash as BucketHashes], styles.gearItem)}
+                >
+                  <div onClick={() => locateItem(i)}>
+                    <BungieImage src={i.icon} className={styles.itemImage} />
+                  </div>
+                  <div className={styles.gearItemInfo}>
+                    <div className={styles.power}>{i.power}</div>
+                    <div className={styles.statMeta}>
+                      <BucketIcon className={styles.bucketImage} bucketHash={i.bucket.hash} />
+                      <div className={diffClass}>
+                        {diffSymbol}
+                        {powerDiff}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className={styles.footNote}>
-          {whichGear === 'equip' ? (
-            t('Stats.MaxGearPowerOneExoticRule')
-          ) : (
-            <>
-              <p>{t('Stats.DropLevelExplanation1')}</p>
-              <p>{t('Stats.DropLevelExplanation2')}</p>
-            </>
-          )}
+              );
+            })}
+          </div>
+          <div className={styles.footNote}>
+            {whichGear === 'equip' ? (
+              t('Stats.MaxGearPowerOneExoticRule')
+            ) : (
+              <>
+                <p>{t('Stats.DropLevelExplanation1')}</p>
+                <p>{t('Stats.DropLevelExplanation2')}</p>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </Sheet>

@@ -27,7 +27,7 @@ import { wishListsLastFetchedSelector, wishListsSelector } from 'app/wishlists/s
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './Debug.m.scss';
+import * as styles from './Debug.m.scss';
 
 /**
  * A user-facing debug page that displays information about the DIM environment,

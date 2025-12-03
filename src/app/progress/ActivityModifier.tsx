@@ -3,7 +3,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
 import BungieImage from '../dim-ui/BungieImage';
 import { PressTip } from '../dim-ui/PressTip';
-import styles from './ActivityModifier.m.scss';
+import * as styles from './ActivityModifier.m.scss';
 
 export function ActivityModifier({
   modifierHash,

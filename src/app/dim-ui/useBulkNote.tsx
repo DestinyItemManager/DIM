@@ -15,7 +15,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { PressTipRoot } from './PressTip';
 import { WithSymbolsPicker } from './destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from './text-complete/text-complete';
-import styles from './useBulkNote.m.scss';
+import * as styles from './useBulkNote.m.scss';
 import useDialog, { Body, Buttons, Title } from './useDialog';
 
 export interface BulkNoteResult {

@@ -59,7 +59,6 @@ $header-height: 44px;
       @include interactive($hover: true) {
         color: var(--theme-accent-primary);
         cursor: pointer;
-        transition: color 0.2s linear;
       }
     }
   }
@@ -93,12 +92,10 @@ $header-height: 44px;
 
   @include interactive($hover: true) {
     color: var(--theme-accent-primary);
-    transition: color 0.2s linear;
   }
 
   &.active {
     color: var(--theme-accent-primary);
-    transition: color 0.2s linear;
   }
 }
 
@@ -213,7 +210,6 @@ $header-height: 44px;
     padding: 4px 2rem 4px 1rem;
     font-size: 16px;
     margin: 0;
-    transition: none;
 
     @include phone-portrait {
       font-size: 18px;

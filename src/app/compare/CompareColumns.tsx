@@ -18,10 +18,15 @@ import { ColumnDefinition, SortDirection, Value } from 'app/organizer/table-type
 import { quoteFilterString } from 'app/search/query-parser';
 import { Settings } from 'app/settings/initial-settings';
 import { compact } from 'app/utils/collections';
-import { getWeaponArchetype, getWeaponArchetypeSocket } from 'app/utils/socket-utils';
+import {
+  getArmorArchetype,
+  getArmorArchetypeSocket,
+  getWeaponArchetype,
+  getWeaponArchetypeSocket,
+} from 'app/utils/socket-utils';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import styles from './CompareColumns.m.scss';
+import * as styles from './CompareColumns.m.scss';
 import CompareStat from './CompareStat';
 
 /**
@@ -55,23 +60,26 @@ export function getColumns(
   const isGeneral = itemsType === 'general';
 
   const { statColumns, baseStatColumns, baseMasterworkStatColumns, d1ArmorQualityByStat } =
-    getStatColumns(
-      stats,
-      customStatDefs,
-      destinyVersion,
-      {
-        isArmor,
-        showStatLabel: true,
-      },
-      styles.stat,
-    );
-  const customStats = createCustomStatColumns(
-    customStatDefs,
-    styles.stat,
-    undefined,
-    true,
-    armorCompare === 'baseMasterwork', // createCustomStatColumns's withMasterwork boolean
-  );
+    getStatColumns(stats, customStatDefs, destinyVersion, {
+      isArmor,
+      showStatLabel: true,
+      extraStatInfo: true,
+      className: styles.stat,
+    });
+
+  const preferredStatColumns =
+    !isArmor || armorCompare === 'current'
+      ? statColumns
+      : armorCompare === 'base'
+        ? baseStatColumns
+        : baseMasterworkStatColumns;
+
+  const customStatColumns = createCustomStatColumns(customStatDefs, {
+    className: styles.stat,
+    hideFormula: true,
+    withMasterwork: armorCompare === 'baseMasterwork',
+    extraStatInfo: true,
+  });
 
   // TODO: maybe add destinyVersion / usecase to the ColumnDefinition type??
   const columns: ColumnDefinition[] = compact([
@@ -140,24 +148,24 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
       }),
-    ...(!isArmor || armorCompare === 'current'
-      ? statColumns
-      : armorCompare === 'base'
-        ? baseStatColumns
-        : baseMasterworkStatColumns),
+    ...preferredStatColumns,
     ...d1ArmorQualityByStat,
     destinyVersion === 1 && isArmor && d1QualityColumn,
-    ...(destinyVersion === 2 && isArmor ? customStats : []),
+    ...(destinyVersion === 2 && isArmor ? customStatColumns : []),
     destinyVersion === 2 &&
-      isWeapon &&
       c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
         className: styles.archetype,
         headerClassName: styles.archetype,
-        value: (item) => getWeaponArchetype(item)?.displayProperties.name,
+        value: (item) =>
+          item.bucket.inWeapons
+            ? getWeaponArchetype(item)?.displayProperties.name
+            : getArmorArchetype(item)?.displayProperties.name,
         cell: (_val, item) => {
-          const s = getWeaponArchetypeSocket(item);
+          const s = item.bucket.inWeapons
+            ? getWeaponArchetypeSocket(item)
+            : getArmorArchetypeSocket(item);
           return (
             s && (
               <div className={styles.archetypeRow}>
@@ -188,7 +196,7 @@ export function getColumns(
       c({
         id: 'intrinsics',
         className: styles.perks,
-        header: t('Organizer.Columns.Intrinsics'),
+        header: t('Organizer.Columns.Perks'),
         value: (item) => {
           const intrinsics = getIntrinsicSockets(item);
           return (

@@ -17,7 +17,7 @@ import {
   isArtifice,
 } from 'app/utils/item-utils';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
-import { computeStatDupeLower } from 'app/utils/stats';
+import { collectRelevantStatHashes, computeStatDupeLower } from 'app/utils/stats';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
@@ -122,13 +122,27 @@ const dupeTypeLookupRaw: Record<
   // Finds items with all the same perks or which contain a subset that comprises another item's perks.
   perks: {
     keyGenerator: (item) =>
-      `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.typeName}`,
+      `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.ammoType}|${item.typeName}`,
     confirmItemsInGroup: (items) => {
       items = items.filter((i) =>
         i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible),
       );
-
       const perksSet = new PerksSet(items);
+      return items.filter((i) => perksSet.hasPerkDupes(i));
+    },
+  },
+
+  // Finds items with all the same traits or which contain a subset that comprises another item's traits.
+  traits: {
+    keyGenerator: (item) =>
+      item.bucket.inWeapons
+        ? `${item.bucket.hash}|${item.classType}|${item.isExotic}|${item.ammoType}|${item.typeName}`
+        : undefined,
+    confirmItemsInGroup: (items) => {
+      items = items.filter((i) =>
+        i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible),
+      );
+      const perksSet = new PerksSet(items, 'traits');
       return items.filter((i) => perksSet.hasPerkDupes(i));
     },
   },
@@ -190,10 +204,7 @@ const dupeTypeLookupRaw: Record<
             ? allArmors
             : armorsByDestinyClass.get(customStat.class)!;
 
-        const relevantStatHashes = filterMap(
-          Object.entries(customStat.weights),
-          ([statHashKey, weight]) => (weight && weight > 0 ? parseInt(statHashKey, 10) : undefined),
-        );
+        const relevantStatHashes = collectRelevantStatHashes(customStat.weights);
         const thisStatLowerIds = computeStatDupeLower(thisStatClassArmors, relevantStatHashes);
         const armorSetsToNarrow =
           customStat.class === DestinyClass.Unknown ? destinyClasses : [customStat.class];
@@ -223,7 +234,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       'dupe:archetype+tertiarystat',
       'dupe:nonzerostats',
       'dupe:setbonus+statlower',
-      'dupe:perks',
+      'dupe:traits',
       'dupe:statlower',
       'dupe:customstatlower',
     ],
@@ -237,6 +248,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       tunedstat: tl('Filter.DupeTunedStat'),
       setbonus: tl('Filter.DupeSetBonus'),
       perks: tl('Filter.DupePerks'),
+      traits: tl('Filter.DupeTraits'),
       statlower: tl('Filter.StatLower'),
       customstatlower: tl('Filter.CustomStatLower'),
     },

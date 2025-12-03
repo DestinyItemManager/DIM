@@ -8,8 +8,7 @@ interface CssExports {
   'itemShader': string;
   'itemSource': string;
   'milestoneImage': string;
-  'mods': string;
   'ownedIcon': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

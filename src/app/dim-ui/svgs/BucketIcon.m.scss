@@ -1,6 +1,0 @@
-.icon {
-  filter: invert(1) !important;
-  &:global(.dontInvert) {
-    filter: none !important;
-  }
-}

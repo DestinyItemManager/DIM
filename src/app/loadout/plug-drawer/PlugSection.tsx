@@ -5,7 +5,7 @@ import { count } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useCallback } from 'react';
 import { groupModsByModType } from '../mod-utils';
-import styles from './PlugSection.m.scss';
+import * as styles from './PlugSection.m.scss';
 import SelectablePlug from './SelectablePlug';
 import { PlugSelectionType, PlugSet } from './types';
 

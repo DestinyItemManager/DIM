@@ -24,7 +24,7 @@ import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-util
 import { showNotification } from '../notifications/notifications';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import styles from './InfusionFinder.m.scss';
+import * as styles from './InfusionFinder.m.scss';
 import { showInfuse$ } from './infuse';
 
 const itemComparator = chainComparator(
@@ -352,7 +352,7 @@ async function transferItems(
   ];
 
   if (source.destinyVersion === 1) {
-    if (target.bucket.sort === 'General') {
+    if (target.bucket.inGeneral) {
       // Mote of Light
       items.push({
         id: '0',
@@ -360,7 +360,7 @@ async function transferItems(
         amount: 2,
         equip: false,
       });
-    } else if (target.bucket.sort === 'Weapons') {
+    } else if (target.bucket.inWeapons) {
       // Weapon Parts
       items.push({
         id: '0',

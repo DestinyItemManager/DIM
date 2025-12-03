@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { compareFilteredItems } from 'app/compare/actions';
 import { collapsedSelector, settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
@@ -7,11 +8,11 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { ExpandableTextBlock } from 'app/dim-ui/ExpandableTextBlock';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
-import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
+import * as filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
-import { allItemsSelector } from 'app/inventory/selectors';
+import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
@@ -31,8 +32,8 @@ import React, { JSX } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import { DimItem } from '../inventory/item-types';
-import popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class
-import styles from './ItemTriage.m.scss';
+import * as popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class
+import * as styles from './ItemTriage.m.scss';
 import { Factor } from './triage-factors';
 import {
   getBetterWorseItems,
@@ -46,7 +47,7 @@ export function doShowTriage(item: DimItem) {
   return (
     item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
-      (item.bucket.sort === 'Weapons' && // there's some reason not to use inWeapons
+      (item.bucket.inWeapons &&
         item.bucket.hash !== BucketHashes.SeasonalArtifact &&
         item.bucket.hash !== BucketHashes.Subclass))
   );
@@ -127,6 +128,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
 
 function LoadoutsTriageSection({ item }: { item: DimItem }) {
   const loadoutsByItem = useSelector(loadoutsByItemSelector);
+  const stores = useSelector(storesSelector);
   const inLoadouts = loadoutsByItem[item.id] || [];
   // We need to build an absolute path rather than a relative one because the loadout editor is mounted higher than the destiny routes.
   const account = useSelector(currentAccountSelector);
@@ -148,12 +150,24 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
         {inLoadouts.map((l) => {
           const loadout = l.loadout;
           const isDimLoadout = !isInGameLoadout(loadout);
+          const character = isDimLoadout
+            ? undefined
+            : stores.find((s) => s.id === loadout.characterId);
+
           return (
             <li className={styles.loadoutRow} key={loadout.id}>
               {isDimLoadout ? (
                 <ClassIcon classType={loadout.classType} className={styles.inlineIcon} />
               ) : (
-                <InGameLoadoutIcon loadout={loadout} />
+                <>
+                  {character && (
+                    <span className={styles.charIcon}>
+                      <StoreIcon useBackground store={character} />
+                    </span>
+                  )}
+                  <InGameLoadoutIcon loadout={loadout} />
+                  <span className={styles.loadoutNumber}>{loadout.index + 1}</span>
+                </>
               )}
               <ColorDestinySymbols text={loadout.name} className={styles.loadoutName} />
               <span className={styles.controls}>

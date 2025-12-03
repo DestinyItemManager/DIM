@@ -1,6 +1,6 @@
 import { symbolize } from 'app/hotkeys/hotkeys';
 import clsx from 'clsx';
-import styles from './KeyHelp.m.scss';
+import * as styles from './KeyHelp.m.scss';
 
 /**
  * A keyboard shortcut tip

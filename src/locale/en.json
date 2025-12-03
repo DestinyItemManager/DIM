@@ -37,6 +37,7 @@
     "TrashlistedRolls_one": "Trashlisted Roll",
     "TrashlistedRolls_other": "{{count, number}} Trashlisted Rolls",
     "Unknown": "Unknown Item",
+    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_one": "Wishlisted Roll",
     "WishlistedRolls_other": "{{count, number}} Wishlisted Rolls",
     "YourItems": "Your Items"
@@ -209,6 +210,7 @@
     "Armor3": "Shows items that use the Armor 3.0 stat system introduced in Edge of Fate.",
     "ArmorCategory": "Shows armors based on their category.",
     "ArmorIntrinsic": "Shows legendary armor which has an intrinsic perk, such as Artifice Armor.",
+    "Artifice": "Shows Artifice armor.",
     "Ascended": "Shows items that have an ascend node which have been ascended.",
     "Breaker": "Filter by breaker type or corresponding champion type. breaker:instrinsic shows items with intrinsic breaker ability.",
     "BulkClear_one": "Removed tag from 1 item.",
@@ -241,6 +243,7 @@
     "DupeSetBonus": "Groups armor with the same set bonus.",
     "DupeStats": "Shows armor with identical base stats, and matching stat adjustment mods like Artifice or Tuners.",
     "DupeTertiary": "Groups armor with the same tertiary stat.",
+    "DupeTraits": "Weapons whose traits are either a duplicate of, or a subset of, another weapon of the same type.",
     "DupeTunedStat": "Groups armor with the same Tuned stat.",
     "DupeUntunedStats": "Groups armor with identical base stats, ignoring stat adjustment mods.",
     "DupeZeroStats": "Groups armor with the same 3 non-zero base stats.",
@@ -639,8 +642,12 @@
       "Name": "Deprecated Mods"
     },
     "InvalidSearchQuery": {
-      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout.",
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is not valid.",
       "Name": "Invalid Search Query"
+    },
+    "ItemsDoNotMatchSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer, and that search query excludes at least one of the items in the loadout.",
+      "Name": "Search Excludes Items"
     },
     "MissingItems": {
       "Description": "Some of the items in this loadout are no longer in your inventory.",
@@ -698,6 +705,7 @@
     "Exotic": "Exotic Armor",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Special",
+    "FOTLWildcardWarning": "This set contains a Festival of the Lost mask. Manually apply the correct mod to activate desired set bonuses.",
     "Filter": "Settings",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
@@ -965,11 +973,7 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
-    "PinnacleCap": "Pinnacle Cap",
-    "PowerFloor": "Power Floor",
-    "PowerfulCap": "Powerful Cap",
     "SeasonalRank": "Seasonal Rank {{rank}}",
-    "SoftCap": "Soft Cap",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
@@ -1074,10 +1078,10 @@
       "Event": "Event",
       "Featured": "New Gear",
       "Foundry": "Foundry",
+      "Frame": "Frame",
       "Harmonizable": "Harmonizable",
       "Holofoil": "Holofoil",
       "Icon": "Icon",
-      "Intrinsics": "Intrinsic",
       "ItemTier": "Tier",
       "KillTracker": "Kills",
       "Level": "Level",
@@ -1092,11 +1096,10 @@
       "New": "New",
       "Notes": "Notes",
       "OriginTraits": "Origin Trait",
-      "OtherPerks": "Other Perks",
+      "OtherPerks": "Weapon Components",
       "PercentComplete": "% Complete",
       "Perks": "Perks",
       "PerksGrid": "Perks Grid",
-      "PerksMods": "Perks & Mods",
       "Power": "Power",
       "Quality": "Quality %",
       "Recency": "Recency",
@@ -1107,8 +1110,10 @@
       "StatQualityStat": "{{stat}}%",
       "Stats": "Stats",
       "Tag": "Tag",
+      "TertiaryStat": "3rd Stat",
       "Tier": "Rarity",
       "Traits": "Weapon Traits",
+      "TuningStat": "Tuner",
       "WishList": "Wish List",
       "WishListNotes": "Wish List Notes",
       "Year": "Year"
@@ -1189,6 +1194,7 @@
   },
   "Settings": {
     "Appearance": "Appearance",
+    "ArmorArchetypeModslot": "Armor Archetype / Modslot",
     "AutoLockTagged": "Sync item lock state with tag",
     "AutoLockTaggedExplanation": "DIM will automatically lock and unlock items to match their tag. Crafted items will remain unlocked to allow reshaping. When this setting is enabled, the lock icon will not be shown on the item tile for tagged items.",
     "BadgePostmaster": "Show the number of postmaster items for the current character on app icon",
@@ -1228,6 +1234,7 @@
     "InventoryColumns": "Character inventory width",
     "InventoryColumnsMobile": "Character inventory width on mobile portrait",
     "InventoryColumnsMobileLine2": "The items will be resized to accommodate the new setting",
+    "InventoryNumberOfSpacesToClear": "Number of empty spaces to make when using Farming Mode",
     "Items": "Item Display",
     "Language": "Language",
     "LogOut": "Log out",
@@ -1260,11 +1267,14 @@
     "SortByWeaponElement": "Damage Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
+    "SpacesSize_one": "{{count}} space",
+    "SpacesSize_other": "{{count}} spaces",
     "Theme": "Theme",
     "Troubleshooting": "Troubleshooting",
     "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultGroupingNone": "None",
     "VaultWeaponGroupingStyle": "Separate weapon groups on different lines",
+    "WeaponFrame": "Weapon Frame",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
     "WishlistRefreshNotificationTitle": "Wishlists Reloaded"
   },
@@ -1392,6 +1402,10 @@
   "StreamDeck": {
     "Authorize": "Connect application",
     "Enable": "Stream Deck Plugin",
+    "Error": {
+      "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
+      "Title": "Stream Deck Plugin Error"
+    },
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
     "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",

@@ -5,7 +5,7 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PresentationNode from './PresentationNode';
-import styles from './PresentationNodeRoot.m.scss';
+import * as styles from './PresentationNodeRoot.m.scss';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 import { makeItemsForCatalystRecords } from './catalysts';
 import {

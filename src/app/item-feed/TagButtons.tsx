@@ -6,7 +6,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { AppIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compareBy } from 'app/utils/comparators';
-import styles from './TagButtons.m.scss';
+import * as styles from './TagButtons.m.scss';
 
 /**
  * A row of compact buttons for quick-tagging items.
@@ -29,13 +29,13 @@ export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue
 
   return (
     <div className={styles.tagButtons}>
-      <button key="compare" className={styles.tagButton} type="button" onClick={openCompare}>
+      <button key="compare" className="dim-button" type="button" onClick={openCompare}>
         <AppIcon icon={compareIcon} />
       </button>
       {tagOptions.map((tagOption) => (
         <button
           key={tagOption.type}
-          className={styles.tagButton}
+          className="dim-button"
           type="button"
           disabled={tagOption.type === tag}
           onClick={() => handleSetTag(tagOption.type)}

@@ -66,8 +66,8 @@
     position: absolute;
     height: 60%;
     width: 60%;
-    top: 7px;
-    left: 7px;
+    top: 20%;
+    left: 20%;
     filter: drop-shadow(1px 1px 2px black);
 
     @include phone-portrait {

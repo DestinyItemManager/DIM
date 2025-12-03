@@ -9,6 +9,7 @@ interface CssExports {
   'loStats': string;
   'perk': string;
   'setBonus': string;
+  'setBonuses': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

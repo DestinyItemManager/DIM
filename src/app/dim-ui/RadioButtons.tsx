@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { memo, useMemo } from 'react';
-import styles from './RadioButtons.m.scss';
+import * as styles from './RadioButtons.m.scss';
 
 export interface Option<T extends string | number> {
   label: React.ReactNode;

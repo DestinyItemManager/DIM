@@ -7,4 +7,4 @@ interface CssExports {
   'loadoutOptions': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

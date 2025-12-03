@@ -1,8 +1,8 @@
+import cssModules from '@bhollis/eslint-plugin-css-modules';
 import react from '@eslint-react/eslint-plugin';
 import { fixupPluginRules } from '@eslint/compat';
 import eslint from '@eslint/js';
 import arrayFunc from 'eslint-plugin-array-func';
-import cssModules from 'eslint-plugin-css-modules';
 import github from 'eslint-plugin-github';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
@@ -45,17 +45,20 @@ export default tseslint.config(
   {
     name: 'css-modules',
     plugins: {
-      'css-modules': fixupPluginRules(cssModules),
+      'css-modules': cssModules,
     },
     rules: { 'css-modules/no-unused-class': ['error', { camelCase: true }] },
   },
   { name: 'sonarjs/recommended', ...sonarjs.configs.recommended },
   {
-    name: 'react-hooks',
-    plugins: {
-      'react-hooks': fixupPluginRules(reactHooks),
+    ...reactHooks.configs.flat.recommended,
+    rules: {
+      // Core hooks rules
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
+      // TODO: Enable react compiler rules when they are fixed and we are using
+      // react compiler. Until then they are noisy and slow.
     },
-    rules: reactHooks.configs.recommended.rules,
   },
   {
     // We want to choose which rules to enable from the github plugin, not use a preset.
@@ -278,7 +281,7 @@ export default tseslint.config(
       'prefer-promise-reject-errors': 'error',
       'prefer-spread': 'error',
       radix: 'error',
-      yoda: 'error',
+      yoda: ['error', 'never', { exceptRange: true }],
       'prefer-template': 'error',
       'class-methods-use-this': ['error', { exceptMethods: ['render'] }],
       'no-unmodified-loop-condition': 'error',
@@ -447,7 +450,7 @@ export default tseslint.config(
   },
   {
     name: 'tests',
-    files: ['**/*.test.ts'],
+    files: ['**/*.test.ts', 'src/testing/**/*.ts'],
     rules: {
       // We don't want to allow importing test modules in app modules, but of course you can do it in other test modules.
       'no-restricted-imports': 'off',

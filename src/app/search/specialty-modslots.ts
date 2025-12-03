@@ -8,7 +8,7 @@ export interface ModSocketMetadata {
   socketTypeHashes: number[];
   /** mod items have a plugCategoryHash. this mod slot can hold these plugCategoryHashes */
   compatiblePlugCategoryHashes: number[];
-  /** this helps us look up an "empty socket" definition, for its icon & name only */
+  /** this helps us look up an "empty socket" definition, for its name only */
   emptyModSocketHash: number;
   /**
    * the year is 2022. the raid is Vow of the Disciple. bungie forgot to give raid mods a itemTypeDisplayName.
@@ -16,6 +16,20 @@ export interface ModSocketMetadata {
    * NB this was fixed but may prove useful in the future if it happens again, so let's keep this around?
    */
   modGroupNameOverrideActivityHash?: number;
+  /**
+   * The milestone hash for the activity that has the best icon for this mod
+   * type. Usually this is a raid activity.
+   */
+  milestoneHash?: number;
+  /**
+   * The activity mode hash for the activity that has the best icon for this mod
+   * type.
+   */
+  activityModeHash?: number;
+  /**
+   * The icon hash to use for this mod type, if not the empty socket icon.
+   */
+  iconHash?: number;
 }
 
 export const modTypeTagByPlugCategoryHash: LookupTable<PlugCategoryHashes, string> = {
@@ -32,73 +46,80 @@ export const modTypeTagByPlugCategoryHash: LookupTable<PlugCategoryHashes, strin
   [PlugCategoryHashes.EnhancementsRaidV800]: 'salvationsedge',
 };
 
-const modSocketMetadata: ModSocketMetadata[] = [
+export const modSocketMetadata: ModSocketMetadata[] = [
   {
     slotTag: 'lastwish',
     socketTypeHashes: [1444083081],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonOutlaw],
     emptyModSocketHash: 1679876242, // ARGH, this is the wrong image in the game/manifest
+    milestoneHash: 3181387331,
   },
   {
     slotTag: 'gardenofsalvation',
     socketTypeHashes: [1764679361],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidGarden],
     emptyModSocketHash: 706611068,
+    milestoneHash: 2712317338,
   },
   {
     slotTag: 'deepstonecrypt',
     socketTypeHashes: [1269555732],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidDescent],
     emptyModSocketHash: 4055462131,
+    milestoneHash: 541780856,
   },
   {
     slotTag: 'vaultofglass',
     socketTypeHashes: [3372624220],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV520],
     emptyModSocketHash: 3738398030,
+    milestoneHash: 1888320892,
   },
   {
     slotTag: 'vowofthedisciple',
     socketTypeHashes: [2381877427],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV600],
     emptyModSocketHash: 2447143568,
+    milestoneHash: 2136320298,
   },
   {
     slotTag: 'kingsfall',
     socketTypeHashes: [3344538838],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV620],
     emptyModSocketHash: 1728096240,
+    milestoneHash: 292102995,
   },
   {
     slotTag: 'rootofnightmares',
     socketTypeHashes: [1956816524],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV700],
     emptyModSocketHash: 4144354978,
+    milestoneHash: 3699252268,
   },
   {
     slotTag: 'crotasend',
     socketTypeHashes: [2804745000],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV720],
     emptyModSocketHash: 717667840,
+    milestoneHash: 540415767,
   },
   {
     slotTag: 'salvationsedge',
     socketTypeHashes: [1252302330],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV800],
     emptyModSocketHash: 4059283783,
+    milestoneHash: 4196566271,
   },
   {
     slotTag: 'nightmare',
     socketTypeHashes: [2701840022],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsSeasonMaverick],
     emptyModSocketHash: 1180997867,
-  },
-  {
-    slotTag: 'artifice',
-    socketTypeHashes: [1719555937, 2770223926, 3642670483, 2831858578, 4096670123, 3136585661],
-    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsArtifice],
-    emptyModSocketHash: 4173924323,
+    activityModeHash: 332181804,
   },
 ];
 
-export default modSocketMetadata;
+export const artificeDisplayStub = {
+  emptyModSocketHash: 4173924323,
+  iconHash: 3727270518,
+} as ModSocketMetadata;

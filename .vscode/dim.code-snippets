@@ -25,30 +25,30 @@
       "\t\t$0",
       "\t);",
       "}",
-      ""
+      "",
     ],
     "description": "TypeScript Stateless Functional Component",
-    "scope": "javascriptreact,typescriptreact"
+    "scope": "javascriptreact,typescriptreact",
   },
 
   "import i18next": {
     "prefix": "imt",
     "body": ["import { t } from 'app/i18next-t';"],
     "description": "Import t helper from i18next",
-    "scope": "javascriptreact,typescriptreact"
+    "scope": "javascriptreact,typescriptreact",
   },
 
   "import clsx": {
     "prefix": "imc",
     "body": ["import clsx from 'clsx';"],
     "description": "Import clsx",
-    "scope": "javascriptreact,typescriptreact"
+    "scope": "javascriptreact,typescriptreact",
   },
 
   "import styles": {
     "prefix": "ims",
-    "body": ["import styles from './$TM_FILENAME_BASE.m.scss';"],
+    "body": ["import * as styles from './$TM_FILENAME_BASE.m.scss';"],
     "description": "Import CSS module",
-    "scope": "javascriptreact,typescriptreact"
+    "scope": "javascriptreact,typescriptreact",
   },
 }

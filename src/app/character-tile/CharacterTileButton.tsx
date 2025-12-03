@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { DimStore } from '../inventory/store-types';
 import CharacterTile from './CharacterTile';
-import styles from './CharacterTileButton.m.scss';
+import * as styles from './CharacterTileButton.m.scss';
 
 /** Render a {CharacterTile} as a button */
 export default function CharacterTileButton({

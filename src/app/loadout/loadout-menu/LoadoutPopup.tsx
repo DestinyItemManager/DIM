@@ -6,7 +6,7 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
-import { getRewardMultiplier } from 'app/inventory/rewards';
+import { useRewardMultiplier } from 'app/inventory/rewards';
 import {
   allItemsSelector,
   bucketsSelector,
@@ -75,7 +75,7 @@ import {
   searchAndSortLoadoutsByQuery,
   useLoadoutFilterPills,
 } from '../loadout-ui/menu-hooks';
-import styles from './LoadoutPopup.m.scss';
+import * as styles from './LoadoutPopup.m.scss';
 import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
 import MaxlightButton from './MaxlightButton';
 
@@ -462,6 +462,6 @@ function doApplyRandomLoadout(store: DimStore, options: RandomLoadoutOptions): T
 
 function RewardMultiplier({ defs, store }: { defs: D2ManifestDefinitions; store: DimStore }) {
   const profileInfo = useSelector(profileResponseSelector);
-  const multi = profileInfo && getRewardMultiplier(defs, profileInfo, store);
+  const multi = useRewardMultiplier(defs, profileInfo, store);
   return multi?.toFixed(2);
 }

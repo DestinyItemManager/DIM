@@ -12,7 +12,7 @@ import { deepEqual } from 'fast-equals';
 import { useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
-import styles from './PresentationNode.m.scss';
+import * as styles from './PresentationNode.m.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
 import { DimPresentationNode } from './presentation-nodes';
 

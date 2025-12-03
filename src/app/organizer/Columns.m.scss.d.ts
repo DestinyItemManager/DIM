@@ -14,6 +14,7 @@ interface CssExports {
   'inlineIcon': string;
   'isPerk': string;
   'loadout': string;
+  'loadouts': string;
   'locationCell': string;
   'miniPerkContainer': string;
   'modPerk': string;
@@ -43,4 +44,4 @@ interface CssExports {
   'toolbar': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

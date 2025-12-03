@@ -34,7 +34,7 @@ import Checkbox from './Checkbox';
 import { CustomStatsSettings } from './CustomStatsSettings';
 import LanguageSetting from './LanguageSetting';
 import Select, { mapToOptions } from './Select';
-import styles from './SettingsPage.m.scss';
+import * as styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
@@ -74,15 +74,15 @@ export default function SettingsPage() {
   const [maxParallelCores, setMaxParallelCores] = useMaxParallelCores();
 
   const exampleWeapon = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
+    (i) => i.bucket.inWeapons && !i.isExotic && !i.masterwork && !i.deepsightInfo,
   );
   // Include a masterworked item because they look different in some themes
   const exampleWeaponMasterworked = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
+    (i) => i.bucket.inWeapons && !i.isExotic && i.masterwork && !i.deepsightInfo,
   );
-  const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
+  const exampleArmor = allItems.find((i) => i.bucket.inArmor && !i.isExotic);
   const exampleArchivedArmor = allItems.find(
-    (i) => i !== exampleArmor && i.bucket.sort === 'Armor' && !i.isExotic,
+    (i) => i !== exampleArmor && i.bucket.inArmor && !i.isExotic,
   );
   const godRoll = {
     wishListPerks: new Set<number>(),
@@ -184,6 +184,8 @@ export default function SettingsPage() {
     deepsight: t('Settings.SortByDeepsight'),
     featured: t('Settings.SortByFeatured'),
     tier: t('Settings.SortByTier'),
+    armorArchetype: t('Settings.ArmorArchetypeModslot'),
+    weaponFrame: t('Settings.WeaponFrame'),
   };
 
   const vaultWeaponGroupingOptions = mapToOptions({
@@ -204,6 +206,10 @@ export default function SettingsPage() {
   const charColOptions = range(2, 6).map((num) => ({
     value: num,
     name: t('Settings.ColumnSize', { num }),
+  }));
+  const numberOfSpacesOptions = range(1, 10).map((count) => ({
+    value: count,
+    name: t('Settings.SpacesSize', { count }),
   }));
   const vaultColOptions = range(5, 21).map((num) => ({
     value: num,
@@ -416,6 +422,15 @@ export default function SettingsPage() {
                 onChange={onBadgePostmasterChanged}
               />
               <div className={styles.fineprint}>{t('Settings.BadgePostmasterExplanation')}</div>
+            </div>
+            <div className={styles.setting}>
+              <Select
+                label={t('Settings.InventoryNumberOfSpacesToClear')}
+                name="inventoryClearSpaces"
+                value={settings.inventoryClearSpaces}
+                options={numberOfSpacesOptions}
+                onChange={onChangeNumeric}
+              />
             </div>
           </section>
 

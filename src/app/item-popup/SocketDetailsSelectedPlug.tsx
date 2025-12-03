@@ -37,7 +37,7 @@ import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
 import { PlugStats } from './PlugTooltip';
 import { SocketDetailsMod } from './SocketDetails';
-import styles from './SocketDetailsSelectedPlug.m.scss';
+import * as styles from './SocketDetailsSelectedPlug.m.scss';
 
 const costStatHashes = [
   StatHashes.AnyEnergyTypeCost,

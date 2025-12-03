@@ -3,7 +3,14 @@ import { getSeason } from 'app/inventory/store/season';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { ItemRarityMap } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
-import { isD1Item } from 'app/utils/item-utils';
+import {
+  getArmor3StatFocus,
+  getSpecialtySocketMetadata,
+  isArmor3,
+  isArtifice,
+  isD1Item,
+} from 'app/utils/item-utils';
+import { getWeaponArchetype } from 'app/utils/socket-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
@@ -286,6 +293,35 @@ const ITEM_COMPARATORS: {
   featured: compareBy((item) => (item.featured ? 0 : 1)),
   // high -> low
   tier: reverseComparator(compareBy((item) => item.tier)),
+  // armor 3 archetypes -> artifice -> old specialty modslots -> nada
+  armorArchetype: compareBy((item) => {
+    if (!item.bucket.inArmor) {
+      return '0';
+    }
+    if (isArmor3(item)) {
+      return `1 ${getArmor3StatFocus(item)?.[0]}`;
+    }
+    if (isArtifice(item)) {
+      return '2';
+    }
+    const specialtySocket = getSpecialtySocketMetadata(item)?.slotTag;
+    if (specialtySocket) {
+      return `3 ${specialtySocket}`;
+    }
+    return '4';
+  }),
+  // non-weapons -> ascending frame rarity -> frame index
+  weaponFrame: compareBy((item) => {
+    if (!item.bucket.inWeapons) {
+      return '0';
+    }
+    const frame = getWeaponArchetype(item);
+    if (frame) {
+      // Tier types to separate e.g. Ergo Sum                       Tiebreak matching names just in case
+      return `1 ${frame.inventory!.tierType} ${frame.displayProperties.name} ${frame.hash}`;
+    }
+    return '2';
+  }),
   default: () => 0,
 };
 

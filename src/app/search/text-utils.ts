@@ -17,8 +17,17 @@ function latinize(s: string, language: DimLanguage) {
 
 /** Make a Regexp that searches starting at a word boundary */
 export function startWordRegexp(s: string, language: DimLanguage) {
-  // Only some languages effectively use the \b regex word boundary
-  return new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(s)}`, 'i');
+  return new RegExp(
+    `${
+      // Only some languages effectively use the \b regex word boundary
+      isLatinBased(language) &&
+      // Don't force a word boundary if the string doesn't start with a word
+      /^\w/.test(s)
+        ? '\\b'
+        : ''
+    }${escapeRegExp(s)}`,
+    'i',
+  );
 }
 
 /** returns input string toLower, and stripped of accents if it's a latin language */
@@ -27,15 +36,18 @@ export const plainString = (s: string, language: DimLanguage): string =>
 
 /**
  * Create a case-/diacritic-insensitive matching predicate for name / perkname filters.
+ *
  * Requires an exact match if `exact`, otherwise partial.
  */
 export function matchText(value: string, language: DimLanguage, exact: boolean) {
   const normalized = plainString(value, language);
   if (exact) {
-    return (s: string) => normalized === plainString(s, language);
+    // Quotes must be normalized on the tested term `s`
+    // because the `value` provided by the query parser has normalized quotes.
+    return (s: string) => normalized === plainString(normalizeQuotes(s), language);
   } else {
     const startWord = startWordRegexp(normalized, language);
-    return (s: string) => startWord.test(plainString(s, language));
+    return (s: string) => startWord.test(plainString(normalizeQuotes(s), language));
   }
 }
 
@@ -54,7 +66,7 @@ export function testStringsFromDisplayProperties(
 
   return Boolean(
     (displayProperties.name && test(displayProperties.name)) ||
-      (includeDescription && displayProperties.description && test(displayProperties.description)),
+    (includeDescription && displayProperties.description && test(displayProperties.description)),
   );
 }
 
@@ -78,4 +90,25 @@ export function testStringsFromDisplayPropertiesMap(
   return displayProperties.some((d) =>
     testStringsFromDisplayProperties(test, d, includeDescription),
   );
+}
+
+// http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
+const singleQuoteLikeCharacters = /[\u2018-\u201A]/g;
+const doubleQuoteLikeCharacters = /[\u201C-\u201E]/g;
+
+// Turn quote variants into their boring ASCII equivalents for parsing.
+export function normalizeQuotes(str: string) {
+  return str.replace(singleQuoteLikeCharacters, "'").replace(doubleQuoteLikeCharacters, '"');
+}
+
+// These aren't global so they aren't stateful, and can be used to repeatedly .test()
+export const unescapedSingleQuoteCharacters = /(?<!\\)[\u2018-\u201A']/;
+export const unescapedDoubleQuoteCharacters = /(?<!\\)[\u201C-\u201E"]/;
+
+export function escapeQuotes(str: string, onlyDouble = false) {
+  if (!onlyDouble) {
+    str = str.replace(new RegExp(unescapedSingleQuoteCharacters, 'g'), '\\$&');
+  }
+  str = str.replace(new RegExp(unescapedDoubleQuoteCharacters, 'g'), '\\$&');
+  return str;
 }

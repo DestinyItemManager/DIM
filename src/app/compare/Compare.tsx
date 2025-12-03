@@ -19,20 +19,20 @@ import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { Settings } from 'app/settings/initial-settings';
-import { AppIcon, faList, settingsIcon, tuningStatIcon } from 'app/shell/icons';
+import { AppIcon, faList, settingsIcon, statBarsIcon } from 'app/shell/icons';
 import { masterworkHammer } from 'app/shell/icons/custom/MasterworkHammer';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import modificationsIcon from 'destiny-icons/general/modifications.svg';
+import ModificationsIcon from 'destiny-icons/general/modifications.svg?react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy } from '../utils/comparators';
-import styles from './Compare.m.scss';
+import * as styles from './Compare.m.scss';
 import { getColumns } from './CompareColumns';
 import CompareItem, { CompareHeaders } from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
@@ -225,11 +225,10 @@ export default function Compare({ session }: { session: CompareSession }) {
         <>
           <span className={styles.comparisonModeHint}>
             <AppIcon icon={settingsIcon} />
-            <img src={modificationsIcon} className={styles.invertedIcon} />
+            <ModificationsIcon className={styles.modIcon} />
           </span>
           <div className={styles.comparisonModeInfo}>
-            <img src={modificationsIcon} className={styles.invertedIcon} />{' '}
-            {t('Compare.CurrentStats')}
+            <ModificationsIcon className={styles.modIcon} /> {t('Compare.CurrentStats')}
             <span className={styles.comparisonModeDescription}>
               {t('Compare.CurrentStatsDescription')}
             </span>
@@ -244,10 +243,10 @@ export default function Compare({ session }: { session: CompareSession }) {
         <>
           <span className={styles.comparisonModeHint}>
             <AppIcon icon={settingsIcon} />
-            <AppIcon icon={tuningStatIcon} />
+            <AppIcon icon={statBarsIcon} />
           </span>
           <div className={styles.comparisonModeInfo}>
-            <AppIcon icon={tuningStatIcon} /> {t('Organizer.Columns.BaseStats')}
+            <AppIcon icon={statBarsIcon} /> {t('Organizer.Columns.BaseStats')}
             <span className={styles.comparisonModeDescription}>
               {t('Compare.BaseStatsDescription')}
             </span>

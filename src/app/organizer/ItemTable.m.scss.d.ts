@@ -14,4 +14,4 @@ interface CssExports {
   'toolbar': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

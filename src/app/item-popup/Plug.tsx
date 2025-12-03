@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { PressTip } from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
-import styles from './Plug.m.scss';
+import * as styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
 
 interface PlugStatuses {
@@ -46,7 +46,6 @@ export default function Plug({
 } & PlugStatuses) {
   const defs = useD2Definitions()!;
 
-  // TODO: Do this with SVG to make it scale better!
   const modDef = defs.InventoryItem.get(plug.plugDef.hash);
   if (!modDef || !isPluggableItem(modDef)) {
     return null;

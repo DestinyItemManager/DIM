@@ -5,7 +5,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import streamDeckIcon from 'images/streamDeck.svg';
 import { useMemo } from 'react';
 import { useStreamDeckSelection } from '../stream-deck';
-import styles from './OpenOnStreamDeckButton.m.scss';
+import * as styles from './OpenOnStreamDeckButton.m.scss';
 
 export default function OpenOnStreamDeckButton({
   item,

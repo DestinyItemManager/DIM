@@ -178,7 +178,8 @@ export async function generatePlatforms(
         }
       }),
     );
-
+  // Yes, this knowingly mixes promises and non-promises
+  // eslint-disable-next-line @typescript-eslint/await-thenable
   return compact(await Promise.all(accountPromises));
 }
 
@@ -237,9 +238,9 @@ export function compareAccounts(
 ): boolean {
   return Boolean(
     account1 === account2 ||
-      (account1 &&
-        account2 &&
-        account1.membershipId === account2.membershipId &&
-        account1.destinyVersion === account2.destinyVersion),
+    (account1 &&
+      account2 &&
+      account1.membershipId === account2.membershipId &&
+      account1.destinyVersion === account2.destinyVersion),
   );
 }

@@ -16,7 +16,7 @@
 }
 
 .plug {
-  --item-size-adjusted: calc(32 / 50 * var(--item-size));
+  --item-size-adjusted: calc(#{dim-item-px(32)});
   position: relative; // to position the thumbs-up correctly
   display: flex;
   flex-direction: row;
@@ -27,7 +27,7 @@
 
   // Mods and intrinsic perks are all images, while perks are SVGs.
   // You can adjust the size of mods/intrinsics by setting --mod-size.
-  img {
+  :global(.item-img) {
     --item-size: var(--mod-size, var(--item-size-adjusted));
   }
   .perkCircle {

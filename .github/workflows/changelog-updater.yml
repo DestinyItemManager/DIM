@@ -13,12 +13,14 @@ jobs:
   update-changelog:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.I18N_PAT }}
 
+      - uses: pnpm/action-setup@v4
+
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
@@ -34,6 +36,6 @@ jobs:
           mv docs/CHANGELOG.md.new docs/CHANGELOG.md
 
       - name: Commit files
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: Apply changelog updates

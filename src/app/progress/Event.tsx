@@ -12,7 +12,7 @@ import {
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
-import styles from './Event.m.scss';
+import * as styles from './Event.m.scss';
 import Pursuit from './Pursuit';
 import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';

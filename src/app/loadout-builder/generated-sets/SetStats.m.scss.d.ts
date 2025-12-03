@@ -7,10 +7,11 @@ interface CssExports {
   'light': string;
   'loadoutName': string;
   'nonActiveStat': string;
+  'statBarWarningIcon': string;
   'statIcon': string;
   'statSegment': string;
   'tier': string;
   'tierLightContainer': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

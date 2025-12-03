@@ -4,9 +4,10 @@ import {
   GhostActivitySocketTypeHashes,
   weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
-import { filterMap, invert } from 'app/utils/collections';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
+import { unenhancedVersion } from 'app/utils/perk-utils';
 import {
   eventArmorRerollSocketIdentifiers,
   isEnhancedPerk,
@@ -26,7 +27,6 @@ import {
   DestinySocketTypeDefinition,
   SocketPlugSources,
 } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
@@ -34,7 +34,6 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { partition } from 'es-toolkit';
 import {
   DimItem,
@@ -53,8 +52,6 @@ import { exoticClassItemPlugs } from './exotic-class-item';
 //
 // This is called from within d2-item-factory.service.ts
 //
-
-const enhancedToPerk = invert(perkToEnhanced, Number);
 
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
@@ -241,8 +238,7 @@ function isUncraftableEnhancedPerk(
 ) {
   return (
     isEnhancedPerk(built.plugDef) &&
-    craftingRequirements &&
-    craftingRequirements.unlockRequirements.length === 0 &&
+    craftingRequirements?.unlockRequirements.length === 0 &&
     craftingRequirements.materialRequirementHashes.length === 0
   );
 }
@@ -502,7 +498,7 @@ function buildPlug(
     : '';
 
   const enabled = destinyItemPlug ? plug.enabled : plug.isEnabled;
-  const unenhancedVersion = enhancedToPerk[plugDef.hash];
+  const unenhanced = unenhancedVersion(plugDef.hash);
   return {
     plugDef,
     enabled: enabled && (!destinyItemPlug || plug.canInsert),
@@ -511,7 +507,7 @@ function buildPlug(
     stats: null,
     cannotCurrentlyRoll:
       plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash) &&
-      !plugSet?.plugHashesThatCanRoll.includes(unenhancedVersion),
+      (!unenhanced || !plugSet?.plugHashesThatCanRoll.includes(unenhanced)),
   };
 }
 
@@ -802,13 +798,9 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
   const defPlugSet = defs.PlugSet.get(plugSetHash);
   let craftingData: DimPlugSet['craftingData'];
   for (const plugEntry of defPlugSet.reusablePlugItems) {
-    // Deprecated mods should not actually be in any PlugSets, but here we are
-    // https://github.com/Bungie-net/api/issues/1801
-    if (!deprecatedMods.includes(plugEntry.plugItemHash)) {
-      const plug = buildDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
-      if (plug) {
-        plugs.push(plug);
-      }
+    const plug = buildDefinedPlug(defs, plugEntry.plugItemHash, plugEntry.currentlyCanRoll);
+    if (plug) {
+      plugs.push(plug);
     }
     if (
       plugEntry.craftingRequirements &&

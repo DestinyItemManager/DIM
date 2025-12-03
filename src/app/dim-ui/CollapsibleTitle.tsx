@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon } from '../shell/icons';
-import styles from './CollapsibleTitle.m.scss';
+import * as styles from './CollapsibleTitle.m.scss';
 import ErrorBoundary from './ErrorBoundary';
 
 export function Title({

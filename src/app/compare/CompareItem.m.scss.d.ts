@@ -9,11 +9,10 @@ interface CssExports {
   'highlighted': string;
   'itemActions': string;
   'itemAside': string;
-  'lastRow': string;
   'separator': string;
   'sortAsc': string;
   'sortDesc': string;
   'spacer': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

@@ -137,14 +137,48 @@
   display: flex;
   height: 30px;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 
   .loadoutName {
     flex-grow: 1;
   }
+
   img {
-    height: 16px;
-    width: 16px;
+    height: 26px;
+    width: 26px;
+  }
+
+  .loadoutNumber {
+    font-size: 20px;
+    min-width: 1.3em;
+    text-align: center;
+  }
+}
+
+.charIcon {
+  position: relative;
+  display: flex;
+  place-content: center;
+  align-items: center;
+  height: 26px;
+  width: 26px;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  :global(.app-icon) {
+    position: absolute;
+    height: 60%;
+    width: 60%;
+    top: 20%;
+    left: 20%;
+    filter: drop-shadow(1px 1px 2px black);
   }
 }
 

@@ -60,7 +60,6 @@ export async function analyzeLoadout(
   {
     allItems,
     autoModDefs,
-    savedLoStatConstraintsByClass,
     itemCreationContext,
     unlockedPlugs,
     validateQuery,
@@ -85,10 +84,8 @@ export async function analyzeLoadout(
   const originalLoadoutMods = resolvedLoadout.resolvedMods;
   const originalModDefs = originalLoadoutMods.map((mod) => mod.resolvedMod);
 
-  const statOrderForClass = savedLoStatConstraintsByClass[classType];
   const loadoutParameters: LoadoutParameters = {
     ...defaultLoadoutParameters,
-    ...(statOrderForClass && { statConstraints: statOrderForClass }),
     ...loadout.parameters,
   };
 
@@ -289,20 +286,25 @@ export async function analyzeLoadout(
             searchFilter: itemFilter,
             setBonuses: loadoutParameters.setBonuses,
           });
-          // If the item filter loadout armor that was previously included,
-          // this is due to the search filter since we've previously established
-          // that mods fit and the exotic matches.
+          // If filterItems does not include the armor currently in the loadout,
+          // this is maybe due to the search filter since we've previously
+          // established that mods fit and the exotic matches. Or, it's due to
+          // the inherent statlower check done in filterItems.
           if (
             loadoutParameters.query &&
             loadoutArmor.some(
               (item) =>
+                // The item exists in inventory
                 armorForThisClass.some((allItem) => allItem === item) &&
+                // But is not in the candidate items
                 !Object.values(filteredItems)
                   .flat()
                   .some((filteredItem) => filteredItem === item),
             )
           ) {
-            findings.add(LoadoutFinding.InvalidSearchQuery);
+            // Either the search filter excluded these items, OR they were
+            // strictly worse than some other item.
+            findings.add(LoadoutFinding.ItemsDoNotMatchSearchQuery);
           }
 
           const modStatChanges = getTotalModStatChanges(
@@ -358,6 +360,10 @@ export async function analyzeLoadout(
 
             if (hasStrictUpgrade) {
               findings.add(LoadoutFinding.BetterStatsAvailable);
+              // Also *remove* the "items don't match" finding - it was likely
+              // caused by stat-lower filtering, and even if not, the better
+              // stats available finding is more important.
+              findings.delete(LoadoutFinding.ItemsDoNotMatchSearchQuery);
             }
           } catch (e) {
             errorLog('loadout analyzer', 'internal error', e);

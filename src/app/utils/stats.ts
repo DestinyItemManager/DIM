@@ -1,4 +1,4 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, CustomStatWeights } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { armorStats } from 'app/search/d2-known-values';
@@ -133,4 +133,16 @@ export function computeStatDupeLower(
   }
 
   return dupes;
+}
+
+export function collectRelevantStatHashes(weights: CustomStatWeights) {
+  const relevantStatHashes: number[] = [];
+  for (const statHash in weights) {
+    const weight = weights[statHash];
+    if (weight && weight > 0) {
+      relevantStatHashes.push(parseInt(statHash, 10));
+    }
+  }
+
+  return relevantStatHashes;
 }

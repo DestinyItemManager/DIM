@@ -97,6 +97,14 @@ $tempContainerZindex: 1000;
   }
 }
 
+// The opposite of phone-portrait, for when you want to default to mobile styles
+// and only override on larger screens.
+@mixin desktop {
+  @media (min-width: 541px) {
+    @content;
+  }
+}
+
 // Position something directly below the header
 @mixin below-header {
   top: var(--header-height);
@@ -110,10 +118,8 @@ $tempContainerZindex: 1000;
 }
 
 @mixin draggable-hover-border {
-  outline: 1px solid var(--theme-item-polaroid-hover-border);
-
-  @include phone-portrait {
-    outline: none;
+  @include desktop {
+    outline: 1px solid var(--theme-item-polaroid-hover-border);
   }
 }
 
@@ -138,7 +144,21 @@ $tempContainerZindex: 1000;
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }
 
-@mixin interactive($hover: false, $focus: false, $focusWithin: false, $active: false) {
+// Converts a pixel value into a size that scales with the item size setting.
+// The px value should be in terms of the default item size of 50px. This lets
+// you design styles with your setting set to the default, but then it'll work
+// for other sizes. This should be used within calc().
+@function dim-item-px($px) {
+  @return #{'(' + $px + ' / 50) * var(--item-size)'};
+}
+
+@mixin interactive(
+  $hover: false,
+  $focus: false,
+  $focusWithin: false,
+  $active: false,
+  $selectedClass: ''
+) {
   // Declares hover rules only if a device can hover over elements. This avoids issues on mobile
   // browsers where tapping an element triggers and persists its hover state.
   @if $hover == true {
@@ -163,6 +183,12 @@ $tempContainerZindex: 1000;
 
   @if $active == true {
     &:active {
+      @content;
+    }
+  }
+
+  @if $selectedClass != '' {
+    &#{$selectedClass} {
       @content;
     }
   }
