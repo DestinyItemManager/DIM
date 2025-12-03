@@ -12,7 +12,7 @@
   "scripts": {
     "test": "jest -i src/testing/precache-manifest.test.ts && NODE_ENV=test LOCAL_MANIFEST=true jest --verbose",
     "lint": "pnpm run '/^lint:.*/'",
-    "lint:eslint": "eslint src",
+    "lint:eslint": "NODE_OPTIONS=--max-semi-space-size=64 eslint src",
     "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --check",
     "lint:stylelint": "stylelint \"src/**/*.scss\"",
     "lintcached": "pnpm run '/^lintcached:.*/'",
