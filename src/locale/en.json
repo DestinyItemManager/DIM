@@ -973,11 +973,7 @@
   "Milestone": {
     "Daily": "Daily Challenge",
     "OneTime": "One Time Challenge",
-    "PinnacleCap": "Pinnacle Cap",
-    "PowerFloor": "Power Floor",
-    "PowerfulCap": "Powerful Cap",
     "SeasonalRank": "Seasonal Rank {{rank}}",
-    "SoftCap": "Soft Cap",
     "Special": "Special Event Challenge",
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
