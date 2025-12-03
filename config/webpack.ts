@@ -176,10 +176,14 @@ export default (env: Env) => {
       },
       minimizer: [
         new TerserPlugin({
+          minify: TerserPlugin.swcMinify,
           parallel: true,
           terserOptions: {
             ecma: 2020,
             module: true,
+            format: {
+              comments: false,
+            },
             compress: {
               passes: 3,
               toplevel: true,
@@ -201,6 +205,7 @@ export default (env: Env) => {
             },
             mangle: { toplevel: true },
           },
+          extractComments: false,
         }),
       ],
     },
