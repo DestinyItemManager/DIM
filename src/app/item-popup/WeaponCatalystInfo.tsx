@@ -2,7 +2,7 @@ import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import Objective from 'app/progress/Objective';
-import styles from './WeaponCatalystInfo.m.scss';
+import * as styles from './WeaponCatalystInfo.m.scss';
 
 /**
  * A progress bar that shows a weapon's catalyst progress.

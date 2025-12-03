@@ -199,6 +199,12 @@ devDependencies:
   '@babel/register':
     specifier: ^7.28.3
     version: 7.28.3(@babel/core@7.28.5)
+  '@bhollis/css-modules-typescript-loader':
+    specifier: ^1.0.1
+    version: 1.0.1
+  '@bhollis/eslint-plugin-css-modules':
+    specifier: ^1.0.0
+    version: 1.0.0(eslint@9.19.0)
   '@eslint-react/eslint-plugin':
     specifier: ^2.3.9
     version: 2.3.9(eslint@9.19.0)(typescript@5.9.3)
@@ -298,9 +304,6 @@ devDependencies:
   css-loader:
     specifier: ^7.1.2
     version: 7.1.2(webpack@5.103.0)
-  css-modules-typescript-loader:
-    specifier: ^4.0.1
-    version: 4.0.1
   cssnano:
     specifier: ^7.1.2
     version: 7.1.2(postcss@8.5.6)
@@ -310,9 +313,6 @@ devDependencies:
   eslint-plugin-array-func:
     specifier: ^5.0.2
     version: 5.0.2(eslint@9.19.0)
-  eslint-plugin-css-modules:
-    specifier: ^2.12.0
-    version: 2.12.0(eslint@9.19.0)
   eslint-plugin-github:
     specifier: ^6.0.0
     version: 6.0.0(eslint@9.19.0)
@@ -1946,6 +1946,24 @@ packages:
   /@beyond-js/md5@0.0.1:
     resolution: {integrity: sha512-pW3l7xy9xxL9rC2fuojXTuzpWtijdpdwCmopn58YxgGcfAkmps0ZMYW+mQwkFbh5Y6ELXCLPXO/+scMqIE4JrQ==}
     dev: false
+
+  /@bhollis/css-modules-typescript-loader@1.0.1:
+    resolution: {integrity: sha512-DIw53+C1VwdSOtqUsWFA9Kq8SGCf04Ih/CQEHlPF1x/3Tofj8QWIQnL0p6HYgNTr4C6un85E8hcHQ0sBNuJm3A==}
+    dependencies:
+      line-diff: 2.1.1
+      loader-utils: 3.3.1
+    dev: true
+
+  /@bhollis/eslint-plugin-css-modules@1.0.0(eslint@9.19.0):
+    resolution: {integrity: sha512-AmriRAN4D0mMnvIIpB6qqvNKY/PI4Z8gg13SQ4DN0vEsp2VdLx+aHE6YryHKOwd5dwVkOReNh/53pMptj5x0cw==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      eslint: '>=2.0.0'
+    dependencies:
+      es-toolkit: 1.42.0
+      eslint: 9.19.0
+      gonzales-pe: 4.3.0
+    dev: true
 
   /@cacheable/memory@2.0.6:
     resolution: {integrity: sha512-7e8SScMocHxcAb8YhtkbMhGG+EKLRIficb1F5sjvhSYsWTZGxvg4KIDp8kgxnV2PUJ3ddPe6J9QESjKvBWRDkg==}
@@ -6462,10 +6480,6 @@ packages:
     resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
     dev: true
 
-  /big.js@5.2.2:
-    resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
-    dev: true
-
   /binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
@@ -7131,13 +7145,6 @@ packages:
       webpack: 5.103.0(webpack-cli@6.0.1)
     dev: true
 
-  /css-modules-typescript-loader@4.0.1:
-    resolution: {integrity: sha512-vXrUAwPGcRaopnGdg7I5oqv/NSSKQRN5L80m3f49uSGinenU5DTNsMFHS+2roh5tXqpY5+yAAKAl7A2HDvumzg==}
-    dependencies:
-      line-diff: 2.1.1
-      loader-utils: 1.4.2
-    dev: true
-
   /css-select@4.3.0:
     resolution: {integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==}
     dependencies:
@@ -7650,11 +7657,6 @@ packages:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
     dev: true
 
-  /emojis-list@3.0.0:
-    resolution: {integrity: sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==}
-    engines: {node: '>= 4'}
-    dev: true
-
   /encodeurl@1.0.2:
     resolution: {integrity: sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==}
     engines: {node: '>= 0.8'}
@@ -7862,7 +7864,6 @@ packages:
 
   /es-toolkit@1.42.0:
     resolution: {integrity: sha512-SLHIyY7VfDJBM8clz4+T2oquwTQxEzu263AyhVK4jREOAwJ+8eebaa4wM3nlvnAqhDrMm2EsA6hWHaQsMPQ1nA==}
-    dev: false
 
   /escalade@3.2.0:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}
@@ -7948,17 +7949,6 @@ packages:
       eslint: '>=8.51.0'
     dependencies:
       eslint: 9.19.0
-    dev: true
-
-  /eslint-plugin-css-modules@2.12.0(eslint@9.19.0):
-    resolution: {integrity: sha512-ruFBdad69ABrbCDCh5mXj7UzNmrvytfzPACjyvZWIAjFZAG8BXpYSbqmE8gU5wF+pIzV3jU2CWhLvfekXT/IgQ==}
-    engines: {node: '>=4.0.0'}
-    peerDependencies:
-      eslint: '>=2.0.0'
-    dependencies:
-      eslint: 9.19.0
-      gonzales-pe: 4.3.0
-      lodash: 4.17.21
     dev: true
 
   /eslint-plugin-escompat@3.11.4(eslint@9.19.0):
@@ -10986,13 +10976,9 @@ packages:
     engines: {node: '>=6.11.5'}
     dev: true
 
-  /loader-utils@1.4.2:
-    resolution: {integrity: sha512-I5d00Pd/jwMD2QCduo657+YM/6L3KZu++pmX9VFncxaxvHcru9jx1lBaFft+r4Mt2jK0Yhp41XlRAihzPxHNCg==}
-    engines: {node: '>=4.0.0'}
-    dependencies:
-      big.js: 5.2.2
-      emojis-list: 3.0.0
-      json5: 1.0.2
+  /loader-utils@3.3.1:
+    resolution: {integrity: sha512-FMJTLMXfCLMLfJxcX9PFqX5qD88Z5MRGaZCVzfuqeZSPsyiBzs+pahDQjbIWz2QIzPZz0NX9Zy4FX3lmK6YHIg==}
+    engines: {node: '>= 12.13.0'}
     dev: true
 
   /locate-path@3.0.0:

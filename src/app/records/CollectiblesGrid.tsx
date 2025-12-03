@@ -1,4 +1,4 @@
-import styles from './CollectiblesGrid.m.scss';
+import * as styles from './CollectiblesGrid.m.scss';
 
 /**
  * A grid of items for collections, etc.

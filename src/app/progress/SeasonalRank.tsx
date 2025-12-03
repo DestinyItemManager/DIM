@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import brightEngramsBonus from 'data/d2/bright-engram-bonus.json';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
-import styles from './SeasonalRank.m.scss';
+import * as styles from './SeasonalRank.m.scss';
 import { getCharacterProgressions } from './selectors';
 
 export default function SeasonalRank({

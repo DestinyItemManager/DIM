@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 /* eslint-disable css-modules/no-unused-class */
-import styles from './Description.m.scss';
+import * as styles from './Description.m.scss';
 import { LinesContent, Perk } from './descriptionInterface';
 
 const customContent = (content: LinesContent) => {

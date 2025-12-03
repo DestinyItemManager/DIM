@@ -4,7 +4,7 @@ import { useSetting } from 'app/settings/hooks';
 import { AppIcon, collapseIcon, faCaretUp } from 'app/shell/icons';
 import clsx from 'clsx';
 import { Suspense, lazy, useEffect } from 'react';
-import styles from './ItemFeedSidebar.m.scss';
+import * as styles from './ItemFeedSidebar.m.scss';
 
 const ItemFeed = lazy(() => import(/* webpackChunkName: "item-feed" */ './ItemFeed'));
 

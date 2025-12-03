@@ -7,7 +7,7 @@ import { useSetting } from 'app/settings/hooks';
 import clsx from 'clsx';
 import { JSX, useCallback, useId, useRef } from 'react';
 import ItemDetails from './ItemDetails';
-import styles from './ItemPopupTabs.m.scss';
+import * as styles from './ItemPopupTabs.m.scss';
 import { ItemPopupExtraInfo } from './item-popup';
 
 export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | undefined) {

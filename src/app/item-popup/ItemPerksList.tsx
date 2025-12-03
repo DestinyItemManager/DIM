@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import styles from './ItemPerksList.m.scss';
+import * as styles from './ItemPerksList.m.scss';
 import { PlugClickHandler } from './ItemSockets';
 import { PerkCircleWithTooltip } from './Plug';
 import { DimPlugTooltip } from './PlugTooltip';

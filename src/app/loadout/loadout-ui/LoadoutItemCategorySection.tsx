@@ -28,7 +28,7 @@ import { useSelector } from 'react-redux';
 import '../../inventory-page/StoreBucket.scss';
 import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
-import styles from './LoadoutItemCategorySection.m.scss';
+import * as styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
 import { armorItemsMissing, OptimizerButton } from './OptimizerButton';
 

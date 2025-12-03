@@ -17,4 +17,4 @@ interface CssExports {
   'unequipped': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

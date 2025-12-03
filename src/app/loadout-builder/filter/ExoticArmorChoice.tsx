@@ -6,7 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
 import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
-import styles from './ExoticArmorChoice.m.scss';
+import * as styles from './ExoticArmorChoice.m.scss';
 
 export function getLockedExotic(defs: D2ManifestDefinitions, lockedExoticHash: number) {
   const exoticArmor =

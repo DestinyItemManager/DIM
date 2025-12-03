@@ -4,7 +4,7 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import styles from './LoadoutDrawerItem.m.scss';
+import * as styles from './LoadoutDrawerItem.m.scss';
 
 export default function LoadoutDrawerItem({
   resolvedLoadoutItem,

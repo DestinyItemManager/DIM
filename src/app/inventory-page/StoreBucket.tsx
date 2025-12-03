@@ -33,7 +33,7 @@ import { shallowEqual } from 'fast-equals';
 import { memo, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import styles from './StoreBucket.m.scss';
+import * as styles from './StoreBucket.m.scss';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import StoreInventoryItem from './StoreInventoryItem';

@@ -10,7 +10,7 @@ import { AppIcon, powerActionIcon, powerIndicatorIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import xpIcon from 'images/xpIcon.svg';
-import styles from './MaxlightButton.m.scss';
+import * as styles from './MaxlightButton.m.scss';
 
 interface Props {
   allItems: DimItem[];

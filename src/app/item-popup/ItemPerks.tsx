@@ -3,7 +3,7 @@ import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyItemPerkEntryDefinition } from 'bungie-api-ts/destiny2';
-import styles from './ItemPerks.m.scss';
+import * as styles from './ItemPerks.m.scss';
 
 export default function ItemPerks({ item }: { item: DimItem }) {
   if (!item.perks) {

@@ -6,7 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
-import styles from './EnergyIncrements.m.scss';
+import * as styles from './EnergyIncrements.m.scss';
 import { PressTip } from './PressTip';
 
 // TODO special display for T10 -> T10 + exotic artifice?

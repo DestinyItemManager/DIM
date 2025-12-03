@@ -12,7 +12,7 @@ import React, { Dispatch, memo, useCallback } from 'react';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorBucketHashes, ExcludedItems, PinnedItems } from '../types';
-import styles from './LoadoutOptimizerMenuItems.m.scss';
+import * as styles from './LoadoutOptimizerMenuItems.m.scss';
 import LockedItem from './LockedItem';
 
 export type ChooseItemFunction = (

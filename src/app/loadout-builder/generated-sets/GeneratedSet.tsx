@@ -27,7 +27,7 @@ import {
   PinnedItems,
 } from '../types';
 import { getPower } from '../utils';
-import styles from './GeneratedSet.m.scss';
+import * as styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import { TierlessSetStats } from './SetStats';

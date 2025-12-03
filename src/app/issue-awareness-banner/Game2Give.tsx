@@ -1,7 +1,7 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { percent } from 'app/shell/formatters';
 
-import styles from './Game2Give.m.scss';
+import * as styles from './Game2Give.m.scss';
 // import heroimage from './bungie-day-giving-festival.jpg';
 import heroimage from './g2g-banner.jpg';
 import useGame2GiveData from './useGame2GiveData';

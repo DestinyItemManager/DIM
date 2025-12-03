@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { useLocalStorage } from 'app/utils/hooks';
 import React from 'react';
-import styles from './AppInstallBanner.m.scss';
+import * as styles from './AppInstallBanner.m.scss';
 import { AppIcon, closeIcon } from './icons';
 
 const DAY = 1000 * 60 * 60 * 24;

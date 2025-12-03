@@ -14,7 +14,7 @@ import {
   moveDownIcon,
   moveUpIcon,
 } from '../shell/icons';
-import styles from './SortOrderEditor.m.scss';
+import * as styles from './SortOrderEditor.m.scss';
 
 export interface SortProperty {
   readonly id: string;

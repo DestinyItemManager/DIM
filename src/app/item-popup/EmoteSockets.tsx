@@ -1,7 +1,7 @@
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import styles from './EmoteSockets.m.scss';
+import * as styles from './EmoteSockets.m.scss';
 import { ItemSocketsList, PlugClickHandler } from './ItemSockets';
 import Socket from './Socket';
 

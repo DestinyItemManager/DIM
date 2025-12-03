@@ -19,7 +19,7 @@ import CharacterSelect from '../dim-ui/CharacterSelect';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { sortedStoresSelector } from '../inventory/selectors';
 import Vendor from './Vendor';
-import styles from './Vendors.m.scss';
+import * as styles from './Vendors.m.scss';
 import VendorsMenu from './VendorsMenu';
 import { setShowUnacquiredOnly } from './actions';
 import { D2VendorGroup, filterVendorGroups } from './d2-vendors';

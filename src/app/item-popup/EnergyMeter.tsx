@@ -14,7 +14,7 @@ import Cost from 'app/vendors/Cost';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, Transition, Variants, motion } from 'motion/react';
 import { useState } from 'react';
-import styles from './EnergyMeter.m.scss';
+import * as styles from './EnergyMeter.m.scss';
 import { SocketCategoryHeader } from './ItemSocketsGeneral';
 
 const upgradeAnimateVariants: Variants = {

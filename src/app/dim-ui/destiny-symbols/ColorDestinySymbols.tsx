@@ -1,6 +1,6 @@
 import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { DimCustomSymbols } from 'data/font/dim-custom-symbols';
-import styles from './ColorDestinySymbols.m.scss';
+import * as styles from './ColorDestinySymbols.m.scss';
 
 const iconPlaceholder = /([\uE000-\uF8FF\u{F0000}-\u{F1000}])/u;
 

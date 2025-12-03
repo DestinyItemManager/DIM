@@ -5,4 +5,4 @@ interface CssExports {
   'stats': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

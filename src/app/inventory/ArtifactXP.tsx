@@ -6,7 +6,7 @@ import {
 } from 'app/progress/Objective';
 import { DestinyCharacterProgressionComponent } from 'bungie-api-ts/destiny2';
 import XPIcon from '../../images/xpIcon.svg?react';
-import styles from './ArtifactXP.m.scss';
+import * as styles from './ArtifactXP.m.scss';
 
 export function ArtifactXP({
   characterProgress,

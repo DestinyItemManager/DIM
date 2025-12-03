@@ -13,7 +13,7 @@ import { AppIcon, equalsIcon, greaterThanIcon, lessThanIcon, searchIcon } from '
 import clsx from 'clsx';
 import { MAX_STAT } from '../known-values';
 import { includesRuntimeStatMods } from '../stats';
-import styles from './LoadoutParametersDisplay.m.scss';
+import * as styles from './LoadoutParametersDisplay.m.scss';
 
 export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
   return Boolean(

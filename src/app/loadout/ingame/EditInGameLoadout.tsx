@@ -7,7 +7,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './EditInGameLoadout.m.scss';
+import * as styles from './EditInGameLoadout.m.scss';
 import InGameLoadoutIcon from './InGameLoadoutIcon';
 import { RadioButton } from './RadioButton';
 import SelectInGameLoadoutIdentifiers, {

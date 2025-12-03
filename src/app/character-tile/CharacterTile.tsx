@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './CharacterTile.m.scss';
+import * as styles from './CharacterTile.m.scss';
 
 const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
 

@@ -12,7 +12,7 @@ import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';
 import { settingClass } from './SettingsPage';
-import styles from './Spreadsheets.m.scss';
+import * as styles from './Spreadsheets.m.scss';
 
 export default function Spreadsheets() {
   const dispatch = useThunkDispatch();

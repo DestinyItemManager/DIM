@@ -34,7 +34,7 @@ import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router';
-import styles from './Loadouts.m.scss';
+import * as styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import { updateLoadoutStore } from './actions';
 import EditInGameLoadout from './ingame/EditInGameLoadout';

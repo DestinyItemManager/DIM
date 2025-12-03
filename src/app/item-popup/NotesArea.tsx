@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
-import styles from './NotesArea.m.scss';
+import * as styles from './NotesArea.m.scss';
 
 export const maxLength = 1024;
 

@@ -12,4 +12,4 @@ interface CssExports {
   'sheetDisabled': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

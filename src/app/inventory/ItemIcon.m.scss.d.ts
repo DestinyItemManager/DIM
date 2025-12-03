@@ -21,4 +21,4 @@ interface CssExports {
   'strandColorFix': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

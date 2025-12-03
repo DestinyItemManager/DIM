@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import React, { useMemo, useState } from 'react';
 import { ArmorSet } from '../types';
 import { mergeLoadout } from '../updated-loadout';
-import styles from './CompareLoadoutsDrawer.m.scss';
+import * as styles from './CompareLoadoutsDrawer.m.scss';
 
 // TODO: just get rid of compare loadout feature altogether!
 
