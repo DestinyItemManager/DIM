@@ -24,7 +24,7 @@ import React, {
 import { AppIcon, disabledIcon } from '../shell/icons';
 import ErrorBoundary from './ErrorBoundary';
 import { PressTipRoot } from './PressTip';
-import styles from './Sheet.m.scss';
+import * as styles from './Sheet.m.scss';
 import { sheetsOpen } from './sheets-open';
 import { useFixOverscrollBehavior } from './useFixOverscrollBehavior';
 

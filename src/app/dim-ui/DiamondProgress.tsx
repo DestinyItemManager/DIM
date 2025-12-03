@@ -1,4 +1,4 @@
-import styles from './DiamondProgress.m.scss';
+import * as styles from './DiamondProgress.m.scss';
 
 interface Props {
   /** 0-1 progress for the outer ring */

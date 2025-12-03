@@ -8,7 +8,7 @@ import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
-import styles from './Milestones.m.scss';
+import * as styles from './Milestones.m.scss';
 import Pursuit from './Pursuit';
 import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';

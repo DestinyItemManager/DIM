@@ -1,8 +1,8 @@
+import cssModules from '@bhollis/eslint-plugin-css-modules';
 import react from '@eslint-react/eslint-plugin';
 import { fixupPluginRules } from '@eslint/compat';
 import eslint from '@eslint/js';
 import arrayFunc from 'eslint-plugin-array-func';
-import cssModules from 'eslint-plugin-css-modules';
 import github from 'eslint-plugin-github';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import reactPlugin from 'eslint-plugin-react';
@@ -42,13 +42,7 @@ export default tseslint.config(
     },
   },
   { name: 'array-func', ...arrayFunc.configs.all },
-  {
-    name: 'css-modules',
-    plugins: {
-      'css-modules': fixupPluginRules(cssModules),
-    },
-    rules: { 'css-modules/no-unused-class': ['error', { camelCase: true }] },
-  },
+  ...cssModules.configs.recommended,
   { name: 'sonarjs/recommended', ...sonarjs.configs.recommended },
   reactHooks.configs.flat.recommended,
   {

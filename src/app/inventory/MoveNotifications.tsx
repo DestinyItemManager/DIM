@@ -22,7 +22,7 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import ConnectedInventoryItem from './ConnectedInventoryItem';
 import ItemIcon, { DefItemIcon } from './ItemIcon';
-import styles from './MoveNotifications.m.scss';
+import * as styles from './MoveNotifications.m.scss';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 

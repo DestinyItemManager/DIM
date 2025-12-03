@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';
-import styles from './DesktopStores.m.scss';
+import * as styles from './DesktopStores.m.scss';
 import HeaderShadowDiv from './HeaderShadowDiv';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
 import { StoreBuckets } from './StoreBuckets';

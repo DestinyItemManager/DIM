@@ -2,7 +2,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
 import Objective, { ObjectiveCheckbox } from 'app/progress/Objective';
 import { DeepsightHarmonizerIcon } from './DeepsightHarmonizerIcon';
-import styles from './WeaponDeepsightInfo.m.scss';
+import * as styles from './WeaponDeepsightInfo.m.scss';
 /**
  * A progress bar that shows a weapon's crafting pattern progress.
  */

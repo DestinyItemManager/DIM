@@ -4,7 +4,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
 import { ReactNode, useRef } from 'react';
-import styles from './Dropdown.m.scss';
+import * as styles from './Dropdown.m.scss';
 import { usePopper } from './usePopper';
 
 interface Separator {

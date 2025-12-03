@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import styles from './LoadoutDrawerOptions.m.scss';
+import * as styles from './LoadoutDrawerOptions.m.scss';
 
 const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
   const classTypeValues: {

@@ -2,7 +2,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { bungieBackgroundStyle } from './BungieImage';
-import styles from './ElementIcon.m.scss';
+import * as styles from './ElementIcon.m.scss';
 
 export default function ElementIcon({
   element,

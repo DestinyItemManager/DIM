@@ -6,4 +6,4 @@ interface CssExports {
   'trashlist': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

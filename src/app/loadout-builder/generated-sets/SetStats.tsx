@@ -18,7 +18,7 @@ import {
   ModStatChanges,
   ResolvedStatConstraint,
 } from '../types';
-import styles from './SetStats.m.scss';
+import * as styles from './SetStats.m.scss';
 import { sumEnabledStats } from './utils';
 
 /**

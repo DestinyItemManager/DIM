@@ -12,7 +12,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { useCallback, useMemo } from 'react';
 import PlugStackableIcon from './PlugStackableIcon';
-import styles from './SelectablePlug.m.scss';
+import * as styles from './SelectablePlug.m.scss';
 import { PlugSelectionType } from './types';
 
 /**

@@ -3,7 +3,7 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { PlugClickHandler } from './ItemSockets';
 import Plug from './Plug';
-import styles from './Socket.m.scss';
+import * as styles from './Socket.m.scss';
 
 /**
  * A socket may have multiple plugs - this can represent either a perk column or a mod socket.

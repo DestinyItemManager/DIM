@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { streamDeckSelector } from '../selectors';
 import { streamDeckAuthorizationInit } from '../util/authorization';
 import { STREAM_DECK_MINIMUM_VERSION, checkStreamDeckVersion } from '../util/version';
-import styles from './StreamDeckButton.m.scss';
+import * as styles from './StreamDeckButton.m.scss';
 
 function StreamDeckTooltip({
   version,

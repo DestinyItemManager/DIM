@@ -14,7 +14,7 @@ import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import glimmerMats from 'data/d2/spider-mats.json';
 import { useSelector } from 'react-redux';
-import styles from './MaterialCounts.m.scss';
+import * as styles from './MaterialCounts.m.scss';
 
 const upgradeMats = [
   4257549984, // Enhancement Prism

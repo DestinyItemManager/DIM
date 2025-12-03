@@ -5,7 +5,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { PowerFormula, StoreCharacterStats } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
 import { D1StoreCharacterStats } from './D1CharacterStats';
-import styles from './StoreStats.m.scss';
+import * as styles from './StoreStats.m.scss';
 import VaultCapacity from './VaultCapacity';
 
 /** Render the store stats for any store type (character or vault) */

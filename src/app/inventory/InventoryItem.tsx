@@ -19,7 +19,7 @@ import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
 import { TagValue } from './dim-item-info';
-import styles from './InventoryItem.m.scss';
+import * as styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
 import ItemIconPlaceholder from './ItemIconPlaceholder';

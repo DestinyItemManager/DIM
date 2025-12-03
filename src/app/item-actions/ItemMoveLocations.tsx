@@ -16,7 +16,7 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import styles from './ItemMoveLocations.m.scss';
+import * as styles from './ItemMoveLocations.m.scss';
 
 type MoveSubmit = (store: DimStore, equip?: boolean, moveAmount?: number) => void;
 

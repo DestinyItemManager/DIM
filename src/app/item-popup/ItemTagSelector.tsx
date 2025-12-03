@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { TagInfo, TagValue, itemTagSelectorList } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
-import styles from './ItemTagSelector.m.scss';
+import * as styles from './ItemTagSelector.m.scss';
 
 interface Props {
   item: DimItem;

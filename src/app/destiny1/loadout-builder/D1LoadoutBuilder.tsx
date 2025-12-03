@@ -28,7 +28,7 @@ import { bucketsSelector, sortedStoresSelector } from '../../inventory/selectors
 import { D1Store } from '../../inventory/store-types';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { loadVendors, Vendor } from '../vendors/vendor.service';
-import styles from './D1LoadoutBuilder.m.scss';
+import * as styles from './D1LoadoutBuilder.m.scss';
 import ExcludeItemsDropTarget from './ExcludeItemsDropTarget';
 import GeneratedSet from './GeneratedSet';
 import LoadoutBuilderItem from './LoadoutBuilderItem';

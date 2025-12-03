@@ -16,7 +16,7 @@ import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC } from '../types';
 import ExoticPicker, { findLockableExotics, resolveExoticInfo } from './ExoticPicker';
 import { exoticTileInfo } from './ExoticTile';
-import styles from './LoadoutOptimizerExotic.m.scss';
+import * as styles from './LoadoutOptimizerExotic.m.scss';
 
 const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
   classType,

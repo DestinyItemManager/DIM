@@ -4,7 +4,7 @@ import { wrap } from 'app/utils/collections';
 import { animate, motion, PanInfo, Transition, useMotionValue, useTransform } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
-import styles from './PhoneStoresHeader.m.scss';
+import * as styles from './PhoneStoresHeader.m.scss';
 
 const spring: Transition<number> = {
   type: 'spring',

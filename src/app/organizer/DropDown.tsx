@@ -5,7 +5,7 @@ import { AppIcon, enabledIcon, expandDownIcon, unselectedCheckIcon } from 'app/s
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { ReactNode, useState } from 'react';
-import styles from './DropDown.m.scss';
+import * as styles from './DropDown.m.scss';
 
 export interface DropDownItem {
   id: string;

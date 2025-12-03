@@ -3,7 +3,7 @@ import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import React from 'react';
 import { D2VendorGroup } from './d2-vendors';
-import styles from './VendorsMenu.m.scss';
+import * as styles from './VendorsMenu.m.scss';
 
 export default function VendorsMenu({ groups }: { groups: readonly D2VendorGroup[] }) {
   return (

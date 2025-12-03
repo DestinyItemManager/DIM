@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { UiWishListRoll } from 'app/wishlists/wishlists';
 import { AppIcon, thumbsDownIcon, thumbsUpIcon } from '../shell/icons';
-import styles from './RatingIcon.m.scss';
+import * as styles from './RatingIcon.m.scss';
 
 export default function RatingIcon({ uiWishListRoll }: { uiWishListRoll: UiWishListRoll }) {
   if (uiWishListRoll === UiWishListRoll.Bad) {

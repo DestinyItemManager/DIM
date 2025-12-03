@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import Account from './Account';
-import styles from './MenuAccounts.m.scss';
+import * as styles from './MenuAccounts.m.scss';
 import { logOut } from './platforms';
 import { accountsSelector, currentAccountSelector } from './selectors';
 

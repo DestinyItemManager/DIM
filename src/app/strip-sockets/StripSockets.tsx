@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import { DefItemIcon } from '../inventory/ItemIcon';
 import { allItemsSelector } from '../inventory/selectors';
-import styles from './StripSockets.m.scss';
+import * as styles from './StripSockets.m.scss';
 import { SocketKind, StripAction, collectSocketsToStrip, doStripSockets } from './strip-sockets';
 import { stripSocketsQuery$ } from './strip-sockets-actions';
 

@@ -11,4 +11,4 @@ interface CssExports {
   'seasonHeader': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

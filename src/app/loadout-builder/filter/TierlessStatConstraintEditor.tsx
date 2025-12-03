@@ -18,7 +18,7 @@ import { Reorder, useDragControls } from 'motion/react';
 import { Dispatch, useEffect, useId, useRef, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMaxStat, ResolvedStatConstraint, StatRanges } from '../types';
-import styles from './TierlessStatConstraintEditor.m.scss';
+import * as styles from './TierlessStatConstraintEditor.m.scss';
 
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus

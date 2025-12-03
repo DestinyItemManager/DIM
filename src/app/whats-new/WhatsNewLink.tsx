@@ -7,7 +7,7 @@ import { useSubscription } from 'use-subscription';
 import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { GlobalAlertLevelsToToastLevels } from './BungieAlerts';
-import styles from './WhatsNewLink.m.scss';
+import * as styles from './WhatsNewLink.m.scss';
 import { DimVersions } from './versions';
 
 /**

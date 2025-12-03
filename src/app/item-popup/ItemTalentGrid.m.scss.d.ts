@@ -2,11 +2,11 @@
 // Please do not change this file!
 interface CssExports {
   'activated': string;
-  'default': string;
+  'defaultOption': string;
   'nodeImg': string;
   'nodeXp': string;
   'showXp': string;
   'talentGrid': string;
 }
 export const cssExports: CssExports;
-export default cssExports;
+export = cssExports;

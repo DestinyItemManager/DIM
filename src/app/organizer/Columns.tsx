@@ -92,7 +92,7 @@ import ItemTalentGrid from 'app/item-popup/ItemTalentGrid';
 import { ammoTypeFilter } from 'app/search/items/search-filters/known-values';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import styles from './Columns.m.scss';
+import * as styles from './Columns.m.scss';
 import { ColumnDefinition, ColumnGroup, ColumnWithStat, SortDirection, Value } from './table-types';
 
 /**

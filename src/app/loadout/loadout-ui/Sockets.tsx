@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { pickPlugPositions } from '../mod-assignment-utils';
 import PlugDef from './PlugDef';
-import styles from './Sockets.m.scss';
+import * as styles from './Sockets.m.scss';
 
 const undesirablePlugs = [
   PlugCategoryHashes.ArmorSkinsEmpty,
