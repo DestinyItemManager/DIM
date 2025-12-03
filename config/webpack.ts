@@ -19,23 +19,23 @@ import TerserPlugin from 'terser-webpack-plugin';
 import 'webpack-dev-server';
 import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
-import csp from './content-security-policy';
-import { makeFeatureFlags } from './feature-flags';
+import csp from './content-security-policy.ts';
+import { makeFeatureFlags } from './feature-flags.ts';
 
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
-import NotifyPlugin from './notify-webpack-plugin';
+import NotifyPlugin from './notify-webpack-plugin.ts';
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
-import packageJson from '../package.json';
-import createWebAppManifest from './manifest-webapp';
+import packageJson from '../package.json' with { type: 'json' };
+import createWebAppManifest from './manifest-webapp.ts';
 
 import cssnano from 'cssnano';
 import sortMediaQueries from 'postcss-sort-media-queries';
 
-import splash from '../icons/splash.json';
+import splash from '../icons/splash.json' with { type: 'json' };
 
 // https://stackoverflow.com/questions/69584268/what-is-the-type-of-the-webpack-config-function-when-it-comes-to-typescript
 type CLIValues = boolean | string;
@@ -113,7 +113,7 @@ export default (env: Env) => {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
           allowedHosts: 'all',
           server: {
-            type: 'spdy',
+            type: 'https',
             options: {
               key: fs.readFileSync('key.pem'), // Private keys in PEM format.
               cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
@@ -552,6 +552,7 @@ export default (env: Env) => {
         format: 'html',
         outputDir: 'sonda-report',
         open: false,
+        deep: true,
         sources: true,
         gzip: false,
         brotli: false,
