@@ -51,13 +51,11 @@ export default tseslint.config(
   },
   { name: 'sonarjs/recommended', ...sonarjs.configs.recommended },
   {
-    files: ['**/*.{js,jsx}'],
-    plugins: { 'react-hooks': reactHooks },
-    // ...
+    ...reactHooks.configs.flat.recommended,
     rules: {
       // Core hooks rules
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'error',
       // TODO: Enable react compiler rules when they are fixed and we are using
       // react compiler. Until then they are noisy and slow.
     },
