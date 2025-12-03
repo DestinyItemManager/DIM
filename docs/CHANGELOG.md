@@ -1,5 +1,7 @@
 ## Next
 
+## 8.101.1 <span class="changelog-date">(2025-12-02)</span>
+
 * Fixed a crash on the Records page caused by Seasonal Challenges being removed from the game.
 
 ## 8.101.0 <span class="changelog-date">(2025-11-30)</span>
