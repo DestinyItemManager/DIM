@@ -42,7 +42,7 @@
 .vaultUnderButton {
   composes: singleCharacterButton;
 
-  font-size: 20px;
+  font-size: 18px;
 
   &.under > span {
     transform: rotate(90deg);

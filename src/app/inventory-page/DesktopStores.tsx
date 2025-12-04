@@ -99,11 +99,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
               type="button"
               className={clsx(styles.vaultUnderButton, { [styles.under]: !vaultUnder })}
               onClick={toggleVaultUnder}
-              title={
-                singleCharacter
-                  ? t('Settings.ExpandSingleCharacter')
-                  : `${t('Settings.SingleCharacter')}: ${t('Settings.SingleCharacterExplanation')}`
-              }
+              title={!vaultUnder ? t('Settings.VaultUnder') : t('Settings.RestoreVaultSide')}
             >
               <AppIcon icon={vaultUnder ? levellingIcon : levelDownIcon} />
             </button>
