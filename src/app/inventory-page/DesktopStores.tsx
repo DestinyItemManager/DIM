@@ -60,7 +60,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   }
 
   const toggleSingleCharacter = () => setSetting('singleCharacter', !singleCharacter);
-  const toggleVaultUnder = () => setSetting('vaultUnder', !vaultUnder);
+  const toggleVaultUnder = () => setVaultUnder(!vaultUnder);
 
   return (
     <div className={styles.inventoryContainer}>
