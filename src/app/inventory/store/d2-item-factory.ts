@@ -858,7 +858,11 @@ function getItemCategoryHashes(itemDef: DestinyInventoryItemDefinition): ItemCat
 
     // Masks are helmets too
     if (additionalICH === ItemCategoryHashes.Mask) {
-      itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Helmets];
+      itemCategoryHashes = [
+        ...itemCategoryHashes,
+        ItemCategoryHashes.Helmets,
+        ItemCategoryHashes.Armor,
+      ];
     }
   }
 
