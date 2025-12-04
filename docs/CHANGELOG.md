@@ -1,5 +1,7 @@
 ## Next
 
+* Festival masks will now show up in the Organizer.
+
 ## 8.101.1 <span class="changelog-date">(2025-12-02)</span>
 
 * Fixed a crash on the Records page caused by Seasonal Challenges being removed from the game.
