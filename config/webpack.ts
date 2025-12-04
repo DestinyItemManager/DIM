@@ -1,3 +1,4 @@
+import { InjectManifest } from '@aaroon/workbox-rspack-plugin';
 import { type Configuration, rspack } from '@rspack/core';
 import ReactRefreshPlugin from '@rspack/plugin-react-refresh';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -7,7 +8,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import SondaWebpackPlugin from 'sonda/webpack';
 import { TsCheckerRspackPlugin } from 'ts-checker-rspack-plugin';
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
-import { InjectManifest } from 'workbox-webpack-plugin';
 import NotifyPlugin from './notify-webpack-plugin.ts';
 
 import browserslist from 'browserslist';
@@ -407,6 +407,7 @@ export default (env: Env) => {
     new rspack.CssExtractRspackPlugin({
       filename: cssFilenamePattern,
       chunkFilename: cssFilenamePattern,
+      ignoreOrder: true,
     }),
 
     // TODO: prerender?

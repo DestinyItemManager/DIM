@@ -14,26 +14,6 @@ module.exports = function (api) {
         useESModules: !isTest,
       },
     ],
-    [
-      'transform-imports',
-      {
-        '@fortawesome/free-brands-svg-icons': {
-          transform: (member) => `@fortawesome/free-brands-svg-icons/${member}`,
-          preventFullImport: true,
-          skipDefaultConversion: true,
-        },
-        '@fortawesome/free-solid-svg-icons': {
-          transform: (member) => `@fortawesome/free-solid-svg-icons/${member}`,
-          preventFullImport: true,
-          skipDefaultConversion: true,
-        },
-        '@fortawesome/free-regular-svg-icons': {
-          transform: (member) => `@fortawesome/free-regular-svg-icons/${member}`,
-          preventFullImport: true,
-          skipDefaultConversion: true,
-        },
-      },
-    ],
   ];
 
   if (isProduction) {
