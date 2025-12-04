@@ -6,6 +6,8 @@ interface CssExports {
   'inventoryContainer': string;
   'singleCharacter': string;
   'singleCharacterButton': string;
+  'under': string;
+  'vaultUnderButton': string;
 }
 export const cssExports: CssExports;
 export = cssExports;

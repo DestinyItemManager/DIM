@@ -21,6 +21,7 @@ export function StoreBuckets({
   currentStore,
   labels,
   singleCharacter,
+  vaultUnder = false,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
@@ -28,6 +29,7 @@ export function StoreBuckets({
   currentStore: DimStore;
   labels?: boolean;
   singleCharacter: boolean;
+  vaultUnder?: boolean;
 }) {
   let content: React.ReactNode;
 
@@ -88,6 +90,7 @@ export function StoreBuckets({
     <div
       className={clsx('store-row', {
         [styles.singleCharacterAccountWideRow]: bucket.accountWide && singleCharacter,
+        [styles.vaultUnder]: vaultUnder,
       })}
     >
       {labels && (

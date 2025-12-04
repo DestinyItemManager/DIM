@@ -6,6 +6,7 @@ interface CssExports {
   'hasButton': string;
   'postmasterFull': string;
   'singleCharacterAccountWideRow': string;
+  'vaultUnder': string;
 }
 export const cssExports: CssExports;
 export = cssExports;

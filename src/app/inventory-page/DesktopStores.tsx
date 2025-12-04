@@ -6,8 +6,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket, getCurrentStore, getVault } from 'app/inventory/stores-helpers';
 import IssueAwarenessBanner from 'app/issue-awareness-banner/IssueAwarenessBanner';
 import ItemFeedSidebar from 'app/item-feed/ItemFeedSidebar';
-import { useSetSetting } from 'app/settings/hooks';
-import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
+import { useSetSetting, useSetting } from 'app/settings/hooks';
+import { AppIcon, levelDownIcon, levellingIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isClassCompatible } from 'app/utils/item-utils';
@@ -36,6 +36,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   const currentStore = getCurrentStore(stores);
   const setSetting = useSetSetting();
   useEventBusListener(locateItem$, itemPop);
+  const [vaultUnder, setVaultUnder] = useSetting('vaultUnder');
 
   // Hide the single character toggle for players with only one character
   // unless they own items that cannot be used by their only character.
@@ -59,6 +60,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   }
 
   const toggleSingleCharacter = () => setSetting('singleCharacter', !singleCharacter);
+  const toggleVaultUnder = () => setSetting('vaultUnder', !vaultUnder);
 
   return (
     <div className={styles.inventoryContainer}>
@@ -93,6 +95,18 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
                 <AppIcon icon={singleCharacter ? minimizeIcon : maximizeIcon} />
               </button>
             )}
+            <button
+              type="button"
+              className={clsx(styles.vaultUnderButton, { [styles.under]: !vaultUnder })}
+              onClick={toggleVaultUnder}
+              title={
+                singleCharacter
+                  ? t('Settings.ExpandSingleCharacter')
+                  : `${t('Settings.SingleCharacter')}: ${t('Settings.SingleCharacterExplanation')}`
+              }
+            >
+              <AppIcon icon={vaultUnder ? levellingIcon : levelDownIcon} />
+            </button>
           </div>
           {$featureFlags.issueBanner && <IssueAwarenessBanner />}
         </HeaderShadowDiv>
@@ -103,6 +117,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
           currentStore={currentStore}
           buckets={buckets}
           singleCharacter={singleCharacter}
+          vaultUnder={vaultUnder}
         />
       </div>
       {$featureFlags.itemFeed && <ItemFeedSidebar />}
@@ -136,6 +151,7 @@ interface InventoryContainerProps {
   currentStore: DimStore;
   vault: DimStore;
   singleCharacter: boolean;
+  vaultUnder: boolean;
 }
 
 function CollapsibleContainer({
@@ -146,6 +162,7 @@ function CollapsibleContainer({
   inventoryBucket,
   vault,
   singleCharacter,
+  vaultUnder,
 }: {
   category: string;
   inventoryBucket: InventoryBucket[];
@@ -168,6 +185,7 @@ function CollapsibleContainer({
           vault={vault}
           currentStore={currentStore}
           singleCharacter={singleCharacter}
+          vaultUnder={vaultUnder}
         />
       ))}
     </InventoryCollapsibleTitle>
@@ -180,6 +198,7 @@ function StoresInventory({
   currentStore,
   vault,
   singleCharacter,
+  vaultUnder,
 }: InventoryContainerProps) {
   return (
     <>
@@ -193,6 +212,7 @@ function StoresInventory({
           singleCharacter={singleCharacter}
           category={category}
           inventoryBucket={inventoryBucket}
+          vaultUnder={vaultUnder}
         />
       ))}
       {stores[0].destinyVersion === 1 && <D1ReputationSection stores={stores} />}
