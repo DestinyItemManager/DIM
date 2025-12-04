@@ -195,7 +195,11 @@ export default (env: Env) => {
           },
           extractComments: false,
         }),
-        new rspack.LightningCssMinimizerRspackPlugin({}),
+        new rspack.LightningCssMinimizerRspackPlugin({
+          minimizerOptions: {
+            targets: packageJson.browserslist,
+          },
+        }),
       ],
     },
 
