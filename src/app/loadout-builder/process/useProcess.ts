@@ -74,7 +74,7 @@ export function useProcess({
   autoStatMods: boolean;
   strictUpgrades: boolean;
 }) {
-  const [{ result, processing, totalCombos, completedCombos, startTime }, setState] =
+  const [{ result, processing, totalCombos, completedCombos, startTime, resultStoreId }, setState] =
     useState<ProcessState>({
       processing: false,
       startTime: 0,
@@ -197,7 +197,13 @@ export function useProcess({
     firstTime,
   ]);
 
-  return { result, processing, startTime, totalCombos, completedCombos };
+  return {
+    result: resultStoreId === selectedStore.id ? result : null,
+    processing,
+    startTime,
+    totalCombos,
+    completedCombos,
+  };
 }
 
 /**

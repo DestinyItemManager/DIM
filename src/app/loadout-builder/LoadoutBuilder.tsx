@@ -31,8 +31,10 @@ import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { errorLog } from 'app/utils/log';
 import { getMaxParallelCores } from 'app/utils/parallel-cores';
 import { timerDurationFromMs } from 'app/utils/time';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -306,7 +308,20 @@ export default memo(function LoadoutBuilder({
         statMods: processed.statMods,
       };
     }
-    return resultSets && sortGeneratedSets(resultSets.map(hydrateArmorSet), desiredStatRanges);
+    return (
+      resultSets &&
+      sortGeneratedSets(
+        filterMap(resultSets, (s) => {
+          try {
+            return hydrateArmorSet(s);
+          } catch (e) {
+            errorLog('loadout optimizer', 'Error hydrating armor set', e);
+            return undefined;
+          }
+        }),
+        desiredStatRanges,
+      )
+    );
   }, [desiredStatRanges, resultSets, armorItems]);
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
