@@ -65,11 +65,9 @@ jobs:
         env:
           cache-name: cache-eslint
         with:
-          path: ~/.eslintcache
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('.eslintrc') }}
-            ${{ runner.os }}-${{ env.cache-name }}-
+          path: |
+            .eslintcache
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.json', '**/eslint.config.js') }}
 
       - name: Install
         run: pnpm install --frozen-lockfile --prefer-offline
@@ -92,12 +90,24 @@ jobs:
 
       - name: Annotate ESLint Results
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
-        uses: ataylorme/eslint-annotate-action@v2
+        uses: ataylorme/eslint-annotate-action@v3
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           report-json: "eslint.results.json"
-          fail-on-warning: true
+          fail-on-warning: false
+          fail-on-error: false
 
-      - name: Check If ESLint Failed
+      - name: Show ESLint Summary and Failures
         if : steps.eslint-continue.outcome == 'failure'
-        run: exit 1
+        run: |
+          ERRORS=$(cat eslint.results.json | jq '[.[] | select(.errorCount > 0)] | length')
+          WARNINGS=$(cat eslint.results.json | jq '[.[] | select(.warningCount > 0)] | length')
+
+          echo "Files with errors: $ERRORS"
+          echo "Files with warnings: $WARNINGS"
+
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::Found linting errors in $ERRORS files"
+            pnpm lintcached
+            exit 1
+          fi
