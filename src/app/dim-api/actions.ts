@@ -83,7 +83,8 @@ const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, Any
               current.profiles !== previous.profiles ||
               current.updateQueue !== previous.updateQueue ||
               current.itemHashTags !== previous.itemHashTags ||
-              current.searches !== previous.searches)
+              current.searches !== previous.searches ||
+              current.globalSettings !== previous.globalSettings)
           ) {
             // Only save the difference between the current and default settings
             const settingsToSave = subtractObject(
@@ -97,6 +98,7 @@ const installObservers = once((dispatch: ThunkDispatch<RootState, undefined, Any
               updateQueue: current.updateQueue,
               itemHashTags: current.itemHashTags,
               searches: current.searches,
+              globalSettings: current.globalSettings,
             };
             infoLog(TAG, 'Saving profile data to IDB');
             set('dim-api-profile', savedState);
@@ -215,16 +217,16 @@ export function loadDimApiData(
     const getPlatformsPromise = dispatch(getPlatforms); // in parallel, we'll wait later
 
     await profileFromIDB;
+    readyResolve();
     installObservers(dispatch); // idempotent
 
-    await globalSettingsLoad;
+    await Promise.race([globalSettingsLoad, delay(3_000)]); // don't wait forever for global settings
 
     // They don't want to sync from the server, or the API is disabled - stick with local data
     if (
       !getState().dimApi.apiPermissionGranted ||
       !getState().dimApi.globalSettings.dimApiEnabled
     ) {
-      readyResolve();
       return;
     }
 
@@ -288,14 +290,7 @@ export function loadDimApiData(
 
         // Wait, then retry. We don't await this here so we don't stop the finally block from running
         delay(waitTime).then(() => dispatch(loadDimApiData(options)));
-      } finally {
-        // Release the app to load with whatever language was saved or the
-        // default. Better to have the wrong language (that fixes itself on
-        // reload) than to block the app working if the DIM API is down.
-        readyResolve();
       }
-    } else {
-      readyResolve();
     }
 
     // Make sure any queued updates get sent to the server
