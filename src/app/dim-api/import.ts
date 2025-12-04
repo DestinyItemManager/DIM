@@ -17,7 +17,7 @@ import { Dispatch } from 'redux';
 import { loadDimApiData } from './actions';
 import { profileLoadedFromIDB } from './basic-actions';
 import { importData } from './dim-api';
-import type { DimApiState } from './reducer';
+import { type DimApiState } from './reducer';
 import { makeProfileKey } from './selectors';
 
 const TAG = 'importData';
@@ -68,7 +68,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
 }
 
 function importBackupIntoLocalState(data: ExportResponse, silent = false): ThunkResult {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const settings = data.settings;
     const loadouts = extractLoadouts(data);
     const tags = extractItemAnnotations(data);
@@ -152,6 +152,7 @@ function importBackupIntoLocalState(data: ExportResponse, silent = false): Thunk
         itemHashTags: keyBy(itemHashTags, (t) => t.hash),
         searches,
         updateQueue: [],
+        globalSettings: getState().dimApi.globalSettings,
       }),
     );
 

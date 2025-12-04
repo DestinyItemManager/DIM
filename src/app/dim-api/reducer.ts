@@ -222,6 +222,7 @@ export const dimApi = (
               ...state.searches,
               ...action.payload.searches,
             },
+            globalSettings: state.globalSettings,
           })
         : {
             ...state,
