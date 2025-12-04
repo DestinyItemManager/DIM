@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Check for artifact existence
         id: check_my_artifact
-        uses: xSAVIKx/artifact-exists-action@v0
+        uses: LIT-Protocol/artifact-exists-action@v0
         with:
           name: 'relative-ci-artifacts'
 
