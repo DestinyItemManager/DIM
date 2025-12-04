@@ -1,6 +1,6 @@
 // Originally from https://github.com/joshhunt/notify-webpack-plugin/, converted to TypeScript
 
-import { type Compiler, type Stats } from 'webpack';
+import { type Compiler, type Stats } from '@rspack/core';
 
 import chalk from 'chalk';
 
