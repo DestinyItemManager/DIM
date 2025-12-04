@@ -64,10 +64,13 @@ jobs:
               - config/webpack.ts
               - babel.config.js
 
-      - name: Upload bundle stats artifact
+      # Send webpack stats and build information to RelativeCI
+      - name: Send bundle stats and build information to RelativeCI
         if: ${{ steps.filter.outputs.build-pipeline == 'true' }}
-        uses: relative-ci/agent-upload-artifact-action@v2
+        uses: relative-ci/agent-action@v3.2.1
         with:
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           webpackStatsFile: ./webpack-stats.json
 
       # Deploy a preview version of the server!

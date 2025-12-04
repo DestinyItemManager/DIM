@@ -64,9 +64,11 @@ jobs:
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
       # Send webpack stats and build information to RelativeCI
-      - name: Upload bundle stats artifact
-        uses: relative-ci/agent-upload-artifact-action@v2
+      - name: Send bundle stats and build information to RelativeCI
+        uses: relative-ci/agent-action@v3.2.1
         with:
+          key: ${{ secrets.RELATIVE_CI_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           webpackStatsFile: ./webpack-stats.json
 
       - name: Check Syntax
