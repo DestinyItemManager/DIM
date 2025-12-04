@@ -73,6 +73,14 @@ export default (env: Env) => {
   const jsFilenamePattern = env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js';
   const cssFilenamePattern = env.dev ? '[name]-[fullhash].css' : '[name]-[contenthash:8].css';
 
+  const lightningCssLoader = {
+    loader: 'builtin:lightningcss-loader',
+    /** @type {import('@rspack/core').LightningcssLoaderOptions} */
+    options: {
+      targets: packageJson.browserslist,
+    },
+  };
+
   const config: Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
 
@@ -292,7 +300,7 @@ export default (env: Env) => {
                 importLoaders: 2,
               },
             },
-            'postcss-loader',
+            lightningCssLoader,
             { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
           ],
           type: 'javascript/auto',
@@ -304,7 +312,7 @@ export default (env: Env) => {
           use: [
             env.dev ? 'style-loader' : rspack.CssExtractRspackPlugin.loader,
             'css-loader',
-            'postcss-loader',
+            lightningCssLoader,
             { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
           ],
           type: 'javascript/auto',
@@ -314,7 +322,7 @@ export default (env: Env) => {
           use: [
             env.dev ? 'style-loader' : rspack.CssExtractRspackPlugin.loader,
             'css-loader',
-            'postcss-loader',
+            lightningCssLoader,
           ],
           type: 'javascript/auto',
         },
