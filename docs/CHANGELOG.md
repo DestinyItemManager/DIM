@@ -1,8 +1,10 @@
 ## Next
 
+* DIM should load faster even when it is having trouble loading DIM API data.
 * Festival masks will now show up in the Organizer.
 * Tiered Engrams in postmaster will now match `is:engrams`
-* Fix crash in loadout optimizer when changing characters.
+* Fix crash in Loadout Optimizer when changing characters.
+* Include more ingame loadout identification info in Triage loadouts list.
 
 ## 8.101.1 <span class="changelog-date">(2025-12-02)</span>
 
