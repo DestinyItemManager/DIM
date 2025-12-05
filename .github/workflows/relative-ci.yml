@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Check for webpack stats artifact
         id: check-artifact
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -34,11 +34,11 @@ jobs:
 
       - name: Download webpack stats
         if: steps.check-artifact.outputs.exists == 'true'
-        uses: dawidd6/action-download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: webpack-stats
-          run_id: ${{ github.event.workflow_run.id }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload to RelativeCI
         if: steps.check-artifact.outputs.exists == 'true'

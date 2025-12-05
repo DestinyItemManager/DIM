@@ -67,7 +67,7 @@ jobs:
       # Send webpack stats and build information to RelativeCI
       - name: Upload webpack stats
         if: ${{ steps.filter.outputs.build-pipeline == 'true' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: webpack-stats
           path: webpack-stats.json
