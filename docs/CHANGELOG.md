@@ -5,6 +5,7 @@
 * Tiered Engrams in postmaster will now match `is:engrams`
 * Fix crash in Loadout Optimizer when changing characters.
 * Include more ingame loadout identification info in Triage loadouts list.
+* Fixed the well-rested XP calculation being too low for the first 5 levels of the season pass.
 
 ## 8.101.1 <span class="changelog-date">(2025-12-02)</span>
 
