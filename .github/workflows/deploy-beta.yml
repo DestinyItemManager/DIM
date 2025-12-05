@@ -22,13 +22,7 @@ jobs:
         with:
           fetch-depth: 2 # So sentry can get the previous commit
 
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
+      - uses: ./.github/actions/setup-pnpm
 
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1
@@ -37,11 +31,11 @@ jobs:
           private-key-name: dim.rsa
           known-hosts: ${{ secrets.REMOTE_HOST }}
 
-      - name: get-npm-version
+      - name: Get package version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
-      - name: set beta
+      - name: Set beta environment
         run: |
           echo "build_level='beta'" >> $GITHUB_ENV
 
@@ -50,9 +44,6 @@ jobs:
           RUN_NUM: ${{ github.run_number }}
         run: |
           echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM))" >> $GITHUB_ENV
-
-      - name: Install
-        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build
         run: pnpm build:beta
@@ -63,8 +54,7 @@ jobs:
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
-      # Send webpack stats and build information to RelativeCI
-      - name: Send bundle stats and build information to RelativeCI
+      - name: Send bundle stats to RelativeCI
         uses: relative-ci/agent-action@v3.2.1
         with:
           key: ${{ secrets.RELATIVE_CI_KEY }}
@@ -74,14 +64,14 @@ jobs:
       - name: Check Syntax
         run: pnpm syntax
 
-      - name: Rsync to Server
+      - name: Deploy to server
         run: ./build/rsync-deploy.sh
         env:
-            SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-            SOURCE: "dist/"
-            REMOTE_USER: ${{ secrets.REMOTE_USER }}
-            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-            REMOTE_PATH: beta.destinyitemmanager.com
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SOURCE: "dist/"
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_PATH: beta.destinyitemmanager.com
 
       - name: Purge CloudFlare cache
         run: ./build/purge-cloudflare.sh
