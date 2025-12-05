@@ -8,30 +8,20 @@ on:
       - 'src/locale/en.json'
 
 jobs:
-  i18n-update:
+  update:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 3
           token: ${{ secrets.I18N_PAT }}
 
-      - uses: pnpm/action-setup@v4
+      - uses: ./.github/actions/setup-pnpm
 
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
-
-      - name: Install
-        run: pnpm install --frozen-lockfile --prefer-offline
-
-      - name: pnpm i18n
+      - name: Run i18n update
         run: pnpm i18n
 
       - name: Commit files
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: Apply i18n updates
+          commit_message: "i18n: Apply automated updates"
