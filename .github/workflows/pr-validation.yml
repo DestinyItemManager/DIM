@@ -1,0 +1,218 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - 'docs/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Test job - runs in parallel
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm  # This caches the pnpm store automatically
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Cache Manifest
+        uses: actions/cache@v4
+        with:
+          path: manifest-cache
+          key: destiny-manifest-${{ github.run_number }}
+          restore-keys: |
+            destiny-manifest-
+
+      - name: Run tests
+        run: pnpm test
+        env:
+          CLEAN_MANIFEST_CACHE: true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: test-results
+          path: junit.xml
+          retention-days: 7
+
+  # Lint job - runs in parallel
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm  # This caches the pnpm store automatically
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Cache ESLint
+        uses: actions/cache@v4
+        with:
+          path: |
+            .eslintcache
+            node_modules/.cache
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml', 'eslint.config.js', 'tsconfig.json') }}
+          restore-keys: |
+            ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-eslint-
+
+      - name: Prettier
+        run: pnpm lint:prettier
+
+      - name: StyleLint
+        run: pnpm lint:stylelint
+
+      - name: ESLint
+        id: eslint
+        run: |
+          if [[ "${{ github.event.pull_request.head.repo.full_name }}" == "${{ github.repository }}" ]] && [[ "${{ github.actor }}" != "dependabot[bot]" ]]; then
+            pnpm lint-report:cached || echo "eslint_failed=true" >> $GITHUB_OUTPUT
+          else
+            pnpm lintcached
+          fi
+
+      - name: Annotate ESLint Results
+        if: steps.eslint.outputs.eslint_failed == 'true'
+        uses: ataylorme/eslint-annotate-action@v3
+        with:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint.results.json"
+          fail-on-warning: false
+          fail-on-error: false
+
+      - name: Check ESLint Results
+        if: steps.eslint.outputs.eslint_failed == 'true'
+        run: |
+          ERRORS=$(jq '[.[] | select(.errorCount > 0)] | length' eslint.results.json 2>/dev/null || echo "0")
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::Found linting errors in $ERRORS files"
+            pnpm lintcached
+            exit 1
+          fi
+
+  # Build job - runs in parallel
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: pr
+      url: ${{ steps.deploy-url.outputs.url }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm  # This caches the pnpm store automatically
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Get package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Set version
+        run: |
+          echo "VERSION=${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Build PR version
+        run: pnpm build:pr
+        env:
+          NODE_OPTIONS: "--max_old_space_size=8192"
+          WEB_API_KEY: ${{ secrets.BUNGIE_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+          PUBLIC_PATH: /${{ github.event.number }}/
+
+      - name: Check for build pipeline updates
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            build-pipeline:
+              - package.json
+              - pnpm-lock.yaml
+              - config/webpack.ts
+              - babel.config.cjs
+
+      - name: Upload webpack stats
+        if: steps.filter.outputs.build-pipeline == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: webpack-stats
+          path: webpack-stats.json
+          retention-days: 1
+
+      - name: Install SSH key
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
+        with:
+          private-key: ${{ secrets.SSH_KEY }}
+          private-key-name: dim.rsa
+          known-hosts: ${{ secrets.REMOTE_HOST }}
+
+      - name: Check Syntax
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+        run: pnpm syntax
+
+      - name: Deploy to preview
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+        run: ./build/rsync-deploy.sh
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SOURCE: "dist/"
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_PATH: pr.destinyitemmanager.com/${{ github.event.number }}
+
+      - name: Purge CloudFlare cache
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+        run: ./build/purge-cloudflare.sh
+        env:
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          APP_DOMAIN: pr.destinyitemmanager.com/${{ github.event.number }}
+
+      - name: Set preview URL
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+        id: deploy-url
+        run: |
+          echo "url=https://pr.dim.gg/${{ github.event.number }}/" >> $GITHUB_OUTPUT
+
+  validation-complete:
+    needs: [test, lint, build]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check validation results
+        run: |
+          if [[ "${{ needs.test.result }}" == "failure" ]] || [[ "${{ needs.lint.result }}" == "failure" ]] || [[ "${{ needs.build.result }}" == "failure" ]]; then
+            echo "::error::PR validation failed"
+            exit 1
+          fi
+          echo "::notice::✅ All PR validations passed successfully!"
