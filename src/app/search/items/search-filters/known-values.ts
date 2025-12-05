@@ -198,6 +198,9 @@ export const itemTypeFilter = {
         break;
       }
     }
+    if (filterValue === 'engrams') {
+      return (item) => item.isEngram;
+    }
     return (item) => item.bucket.hash === bucketHash;
   },
   fromItem: (item) => `is:${bucketToType[item.bucket.hash as BucketHashes]}`,
