@@ -348,6 +348,10 @@ export function makeItem(
     itemDef.traitHashes?.includes(TraitHashes.ItemEngram) ||
     false;
 
+  if (isEngram && normalBucket.hash !== BucketHashes.Engrams) {
+    normalBucket = buckets.byHash[BucketHashes.Engrams];
+  }
+
   // https://github.com/Bungie-net/api/issues/134, class items had a primary stat
 
   let primaryStat: DimItem['primaryStat'] = null;
