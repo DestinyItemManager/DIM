@@ -545,6 +545,7 @@ export default (env: Env) => {
             /^(?!en).+.json/,
             /webpack-stats.json/,
             /screenshots\//,
+            /\.br$/,
           ],
         },
       }),
