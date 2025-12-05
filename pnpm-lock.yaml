@@ -208,6 +208,9 @@ devDependencies:
   '@bhollis/eslint-plugin-css-modules':
     specifier: ^1.0.0
     version: 1.0.0(eslint@9.19.0)
+  '@bundle-stats/plugin-webpack-filter':
+    specifier: ^4.21.7
+    version: 4.21.7(core-js@3.47.0)
   '@eslint-react/eslint-plugin':
     specifier: ^2.3.9
     version: 2.3.9(eslint@9.19.0)(typescript@5.9.3)
@@ -1943,6 +1946,16 @@ packages:
       es-toolkit: 1.42.0
       eslint: 9.19.0
       gonzales-pe: 4.3.0
+    dev: true
+
+  /@bundle-stats/plugin-webpack-filter@4.21.7(core-js@3.47.0):
+    resolution: {integrity: sha512-3FFpruerI+hxqBkCTkiuZBmD7vJ4bFtgezh4sDV1xm0u4UXxXQF70J/A23qldQSc+lATgye94fs60uFI2wGrjg==}
+    engines: {node: '>= 14.0'}
+    peerDependencies:
+      core-js: ^3.0.0
+    dependencies:
+      core-js: 3.47.0
+      tslib: 2.8.1
     dev: true
 
   /@cacheable/memory@2.0.6:
@@ -7138,7 +7151,6 @@ packages:
   /core-js@3.47.0:
     resolution: {integrity: sha512-c3Q2VVkGAUyupsjRnaNX6u8Dq2vAdzm9iuPj5FW0fRxzlxgq9Q39MDq10IvmQSpLgHQNyQzQmOo6bgGHmH3NNg==}
     requiresBuild: true
-    dev: false
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
