@@ -1,6 +1,7 @@
 ## Next
 
 * Festival masks will now show up in the Organizer.
+* Tiered Engrams in postmaster will now match `is:engrams`
 
 ## 8.101.1 <span class="changelog-date">(2025-12-02)</span>
 
