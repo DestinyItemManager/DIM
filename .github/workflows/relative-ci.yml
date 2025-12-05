@@ -2,7 +2,7 @@ name: RelativeCI
 
 on:
   workflow_run:
-    workflows: ["PR Build"]
+    workflows: ["PR Validation"]
     types: [completed]
 
 jobs:
