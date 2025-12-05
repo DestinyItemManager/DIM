@@ -85,31 +85,30 @@ jobs:
 
       - name: ESLint
         id: eslint
-        run: |
-          if [[ "${{ github.event.pull_request.head.repo.full_name }}" == "${{ github.repository }}" ]] && [[ "${{ github.actor }}" != "dependabot[bot]" ]]; then
-            pnpm lint-report:cached || echo "eslint_failed=true" >> $GITHUB_OUTPUT
-          else
-            pnpm lintcached
-          fi
+        run: pnpm lint-report:cached
+        continue-on-error: true
 
-      - name: Annotate ESLint Results
-        if: steps.eslint.outputs.eslint_failed == 'true'
-        uses: ataylorme/eslint-annotate-action@v3
+      - name: Upload ESLint results
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          report-json: "eslint.results.json"
-          fail-on-warning: false
-          fail-on-error: false
+          name: eslint-results
+          path: eslint.results.json
+          if-no-files-found: ignore
+          retention-days: 7
 
-      - name: Check ESLint Results
-        if: steps.eslint.outputs.eslint_failed == 'true'
+      # Annotation happens in separate workflow (eslint-annotate.yml)
+      # This allows annotations to work for fork PRs too
+
+      - name: Show ESLint errors in console
+        if: steps.eslint.outcome == 'failure'
+        run: pnpm lintcached
+
+      - name: Fail if ESLint has errors
+        if: steps.eslint.outcome == 'failure'
         run: |
-          ERRORS=$(jq '[.[] | select(.errorCount > 0)] | length' eslint.results.json 2>/dev/null || echo "0")
-          if [ "$ERRORS" -gt 0 ]; then
-            echo "::error::Found linting errors in $ERRORS files"
-            pnpm lintcached
-            exit 1
-          fi
+          echo "::error::ESLint found errors - check output above or download artifact for details"
+          exit 1
 
   build:
     runs-on: ubuntu-latest
