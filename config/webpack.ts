@@ -1,4 +1,5 @@
 import { InjectManifest } from '@aaroon/workbox-rspack-plugin';
+import filterWebpackStats from '@bundle-stats/plugin-webpack-filter';
 import { type Configuration, rspack } from '@rspack/core';
 import ReactRefreshPlugin from '@rspack/plugin-react-refresh';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -547,6 +548,10 @@ export default (env: Env) => {
             /screenshots\//,
             /\.br$/,
           ],
+        },
+        transform: (webpackStats) => {
+          const filteredSource = filterWebpackStats(webpackStats);
+          return JSON.stringify(filteredSource);
         },
       }),
 
