@@ -1,7 +1,7 @@
 name: 'Test Report'
 on:
   workflow_run:
-    workflows: ['PR Test & Lint']                     # runs after CI workflow
+    workflows: ['PR Validation']                     # runs after CI workflow
     types:
       - completed
 jobs:
