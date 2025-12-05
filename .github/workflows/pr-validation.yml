@@ -11,22 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Test job - runs in parallel
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm  # This caches the pnpm store automatically
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - uses: ./.github/actions/setup-pnpm
 
       - name: Cache Manifest
         uses: actions/cache@v4
@@ -49,22 +38,11 @@ jobs:
           path: junit.xml
           retention-days: 7
 
-  # Lint job - runs in parallel
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm  # This caches the pnpm store automatically
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - uses: ./.github/actions/setup-pnpm
 
       - name: Cache ESLint
         uses: actions/cache@v4
@@ -111,7 +89,6 @@ jobs:
             exit 1
           fi
 
-  # Build job - runs in parallel
   build:
     runs-on: ubuntu-latest
     environment:
@@ -119,18 +96,7 @@ jobs:
       url: ${{ steps.deploy-url.outputs.url }}
     steps:
       - uses: actions/checkout@v6
-
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm  # This caches the pnpm store automatically
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
-
+      - uses: ./.github/actions/setup-pnpm
       - name: Get package version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1

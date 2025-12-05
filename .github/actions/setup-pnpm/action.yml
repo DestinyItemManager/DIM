@@ -1,0 +1,35 @@
+name: 'Setup PNPM Environment'
+description: 'Setup Node.js with PNPM and install dependencies with proper caching'
+
+inputs:
+  install:
+    description: 'Whether to install dependencies (default: true)'
+    required: false
+    default: 'true'
+
+  frozen-lockfile:
+    description: 'Use frozen lockfile for install (default: true)'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'pnpm'  # This caches the pnpm store automatically
+
+    - name: Install dependencies
+      if: inputs.install == 'true'
+      shell: bash
+      run: |
+        if [ "${{ inputs.frozen-lockfile }}" == "true" ]; then
+          pnpm install --frozen-lockfile --prefer-offline
+        else
+          pnpm install --prefer-offline
+        fi
