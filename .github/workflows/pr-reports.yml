@@ -11,15 +11,18 @@ permissions:
   actions: read
 
 jobs:
-  test-report:
+  # Check all artifacts in a single job to reduce API calls
+  check-artifacts:
     runs-on: ubuntu-latest
-    if: >
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion != 'cancelled'
-
+    timeout-minutes: 5
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion != 'cancelled'
+    outputs:
+      has-test-results: ${{ steps.check.outputs.test-results }}
+      has-eslint-results: ${{ steps.check.outputs.eslint-results }}
+      has-webpack-stats: ${{ steps.check.outputs.webpack-stats }}
     steps:
-      - name: Check for test results artifact
-        id: check-artifact
+      - name: Check for all artifacts
+        id: check
         uses: actions/github-script@v7
         with:
           script: |
@@ -29,18 +32,25 @@ jobs:
               run_id: context.payload.workflow_run.id
             });
 
-            const artifact = artifacts.data.artifacts.find(a => a.name === 'test-results');
+            const hasTestResults = artifacts.data.artifacts.some(a => a.name === 'test-results');
+            const hasEslintResults = artifacts.data.artifacts.some(a => a.name === 'eslint-results');
+            const hasWebpackStats = artifacts.data.artifacts.some(a => a.name === 'webpack-stats');
 
-            if (artifact) {
-              console.log(`✅ Found test-results artifact (${artifact.size_in_bytes} bytes)`);
-              core.setOutput('exists', 'true');
-            } else {
-              console.log('ℹ️ No test-results artifact found - skipping report');
-              core.setOutput('exists', 'false');
-            }
+            console.log(`Test results: ${hasTestResults ? '✅' : '❌'}`);
+            console.log(`ESLint results: ${hasEslintResults ? '✅' : '❌'}`);
+            console.log(`Webpack stats: ${hasWebpackStats ? '✅' : '❌'}`);
 
+            core.setOutput('test-results', hasTestResults);
+            core.setOutput('eslint-results', hasEslintResults);
+            core.setOutput('webpack-stats', hasWebpackStats);
+
+  test-report:
+    needs: check-artifacts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: needs.check-artifacts.outputs.has-test-results == 'true'
+    steps:
       - name: Download test results
-        if: steps.check-artifact.outputs.exists == 'true'
         uses: actions/download-artifact@v4
         with:
           name: test-results
@@ -48,7 +58,6 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Publish test report
-        if: steps.check-artifact.outputs.exists == 'true'
         uses: dorny/test-reporter@v2
         with:
           artifact: test-results
@@ -57,35 +66,12 @@ jobs:
           reporter: jest-junit
 
   eslint-annotate:
+    needs: check-artifacts
     runs-on: ubuntu-latest
-    if: >
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion != 'cancelled'
-
+    timeout-minutes: 10
+    if: needs.check-artifacts.outputs.has-eslint-results == 'true'
     steps:
-      - name: Check for ESLint results artifact
-        id: check-artifact
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id
-            });
-
-            const artifact = artifacts.data.artifacts.find(a => a.name === 'eslint-results');
-
-            if (artifact) {
-              console.log(`✅ Found eslint-results artifact (${artifact.size_in_bytes} bytes)`);
-              core.setOutput('exists', 'true');
-            } else {
-              console.log('ℹ️ No eslint-results artifact found - skipping annotations');
-              core.setOutput('exists', 'false');
-            }
-
       - name: Download ESLint results
-        if: steps.check-artifact.outputs.exists == 'true'
         uses: actions/download-artifact@v4
         with:
           name: eslint-results
@@ -93,7 +79,6 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Annotate ESLint results
-        if: steps.check-artifact.outputs.exists == 'true'
         uses: ataylorme/eslint-annotate-action@v3
         with:
           report-json: eslint.results.json
@@ -101,33 +86,12 @@ jobs:
           fail-on-warning: false
 
   bundle-analysis:
+    needs: check-artifacts
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
-
+    timeout-minutes: 10
+    if: needs.check-artifacts.outputs.has-webpack-stats == 'true' && github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Check for webpack stats artifact
-        id: check-artifact
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id
-            });
-
-            const artifact = artifacts.data.artifacts.find(a => a.name === 'webpack-stats');
-
-            if (artifact) {
-              console.log(`✅ Found webpack-stats artifact (${artifact.size_in_bytes} bytes)`);
-              core.setOutput('exists', 'true');
-            } else {
-              console.log('ℹ️ No webpack-stats artifact found - skipping upload');
-              core.setOutput('exists', 'false');
-            }
-
       - name: Download webpack stats
-        if: steps.check-artifact.outputs.exists == 'true'
         uses: actions/download-artifact@v4
         with:
           name: webpack-stats
@@ -135,7 +99,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload to RelativeCI
-        if: steps.check-artifact.outputs.exists == 'true'
         uses: relative-ci/agent-action@v3.2.1
         with:
           key: ${{ secrets.RELATIVE_CI_KEY }}

@@ -13,10 +13,12 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
 
-      # Inline setup (works with fork PRs)
+      # Inline setup - required for fork PR compatibility
+      # Cannot use ./.github/actions/setup-pnpm as it won't work from forks
       - uses: pnpm/action-setup@v4
 
       - name: Setup Node
@@ -51,10 +53,11 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
-      # Inline setup (works with fork PRs)
+      # Inline setup - required for fork PR compatibility
       - uses: pnpm/action-setup@v4
 
       - name: Setup Node
@@ -66,15 +69,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
+      # Optimized cache key: Only invalidate on config changes, not all dependencies
       - name: Cache ESLint
         uses: actions/cache@v4
         with:
           path: |
             .eslintcache
             node_modules/.cache
-          key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml', 'eslint.config.js', 'tsconfig.json') }}
+          key: ${{ runner.os }}-eslint-${{ hashFiles('eslint.config.js', 'tsconfig.json') }}-${{ hashFiles('src/**/*.ts', 'src/**/*.tsx', 'src/**/*.js', 'src/**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-eslint-${{ hashFiles('eslint.config.js', 'tsconfig.json') }}-
             ${{ runner.os }}-eslint-
 
       - name: Prettier
@@ -97,7 +101,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      # Annotation happens in separate workflow (eslint-annotate.yml)
+      # Annotation happens in separate workflow (pr-reports.yml)
       # This allows annotations to work for fork PRs too
 
       - name: Show ESLint errors in console
@@ -112,13 +116,14 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     environment:
       name: pr
       url: ${{ steps.deploy-url.outputs.url }}
     steps:
       - uses: actions/checkout@v6
 
-      # Inline setup (works with fork PRs)
+      # Inline setup - required for fork PR compatibility
       - uses: pnpm/action-setup@v4
 
       - name: Setup Node
@@ -206,6 +211,7 @@ jobs:
   validation-complete:
     needs: [test, lint, build]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     if: always()
     steps:
       - name: Check validation results
