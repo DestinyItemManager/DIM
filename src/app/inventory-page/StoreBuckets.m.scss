@@ -38,9 +38,12 @@
 }
 
 .vaultUnder {
-  > *:last-child {
+  > .vaultCell {
     grid-column: 1 / -1;
     margin-top: 4px;
     margin-bottom: 16px;
+    > :global(.sub-bucket) {
+      min-height: var(--item-size);
+    }
   }
 }
