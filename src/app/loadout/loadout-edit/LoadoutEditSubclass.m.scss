@@ -10,11 +10,11 @@
 
   @include phone-portrait {
     --loadout-edit-subclass-columns: 5;
-    // TODO: Turn this 22px * 2 into a variable for side padding
     --item-icon-size: calc(
-      ((100vw - 22px * 2 - var(--item-size)) / var(--loadout-edit-subclass-columns)) - var(
-          --item-margin
-        )
+      (
+          (100vw - var(--inventory-column-padding) * 2 - var(--item-size)) /
+            var(--loadout-edit-subclass-columns)
+        ) - var(--item-margin)
     );
     max-width: none;
   }

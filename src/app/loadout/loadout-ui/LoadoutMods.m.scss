@@ -12,7 +12,10 @@
   @include phone-portrait {
     --mods-grid-columns: 7;
     --item-icon-size: calc(
-      ((100vw - 20px - (var(--mods-grid-columns) - 1) * 4px) / var(--mods-grid-columns))
+      (
+        (100vw - var(--inventory-column-padding) * 2 - (var(--mods-grid-columns) - 1) * 4px) /
+          var(--mods-grid-columns)
+      )
     );
     min-width: none;
   }

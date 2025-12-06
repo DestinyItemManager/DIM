@@ -7,7 +7,11 @@
   margin-bottom: 10px;
 
   @include phone-portrait {
-    --item-size: calc((100vw - 22px * 2 - var(--item-margin) * 4) / 5) !important;
+    // 10px padding in the sheet, 12px padding in the loadout sections
+    --inventory-column-padding: 22px;
+    --item-size: calc(
+      (100vw - var(--inventory-column-padding) * 2 - var(--item-margin) * 4) / 5
+    ) !important;
     flex-flow: column;
   }
 }

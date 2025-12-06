@@ -44,9 +44,10 @@
   @include phone-portrait {
     --loadout-edit-subclass-columns: 5;
     --item-icon-size: calc(
-      ((100vw - 20px - var(--item-size)) / var(--loadout-edit-subclass-columns)) - var(
-          --item-margin
-        )
+      (
+          (100vw - var(--inventory-column-padding) * 2 - var(--item-size)) /
+            var(--loadout-edit-subclass-columns)
+        ) - var(--item-margin)
     );
     max-width: none;
   }
