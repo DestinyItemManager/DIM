@@ -376,6 +376,15 @@ export default function SettingsPage() {
             </div>
 
             <div className={styles.setting}>
+              <Checkbox
+                label={t('Settings.VaultUnder')}
+                name="vaultUnder"
+                value={settings.vaultUnder}
+                onChange={onCheckChange}
+              />
+            </div>
+
+            <div className={styles.setting}>
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>
 
               <SortOrderEditor order={itemSortCustom} onSortOrderChanged={itemSortOrderChanged} />

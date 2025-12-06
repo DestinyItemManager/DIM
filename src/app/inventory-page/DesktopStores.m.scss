@@ -14,7 +14,7 @@
   display: grid;
   grid-template-rows: 46px 1fr;
   padding: 16px var(--inventory-column-padding) 6px 0;
-  align-items: center;
+  place-items: center;
 }
 
 .singleCharacter {
@@ -34,8 +34,18 @@
   align-items: center;
 
   @include interactive($hover: true) {
-    transform: scale(1.5);
+    transform: scale(1.25);
     color: var(--theme-accent-primary);
+  }
+}
+
+.vaultUnderButton {
+  composes: singleCharacterButton;
+
+  font-size: 18px;
+
+  &.under > span {
+    transform: rotate(90deg);
   }
 }
 

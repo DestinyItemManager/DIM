@@ -21,6 +21,7 @@ export const copyIcon = 'fas fa-copy';
 export const downloadIcon = 'fas fa-file-export';
 export const sendIcon = 'fas fa-envelope';
 export const clearIcon = 'fas fa-eraser';
+export const levelDownIcon = 'fas fa-level-down-alt';
 export const levellingIcon = 'fas fa-level-up-alt';
 export const lockIcon = 'fas fa-lock';
 export const unlockedIcon = 'fas fa-unlock';

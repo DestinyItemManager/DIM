@@ -1292,6 +1292,8 @@
     "Theme": "Theme",
     "Troubleshooting": "Troubleshooting",
     "VaultGroupingNone": "None",
+    "VaultUnder": "Show vaulted items under equipped items",
+    "RestoreVaultSide": "Show vaulted items in their own column",
     "WeaponFrame": "Weapon Frame",
     "WishlistRefreshNotificationBody": "If you do not see any updates, be sure the source (such as GitHub) reflects them!",
     "WishlistRefreshNotificationTitle": "Wishlists Reloaded"

@@ -21,6 +21,7 @@ export function StoreBuckets({
   currentStore,
   labels,
   singleCharacter,
+  vaultUnder = false,
 }: {
   bucket: InventoryBucket;
   stores: DimStore[];
@@ -28,6 +29,7 @@ export function StoreBuckets({
   currentStore: DimStore;
   labels?: boolean;
   singleCharacter: boolean;
+  vaultUnder?: boolean;
 }) {
   let content: React.ReactNode;
 
@@ -58,12 +60,18 @@ export function StoreBuckets({
     );
   } else {
     content = stores.map((store) => {
+      if (!bucket.vaultBucket && store.isVault) {
+        // Don't bother adding a cell for vaultless buckets in the vault - doing so will
+        // add an empty space in vaultUnder mode.
+        return null;
+      }
       const hasPullFromPostmaster =
         bucket.hash === BucketHashes.LostItems && store.destinyVersion === 2;
       return (
         <div
           key={store.id}
           className={clsx('store-cell', {
+            [styles.vaultCell]: store.isVault,
             [styles.hasButton]: hasPullFromPostmaster,
             [styles.postmasterFull]:
               bucket.sort === 'Postmaster' &&
@@ -88,6 +96,7 @@ export function StoreBuckets({
     <div
       className={clsx('store-row', {
         [styles.singleCharacterAccountWideRow]: bucket.accountWide && singleCharacter,
+        [styles.vaultUnder]: !bucket.accountWide && vaultUnder,
       })}
     >
       {labels && (

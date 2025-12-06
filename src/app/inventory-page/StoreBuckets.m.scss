@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 /* The bucket label shown on mobile only */
 .bucketLabel {
   display: flex;
@@ -33,4 +35,15 @@
 // the horizontal space evenly between vault and character.
 .singleCharacterAccountWideRow {
   grid-template-columns: 1fr 1fr;
+}
+
+.vaultUnder {
+  > .vaultCell {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    > :global(.sub-bucket) {
+      min-height: var(--item-size);
+    }
+  }
 }
