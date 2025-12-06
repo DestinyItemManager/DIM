@@ -104,14 +104,10 @@ jobs:
       # Annotation happens in separate workflow (pr-reports.yml)
       # This allows annotations to work for fork PRs too
 
-      - name: Show ESLint errors in console
-        if: steps.eslint.outcome == 'failure'
-        run: pnpm lintcached
-
       - name: Fail if ESLint has errors
         if: steps.eslint.outcome == 'failure'
         run: |
-          echo "::error::ESLint found errors - check output above or download artifact for details"
+          pnpm lintcached
           exit 1
 
   build:
