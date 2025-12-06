@@ -4,12 +4,6 @@ interface CssExports {
   'canDrop': string;
   'classButton': string;
   'isOver': string;
-  'missingItem': string;
-  'modsPlaceholder': string;
-  'power': string;
-  'subclass': string;
-  'subclassContainer': string;
-  'subclassMods': string;
 }
 export const cssExports: CssExports;
 export = cssExports;

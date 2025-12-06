@@ -1,64 +1,5 @@
 @use '../../variables' as *;
 
-.subclassContainer {
-  --item-icon-size: calc(0.8 * var(--item-size));
-
-  composes: flexRow from '../../dim-ui/common.m.scss';
-  flex-wrap: wrap;
-  gap: var(--item-margin);
-  cursor: pointer;
-
-  @include phone-portrait {
-    --loadout-edit-subclass-columns: 5;
-    --item-icon-size: calc(
-      (
-          (100vw - var(--inventory-column-padding) * 2 - var(--item-size)) /
-            var(--loadout-edit-subclass-columns)
-        ) - var(--item-margin)
-    );
-    max-width: none;
-  }
-}
-
-.subclass {
-  width: var(--item-size);
-  min-width: var(--item-size);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--item-margin);
-}
-
-.power {
-  display: inline;
-  color: $gold;
-  flex: inherit;
-  font-size: 12px;
-  letter-spacing: normal;
-  svg {
-    margin-right: 2px;
-    font-size: 10px;
-  }
-}
-
-.subclassMods {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(var(--loadout-edit-subclass-columns, 3), var(--item-icon-size));
-  gap: var(--item-margin);
-  align-content: flex-start;
-  align-items: flex-start;
-
-  :global(.item) {
-    --item-size: var(--item-icon-size);
-  }
-}
-
-.modsPlaceholder {
-  composes: placeholder from '../loadout-ui/LoadoutItemCategorySection.m.scss';
-  width: calc(3 * var(--item-icon-size) + var(--item-margin) + #{$item-border-width}) !important;
-}
-
 .classButton {
   // Smaller items to try and make it clearer that these aren't selected.
   --item-size: 32px;
@@ -81,10 +22,6 @@
   @include phone-portrait {
     --item-size: calc(100vw / 8);
   }
-}
-
-.missingItem {
-  opacity: 0.3;
 }
 
 .canDrop {
