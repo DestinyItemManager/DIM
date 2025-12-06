@@ -5,6 +5,10 @@
   flex-direction: column;
   align-items: center;
   gap: var(--item-margin);
+
+  @include phone-portrait {
+    --item-size: calc((100vw - 20px - var(--item-margin) * 4) / 5) !important;
+  }
 }
 
 .itemsInCategory {

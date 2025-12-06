@@ -35,7 +35,7 @@
 
 .actions {
   composes: flexRow from '../dim-ui/common.m.scss';
-  flex-flow: row wrap;
+  flex-flow: row;
   gap: 4px;
   margin-left: auto;
 
@@ -79,10 +79,6 @@
   margin-top: 10px;
   min-height: 16px;
   gap: 24px;
-
-  @include phone-portrait {
-    gap: 12px;
-  }
 }
 
 .classIcon {

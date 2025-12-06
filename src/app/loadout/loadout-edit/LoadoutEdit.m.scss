@@ -7,7 +7,7 @@
   margin-bottom: 10px;
 
   @include phone-portrait {
-    --item-size: calc((100vw - 22px * 2 - 4px * 4) / 5) !important;
+    --item-size: calc((100vw - 22px * 2 - var(--item-margin) * 4) / 5) !important;
     flex-flow: column;
   }
 }
@@ -30,7 +30,6 @@
   background-color: rgb(255, 255, 255, 0.1);
 
   @include phone-portrait {
-    --item-margin: 4px;
     flex: 1;
   }
 }
