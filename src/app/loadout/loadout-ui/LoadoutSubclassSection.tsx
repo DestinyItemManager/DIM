@@ -25,58 +25,106 @@ export default function LoadoutSubclassSection({
   power: number;
 }) {
   const defs = useD2Definitions()!;
-  const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
+
+  return (
+    <SubclassContainer>
+      <SubclassIcon subclass={subclass} plugs={plugs} power={power} />
+      {subclass && <SubclassMods subclass={subclass} plugs={plugs} />}
+    </SubclassContainer>
+  );
+}
+
+/**
+ * The container for the subclass icon and power display. Pass your own subclass
+ * item icon as children.
+ */
+export function SubclassIcon({
+  subclass,
+  plugs,
+  power,
+}: {
+  subclass?: ResolvedLoadoutItem;
+  power: number;
+  plugs: ReturnType<typeof getSubclassPlugs>;
+}) {
   const superPlug = plugs.find((p) => p.socketCategoryHash === SocketCategoryHashes.Super);
 
   return (
-    <div className={styles.subclassContainer}>
-      <div
-        className={clsx(styles.subclass, {
-          [styles.missingItem]: subclass?.missing,
-        })}
-      >
-        {subclass ? (
-          <PressTip tooltip={() => superPlug && <PlugDefTooltip def={superPlug?.plug} />}>
-            <DraggableInventoryItem item={subclass.item}>
-              <ItemPopupTrigger
-                item={subclass.item}
-                extraData={{ socketOverrides: subclass.loadoutItem.socketOverrides }}
-              >
-                {(ref, onClick) => (
-                  <ConnectedInventoryItem
-                    ref={ref}
-                    // Disable the popup when plugs are available as we are showing
-                    // plugs in the loadout and they may be different to the popup
-                    onClick={onClick}
-                    item={subclass.item}
-                  />
-                )}
-              </ItemPopupTrigger>
-            </DraggableInventoryItem>
-          </PressTip>
-        ) : (
-          <EmptySubclass />
-        )}
-        {power !== 0 && (
-          <div className={styles.power}>
-            <AppIcon icon={powerActionIcon} />
-            <span>{power}</span>
-          </div>
-        )}
-      </div>
-      {plugs.length ? (
-        <div className={styles.subclassMods}>
-          {plugs?.map(
-            (plug) =>
-              plug.socketCategoryHash !== SocketCategoryHashes.Super && (
-                <PlugDef key={getModRenderKey(plug.plug)} plug={plug.plug} item={subclass?.item} />
-              ),
-          )}
-        </div>
+    <div className={styles.subclass}>
+      {subclass ? (
+        <PressTip
+          tooltip={() => superPlug && <PlugDefTooltip def={superPlug?.plug} />}
+          className={clsx({
+            [styles.missingItem]: subclass?.missing,
+          })}
+        >
+          <DraggableInventoryItem item={subclass.item}>
+            <ItemPopupTrigger
+              item={subclass.item}
+              extraData={{ socketOverrides: subclass.loadoutItem.socketOverrides }}
+            >
+              {(ref, onClick) => (
+                <ConnectedInventoryItem
+                  ref={ref}
+                  // Disable the popup when plugs are available as we are showing
+                  // plugs in the loadout and they may be different to the popup
+                  onClick={onClick}
+                  item={subclass.item}
+                />
+              )}
+            </ItemPopupTrigger>
+          </DraggableInventoryItem>
+        </PressTip>
       ) : (
-        <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
+        <EmptySubclass />
+      )}
+      {power !== 0 && (
+        <div className={styles.power}>
+          <AppIcon icon={powerActionIcon} />
+          <span>{power}</span>
+        </div>
       )}
     </div>
+  );
+}
+
+/** The container for the subclass and its mods */
+export function SubclassContainer({
+  children,
+  className,
+  ref,
+  ...props
+}: {
+  children: React.ReactNode;
+  ref?: React.Ref<HTMLDivElement>;
+} & React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={clsx(styles.subclassContainer, className)} {...props} ref={ref}>
+      {children}
+    </div>
+  );
+}
+
+/** The list of fragments and abilities for the subclass. */
+export function SubclassMods({
+  subclass,
+  plugs,
+}: {
+  subclass: ResolvedLoadoutItem;
+  plugs: ReturnType<typeof getSubclassPlugs>;
+}) {
+  const getModRenderKey = createGetModRenderKey();
+  return plugs.length ? (
+    <div className={styles.subclassMods}>
+      {plugs?.map(
+        (plug) =>
+          plug.socketCategoryHash !== SocketCategoryHashes.Super && (
+            <PlugDef key={getModRenderKey(plug.plug)} plug={plug.plug} item={subclass?.item} />
+          ),
+      )}
+    </div>
+  ) : (
+    <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
   );
 }

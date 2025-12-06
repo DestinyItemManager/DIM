@@ -5,6 +5,15 @@
   flex-flow: row wrap;
   gap: 10px;
   margin-bottom: 10px;
+
+  @include phone-portrait {
+    // 10px padding in the sheet, 12px padding in the loadout sections
+    --inventory-column-padding: 22px;
+    --item-size: calc(
+      (100vw - var(--inventory-column-padding) * 2 - var(--item-margin) * 4) / 5
+    ) !important;
+    flex-flow: column;
+  }
 }
 
 .mods {
@@ -25,7 +34,6 @@
   background-color: rgb(255, 255, 255, 0.1);
 
   @include phone-portrait {
-    --item-margin: 4px;
     flex: 1;
   }
 }

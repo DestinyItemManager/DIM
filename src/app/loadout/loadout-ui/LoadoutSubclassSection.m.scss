@@ -3,9 +3,17 @@
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
   composes: flexRow from '../../dim-ui/common.m.scss';
+  gap: var(--item-margin);
 
   @include phone-portrait {
-    width: 100%;
+    --loadout-edit-subclass-columns: 5;
+    --item-icon-size: calc(
+      (
+          (100vw - var(--inventory-column-padding) * 2 - var(--item-size)) /
+            var(--loadout-edit-subclass-columns)
+        ) - var(--item-margin)
+    );
+    max-width: none;
   }
 }
 
@@ -15,7 +23,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: var(--item-margin);
   gap: var(--item-margin);
 }
 
@@ -32,17 +39,16 @@
 }
 
 .subclassMods {
-  --item-icon-size: calc(0.8 * var(--item-size));
-  width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
-  margin-right: calc(-1 * var(--item-margin) + #{$item-border-width});
+  flex: 1;
+  // margin-right: calc(-1 * var(--item-margin) + #{$item-border-width});
   display: grid;
-  grid-template-columns: repeat(auto-fill, var(--item-icon-size));
-  gap: 4px;
+  grid-template-columns: repeat(var(--loadout-edit-subclass-columns, 3), var(--item-icon-size));
+  gap: var(--item-margin);
   align-content: flex-start;
   align-items: flex-start;
 
-  @include phone-portrait {
-    width: min(calc(3 * var(--item-icon-size) + 2 * var(--item-margin)), 100%);
+  @include desktop {
+    --item-margin: 4px;
   }
 
   :global(.item) {
