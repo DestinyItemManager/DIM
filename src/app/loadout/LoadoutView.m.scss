@@ -80,6 +80,10 @@
   margin-top: 10px;
   min-height: 16px;
   gap: 24px;
+
+  @include phone-portrait {
+    flex-flow: column;
+  }
 }
 
 .classIcon {

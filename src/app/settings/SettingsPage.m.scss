@@ -82,7 +82,7 @@
 }
 
 .horizontal {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexWrap from '../dim-ui/common.m.scss';
   align-items: center;
   justify-content: space-between;
   gap: 1em;
