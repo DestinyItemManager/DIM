@@ -11,7 +11,7 @@ import { StoreObserver } from './store/observerMiddleware';
 const KEYBOARD_THRESHOLD = 50;
 
 function setCSSVariable(property: string, value: { toString: () => string }) {
-  if (value) {
+  if (value !== undefined && value !== null) {
     document.querySelector('html')!.style.setProperty(property, value.toString());
   }
 }
@@ -22,6 +22,16 @@ export function createItemSizeObserver(): StoreObserver<number> {
     getObserved: (rs) => settingsSelector(rs).itemSize,
     sideEffect: ({ current }) => {
       setCSSVariable('--item-size', `${Math.max(48, current)}px`);
+    },
+  };
+}
+
+export function createOrnamentDisplayObserver(): StoreObserver<number> {
+  return {
+    id: 'ornament-display-observer',
+    getObserved: (rs) => settingsSelector(rs).ornamentDisplay,
+    sideEffect: ({ current }) => {
+      setCSSVariable('--ornament-display', current);
     },
   };
 }

@@ -71,12 +71,42 @@ $commonBg: #366f42;
 }
 
 .animatedBackground {
-  display: none;
+  display: block;
+  transition: opacity 0.2s ease-out;
+  opacity: 0;
 
   @media (prefers-reduced-motion: no-preference) {
     :global(.item):hover & {
-      display: block;
+      opacity: 1;
     }
+  }
+}
+
+.hasAltIcon {
+  display: block;
+  transition: opacity 0.2s ease-out;
+  opacity: calc(1 - var(--ornament-display, 1));
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0s;
+  }
+
+  :global(.item):hover & {
+    opacity: var(--ornament-display, 1);
+  }
+}
+
+.altIcon {
+  display: block;
+  transition: opacity 0.2s ease-out;
+  opacity: var(--ornament-display, 1);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0s;
+  }
+
+  :global(.item):hover & {
+    opacity: calc(1 - var(--ornament-display, 1));
   }
 }
 
