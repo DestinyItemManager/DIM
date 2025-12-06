@@ -1,6 +1,7 @@
 import { getCraftingTemplate } from 'app/armory/crafting-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
+  DEFAULT_SHADER,
   GhostActivitySocketTypeHashes,
   weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
@@ -832,6 +833,10 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
  * versions of that plug in the plugSet cannot currently roll.
  */
 function plugCannotCurrentlyRoll(plugs: DimPlug[], plugHash: number) {
+  // The default shader plug reports that it cannot roll, but it can...
+  if (plugHash === DEFAULT_SHADER) {
+    return false;
+  }
   let matchingPlugs = false;
   for (const p of plugs) {
     if (p.plugDef.hash === plugHash) {

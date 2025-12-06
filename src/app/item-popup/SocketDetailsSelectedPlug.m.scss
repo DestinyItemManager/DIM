@@ -2,16 +2,17 @@
 
 .selectedPlug {
   composes: flexRow from '../dim-ui/common.m.scss';
-  min-height: calc(var(--item-size) + 20px);
+  min-height: var(--item-size);
   display: grid;
   grid-template-columns: var(--item-size) 1fr;
-  grid-template-rows: min-content;
+  grid-template-rows: min-content 1fr;
   grid-template-areas: 'mod name button' 'mod desc button';
   gap: 0 8px;
-  height: min(25vh, 15em);
+  max-height: min(25vh, 18em);
 
   @include phone-portrait {
     grid-template-columns: var(--item-size) 1fr;
+    grid-template-rows: min-content 1fr min-content;
     grid-template-areas:
       'mod name'
       'mod desc'
