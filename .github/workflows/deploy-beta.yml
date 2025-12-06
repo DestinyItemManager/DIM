@@ -64,7 +64,7 @@ jobs:
       - name: Check Syntax
         run: pnpm syntax
 
-      - name: Deploy to server
+      - name: Rsync to Server
         run: ./build/rsync-deploy.sh
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}

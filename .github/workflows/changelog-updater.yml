@@ -22,14 +22,13 @@ jobs:
         with:
           install: 'false'  # Don't need dependencies for this script
 
-      # Process commits and generate changelog
       - name: Update changelog from commits
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           COMMIT_SHAS: ${{ join(github.event.commits.*.id, ' ') }}
         run: |
-          set -e
+          # Process all commits and automatically detect associated PRs using GitHub API
           node build/update-changelog.js $COMMIT_SHAS > docs/CHANGELOG.md.new
           mv docs/CHANGELOG.md.new docs/CHANGELOG.md
 
