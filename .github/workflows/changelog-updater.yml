@@ -12,20 +12,17 @@ permissions:
 jobs:
   update-changelog:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
         with:
           token: ${{ secrets.I18N_PAT }}
 
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup-pnpm
         with:
-          node-version-file: '.nvmrc'
+          install: 'false'  # Don't need dependencies for this script
 
       - name: Update changelog from commits
-        id: changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
