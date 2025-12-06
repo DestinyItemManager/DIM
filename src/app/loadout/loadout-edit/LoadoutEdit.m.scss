@@ -5,6 +5,11 @@
   flex-flow: row wrap;
   gap: 10px;
   margin-bottom: 10px;
+
+  @include phone-portrait {
+    --item-size: calc((100vw - 22px * 2 - 4px * 4) / 5) !important;
+    flex-flow: column;
+  }
 }
 
 .mods {

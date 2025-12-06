@@ -52,6 +52,10 @@
 
 @mixin items-width($numItems) {
   width: calc(#{$numItems} * var(--item-size) + #{$numItems - 1} * var(--item-margin));
+
+  @include phone-portrait {
+    width: auto;
+  }
 }
 
 .categoryWeapons {
