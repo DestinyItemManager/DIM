@@ -4,3 +4,20 @@
   padding: 10px 10px 16px 10px;
   gap: 14px;
 }
+
+.footer {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
+
+.selectedPerks {
+  --item-size: 32px;
+  gap: 10px;
+}
