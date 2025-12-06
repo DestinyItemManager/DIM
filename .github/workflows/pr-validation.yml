@@ -207,17 +207,3 @@ jobs:
         id: deploy-url
         run: |
           echo "url=https://pr.dim.gg/${{ github.event.number }}/" >> $GITHUB_OUTPUT
-
-  validation-complete:
-    needs: [test, lint, build]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    if: always()
-    steps:
-      - name: Check validation results
-        run: |
-          if [[ "${{ needs.test.result }}" == "failure" ]] || [[ "${{ needs.lint.result }}" == "failure" ]] || [[ "${{ needs.build.result }}" == "failure" ]]; then
-            echo "::error::PR validation failed"
-            exit 1
-          fi
-          echo "::notice::✅ All PR validations passed successfully!"

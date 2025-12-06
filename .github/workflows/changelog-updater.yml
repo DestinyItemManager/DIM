@@ -22,39 +22,18 @@ jobs:
         with:
           install: 'false'  # Don't need dependencies for this script
 
-      # Process commits and generate changelog with proper error handling
+      # Process commits and generate changelog
       - name: Update changelog from commits
-        id: changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           COMMIT_SHAS: ${{ join(github.event.commits.*.id, ' ') }}
         run: |
           set -e
-
-          # Generate new changelog
-          if node build/update-changelog.js $COMMIT_SHAS > docs/CHANGELOG.md.new; then
-            # Only update if the script succeeded
-            mv docs/CHANGELOG.md.new docs/CHANGELOG.md
-            echo "updated=true" >> $GITHUB_OUTPUT
-          else
-            echo "::error::Failed to update changelog"
-            rm -f docs/CHANGELOG.md.new
-            echo "updated=false" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-
-      - name: Check for actual changes
-        id: check-changes
-        run: |
-          if git diff --quiet docs/CHANGELOG.md; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
+          node build/update-changelog.js $COMMIT_SHAS > docs/CHANGELOG.md.new
+          mv docs/CHANGELOG.md.new docs/CHANGELOG.md
 
       - name: Commit files
-        if: steps.check-changes.outputs.changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: Apply changelog updates

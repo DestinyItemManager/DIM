@@ -7,11 +7,6 @@ inputs:
     required: false
     default: 'true'
 
-  frozen-lockfile:
-    description: 'Use frozen lockfile for install (default: true)'
-    required: false
-    default: 'true'
-
 runs:
   using: 'composite'
   steps:
@@ -27,9 +22,4 @@ runs:
     - name: Install dependencies
       if: inputs.install == 'true'
       shell: bash
-      run: |
-        if [ "${{ inputs.frozen-lockfile }}" == "true" ]; then
-          pnpm install --frozen-lockfile --prefer-offline
-        else
-          pnpm install --prefer-offline
-        fi
+      run: pnpm install --frozen-lockfile --prefer-offline

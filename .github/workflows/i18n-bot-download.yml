@@ -34,29 +34,11 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Sort all locale files with proper error handling
       - name: Sort locale JSON files
         run: |
-          set -e  # Exit immediately if a command fails
-
           allLocales=("en" "de" "es" "esMX" "fr" "it" "ja" "ko" "pl" "ptBR" "ru" "zhCHS" "zhCHT")
-
-          for lang in "${allLocales[@]}"; do
-            file="src/locale/$lang.json"
-            if [ -f "$file" ]; then
-              echo "Sorting $file..."
-              # Use atomic operations with temp file
-              if jq -S . "$file" > "$file.tmp"; then
-                mv "$file.tmp" "$file"
-                echo "✅ Sorted $file"
-              else
-                echo "::error::Failed to sort $file"
-                rm -f "$file.tmp"
-                exit 1
-              fi
-            else
-              echo "::warning::File $file not found, skipping"
-            fi
+          for lang in ${allLocales[@]}; do
+            jq -S . src/locale/$lang.json > src/locale/sorted_$lang.json && mv src/locale/sorted_$lang.json src/locale/$lang.json
           done
 
       - name: Build browsercheck utils

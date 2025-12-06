@@ -17,9 +17,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Sort en.json
-        run: |
-          sorted=$(jq -S . src/locale/en.json)
-          echo "$sorted" > src/locale/en.json
+        run: dimJSON="$(jq -S . src/locale/en.json)" && echo "${dimJSON}" > src/locale/en.json
 
       - name: Upload en.json to Crowdin
         uses: crowdin/github-action@v2.12.0
