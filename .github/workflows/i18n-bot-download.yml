@@ -51,7 +51,7 @@ jobs:
           base: HEAD
           filters: |
             changed:
-              - 'src/locale/*.json'
+              - '**'
 
       - name: Commit files
         if: steps.filter.outputs.changed == 'true'
