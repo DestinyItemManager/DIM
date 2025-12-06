@@ -120,7 +120,7 @@ export const LoadoutMods = memo(function LoadoutMods({
   }
 
   return (
-    <div>
+    <>
       <div className={styles.modsGrid}>
         {allMods.map((mod) => (
           <LoadoutMod
@@ -216,7 +216,7 @@ export const LoadoutMods = memo(function LoadoutMods({
           onClose={() => setShowModPicker(false)}
         />
       )}
-    </div>
+    </>
   );
 });
 
