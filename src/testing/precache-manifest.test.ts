@@ -3,6 +3,11 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getTestManifestJson } from './test-utils';
 
+beforeAll(() => {
+  delete process.env.LOCAL_MANIFEST;
+  delete process.env.NODE_ENV;
+});
+
 test('precache manifest', async () => {
   const [_manifest, filename] = await getTestManifestJson();
   console.log('Loaded manifest to', filename);
