@@ -44,7 +44,7 @@ jobs:
           CLEAN_MANIFEST_CACHE: true
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: success() || failure()
         with:
           name: test-results
@@ -94,7 +94,7 @@ jobs:
 
       - name: Upload ESLint results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: eslint-results
           path: eslint.results.json
@@ -162,7 +162,7 @@ jobs:
 
       - name: Upload webpack stats
         if: steps.filter.outputs.build-pipeline == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: webpack-stats
           path: webpack-stats.json

@@ -55,7 +55,7 @@ jobs:
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
       - name: Send bundle stats to RelativeCI
-        uses: relative-ci/agent-action@v3.2.1
+        uses: relative-ci/agent-action@v3
         with:
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
