@@ -1,7 +1,7 @@
 # This workflow runs whenever locale/en.json is updated on the master branch
 # It updates crowdin with new translation strings
-# and notifies the #i18n @i18n in Discord of the new translations.
 name: i18n upload bot
+
 on:
   workflow_dispatch:
   push:
@@ -10,7 +10,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  upload:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout DIM
@@ -31,7 +31,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: porcelain check
+      - name: Check for changes
         uses: dorny/paths-filter@v3
         id: filter
         with:

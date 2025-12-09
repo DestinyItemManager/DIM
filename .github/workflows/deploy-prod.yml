@@ -11,7 +11,7 @@ on:
   schedule:
     # Deploy at 5pm Sunday PST, which is 1am Monday UTC
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 1 * * 1'
+    - cron: '0 1 * * 1'
 
 jobs:
   deploy:
@@ -26,13 +26,7 @@ jobs:
           # Use the dim-release-bot token rather than the default
           token: ${{ secrets.GH_TOKEN }}
 
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
+      - uses: ./.github/actions/setup-pnpm
 
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.1
@@ -40,9 +34,6 @@ jobs:
           private-key: ${{ secrets.SSH_KEY }}
           private-key-name: dim.rsa
           known-hosts: ${{ secrets.REMOTE_HOST }}
-
-      - name: Install
-        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build and deploy
         run: ./build/deploy-prod.sh
@@ -67,7 +58,7 @@ jobs:
           CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
           APP_DOMAIN: app.destinyitemmanager.com
 
-      - name: get-npm-version
+      - name: Get package version
         id: package-version
         shell: bash
         run: |
