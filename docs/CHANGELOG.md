@@ -1,5 +1,7 @@
 ## Next
 
+* Added heat-related weapon stats.
+
 ## 8.102.0 <span class="changelog-date">(2025-12-07)</span>
 
 * DIM should load faster even when it is having trouble loading DIM API data.
