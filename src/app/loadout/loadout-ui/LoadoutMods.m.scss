@@ -10,9 +10,16 @@
   align-items: flex-start;
 
   @include phone-portrait {
-    min-width: min(calc(5 * var(--item-icon-size) + 4 * var(--item-margin)), calc(100vw - 20px));
-    max-width: calc(100vw - 20px);
+    --mods-grid-columns: 7;
+    --item-icon-size: calc(
+      (
+        (100vw - var(--inventory-column-padding) * 2 - (var(--mods-grid-columns) - 1) * 4px) /
+          var(--mods-grid-columns)
+      )
+    );
+    min-width: none;
   }
+
   :global(.item) {
     --item-size: var(--item-icon-size);
   }

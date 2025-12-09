@@ -1,23 +1,44 @@
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
-import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { getSubclassPlugs } from '../loadout-item-utils';
-import PlugDef from '../loadout-ui/PlugDef';
-import { createGetModRenderKey } from '../mod-utils';
+import {
+  SubclassContainer,
+  SubclassIcon,
+  SubclassMods,
+} from '../loadout-ui/LoadoutSubclassSection';
 import * as styles from './LoadoutEditSubclass.m.scss';
 import { useEquipDropTargets } from './useEquipDropTargets';
+
+// Selector to get all subclass items for a given class type and store ID. This
+// gets cached across components.
+const subclassItemsSelector = createSelector(
+  allItemsSelector,
+  (_state: unknown, classType: DestinyClass) => classType,
+  (_state: unknown, _classType: DestinyClass, storeId: string) => storeId,
+  (allItems, classType, storeId) =>
+    allItems
+      .filter(
+        (item) =>
+          item.bucket.hash === BucketHashes.Subclass &&
+          item.classType === classType &&
+          item.owner === storeId &&
+          itemCanBeInLoadout(item),
+      )
+      .sort(compareBy((i) => i.element?.enumValue)),
+);
 
 /** The subclass section used in the loadouts page and drawer */
 export default function LoadoutEditSubclass({
@@ -37,19 +58,10 @@ export default function LoadoutEditSubclass({
 }) {
   const defs = useD2Definitions()!;
   const stores = useSelector(storesSelector);
-  const allItems = useSelector(allItemsSelector);
+  const subclassItems = useSelector((state: RootState) =>
+    subclassItemsSelector(state, classType, storeId),
+  );
 
-  const subclassItemFilter = (item: DimItem) =>
-    item.bucket.hash === BucketHashes.Subclass &&
-    item.classType === classType &&
-    item.owner === storeId &&
-    itemCanBeInLoadout(item);
-
-  const subclassItems = allItems
-    .filter(subclassItemFilter)
-    .sort(compareBy((i) => i.element?.enumValue));
-
-  const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
 
   const acceptTarget = useMemo(
@@ -65,71 +77,36 @@ export default function LoadoutEditSubclass({
   );
 
   return (
-    <div
+    <SubclassContainer
       ref={(el) => {
         equippedRef(el);
       }}
-      className={clsx(styles.subclassContainer, {
+      className={clsx({
         [styles.isOver]: isOverEquipped,
         [styles.canDrop]: canDropEquipped,
       })}
       onClick={subclass ? onClick : undefined}
+      role={subclass ? 'button' : undefined}
     >
-      {!subclass && subclassItems.length > 0 && (
+      {subclass ? (
         <>
-          {subclassItems.map((item) => (
-            <button
-              key={item.index}
-              className={styles.classButton}
-              type="button"
-              onClick={() => onPick(item)}
-              title={t('Loadouts.ChooseItem', { name: t('Bucket.Class') })}
-            >
-              <ConnectedInventoryItem item={item} hideSelectedSuper />
-            </button>
-          ))}
+          <SubclassIcon subclass={subclass} plugs={plugs} power={power} />
+          <SubclassMods subclass={subclass} plugs={plugs} />
         </>
-      )}
-      {subclass && (
-        <div className={styles.subclass}>
-          <div
-            className={clsx({
-              [styles.missingItem]: subclass?.missing,
-            })}
+      ) : (
+        // When no subclass is selected, show all subclasses and let the user choose.
+        subclassItems.map((item) => (
+          <button
+            key={item.index}
+            className={styles.classButton}
+            type="button"
+            onClick={() => onPick(item)}
+            title={t('Loadouts.ChooseItem', { name: t('Bucket.Class') })}
           >
-            <ItemPopupTrigger item={subclass.item}>
-              {(ref, onClick) => (
-                <ConnectedInventoryItem
-                  ref={ref}
-                  // Disable the popup when plugs are available as we are showing
-                  // plugs in the loadout and they may be different to the popup
-                  onClick={plugs.length ? undefined : onClick}
-                  item={subclass.item}
-                />
-              )}
-            </ItemPopupTrigger>
-          </div>
-          {power !== 0 && (
-            <div className={styles.power}>
-              <AppIcon icon={powerActionIcon} />
-              <span>{power}</span>
-            </div>
-          )}
-        </div>
+            <ConnectedInventoryItem item={item} hideSelectedSuper />
+          </button>
+        ))
       )}
-      {subclass &&
-        (plugs.length ? (
-          <div className={styles.subclassMods}>
-            {plugs?.map(
-              (plug) =>
-                plug.socketCategoryHash !== SocketCategoryHashes.Super && (
-                  <PlugDef key={getModRenderKey(plug.plug)} plug={plug.plug} item={subclass.item} />
-                ),
-            )}
-          </div>
-        ) : (
-          <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
-        ))}
-    </div>
+    </SubclassContainer>
   );
 }

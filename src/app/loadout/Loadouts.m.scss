@@ -49,4 +49,8 @@
   margin: 16px 0 0 0;
   border-bottom: 1px solid var(--theme-text);
   font-size: 16px;
+
+  @include phone-portrait {
+    padding: 0 8px;
+  }
 }

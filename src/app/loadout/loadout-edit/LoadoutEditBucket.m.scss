@@ -51,7 +51,9 @@
 }
 
 @mixin items-width($numItems) {
-  width: calc(#{$numItems} * var(--item-size) + #{$numItems - 1} * var(--item-margin));
+  @include desktop {
+    width: calc(#{$numItems} * var(--item-size) + #{$numItems - 1} * var(--item-margin));
+  }
 }
 
 .categoryWeapons {
@@ -63,11 +65,6 @@
 .categoryGeneral {
   // 2x2 grid
   @include items-width(2);
-
-  @include phone-portrait {
-    // 4 in a line
-    @include items-width(4);
-  }
 }
 
 .missingItem {

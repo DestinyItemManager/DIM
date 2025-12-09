@@ -5,6 +5,12 @@
   flex-direction: column;
   align-items: center;
   gap: var(--item-margin);
+
+  @include phone-portrait {
+    --item-size: calc(
+      (100vw - var(--inventory-column-padding) * 2 - var(--item-margin) * 4) / 5
+    ) !important;
+  }
 }
 
 .itemsInCategory {
@@ -44,20 +50,24 @@
   }
 }
 
-.categoryWeapons {
-  width: calc(3 * var(--item-size) + 2 * var(--item-margin));
-}
-
-.categoryArmor {
-  width: calc(5 * var(--item-size) + 4 * var(--item-margin));
-  align-items: start;
-  &.hasSetBonus {
-    width: calc(6 * var(--item-size) + 5 * var(--item-margin));
+@mixin items-width($numItems) {
+  @include desktop {
+    width: calc(#{$numItems} * var(--item-size) + #{$numItems - 1} * var(--item-margin));
   }
 }
 
+.categoryWeapons {
+  @include items-width(3);
+}
+.categoryArmor {
+  @include items-width(5);
+  &.hasSetBonus {
+    @include items-width(6);
+  }
+}
 .categoryGeneral {
-  width: calc(2 * var(--item-size) + 1 * var(--item-margin));
+  // 2x2 grid
+  @include items-width(2);
 }
 
 .missingItem {
