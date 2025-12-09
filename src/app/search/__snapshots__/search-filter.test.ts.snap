@@ -110,7 +110,7 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
 ]
 `;
 
-exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',        'rof',             'charge',\\n  'impact',     'handling',        'range',\\n  'stability',  'reload',          'magazine',\\n  'aimassist',  'equipspeed',      'shieldduration',\\n  'velocity',   'blastradius',     'recoildirection',\\n  'drawtime',   'zoom',            'airborne',\\n  'accuracy',   'ammogen',         'persistence',\\n  'swingspeed', 'guardefficiency', 'guardresistance',\\n  'chargerate', 'guardendurance',  'ammocapacity',\\n  'weapons',    'health',          'class',\\n  'grenade',    'super',           'melee',\\n  'mobility',   'resilience',      'recovery',\\n  'discipline', 'intellect',       'strength',\\n  'total',      'any'\\n], overload undefined 1`] = `
+exports[`generateSuggestionsForFilter full suggestions for filter format 'stat', keyword 'stat' with suggestions [\\n  'rpm',        'rof',             'charge',\\n  'impact',     'handling',        'ventspeed',\\n  'heatgen',    'cooling',         'range',\\n  'stability',  'reload',          'magazine',\\n  'aimassist',  'equipspeed',      'shieldduration',\\n  'velocity',   'blastradius',     'recoildirection',\\n  'drawtime',   'zoom',            'airborne',\\n  'accuracy',   'ammogen',         'persistence',\\n  'swingspeed', 'guardefficiency', 'guardresistance',\\n  'chargerate', 'guardendurance',  'ammocapacity',\\n  'weapons',    'health',          'class',\\n  'grenade',    'super',           'melee',\\n  'mobility',   'resilience',      'recovery',\\n  'discipline', 'intellect',       'strength',\\n  'total',      'any'\\n], overload undefined 1`] = `
 [
   "stat:",
   "stat:rpm:",
@@ -138,6 +138,21 @@ exports[`generateSuggestionsForFilter full suggestions for filter format 'stat',
   "stat:handling:>",
   "stat:handling:<=",
   "stat:handling:>=",
+  "stat:ventspeed:",
+  "stat:ventspeed:<",
+  "stat:ventspeed:>",
+  "stat:ventspeed:<=",
+  "stat:ventspeed:>=",
+  "stat:heatgen:",
+  "stat:heatgen:<",
+  "stat:heatgen:>",
+  "stat:heatgen:<=",
+  "stat:heatgen:>=",
+  "stat:cooling:",
+  "stat:cooling:<",
+  "stat:cooling:>",
+  "stat:cooling:<=",
+  "stat:cooling:>=",
   "stat:range:",
   "stat:range:<",
   "stat:range:>",
