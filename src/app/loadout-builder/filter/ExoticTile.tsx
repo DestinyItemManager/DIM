@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, DestinyItemSubType } from 'bungie-api-ts/destiny2';
 import React from 'react';
 import * as styles from './ExoticTile.m.scss';
 
@@ -52,7 +52,6 @@ export default function ExoticTile({
 export function exoticTileInfo(defs: D2ManifestDefinitions, exotic: LockedExoticWithPlugs) {
   const { def, exoticPerk, exoticMods } = exotic;
   let perkShortDescription = exoticPerk?.displayProperties.description;
-
   if (exoticPerk) {
     for (const perk of exoticPerk.perks) {
       const description = defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description;
@@ -66,7 +65,10 @@ export function exoticTileInfo(defs: D2ManifestDefinitions, exotic: LockedExotic
   const description = (
     <>
       {exotic.isArmor1 && <div>{t('LB.IncompatibleWithOptimizer')}</div>}
-      {exoticPerk && perkShortDescription}
+      {(exotic.def.itemSubType === DestinyItemSubType.ClassArmor && (
+        <div>{t('LB.SelectPerks')}</div>
+      )) ||
+        (exoticPerk && perkShortDescription)}
       {exoticMods?.map((mod) => (
         <div key={mod.hash} className={styles.perkOrModNameAndImage}>
           <DefItemIcon className={styles.perkOrModImage} itemDef={mod} />
