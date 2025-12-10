@@ -378,8 +378,8 @@ export default function SettingsPage() {
             <div className={styles.setting}>
               <Checkbox
                 label={t('Settings.VaultUnder')}
-                name="vaultUnder"
-                value={settings.vaultUnder}
+                name="vaultBelow"
+                value={settings.vaultBelow}
                 onChange={onCheckChange}
               />
             </div>

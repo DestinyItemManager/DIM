@@ -36,7 +36,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
   const currentStore = getCurrentStore(stores);
   const setSetting = useSetSetting();
   useEventBusListener(locateItem$, itemPop);
-  const [vaultUnder, setVaultUnder] = useSetting('vaultUnder');
+  const [vaultUnder, setVaultUnder] = useSetting('vaultBelow');
 
   // Hide the single character toggle for players with only one character
   // unless they own items that cannot be used by their only character.
