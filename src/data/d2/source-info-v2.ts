@@ -200,6 +200,11 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
+  conquest: {
+    sourceHashes: [
+      1331532890, // Source: Seasonal Conquest Triumph "Ultimate Victory"
+    ],
+  },
   contact: {
     sourceHashes: [
       2039343154, // Source: Contact Public Event
@@ -388,6 +393,7 @@ const D2Sources: {
       1745960977, // Source: "Pit of Heresy" Dungeon
       2463956052, // Source: Vesper's Host
       2607970476, // Source: Sundered Doctrine
+      3247513834, // Source: Equilibrium
       3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     itemHashes: [
@@ -470,6 +476,11 @@ const D2Sources: {
       4137108180, // Source: Escalation Protocol on Mars.
     ],
     enteredDCV: 20,
+  },
+  equilibrium: {
+    sourceHashes: [
+      3247513834, // Source: Equilibrium
+    ],
   },
   europa: {
     sourceHashes: [
@@ -576,6 +587,7 @@ const D2Sources: {
       2296534980, // Source: Exotic Mission Encore
       2745272818, // Source: "Presage" Exotic Quest
       2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
+      3237053501, // Source: Heliostat
       3597879858, // Source: "Presage" Exotic Quest
     ],
   },
@@ -702,6 +714,11 @@ const D2Sources: {
       2676881949, // Source: Season of the Haunted
     ],
     enteredDCV: 20,
+  },
+  heliostat: {
+    sourceHashes: [
+      3237053501, // Source: Heliostat
+    ],
   },
   heresy: {
     sourceHashes: [
@@ -1183,6 +1200,16 @@ const D2Sources: {
       3937492340, // Source: Seraph Bounties
     ],
     enteredDCV: 20,
+  },
+  reclaim: {
+    sourceHashes: [
+      2929839827, // Source: Reclaim
+    ],
+  },
+  renegades: {
+    sourceHashes: [
+      178383754, // Source: Renegades
+    ],
   },
   revenant: {
     sourceHashes: [

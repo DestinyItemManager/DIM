@@ -2733,6 +2733,23 @@ const missingSources: { [key: string]: number[] } = {
     1631448645, // Seraph Cipher
     4074251943, // Hung Jury SR4 (Adept)
   ],
+  reclaim: [
+    2979965244, // Romantic Death
+    2979965245, // Romantic Death
+    2979965246, // Romantic Death
+    2979965247, // Romantic Death
+    3184457500, // Folded Root
+    3184457501, // Folded Root
+    3184457502, // Folded Root
+    3184457503, // Folded Root
+  ],
+  renegades: [
+    1872906663, // Modified B-7 Pistol
+    2023002233, // All or Nothing
+    2462965802, // Uncivil Discourse
+    2659286158, // Compact Defender
+    2770035786, // M-17 "Fast Talker"
+  ],
   revenant: [
     239405325, // Spacewalk Strides
     480133716, // Spacewalk Robes
