@@ -325,6 +325,7 @@ exports[`filterComplete autocomplete terms for |stat| 1`] = `
   "dupe:nonzerostats",
   "dupe:setbonus+statlower",
   "dupe:customstatlower",
+  "source:heliostat",
   "maxstatloadout:weapons",
   "maxstatloadout:health",
   "maxstatloadout:class",
