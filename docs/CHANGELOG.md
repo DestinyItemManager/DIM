@@ -1,5 +1,7 @@
 ## Next
 
+## 8.103.0 <span class="changelog-date">(2025-12-14)</span>
+
 * Added heat-related weapon stats.
 * Improved mobile view for loadouts.
 
