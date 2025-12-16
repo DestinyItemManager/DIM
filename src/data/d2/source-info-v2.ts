@@ -1528,7 +1528,6 @@ const D2Sources: {
       3390015730, // Source: Trials of Osiris Challenges
       3471208558, // Source: Trials of Osiris Wins
       3543690049, // Source: Complete a flawless Trials ticket.
-      3564069447, // Source: Flawless Win with a "Flight of the Pigeon" Medal
     ],
   },
   umbral: {
