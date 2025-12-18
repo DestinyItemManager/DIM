@@ -1,4 +1,4 @@
-import { VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
+import { OrnamentDisplay, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -519,11 +519,13 @@ export default function SettingsPage() {
               <Checkbox
                 label={t('Settings.OrnamentDisplay')}
                 name="ornamentDisplay"
-                value={Boolean(settings.ornamentDisplay)}
-                onChange={(checked, name) => setSetting(name, checked ? 1 : 0)}
+                value={settings.ornamentDisplay === OrnamentDisplay.All}
+                onChange={(checked, name) =>
+                  setSetting(name, checked ? OrnamentDisplay.All : OrnamentDisplay.None)
+                }
               />
               <div className={styles.fineprint}>
-                {settings.ornamentDisplay
+                {settings.ornamentDisplay === OrnamentDisplay.All
                   ? t('Settings.OrnamentDisplayExplanationHide')
                   : t('Settings.OrnamentDisplayExplanationShow')}
               </div>

@@ -1,3 +1,4 @@
+import { OrnamentDisplay } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { deepEqual } from 'fast-equals';
 import { isPhonePortraitSelector } from './shell/selectors';
@@ -26,12 +27,12 @@ export function createItemSizeObserver(): StoreObserver<number> {
   };
 }
 
-export function createOrnamentDisplayObserver(): StoreObserver<number> {
+export function createOrnamentDisplayObserver(): StoreObserver<OrnamentDisplay> {
   return {
     id: 'ornament-display-observer',
     getObserved: (rs) => settingsSelector(rs).ornamentDisplay,
     sideEffect: ({ current }) => {
-      setCSSVariable('--ornament-display', current);
+      setCSSVariable('--ornament-display', current === OrnamentDisplay.All ? 1 : 0);
     },
   };
 }
