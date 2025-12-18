@@ -504,6 +504,10 @@ export function getWeaponSockets(
         ...fullMasterworkPlug,
         plugDef: {
           ...fullMasterworkPlug.plugDef,
+          displayProperties: {
+            ...fullMasterworkPlug.plugDef.displayProperties,
+            iconHash: 0, // use legacy icon so we can remove the '10' on it
+          },
           iconWatermark: '', // remove the '10' in the top left of the icon
           investmentStats: [], // remove the stats from the fake plug
         },
