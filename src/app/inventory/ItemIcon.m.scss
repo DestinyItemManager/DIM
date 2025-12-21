@@ -72,12 +72,14 @@ $commonBg: #366f42;
 
 .animatedBackground {
   display: block;
-  transition: opacity 0.2s ease-out;
   opacity: 0;
+  content-visibility: hidden;
 
   @media (prefers-reduced-motion: no-preference) {
+    transition: opacity 0.2s ease-out;
     :global(.item):hover & {
       opacity: 1;
+      content-visibility: auto;
     }
   }
 }
