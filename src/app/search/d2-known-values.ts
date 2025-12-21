@@ -210,10 +210,13 @@ export const D2PlugCategoryByStatHash = new Map<StatHashes, PlugCategoryHashes>(
   [StatHashes.Impact, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatDamage],
   [StatHashes.DrawTime, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatDrawTime],
   [StatHashes.Handling, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatHandling],
+  [StatHashes.CoolingEfficiency, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatHeatEfficiency],
+  [StatHashes.Persistence, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatPersistence],
   [StatHashes.Range, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatRange],
   [StatHashes.ReloadSpeed, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatReload],
   [StatHashes.Stability, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatStability],
   [StatHashes.Velocity, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatProjectileSpeed],
+  [StatHashes.VentSpeed, PlugCategoryHashes.V400PlugsWeaponsMasterworksStatVentSpeed],
   [StatHashes.ShieldDuration, PlugCategoryHashes.V600PlugsWeaponsMasterworksStatShieldDuration],
 ]);
 
