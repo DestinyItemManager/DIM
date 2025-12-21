@@ -177,14 +177,14 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           {animatedBackground && (
             <img src={animatedBackground} className={styles.animatedBackground} />
           )}
-          {masterworkGlow && (
-            <div style={bungieBackgroundStyle(masterworkGlow)} className={styles.adjustOpacity} />
-          )}
           {foreground && (
             <div
               style={bungieBackgroundStyle(foreground)}
               className={clsx({ [styles.hasAltIcon]: Boolean(altIcon) })}
             />
+          )}
+          {masterworkGlow && (
+            <div style={bungieBackgroundStyle(masterworkGlow)} className={styles.adjustOpacity} />
           )}
           {altIcon && <div style={bungieBackgroundStyle(altIcon)} className={styles.altIcon} />}
           {seasonBanner && (
