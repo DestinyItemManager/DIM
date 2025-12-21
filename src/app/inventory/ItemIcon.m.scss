@@ -84,11 +84,10 @@ $commonBg: #366f42;
 
 .hasAltIcon {
   display: block;
-  transition: opacity 0.2s ease-out;
   opacity: calc(1 - var(--ornament-display, 1));
 
-  @media (prefers-reduced-motion: reduce) {
-    transition-duration: 0s;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity 0.2s ease-out;
   }
 
   :global(.item):hover & {
@@ -98,11 +97,10 @@ $commonBg: #366f42;
 
 .altIcon {
   display: block;
-  transition: opacity 0.2s ease-out;
   opacity: var(--ornament-display, 1);
 
-  @media (prefers-reduced-motion: reduce) {
-    transition-duration: 0s;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity 0.2s ease-out;
   }
 
   :global(.item):hover & {
