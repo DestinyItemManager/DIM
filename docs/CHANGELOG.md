@@ -1,5 +1,7 @@
 ## Next
 
+## 8.104.0 <span class="changelog-date">(2025-12-21)</span>
+
 * Fix the masterwork socket on crafted and enhanced weapons incorrectly showing a masterwork tier number
 
 ## 8.103.1 <span class="changelog-date">(2025-12-16)</span>
