@@ -81,8 +81,8 @@ dependencies:
     specifier: ^1.43.0
     version: 1.43.0
   fast-equals:
-    specifier: ^5.4.0
-    version: 5.4.0
+    specifier: ^6.0.0
+    version: 6.0.0
   i18next:
     specifier: ^25.7.3
     version: 25.7.3(typescript@5.9.3)
@@ -8702,8 +8702,8 @@ packages:
     resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
     dev: true
 
-  /fast-equals@5.4.0:
-    resolution: {integrity: sha512-jt2DW/aNFNwke7AUd+Z+e6pz39KO5rzdbbFCg2sGafS4mk13MI7Z8O5z9cADNn5lhGODIgLwug6TZO2ctf7kcw==}
+  /fast-equals@6.0.0:
+    resolution: {integrity: sha512-PFhhIGgdM79r5Uztdj9Zb6Tt1zKafqVfdMGwVca1z5z6fbX7DmsySSuJd8HiP6I1j505DCS83cLxo5rmSNeVEA==}
     engines: {node: '>=6.0.0'}
     dev: false
 
