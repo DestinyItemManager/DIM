@@ -202,7 +202,7 @@
     "dnd-core": "^16.0.1",
     "downshift": "^9.0.13",
     "es-toolkit": "^1.43.0",
-    "fast-equals": "^5.4.0",
+    "fast-equals": "^6.0.0",
     "i18next": "^25.7.3",
     "i18next-http-backend": "^3.0.2",
     "immer": "^11.1.0",
