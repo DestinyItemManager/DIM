@@ -1,6 +1,6 @@
 ## Next
 
-* Fix `exactperk/perkname` matching against an item's type, instead of just its name.
+* Fix `exactperk/perkname` matching against a perk's type, instead of just its name.
 
 ## 8.104.0 <span class="changelog-date">(2025-12-21)</span>
 
