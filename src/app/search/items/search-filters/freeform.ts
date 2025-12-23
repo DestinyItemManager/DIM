@@ -236,7 +236,7 @@ function testStringsFromAllSockets(
           plug.plugDef.displayProperties,
           includeDescription,
         ) ||
-        test(plug.plugDef.itemTypeDisplayName) ||
+        (includeDescription && test(plug.plugDef.itemTypeDisplayName)) ||
         (defs &&
           getPlugPerks(plug, defs).some((perk) =>
             testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription),
