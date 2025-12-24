@@ -33,6 +33,14 @@ export function createOrnamentDisplayObserver(): StoreObserver<OrnamentDisplay> 
     getObserved: (rs) => settingsSelector(rs).ornamentDisplay,
     sideEffect: ({ current }) => {
       setCSSVariable('--ornament-display', current === OrnamentDisplay.All ? 1 : 0);
+      setCSSVariable(
+        '--ornament-display-visibility',
+        current === OrnamentDisplay.All ? 'auto' : 'hidden',
+      );
+      setCSSVariable(
+        '--ornament-display-visibility-inverse',
+        current === OrnamentDisplay.All ? 'hidden' : 'auto',
+      );
     },
   };
 }

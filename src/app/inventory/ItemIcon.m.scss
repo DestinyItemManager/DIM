@@ -87,7 +87,7 @@ $commonBg: #366f42;
 .hasAltIcon {
   display: block;
   opacity: calc(1 - var(--ornament-display, 1));
-  content-visibility: if(var(--ornament-display, 1) == 1, hidden, auto);
+  content-visibility: var(--ornament-display-visibility-inverse, hidden);
 
   @media (prefers-reduced-motion: no-preference) {
     transition: opacity 0.2s ease-out;
@@ -95,14 +95,14 @@ $commonBg: #366f42;
 
   :global(.item):hover & {
     opacity: var(--ornament-display, 1);
-    content-visibility: if(var(--ornament-display, 1) == 1, auto, hidden);
+    content-visibility: var(--ornament-display-visibility, auto);
   }
 }
 
 .altIcon {
   display: block;
   opacity: var(--ornament-display, 1);
-  content-visibility: if(var(--ornament-display, 1) == 1, auto, hidden);
+  content-visibility: var(--ornament-display-visibility, auto);
 
   @media (prefers-reduced-motion: no-preference) {
     transition: opacity 0.2s ease-out;
@@ -110,7 +110,7 @@ $commonBg: #366f42;
 
   :global(.item):hover & {
     opacity: calc(1 - var(--ornament-display, 1));
-    content-visibility: if(var(--ornament-display, 1) == 1, hidden, auto);
+    content-visibility: var(--ornament-display-visibility-inverse, hidden);
   }
 }
 
