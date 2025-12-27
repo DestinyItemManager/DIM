@@ -1,6 +1,7 @@
 ## Next
 
 * Fix `exactperk/perkname` matching against a perk's type, instead of just its name.
+* Added the Synthweave bounty counter to Ada-1's bounty descriptions
 
 ## 8.104.0 <span class="changelog-date">(2025-12-21)</span>
 
