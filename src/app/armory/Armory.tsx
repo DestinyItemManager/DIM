@@ -202,7 +202,10 @@ export default function Armory({
           )}
           {item.pursuit?.questLine?.description && (
             <p>
-              <RichDestinyText text={item.pursuit.questLine.description} ownerId={item.owner} />
+              <RichDestinyText
+                text={item.pursuit.questLine.description}
+                ownerId={item.vendor?.characterId ?? item.owner}
+              />
             </p>
           )}
           {itemDef.setData?.itemList && (

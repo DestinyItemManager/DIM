@@ -152,12 +152,14 @@ export function makeFakeItem(
     quantity = 1,
     allowWishList = false,
     itemValueVisibility,
+    tooltipNotificationIndexes = [],
   }: {
     itemInstanceId?: string;
     quantity?: number;
     allowWishList?: boolean;
     /** if available, this should be passed in from a vendor saleItem (DestinyVendorSaleItemComponent) */
     itemValueVisibility?: DestinyVendorSaleItemComponent['itemValueVisibility'];
+    tooltipNotificationIndexes?: number[] | undefined;
   } = emptyObject(),
 ): DimItem | undefined {
   const item = makeItem(
@@ -174,7 +176,7 @@ export function makeFakeItem(
       lockable: false,
       state: ItemState.None,
       isWrapper: false,
-      tooltipNotificationIndexes: [],
+      tooltipNotificationIndexes: tooltipNotificationIndexes ?? [],
       metricObjective: {} as DestinyObjectiveProgress,
       versionNumber: context.defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
@@ -397,6 +399,8 @@ export function makeItem(
 
   const tooltipNotifications = item.tooltipNotificationIndexes?.length
     ? item.tooltipNotificationIndexes
+        // guarding against our special case for Synth bounties in case things change
+        .filter((i) => i >= 0 && i < itemDef.tooltipNotifications?.length)
         // why the optional chain? well, somehow, an item can return tooltipNotificationIndexes,
         // but have no tooltipNotifications in its def
         .map((i) => itemDef.tooltipNotifications?.[i])

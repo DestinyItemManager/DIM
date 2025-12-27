@@ -57,7 +57,7 @@ export default function ItemPopupHeader({
         <span className={styles.title}>{item.name}</span>
       ) : (
         <h1 className={styles.title}>
-          <RichDestinyText text={item.name} ownerId={item.owner} />
+          <RichDestinyText text={item.name} ownerId={item.vendor?.characterId ?? item.owner} />
         </h1>
       )}
       <div className={styles.subtitle}>
