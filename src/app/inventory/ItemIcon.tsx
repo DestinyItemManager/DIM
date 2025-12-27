@@ -183,10 +183,10 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
               className={clsx({ [styles.hasAltIcon]: Boolean(altIcon) })}
             />
           )}
+          {altIcon && <div style={bungieBackgroundStyle(altIcon)} className={styles.altIcon} />}
           {masterworkGlow && (
             <div style={bungieBackgroundStyle(masterworkGlow)} className={styles.adjustOpacity} />
           )}
-          {altIcon && <div style={bungieBackgroundStyle(altIcon)} className={styles.altIcon} />}
           {seasonBanner && (
             <div style={bungieBackgroundStyle(seasonBanner)} className={styles.shiftedLayer} />
           )}
