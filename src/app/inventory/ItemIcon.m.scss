@@ -71,11 +71,15 @@ $commonBg: #366f42;
 }
 
 .animatedBackground {
-  display: none;
+  display: block;
+  opacity: 0;
+  content-visibility: hidden;
 
   @media (prefers-reduced-motion: no-preference) {
+    transition: opacity 0.2s ease-out;
     :global(.item):hover & {
-      display: block;
+      opacity: 1;
+      content-visibility: auto;
     }
   }
 }
