@@ -707,7 +707,7 @@ function buildSocket(
     if (reusablePlugs) {
       // Get options from live info
       for (const reusablePlug of reusablePlugs) {
-        if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
+        if (reusablePlug.plugItemHash === plugged?.plugDef.hash) {
           if (addPlug(plugged)) {
             foundPluggedInOptions = true;
           }
@@ -723,7 +723,7 @@ function buildSocket(
       const plugSet = defs.PlugSet.get(socketDef.reusablePlugSetHash, forThisItem);
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
-          if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
+          if (reusablePlug.plugItemHash === plugged?.plugDef.hash) {
             if (addPlug(plugged)) {
               foundPluggedInOptions = true;
             }
@@ -742,7 +742,7 @@ function buildSocket(
     } else if (socketDef.reusablePlugItems) {
       // Get options from definition itself
       for (const reusablePlug of socketDef.reusablePlugItems) {
-        if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
+        if (reusablePlug.plugItemHash === plugged?.plugDef.hash) {
           if (addPlug(plugged)) {
             foundPluggedInOptions = true;
           }
