@@ -1,5 +1,7 @@
 ## Next
 
+* Add setting to toggle display of ornaments and view ornaments when hovering over items
+
 ## 8.105.0 <span class="changelog-date">(2025-12-28)</span>
 
 * Fix `exactperk/perkname` matching against a perk's type, instead of just its name.
