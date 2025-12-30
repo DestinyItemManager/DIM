@@ -1,3 +1,4 @@
+import { OrnamentDisplay } from '@destinyitemmanager/dim-api-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { deepEqual } from 'fast-equals';
 import { isPhonePortraitSelector } from './shell/selectors';
@@ -11,7 +12,7 @@ import { StoreObserver } from './store/observerMiddleware';
 const KEYBOARD_THRESHOLD = 50;
 
 function setCSSVariable(property: string, value: { toString: () => string }) {
-  if (value) {
+  if (value !== undefined && value !== null) {
     document.querySelector('html')!.style.setProperty(property, value.toString());
   }
 }
@@ -22,6 +23,24 @@ export function createItemSizeObserver(): StoreObserver<number> {
     getObserved: (rs) => settingsSelector(rs).itemSize,
     sideEffect: ({ current }) => {
       setCSSVariable('--item-size', `${Math.max(48, current)}px`);
+    },
+  };
+}
+
+export function createOrnamentDisplayObserver(): StoreObserver<OrnamentDisplay> {
+  return {
+    id: 'ornament-display-observer',
+    getObserved: (rs) => settingsSelector(rs).ornamentDisplay,
+    sideEffect: ({ current }) => {
+      setCSSVariable('--ornament-display-opacity', current === OrnamentDisplay.All ? 1 : 0);
+      setCSSVariable(
+        '--ornament-display-visibility',
+        current === OrnamentDisplay.All ? 'auto' : 'hidden',
+      );
+      setCSSVariable(
+        '--ornament-display-visibility-inverse',
+        current === OrnamentDisplay.All ? 'hidden' : 'auto',
+      );
     },
   };
 }

@@ -82,6 +82,11 @@
     // it was 16px.
     --scrollbar-size: 17px;
 
+    // Whether to display ornament or base icons
+    --ornament-display-opacity: 1;
+    --ornament-display-visibility: auto;
+    --ornament-display-visibility-inverse: hidden;
+
     // prevents content shift with persistent scroll-y bar
     overflow-y: scroll;
   }

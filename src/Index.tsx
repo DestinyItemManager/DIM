@@ -7,6 +7,7 @@ import './app/utils/sentry';
 import { createSaveAccountsObserver } from 'app/accounts/observers';
 import {
   createItemSizeObserver,
+  createOrnamentDisplayObserver,
   createThemeObserver,
   createTilesPerCharColumnObserver,
   setCssVariableEventListeners,
@@ -64,6 +65,7 @@ const i18nPromise = initi18n();
   }
   store.dispatch(observe(createSaveAccountsObserver()));
   store.dispatch(observe(createItemSizeObserver()));
+  store.dispatch(observe(createOrnamentDisplayObserver()));
   store.dispatch(observe(createThemeObserver()));
   store.dispatch(observe(createTilesPerCharColumnObserver()));
   setCssVariableEventListeners();

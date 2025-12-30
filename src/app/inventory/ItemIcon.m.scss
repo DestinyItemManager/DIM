@@ -71,12 +71,52 @@ $commonBg: #366f42;
 }
 
 .animatedBackground {
-  display: none;
+  display: block;
+  opacity: 0;
+  content-visibility: hidden;
 
   @media (prefers-reduced-motion: no-preference) {
+    transition:
+      opacity 0.2s ease-out,
+      content-visibility 0.2s allow-discrete;
     :global(.item):hover & {
-      display: block;
+      opacity: 1;
+      content-visibility: auto;
     }
+  }
+}
+
+.hasAltIcon {
+  display: block;
+  opacity: calc(1 - var(--ornament-display-opacity, 1));
+  content-visibility: var(--ornament-display-visibility-inverse, hidden);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      opacity 0.2s ease-out,
+      content-visibility 0.2s allow-discrete;
+  }
+
+  :global(.item):hover & {
+    opacity: var(--ornament-display-opacity, 1);
+    content-visibility: var(--ornament-display-visibility, auto);
+  }
+}
+
+.altIcon {
+  display: block;
+  opacity: var(--ornament-display-opacity, 1);
+  content-visibility: var(--ornament-display-visibility, auto);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      opacity 0.2s ease-out,
+      content-visibility 0.2s allow-discrete;
+  }
+
+  :global(.item):hover & {
+    opacity: calc(1 - var(--ornament-display-opacity, 1));
+    content-visibility: var(--ornament-display-visibility-inverse, hidden);
   }
 }
 

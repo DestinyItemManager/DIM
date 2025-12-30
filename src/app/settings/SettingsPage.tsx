@@ -1,4 +1,4 @@
-import { VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
+import { OrnamentDisplay, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -81,8 +81,12 @@ export default function SettingsPage() {
     (i) => i.bucket.inWeapons && !i.isExotic && i.masterwork && !i.deepsightInfo,
   );
   const exampleArmor = allItems.find((i) => i.bucket.inArmor && !i.isExotic);
+  const exampleOrnament =
+    allItems.find(
+      (i) => i !== exampleArmor && i.bucket.inArmor && i.isExotic && i.ornamentIconDef,
+    ) || allItems.find((i) => i !== exampleArmor && i.ornamentIconDef);
   const exampleArchivedArmor = allItems.find(
-    (i) => i !== exampleArmor && i.bucket.inArmor && !i.isExotic,
+    (i) => i !== exampleArmor && i !== exampleOrnament && i.bucket.inArmor && !i.isExotic,
   );
   const godRoll = {
     wishListPerks: new Set<number>(),
@@ -472,6 +476,13 @@ export default function SettingsPage() {
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
+              {exampleOrnament && (
+                <InventoryItem
+                  item={exampleOrnament}
+                  isNew={settings.showNewItems}
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
               {exampleArchivedArmor && (
                 <InventoryItem
                   item={exampleArchivedArmor}
@@ -503,6 +514,22 @@ export default function SettingsPage() {
                 <div className={styles.fineprint}>{t('Settings.DefaultItemSizeNote')}</div>
               </div>
             )}
+
+            <div className={styles.setting}>
+              <Checkbox
+                label={t('Settings.OrnamentDisplay')}
+                name="ornamentDisplay"
+                value={settings.ornamentDisplay === OrnamentDisplay.All}
+                onChange={(checked, name) =>
+                  setSetting(name, checked ? OrnamentDisplay.All : OrnamentDisplay.None)
+                }
+              />
+              <div className={styles.fineprint}>
+                {settings.ornamentDisplay === OrnamentDisplay.All
+                  ? t('Settings.OrnamentDisplayExplanationHide')
+                  : t('Settings.OrnamentDisplayExplanationShow')}
+              </div>
+            </div>
 
             {$featureFlags.newItems && (
               <div className={styles.setting}>
