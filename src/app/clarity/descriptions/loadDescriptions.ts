@@ -81,7 +81,7 @@ const loadClarityStats = dedupePromise(async (loadFromIndexedDB: boolean) => {
     liveStatsVersion = await fetchClarity<ClarityStatsVersion>('statsVersion');
     if (
       liveStatsVersion.schemaVersion === CLARITY_STATS_SUPPORTED_SCHEMA &&
-      (!savedStats || savedStats.lastUpdate !== liveStatsVersion.lastUpdate)
+      savedStats?.lastUpdate !== liveStatsVersion.lastUpdate
     ) {
       // There's been a live update and we support the update's schema -- fetch it
       return await fetchRemoteStats(liveStatsVersion);

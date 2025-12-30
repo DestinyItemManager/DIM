@@ -1025,7 +1025,7 @@ function isAssigningToDefault(item: DimItem, assignment: Assignment) {
       item.hash,
     );
   }
-  return socket && assignment.mod.hash === socket.emptyPlugItemHash;
+  return assignment.mod.hash === socket?.emptyPlugItemHash;
 }
 
 /**
