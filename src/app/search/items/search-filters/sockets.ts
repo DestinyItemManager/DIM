@@ -108,8 +108,7 @@ const socketFilters: ItemFilterDefinition[] = [
     filter: () => (item) =>
       item.sockets?.allSockets.some((socket) =>
         Boolean(
-          socket.plugged &&
-          socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
+          socket.plugged?.plugDef.itemSubType === DestinyItemSubType.Shader &&
           socket.plugged.plugDef.hash !== DEFAULT_SHADER,
         ),
       ),

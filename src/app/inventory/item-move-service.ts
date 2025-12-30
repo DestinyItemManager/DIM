@@ -1132,8 +1132,7 @@ export function sortMoveAsideCandidatesForStore(
       compareBy((displaced) => !displaced.equipped),
       // prefer same bucket over everything, because that makes space in the correct "pocket"
       compareBy(
-        (displaced) =>
-          !fromStore.isVault && displacer && displaced.bucket.hash === displacer.bucket.hash,
+        (displaced) => !fromStore.isVault && displaced.bucket.hash === displacer?.bucket.hash,
       ),
 
       // TODO: Prefer moving from vault into Inventory (consumables)
