@@ -116,7 +116,11 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   let foreground = (item.iconDef?.foreground ?? item.icon) || '';
   let altIcon = '';
   if (item.ornamentIconDef) {
-    altIcon = item.ornamentIconDef.foreground;
+    if (item.bucket.inArmor) {
+      altIcon = item.ornamentIconDef.foreground;
+    } else {
+      foreground = item.ornamentIconDef.foreground;
+    }
   }
 
   if (!animatedBackground && !altIcon) {
