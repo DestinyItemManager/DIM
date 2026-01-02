@@ -60,6 +60,10 @@ const themeOptions = mapToOptions({
   vexnet: 'Vex Network',
 });
 
+// Old ornament setting; keeping these strings from being culled
+// t('Settings.OrnamentDisplayExplanationHide')
+// t('Settings.OrnamentDisplayExplanationShow')
+
 export default function SettingsPage() {
   usePageTitle(t('Settings.Settings'));
   const dispatch = useThunkDispatch();
@@ -526,8 +530,8 @@ export default function SettingsPage() {
               />
               <div className={styles.fineprint}>
                 {settings.ornamentDisplay === OrnamentDisplay.All
-                  ? t('Settings.OrnamentDisplayExplanationHide')
-                  : t('Settings.OrnamentDisplayExplanationShow')}
+                  ? t('Settings.OrnamentDisplayExplanationEnabled')
+                  : t('Settings.OrnamentDisplayExplanationDisabled')}
               </div>
             </div>
 
