@@ -1259,7 +1259,7 @@
     "MaxParallelCores": "Maximum cores for parallel tasks",
     "MaxParallelCoresExplanation": "Controls how many CPU cores DIM can use for intensive tasks like Loadout Optimizer and Loadout Analyzer. Higher values may improve performance but use more system resources.",
     "OrnamentDisplay": "Show Ornaments on item tiles",
-    "OrnamentDisplayExplanationDisabled": "Items will never display their ornaments",
+    "OrnamentDisplayExplanationDisabled": "Hovering or long-pressing armor will show its ornament",
     "OrnamentDisplayExplanationEnabled": "Hovering or long-pressing armor will hide its ornament",
     "OrnamentDisplayExplanationHide": "Hovering or long-pressing an item will hide its ornament",
     "OrnamentDisplayExplanationShow": "Hovering or long-pressing an item will show its ornament",

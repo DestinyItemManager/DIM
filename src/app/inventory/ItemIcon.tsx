@@ -116,11 +116,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   let foreground = (item.iconDef?.foreground ?? item.icon) || '';
   let altIcon = '';
   if (item.ornamentIconDef) {
-    if (item.bucket.inArmor) {
-      altIcon = item.ornamentIconDef.foreground;
-    } else {
-      foreground = item.ornamentIconDef.foreground;
-    }
+    altIcon = item.ornamentIconDef.foreground;
   }
 
   if (!animatedBackground && !altIcon) {
@@ -184,10 +180,18 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           {foreground && (
             <div
               style={bungieBackgroundStyle(foreground)}
-              className={clsx({ [styles.hasAltIcon]: Boolean(altIcon) })}
+              className={clsx({
+                [styles.hasAltIcon]: Boolean(altIcon),
+                [styles.isArmor]: item.bucket.inArmor,
+              })}
             />
           )}
-          {altIcon && <div style={bungieBackgroundStyle(altIcon)} className={styles.altIcon} />}
+          {altIcon && (
+            <div
+              style={bungieBackgroundStyle(altIcon)}
+              className={clsx({ [styles.altIcon]: true, [styles.isArmor]: item.bucket.inArmor })}
+            />
+          )}
           {masterworkGlow && (
             <div style={bungieBackgroundStyle(masterworkGlow)} className={styles.adjustOpacity} />
           )}
