@@ -15,6 +15,7 @@ interface CssExports {
   'hasAltIcon': string;
   'highlightedObjective': string;
   'inverted': string;
+  'isArmor': string;
   'legendary': string;
   'masterwork': string;
   'rare': string;
