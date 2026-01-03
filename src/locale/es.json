@@ -1241,6 +1241,11 @@
     "Masterworked": "Obras Maestras Completas",
     "MaxParallelCores": "Núcleos máximos para tareas paralelas",
     "MaxParallelCoresExplanation": "Controla cuántos núcleos de la CPU puede usar DIM para tareas intensivas como el Optimizador de Equipaciones y el Analizador de Equipaciones. Valores más algo podrían mejorar el rendimiento pero usar más recursos del sistema.",
+    "OrnamentDisplay": "Mostrar Diseños en las miniaturas de los objetos",
+    "OrnamentDisplayExplanationDisabled": "Los objetos nunca mostrarán sus diseños",
+    "OrnamentDisplayExplanationEnabled": "Pasar el cursor o mantener pulsado un largo tiempo una armadura ocultará su diseño",
+    "OrnamentDisplayExplanationHide": "Pasar el cursor o mantener pulsado un largo tiempo un objeto mostrará este diseño",
+    "OrnamentDisplayExplanationShow": "Pasar el cursor o mantener pulsado un largo tiempo un objeto ocultará este diseño",
     "ResetToDefault": "Reiniciar",
     "RestoreVaultSide": "Muestra objetos en el depósito en su propia columna",
     "ReverseSort": "Alternar orden normal/invertido",
@@ -1526,7 +1531,7 @@
       "EnableDimSyncWarning": "Ya habías deshabilitado previamente Sincronización DIM y sólo estaba usando almacenamiento de datos local. Habilitando Sincronización DIM reemplazará cualquier información local con la información de Sincronización DIM. Deberías hacer una copia de seguridad de tus datos antes de habilitar Sincronización DIM. Puedes reestablecerla desde esa copia de seguridad en Configuración.",
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "Aprenda más sobre cuentas e inicio de sesión",
-      "NewAccount": "Inicia sesión con una cuente diferente de Bungie.net",
+      "NewAccount": "Inicia sesión con una cuenta diferente de Bungie.net",
       "Permission": "Necesitamos tu permiso..."
     },
     "Support": {
