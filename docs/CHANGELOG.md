@@ -1,6 +1,7 @@
 ## Next
 
 * Add setting to toggle display of ornaments and view ornaments when hovering over items
+* Limit ornament icon swapping to armor only
 
 ## 8.105.0 <span class="changelog-date">(2025-12-28)</span>
 
