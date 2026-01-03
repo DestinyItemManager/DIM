@@ -98,8 +98,8 @@ $commonBg: #366f42;
   }
 
   :global(.item):hover &.isArmor {
-    opacity: var(--ornament-display-opacity, 1);
-    content-visibility: var(--ornament-display-visibility, auto);
+    opacity: 1;
+    content-visibility: auto;
   }
 }
 
@@ -115,8 +115,8 @@ $commonBg: #366f42;
   }
 
   :global(.item):hover &.isArmor {
-    opacity: calc(1 - var(--ornament-display-opacity, 1));
-    content-visibility: var(--ornament-display-visibility-inverse, hidden);
+    opacity: 0;
+    content-visibility: hidden;
   }
 }
 
