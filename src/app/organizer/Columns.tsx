@@ -49,7 +49,6 @@ import {
   getArmor3TuningStat,
   getItemCurrentKillTrackerInfo,
   getItemDamageShortName,
-  getItemKillTrackers,
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
@@ -847,25 +846,11 @@ export function getColumns(
         },
         cell: (_val, item) => {
           const killTrackerInfo = getItemCurrentKillTrackerInfo(item);
-          const killTrackers = getItemKillTrackers(item);
+          // TODO add additional kill trackers to display if present
           return (
-            <>
-              {killTrackerInfo && (
-                <KillTrackerInfo tracker={killTrackerInfo} className={styles.locationCell} />
-              )}
-              {killTrackers &&
-                killTrackers.length > 1 &&
-                killTrackers.map((kt) => (
-                  <>
-                    <KillTrackerInfo
-                      tracker={kt}
-                      key={kt.trackerDef.hash}
-                      className={clsx(styles.locationCell)}
-                    />
-                    <br />
-                  </>
-                ))}
-            </>
+            killTrackerInfo && (
+              <KillTrackerInfo tracker={killTrackerInfo} className={styles.locationCell} />
+            )
           );
         },
         defaultSort: SortDirection.DESC,
