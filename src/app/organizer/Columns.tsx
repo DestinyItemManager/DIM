@@ -47,8 +47,9 @@ import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparator
 import {
   getArmor3StatFocus,
   getArmor3TuningStat,
+  getItemCurrentKillTrackerInfo,
   getItemDamageShortName,
-  getItemKillTrackerInfo,
+  getItemKillTrackers,
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
@@ -841,15 +842,30 @@ export function getColumns(
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
         value: (item) => {
-          const killTrackerInfo = getItemKillTrackerInfo(item);
+          const killTrackerInfo = getItemCurrentKillTrackerInfo(item);
           return killTrackerInfo?.count;
         },
         cell: (_val, item) => {
-          const killTrackerInfo = getItemKillTrackerInfo(item);
+          const killTrackerInfo = getItemCurrentKillTrackerInfo(item);
+          const killTrackers = getItemKillTrackers(item);
           return (
-            killTrackerInfo && (
-              <KillTrackerInfo tracker={killTrackerInfo} className={styles.locationCell} />
-            )
+            <>
+              {killTrackerInfo && (
+                <KillTrackerInfo tracker={killTrackerInfo} className={styles.locationCell} />
+              )}
+              {killTrackers &&
+                killTrackers.length > 1 &&
+                killTrackers.map((kt) => (
+                  <>
+                    <KillTrackerInfo
+                      tracker={kt}
+                      key={kt.trackerDef.hash}
+                      className={clsx(styles.locationCell)}
+                    />
+                    <br />
+                  </>
+                ))}
+            </>
           );
         },
         defaultSort: SortDirection.DESC,
