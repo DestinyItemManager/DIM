@@ -557,6 +557,7 @@ export function fitMostMods({
 function getArmorSocketsAndMods(
   sockets: DimSockets | null,
   mods: readonly PluggableInventoryItemDefinition[],
+  assumeArtificeUnlocked = false,
 ) {
   const orderedSockets = getSocketsByCategoryHash(sockets, SocketCategoryHashes.ArmorMods)
     // If a socket is not plugged (even with an empty socket) we consider it disabled
@@ -564,7 +565,8 @@ function getArmorSocketsAndMods(
     // but the API considers it to be disabled.
     .filter(
       (socket) =>
-        socket.visibleInGame &&
+        (socket.visibleInGame ||
+          (assumeArtificeUnlocked && socket.emptyPlugItemHash === 4173924323)) &&
         socket.plugged &&
         // TODO: Edge of Fate: This is a hacky fix for the masterwork socket
         // that has appeared. We should maybe exclude it from the socket list
@@ -678,7 +680,7 @@ export function pickPlugPositions(
     return assignments;
   }
 
-  const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToInsert);
+  const { orderedSockets, orderedMods } = getArmorSocketsAndMods(item.sockets, modsToInsert, true);
 
   for (const modToInsert of orderedMods) {
     // If this mod is already plugged somewhere, that's the slot we want to keep it in
