@@ -1,6 +1,7 @@
 ## Next
 
 * Fix Loadout Optimizer being unable to plan Artifice mods for Exotic armor with a locked Artifice mod slot.
+* Fix scrolling not working on Loadout Optimizer on Chrome 144 for Android.
 
 ## 8.108.0 <span class="changelog-date">(2026-01-18)</span>
 
