@@ -52,7 +52,6 @@
   top: calc(var(--header-height) + 8px);
   width: calc(var(--page-with-menu-menu-width) + 8px);
   overflow: hidden auto;
-  overscroll-behavior: none;
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
 
   @include phone-portrait {
