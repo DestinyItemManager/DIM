@@ -604,6 +604,7 @@ export default (env: Env) => {
         ],
         swSrc: './src/service-worker.ts',
         swDest: 'service-worker.js',
+        compileSrc: true,
       }),
     );
 

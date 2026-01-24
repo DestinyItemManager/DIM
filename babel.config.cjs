@@ -52,7 +52,8 @@ module.exports = function (api) {
       // Remove this if we start using proposed set methods like .intersection
       /^es(next)?\.set/,
       // Remove this if we start using iterator-helpers (which would be nice!)
-      /^es(next)?\.iterator/,
+      // Note: Updated to esnext.iterator to avoid matching non-existent polyfills in newer CoreJS
+      /^esnext\.iterator/,
       // Not sure what exactly this is, but we have our own error-cause stuff
       'es.error.cause',
       // Only used when customizing JSON parsing w/ a "reviver"
