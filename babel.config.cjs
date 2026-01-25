@@ -49,12 +49,10 @@ module.exports = function (api) {
       // Really edge-case bugfix for Array.prototype.push and friends
       'es.array.push',
       'es.array.unshift',
-      // This fixes an obscure Webkit bug that we don't care about
-      'es.map.group-by',
       // Remove this if we start using proposed set methods like .intersection
       /^es(next)?\.set/,
       // Remove this if we start using iterator-helpers (which would be nice!)
-      /^es(next)?\.iterator\.(?!concat)/,
+      /^es(next)?\.iterator/,
       // Not sure what exactly this is, but we have our own error-cause stuff
       'es.error.cause',
       // Only used when customizing JSON parsing w/ a "reviver"
