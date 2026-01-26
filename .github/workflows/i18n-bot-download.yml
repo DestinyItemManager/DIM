@@ -20,7 +20,7 @@ jobs:
       - uses: ./.github/actions/setup-pnpm
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@v2.13.0
+        uses: crowdin/github-action@v2.14.0
         with:
           upload_sources: false
           upload_translations: false
