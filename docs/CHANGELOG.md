@@ -1,5 +1,7 @@
 ## Next
 
+## 8.109.0 <span class="changelog-date">(2026-01-25)</span>
+
 ## 8.108.1 <span class="changelog-date">(2026-01-23)</span>
 
 * Fix Loadout Optimizer being unable to plan Artifice mods for Exotic armor with a locked Artifice mod slot.
