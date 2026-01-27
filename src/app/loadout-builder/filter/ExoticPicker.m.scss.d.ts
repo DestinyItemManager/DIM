@@ -2,6 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'container': string;
+  'footer': string;
+  'selectedPerks': string;
+  'submitButton': string;
 }
 export const cssExports: CssExports;
 export = cssExports;
