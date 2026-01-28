@@ -314,7 +314,6 @@ const D2Sources: {
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Glory Rank of "Fabled" in Crucible
       2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
-      2602565384, // Source: Win competitive matches while at Ascendant 0 Rank.
       2622122683, // Source: Lord Shaxx Rank Up Reputation
       2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
