@@ -1028,6 +1028,7 @@ const missingSources: { [key: string]: number[] } = {
     830497630, // Solstice Helm (Resplendent)
     929148730, // Solstice Vest (Drained)
     967650555, // Solstice Greaves (Scorched)
+    981450701, // Keraunios
     1056992393, // Inaugural Revelry Plate
     1123433952, // Stay Frosty
     1141639721, // Solstice Gauntlets (Scorched)
@@ -1079,6 +1080,7 @@ const missingSources: { [key: string]: number[] } = {
     2316331767, // Permafrost
     2328435454, // Inaugural Revelry Helm
     2337290000, // Solstice Bond (Majestic)
+    2386208942, // Keraunios
     2419100474, // Solstice Grasps (Renewed)
     2470583197, // Solstice Gloves (Renewed)
     2477028154, // Inaugural Revelry Mask

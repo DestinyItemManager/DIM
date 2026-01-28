@@ -43,7 +43,7 @@ const richTextManifestSourceData = {
   '[Stasis: Glyph 2 Locked]': ['Objective', 1857129539],
   '[Stasis: Glyph 3 Locked]': ['Objective', 1481711502],
   '[Stasis]': ['Objective', 1097409723],
-  '[Strand]': ['SandboxPerk', 381243875],
+  '[Strand]': ['Objective', 289019406],
   '[Super]': ['SandboxPerk', 608022904],
   '[Sword]': ['Objective', 1260068656],
   '[Trace Rifle]': ['Objective', 554293431],
