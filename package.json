@@ -237,7 +237,7 @@
     "*.{css,scss}": "stylelint --fix",
     "*.{js,jsx,ts,tsx,cjs,mjs,cts,mts,css,scss,md}": "prettier --write"
   },
-  "packageManager": "pnpm@8.8.0+sha256.d713a5750e41c3660d1e090608c7f607ad00d1dd5ba9b6552b5f390bf37924e9",
+  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
   "pnpm": {
     "peerDependencyRules": {
       "allowedVersions": {
@@ -255,6 +255,18 @@
         "eslint-plugin-sonarjs",
         "ua-parser-js"
       ]
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "unrs-resolver"
+    ],
+    "ignoredBuiltDependencies": [
+      "@fortawesome/fontawesome-common-types",
+      "@fortawesome/fontawesome-free",
+      "@fortawesome/fontawesome-svg-core",
+      "@parcel/watcher",
+      "core-js",
+      "unrs-resolver"
+    ]
   }
 }
