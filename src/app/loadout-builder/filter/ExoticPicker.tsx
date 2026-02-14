@@ -1,18 +1,25 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
+import { PressTip } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
-import { TileGrid } from 'app/dim-ui/TileGrid';
+import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
+import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { allItemsSelector } from 'app/inventory/selectors';
+import { PlugDefTooltip } from 'app/item-popup/PlugTooltip';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
 import { startWordRegexp } from 'app/search/text-utils';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy, compareByIndex } from 'app/utils/comparators';
 import {
+  getExtraIntrinsicPerkSockets,
   socketContainsIntrinsicPlug,
   socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
@@ -241,5 +248,167 @@ export default function ExoticPicker({
         </div>
       )}
     </Sheet>
+  );
+}
+
+export function ExoticPerkPicker({
+  lockedExoticHash,
+  onSelected,
+  onClose,
+}: {
+  lockedExoticHash?: number;
+  onSelected: (selectedPerk1: number, selectedPerk2: number) => void;
+  onClose: () => void;
+}) {
+  const defs = useD2Definitions()!;
+  const [selectedPerk1, setSelectedPerk1] = useState<number>(0);
+  const [selectedPerk2, setSelectedPerk2] = useState<number>(0);
+
+  const allItems = useSelector(allItemsSelector).filter((item) => item.hash === lockedExoticHash);
+
+  const row1Perks = new Map<number, Set<number>>();
+  const row2Perks = new Map<number, Set<number>>();
+  for (const item of allItems) {
+    const perks = getExtraIntrinsicPerkSockets(item);
+    if (
+      perks &&
+      perks.length === 2 &&
+      perks[0].plugged?.plugDef.hash &&
+      perks[1].plugged?.plugDef.hash
+    ) {
+      row1Perks.set(
+        perks[0].plugged.plugDef.hash,
+        row1Perks.get(perks[0].plugged.plugDef.hash) ?? new Set(),
+      );
+      row1Perks.get(perks[0].plugged.plugDef.hash)!.add(perks[1].plugged.plugDef.hash);
+      row2Perks.set(
+        perks[1].plugged.plugDef.hash,
+        row2Perks.get(perks[1].plugged.plugDef.hash) ?? new Set(),
+      );
+      row2Perks.get(perks[1].plugged.plugDef.hash)!.add(perks[0].plugged.plugDef.hash);
+    }
+  }
+
+  const handlePerk1Click = (perkHash: number) => () => {
+    setSelectedPerk1((perk1) => {
+      if (perk1 === perkHash) {
+        return 0;
+      }
+      return perkHash;
+    });
+  };
+  const handlePerk2Click = (perkHash: number) => () => {
+    setSelectedPerk2((perk2) => {
+      if (perk2 === perkHash) {
+        return 0;
+      }
+      return perkHash;
+    });
+  };
+
+  const footer = ({ onClose }: { onClose: () => void }) => (
+    <Footer
+      selectedPerk1={selectedPerk1}
+      selectedPerk2={selectedPerk2}
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSelected(selectedPerk1, selectedPerk2);
+        onClose();
+      }}
+    />
+  );
+
+  return (
+    <Sheet
+      header={
+        <div>
+          <h1>{t('LB.ChooseAnExotic')}</h1>
+        </div>
+      }
+      footer={footer}
+      onClose={onClose}
+      freezeInitialHeight={true}
+    >
+      <div className={styles.container}>
+        <TileGrid header="Row 1">
+          {row1Perks
+            .keys()
+            .map((perkHash) => defs.InventoryItem.get(perkHash))
+            .map((perkDef) => (
+              <TileGridTile
+                key={perkDef.hash}
+                selected={selectedPerk1 === perkDef.hash}
+                disabled={
+                  selectedPerk2 !== 0 && row2Perks.get(selectedPerk2)?.has(perkDef.hash) === false
+                }
+                title={perkDef.displayProperties.name}
+                icon={<DefItemIcon itemDef={perkDef} />}
+                onClick={handlePerk1Click(perkDef.hash)}
+              >
+                {perkDef.displayProperties.description}
+              </TileGridTile>
+            ))}
+        </TileGrid>
+        <TileGrid header="Row 2">
+          {row2Perks
+            .keys()
+            .map((perkHash) => defs.InventoryItem.get(perkHash))
+            .map((perkDef) => (
+              <TileGridTile
+                key={perkDef.hash}
+                selected={selectedPerk2 === perkDef.hash}
+                disabled={
+                  selectedPerk1 !== 0 && row1Perks.get(selectedPerk1)?.has(perkDef.hash) === false
+                }
+                title={perkDef.displayProperties.name}
+                icon={<DefItemIcon itemDef={perkDef} />}
+                onClick={handlePerk2Click(perkDef.hash)}
+              >
+                {perkDef.displayProperties.description}
+              </TileGridTile>
+            ))}
+        </TileGrid>
+      </div>
+    </Sheet>
+  );
+}
+
+function Footer({
+  selectedPerk1,
+  selectedPerk2,
+  onSubmit,
+}: {
+  selectedPerk1: number;
+  selectedPerk2: number;
+  onSubmit: (event: React.FormEvent | KeyboardEvent) => void;
+}) {
+  const defs = useD2Definitions()!;
+  const acceptButtonText = t('LB.SelectPerks');
+  useHotkey('enter', acceptButtonText, onSubmit);
+  const isPhonePortrait = useIsPhonePortrait();
+
+  const displayPerk = (selectedPerk: number) => {
+    const def = defs.InventoryItem.get(selectedPerk);
+    return (
+      def !== undefined && (
+        <PressTip tooltip={<PlugDefTooltip def={def} />}>
+          <DefItemIcon itemDef={def} />
+          {def.displayProperties.name}
+        </PressTip>
+      )
+    );
+  };
+
+  return (
+    <div className={styles.footer}>
+      <button type="button" className={styles.submitButton} onClick={onSubmit}>
+        {!isPhonePortrait && '⏎ '}
+        {acceptButtonText}
+      </button>
+      <SheetHorizontalScrollContainer className={styles.selectedPerks}>
+        {selectedPerk1 !== 0 && <>{displayPerk(selectedPerk1)}</>}
+        {selectedPerk2 !== 0 && <>{displayPerk(selectedPerk2)}</>}
+      </SheetHorizontalScrollContainer>
+    </div>
   );
 }
