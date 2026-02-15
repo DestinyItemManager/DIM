@@ -1,4 +1,5 @@
 import { addCompareItem } from 'app/compare/actions';
+import { compareSessionSelector } from 'app/compare/selectors';
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
@@ -25,13 +26,18 @@ import * as styles from './ActionButtons.m.scss';
 interface ActionButtonProps {
   item: DimItem;
   label?: boolean;
+  fromCompare?: boolean;
 }
 
-export function CompareActionButton({ item, label }: ActionButtonProps) {
+export function CompareActionButton({ item, label, fromCompare = false }: ActionButtonProps) {
   const dispatch = useDispatch();
+  const session = useSelector(compareSessionSelector);
 
   const openCompare = () => {
     hideItemPopup();
+    if (fromCompare && session) {
+      session.initialItemId = item.id;
+    }
     dispatch(addCompareItem(item));
   };
 
@@ -42,7 +48,9 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
   return (
     <ActionButton onClick={openCompare} hotkey="c" hotkeyDescription={t('Compare.ButtonHelp')}>
       <AppIcon icon={compareIcon} />
-      {label && <span className={styles.label}>{t('Compare.Button')}</span>}
+      {label && (
+        <span className={styles.label}>{fromCompare ? t('Compare.New') : t('Compare.Button')}</span>
+      )}
     </ActionButton>
   );
 }
