@@ -49,7 +49,9 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
         // dim-api can cache the data for up to 60 seconds. Reload from the
         // server after that so we don't use our faked import data too long. We
         // won't wait for this.
-        delay(60_000).then(() => dispatch(loadDimApiData({ forceLoad: true })));
+        delay(60_000)
+          .then(() => dispatch(loadDimApiData({ forceLoad: true })))
+          .catch((e) => errorLog(TAG, 'Retry failed', e));
         infoLog(TAG, 'Successfully imported data into DIM API', result);
         showImportSuccessNotification(result, true);
         return;
