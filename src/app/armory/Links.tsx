@@ -136,7 +136,7 @@ function getWeaponSocketInfo(item: DimItem): null | {
     const weaponModSocket = item.sockets.allSockets.find((s) =>
       s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
     );
-    const weaponMod = weaponModSocket?.plugged!.plugDef.hash ?? 0;
+    const weaponMod = weaponModSocket?.plugged?.plugDef.hash ?? 0;
 
     const trackerSocket = item.sockets.allSockets.find(isKillTrackerSocket);
     const largePerks = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.LargePerk)
