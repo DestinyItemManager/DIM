@@ -791,7 +791,9 @@ function isLegendaryOrBetter(item: DimItem) {
   return item.rarity === 'Legendary' || item.rarity === 'Exotic';
 }
 
-function getQuestLineInfo(itemDef: DestinyInventoryItemDefinition): DimQuestLine | undefined {
+export function getQuestLineInfo(
+  itemDef: DestinyInventoryItemDefinition,
+): DimQuestLine | undefined {
   if (itemDef.inventory?.bucketTypeHash === BucketHashes.Quests && itemDef.setData?.itemList) {
     const thisStepIndex = itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash);
     if (thisStepIndex !== -1) {
