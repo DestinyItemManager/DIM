@@ -446,6 +446,7 @@
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "Enter": "ENTER",
+    "FarmingMode": "Toggle farming mode",
     "ItemPopupTab": "Switch item details tab",
     "LockUnlock": "Lock or unlock an item",
     "MarkItemAs": "Mark item as '{{tag}}'",
