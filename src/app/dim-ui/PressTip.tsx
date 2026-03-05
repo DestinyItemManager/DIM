@@ -319,6 +319,13 @@ export function PressTip(props: Props) {
 
   // Fires on both pointerenter and pointerdown - does double duty for handling both hover tips and press tips
   const hover = useCallback((e: React.PointerEvent) => {
+    // safari ios 26+ is firing pointerenter on touch for some reason
+    // because of that tooltip opens instantly and then it gets stuck
+    // pointerup is not closing it if it was opened by pointerenter
+    // touch devices dont really have hover so tooltip should only open on long press pointerdown
+    if (e.type === 'pointerenter' && e.pointerType === 'touch') {
+      return;
+    }
     if (e.type === 'pointerenter' && e.buttons !== 0) {
       // Ignore hover events when the mouse is down
       return;
