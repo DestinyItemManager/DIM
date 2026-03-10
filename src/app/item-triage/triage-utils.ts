@@ -100,7 +100,7 @@ export function getBetterWorseItems(
     if (thisItem.stats) {
       const itemIsArtifice = isArtifice(thisItem);
       const thisItemStats = keyByStatHash(thisItem.stats);
-      let result: false | StatLookup = false;
+      let result: false | StatLookup;
       let resultDueToArtifice = false;
       if (exampleIsArtifice === itemIsArtifice) {
         result = compareBetterStats(exampleItemStats, thisItemStats, false);
