@@ -30,6 +30,9 @@ export default tseslint.config(
   {
     name: 'react',
     ...reactPlugin.configs.flat.recommended,
+    plugins: {
+      react: fixupPluginRules(reactPlugin),
+    },
     settings: {
       react: {
         version: 'detect',
@@ -45,7 +48,7 @@ export default tseslint.config(
   {
     name: 'css-modules',
     plugins: {
-      'css-modules': cssModules,
+      'css-modules': fixupPluginRules(cssModules),
     },
     rules: { 'css-modules/no-unused-class': ['error', { camelCase: true }] },
   },
