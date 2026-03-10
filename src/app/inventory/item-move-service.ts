@@ -509,6 +509,7 @@ function canEquipExotic(
             slot: otherExotic.typeName,
             error: errorMessage(e),
           }),
+          { cause: e },
         );
       }
     } else {
@@ -1076,7 +1077,6 @@ export function executeMoveItem(
           ),
         );
         target = getStore(getStores(), target.id)!;
-        source = getStore(getStores(), item.owner)!;
         item = await dispatch(moveToVault(item, amount, session));
 
         // now make sure the target char has space before trying to unvault the item
@@ -1084,7 +1084,6 @@ export function executeMoveItem(
           ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
         );
         target = getStore(getStores(), target.id)!;
-        source = getStore(getStores(), item.owner)!;
         item = await dispatch(moveToStore(item, target, equip, amount, session));
       }
       if (equip && !item.equipped) {

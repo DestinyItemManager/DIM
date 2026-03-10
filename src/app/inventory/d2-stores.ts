@@ -66,7 +66,7 @@ export function updateCharacters(): ThunkResult {
       return;
     }
 
-    let characters: CharacterInfo[] = [];
+    let characters: CharacterInfo[];
     if (account.destinyVersion === 2) {
       const profileInfo = await getCharacters(account);
       characters = profileInfo.characters.data

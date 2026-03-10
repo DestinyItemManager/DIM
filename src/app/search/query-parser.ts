@@ -458,7 +458,7 @@ export function* lexer(query: string): Generator<Token> {
         args: quotedString,
         quoted: true,
       };
-    } else if ((match = extract(negation)) !== undefined) {
+    } else if (extract(negation) !== undefined) {
       // minus sign is the same as "not"
       yield { startIndex, length: i - startIndex, type: 'not' };
     } else if ((match = extract(booleanKeywords)) !== undefined) {
@@ -476,7 +476,7 @@ export function* lexer(query: string): Generator<Token> {
       const keyword = match.slice(0, match.length - 1);
       const nextChar = query[i];
 
-      let args = '';
+      let args: string;
       let quoted = false;
 
       if (nextChar === '"' || nextChar === "'") {
@@ -518,7 +518,7 @@ export function* lexer(query: string): Generator<Token> {
         keyword: 'keyword',
         args: match,
       };
-    } else if ((match = extract(whitespace)) !== undefined) {
+    } else if (extract(whitespace) !== undefined) {
       // Ignore whitespace at the beginning and end of the string
       if (startIndex !== 0 && i !== query.length) {
         yield { startIndex, length: i - startIndex, type: 'implicit_and' };
@@ -562,7 +562,7 @@ export function quoteFilterString(arg: string) {
   // it escapes existing backslashes so they are treated as just backslashes.
   arg = arg.replaceAll('\\', '\\\\');
 
-  let quoteChar = '';
+  let quoteChar: string;
   // As long as one quote type is safe to add, wrapping the string with it defuses everything, including Other symbols
   if (!hasDouble || !hasSingle) {
     quoteChar = hasDouble ? `'` : `"`;
