@@ -108,7 +108,7 @@ export function potentialSpaceLeftForItem(
 ): SpaceLeft {
   // Calculate how many full stacks (slots, where multiple items in a stack
   // count as 1) are occupied in the bucket this item would go into.
-  let occupiedStacks = 0;
+  let occupiedStacks: number;
   if (store.isVault) {
     if (!item.bucket.vaultBucket) {
       return { guaranteed: 0, couldMakeSpace: false };

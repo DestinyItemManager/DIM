@@ -71,7 +71,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             <BungieImage key="1" src={intrinsic.icon} />,
             intrinsic.name,
             exampleItem.rarity === 'Legendary' ? (
-              // eslint-disable-next-line @eslint-react/no-duplicate-key
               <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />
             ) : null,
             <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,

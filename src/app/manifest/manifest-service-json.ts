@@ -186,7 +186,7 @@ function loadManifest(tableAllowList: TableShortName[]): ThunkResult<AllDestinyM
   return async (dispatch, getState) => {
     let components: {
       [key: string]: string;
-    } | null = null;
+    };
     try {
       const data = await d2GetManifest();
       await settingsReady; // wait for settings to be ready

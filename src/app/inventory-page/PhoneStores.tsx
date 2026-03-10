@@ -45,10 +45,6 @@ export default function PhoneStores({
     locateItem$,
     useCallback(
       (item) => {
-        let owner = item.owner;
-        if (singleCharacter && owner !== currentStore?.id) {
-          owner = 'vault';
-        }
         if (selectedStoreId !== item.owner) {
           setSelectedStoreId({
             selectedStoreId: item.owner,
@@ -59,7 +55,7 @@ export default function PhoneStores({
           itemPop(item);
         }
       },
-      [currentStore?.id, selectedStoreId, singleCharacter],
+      [selectedStoreId],
     ),
   );
 

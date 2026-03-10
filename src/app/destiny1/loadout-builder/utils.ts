@@ -129,7 +129,7 @@ export function getBestArmor(
     { stats: [D1StatHashes.Strength], type: 'str' },
   ];
   const armor: Partial<Record<ArmorTypes, ItemWithBonus[]>> = {};
-  let best: { item: D1ItemWithNormalStats; bonusType: string }[] = [];
+  let best: { item: D1ItemWithNormalStats; bonusType: string }[];
   let curbest;
   let bestCombs: { item: D1ItemWithNormalStats; bonusType: string }[];
 

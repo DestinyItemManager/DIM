@@ -32,11 +32,11 @@ export function makeCharacter(
   const character = characterComponent.character;
   const race = defs.Race.get(character.characterBase.raceHash);
   const klass = defs.Class.get(character.characterBase.classHash);
-  let genderRace = '';
-  let className = '';
-  let raceName = '';
-  let gender: DimStore['gender'] = '';
-  let genderName: DimStore['genderName'] = '';
+  let genderRace: string;
+  let className: string;
+  let raceName: string;
+  let gender: DimStore['gender'];
+  let genderName: DimStore['genderName'];
   if (character.characterBase.genderType === 0) {
     gender = 'male';
     genderName = 'male';
