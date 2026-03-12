@@ -11,7 +11,7 @@ import { t } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
-import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
+import { getQuestLineInfo, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import {
   SocketOverrides,
   applySocketOverrides,
@@ -236,6 +236,7 @@ export default function Armory({
           <div className={styles.list}>
             {alternates.map((alternate) => {
               const altSeasonNum = getSeason(alternate);
+              const questLine = getQuestLineInfo(alternate);
               return (
                 <div key={alternate.hash} className={styles.alternate}>
                   <button
@@ -247,6 +248,14 @@ export default function Armory({
                   </button>
                   <div>
                     <b>{alternate.displayProperties.name}</b>
+                    {questLine && (
+                      <div>
+                        {t('MovePopup.Subtitle.QuestProgress', {
+                          questStepNum: questLine.questStepNum,
+                          questStepsTotal: questLine.questStepsTotal ?? '?',
+                        })}
+                      </div>
+                    )}
                     {altSeasonNum >= 0 && (
                       <SeasonInfo defs={defs} item={alternate} seasonNum={altSeasonNum} />
                     )}
@@ -323,7 +332,9 @@ function getAlternateItems(
 
   alternates.sort(
     chainComparator(
-      reverseComparator(compareBy((i) => getSeason(i, defs) ?? 0)),
+      reverseComparator(
+        compareBy((i) => getQuestLineInfo(i)?.questStepNum ?? getSeason(i, defs) ?? 0),
+      ),
       compareBy((i) => i.displayProperties.name),
     ),
   );

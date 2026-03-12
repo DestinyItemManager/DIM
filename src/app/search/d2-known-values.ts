@@ -297,6 +297,12 @@ export const uniqueEquipBuckets = [
   BucketHashes.Finishers,
 ];
 
+/**
+ * Bucket for what appears to be milestone quest steps
+ * Matches the D1 quest bucket hash
+ */
+export const MILESTONE_QUEST_BUCKET = 1801258597;
+
 //
 // PRESENTATION NODE KNOWN VALUES
 //

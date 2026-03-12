@@ -5,6 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { MILESTONE_QUEST_BUCKET } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import pursuitsInfoFile from 'data/d2/pursuits.json';
@@ -39,7 +40,9 @@ export default function Pursuits({ store }: { store: DimStore }) {
   // Get all items in this character's inventory that represent quests - some are actual items that take
   // up inventory space, others are in the "Progress" bucket and need to be separated from the quest items
   // that represent milestones.
-  const pursuits = Object.groupBy(findItemsByBucket(store, BucketHashes.Quests), (item) => {
+  const milestoneQuests = findItemsByBucket(store, MILESTONE_QUEST_BUCKET);
+  const quests = findItemsByBucket(store, BucketHashes.Quests);
+  const pursuits = Object.groupBy([...milestoneQuests, ...quests], (item) => {
     const itemDef = defs.InventoryItem.get(item.hash);
     if (!item.objectives || item.objectives.length === 0 || item.sockets) {
       return 'Items';
