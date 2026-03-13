@@ -289,7 +289,9 @@ export function loadDimApiData(
         infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting profile fetch');
 
         // Wait, then retry. We don't await this here so we don't stop the finally block from running
-        delay(waitTime).then(() => dispatch(loadDimApiData(options)));
+        delay(waitTime)
+          .then(() => dispatch(loadDimApiData(options)))
+          .catch((e) => errorLog(TAG, 'Retry failed', e));
       }
     }
 
