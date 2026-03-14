@@ -20,6 +20,25 @@ const descriptionLabel = /^@?description:(.+)$/;
 const notesLabel = '//notes:';
 
 /**
+ * Little Light uses this hash to mean "Any Perk" in a slot.
+ */
+const LITTLE_LIGHT_ANY_PERK = 29505215;
+
+export interface LittleLightRoll {
+  hash: number;
+  plugs: number[][];
+  tags?: string[];
+  description?: string;
+  name?: string;
+}
+
+export interface LittleLightWishList {
+  name?: string;
+  description?: string;
+  data: LittleLightRoll[];
+}
+
+/**
  * Extracts rolls, title, and description from the meat of
  * one or more wish list text files, deduplicating within
  * and between lists.
@@ -42,6 +61,46 @@ export function toWishList(files: [url: string | undefined, contents: string][])
         numRolls: 0,
         dupeRolls: 0,
       };
+
+      const trimmedText = fileText.trim();
+      if (trimmedText.startsWith('{') || trimmedText.startsWith('[')) {
+        try {
+          const json = JSON.parse(trimmedText) as LittleLightWishList;
+          if (json.data && Array.isArray(json.data)) {
+            info.title = json.name;
+            info.description = json.description;
+
+            for (const llRoll of json.data) {
+              const rolls = parseLittleLightWishListRoll(llRoll);
+              for (const roll of rolls) {
+                const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
+                  roll.recommendedPerks,
+                )}`;
+
+                if (!seen.has(rollHash)) {
+                  seen.add(rollHash);
+                  wishList.wishListRolls.push(roll);
+                  info.numRolls++;
+                } else {
+                  info.dupeRolls++;
+                }
+                roll.sourceWishListIndex = wishList.infos.length;
+                roll.title = info.title;
+                roll.description = info.description;
+              }
+            }
+
+            if (info.dupeRolls > 0) {
+              warnLog(TAG, 'Discarded', info.dupeRolls, 'duplicate rolls from wish list', url);
+            }
+            wishList.infos.push(info);
+            continue;
+          }
+        } catch (e) {
+          warnLog(TAG, 'Failed to parse wishlist as JSON', e);
+        }
+      }
+
       let blockNotes: string | undefined = undefined;
       let title: string | undefined = undefined;
       let description: string | undefined = undefined;
@@ -98,6 +157,64 @@ export function toWishList(files: [url: string | undefined, contents: string][])
   }
 }
 
+/**
+ * Little Light wish lists specify rolls as a list of columns, each containing a list of perks.
+ * To match DIM's current engine, we must expand these into all possible combinations
+ * and treat them as "expert" rolls (where all specified perks must be present).
+ */
+function parseLittleLightWishListRoll(llRoll: LittleLightRoll): WishListRoll[] {
+  if (!llRoll.hash || !llRoll.plugs || llRoll.plugs.length === 0) {
+    return [];
+  }
+
+  // Filter out empty columns, non-positive perk hashes, and the Little Light "Any" placeholder
+  const columns = llRoll.plugs
+    .map((column) =>
+      column.filter((perkHash) => perkHash > 0 && perkHash !== LITTLE_LIGHT_ANY_PERK),
+    )
+    .filter((column) => column.length > 0);
+
+  if (columns.length === 0) {
+    return [];
+  }
+
+  const notesParts: string[] = [];
+  if (llRoll.tags && llRoll.tags.length > 0) {
+    notesParts.push(`Tags: ${llRoll.tags.join(', ')}`);
+  }
+  if (llRoll.name) {
+    notesParts.push(`Name: ${llRoll.name}`);
+  }
+  if (llRoll.description) {
+    notesParts.push(`Notes: ${llRoll.description}`);
+  }
+  const notes = notesParts.length > 0 ? notesParts.join(' | ') : undefined;
+
+  // Generate Cartesian product of all columns
+  let combinations: number[][] = [[]];
+  for (const column of columns) {
+    const nextCombinations: number[][] = [];
+    for (const combination of combinations) {
+      for (const perkHash of column) {
+        nextCombinations.push([...combination, perkHash]);
+      }
+    }
+    combinations = nextCombinations;
+
+    // Safety break to prevent exponential explosion if a list is crazy
+    if (combinations.length > 500) {
+      break;
+    }
+  }
+
+  return combinations.map((perks) => ({
+    itemHash: llRoll.hash,
+    recommendedPerks: new Set(perks),
+    isExpertMode: true,
+    notes,
+  }));
+}
+
 function expectedMatchResultsLength(matchResults: RegExpMatchArray): boolean {
   return matchResults.length === 4;
 }
@@ -120,7 +237,7 @@ function getPerks(matchResults: RegExpMatchArray): Set<number> {
   const s = new Set<number>();
   for (const perkHash of split) {
     const n = Number(perkHash);
-    if (n > 0) {
+    if (n > 0 && n !== LITTLE_LIGHT_ANY_PERK) {
       s.add(n);
     }
   }
