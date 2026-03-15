@@ -53,10 +53,24 @@ const cases: [wishlist: string, results: WishListRoll[]][] = [
   ],
 ];
 
-test.each(cases)('parse wishlist line: %s', (wishlist, results) => {
-  const parsed = toWishList([[undefined, wishlist]]).wishListRolls;
-  expect(parsed).toHaveLength(results.length);
-  for (const [i, expected] of results.entries()) {
-    expect(parsed[i]).toStrictEqual(expected);
-  }
+describe('toWishList', () => {
+  test.each(cases)('parse wishlist line: %s', (wishlist, results) => {
+    const parsed = toWishList([[undefined, wishlist]]).wishListRolls;
+    expect(parsed).toHaveLength(results.length);
+    for (const [i, expected] of results.entries()) {
+      expect(parsed[i]).toStrictEqual(expected);
+    }
+  });
+
+  test('does not parse destinytracker URLs', () => {
+    const dtrUrl = 'https://destinytracker.com/destiny-2/db/items/12345?perks=1,2,3#notes:test';
+    const result = toWishList([[undefined, dtrUrl]]);
+    expect(result.wishListRolls).toHaveLength(0);
+  });
+
+  test('does not parse banshee-44 URLs', () => {
+    const bansheeUrl = 'https://banshee-44.com/?weapon=12345&socketEntries=1,2,3#notes:test';
+    const result = toWishList([[undefined, bansheeUrl]]);
+    expect(result.wishListRolls).toHaveLength(0);
+  });
 });

@@ -4,8 +4,7 @@ export const enum DimWishList {
 
 /**
  * Interface for translating lists of wish list rolls to a format we can use.
- * Initially, support for translating banshee-44.com -> this has been built,
- * but this is here so that we can plug in support for anyone else that can
+ * This is here so that we can plug in support for anyone that can
  * get us this information.
  */
 export interface WishListRoll {
@@ -21,8 +20,6 @@ export interface WishListRoll {
   recommendedPerks: Set<number>;
   /**
    * Is this an expert mode recommendation?
-   * With B-44 rolls, we make sure that most every perk asked for exists
-   * on the item. (It does discard masterwork and some other odds and ends).
    * With expert rolls, you can be as vague or specific as you want, so we make
    * sure that at least every perk asked for is there.
    */

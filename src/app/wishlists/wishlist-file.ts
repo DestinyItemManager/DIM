@@ -123,10 +123,7 @@ export function toWishList(files: [url: string | undefined, contents: string][])
             info.description = description;
           }
         } else {
-          const roll =
-            toDimWishListRoll(line, blockNotes) ||
-            toBansheeWishListRoll(line, blockNotes) ||
-            toDtrWishListRoll(line, blockNotes);
+          const roll = toDimWishListRoll(line, blockNotes);
 
           if (roll) {
             const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
@@ -259,50 +256,6 @@ function getItemHash(matchResults: RegExpMatchArray): number {
   }
 
   return Number(matchResults.groups.itemHash);
-}
-
-const dtrTextLineRegex =
-  /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)\D*perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)/;
-function toDtrWishListRoll(dtrTextLine: string, blockNotes?: string): WishListRoll | null {
-  const matchResults = dtrTextLineRegex.exec(dtrTextLine);
-
-  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
-    return null;
-  }
-
-  const itemHash = getItemHash(matchResults);
-  const recommendedPerks = getPerks(matchResults);
-  const notes = getNotes(matchResults, blockNotes);
-
-  return {
-    itemHash,
-    recommendedPerks,
-    isExpertMode: false,
-    notes,
-  };
-}
-
-const bansheeTextLineRegex =
-  /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)/;
-
-/** Translate a single banshee-44.com URL -> WishListRoll. */
-function toBansheeWishListRoll(bansheeTextLine: string, blockNotes?: string): WishListRoll | null {
-  const matchResults = bansheeTextLineRegex.exec(bansheeTextLine);
-
-  if (!matchResults || !expectedMatchResultsLength(matchResults)) {
-    return null;
-  }
-
-  const itemHash = getItemHash(matchResults);
-  const recommendedPerks = getPerks(matchResults);
-  const notes = getNotes(matchResults, blockNotes);
-
-  return {
-    itemHash,
-    recommendedPerks,
-    isExpertMode: false,
-    notes,
-  };
 }
 
 const textLineRegex =
