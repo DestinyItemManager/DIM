@@ -332,9 +332,8 @@ function getAlternateItems(
 
   alternates.sort(
     chainComparator(
-      reverseComparator(
-        compareBy((i) => getQuestLineInfo(i)?.questStepNum ?? getSeason(i, defs) ?? 0),
-      ),
+      reverseComparator(compareBy((i) => getSeason(i, defs) ?? 0)),
+      compareBy((i) => getQuestLineInfo(i)?.questStepNum ?? 0),
       compareBy((i) => i.displayProperties.name),
     ),
   );
