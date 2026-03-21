@@ -3,6 +3,9 @@
 * Add support for importing wish lists in Little Light JSON format.
 * Improved wish list matching to correctly handle multiple perk combinations (Cartesian product) from imported lists.
 
+
+* Add Territorial Profit quest and other milestone-based quest steps to Progress tab
+
 ## 8.116.0 <span class="changelog-date">(2026-03-15)</span>
 
 ## 8.115.0 <span class="changelog-date">(2026-03-08)</span>
