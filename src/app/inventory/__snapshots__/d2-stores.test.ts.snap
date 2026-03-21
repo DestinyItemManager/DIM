@@ -25150,7 +25150,7 @@ exports[`process stores generates a correct weapon CSV export 1`] = `
     "Element": "Strand",
     "Equipped": false,
     "Event": "Solstice",
-    "Foundry": undefined,
+    "Foundry": "hakke",
     "Guard Endurance": 0,
     "Guard Resistance": 0,
     "Handling": 35,
