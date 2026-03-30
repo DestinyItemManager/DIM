@@ -1,5 +1,7 @@
 ## Next
 
+## 8.118.0 <span class="changelog-date">(2026-03-29)</span>
+
 ## 8.117.0 <span class="changelog-date">(2026-03-22)</span>
 
 * Add Territorial Profit quest and other milestone-based quest steps to Progress tab
