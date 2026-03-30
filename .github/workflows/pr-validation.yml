@@ -19,7 +19,7 @@ jobs:
 
       # Inline setup - required for fork PR compatibility
       # Cannot use ./.github/actions/setup-pnpm as it won't work from forks
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v6
 
       # Inline setup - required for fork PR compatibility
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -120,7 +120,7 @@ jobs:
       - uses: actions/checkout@v6
 
       # Inline setup - required for fork PR compatibility
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -151,7 +151,7 @@ jobs:
 
       - name: Check for build pipeline updates
         id: filter
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
             build-pipeline:

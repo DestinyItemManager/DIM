@@ -58,7 +58,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Publish test report
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         with:
           artifact: test-results
           name: JEST Tests
@@ -79,7 +79,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Annotate ESLint results
-        uses: ataylorme/eslint-annotate-action@v3
+        uses: ataylorme/eslint-annotate-action@v4
         with:
           report-json: eslint.results.json
           fail-on-error: false
