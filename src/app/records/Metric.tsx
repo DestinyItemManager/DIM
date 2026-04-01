@@ -1,7 +1,9 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { getValueStyle } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ObjectiveValue } from 'app/progress/Objective';
 import { percent } from 'app/shell/formatters';
+import { DestinyUnlockValueUIStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import * as styles from './Metric.m.scss';
 import MetricBanner from './MetricBanner';
@@ -33,12 +35,16 @@ export default function Metric({ metric }: Props) {
     );
 
   const progress = metricComponent.objectiveProgress.progress || 0;
+  const hasProgressBar =
+    hasGoal &&
+    getValueStyle(objectiveDef, progress, completionValue) !==
+      DestinyUnlockValueUIStyle.TimeDuration;
 
   return (
     <div
       className={clsx(styles.metric, {
         [styles.completed]: masterwork,
-        [styles.hasProgressBar]: hasGoal,
+        [styles.hasProgressBar]: hasProgressBar,
       })}
     >
       <MetricBanner
@@ -62,7 +68,7 @@ export default function Metric({ metric }: Props) {
           </p>
         )}
       </div>
-      {hasGoal && (
+      {hasProgressBar && (
         <div className={clsx(styles.progressBar, { [styles.complete]: masterwork })}>
           {!masterwork && (
             <div
