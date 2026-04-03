@@ -61,6 +61,23 @@ export function getValueStyle(
     : DestinyUnlockValueUIStyle.Automatic;
 }
 
+/**
+ * D2 objectiveDef + allowOvercompletion + completionValue 1 mean that
+ * this objective gilds if any non-zero value is set, so the goal of 1
+ * is just a placeholder and shouldn't be shown.
+ */
+export function isObjectiveWithPlaceholderGoal(
+  objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition | undefined,
+  completionValue: number,
+) {
+  return (
+    objectiveDef &&
+    'allowOvercompletion' in objectiveDef &&
+    objectiveDef.allowOvercompletion &&
+    completionValue === 1
+  );
+}
+
 export function isBooleanObjective(
   objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition,
   progress: number | undefined,

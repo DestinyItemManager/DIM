@@ -1,5 +1,5 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { getValueStyle } from 'app/inventory/store/objectives';
+import { getValueStyle, isObjectiveWithPlaceholderGoal } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ObjectiveValue } from 'app/progress/Objective';
 import { percent } from 'app/shell/formatters';
@@ -26,13 +26,7 @@ export default function Metric({ metric }: Props) {
   const objectiveDef = defs.Objective.get(metricComponent.objectiveProgress.objectiveHash);
   const completionValue = objectiveDef?.completionValue ?? 0;
   const hasGoal =
-    completionValue > 0 &&
-    !(
-      objectiveDef &&
-      'allowOvercompletion' in objectiveDef &&
-      objectiveDef.allowOvercompletion &&
-      completionValue === 1
-    );
+    completionValue > 0 && !isObjectiveWithPlaceholderGoal(objectiveDef, completionValue);
 
   const progress = metricComponent.objectiveProgress.progress || 0;
   const hasProgressBar =
