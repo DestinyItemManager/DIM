@@ -7,6 +7,7 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 1. All of our code is written in [TypeScript](https://typescriptlang.org) and uses React to build UI components.
 1. Be sure to run `pnpm fix` before submitting your PR - it'll catch most style problems and make things much easier to merge.
 1. Don't forget to add a description of your change to [docs/CHANGELOG.md](CHANGELOG.md) so it'll be included in the release notes!
+1. Use of AI coding tools is not prohibited, but consider that if we wanted to use AI to solve some problem, we could do it ourselves. We do not need people to feed our backlog into Claude.
 
 ## Developer Quick start
 
