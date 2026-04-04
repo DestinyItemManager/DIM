@@ -585,22 +585,6 @@ function buildTalentGrid(
     const xpRequired = xpToReachLevel(activatedAtGridLevel) - startProgressionBarAtProgress;
     const xp = clamp(totalXP - startProgressionBarAtProgress, 0, xpRequired);
 
-    // Build a perk string for the DTR link. See https://github.com/DestinyItemManager/DIM/issues/934
-    let dtrHash: string | null = null;
-    if (node.isActivated || talentNodeGroup.isRandom) {
-      dtrHash = node.nodeHash.toString(16);
-      if (dtrHash.length > 1) {
-        dtrHash += '.';
-      }
-
-      if (talentNodeGroup.isRandom) {
-        dtrHash += node.stepIndex.toString(16);
-        if (node.isActivated) {
-          dtrHash += 'o';
-        }
-      }
-    }
-
     // hacky way to determine if the node is a weapon ornament
     let ornamentComplete = false;
     if (talentNodeGroup.column > 1 && !xpRequired && !exclusiveInColumn && item.primaryStat) {

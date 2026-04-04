@@ -51,14 +51,14 @@ jobs:
     if: needs.check-artifacts.outputs.has-test-results == 'true'
     steps:
       - name: Download test results
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: test-results
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Publish test report
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         with:
           artifact: test-results
           name: JEST Tests
@@ -72,14 +72,14 @@ jobs:
     if: needs.check-artifacts.outputs.has-eslint-results == 'true'
     steps:
       - name: Download ESLint results
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: eslint-results
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Annotate ESLint results
-        uses: ataylorme/eslint-annotate-action@v3
+        uses: ataylorme/eslint-annotate-action@v4
         with:
           report-json: eslint.results.json
           fail-on-error: false
@@ -92,7 +92,7 @@ jobs:
     if: needs.check-artifacts.outputs.has-webpack-stats == 'true' && github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Download webpack stats
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: webpack-stats
           run-id: ${{ github.event.workflow_run.id }}

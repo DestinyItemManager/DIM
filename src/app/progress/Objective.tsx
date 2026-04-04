@@ -6,6 +6,7 @@ import {
   getValueStyle,
   isBooleanObjective,
   isFlawlessObjective,
+  isObjectiveWithPlaceholderGoal,
   isRoundsWonObjective,
 } from 'app/inventory/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
@@ -272,11 +273,7 @@ export function ObjectiveValue({
   }
 
   // Default
-  return completionValue === 0 ||
-    (objectiveDef &&
-      'allowOvercompletion' in objectiveDef &&
-      objectiveDef.allowOvercompletion &&
-      completionValue === 1) ? (
+  return completionValue === 0 || isObjectiveWithPlaceholderGoal(objectiveDef, completionValue) ? (
     <>{progress.toLocaleString()}</>
   ) : (
     <>

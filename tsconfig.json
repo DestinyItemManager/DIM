@@ -13,16 +13,24 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
     "allowJs": true,
+    "rootDir": "./src",
+    "types": [
+      "node",
+      "jest",
+      "dom-chromium-installation-events",
+      "dom-screen-wake-lock",
+      "webpack-env"
+    ],
     "paths": {
-      "app/*": ["src/app/*"],
-      "data/*": ["src/data/*"],
-      "images/*": ["src/images/*"],
-      "destiny-icons/*": ["destiny-icons/*"],
-      "locale/*": ["src/locale/*"],
-      "testing/*": ["src/testing/*"],
-      "docs/*": ["docs/*"]
+      "app/*": ["./src/app/*"],
+      "data/*": ["./src/data/*"],
+      "images/*": ["./src/images/*"],
+      "destiny-icons/*": ["./destiny-icons/*"],
+      "locale/*": ["./src/locale/*"],
+      "testing/*": ["./src/testing/*"],
+      "docs/*": ["./docs/*"],
+      "*": ["./*"]
     }
   },
   "include": ["./src/**/*", "config/feature-flags.ts"]

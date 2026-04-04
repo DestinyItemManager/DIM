@@ -1,6 +1,6 @@
 # General DIM Code Style
 
-Always follow the [Contributing Guide](/docs/CONTRIBUTING.md).
+Always follow the [Contributing Guide](../docs/CONTRIBUTING.md).
 
 ## JS
 

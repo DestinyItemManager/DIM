@@ -19,7 +19,7 @@ jobs:
 
       # Inline setup - required for fork PR compatibility
       # Cannot use ./.github/actions/setup-pnpm as it won't work from forks
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -44,7 +44,7 @@ jobs:
           CLEAN_MANIFEST_CACHE: true
 
       - name: Upload test results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: test-results
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v6
 
       # Inline setup - required for fork PR compatibility
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -94,7 +94,7 @@ jobs:
 
       - name: Upload ESLint results
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: eslint-results
           path: eslint.results.json
@@ -120,7 +120,7 @@ jobs:
       - uses: actions/checkout@v6
 
       # Inline setup - required for fork PR compatibility
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v5
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -151,7 +151,7 @@ jobs:
 
       - name: Check for build pipeline updates
         id: filter
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         with:
           filters: |
             build-pipeline:
@@ -162,7 +162,7 @@ jobs:
 
       - name: Upload webpack stats
         if: steps.filter.outputs.build-pipeline == 'true'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: webpack-stats
           path: webpack-stats.json

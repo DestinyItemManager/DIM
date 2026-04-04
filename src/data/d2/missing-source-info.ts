@@ -974,6 +974,7 @@ const missingSources: { [key: string]: number[] } = {
   ],
   events: [
     72775246, // Gunburn
+    76739872, // The Beacon
     116784191, // Solstice Boots (Renewed)
     140842223, // Solstice Mask (Drained)
     143299650, // Solstice Plate (Renewed)
@@ -1080,7 +1081,6 @@ const missingSources: { [key: string]: number[] } = {
     2316331767, // Permafrost
     2328435454, // Inaugural Revelry Helm
     2337290000, // Solstice Bond (Majestic)
-    2386208942, // Keraunios
     2419100474, // Solstice Grasps (Renewed)
     2470583197, // Solstice Gloves (Renewed)
     2477028154, // Inaugural Revelry Mask
@@ -1107,6 +1107,7 @@ const missingSources: { [key: string]: number[] } = {
     2837295684, // Inaugural Revelry Mark
     2869466318, // BrayTech Werewolf
     2877046370, // Solstice Strides (Majestic)
+    2908653246, // Triple Laureate
     2924095235, // Solstice Bond (Rekindled)
     2940416351, // Solstice Boots (Drained)
     2965080304, // Yeartide Apex

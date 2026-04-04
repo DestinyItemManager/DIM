@@ -16,9 +16,11 @@ export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
             <BungieImage src={trait.displayProperties.icon} />
             {trait.displayProperties.name}
           </div>
-          {metrics.map((metric) => (
-            <Metric key={metric.metricDef.hash} metric={metric} />
-          ))}
+          <div className={styles.metricsGrid}>
+            {metrics.map((metric) => (
+              <Metric key={metric.metricDef.hash} metric={metric} />
+            ))}
+          </div>
         </div>
       ))}
     </div>
