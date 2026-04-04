@@ -1,18 +1,21 @@
 import { pathsToModuleNameMapper } from 'ts-jest';
 import tsconfig from './tsconfig.json' with { type: 'json' };
 
+const tsconfigPaths = { ...tsconfig.compilerOptions.paths };
+delete tsconfigPaths['*'];
+
 export default {
   testEnvironment: 'jsdom',
   reporters: ['default', 'jest-junit'],
   verbose: true,
   testTimeout: 60000,
   roots: ['<rootDir>'],
-  modulePaths: [tsconfig.compilerOptions.baseUrl],
+  modulePaths: tsconfig.compilerOptions.baseUrl ? [tsconfig.compilerOptions.baseUrl] : [],
   moduleNameMapper: {
     '\\.(jpg|jpeg|a?png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)(\\?react)?$':
       '<rootDir>/src/__mocks__/fileMock.js',
     // Automatically include paths from tsconfig
-    ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths),
+    ...pathsToModuleNameMapper(tsconfigPaths, { prefix: '<rootDir>/' }),
     '^.+\\.s?css$': 'identity-obj-proxy',
     'Library\\.mjs$': 'identity-obj-proxy',
   },

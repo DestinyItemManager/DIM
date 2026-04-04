@@ -26,7 +26,7 @@ export function getQualityRating(
     return null;
   }
 
-  let split = 0;
+  let split: number;
   switch (bucketHash) {
     case BucketHashes.Helmet:
       split = 46; // bungie reports 48, but i've only seen 46

@@ -18,34 +18,27 @@ export function SpecialtyModSlotIcon({ item, className }: { item: DimItem; class
   if (!modMetadata) {
     return null;
   }
+  const emptySlotItem = defs.InventoryItem.get(modMetadata.emptyModSocketHash);
+  let background: string;
+  if (modMetadata.milestoneHash) {
+    const milestone = defs.Milestone.get(modMetadata.milestoneHash);
+    background = milestone.displayProperties.icon;
+  } else if (modMetadata.activityModeHash) {
+    const activityMode = defs.ActivityMode.get(modMetadata.activityModeHash);
+    background = activityMode.displayProperties.icon;
+  } else if (modMetadata.iconHash) {
+    const icon = defs.Icon.get(modMetadata.iconHash);
+    background = icon.foreground;
+  } else {
+    background = emptySlotItem.displayProperties.icon;
+  }
   return (
-    <>
-      {modMetadata &&
-        ((m) => {
-          const emptySlotItem = defs.InventoryItem.get(m.emptyModSocketHash);
-          let background: string;
-          if (m.milestoneHash) {
-            const milestone = defs.Milestone.get(m.milestoneHash);
-            background = milestone.displayProperties.icon;
-          } else if (m.activityModeHash) {
-            const activityMode = defs.ActivityMode.get(m.activityModeHash);
-            background = activityMode.displayProperties.icon;
-          } else if (m.iconHash) {
-            const icon = defs.Icon.get(m.iconHash);
-            background = icon.foreground;
-          } else {
-            background = emptySlotItem.displayProperties.icon;
-          }
-          return (
-            <PressTip
-              minimal
-              tooltip={emptySlotItem.itemTypeDisplayName}
-              key={emptySlotItem.hash}
-              className={clsx(className, styles.specialtyModIcon)}
-              style={bungieBackgroundStyle(background)}
-            />
-          );
-        })(modMetadata)}
-    </>
+    <PressTip
+      minimal
+      tooltip={emptySlotItem.itemTypeDisplayName}
+      key={emptySlotItem.hash}
+      className={clsx(className, styles.specialtyModIcon)}
+      style={bungieBackgroundStyle(background)}
+    />
   );
 }
