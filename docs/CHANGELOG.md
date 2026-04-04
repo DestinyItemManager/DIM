@@ -1,6 +1,7 @@
 ## Next
 
 * Restyled Stat trackers on Records page and added their gilding requirements
+* The warning tooltip for mismatched perk hashes in wishlists will now show the perk name in addition to the perk hash.
 
 ## 8.118.0 <span class="changelog-date">(2026-03-29)</span>
 
