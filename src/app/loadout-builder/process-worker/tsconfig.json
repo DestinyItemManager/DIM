@@ -15,6 +15,7 @@
     "skipLibCheck": true,
     "allowJs": false,
     "baseUrl": ".",
+    "types": ["node", "jest"],
     "paths": {
       "app/*": ["../../*"],
       "data/*": ["../../../data/*"],
