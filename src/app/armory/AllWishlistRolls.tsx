@@ -217,8 +217,13 @@ function WishlistRolls({
 }
 
 function InvalidPlug({ hash }: { hash: number }) {
+  const defs = useD2Definitions();
+  const perkName = defs?.InventoryItem.get(hash)?.displayProperties.name;
   return (
-    <PressTip tooltip={t('Armory.UnknownPerkHash', { hash })} className={styles.invalidPlug}>
+    <PressTip
+      tooltip={t('Armory.UnknownPerkHash', { hash, perkName: perkName ?? t('Armory.Unknown') })}
+      className={styles.invalidPlug}
+    >
       <AppIcon icon={faExclamationTriangle} />
     </PressTip>
   );
