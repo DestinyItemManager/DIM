@@ -431,6 +431,7 @@ export default tseslint.config(
       '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
       '@eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect': 'off',
       '@eslint-react/prefer-read-only-props': 'off',
+      '@eslint-react/naming-convention/ref-name': 'off',
       // This is busted right now
       '@eslint-react/naming-convention/use-state': 'off',
     },
