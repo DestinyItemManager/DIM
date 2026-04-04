@@ -30,6 +30,9 @@ export default tseslint.config(
   {
     name: 'react',
     ...reactPlugin.configs.flat.recommended,
+    plugins: {
+      react: fixupPluginRules(reactPlugin),
+    },
     settings: {
       react: {
         version: 'detect',
@@ -426,7 +429,6 @@ export default tseslint.config(
       'sonarjs/no-nested-template-literals': 'off',
       '@eslint-react/no-array-index-key': 'off',
       '@eslint-react/no-unstable-default-props': 'off',
-      '@eslint-react/naming-convention/component-name': 'warn',
       '@eslint-react/dom/no-dangerously-set-innerhtml': 'off',
       '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
       '@eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect': 'off',

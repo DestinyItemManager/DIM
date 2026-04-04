@@ -208,8 +208,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       '@bhollis/eslint-plugin-css-modules':
-        specifier: ^1.0.0
-        version: 1.0.0(eslint@10.1.0)
+        specifier: ^1.0.1
+        version: 1.0.1(eslint@10.1.0)
       '@bundle-stats/plugin-webpack-filter':
         specifier: ^4.21.10
         version: 4.21.10(core-js@3.48.0)
@@ -1149,8 +1149,8 @@ packages:
   '@bhollis/css-modules-typescript-loader@1.0.1':
     resolution: {integrity: sha512-DIw53+C1VwdSOtqUsWFA9Kq8SGCf04Ih/CQEHlPF1x/3Tofj8QWIQnL0p6HYgNTr4C6un85E8hcHQ0sBNuJm3A==}
 
-  '@bhollis/eslint-plugin-css-modules@1.0.0':
-    resolution: {integrity: sha512-AmriRAN4D0mMnvIIpB6qqvNKY/PI4Z8gg13SQ4DN0vEsp2VdLx+aHE6YryHKOwd5dwVkOReNh/53pMptj5x0cw==}
+  '@bhollis/eslint-plugin-css-modules@1.0.1':
+    resolution: {integrity: sha512-jBEOyjxXerkS6NqMf2kJCQ8PnX6exOaCJIGTA42LDdtpWlLOzwO6uGH+U7kCgdTYdxGczygB/yF5NYNkb28drg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       eslint: '>=2.0.0'
@@ -8761,7 +8761,7 @@ snapshots:
       line-diff: 2.1.2
       loader-utils: 3.3.1
 
-  '@bhollis/eslint-plugin-css-modules@1.0.0(eslint@10.1.0)':
+  '@bhollis/eslint-plugin-css-modules@1.0.1(eslint@10.1.0)':
     dependencies:
       es-toolkit: 1.45.1
       eslint: 10.1.0
