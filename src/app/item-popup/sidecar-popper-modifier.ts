@@ -41,7 +41,6 @@ function setupMenu({ state, options }: ModifierArguments<Options>) {
     return;
   }
   if (typeof sidecarElement === 'string') {
-    // @ts-expect-error ts(2322)
     sidecarElement = state.elements.popper.querySelector(sidecarElement)!;
 
     if (!sidecarElement) {
