@@ -39,7 +39,7 @@
     "TrashlistedRolls_one": "Мусорный ролл",
     "TrashlistedRolls_other": "{{count, number}} мусорных роллов",
     "Unknown": "Неизвестный предмет",
-    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
+    "UnknownPerkHash": "The perk hash {{hash}} ({{perkName}}) does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_few": "{{count, number}} в списке Желанных Роллов",
     "WishlistedRolls_many": "{{count, number}} в списке Желанных Роллов",
     "WishlistedRolls_one": "Желанный Ролл",

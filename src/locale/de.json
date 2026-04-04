@@ -37,7 +37,7 @@
     "TrashlistedRolls_one": "Mülllisten-Roll",
     "TrashlistedRolls_other": "{{count, number}} Mülllisten-Rolls",
     "Unknown": "Unbekannter Gegenstand",
-    "UnknownPerkHash": "Der Perk Hash {{hash}} erscheint nicht auf diesem Element, daher ist dieser Wunschlisten-Roll ungültig. Bitte kontaktiere den Autor der Wunschliste, um dies zu korrigieren. Bitte beachte, dass Wunschlisten immer die nicht verbesserte Version von Perks angeben sollten.",
+    "UnknownPerkHash": "Der Perk Hash {{hash}} ({{perkName}}) erscheint nicht auf diesem Element, daher ist dieser Wunschlisten-Roll ungültig. Bitte kontaktiere den Autor der Wunschliste, um dies zu korrigieren. Bitte beachte, dass Wunschlisten immer die nicht verbesserte Version von Perks angeben sollten.",
     "WishlistedRolls_one": "Wunschlisten-Roll",
     "WishlistedRolls_other": "{{count, number}} Wunschlisten-Rolls",
     "YourItems": "Deine Gegenstände"

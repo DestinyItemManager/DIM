@@ -37,7 +37,7 @@
     "TrashlistedRolls_one": "Tirada en Lista de Basura",
     "TrashlistedRolls_other": "{{count, number}} Tiradas en Lista de Basura",
     "Unknown": "Objeto Desconocido",
-    "UnknownPerkHash": "El hash de la ventaja {{hash}} no aparece en este objeto, así que esta tirada de la lista de deseos no es válida. Por favor contacta con el autor de la lista de deseos para corregir esto. Ten en cuenta que las listas de deseos siempre debería especificar la versiones no mejoradas de las ventajas.",
+    "UnknownPerkHash": "El hash de la ventaja {{hash}} ({{perkName}}) no aparece en este objeto, así que esta tirada de la lista de deseos es inválida. Por favor contacta con el autor de la lista de deseos para corregir esto. Toma en cuenta que la listas de deseos siempre deberían especificar las versiones no mejoradas de las ventajas.",
     "WishlistedRolls_one": "Tirada en Lista de Deseos",
     "WishlistedRolls_other": "{{count, number}} Tiradas en Lista de Deseos",
     "YourItems": "Tus Objetos"

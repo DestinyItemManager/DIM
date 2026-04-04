@@ -37,7 +37,7 @@
     "TrashlistedRolls_one": "Roll Lista degli Scarti",
     "TrashlistedRolls_other": "{{count, number}} Roll Lista degli Scarti",
     "Unknown": "Oggetto Sconosciuto",
-    "UnknownPerkHash": "L'hash peculiarità {{hash}} non compare su questo oggetto, perciò questo roll Lista Desideri non è valido. Contatta l'autore della Lista Desideri per correggerlo. Nota che le Liste Desideri dovrebbero sempre specificare le versioni non migliorate delle peculiarità.",
+    "UnknownPerkHash": "L'hash della peculiarità {{hash}} ({{perkName}}) non compare su questo oggetto, quindi questo roll della Lista Desideri non è valido. Contatta l'autore della Lista Desideri per correggerlo. Nota che le Liste Desideri dovrebbero sempre specificare la versione non potenziata delle peculiarità.",
     "WishlistedRolls_one": "Roll Lista dei Desideri",
     "WishlistedRolls_other": "{{count, number}} Roll Lista dei Desideri",
     "YourItems": "I tuoi oggetti"

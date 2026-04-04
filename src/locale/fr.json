@@ -37,7 +37,7 @@
     "TrashlistedRolls_one": "Arme indésirable",
     "TrashlistedRolls_other": "{{count, number}} Armes indésirables",
     "Unknown": "Object inconnu",
-    "UnknownPerkHash": "The perk hash {{hash}} does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
+    "UnknownPerkHash": "The perk hash {{hash}} ({{perkName}}) does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
     "WishlistedRolls_one": "Arme souhaitée",
     "WishlistedRolls_other": "{{count, number}} Armes souhaitées",
     "YourItems": "Vos objets"
