@@ -1,50 +1,82 @@
 @use '../variables.scss' as *;
 
 .metric {
-  box-sizing: border-box;
-  margin: 8px 0 16px 0;
   position: relative;
-
-  p {
-    margin: 8px 0 8px 36px;
-    color: #a1a2a2;
-  }
+  box-sizing: border-box;
+  background: rgb(255, 255, 255, 0.05);
+  border: 1px solid #666;
+  padding: 12px 12px 12px 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  user-select: text;
+  gap: 8px;
 }
 
 .masterworked {
   color: $gold;
 }
 
-.header {
-  margin: 0;
-  padding: 4px 16px 4px 36px;
-  font-size: 14px;
-  font-weight: normal;
-  background-color: #444;
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
+.completed {
+  border-color: $gold;
 }
 
-.name {
+.info {
   flex: 1;
 }
 
+.name {
+  font-size: 14px;
+}
+
 .value {
+  float: right;
   font-weight: bold;
-  line-height: 16px;
   font-size: 16px;
+  text-align: right;
+  margin-left: 4px;
+}
+
+.goal {
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--theme-text-secondary);
+  text-align: right;
 }
 
 .icon {
-  left: 8px;
+  margin-top: -13px;
 }
 
 .description {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin: 4px 0 0;
+  color: var(--theme-text-secondary);
   img {
     filter: invert(0.7);
   }
+}
+
+.hasProgressBar {
+  padding-bottom: 18px;
+}
+
+.progressBar {
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  left: 0;
+  bottom: 0;
+  background-color: rgb(255, 255, 255, 0.1);
+
+  &.complete {
+    background-color: $xp;
+  }
+}
+
+.progressFill {
+  height: 100%;
+  background-color: white;
 }
