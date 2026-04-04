@@ -15,7 +15,11 @@
     "skipLibCheck": true,
     "allowJs": true,
     "types": [
-      "node", "jest", "dom-chromium-installation-events", "dom-screen-wake-lock"
+      "node",
+      "jest",
+      "dom-chromium-installation-events",
+      "dom-screen-wake-lock",
+      "webpack-env"
     ],
     "paths": {
       "app/*": ["./src/app/*"],

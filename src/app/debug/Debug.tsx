@@ -25,7 +25,7 @@ import { usePageTitle } from 'app/utils/hooks';
 import { systemInfo } from 'app/utils/system-info';
 import { wishListsLastFetchedSelector, wishListsSelector } from 'app/wishlists/selectors';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as styles from './Debug.m.scss';
 
@@ -58,7 +58,6 @@ export default function Debug() {
 
   useLoadStores(currentAccount);
 
-  const [localStorageError, setLocalStorageError] = useState<Error>();
   const [idbError, setIdbError] = useState<Error>();
   useEffect(() => {
     (async () => {
@@ -70,11 +69,11 @@ export default function Debug() {
     })();
   }, []);
 
-  useEffect(() => {
+  const localStorageError = useMemo(() => {
     try {
       localStorage.setItem('test', 'true');
     } catch (e) {
-      setLocalStorageError(convertToError(e));
+      return convertToError(e);
     }
   }, []);
 

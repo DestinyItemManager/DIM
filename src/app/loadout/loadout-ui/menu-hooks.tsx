@@ -58,7 +58,6 @@ export function useLoadoutFilterPills(
     extra?: React.ReactNode;
   } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  // eslint-disable-next-line @eslint-react/prefer-use-state-lazy-initialization
   const [selectedFilters, setSelectedFilters] = useState<Option<FilterPillType>[]>(emptyArray());
   const defs = useD2Definitions();
   const analysisSummary = useSummaryLoadoutsAnalysis(

@@ -434,6 +434,13 @@ export default tseslint.config(
       '@eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect': 'off',
       '@eslint-react/prefer-read-only-props': 'off',
       '@eslint-react/naming-convention/ref-name': 'off',
+      '@eslint-react/purity': 'off',
+      '@eslint-react/set-state-in-effect': 'off',
+      '@eslint-react/use-state': 'off',
+      '@eslint-react/component-hook-factories': 'off',
+      // These are redundant with react-hooks rules
+      '@eslint-react/rules-of-hooks': 'off',
+      '@eslint-react/exhaustive-deps': 'off',
       // This is busted right now
       '@eslint-react/naming-convention/use-state': 'off',
     },

@@ -15,48 +15,70 @@ export default function PresentationNodeSearchResults({
   ownedItemHashes?: Set<number>;
   profileResponse: DestinyProfileResponse;
 }) {
-  // TODO: make each node in path linkable
-  const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
-  const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
   return (
     <div>
       {searchResults.map((sr) => (
-        <div key={sr.path.map((p) => p.hash).join('.')}>
-          <ul className={styles.path}>
-            {sr.path.map((p, index) => index > 0 && <li key={p.hash}>{p.name}</li>)}
-          </ul>
-          <div>
-            {!sr.collectibles &&
-              !sr.records &&
-              !sr.metrics &&
-              !sr.craftables &&
-              !sr.plugs &&
-              (() => {
-                const node = sr.path.at(-1)!;
-                return node.childPresentationNodes ? (
-                  <PresentationNodeRoot
-                    presentationNodeHash={node.hash}
-                    ownedItemHashes={ownedItemHashes}
-                    profileResponse={profileResponse}
-                  />
-                ) : (
-                  <PresentationNodeLeaf
-                    node={node}
-                    ownedItemHashes={ownedItemHashes}
-                    redactedRecordsRevealed={redactedRecordsRevealed}
-                    sortRecordProgression={sortRecordProgression}
-                  />
-                );
-              })()}
-            <PresentationNodeLeaf
-              node={sr}
-              ownedItemHashes={ownedItemHashes}
-              redactedRecordsRevealed={redactedRecordsRevealed}
-              sortRecordProgression={sortRecordProgression}
-            />
-          </div>
-        </div>
+        <PresentationNodeSearchResult
+          key={sr.path.map((p) => p.hash).join('.')}
+          sr={sr}
+          ownedItemHashes={ownedItemHashes}
+          profileResponse={profileResponse}
+        />
       ))}
+    </div>
+  );
+}
+
+function PresentationNodeSearchResult({
+  sr,
+  ownedItemHashes,
+  profileResponse,
+}: {
+  sr: DimPresentationNodeSearchResult;
+  ownedItemHashes?: Set<number>;
+  profileResponse: DestinyProfileResponse;
+}) {
+  // TODO: make each node in path linkable
+  const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
+  const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
+  const childNodes =
+    !sr.collectibles &&
+    !sr.records &&
+    !sr.metrics &&
+    !sr.craftables &&
+    !sr.plugs &&
+    (() => {
+      const node = sr.path.at(-1)!;
+      return node.childPresentationNodes ? (
+        <PresentationNodeRoot
+          presentationNodeHash={node.hash}
+          ownedItemHashes={ownedItemHashes}
+          profileResponse={profileResponse}
+        />
+      ) : (
+        <PresentationNodeLeaf
+          node={node}
+          ownedItemHashes={ownedItemHashes}
+          redactedRecordsRevealed={redactedRecordsRevealed}
+          sortRecordProgression={sortRecordProgression}
+        />
+      );
+    })();
+
+  return (
+    <div key={sr.path.map((p) => p.hash).join('.')}>
+      <ul className={styles.path}>
+        {sr.path.map((p, index) => index > 0 && <li key={p.hash}>{p.name}</li>)}
+      </ul>
+      <div>
+        {childNodes}
+        <PresentationNodeLeaf
+          node={sr}
+          ownedItemHashes={ownedItemHashes}
+          redactedRecordsRevealed={redactedRecordsRevealed}
+          sortRecordProgression={sortRecordProgression}
+        />
+      </div>
     </div>
   );
 }
