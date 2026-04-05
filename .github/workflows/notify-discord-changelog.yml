@@ -1,0 +1,22 @@
+name: Notify Discord - Changelog
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'docs/CHANGELOG.md'
+
+jobs:
+  post-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Post changelog to Discord
+        env:
+          DISCORD_CHANGELOG_BOT_TOKEN: ${{ secrets.DISCORD_CHANGELOG_BOT_TOKEN }}
+          DISCORD_CHANGELOG_WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
+        run: python3 .github/scripts/discord_changelog.py
