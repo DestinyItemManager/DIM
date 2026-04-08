@@ -19,6 +19,7 @@ import urllib.error
 
 LOCALE_FILE = "src/locale/en.json"
 CHUNK_SIZE = 4000  # safely under Discord's 4096 embed limit
+REQUEST_TIMEOUT = 10  # seconds
 ROLE_MENTION = "<@&622449489008918548>"
 AVATAR_URL = "https://raw.githubusercontent.com/DestinyItemManager/DIM/refs/heads/master/icons/pr/android-chrome-mask-512x512-6-2018.png"
 COLOR = 0xFF64E7
@@ -153,7 +154,7 @@ def post_to_discord(report):
             headers={"Content-Type": "application/json"}
         )
         try:
-            urllib.request.urlopen(req)
+            urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT)
             print(f"Posted chunk {i + 1}/{len(chunks)} ({len(chunk)} chars)")
         except urllib.error.HTTPError as e:
             print(f"HTTP {e.code}: {e.read().decode()}")

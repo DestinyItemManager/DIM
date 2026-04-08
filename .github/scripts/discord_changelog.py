@@ -23,6 +23,7 @@ CHANGELOG_FILE = "docs/CHANGELOG.md"
 CHANNEL_ID = "894808801109245952"
 BETA_AVATAR_HASH = "5153E66D003AFF489DC73FF9EE151A6F"
 CHUNK_SIZE = 4000  # safely under Discord's 4096 embed limit
+REQUEST_TIMEOUT = 10  # seconds
 
 ICONS_BASE = "https://raw.githubusercontent.com/DestinyItemManager/DIM/refs/heads/master/icons"
 AVATAR_BETA = f"{ICONS_BASE}/beta/favicon-96x96.png"
@@ -82,7 +83,7 @@ def bot_api(method, path, token, data=None):
         method=method
     )
     try:
-        with urllib.request.urlopen(req) as r:
+        with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as r:
             raw = r.read()
             return json.loads(raw) if raw else None
     except urllib.error.HTTPError as e:
@@ -107,17 +108,43 @@ def chunk_content(content):
 
 # ── Commands ───────────────────────────────────────────────────────────────────
 
+LOOKBACK_DAYS = 8  # releases are weekly; 8 days covers the full beta window
+
+
+def _snowflake_from_days_ago(days):
+    """Return the Discord snowflake ID for a timestamp N days ago.
+    Used as an `after` cursor to avoid scanning the full channel history.
+    """
+    ms = int((time.time() - days * 86400) * 1000)
+    return str((ms - 1420070400000) << 22)
+
+
+def _bot_api_with_retry(method, path, token, data=None, retries=5):
+    """Call bot_api with exponential backoff on 429 rate-limit responses."""
+    for attempt in range(retries):
+        try:
+            return bot_api(method, path, token, data)
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < retries - 1:
+                retry_after = float(json.loads(e.read()).get("retry_after", 1))
+                print(f"Rate limited, retrying in {retry_after}s...")
+                time.sleep(retry_after)
+            else:
+                raise
+
+
 def delete_beta():
-    """Delete all beta-avatar messages from the changelog channel."""
+    """Delete beta-avatar messages from the last LOOKBACK_DAYS days."""
     token = os.environ["DISCORD_CHANGELOG_BOT_TOKEN"]
+    after_id = _snowflake_from_days_ago(LOOKBACK_DAYS)
 
     messages = []
     last_id = None
     while True:
-        path = f"channels/{CHANNEL_ID}/messages?limit=100"
+        path = f"channels/{CHANNEL_ID}/messages?limit=100&after={after_id}"
         if last_id:
             path += f"&before={last_id}"
-        batch = bot_api("GET", path, token)
+        batch = _bot_api_with_retry("GET", path, token)
         if not batch:
             break
         messages.extend(batch)
@@ -128,7 +155,7 @@ def delete_beta():
     deleted = 0
     for msg in messages:
         if msg.get("author", {}).get("avatar", "").upper() == BETA_AVATAR_HASH:
-            bot_api("DELETE", f"channels/{CHANNEL_ID}/messages/{msg['id']}", token)
+            _bot_api_with_retry("DELETE", f"channels/{CHANNEL_ID}/messages/{msg['id']}", token)
             deleted += 1
             time.sleep(0.5)  # stay under rate limit
 
@@ -164,5 +191,5 @@ if __name__ == "__main__":
             webhook, data=data,
             headers={"Content-Type": "application/json"}
         )
-        urllib.request.urlopen(req)
+        urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT)
         print(f"Posted chunk ({len(chunk)} chars)")
