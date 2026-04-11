@@ -36,7 +36,7 @@
     "Season": "年 {{year}}，第 {{season}} 赛季",
     "TrashlistedRolls_other": "{{count, number}} 个垃圾列表特性组合",
     "Unknown": "未知物品",
-    "UnknownPerkHash": "The perk hash {{hash}} ({{perkName}}) does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
+    "UnknownPerkHash": "特性 hash {{hash}} ({{perkName}}) 未出现在此物品上，故该愿望单组合无效。请联系愿望单作者更正。注意：愿望单仅会显示未强化版的特性。",
     "WishlistedRolls_other": "{{count, number}} 个愿望清单特性组合",
     "YourItems": "你的物品"
   },

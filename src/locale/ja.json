@@ -36,7 +36,7 @@
     "Season": "{{year}} 年目、シーズン {{season}}",
     "TrashlistedRolls_other": "{{count, number}} 個のウイッシュリストのロール",
     "Unknown": "不明のアイテム",
-    "UnknownPerkHash": "The perk hash {{hash}} ({{perkName}}) does not appear on this item, so this wish list roll is invalid. Please contact the wish list author to correct this. Note that wish lists should always specify the non-enhanced version of perks.",
+    "UnknownPerkHash": "このアイテムにパーク:{{perkName}}のハッシュ: {{hash}}が見つからないため、このウィッシュリストロールは無効です。ウィッシュリストの管理者に問い合わせてください。なお、ウィッシュリストでは常に非強化版パークを指定する必要があります。",
     "WishlistedRolls_other": "{{count, number}} 個のウィッシュリストと一致しました",
     "YourItems": "所持品"
   },
