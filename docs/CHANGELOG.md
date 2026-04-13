@@ -1,5 +1,7 @@
 ## Next
 
+## 8.120.0 <span class="changelog-date">(2026-04-12)</span>
+
 ## 8.119.0 <span class="changelog-date">(2026-04-05)</span>
 
 * Restyled Stat trackers on Records page and added their gilding requirements
