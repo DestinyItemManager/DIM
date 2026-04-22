@@ -205,7 +205,7 @@
     "es-toolkit": "^1.45.1",
     "fast-equals": "^6.0.0",
     "i18next": "^25.8.14",
-    "i18next-http-backend": "^3.0.2",
+    "i18next-http-backend": "^3.0.5",
     "immer": "^11.1.4",
     "memoize-one": "^6.0.0",
     "motion": "^12.35.0",
