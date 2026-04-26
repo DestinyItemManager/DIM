@@ -1,10 +1,16 @@
 @use '../variables.scss' as *;
+@use './set-card';
 
 .presentationNode {
   /* indent child nodes more than their parent */
-  > * > .presentationNode {
+  > * > * > .presentationNode {
     margin-left: 10px;
   }
+}
+
+/* Grid wrapper for CategorySets hierarchy nodes */
+.categorySetGrid {
+  @include set-card.set-card-grid;
 }
 
 /* The smaller headers for things like Armor and Weapons Collections leaf nodes */

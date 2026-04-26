@@ -6,9 +6,9 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { objectValues } from 'app/utils/util-types';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
-import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import SetCard from '../SetCard';
 import * as styles from './UniversalOrnaments.m.scss';
 import {
   OrnamentStatus,
@@ -88,12 +88,7 @@ function Ornaments({
   const complete = set.ornaments.every((item) => ownedItemHashes.unlockedOrnaments.has(item.hash));
 
   return (
-    <div
-      className={clsx(styles.record, {
-        [styles.redeemed]: complete,
-      })}
-    >
-      <h3>{set.name}</h3>
+    <SetCard title={set.name} complete={complete}>
       <div className={styles.ornaments}>
         {set.ornaments.map((item) => {
           const acquired = ownedItemHashes.visibleOrnaments.has(item.hash);
@@ -110,6 +105,6 @@ function Ornaments({
           );
         })}
       </div>
-    </div>
+    </SetCard>
   );
 }

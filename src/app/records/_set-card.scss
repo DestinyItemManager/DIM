@@ -1,0 +1,12 @@
+/// Shared grid layout for set card displays (armor sets, ornament sets, etc.)
+
+@mixin set-card-grid {
+  display: grid;
+  // 5 items + 4 gaps (4px each) + card padding (8px each side) + border (1px each side)
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(calc(var(--item-size) * 5 + 34px), 100%), 1fr)
+  );
+  gap: 8px;
+  margin: 8px 4px;
+}

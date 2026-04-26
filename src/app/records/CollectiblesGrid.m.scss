@@ -9,4 +9,9 @@
   :global(.always-expanded) & {
     margin: 2px 0 8px;
   }
+
+  /* Set cards (armor sets, ornament sets): no extra margins inside the card padding */
+  :global(.set-card) & {
+    margin: 0;
+  }
 }

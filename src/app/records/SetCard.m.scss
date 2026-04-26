@@ -1,0 +1,25 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  box-sizing: border-box;
+  position: relative;
+  background: rgb(255, 255, 255, 0.05);
+  border: 1px solid #666;
+
+  &.complete {
+    border-color: var(--theme-record-redeemed);
+    background: transparent;
+
+    .title {
+      color: var(--theme-record-redeemed);
+    }
+  }
+}
+
+.title {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  font-weight: normal;
+  text-transform: uppercase;
+}
