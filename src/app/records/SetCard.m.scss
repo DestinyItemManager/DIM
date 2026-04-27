@@ -5,14 +5,21 @@
   box-sizing: border-box;
   position: relative;
   background: rgb(255, 255, 255, 0.05);
-  border: 1px solid #666;
 
   &.complete {
-    border-color: var(--theme-record-redeemed);
     background: transparent;
 
     .title {
       color: var(--theme-record-redeemed);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--theme-record-redeemed);
+      opacity: 0.15;
+      pointer-events: none;
     }
   }
 }
