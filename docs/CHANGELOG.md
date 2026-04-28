@@ -1,5 +1,7 @@
 ## Next
 
+* Restyle Collections Armor to match Universal Ornaments
+
 ## 8.122.0 <span class="changelog-date">(2026-04-26)</span>
 
 ## 8.121.0 <span class="changelog-date">(2026-04-19)</span>
