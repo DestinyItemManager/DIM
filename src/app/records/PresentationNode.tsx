@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import * as styles from './PresentationNode.m.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
+import SetCard from './SetCard';
 import { DimPresentationNode } from './presentation-nodes';
 
 export default function PresentationNode({
@@ -68,11 +69,42 @@ export default function PresentationNode({
       defs.PresentationNode.get(p)?.screenStyle === DestinyPresentationScreenStyle.CategorySets,
   );
 
+  // CategorySets leaf nodes render as self-contained set cards
+  if (aParentIsCategorySetStyle && !node.childPresentationNodes?.length) {
+    return (
+      <SetCard
+        title={
+          <PresentationNodeTitle
+            displayProperties={node}
+            overrideName={overrideName}
+            titleInfo={node.titleInfo}
+          />
+        }
+        complete={completed}
+      >
+        <PresentationNodeLeaf
+          node={node}
+          ownedItemHashes={ownedItemHashes}
+          redactedRecordsRevealed={redactedRecordsRevealed}
+          sortRecordProgression={sortRecordProgression}
+        />
+      </SetCard>
+    );
+  }
+
+  // True when children are set cards, meaning this node should render them in a grid
+  // and not use the alwaysExpanded header style itself.
+  const childrenAreCategorySetLeaves =
+    aParentIsCategorySetStyle &&
+    Boolean(node.childPresentationNodes?.length) &&
+    node.childPresentationNodes?.every((c) => !c.childPresentationNodes?.length);
+
   const alwaysExpanded =
     // if we're not in triumphs
     !isInTriumphs &&
-    // & we're 4 levels deep(collections:weapon), or in CategorySet & 5 deep (collections:armor)
-    thisAndParents.length >= (aParentIsCategorySetStyle ? 5 : 4);
+    // and 4 levels deep (e.g. collections > weapons > kinetic > auto rifles)
+    !childrenAreCategorySetLeaves &&
+    thisAndParents.length >= 4;
 
   const onlyChild =
     // if this is a child of a child
@@ -129,17 +161,19 @@ export default function PresentationNode({
         )
       )}
       <CollapsedSection collapsed={!childrenExpanded} headerId={headerId} contentId={contentId}>
-        {node.childPresentationNodes?.map((subNode) => (
-          <PresentationNode
-            key={subNode.hash}
-            node={subNode}
-            ownedItemHashes={ownedItemHashes}
-            path={path}
-            parents={thisAndParents}
-            onNodePathSelected={onNodePathSelected}
-            isInTriumphs={isInTriumphs}
-          />
-        ))}
+        <div className={clsx({ [styles.categorySetGrid]: childrenAreCategorySetLeaves })}>
+          {node.childPresentationNodes?.map((subNode) => (
+            <PresentationNode
+              key={subNode.hash}
+              node={subNode}
+              ownedItemHashes={ownedItemHashes}
+              path={path}
+              parents={thisAndParents}
+              onNodePathSelected={onNodePathSelected}
+              isInTriumphs={isInTriumphs}
+            />
+          ))}
+        </div>
         {visible > 0 && (
           <PresentationNodeLeaf
             node={node}
