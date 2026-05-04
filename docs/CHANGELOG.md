@@ -1,5 +1,7 @@
 ## Next
 
+## 8.123.0 <span class="changelog-date">(2026-05-03)</span>
+
 * Restyle Collections Armor to match Universal Ornaments.
 * d2foundry.gg is back, and so are our links to it.
 
