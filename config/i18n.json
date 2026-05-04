@@ -617,6 +617,7 @@
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectExotic": "Select exotic",
+    "SelectPerks": "Select perks",
     "SelectMods": "Select Mods",
     "SelectSetBonus": "Select Set Bonuses",
     "AddStack": "Add another copy of this mod",
