@@ -35,7 +35,7 @@ export function TierlessSetStats({
   existingLoadoutName,
   equippedHashes,
   setBonusStatus,
-  fotlWarning,
+  setBonusModWarning,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -46,7 +46,7 @@ export function TierlessSetStats({
   existingLoadoutName?: string;
   equippedHashes: Set<number>;
   setBonusStatus: ActiveSetBonusInfo;
-  fotlWarning?: boolean;
+  setBonusModWarning?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const totalStats = sum(Object.values(stats));
@@ -95,8 +95,8 @@ export function TierlessSetStats({
         {maxPower}
       </span>
       <SetBonusesStatus setBonusStatus={setBonusStatus} />
-      {fotlWarning && (
-        <PressTip tooltip={t('LoadoutBuilder.FOTLWildcardWarning')}>
+      {setBonusModWarning && (
+        <PressTip tooltip={t('LoadoutBuilder.SetBonusModWarning')}>
           <AlertIcon className={styles.statBarWarningIcon} />
         </PressTip>
       )}

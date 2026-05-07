@@ -14,7 +14,7 @@ import {
 import { armorStats } from 'app/search/d2-known-values';
 import { filterMap, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { getArmor3TuningSocket } from 'app/utils/socket-utils';
+import { getArmor3TuningSocket, getSetBonusModSocket } from 'app/utils/socket-utils';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { StatHashes } from 'data/d2/generated-enums';
 import { minBy } from 'es-toolkit';
@@ -92,6 +92,7 @@ export function mapDimItemToProcessItems({
     remainingEnergyCapacity: capacity - modsCost,
     compatibleActivityMod: compatibleActivityMod,
     setBonus: setBonus?.hash,
+    hasSetBonusModSocket: getSetBonusModSocket(dimItem) ? true : undefined,
   };
 
   const tuningSocket = getArmor3TuningSocket(dimItem);

@@ -3,13 +3,13 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
-import { fotlWildcardHashes } from 'app/loadout/known-values';
 import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { sumBy } from 'app/utils/collections';
 import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadata } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
+import { getSetBonusModSocket } from 'app/utils/socket-utils';
 import { computeStatDupeLower } from 'app/utils/stats';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { sum } from 'es-toolkit';
@@ -195,7 +195,7 @@ export function filterItems({
       firstPassFilteredItems = firstPassFilteredItems.filter(
         (item) =>
           (item.setBonus && includeOnlySetBonusHashes.includes(item.setBonus.hash)) ||
-          fotlWildcardHashes.has(item.hash),
+          getSetBonusModSocket(item),
       );
     }
 

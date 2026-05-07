@@ -1,5 +1,5 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
-import { fotlWildcardHashes, MAX_STAT } from 'app/loadout/known-values';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { compact, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { sum } from 'es-toolkit';
@@ -242,8 +242,13 @@ export async function process(
               continue;
             }
 
-            // Check set bonus requirements
-            let wildcardAvailable = true;
+            // Set bonuses; each slot can use one wildcard if present
+            let wildcardsRemaining =
+              (helm.hasSetBonusModSocket ? 1 : 0) +
+              (gaunt.hasSetBonusModSocket ? 1 : 0) +
+              (chest.hasSetBonusModSocket ? 1 : 0) +
+              (leg.hasSetBonusModSocket ? 1 : 0) +
+              (classItem.hasSetBonusModSocket ? 1 : 0);
             for (let i = 0; i < setBonusHashes.length; i++) {
               const setHash = setBonusHashes[i];
               const setNeededCount = setBonusCounts[i];
@@ -254,12 +259,9 @@ export async function process(
                 Number(leg.setBonus === setHash) +
                 Number(classItem.setBonus === setHash);
               if (setCount < setNeededCount) {
-                if (
-                  wildcardAvailable &&
-                  fotlWildcardHashes.has(helm.hash!) &&
-                  setCount + 1 === setNeededCount
-                ) {
-                  wildcardAvailable = false;
+                const wildcardsNeeded = setNeededCount - setCount;
+                if (wildcardsRemaining >= wildcardsNeeded) {
+                  wildcardsRemaining -= wildcardsNeeded;
                 } else {
                   setStatistics.skipReasons.insufficientSetBonus += 1;
                   continue innerloop;

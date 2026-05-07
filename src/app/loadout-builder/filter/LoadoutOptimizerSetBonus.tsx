@@ -11,7 +11,8 @@ import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { uniqBy } from 'app/utils/collections';
+import { filterMap, uniqBy } from 'app/utils/collections';
+import { getActiveSetBonusHash, getSetBonusModSocket } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyItemSetPerkDefinition } from 'bungie-api-ts/destiny2';
 import { countBy, sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
@@ -47,13 +48,15 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
   const hidePicker = () => setShowSetBonusPicker(false);
 
   const handleSyncFromEquipped = () => {
-    const equippedSetBonuses = allItems.filter(
-      (i) => i.equipped && isLoadoutBuilderItem(i) && i.owner === storeId && i.setBonus,
+    const equippedSetBonuses = filterMap(allItems, (i) =>
+      i.equipped && isLoadoutBuilderItem(i) && i.owner === storeId
+        ? getActiveSetBonusHash(i)
+        : undefined,
     );
 
     const newSetBonuses: SetBonusCounts = {};
-    for (const item of equippedSetBonuses) {
-      newSetBonuses[item.setBonus!.hash] = (newSetBonuses[item.setBonus!.hash] || 0) + 1;
+    for (const setHash of equippedSetBonuses) {
+      newSetBonuses[setHash] = (newSetBonuses[setHash] || 0) + 1;
     }
 
     for (const setHash in newSetBonuses) {
@@ -116,15 +119,35 @@ function findSetBonuses(
   vendorItems: DimItem[],
   classType: DestinyClass,
 ): SetBonusCounts {
+  const candidateItems = [...allItems, ...vendorItems].filter(
+    (item) => item.classType === classType && isLoadoutBuilderItem(item),
+  );
   // One item from each bucket with a set bonus
   const setBonusExemplars = uniqBy(
-    [...allItems, ...vendorItems].filter(
-      (item) => item.classType === classType && item.setBonus && isLoadoutBuilderItem(item),
-    ),
+    candidateItems.filter((item) => item.setBonus),
     (item) => `${item.setBonus!.hash}-${item.bucket.hash}`,
   );
   // Get the max number of items we could have available for each set bonus
-  return countBy(setBonusExemplars, (i) => i.setBonus!.hash);
+  const counts = countBy(setBonusExemplars, (i) => i.setBonus!.hash) as SetBonusCounts;
+
+  // Get buckets in which wildcards exist
+  const wildcardBuckets = new Set(
+    candidateItems.filter(getSetBonusModSocket).map((i) => i.bucket.hash),
+  );
+  for (const setHash of Object.keys(counts).map(Number)) {
+    // Get buckets for which this set bonus has items
+    const setBuckets = new Set(
+      setBonusExemplars.filter((i) => i.setBonus!.hash === setHash).map((i) => i.bucket.hash),
+    );
+    // Fill missing buckets with wildcards
+    for (const b of wildcardBuckets) {
+      if (!setBuckets.has(b)) {
+        counts[setHash] = (counts[setHash] ?? 0) + 1;
+      }
+    }
+  }
+
+  return counts;
 }
 
 export function SetBonusPicker({
