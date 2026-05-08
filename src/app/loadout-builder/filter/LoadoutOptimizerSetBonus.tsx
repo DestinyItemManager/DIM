@@ -1,4 +1,5 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
@@ -7,6 +8,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { SetBonus, SetPerkIcon } from 'app/item-popup/SetBonus';
+import { setBonusModToSet } from 'app/loadout/known-values';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -115,6 +117,7 @@ export default LoadoutOptimizerSetBonus;
  * many pieces could be used for each.
  */
 function findSetBonuses(
+  defs: D2ManifestDefinitions,
   allItems: DimItem[],
   vendorItems: DimItem[],
   classType: DestinyClass,
@@ -134,16 +137,27 @@ function findSetBonuses(
   const wildcardBuckets = new Set(
     candidateItems.filter(getSetBonusModSocket).map((i) => i.bucket.hash),
   );
-  for (const setHash of Object.keys(counts).map(Number)) {
-    // Get buckets for which this set bonus has items
-    const setBuckets = new Set(
-      setBonusExemplars.filter((i) => i.setBonus!.hash === setHash).map((i) => i.bucket.hash),
-    );
-    // Fill missing buckets with wildcards
-    for (const b of wildcardBuckets) {
-      if (!setBuckets.has(b)) {
-        counts[setHash] = (counts[setHash] ?? 0) + 1;
-      }
+  if (wildcardBuckets.size) {
+    const availableSets = new Set<number>([
+      // Sets with owned pieces
+      ...Object.keys(counts).map(Number),
+      // Plus any set that wildcards can fill on their own (none in practice so far)
+      ...Object.values(setBonusModToSet).filter((setHash) => {
+        const setDef = defs.EquipableItemSet.get(setHash);
+        return (
+          setDef &&
+          wildcardBuckets.size >= Math.min(...setDef.setPerks.map((p) => p.requiredSetCount))
+        );
+      }),
+    ]);
+    for (const setHash of availableSets) {
+      // Get buckets for which this set bonus has items
+      const setBuckets = new Set(
+        setBonusExemplars.filter((i) => i.setBonus!.hash === setHash).map((i) => i.bucket.hash),
+      );
+      // Add one wildcard per missing bucket
+      const wildcardCount = [...wildcardBuckets].filter((b) => !setBuckets.has(b)).length;
+      counts[setHash] = (counts[setHash] ?? 0) + wildcardCount;
     }
   }
 
@@ -178,8 +192,8 @@ export function SetBonusPicker({
   const allItems = useSelector(allItemsSelector);
 
   const possibleSetBonuses = useMemo(
-    () => findSetBonuses(allItems, vendorItems, classType),
-    [allItems, vendorItems, classType],
+    () => findSetBonuses(defs, allItems, vendorItems, classType),
+    [defs, allItems, vendorItems, classType],
   );
 
   // Only allow choosing set bonuses the user has items for
