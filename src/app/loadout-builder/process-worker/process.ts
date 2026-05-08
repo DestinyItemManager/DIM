@@ -232,6 +232,7 @@ export async function process(
 
             const classItemExotic = Number(classItem.isExotic);
             const classItemArtifice = Number(classItem.isArtifice);
+            const classItemWildcard = classItem.hasSetBonusModSocket ? 1 : 0;
             const classItemStats = statsCache.get(classItem)!;
 
             // Check exotic constraints
@@ -248,11 +249,7 @@ export async function process(
 
             // Set bonuses; each slot can use one wildcard if present
             let wildcardsRemaining =
-              helmWildcard +
-              gauntWildcard +
-              chestWildcard +
-              legWildcard +
-              (classItem.hasSetBonusModSocket ? 1 : 0);
+              helmWildcard + gauntWildcard + chestWildcard + legWildcard + classItemWildcard;
             for (let i = 0; i < setBonusHashes.length; i++) {
               const setHash = setBonusHashes[i];
               const setNeededCount = setBonusCounts[i];
