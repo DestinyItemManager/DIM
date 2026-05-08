@@ -13,10 +13,10 @@ import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { filterMap, uniqBy } from 'app/utils/collections';
+import { filterMap, mapValues, minOf } from 'app/utils/collections';
 import { getActiveSetBonusHash, getSetBonusModSocket } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyItemSetPerkDefinition } from 'bungie-api-ts/destiny2';
-import { countBy, sum } from 'es-toolkit';
+import { sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -122,46 +122,41 @@ function findSetBonuses(
   vendorItems: DimItem[],
   classType: DestinyClass,
 ): SetBonusCounts {
-  const candidateItems = [...allItems, ...vendorItems].filter(
-    (item) => item.classType === classType && isLoadoutBuilderItem(item),
-  );
-  // One item from each bucket with a set bonus
-  const setBonusExemplars = uniqBy(
-    candidateItems.filter((item) => item.setBonus),
-    (item) => `${item.setBonus!.hash}-${item.bucket.hash}`,
-  );
-  // Get the max number of items we could have available for each set bonus
-  const counts = countBy(setBonusExemplars, (i) => i.setBonus!.hash) as SetBonusCounts;
+  // For each set bonus, the buckets where contributing piece exists
+  const bucketsBySet: Record<number, Set<number>> = {};
+  // Buckets where a wildcard item exists
+  const wildcardBuckets = new Set<number>();
 
-  // Get buckets in which wildcards exist
-  const wildcardBuckets = new Set(
-    candidateItems.filter(getSetBonusModSocket).map((i) => i.bucket.hash),
-  );
-  if (wildcardBuckets.size) {
-    const availableSets = new Set<number>([
-      // Sets with owned pieces
-      ...Object.keys(counts).map(Number),
-      // Plus any set that wildcards can fill on their own (none in practice so far)
-      ...Object.values(setBonusModToSet).filter((setHash) => {
-        const setDef = defs.EquipableItemSet.get(setHash);
-        return (
-          setDef &&
-          wildcardBuckets.size >= Math.min(...setDef.setPerks.map((p) => p.requiredSetCount))
-        );
-      }),
-    ]);
-    for (const setHash of availableSets) {
-      // Get buckets for which this set bonus has items
-      const setBuckets = new Set(
-        setBonusExemplars.filter((i) => i.setBonus!.hash === setHash).map((i) => i.bucket.hash),
-      );
-      // Add one wildcard per missing bucket
-      const wildcardCount = [...wildcardBuckets].filter((b) => !setBuckets.has(b)).length;
-      counts[setHash] = (counts[setHash] ?? 0) + wildcardCount;
+  for (const item of [...allItems, ...vendorItems]) {
+    if (item.classType !== classType || !isLoadoutBuilderItem(item)) {
+      continue;
+    }
+    if (item.setBonus) {
+      (bucketsBySet[item.setBonus.hash] ??= new Set()).add(item.bucket.hash);
+    }
+    if (getSetBonusModSocket(item)) {
+      wildcardBuckets.add(item.bucket.hash);
     }
   }
 
-  return counts;
+  // Seed sets that wildcards could fill on their own (none in practice so far)
+  if (wildcardBuckets.size) {
+    for (const setHash of Object.values(setBonusModToSet)) {
+      const setDef = defs.EquipableItemSet.get(setHash);
+      if (
+        setDef &&
+        !(setHash in bucketsBySet) &&
+        wildcardBuckets.size >= minOf(setDef.setPerks, (p) => p.requiredSetCount)
+      ) {
+        bucketsBySet[setHash] = new Set();
+      }
+    }
+  }
+
+  return mapValues(
+    bucketsBySet,
+    (buckets) => buckets.size + [...wildcardBuckets].filter((b) => !buckets.has(b)).length,
+  );
 }
 
 export function SetBonusPicker({
