@@ -1,5 +1,6 @@
 import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
+import { isExoticClassItemWithPerks } from 'app/inventory/store/exotic-class-item';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
@@ -8,7 +9,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getArmorArchetypeSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
@@ -69,7 +70,14 @@ export default function GeneratedSetItem({
       // Legendary armor can have intrinsic perks and it might be
       // nice to provide a convenient user interface for those,
       // but the exotic picker is not the way to do it.
-      if (item.isExotic && item.bucket.hash !== BucketHashes.ClassArmor) {
+      if (isExoticClassItemWithPerks(item.hash)) {
+        lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
+        lbDispatch({
+          type: 'toggleExoticClassItemPerk',
+          perkHash: plugDef.hash,
+          exoticHash: item.hash,
+        });
+      } else if (item.isExotic) {
         lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
       } else {
         dispatch(toggleSearchQueryComponent(`exactperk:"${plugDef.displayProperties.name}"`));

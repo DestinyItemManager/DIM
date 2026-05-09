@@ -32,6 +32,8 @@ export interface ProcessItem {
   /** The activity (raid) mod type that can be slotted on this item, if any. */
   compatibleActivityMod?: string;
   setBonus?: number;
+  /** The intrinsic perk plug hashes on this item (e.g. exotic class item perks). */
+  intrinsicPerks?: number[];
   /**
    * True if this item has a configurable set bonus selector socket — let it
    * wildcard a single missing piece of any requested set bonus.
@@ -130,6 +132,7 @@ export interface ProcessStatistics {
       doubleExotic: number;
       skippedLowTier: number;
       insufficientSetBonus: number;
+      insufficientPerks: number;
     };
     lowerBoundsExceeded: RejectionRate;
     modsStatistics: ModAssignmentStatistics;

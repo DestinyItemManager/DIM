@@ -58,6 +58,7 @@ export function runProcess({
   autoModDefs,
   filteredItems,
   setBonuses,
+  perks,
   lockedModMap,
   modStatChanges,
   armorEnergyRules,
@@ -72,6 +73,7 @@ export function runProcess({
   autoModDefs: AutoModDefs;
   filteredItems: ItemsByBucket;
   setBonuses: SetBonusCounts;
+  perks: number[];
   lockedModMap: ModMap;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
@@ -128,11 +130,19 @@ export function runProcess({
     }
   }
 
+  // Convert the flat perks array (with duplicates) into a counted map
+  const perkCountMap = new Map<number, number>();
+  for (const hash of perks) {
+    perkCountMap.set(hash, (perkCountMap.get(hash) ?? 0) + 1);
+  }
+  const requiredPerks = Array.from(perkCountMap, ([hash, count]) => ({ hash, count }));
+
   const input: ProcessInputs = {
     filteredItems: processItems,
     modStatTotals: mapValues(modStatChanges, (stat) => stat.value),
     lockedMods: lockedProcessMods,
     setBonuses,
+    requiredPerks,
     desiredStatRanges,
     anyExotic,
     autoModOptions: autoModsData,
@@ -260,6 +270,7 @@ function combineProcessInfo(a: ProcessStatistics, b: ProcessStatistics): Process
     b.statistics.modsStatistics.finalAssignment.modsAssignmentFailed;
   a.statistics.skipReasons.doubleExotic += b.statistics.skipReasons.doubleExotic;
   a.statistics.skipReasons.insufficientSetBonus += b.statistics.skipReasons.insufficientSetBonus;
+  a.statistics.skipReasons.insufficientPerks += b.statistics.skipReasons.insufficientPerks;
   a.statistics.skipReasons.noExotic += b.statistics.skipReasons.noExotic;
   a.statistics.skipReasons.skippedLowTier += b.statistics.skipReasons.skippedLowTier;
   return a;

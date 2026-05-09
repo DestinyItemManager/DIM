@@ -14,7 +14,12 @@ import {
 import { armorStats } from 'app/search/d2-known-values';
 import { filterMap, mapValues, sumBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { getArmor3TuningSocket, getSetBonusModSocket } from 'app/utils/socket-utils';
+import {
+  getArmor3TuningSocket,
+  getExtraIntrinsicPerkSockets,
+  getIntrinsicArmorPerkSocket,
+  getSetBonusModSocket,
+} from 'app/utils/socket-utils';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { StatHashes } from 'data/d2/generated-enums';
 import { minBy } from 'es-toolkit';
@@ -81,6 +86,12 @@ export function mapDimItemToProcessItems({
 
   const assumeArtifice = isAssumedArtifice(dimItem, armorEnergyRules);
 
+  const intrinsicPerkHashes = filterMap(
+    [getIntrinsicArmorPerkSocket(dimItem), ...getExtraIntrinsicPerkSockets(dimItem)],
+    (s) => s?.plugged?.plugDef.hash,
+  );
+  const intrinsicPerks = intrinsicPerkHashes.length > 0 ? intrinsicPerkHashes : undefined;
+
   const processItem: ProcessItem = {
     id,
     hash,
@@ -93,6 +104,7 @@ export function mapDimItemToProcessItems({
     compatibleActivityMod: compatibleActivityMod,
     setBonus: setBonus?.hash,
     hasSetBonusModSocket: getSetBonusModSocket(dimItem) ? true : undefined,
+    intrinsicPerks,
   };
 
   const tuningSocket = getArmor3TuningSocket(dimItem);

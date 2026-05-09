@@ -14,6 +14,10 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import {
+  getExoticClassItemPerkColumn,
+  getExoticClassItemPerkHashes,
+} from 'app/inventory/store/exotic-class-item';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import {
@@ -21,6 +25,7 @@ import {
   clearSubclass,
   removeMod,
   setLoadoutParameters,
+  setLoadoutPerks,
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
@@ -273,6 +278,8 @@ type LoadoutBuilderConfigAction =
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'lockExotic'; lockedExoticHash: number | undefined }
   | { type: 'removeLockedExotic' }
+  | { type: 'updatePerks'; removed: number[]; added: number[] }
+  | { type: 'toggleExoticClassItemPerk'; perkHash: number; exoticHash: number }
   | { type: 'dismissComparisonStats' }
   | { type: 'setSearchQuery'; query: string };
 
@@ -334,7 +341,10 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         // Always remove the subclass
         loadout = clearSubclass(defs)(loadout);
 
-        // And the exotic
+        // And the exotic — clear any locked exotic class item perks too
+        loadout = setLoadoutPerks({
+          removed: getExoticClassItemPerkHashes(loadout.parameters?.exoticArmorHash),
+        })(loadout);
         let loadoutParameters = {
           ...loadout.parameters,
           exoticArmorHash: undefined,
@@ -518,10 +528,51 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, removeMod(action.mod));
       case 'lockExotic': {
         const { lockedExoticHash } = action;
-        return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: lockedExoticHash }));
+        return updateLoadout(state, (loadout) => {
+          const previousHash = loadout.parameters?.exoticArmorHash;
+          if (previousHash === lockedExoticHash) {
+            return loadout;
+          }
+          const cleared = setLoadoutPerks({
+            removed: getExoticClassItemPerkHashes(previousHash),
+          })(loadout);
+          return {
+            ...cleared,
+            parameters: { ...cleared.parameters, exoticArmorHash: lockedExoticHash },
+          };
+        });
       }
       case 'removeLockedExotic':
-        return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: undefined }));
+        return updateLoadout(state, (loadout) => {
+          const cleared = setLoadoutPerks({
+            removed: getExoticClassItemPerkHashes(loadout.parameters?.exoticArmorHash),
+          })(loadout);
+          return {
+            ...cleared,
+            parameters: { ...cleared.parameters, exoticArmorHash: undefined },
+          };
+        });
+      case 'updatePerks': {
+        const { removed, added } = action;
+        return updateLoadout(state, setLoadoutPerks({ removed, added }));
+      }
+      case 'toggleExoticClassItemPerk': {
+        const { perkHash, exoticHash } = action;
+        return updateLoadout(state, (loadout) => {
+          const currentPerks = loadout.parameters?.perks ?? [];
+          if (currentPerks.includes(perkHash)) {
+            return setLoadoutPerks({ removed: [perkHash] })(loadout);
+          }
+          // Replace any currently-selected perk in the same column.
+          const columnPerks = getExoticClassItemPerkColumn(exoticHash, perkHash);
+          if (columnPerks === undefined) {
+            // Refuse to set anything if something's gone wrong
+            return loadout;
+          }
+          const removed = currentPerks.filter((p) => columnPerks.includes(p));
+          return setLoadoutPerks({ removed, added: [perkHash] })(loadout);
+        });
+      }
       case 'autoStatModsChanged':
         return updateLoadout(state, setLoadoutParameters({ autoStatMods: action.autoStatMods }));
       case 'dismissComparisonStats':

@@ -2,12 +2,14 @@ import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { isExoticClassItemWithPerks } from 'app/inventory/store/exotic-class-item';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { count, sumBy } from 'app/utils/collections';
 import { stubFalse, stubTrue } from 'app/utils/functions';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { getExtraIntrinsicPerkHashes, getExtraIntrinsicPerkSockets } from 'app/utils/socket-utils';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import { elementalChargeModHash, stacksOnStacksModHash } from 'testing/test-item-utils';
@@ -332,5 +334,80 @@ describe('loadout-builder item-filter', () => {
 
     pinInvariants(filteredItems, filterInfo);
     expect(filteredItems[exotic.bucket.hash as ArmorBucketHash].length).toBe(0);
+  });
+
+  it('does not filter exotic class items when no perks are specified', () => {
+    const targetExotic = items.find(
+      (i) => isExoticClassItemWithPerks(i.hash) && getExtraIntrinsicPerkSockets(i).length > 0,
+    )!;
+    const [filteredItems] = filterItems({
+      ...defaultArgs,
+      defs,
+      items,
+      lockedModMap: noMods.modMap,
+      unassignedMods: noMods.unassignedMods,
+      lockedExoticHash: targetExotic.hash,
+    });
+
+    const matching = items.filter((i) => i.hash === targetExotic.hash);
+    expect(filteredItems[BucketHashes.ClassArmor].length).toBe(matching.length);
+  });
+
+  it('narrows exotic class items to instances having a specified perk', () => {
+    const targetExotic = items.find(
+      (i) => isExoticClassItemWithPerks(i.hash) && getExtraIntrinsicPerkSockets(i).length > 0,
+    )!;
+    const [perk] = getExtraIntrinsicPerkHashes(targetExotic);
+
+    const [filteredItems] = filterItems({
+      ...defaultArgs,
+      defs,
+      items,
+      lockedModMap: noMods.modMap,
+      unassignedMods: noMods.unassignedMods,
+      lockedExoticHash: targetExotic.hash,
+      perks: [perk],
+    });
+
+    const survivors = filteredItems[BucketHashes.ClassArmor];
+    expect(survivors.length).toBeGreaterThan(0);
+    for (const item of survivors) {
+      expect(getExtraIntrinsicPerkHashes(item)).toContain(perk);
+    }
+  });
+
+  it('ignores perks that do not belong to the locked exotic class item', () => {
+    const targetExotic = items.find(
+      (i) => isExoticClassItemWithPerks(i.hash) && getExtraIntrinsicPerkSockets(i).length > 0,
+    )!;
+    // Use a hash unlikely to be a real perk for this exotic.
+    const [filteredItems] = filterItems({
+      ...defaultArgs,
+      defs,
+      items,
+      lockedModMap: noMods.modMap,
+      unassignedMods: noMods.unassignedMods,
+      lockedExoticHash: targetExotic.hash,
+      perks: [1],
+    });
+
+    const matching = items.filter((i) => i.hash === targetExotic.hash);
+    expect(filteredItems[BucketHashes.ClassArmor].length).toBe(matching.length);
+  });
+
+  it('does not filter by perks when the locked exotic is not a class item', () => {
+    const targetExotic = items.find((i) => i.isExotic && !isExoticClassItemWithPerks(i.hash))!;
+    const [filteredItems] = filterItems({
+      ...defaultArgs,
+      defs,
+      items,
+      lockedModMap: noMods.modMap,
+      unassignedMods: noMods.unassignedMods,
+      lockedExoticHash: targetExotic.hash,
+      perks: [12345, 67890],
+    });
+
+    const matching = items.filter((i) => i.hash === targetExotic.hash);
+    expect(filteredItems[targetExotic.bucket.hash as ArmorBucketHash].length).toBe(matching.length);
   });
 });

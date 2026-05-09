@@ -462,6 +462,29 @@ export default function NoBuildsFoundExplainer({
       suggestions,
     });
   }
+
+  // TODO: As with set bonuses, could use better detection/clearing inline.
+  if (params.perks?.length) {
+    const suggestions: ActionableSuggestion[] = [
+      {
+        id: 'removePerks',
+        contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemovePerks'),
+      },
+    ];
+
+    if (filterInfo?.searchQueryEffective) {
+      suggestions.push({
+        id: 'clearQuery',
+        contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeRemoveSearchQuery'),
+      });
+    }
+
+    problems.push({
+      id: 'perks',
+      description: t('LoadoutBuilder.NoBuildsFoundExplainer.Perks'),
+      suggestions,
+    });
+  }
   return (
     <div className={styles.noBuildsExplainerContainer}>
       <h3 className={styles.noBuildsFoundMsg}>

@@ -28,6 +28,7 @@ export default function LoadoutEditSection({
   fillFromInventoryCount,
   onFillFromInventory,
   onClearLoadoutParameters,
+  onClearPerks,
 }: {
   title: string;
   titleInfo?: string;
@@ -42,6 +43,7 @@ export default function LoadoutEditSection({
   fillFromInventoryCount?: number;
   onFillFromInventory?: () => void;
   onClearLoadoutParameters?: () => void;
+  onClearPerks?: () => void;
 }) {
   const options: Option[] = compact([
     onFillFromEquipped
@@ -87,6 +89,17 @@ export default function LoadoutEditSection({
             <>
               <AppIcon icon={faRandom} />{' '}
               {!hasRandomizeQuery ? t('Loadouts.RandomizeButton') : t('Loadouts.RandomizeSearch')}
+            </>
+          ),
+        }
+      : undefined,
+    onClearPerks
+      ? {
+          key: 'clearPerks',
+          onSelected: onClearPerks,
+          content: (
+            <>
+              <AppIcon icon={clearIcon} /> {t('Loadouts.ClearPerks')}
             </>
           ),
         }

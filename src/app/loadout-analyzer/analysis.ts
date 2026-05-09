@@ -341,6 +341,7 @@ export async function analyzeLoadout(
               autoStatMods: loadoutParameters.autoStatMods,
               filteredItems,
               setBonuses,
+              perks: loadoutParameters.perks ?? [],
               lockedModMap: modMap,
               modStatChanges,
               desiredStatRanges: mergedDesiredStatRanges,

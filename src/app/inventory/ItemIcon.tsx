@@ -261,7 +261,9 @@ export function DefItemIcon({
     itemDef.plug && strandWrongColorPlugCategoryHashes.includes(itemDef.plug.plugCategoryHash);
 
   const isMasterworkMod =
-    isPluggableItem(itemDef) && itemDef.plug.plugCategoryIdentifier.includes('.masterworks.stat.');
+    isPluggableItem(itemDef) &&
+    (itemDef.plug.plugCategoryIdentifier.includes('.masterworks.stat.') ||
+      itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.MasterworksMods));
 
   const itemImageStyles = clsx(
     'item-img',

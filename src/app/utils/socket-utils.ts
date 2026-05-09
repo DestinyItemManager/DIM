@@ -187,6 +187,14 @@ export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
   ];
 }
 
+/**
+ * The plug hashes currently rolled in the item's extra intrinsic perk sockets (e.g. exotic class
+ * item perks). Convenience wrapper around {@link getExtraIntrinsicPerkSockets}.
+ */
+export function getExtraIntrinsicPerkHashes(item: DimItem): number[] {
+  return filterMap(getExtraIntrinsicPerkSockets(item), (s) => s.plugged?.plugDef.hash);
+}
+
 export function socketContainsPlugWithCategory(
   socket: DimSocket,
   category: PlugCategoryHashes,

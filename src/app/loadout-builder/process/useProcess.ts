@@ -56,6 +56,7 @@ export function useProcess({
   filteredItems,
   lockedModMap,
   setBonuses,
+  perks,
   modStatChanges,
   armorEnergyRules,
   desiredStatRanges,
@@ -67,6 +68,7 @@ export function useProcess({
   filteredItems: ItemsByBucket;
   lockedModMap: ModMap;
   setBonuses: SetBonusCounts;
+  perks: number[];
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
   desiredStatRanges: DesiredStatRange[];
@@ -121,6 +123,7 @@ export function useProcess({
         filteredItems,
         lockedModMap,
         setBonuses,
+        perks,
         modStatChanges,
         armorEnergyRules,
         desiredStatRanges,
@@ -191,6 +194,7 @@ export function useProcess({
     autoStatMods,
     lockedModMap,
     setBonuses,
+    perks,
     modStatChanges,
     autoModDefs,
     strictUpgrades,

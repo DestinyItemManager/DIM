@@ -18,6 +18,7 @@ import {
   removeMod,
   setClassType,
   setLoadoutParameters,
+  setLoadoutPerks,
   setLoadoutSubclassFromEquipped,
   toggleEquipped,
   updateMods,
@@ -365,6 +366,86 @@ describe('removeMod', () => {
       resolvedMod: defs.InventoryItem.get(193878019) as PluggableInventoryItemDefinition,
     })(loadout);
     expect(loadout.parameters!.mods).toStrictEqual([837201397]);
+  });
+});
+
+describe('setLoadoutPerks', () => {
+  it('adds perks to a loadout that has none', () => {
+    const loadout = setLoadoutPerks({ added: [111, 222] })(emptyLoadout);
+    expect(loadout.parameters!.perks).toStrictEqual([111, 222]);
+  });
+
+  it('removes a perk that is currently selected', () => {
+    let loadout = setLoadoutPerks({ added: [111, 222] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [111] })(loadout);
+    expect(loadout.parameters!.perks).toStrictEqual([222]);
+  });
+
+  it('removes and adds in a single call', () => {
+    let loadout = setLoadoutPerks({ added: [111, 222] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [111], added: [333] })(loadout);
+    expect(loadout.parameters!.perks).toStrictEqual([222, 333]);
+  });
+
+  it('ignores removed entries that are not currently selected', () => {
+    let loadout = setLoadoutPerks({ added: [111] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [222], added: [333] })(loadout);
+    expect(loadout.parameters!.perks).toStrictEqual([111, 333]);
+  });
+
+  it('clears the perks parameter entirely when all perks are removed', () => {
+    let loadout = setLoadoutPerks({ added: [111] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [111] })(loadout);
+    expect(loadout.parameters!.perks).toBeUndefined();
+  });
+
+  it('defaults removed and added to empty arrays', () => {
+    const loadout = setLoadoutPerks({})(emptyLoadout);
+    expect(loadout.parameters!.perks).toBeUndefined();
+  });
+
+  it('removes only one occurrence per entry', () => {
+    let loadout = setLoadoutPerks({ added: [111, 111, 222] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [111] })(loadout);
+    expect(loadout.parameters!.perks).toStrictEqual([111, 222]);
+  });
+
+  it('ignores surplus removed entries when no more matches remain', () => {
+    let loadout = setLoadoutPerks({ added: [111, 222] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [111, 111, 111] })(loadout);
+    expect(loadout.parameters!.perks).toStrictEqual([222]);
+  });
+
+  it('adds duplicates when the same hash appears multiple times', () => {
+    const loadout = setLoadoutPerks({ added: [111, 111, 222] })(emptyLoadout);
+    expect(loadout.parameters!.perks).toStrictEqual([111, 111, 222]);
+  });
+
+  it('removes all instances when the hash is included that many times', () => {
+    let loadout = setLoadoutPerks({ added: [111, 111, 111, 222] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [111, 111, 111] })(loadout);
+    expect(loadout.parameters!.perks).toStrictEqual([222]);
+  });
+
+  it('removes then re-adds a hash, repositioning it at the end', () => {
+    let loadout = setLoadoutPerks({ added: [111, 222] })(emptyLoadout);
+    loadout = setLoadoutPerks({ removed: [111], added: [111] })(loadout);
+    expect(loadout.parameters!.perks).toStrictEqual([222, 111]);
+  });
+
+  it('returns a new loadout (does not mutate the input)', () => {
+    const before = setLoadoutPerks({ added: [111] })(emptyLoadout);
+    const after = setLoadoutPerks({ added: [222] })(before);
+    expect(after).not.toBe(before);
+    expect(before.parameters!.perks).toStrictEqual([111]);
+    expect(after.parameters!.perks).toStrictEqual([111, 222]);
+  });
+
+  it('preserves other loadout parameters', () => {
+    let loadout = setLoadoutParameters({ exoticArmorHash: 12345 })(emptyLoadout);
+    loadout = setLoadoutPerks({ added: [111] })(loadout);
+    expect(loadout.parameters!.exoticArmorHash).toBe(12345);
+    expect(loadout.parameters!.perks).toStrictEqual([111]);
   });
 });
 

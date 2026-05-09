@@ -4,3 +4,28 @@
   padding: 10px 10px 16px 10px;
   gap: 14px;
 }
+
+.footer {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.submitButton {
+  composes: dim-button from global;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: 8px;
+}
+
+.selectedPerks {
+  gap: 10px;
+}
+
+.selectedPerk {
+  --item-size: 27px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  gap: 6px;
+  background-color: var(--theme-item-popup-panel-bg);
+}
