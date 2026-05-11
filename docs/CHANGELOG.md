@@ -2,6 +2,7 @@
 
 * Fix masterwork socket on newer armor not displaying correctly
 * Add the ability to select exotic class item perks in Loadout Optimizer
+* Fix Lore book title position on the Records page
 
 ## 8.123.0 <span class="changelog-date">(2026-05-03)</span>
 
