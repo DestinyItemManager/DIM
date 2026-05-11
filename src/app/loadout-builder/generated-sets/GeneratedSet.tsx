@@ -173,7 +173,7 @@ export default memo(function GeneratedSet({
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
         setBonusStatus={setBonusStatus}
-        setBonusModWarning={set.armor.some(getSetBonusModSocket)}
+        setBonusModWarning={set.armor.some((i) => getSetBonusModSocket(i))}
       />
       <div className={styles.build}>
         <div className={styles.items}>

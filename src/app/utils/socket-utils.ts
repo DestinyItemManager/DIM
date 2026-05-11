@@ -774,11 +774,14 @@ export function getWeaponComponentSockets(item: DimItem) {
   return (item.sockets?.allSockets ?? []).filter(socketIsWeaponComponent);
 }
 
-/** The set bonus selector socket on an item (FOTL/Guardian Games), if usable/visible. */
-export function getSetBonusModSocket(item: DimItem) {
+/**
+ * The set bonus selector socket on an item (FOTL/Guardian Games), if usable/visible.
+ * 2nd param determines whether to return sockets that aren't visible.
+ */
+export function getSetBonusModSocket(item: DimItem, ignoreVisibility = false) {
   return item.sockets?.allSockets.find(
     (s) =>
-      s.visibleInGame &&
+      (ignoreVisibility || s.visibleInGame) &&
       socketContainsPlugWithCategory(
         s,
         PlugCategoryHashes.CoreGearSystemsEventGearItemSetsSelectors,
