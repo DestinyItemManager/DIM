@@ -142,7 +142,7 @@ export default function PresentationNode({
             [styles.completed]: completed,
           })}
         >
-          {title}
+          <span>{title}</span>
           {nodeProgress}
         </h4>
       ) : (
