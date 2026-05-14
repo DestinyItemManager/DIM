@@ -103,7 +103,7 @@ export function mapDimItemToProcessItems({
     remainingEnergyCapacity: capacity - modsCost,
     compatibleActivityMod: compatibleActivityMod,
     setBonus: setBonus?.hash,
-    hasSetBonusModSocket: getSetBonusModSocket(dimItem) ? true : undefined,
+    hasSetBonusModSocket: Boolean(getSetBonusModSocket(dimItem)),
     intrinsicPerks,
   };
 
