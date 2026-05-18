@@ -117,6 +117,9 @@
 .fa-th:before {
   content: fa-content($fa-var-th);
 }
+.fa-hourglass:before {
+  content: fa-content($fa-var-hourglass);
+}
 .fa-list:before {
   content: fa-content($fa-var-list);
 }
