@@ -79,7 +79,7 @@ export default memo(function CompareItem({
           {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
           <button type="button" className={styles.close} onClick={() => remove(item)} />
         </div>
-        <ItemPopupTrigger item={item} noCompare={true}>
+        <ItemPopupTrigger item={item} extraData={{ fromCompare: true }}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
               <ConnectedInventoryItem item={item} />
