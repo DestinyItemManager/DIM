@@ -1,5 +1,7 @@
 ## Next
 
+* Add support for the Set Bonus mod socket on event items, including `modslot:setbonus` search filter
+
 ## 8.128.0 <span class="changelog-date">(2026-06-07)</span>
 
 ## 8.127.0 <span class="changelog-date">(2026-05-31)</span>
