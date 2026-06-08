@@ -9,6 +9,7 @@ import {
 } from 'app/inventory/item-types';
 import { craftedSocketCategoryHash, mementoSocketCategoryHash } from 'app/inventory/store/crafted';
 import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
+import { setBonusModToSet } from 'app/loadout/known-values';
 import {
   D2PlugCategoryByStatHash,
   GhostActivitySocketTypeHashes,
@@ -771,4 +772,29 @@ function socketIsWeaponComponent(socket: DimSocket) {
  */
 export function getWeaponComponentSockets(item: DimItem) {
   return (item.sockets?.allSockets ?? []).filter(socketIsWeaponComponent);
+}
+
+/**
+ * The set bonus selector socket on an item (FOTL/Guardian Games), if usable/visible.
+ * 2nd param determines whether to return sockets that aren't visible.
+ */
+export function getSetBonusModSocket(item: DimItem, ignoreVisibility = false) {
+  return item.sockets?.allSockets.find(
+    (s) =>
+      (ignoreVisibility || s.visibleInGame) &&
+      socketContainsPlugWithCategory(
+        s,
+        PlugCategoryHashes.CoreGearSystemsEventGearItemSetsSelectors,
+      ),
+  );
+}
+
+/** Hash of the set bonus this item currently contributes to, including via a plugged selector mod. */
+export function getActiveSetBonusHash(item: DimItem): number | undefined {
+  if (item.setBonus) {
+    return item.setBonus.hash;
+  }
+  const socket = getSetBonusModSocket(item);
+  // TODO: make sure 'enabled' is correct when the next event happens
+  return socket?.plugged?.enabled ? setBonusModToSet[socket.plugged.plugDef.hash] : undefined;
 }

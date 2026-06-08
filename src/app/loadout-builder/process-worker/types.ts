@@ -35,6 +35,11 @@ export interface ProcessItem {
   /** The intrinsic perk plug hashes on this item (e.g. exotic class item perks). */
   intrinsicPerks?: number[];
   /**
+   * True if this item has a configurable set bonus selector socket — let it
+   * wildcard a single missing piece of any requested set bonus.
+   */
+  hasSetBonusModSocket?: boolean;
+  /**
    * This is a pre-set tuning mod on the item. This hash should be passed along
    * to the ArmorSet.statMods list.
    */

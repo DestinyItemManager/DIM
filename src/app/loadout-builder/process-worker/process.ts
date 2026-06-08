@@ -1,5 +1,5 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
-import { fotlWildcardHashes, MAX_STAT } from 'app/loadout/known-values';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { compact, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { sum } from 'es-toolkit';
@@ -212,24 +212,28 @@ export async function process(
     const helm = helms[helmIdx];
     const helmExotic = Number(helm.isExotic);
     const helmArtifice = Number(helm.isArtifice);
+    const helmWildcard = helm.hasSetBonusModSocket ? 1 : 0;
     const helmPerks = perkCount(helm);
     const helmStats = statsCache.get(helm)!;
     for (let gauntIdx = 0; gauntIdx < gauntlets.length; gauntIdx++) {
       const gaunt = gauntlets[gauntIdx];
       const gauntletExotic = Number(gaunt.isExotic);
       const gauntArtifice = Number(gaunt.isArtifice);
+      const gauntWildcard = gaunt.hasSetBonusModSocket ? 1 : 0;
       const gauntPerks = perkCount(gaunt);
       const gauntStats = statsCache.get(gaunt)!;
       for (let chestIdx = 0; chestIdx < chests.length; chestIdx++) {
         const chest = chests[chestIdx];
         const chestExotic = Number(chest.isExotic);
         const chestArtifice = Number(chest.isArtifice);
+        const chestWildcard = chest.hasSetBonusModSocket ? 1 : 0;
         const chestPerks = perkCount(chest);
         const chestStats = statsCache.get(chest)!;
         for (let legIdx = 0; legIdx < legs.length; legIdx++) {
           const leg = legs[legIdx];
           const legExotic = Number(leg.isExotic);
           const legArtifice = Number(leg.isArtifice);
+          const legWildcard = leg.hasSetBonusModSocket ? 1 : 0;
           const legPerks = perkCount(leg);
           const legStats = statsCache.get(leg)!;
           innerloop: for (let classItemIdx = 0; classItemIdx < classItems.length; classItemIdx++) {
@@ -245,6 +249,7 @@ export async function process(
 
             const classItemExotic = Number(classItem.isExotic);
             const classItemArtifice = Number(classItem.isArtifice);
+            const classItemWildcard = classItem.hasSetBonusModSocket ? 1 : 0;
             const classItemStats = statsCache.get(classItem)!;
 
             // Check exotic constraints
@@ -270,8 +275,9 @@ export async function process(
               }
             }
 
-            // Check set bonus requirements
-            let wildcardAvailable = true;
+            // Set bonuses; each slot can use one wildcard if present
+            let wildcardsRemaining =
+              helmWildcard + gauntWildcard + chestWildcard + legWildcard + classItemWildcard;
             for (let i = 0; i < setBonusHashes.length; i++) {
               const setHash = setBonusHashes[i];
               const setNeededCount = setBonusCounts[i];
@@ -282,12 +288,9 @@ export async function process(
                 Number(leg.setBonus === setHash) +
                 Number(classItem.setBonus === setHash);
               if (setCount < setNeededCount) {
-                if (
-                  wildcardAvailable &&
-                  fotlWildcardHashes.has(helm.hash!) &&
-                  setCount + 1 === setNeededCount
-                ) {
-                  wildcardAvailable = false;
+                const wildcardsNeeded = setNeededCount - setCount;
+                if (wildcardsRemaining >= wildcardsNeeded) {
+                  wildcardsRemaining -= wildcardsNeeded;
                 } else {
                   setStatistics.skipReasons.insufficientSetBonus += 1;
                   continue innerloop;

@@ -4,7 +4,6 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
 import { getSetBonusStatus } from 'app/item-popup/SetBonus';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
-import { fotlWildcardHashes } from 'app/loadout/known-values';
 import { Loadout } from 'app/loadout/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -13,6 +12,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { mapValues } from 'app/utils/collections';
 import { compareByIndex } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
+import { getSetBonusModSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import { intersectionBy, once } from 'es-toolkit';
@@ -173,7 +173,7 @@ export default memo(function GeneratedSet({
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
         setBonusStatus={setBonusStatus}
-        fotlWarning={set.armor.some((i) => fotlWildcardHashes.has(i.hash))}
+        setBonusModWarning={set.armor.some((i) => getSetBonusModSocket(i))}
       />
       <div className={styles.build}>
         <div className={styles.items}>

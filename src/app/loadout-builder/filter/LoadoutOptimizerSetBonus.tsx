@@ -1,4 +1,5 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import Sheet from 'app/dim-ui/Sheet';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
@@ -7,13 +8,15 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { SetBonus, SetPerkIcon } from 'app/item-popup/SetBonus';
+import { setBonusModToSet } from 'app/loadout/known-values';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { uniqBy } from 'app/utils/collections';
+import { filterMap, mapValues, minOf } from 'app/utils/collections';
+import { getActiveSetBonusHash, getSetBonusModSocket } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyItemSetPerkDefinition } from 'bungie-api-ts/destiny2';
-import { countBy, sum } from 'es-toolkit';
+import { sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -47,13 +50,15 @@ const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
   const hidePicker = () => setShowSetBonusPicker(false);
 
   const handleSyncFromEquipped = () => {
-    const equippedSetBonuses = allItems.filter(
-      (i) => i.equipped && isLoadoutBuilderItem(i) && i.owner === storeId && i.setBonus,
+    const equippedSetBonuses = filterMap(allItems, (i) =>
+      i.equipped && isLoadoutBuilderItem(i) && i.owner === storeId
+        ? getActiveSetBonusHash(i)
+        : undefined,
     );
 
     const newSetBonuses: SetBonusCounts = {};
-    for (const item of equippedSetBonuses) {
-      newSetBonuses[item.setBonus!.hash] = (newSetBonuses[item.setBonus!.hash] || 0) + 1;
+    for (const setHash of equippedSetBonuses) {
+      newSetBonuses[setHash] = (newSetBonuses[setHash] || 0) + 1;
     }
 
     for (const setHash in newSetBonuses) {
@@ -112,19 +117,46 @@ export default LoadoutOptimizerSetBonus;
  * many pieces could be used for each.
  */
 function findSetBonuses(
+  defs: D2ManifestDefinitions,
   allItems: DimItem[],
   vendorItems: DimItem[],
   classType: DestinyClass,
 ): SetBonusCounts {
-  // One item from each bucket with a set bonus
-  const setBonusExemplars = uniqBy(
-    [...allItems, ...vendorItems].filter(
-      (item) => item.classType === classType && item.setBonus && isLoadoutBuilderItem(item),
-    ),
-    (item) => `${item.setBonus!.hash}-${item.bucket.hash}`,
+  // For each set bonus, the buckets where contributing piece exists
+  const bucketsBySet: Record<number, Set<number>> = {};
+  // Buckets where a wildcard item exists
+  const wildcardBuckets = new Set<number>();
+
+  for (const item of [...allItems, ...vendorItems]) {
+    if (item.classType !== classType || !isLoadoutBuilderItem(item)) {
+      continue;
+    }
+    if (item.setBonus) {
+      (bucketsBySet[item.setBonus.hash] ??= new Set()).add(item.bucket.hash);
+    }
+    if (getSetBonusModSocket(item)) {
+      wildcardBuckets.add(item.bucket.hash);
+    }
+  }
+
+  // Seed sets that wildcards could fill on their own (none in practice so far)
+  if (wildcardBuckets.size) {
+    for (const setHash of Object.values(setBonusModToSet)) {
+      const setDef = defs.EquipableItemSet.get(setHash);
+      if (
+        setDef &&
+        !(setHash in bucketsBySet) &&
+        wildcardBuckets.size >= minOf(setDef.setPerks, (p) => p.requiredSetCount)
+      ) {
+        bucketsBySet[setHash] = new Set();
+      }
+    }
+  }
+
+  return mapValues(
+    bucketsBySet,
+    (buckets) => buckets.size + [...wildcardBuckets].filter((b) => !buckets.has(b)).length,
   );
-  // Get the max number of items we could have available for each set bonus
-  return countBy(setBonusExemplars, (i) => i.setBonus!.hash);
 }
 
 export function SetBonusPicker({
@@ -155,8 +187,8 @@ export function SetBonusPicker({
   const allItems = useSelector(allItemsSelector);
 
   const possibleSetBonuses = useMemo(
-    () => findSetBonuses(allItems, vendorItems, classType),
-    [allItems, vendorItems, classType],
+    () => findSetBonuses(defs, allItems, vendorItems, classType),
+    [defs, allItems, vendorItems, classType],
   );
 
   // Only allow choosing set bonuses the user has items for

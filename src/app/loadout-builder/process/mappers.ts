@@ -18,6 +18,7 @@ import {
   getArmor3TuningSocket,
   getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
+  getSetBonusModSocket,
 } from 'app/utils/socket-utils';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -102,6 +103,7 @@ export function mapDimItemToProcessItems({
     remainingEnergyCapacity: capacity - modsCost,
     compatibleActivityMod: compatibleActivityMod,
     setBonus: setBonus?.hash,
+    hasSetBonusModSocket: Boolean(getSetBonusModSocket(dimItem)),
     intrinsicPerks,
   };
 

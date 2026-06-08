@@ -8,6 +8,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { useCurrentSetBonus } from 'app/inventory/store/hooks';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareByIndex } from 'app/utils/comparators';
+import { getActiveSetBonusHash } from 'app/utils/socket-utils';
 import {
   DestinyEquipableItemSetDefinition,
   DestinySandboxPerkDefinition,
@@ -37,14 +38,15 @@ export function getSetBonusStatus(defs: D2ManifestDefinitions, items: DimItem[])
   const displayIterable = [];
 
   for (const item of equippedArmor) {
-    if (item.setBonus) {
-      (possibleBonusSets[item.setBonus.hash] ??= []).push(item);
+    const setBonusHash = getActiveSetBonusHash(item);
+    if (setBonusHash) {
+      (possibleBonusSets[setBonusHash] ??= []).push(item);
     }
   }
 
   for (const h in possibleBonusSets) {
     const matchingSetItems = possibleBonusSets[h];
-    const possibleBonus = matchingSetItems[0].setBonus!;
+    const possibleBonus = defs.EquipableItemSet.get(Number(h));
     const info: {
       bonusDef: DestinyEquipableItemSetDefinition;
       activePerks: { requiredSetCount: number; perkDef: DestinySandboxPerkDefinition }[];
@@ -208,7 +210,9 @@ function ContributingArmor({
             src={i.icon}
             className={clsx(
               styles.gearListIcon,
-              setBonus.setItems.includes(i.hash) || styles.unsatisfied,
+              setBonus.setItems.includes(i.hash) ||
+                getActiveSetBonusHash(i) === setBonus.hash ||
+                styles.unsatisfied,
             )}
           />
         ))}

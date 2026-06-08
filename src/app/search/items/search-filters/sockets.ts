@@ -12,6 +12,7 @@ import { enhancedVersion } from 'app/utils/perk-utils';
 import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
+  getSetBonusModSocket,
   getSocketsByCategoryHash,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
@@ -30,11 +31,14 @@ export const modslotFilter = {
   keywords: 'modslot',
   description: tl('Filter.ModSlot'),
   format: 'query',
-  suggestions: modSlotTags.concat(['none', 'activity']),
+  suggestions: modSlotTags.concat(['none', 'activity', 'setbonus']),
   destinyVersion: 2,
   filter:
     ({ filterValue }) =>
     (item) => {
+      if (filterValue === 'setbonus') {
+        return Boolean(getSetBonusModSocket(item, true));
+      }
       const modSocketTag = getSpecialtySocketMetadata(item)?.slotTag;
 
       return Boolean(
@@ -44,6 +48,9 @@ export const modslotFilter = {
       );
     },
   fromItem: (item) => {
+    if (getSetBonusModSocket(item, true)) {
+      return 'modslot:setbonus';
+    }
     const modSocketTag = getSpecialtySocketMetadata(item)?.slotTag;
     return modSocketTag ? `modslot:${modSocketTag}` : '';
   },
