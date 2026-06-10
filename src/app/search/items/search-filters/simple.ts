@@ -23,7 +23,7 @@ const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | fal
     description: tl('Filter.Weapon'),
     filter: () => (item) =>
       item.bucket?.sort === 'Weapons' &&
-      item.bucket.hash !== BucketHashes.SeasonalArtifact &&
+      item.bucket.hash !== BucketHashes.Artifacts &&
       item.bucket.hash !== BucketHashes.Subclass,
   },
   {

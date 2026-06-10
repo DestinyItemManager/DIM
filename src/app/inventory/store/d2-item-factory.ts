@@ -360,7 +360,7 @@ export function makeItem(
   if (
     itemInstanceData.primaryStat &&
     normalBucket.hash !== BucketHashes.Subclass &&
-    normalBucket.hash !== BucketHashes.SeasonalArtifact &&
+    normalBucket.hash !== BucketHashes.Artifacts &&
     !itemDef.stats?.disablePrimaryStatDisplay
   ) {
     primaryStat = itemInstanceData.primaryStat;

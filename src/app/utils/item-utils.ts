@@ -26,9 +26,7 @@ import {
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import artifactBreakerMods from 'data/d2/artifact-breaker-weapon-types.json';
 import {
-  BreakerTypeHashes,
   BucketHashes,
   ItemCategoryHashes,
   PlugCategoryHashes,
@@ -346,32 +344,6 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
  */
 export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
   return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
-}
-
-const ichToBreakerType = Object.entries(artifactBreakerMods).reduce<
-  Partial<Record<ItemCategoryHashes, BreakerTypeHashes>>
->((memo, [breakerType, iches]) => {
-  const breakerTypeNum = parseInt(breakerType, 10);
-  for (const ich of iches) {
-    memo[ich] = breakerTypeNum;
-  }
-  return memo;
-}, {});
-
-/**
- * Get the effective breaker type of a weapon as granted by the seasonal
- * artifact. This does not include intrinsic breaker types (e.g. on some
- * exotics) so you should check item.breakerType first if you want the effective
- * overall breaker type, as intrinsic breaker beats artifact breaker.
- */
-export function getSeasonalBreakerTypeHash(item: DimItem): number | undefined {
-  if (item.destinyVersion === 2 && item.bucket.inWeapons && !item.breakerType) {
-    for (const ich of item.itemCategoryHashes) {
-      if (ichToBreakerType[ich]) {
-        return ichToBreakerType[ich];
-      }
-    }
-  }
 }
 
 /** The full item type name shown as a subtitle in the item popup. e.g. "Hunter Gauntlets" */

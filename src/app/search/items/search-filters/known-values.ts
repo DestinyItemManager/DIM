@@ -19,19 +19,15 @@ import {
   DestinyClass,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
-import artifactBreakerMods from 'data/d2/artifact-breaker-weapon-types.json';
-import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
-import { BreakerTypeHashes, BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import powerfulSources from 'data/d2/powerful-rewards.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 import D2Sources from './d2-sources';
 
 const D2EventPredicateLookup = Object.fromEntries(
-  Object.entries(D2EventInfo).map(([index, event]) => [
-    event.shortname,
-    Number(index) as D2EventEnum,
-  ]),
+  Object.entries(D2EventInfo).map(([index, event]) => [event.shortname, Number(index)]),
 );
 // filters relying on curated known values (class names, rarities, elements)
 
@@ -135,7 +131,7 @@ const bucketToType: LookupTable<BucketHashes, string> = {
   [BucketHashes.Vehicle]: 'vehicle',
   [BucketHashes.Emotes]: 'emotes',
   [BucketHashes.Finishers]: 'finishers',
-  [BucketHashes.SeasonalArtifact]: 'seasonalartifacts',
+  [BucketHashes.Artifacts]: 'seasonalartifacts',
 
   [BucketHashes.Accessories]: 'accessories',
   [BucketHashes.Consumables]: 'consumables',
@@ -341,11 +337,7 @@ const knownValuesFilters: ItemFilterDefinition[] = [
       if (!breakerType) {
         throw new Error(`Unknown breaker type ${filterValue}`);
       }
-      const breakingIchs = breakerType.flatMap((ty) => artifactBreakerMods[ty] || []);
-      return (item) =>
-        item.breakerType
-          ? breakerType.includes(item.breakerType?.hash as BreakerTypeHashes)
-          : item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich));
+      return (item) => item.breakerType && breakerType.includes(item.breakerType?.hash);
     },
   },
   {

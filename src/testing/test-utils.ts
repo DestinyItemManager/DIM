@@ -24,8 +24,8 @@ import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import profile from 'testing/data/profile-2025-12-02.json';
-import vendors from 'testing/data/vendors-2025-12-02.json';
+import profile from 'testing/data/profile-2026-06-09.json';
+import vendors from 'testing/data/vendors-2026-06-09.json';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 
 /**

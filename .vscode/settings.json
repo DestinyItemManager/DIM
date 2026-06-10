@@ -70,5 +70,6 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "never"
     }
-  }
+  },
+  "js/ts.tsdk.path": "./node_modules/typescript/lib"
 }

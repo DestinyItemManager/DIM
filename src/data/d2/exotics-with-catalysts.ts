@@ -11,20 +11,25 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   400096939, // Outbreak Perfected
   417164956, // Jötunn
   427899681, // Red Death Reformed
+  449318888, // Deterministic Chaos
   603721696, // Cryosthesia 77K
   648595258, // Graviton Spike
   776191470, // Tommy's Matchbook
+  814876684, // Wish-Ender
   814876685, // Trinity Ghoul
   940371471, // Wicked Implement
   1034055198, // Necrochasm
   1047932517, // Slayer's Fang
   1111334348, // Ice Breaker
+  1201830623, // Truth
   1234150730, // Trespasser
   1331482397, // MIDA Multi-Tool
   1345867570, // Sweet Business
   1345867571, // Coldheart
   1363238943, // Ruinous Effigy
   1363886209, // Gjallarhorn
+  1364093401, // The Last Word
+  1395261499, // Xenophage
   1441805468, // The Navigator
   1473821207, // Revision Zero
   1481594633, // Barrow-Dyad
@@ -39,6 +44,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1763584999, // Grand Overture
   1802135586, // Touch of Malice
   1833195496, // Ager's Scepter
+  1852863732, // Wavesplitter
   1853180924, // Traveler's Chosen
   1864563948, // Worldline Zero
   1891561814, // Whisper of the Worm
@@ -53,29 +59,40 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2350354266, // Alethonym
   2357297366, // Witherhoard
   2362471601, // Rat King
+  2376481550, // Anarchy
+  2399110176, // Eyes of Tomorrow
   2581676735, // New Land Beyond
   2591746970, // Leviathan's Breath
   2603483885, // Cloudstrike
   2694576561, // Two-Tailed Fox
+  2812324400, // Parasite
   2812324401, // Dead Messenger
   2816212794, // Bad Juju
   2856683562, // SUROS Regime
+  2905188646, // Still Hunt
   2907129556, // Sturm
   2907129557, // Sunshot
   2910326942, // Wish-Keeper
   2973900274, // Third Iteration
   3089417789, // Riskrunner
+  3110698812, // Tarrabah
+  3118061004, // Winterbite
   3118061005, // Vexcalibur
   3121540812, // Final Warning
   3141979346, // D.A.R.C.I.
   3141979347, // Borealis
   3211806999, // Izanagi's Burden
   3260753130, // Ticuu's Divination
+  3284383335, // Euphony
   3325463374, // Thunderlord
+  3371017761, // Conditional Finality
   3413074534, // Polaris Lance
+  3413860062, // The Chaperone
   3413860063, // Lord of Wolves
   3437746471, // Crimson
   3460576091, // Duality
+  3487253372, // The Lament
+  3505113722, // Collective Obligation
   3512014804, // Lumina
   3524313097, // Eriana's Vow
   3549153978, // Fighting Lion
@@ -102,9 +119,12 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   4017959782, // Symmetry
   4036115577, // Sleeper Simulant
   4068264807, // Monte Carlo
+  4103414242, // Divinity
   4124984448, // Hard Light
+  4129629253, // Khvostov 7G-0X
   4174431791, // Hierarchy of Needs
   4190156464, // Merciless
+  4207066264, // Microcosm
   4255268456, // Skyburner's Oath
   4284533075, // Service of Luzaku
   4289226715, // Vex Mythoclast

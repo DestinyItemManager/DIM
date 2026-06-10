@@ -177,7 +177,7 @@ function canShowStore(buttonStore: DimStore, itemOwnerStore: DimStore, item: Dim
   // Don't show "Store" for finishers, seasonal artifacts, or clan banners
   if (
     item.location.capacity === 1 ||
-    item.location.hash === BucketHashes.SeasonalArtifact ||
+    item.location.hash === BucketHashes.Artifacts ||
     item.location.hash === BucketHashes.Finishers
   ) {
     return false;

@@ -291,11 +291,7 @@ export const SOME_OTHER_DUMMY_BUCKET = 3621873013;
 // like you can have 1 equipped but it's glued to the character.
 // this array is used to prevent them from
 // having normal equipment sidecar buttons
-export const uniqueEquipBuckets = [
-  BucketHashes.SeasonalArtifact,
-  BucketHashes.Emotes,
-  BucketHashes.Finishers,
-];
+export const uniqueEquipBuckets = [BucketHashes.Emotes, BucketHashes.Finishers];
 
 /**
  * Bucket for what appears to be milestone quest steps
