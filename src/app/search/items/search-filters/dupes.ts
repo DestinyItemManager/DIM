@@ -315,7 +315,7 @@ const dupeFilters: ItemFilterDefinition[] = [
       return (item) =>
         // I do not know why this is necessary, how is a DEFAULT_SHADER being dupe checked?
         item.hash !== DEFAULT_SHADER &&
-        item.bucket.hash !== BucketHashes.SeasonalArtifact &&
+        item.bucket.hash !== BucketHashes.Artifacts &&
         item.comparable &&
         dupes.has(item.id);
     },

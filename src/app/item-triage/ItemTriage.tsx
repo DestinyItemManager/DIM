@@ -48,7 +48,7 @@ export function doShowTriage(item: DimItem) {
     item.destinyVersion === 2 &&
     (item.bucket.inArmor ||
       (item.bucket.inWeapons &&
-        item.bucket.hash !== BucketHashes.SeasonalArtifact &&
+        item.bucket.hash !== BucketHashes.Artifacts &&
         item.bucket.hash !== BucketHashes.Subclass))
   );
 }

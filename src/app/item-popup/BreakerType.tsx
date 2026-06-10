@@ -1,37 +1,18 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { useD2Definitions } from 'app/manifest/selectors';
-import { getSeasonalBreakerTypeHash } from 'app/utils/item-utils';
-import clsx from 'clsx';
 import * as styles from './BreakerType.m.scss';
 
 export default function BreakerType({ item }: { item: DimItem }) {
-  const defs = useD2Definitions()!;
-  let breakerType = item.breakerType;
-  let breakerClass: string | undefined;
-  if (!breakerType) {
-    const breakerTypeHash = getSeasonalBreakerTypeHash(item);
-    if (breakerTypeHash) {
-      breakerType = defs.BreakerType.get(breakerTypeHash);
-      breakerClass = styles.artifactBreaker;
-    }
-  }
-
+  const breakerType = item.breakerType;
   return (
     breakerType && (
       <BungieImage
-        className={clsx(styles.breakerIcon, breakerClass)}
+        className={styles.breakerIcon}
         src={breakerType.displayProperties.icon}
-        title={
-          breakerClass === styles.artifactBreaker
-            ? t('MovePopup.ArtifactBreaker', {
-                breaker: breakerType.displayProperties.name,
-              })
-            : t('MovePopup.IntrinsicBreaker', {
-                breaker: breakerType.displayProperties.name,
-              })
-        }
+        title={t('MovePopup.IntrinsicBreaker', {
+          breaker: breakerType.displayProperties.name,
+        })}
       />
     )
   );

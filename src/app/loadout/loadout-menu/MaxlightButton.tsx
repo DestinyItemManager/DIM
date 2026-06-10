@@ -2,14 +2,12 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { getArtifactBonus } from 'app/inventory/stores-helpers';
 import { maxLightItemSet, maxLightLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { AppIcon, powerActionIcon, powerIndicatorIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
-import xpIcon from 'images/xpIcon.svg';
 import * as styles from './MaxlightButton.m.scss';
 
 interface Props {
@@ -22,7 +20,6 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified }: Pr
   const dispatch = useThunkDispatch();
 
   const maxLight = getLight(dimStore, maxLightItemSet(allItems, dimStore).equippable);
-  const artifactLight = getArtifactBonus(dimStore);
 
   // Apply a loadout that's dynamically calculated to maximize Light level (preferring not to change currently-equipped items)
   const makeMaxLightLoadout = () => {
@@ -53,13 +50,6 @@ export default function MaxlightButton({ allItems, dimStore, hasClassified }: Pr
             <>
               <img className={styles.yellowInlineSvg} src={helmetIcon} />
               {Math.floor(maxLight)}
-              {Boolean(artifactLight) && (
-                <>
-                  {' + '}
-                  <img className={styles.yellowInlineSvg} src={xpIcon} />
-                  {artifactLight}
-                </>
-              )}
             </>
           )}
 
