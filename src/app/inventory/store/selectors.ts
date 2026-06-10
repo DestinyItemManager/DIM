@@ -5,7 +5,6 @@ import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { DimItem } from '../item-types';
 import { allItemsSelector, storesSelector } from '../selectors';
-import { getArtifactBonus } from '../stores-helpers';
 
 /**
  * Does this store (character) have any classified items that might affect their power level?
@@ -47,9 +46,7 @@ export interface StorePowerLevel {
   maxEquippableGearPower: number;
   /** average of your highest gear in each bucket, even if it's not equippable by this store. destiny's new power algorithm as of The Final Shape */
   dropPower: number;
-  /** currently represents the power level bonus provided by the Seasonal Artifact */
-  powerModifier: number;
-  /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
+  /** maxGearPower. the highest PL you can get your inventory screen to show */
   maxTotalPower: number;
 
   /** the highest-power items per bucket, even if not equippable at the same time */
@@ -97,15 +94,13 @@ export const allPowerLevelsSelector = createSelector(
       const notEquippable = unrestrictedMaxGearPower !== equippableMaxGearPower;
       const notOnStore = dropPowerLevel !== unrestrictedMaxGearPower;
       const hasClassified = hasAffectingClassified(equipUnrestricted, bucketsWithClassifieds);
-      const artifactPower = getArtifactBonus(store);
 
       levels[store.id] = {
         maxGearPower: unrestrictedMaxGearPower,
         maxEquippableGearPower: equippableMaxGearPower,
         maxEquippablePowerItems: equippable,
         dropPower,
-        powerModifier: artifactPower,
-        maxTotalPower: unrestrictedMaxGearPower + artifactPower,
+        maxTotalPower: unrestrictedMaxGearPower,
         highestPowerItems: equipUnrestricted,
         dropCalcItems: classUnrestricted,
         problems: {

@@ -3,7 +3,6 @@ import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
-import { ArtifactXP } from 'app/inventory/ArtifactXP';
 import { ItemPowerSet } from 'app/inventory/ItemPowerSet';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { profileResponseSelector } from 'app/inventory/selectors';
@@ -13,10 +12,7 @@ import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { getSubclassPlugHashes } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
-import AppIcon from 'app/shell/icons/AppIcon';
-import { dimPowerIcon } from 'app/shell/icons/custom/Power';
 import { RootState } from 'app/store/types';
 import { filterMap, sumBy } from 'app/utils/collections';
 import clsx from 'clsx';
@@ -24,7 +20,6 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
-import xpIcon from '../../images/xpIcon.svg';
 import * as styles from './CharacterStats.m.scss';
 import StatTooltip from './StatTooltip';
 
@@ -80,18 +75,10 @@ export function PowerFormula({ storeId }: { storeId: string }) {
   const powerLevel = useSelector((state: RootState) => powerLevelSelector(state, storeId));
 
   const profileResponse = useSelector(profileResponseSelector);
-  const characterProgress = getCharacterProgressions(profileResponse);
 
   if (!defs || !profileResponse || !powerLevel) {
     return null;
   }
-
-  const maxTotalPower: PowerStat = {
-    value: powerLevel.maxTotalPower,
-    icon: <AppIcon icon={dimPowerIcon} />,
-    name: t('Stats.MaxTotalPower'),
-    problems: { ...powerLevel.problems, notOnStore: false },
-  };
 
   const maxGearPower: PowerStat = {
     value: powerLevel.maxEquippableGearPower,
@@ -118,24 +105,7 @@ export function PowerFormula({ storeId }: { storeId: string }) {
     ),
   };
 
-  // optional chaining here accounts for an edge-case, possible, but type-unadvertised,
-  // missing artifact power bonus. please keep this here.
-  const bonusPowerProgressionHash =
-    profileResponse.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
-      ?.progressionHash;
-
-  const artifactPower: PowerStat = {
-    value: powerLevel.powerModifier,
-    name: t('Stats.PowerModifier'),
-    richTooltipContent: () => (
-      <ArtifactXP
-        characterProgress={characterProgress}
-        bonusPowerProgressionHash={bonusPowerProgressionHash}
-      />
-    ),
-    icon: xpIcon,
-  };
-  const stats = artifactPower.value ? [maxTotalPower, maxGearPower, artifactPower] : [maxGearPower];
+  const stats = [maxGearPower];
   return <CharacterPower stats={stats} />;
 }
 

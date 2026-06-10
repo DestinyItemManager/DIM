@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, currenciesSelector, vaultSelector } from 'app/inventory/selectors';
 import { AccountCurrency, DimStore } from 'app/inventory/store-types';
-import { findItemsByBucket, getArtifactBonus } from 'app/inventory/stores-helpers';
+import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -36,12 +36,11 @@ export function postmaster(store: DimStore) {
 export function maxPower(store: DimStore, state: RootState) {
   const allItems = allItemsSelector(state);
   const maxLight = getLight(store, maxLightItemSet(allItems, store).equippable);
-  const artifact = getArtifactBonus(store);
 
   return {
-    total: (maxLight + artifact).toFixed(0),
+    total: maxLight.toFixed(0),
     base: maxLight.toFixed(0),
-    artifact,
+    artifact: 0,
   };
 }
 
