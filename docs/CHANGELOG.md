@@ -1,6 +1,7 @@
 ## Next
 
 * Add support for the Set Bonus mod socket on event items, including `modslot:setbonus` search filter
+* d2foundry.gg links are gone again
 
 ## 8.128.0 <span class="changelog-date">(2026-06-07)</span>
 

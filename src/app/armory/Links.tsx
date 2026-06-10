@@ -10,7 +10,6 @@ import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import destinysets from 'images/destinysets.svg';
 import logo from 'images/dimlogo.svg';
-import foundry from 'images/foundry.png';
 import ishtarLogo from 'images/ishtar-collective.svg';
 import lightgg from 'images/lightgg.png';
 import { useSelector } from 'react-redux';
@@ -30,11 +29,6 @@ export default function Links({ item }: { item: DimItem }) {
       name: 'Light.gg',
       icon: lightgg,
       link: `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
-    },
-    item.bucket.inWeapons && {
-      name: 'D2Foundry',
-      icon: foundry,
-      link: `https://d2foundry.gg/w/${item.hash}${buildFoundrySockets(item)}`,
     },
     !isPhonePortrait && {
       name: 'data.destinysets.com',
@@ -90,24 +84,6 @@ function buildLightGGSockets(item: DimItem) {
 
   if (perkValues) {
     return `?p=${[...perkValues.largePerks, ...perkValues.traits, perkValues.masterwork, perkValues.weaponMod].map((s) => String(s)).join(',')}`;
-  }
-
-  return '';
-}
-
-/**
- * Foundry's socket format is: ?p=perkHashes,...&m=weaponMod&mw=masterworkStatHash
- */
-function buildFoundrySockets(item: DimItem) {
-  const perkValues = getWeaponSocketInfo(item);
-
-  if (perkValues) {
-    const primaryMasterworkStat =
-      item.sockets?.allSockets.find(isWeaponMasterworkSocket)?.plugged?.plugDef
-        .investmentStats?.[0];
-    const mwHash = primaryMasterworkStat?.statTypeHash || perkValues.largePerks[0] || 0; // `mw` for crafted exo intrinsic
-    const modHash = perkValues.weaponMod || perkValues.masterwork || 0; // `m` for non-crafted exo mw
-    return `?p=${perkValues.traits.join(',')}&m=${modHash || ''}&mw=${mwHash || ''}`;
   }
 
   return '';
