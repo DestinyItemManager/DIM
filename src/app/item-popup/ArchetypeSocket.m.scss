@@ -38,3 +38,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.breakerTypeContainer {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  vertical-align: middle;
+}

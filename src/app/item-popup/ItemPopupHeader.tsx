@@ -14,7 +14,6 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { AmmoIcon } from './AmmoIcon';
-import BreakerType from './BreakerType';
 import * as styles from './ItemPopupHeader.m.scss';
 
 const rarityClassName: LookupTable<ItemRarityName, string> = {
@@ -64,7 +63,6 @@ export default function ItemPopupHeader({
         <div className={styles.type}>
           <div className={styles.itemType}>{itemTypeName(item)}</div>
           {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
-          <BreakerType item={item} />
         </div>
 
         <div className={styles.details}>
