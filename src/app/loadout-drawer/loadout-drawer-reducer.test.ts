@@ -495,7 +495,9 @@ describe('fillLoadoutFromEquipped', () => {
 
   it('can fill in armor', () => {
     // Add a single item that's not equipped to the loadout
-    const item = items.find((i) => i.bucket.hash === BucketHashes.Helmet && !i.equipped)!;
+    const item = items.find(
+      (i) => i.bucket.hash === BucketHashes.Helmet && !i.equipped && i.power && !i.isExotic,
+    )!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
     loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks, 'Armor')(loadout);
@@ -521,7 +523,9 @@ describe('fillLoadoutFromEquipped', () => {
 
   it('can fill in everything', () => {
     // Add a single item that's not equipped to the loadout
-    const item = items.find((i) => i.bucket.hash === BucketHashes.Helmet && !i.equipped)!;
+    const item = items.find(
+      (i) => i.bucket.hash === BucketHashes.Helmet && !i.equipped && i.power && !i.isExotic,
+    )!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
     loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(loadout);
