@@ -50,6 +50,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1891561814, // Whisper of the Worm
   1912669214, // Centrifuse
   2044500762, // The Queenbreaker
+  2069224589, // One Thousand Voices
   2084878005, // Heir Apparent
   2130065553, // Arbalest
   2179048386, // Forerunner
@@ -61,6 +62,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2362471601, // Rat King
   2376481550, // Anarchy
   2399110176, // Eyes of Tomorrow
+  2415517654, // Bastion
   2581676735, // New Land Beyond
   2591746970, // Leviathan's Breath
   2603483885, // Cloudstrike
@@ -111,6 +113,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3761898871, // Lorentz Driver
   3766045777, // Black Talon
   3821409356, // Ex Diris
+  3824106094, // Devil's Ruin
   3844694310, // The Jade Rabbit
   3856705927, // Hawkmoon
   3886719505, // Buried Bloodline
