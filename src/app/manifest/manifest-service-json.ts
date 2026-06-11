@@ -218,7 +218,7 @@ function loadManifest(tableAllowList: TableShortName[]): ThunkResult<AllDestinyM
 }
 
 /**
- * Returns a promise for the manifest data as a Uint8Array. Will cache it on success.
+ * Downloads the manifest from Bungie.net, caching it in IndexedDB on success.
  */
 function loadManifestRemote(
   version: string,
@@ -230,10 +230,36 @@ function loadManifestRemote(
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
     try {
-      const manifest = await downloadManifestComponents(components, tableAllowList);
+      let saveError: Error | undefined;
+      // Save each table to IndexedDB as it arrives, and wait for those saves,
+      // so we never serialize the whole manifest at once and saving doesn't
+      // overlap with building stores. Peak memory matters a lot on iOS, where
+      // the OS will kill the page (black screen) if we use too much.
+      const manifest = await downloadManifestComponents(
+        components,
+        tableAllowList,
+        async (tableShort, records) => {
+          try {
+            await set(`${idbKey}-${tableShort}`, records);
+          } catch (e) {
+            saveError ??= convertToError(e);
+          }
+        },
+      );
 
-      // We intentionally don't wait on this promise
-      saveManifestToIndexedDB(manifest, version, tableAllowList);
+      if (saveError) {
+        errorLog(TAG, 'Error saving manifest file', saveError);
+        showNotification({
+          title: t('Help.NoStorage'),
+          body: t('Help.NoStorageMessage'),
+          type: 'error',
+        });
+      } else {
+        await del(idbKey); // the old storage location before per-table
+        infoLog(TAG, `Successfully stored manifest file.`);
+        localStorage.setItem(localStorageKey, version);
+        localStorage.setItem(`${localStorageKey}-whitelist`, JSON.stringify(tableAllowList));
+      }
       return manifest;
     } finally {
       dispatch(loadingEnd(t('Manifest.Download')));
@@ -241,11 +267,26 @@ function loadManifestRemote(
   };
 }
 
+/**
+ * Tables so large that parsing them concurrently with anything else risks
+ * running out of memory on iOS Safari. These are loaded one at a time, before
+ * the other tables, while the heap is at its smallest.
+ */
+const hugeTables: TableShortName[] = ['InventoryItem', 'Vendor'];
+
+/** How many of the remaining (smaller) tables to download and parse at once. */
+const maxConcurrency = 4;
+
 export async function downloadManifestComponents(
   components: {
     [key: string]: string;
   },
   tableAllowList: TableShortName[],
+  /** Called (and awaited) with each table's trimmed contents before the next table is loaded. */
+  onTableLoaded?: (
+    tableShort: TableShortName,
+    records: AllDestinyManifestComponents[DestinyManifestComponentName],
+  ) => Promise<void>,
 ) {
   // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
   // try canonical component URL which should likely be already cached,
@@ -259,69 +300,57 @@ export async function downloadManifestComponents(
 
   const manifest: Partial<AllDestinyManifestComponents> = {};
 
-  // Load the manifest tables we want table-by-table, in parallel. This is
-  // faster and downloads less data than the single huge file.
-  const futures = tableAllowList
-    .map((t) => `Destiny${t}Definition` as DestinyManifestComponentName)
-    .map(async (table) => {
-      let response: Response;
-      let error: Error | undefined;
-      let body = null;
+  const loadTable = async (tableShort: TableShortName) => {
+    const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
+    let response: Response;
+    let error: Error | undefined;
+    let body = null;
 
-      for (const query of cacheBusterStrings) {
-        try {
-          response = await fetch(`https://www.bungie.net${components[table]}${query}`);
-          if (response.ok) {
-            // Sometimes the file is found, but isn't parseable as JSON
-            body =
-              (await response.json()) as AllDestinyManifestComponents[DestinyManifestComponentName];
-            break;
-          }
-          error ??= await toHttpStatusError(response);
-        } catch (e) {
-          error ??= convertToError(e);
+    for (const query of cacheBusterStrings) {
+      try {
+        response = await fetch(`https://www.bungie.net${components[table]}${query}`);
+        if (response.ok) {
+          // Sometimes the file is found, but isn't parseable as JSON
+          body =
+            (await response.json()) as AllDestinyManifestComponents[DestinyManifestComponentName];
+          break;
         }
+        error ??= await toHttpStatusError(response);
+      } catch (e) {
+        error ??= convertToError(e);
       }
-      if (!body) {
-        handleErrors(error); // throws
+    }
+    if (!body) {
+      handleErrors(error); // throws
+    }
+
+    const records = (
+      table in tableTrimmers ? tableTrimmers[table]!(body) : body
+    ) as AllDestinyManifestComponents[DestinyManifestComponentName];
+    (manifest as Record<string, unknown>)[table] = records;
+    await onTableLoaded?.(tableShort, records);
+  };
+
+  for (const tableShort of hugeTables) {
+    if (tableAllowList.includes(tableShort)) {
+      await loadTable(tableShort);
+    }
+  }
+
+  // Load the remaining tables with limited concurrency - parsing them all at
+  // once holds too many decoded bodies and parsed tables in memory
+  // simultaneously.
+  const queue = tableAllowList.filter((t) => !hugeTables.includes(t));
+  await Promise.all(
+    Array.from({ length: maxConcurrency }, async () => {
+      let tableShort: TableShortName | undefined;
+      while ((tableShort = queue.shift()) !== undefined) {
+        await loadTable(tableShort);
       }
-
-      // I couldn't figure out how to make these types work...
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      manifest[table] = table in tableTrimmers ? tableTrimmers[table]!(body) : body;
-    });
-
-  await Promise.all(futures);
+    }),
+  );
 
   return manifest as AllDestinyManifestComponents;
-}
-
-async function saveManifestToIndexedDB(
-  manifest: AllDestinyManifestComponents,
-  version: string,
-  tableAllowList: TableShortName[],
-) {
-  try {
-    await Promise.all([
-      ...tableAllowList.map(async (t) => {
-        const records = manifest[`Destiny${t}Definition`];
-        if (records) {
-          await set(`${idbKey}-${t}`, records);
-        }
-      }),
-      del(idbKey), // the old storage location before per-table
-    ]);
-    infoLog(TAG, `Successfully stored manifest file.`);
-    localStorage.setItem(localStorageKey, version);
-    localStorage.setItem(`${localStorageKey}-whitelist`, JSON.stringify(tableAllowList));
-  } catch (e) {
-    errorLog(TAG, 'Error saving manifest file', e);
-    showNotification({
-      title: t('Help.NoStorage'),
-      body: t('Help.NoStorageMessage'),
-      type: 'error',
-    });
-  }
 }
 
 async function deleteManifestFile() {
@@ -353,14 +382,28 @@ async function loadManifestFromCache(
   ) as string[];
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
     const manifest = {} as AllDestinyManifestComponents;
+    const loadTable = async (t: TableShortName) => {
+      const records = await get<Record<number, any>>(`${idbKey}-${t}`);
+      const tableName = `Destiny${t}Definition` as DestinyManifestComponentName;
+      if (!records) {
+        throw new Error(`No cached contents for table ${tableName}`);
+      }
+      manifest[tableName] = records;
+    };
+    // Deserialize the huge tables one at a time to limit peak memory, which
+    // can get the page killed on iOS. See downloadManifestComponents.
+    for (const t of hugeTables) {
+      if (tableAllowList.includes(t)) {
+        await loadTable(t);
+      }
+    }
+    const queue = tableAllowList.filter((t) => !hugeTables.includes(t));
     await Promise.all(
-      tableAllowList.map(async (t) => {
-        const records = await get<Record<number, any>>(`${idbKey}-${t}`);
-        const tableName = `Destiny${t}Definition` as DestinyManifestComponentName;
-        if (!records) {
-          throw new Error(`No cached contents for table ${tableName}`);
+      Array.from({ length: maxConcurrency }, async () => {
+        let t: TableShortName | undefined;
+        while ((t = queue.shift()) !== undefined) {
+          await loadTable(t);
         }
-        manifest[tableName] = records;
       }),
     );
     return manifest;
