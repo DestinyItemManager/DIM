@@ -406,10 +406,17 @@ export function getArmor3TuningStat(item: DimItem): StatHashes | undefined {
     return;
   }
 
+  let tunedStat: StatHashes | undefined;
   for (const { plugItemHash } of reusablePlugItems) {
-    if (plugItemHash in tuningModToTunedStathash) {
-      return tuningModToTunedStathash[plugItemHash];
+    const stat = tuningModToTunedStathash[plugItemHash];
+    if (stat !== undefined) {
+      if (tunedStat !== undefined && tunedStat !== stat) {
+        // Multiple different stat tuners available (e.g. exotics) --
+        // this item isn't locked to a single tuning stat.
+        return undefined;
+      }
+      tunedStat = stat;
     }
   }
-  return undefined;
+  return tunedStat;
 }
