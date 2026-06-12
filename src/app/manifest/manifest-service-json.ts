@@ -30,6 +30,7 @@ import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
 import { reportException } from '../utils/sentry';
+import { batchJsonEntries } from './json-batch-stream';
 
 const TAG = 'manifest';
 
@@ -41,88 +42,88 @@ const TAG = 'manifest';
 // Testing flags
 const alwaysLoadRemote = false;
 
-/** Functions that can reduce the size of a table after it's downloaded but before it's saved to cache. */
-const tableTrimmers: LookupTable<DestinyManifestComponentName, (table: any) => any> = {
-  DestinyInventoryItemDefinition: (table: { [hash: number]: DestinyInventoryItemDefinition }) => {
-    for (const key in table) {
-      const def = table[key] as Draft<DestinyInventoryItemDefinition>;
+/** Functions that can reduce the size of a definition after it's downloaded but before it's saved to cache. */
+const defTrimmers: LookupTable<DestinyManifestComponentName, (d: any) => void> = {
+  DestinyInventoryItemDefinition: (d) => {
+    const def = d as Draft<DestinyInventoryItemDefinition>;
 
-      // Deleting properties can actually make memory usage go up as V8 replaces some efficient
-      // structures from JSON parsing. Only replace objects with empties, and always test with the
-      // memory profiler. Don't assume that deleting something makes this smaller.
+    // Deleting properties can actually make memory usage go up as V8 replaces some efficient
+    // structures from JSON parsing. Only replace objects with empties, and always test with the
+    // memory profiler. Don't assume that deleting something makes this smaller.
 
-      def.action = emptyObject<Draft<DestinyItemActionBlockDefinition>>();
-      def.backgroundColor = emptyObject();
-      def.translationBlock = emptyObject<Draft<DestinyItemTranslationBlockDefinition>>();
-      if (def.equippingBlock?.displayStrings?.length) {
-        def.equippingBlock.displayStrings = emptyArray();
+    def.action = emptyObject<Draft<DestinyItemActionBlockDefinition>>();
+    def.backgroundColor = emptyObject();
+    def.translationBlock = emptyObject<Draft<DestinyItemTranslationBlockDefinition>>();
+    if (def.equippingBlock?.displayStrings?.length) {
+      def.equippingBlock.displayStrings = emptyArray();
+    }
+    if (def.preview) {
+      if (def.preview.derivedItemCategories?.length) {
+        def.preview.derivedItemCategories = emptyArray();
       }
-      if (def.preview) {
-        if (def.preview.derivedItemCategories?.length) {
-          def.preview.derivedItemCategories = emptyArray();
-        }
-        def.preview.screenStyle = '';
+      def.preview.screenStyle = '';
+    }
+    if (def.inventory) {
+      if (def.inventory.bucketTypeHash !== BucketHashes.Subclass) {
+        // The only useful bit about talent grids is for subclass damage types
+        def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
       }
-      if (def.inventory) {
-        if (def.inventory.bucketTypeHash !== BucketHashes.Subclass) {
-          // The only useful bit about talent grids is for subclass damage types
-          def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
-        }
-        def.inventory.tierTypeName = '';
-      }
+      def.inventory.tierTypeName = '';
+    }
 
-      if (def.sockets) {
-        def.sockets.intrinsicSockets = emptyArray();
-        for (const socket of def.sockets.socketEntries) {
-          if (socket.reusablePlugSetHash && socket.reusablePlugItems.length > 0) {
-            socket.reusablePlugItems = emptyArray();
-          }
+    if (def.sockets) {
+      def.sockets.intrinsicSockets = emptyArray();
+      for (const socket of def.sockets.socketEntries) {
+        if (socket.reusablePlugSetHash && socket.reusablePlugItems.length > 0) {
+          socket.reusablePlugItems = emptyArray();
         }
       }
-
-      // We never figured out anything to do with icon sequences on items
-      if (def.displayProperties.iconSequences) {
-        def.displayProperties.iconSequences = emptyArray();
-      }
-
-      // We don't use these
-      def.tooltipStyle = '';
-      def.itemTypeAndTierDisplayName = '';
     }
 
-    return table;
+    // We never figured out anything to do with icon sequences on items
+    if (def.displayProperties.iconSequences) {
+      def.displayProperties.iconSequences = emptyArray();
+    }
+
+    // We don't use these
+    def.tooltipStyle = '';
+    def.itemTypeAndTierDisplayName = '';
   },
-  DestinyObjectiveDefinition: (table: { [hash: number]: DestinyObjectiveDefinition }) => {
-    for (const key in table) {
-      const def = table[key] as Draft<DestinyObjectiveDefinition>;
+  DestinyObjectiveDefinition: (d) => {
+    const def = d as Draft<DestinyObjectiveDefinition>;
 
-      def.stats = emptyObject();
-      def.perks = emptyObject();
-      // Believe it or not we don't use these
-      def.displayProperties.description = '';
-      def.displayProperties.name = '';
-    }
-    return table;
+    def.stats = emptyObject();
+    def.perks = emptyObject();
+    // Believe it or not we don't use these
+    def.displayProperties.description = '';
+    def.displayProperties.name = '';
   },
-  DestinyCollectibleDefinition: (table: { [hash: number]: DestinyCollectibleDefinition }) => {
-    for (const key in table) {
-      const def = table[key] as Draft<DestinyCollectibleDefinition>;
+  DestinyCollectibleDefinition: (d) => {
+    const def = d as Draft<DestinyCollectibleDefinition>;
 
-      def.acquisitionInfo = emptyObject();
-      def.stateInfo = emptyObject();
-    }
-    return table;
+    def.acquisitionInfo = emptyObject();
+    def.stateInfo = emptyObject();
   },
-  DestinyRecordDefinition: (table: { [hash: number]: DestinyRecordDefinition }) => {
-    for (const key in table) {
-      const def = table[key] as Draft<DestinyRecordDefinition>;
+  DestinyRecordDefinition: (d) => {
+    const def = d as Draft<DestinyRecordDefinition>;
 
-      def.requirements = emptyObject();
-      def.expirationInfo = emptyObject();
-    }
-    return table;
+    def.requirements = emptyObject();
+    def.expirationInfo = emptyObject();
   },
 };
+
+function trimTable(
+  table: DestinyManifestComponentName,
+  records: AllDestinyManifestComponents[DestinyManifestComponentName],
+) {
+  const trimmer = defTrimmers[table];
+  if (trimmer) {
+    for (const key in records) {
+      trimmer(records[key as unknown as number]);
+    }
+  }
+  return records;
+}
 
 // Module-local state
 const localStorageKey = 'd2-manifest-version';
@@ -302,17 +303,37 @@ export async function downloadManifestComponents(
 
   const loadTable = async (tableShort: TableShortName) => {
     const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
-    let response: Response;
     let error: Error | undefined;
-    let body = null;
+    let records: AllDestinyManifestComponents[DestinyManifestComponentName] | undefined;
 
     for (const query of cacheBusterStrings) {
       try {
-        response = await fetch(`https://www.bungie.net${components[table]}${query}`);
+        const response = await fetch(`https://www.bungie.net${components[table]}${query}`);
         if (response.ok) {
           // Sometimes the file is found, but isn't parseable as JSON
-          body =
-            (await response.json()) as AllDestinyManifestComponents[DestinyManifestComponentName];
+          // (the getReader check excludes test environments where the body
+          // is a Node stream rather than a web ReadableStream)
+          if (hugeTables.includes(tableShort) && typeof response.body?.getReader === 'function') {
+            // Parse and trim huge tables a batch of definitions at a time, so
+            // the untrimmed table never fully exists in memory. JSON.parse of
+            // the whole table peaks at hundreds of MB, which gets the page
+            // killed on iOS Safari.
+            const trimmer = defTrimmers[table];
+            const result: Record<string, unknown> = {};
+            for await (const batchText of batchJsonEntries(response.body)) {
+              const batch = JSON.parse(batchText) as Record<string, unknown>;
+              for (const key in batch) {
+                trimmer?.(batch[key]);
+                result[key] = batch[key];
+              }
+            }
+            records = result as AllDestinyManifestComponents[DestinyManifestComponentName];
+          } else {
+            records = trimTable(
+              table,
+              (await response.json()) as AllDestinyManifestComponents[DestinyManifestComponentName],
+            );
+          }
           break;
         }
         error ??= await toHttpStatusError(response);
@@ -320,13 +341,10 @@ export async function downloadManifestComponents(
         error ??= convertToError(e);
       }
     }
-    if (!body) {
+    if (!records) {
       handleErrors(error); // throws
     }
 
-    const records = (
-      table in tableTrimmers ? tableTrimmers[table]!(body) : body
-    ) as AllDestinyManifestComponents[DestinyManifestComponentName];
     (manifest as Record<string, unknown>)[table] = records;
     await onTableLoaded?.(tableShort, records);
   };
