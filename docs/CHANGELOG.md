@@ -4,6 +4,7 @@
 * d2foundry.gg links are gone again
 * Artifacts can now be equipped
 * Removed countdown from Season Pass.
+* Greatly reduced memory usage while downloading a new Destiny 2 manifest, and DIM on mobile now reloads itself automatically to pick up manifest updates. This should fix black screens and crashes on iOS (and some Android devices) after Destiny 2 updates.
 
 ## 8.128.0 <span class="changelog-date">(2026-06-07)</span>
 
