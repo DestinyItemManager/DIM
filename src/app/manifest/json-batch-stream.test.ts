@@ -42,6 +42,11 @@ const trickyTable = {
   '5': { nested: { a: { b: { c: [{ d: 'x,y' }] } } } },
   '6': { empty: {}, emptyArr: [], nul: null, bool: false },
   '74624: 39': { 'weird: key, with "stuff"': '}{,' },
+  '8': {
+    s: 'backslash runs \\ \\\\ \\\\\\ before quotes',
+    t: '\\\\',
+    u: 'ends in backslashes \\\\\\',
+  },
 };
 
 describe('batchJsonEntries', () => {
