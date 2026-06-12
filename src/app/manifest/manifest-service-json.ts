@@ -170,7 +170,7 @@ function doGetManifest(
       if (e.cause instanceof TypeError || e.cause instanceof HttpStatusError) {
       } else {
         // Something may be wrong with the manifest
-        deleteManifestFile();
+        deleteManifestCache();
       }
 
       errorLog(TAG, 'Manifest loading error', e);
@@ -371,7 +371,7 @@ export async function downloadManifestComponents(
   return manifest as AllDestinyManifestComponents;
 }
 
-async function deleteManifestFile() {
+export async function deleteManifestCache() {
   localStorage.removeItem(localStorageKey);
   await Promise.all(
     (await keys()).map(async (key) => {
@@ -380,6 +380,29 @@ async function deleteManifestFile() {
       }
     }),
   );
+}
+
+const autoReloadKey = 'd2-manifest-auto-reload';
+
+/**
+ * Delete the cached manifest and reload the app, so the new manifest is
+ * downloaded on a fresh boot with as little else in memory as possible.
+ * Downloading a new manifest while the old one is still in memory can get the
+ * page killed on mobile.
+ *
+ * Returns false (without reloading) if we already auto-reloaded recently, so
+ * a misbehaving manifest can't cause a reload loop - callers should fall back
+ * to downloading the manifest in place.
+ */
+export async function reloadToUpdateManifest(): Promise<boolean> {
+  const lastReload = parseInt(localStorage.getItem(autoReloadKey) ?? '0', 10);
+  if (Date.now() - lastReload < 15 * 60 * 1000) {
+    return false;
+  }
+  localStorage.setItem(autoReloadKey, Date.now().toString());
+  await deleteManifestCache();
+  window.location.reload();
+  return true;
 }
 
 /**
@@ -427,7 +450,7 @@ async function loadManifestFromCache(
     return manifest;
   } else {
     // Delete the existing manifest first, to make space
-    await deleteManifestFile();
+    await deleteManifestCache();
     throw new Error(`version mismatch: ${version} ${currentManifestVersion}`);
   }
 }
