@@ -1,5 +1,7 @@
+@use '../variables.scss' as *;
+
 .breakerIcon {
   margin: 0 4px;
-  width: 15px;
-  height: 15px;
+  width: var(--breaker-size, calc(#{dim-item-px(24)}));
+  height: var(--breaker-size, calc(#{dim-item-px(24)}));
 }

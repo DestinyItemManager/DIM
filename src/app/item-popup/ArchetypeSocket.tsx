@@ -2,6 +2,7 @@ import { DimItem, DimSocket } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './ArchetypeSocket.m.scss';
+import BreakerType from './BreakerType';
 import { PlugClickHandler } from './ItemSockets';
 import Socket from './Socket';
 
@@ -39,6 +40,11 @@ export default function ArchetypeSocket({
         <div className={styles.name}>{archetypeSocket.plugged.plugDef.displayProperties.name}</div>
         {children}
       </div>
+      {item.bucket.inWeapons && (
+        <div className={styles.breakerTypeContainer}>
+          <BreakerType item={item} />
+        </div>
+      )}
     </>
   );
 }

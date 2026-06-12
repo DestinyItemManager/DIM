@@ -107,7 +107,6 @@ export default function ItemSocketsWeapons({
               )}
             </ArchetypeSocket>
           )}
-          {mods.length > 0 && <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>}
         </ArchetypeRow>
       )}
       {perks &&
@@ -142,6 +141,11 @@ export default function ItemSocketsWeapons({
             )}
           </div>
         ))}
+      {!minimal && mods.length > 0 && (
+        <ArchetypeRow isWeapons className={styles.archetype}>
+          <ItemSocketsList>{mods.map(renderSocket)}</ItemSocketsList>
+        </ArchetypeRow>
+      )}
     </>
   );
 }

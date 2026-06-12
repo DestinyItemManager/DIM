@@ -403,6 +403,12 @@ export const breakerTypes = {
   unstoppable: [BreakerTypeHashes.Stagger],
 };
 
+export const breakerTypeByPerkHash: Partial<Record<number, BreakerTypeHashes>> = {
+  2917776374: BreakerTypeHashes.Stagger,
+  3469621377: BreakerTypeHashes.ShieldPiercing,
+  472686235: BreakerTypeHashes.Disruption,
+};
+
 export const breakerTypeNames = Object.entries(breakerTypes)
   .filter(([, hashes]) => hashes.length === 1)
   .reduce<Partial<Record<BreakerTypeHashes, string>>>((memo, [name, [hash]]) => {

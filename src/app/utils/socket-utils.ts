@@ -482,6 +482,7 @@ export function getWeaponSockets(
     PlugCategoryHashes.GenericAllVfx,
     PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
     PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
+    PlugCategoryHashes.WeaponTieringPlugsModsEnhancers,
     // The weapon level socket is not interesting
     PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
     // Hide catalyst socket for exotics with no known catalyst

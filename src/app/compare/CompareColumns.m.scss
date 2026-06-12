@@ -80,6 +80,7 @@
 
 .archetypeRow {
   --archetype-size: 22px !important;
+  --breaker-size: 16px !important;
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
   gap: 2px;
