@@ -1,5 +1,7 @@
 ## Next
 
+## 8.128.1 <span class="changelog-date">(2026-06-13)</span>
+
 * Add support for the Set Bonus mod socket on event items, including `modslot:setbonus` search filter
 * d2foundry.gg links are gone again
 * Artifacts can now be equipped
