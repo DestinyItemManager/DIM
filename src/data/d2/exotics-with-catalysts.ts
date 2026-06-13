@@ -23,6 +23,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1047932517, // Slayer's Fang
   1111334348, // Ice Breaker
   1201830623, // Truth
+  1202007252, // Whirling Ovation
   1234150730, // Trespasser
   1331482397, // MIDA Multi-Tool
   1345867570, // Sweet Business
