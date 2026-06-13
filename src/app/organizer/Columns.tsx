@@ -47,8 +47,8 @@ import { Comparator, compareBy, primitiveComparator } from 'app/utils/comparator
 import {
   getArmor3StatFocus,
   getArmor3TuningStat,
+  getItemCurrentKillTrackerInfo,
   getItemDamageShortName,
-  getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadata,
@@ -841,11 +841,12 @@ export function getColumns(
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
         value: (item) => {
-          const killTrackerInfo = getItemKillTrackerInfo(item);
+          const killTrackerInfo = getItemCurrentKillTrackerInfo(item);
           return killTrackerInfo?.count;
         },
         cell: (_val, item) => {
-          const killTrackerInfo = getItemKillTrackerInfo(item);
+          const killTrackerInfo = getItemCurrentKillTrackerInfo(item);
+          // TODO add additional kill trackers to display if present
           return (
             killTrackerInfo && (
               <KillTrackerInfo tracker={killTrackerInfo} className={styles.locationCell} />

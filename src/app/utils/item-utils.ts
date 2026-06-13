@@ -32,7 +32,7 @@ import {
   PlugCategoryHashes,
   StatHashes,
 } from 'data/d2/generated-enums';
-import { objectifyArray } from './collections';
+import { filterMap, objectifyArray } from './collections';
 import { getArmor3TuningSocket } from './socket-utils';
 
 // damage is a mess!
@@ -213,8 +213,13 @@ export function plugToKillTracker(killTrackerPlug: DimPlug) {
 }
 
 /** returns an item's kill tracker info */
-export const getItemKillTrackerInfo = (item: DimItem): KillTracker | null | undefined =>
+export const getItemCurrentKillTrackerInfo = (item: DimItem): KillTracker | null | undefined =>
   getSocketKillTrackerInfo(getKillTrackerSocket(item));
+
+export const getItemKillTrackers = (item: DimItem): KillTracker[] =>
+  filterMap(item.sockets?.allSockets.find((s) => isKillTrackerSocket(s))?.plugOptions ?? [], (p) =>
+    plugToKillTracker(p),
+  );
 
 const d1YearSourceHashes = {
   //         tTK       Variks        CoE         FoTL    Kings Fall
