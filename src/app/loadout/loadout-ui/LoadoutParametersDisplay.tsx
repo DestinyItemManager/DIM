@@ -154,20 +154,20 @@ function SetBonuses({ setBonuses }: { setBonuses: SetBonusCounts }) {
     const setDef = defs.EquipableItemSet.get(Number(setHash));
     const setCount = setBonuses[Number(setHash)] ?? 0;
     return (
-      setDef &&
-      !setDef.redacted && (
-        <div className={styles.setBonus}>
-          {setDef.setPerks
-            .filter((perk) => perk && setCount >= perk.requiredSetCount)
-            .map((p) => {
-              const perkDef = defs.SandboxPerk.get(p.sandboxPerkHash);
-              return (
-                <div key={p.sandboxPerkHash} className={styles.perk}>
-                  <SetPerkIcon perkDef={perkDef} />
-                  <span>{perkDef.displayProperties.name}</span>
-                </div>
-              );
-            })}
+      !setDef?.redacted && (
+        <div key={setHash} className={styles.setBonus}>
+          {setDef.setPerks.map((p) => {
+            if (!(p && setCount >= p.requiredSetCount)) {
+              return null;
+            }
+            const perkDef = defs.SandboxPerk.get(p.sandboxPerkHash);
+            return (
+              <div key={p.sandboxPerkHash} className={styles.perk}>
+                <SetPerkIcon perkDef={perkDef} />
+                <span>{perkDef.displayProperties.name}</span>
+              </div>
+            );
+          })}
         </div>
       )
     );

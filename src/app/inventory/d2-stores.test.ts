@@ -96,12 +96,15 @@ describe('process stores', () => {
     throw new Error('Expected at least one item with a perk that cannot roll');
   });
 
-  test.each(['weapon', 'armor', 'ghost'] as const)('generates a correct %s CSV export', (type) => {
-    setupi18n();
-    const getTag = () => undefined;
-    const getNotes = () => undefined;
-    const loadoutsByItem = {};
-    const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem, []);
-    expect(csvExport).toMatchSnapshot();
-  });
+  test.each(['weapon', 'armor', 'ghost'] as const)(
+    'generates a correct %s CSV export',
+    async (type) => {
+      await setupi18n();
+      const getTag = () => undefined;
+      const getNotes = () => undefined;
+      const loadoutsByItem = {};
+      const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem, []);
+      expect(csvExport).toMatchSnapshot();
+    },
+  );
 });

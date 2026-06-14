@@ -2,8 +2,6 @@ import i18next from 'i18next';
 import { setupi18n } from 'testing/test-utils';
 import { getCopyWithCount } from 'testing/utils/i18next';
 
-setupi18n();
-
 const locales = [
   'en',
   'de',
@@ -57,15 +55,18 @@ const keysWithCounts = [
   'WishListRoll.WorstRatedTip',
 ];
 
+beforeAll(async () => {
+  await setupi18n();
+});
+
 describe.each(locales)('locale %s', (locale) => {
   describe.each(keysWithCounts)('i18n key %s', (i18nKey) => {
     describe.each([0, 1, 4, 51])('with count %s', (count) => {
       const t = i18next.getFixedT(locale, 'translation');
 
-      test.each`
-        copy                                            | expected
-        ${t(i18nKey, { count, defaultValue: i18nKey })} | ${getCopyWithCount(i18nKey, locale, count)}
-      `('returns: $copy', ({ copy, expected }) => {
+      test('returns expected copy', () => {
+        const copy = t(i18nKey, { count, defaultValue: i18nKey });
+        const expected = getCopyWithCount(i18nKey, locale, count);
         expect(copy).toStrictEqual(expected);
       });
     });

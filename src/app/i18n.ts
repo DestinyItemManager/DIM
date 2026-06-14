@@ -16,6 +16,7 @@ import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
 import enSrc from '../../config/i18n.json';
 import { languageSelector } from './dim-api/selectors';
+import { percent } from './shell/formatters';
 import { humanBytes } from './storage/human-bytes';
 import { StoreObserver } from './store/observerMiddleware';
 import { invert } from './utils/collections';
@@ -79,71 +80,49 @@ export function defaultLanguage(): DimLanguage {
   return browserLanguage();
 }
 
-export function initi18n(): Promise<unknown> {
+export async function initi18n(): Promise<void> {
   const lang = defaultLanguage();
-  return new Promise((resolve, reject) => {
-    // See https://github.com/i18next/i18next
-    i18next.use(HttpApi).init<HttpBackendOptions>(
-      {
-        debug: false,
-        lng: lang,
-        fallbackLng: 'en',
-        lowerCaseLng: true,
-        supportedLngs: DIM_LANGS,
-        load: 'currentOnly',
-        interpolation: {
-          escapeValue: false,
-          format(val: string, format) {
-            switch (format) {
-              case 'pct':
-                return `${Math.min(100, Math.floor(100 * parseFloat(val)))}%`;
-              case 'humanBytes':
-                return humanBytes(parseInt(val, 10));
-              case 'number':
-                return parseInt(val, 10).toLocaleString();
-              default:
-                return val;
-            }
-          },
-        },
-        backend: {
-          loadPath([lng]: string[]) {
-            const path = {
-              de,
-              // In development, directly use the source English translations.
-              // In production we use a version that's gone through i18n-scanner
-              // to remove unused keys.
-              en: $DIM_FLAVOR === 'dev' ? enSrc : en,
-              es,
-              'es-mx': esMX,
-              fr,
-              it,
-              ja,
-              ko,
-              pl,
-              'pt-br': ptBR,
-              ru,
-              'zh-chs': zhCHS,
-              'zh-cht': zhCHT,
-            }[lng] as unknown as string;
-            if (!path) {
-              throw new Error(`unsupported language ${lng}`);
-            }
-            return path;
-          },
-        },
-        returnObjects: true,
-      },
-      (error) => {
-        if (error) {
-          // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-          reject(error);
-        } else {
-          resolve(undefined);
+  // See https://github.com/i18next/i18next
+  await i18next.use(HttpApi).init<HttpBackendOptions>({
+    debug: false,
+    lng: lang,
+    fallbackLng: 'en',
+    lowerCaseLng: true,
+    supportedLngs: DIM_LANGS,
+    load: 'currentOnly',
+    interpolation: {
+      escapeValue: false,
+    },
+    backend: {
+      loadPath([lng]: string[]) {
+        const path = {
+          de,
+          // In development, directly use the source English translations.
+          // In production we use a version that's gone through i18n-scanner
+          // to remove unused keys.
+          en: $DIM_FLAVOR === 'dev' ? enSrc : en,
+          es,
+          'es-mx': esMX,
+          fr,
+          it,
+          ja,
+          ko,
+          pl,
+          'pt-br': ptBR,
+          ru,
+          'zh-chs': zhCHS,
+          'zh-cht': zhCHT,
+        }[lng] as unknown as string;
+        if (!path) {
+          throw new Error(`unsupported language ${lng}`);
         }
+        return path;
       },
-    );
+    },
+    returnObjects: true,
   });
+  i18next.services.formatter?.add('pct', percent);
+  i18next.services.formatter?.add('humanBytes', (val) => humanBytes(parseInt(val as string, 10)));
 }
 
 // Reflect the setting changes in stored values and in the DOM

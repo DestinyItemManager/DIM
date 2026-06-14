@@ -429,7 +429,7 @@ export default tseslint.config(
       'sonarjs/no-nested-template-literals': 'off',
       '@eslint-react/no-array-index-key': 'off',
       '@eslint-react/no-unstable-default-props': 'off',
-      '@eslint-react/dom/no-dangerously-set-innerhtml': 'off',
+      '@eslint-react/dom-no-dangerously-set-innerhtml': 'off',
       '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
       '@eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect': 'off',
       '@eslint-react/prefer-read-only-props': 'off',
@@ -438,6 +438,7 @@ export default tseslint.config(
       '@eslint-react/set-state-in-effect': 'off',
       '@eslint-react/use-state': 'off',
       '@eslint-react/component-hook-factories': 'off',
+      '@eslint-react/naming-convention-ref-name': 'off',
       // These are redundant with react-hooks rules
       '@eslint-react/rules-of-hooks': 'off',
       '@eslint-react/exhaustive-deps': 'off',
