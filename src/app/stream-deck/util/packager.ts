@@ -123,18 +123,15 @@ export function inventoryCounters(state?: RootState) {
   return state?.inventory.stores
     .flatMap((it) => it.items)
     .filter((it) => it.bucket.inInventory)
-    .reduce(
-      (acc, it) => {
-        const key = streamDeckClearId(it.index);
-        if (acc[key]) {
-          acc[key] += it.amount;
-        } else {
-          acc[key] = it.amount;
-        }
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
+    .reduce<Record<string, number>>((acc, it) => {
+      const key = streamDeckClearId(it.index);
+      if (acc[key]) {
+        acc[key] += it.amount;
+      } else {
+        acc[key] = it.amount;
+      }
+      return acc;
+    }, {});
 }
 
 export function character(store: DimStore) {

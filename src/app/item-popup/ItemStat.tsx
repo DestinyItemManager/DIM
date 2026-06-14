@@ -156,6 +156,7 @@ export default function ItemStat({
       itemStatInfo?.statFocus?.[1] === stat.statHash,
   };
 
+  const statHash: StatHashes = stat.statHash;
   return (
     <>
       <div
@@ -166,9 +167,7 @@ export default function ItemStat({
         {stat.statHash === itemStatInfo?.tunedStatHash && (
           <AppIcon icon={tunedStatIcon} className={styles.tunableSymbol} />
         )}{' '}
-        {stat.statHash in statLabels
-          ? t(statLabels[stat.statHash as StatHashes]!)
-          : stat.displayProperties.name}
+        {stat.statHash in statLabels ? t(statLabels[statHash]!) : stat.displayProperties.name}
       </div>
 
       <div className={clsx(styles.value, optionalClasses)}>

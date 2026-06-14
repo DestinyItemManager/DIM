@@ -27,11 +27,10 @@ import powerfulSources from 'data/d2/powerful-rewards.json';
 import { ItemFilterDefinition } from '../item-filter-types';
 import D2Sources from './d2-sources';
 
-const D2EventPredicateLookup = Object.fromEntries(
-  Object.entries(D2EventInfo).map(([index, event]) => [
-    event.shortname,
-    Number(index) as D2EventEnum,
-  ]),
+const D2EventPredicateLookup: {
+  [k: string]: D2EventEnum;
+} = Object.fromEntries(
+  Object.entries(D2EventInfo).map(([index, event]) => [event.shortname, Number(index)]),
 );
 // filters relying on curated known values (class names, rarities, elements)
 
@@ -200,6 +199,7 @@ export const itemTypeFilter = {
     }
     return (item) => item.bucket.hash === bucketHash;
   },
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   fromItem: (item) => `is:${bucketToType[item.bucket.hash as BucketHashes]}`,
 } satisfies ItemFilterDefinition;
 
@@ -228,6 +228,7 @@ const d1itemTypeFilter = {
     }
     return (item) => item.bucket.hash === bucketHash;
   },
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   fromItem: (item) => `is:${d1BucketToType[item.bucket.hash as BucketHashes]}`,
 } satisfies ItemFilterDefinition;
 
@@ -344,7 +345,8 @@ const knownValuesFilters: ItemFilterDefinition[] = [
       const breakingIchs = breakerType.flatMap((ty) => artifactBreakerMods[ty] || []);
       return (item) =>
         item.breakerType
-          ? breakerType.includes(item.breakerType?.hash as BreakerTypeHashes)
+          ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+            breakerType.includes(item.breakerType.hash as BreakerTypeHashes)
           : item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich));
     },
   },

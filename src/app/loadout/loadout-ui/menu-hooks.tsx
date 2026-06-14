@@ -120,7 +120,7 @@ export function useLoadoutFilterPills(
   if (analysisSummary) {
     for (const [finding_, affectedLoadouts] of Object.entries(analysisSummary.loadoutsByFindings)) {
       if (affectedLoadouts.size > 0) {
-        const finding = parseInt(finding_, 10) as LoadoutFinding;
+        const finding: LoadoutFinding = parseInt(finding_, 10);
         const display = findingDisplays[finding];
         if (!display.icon) {
           continue;

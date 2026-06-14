@@ -75,57 +75,54 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
         </div>
       </div>
       <div className={styles.set}>
-        {Object.entries(setType.set.armor).map(([type, armorpiece]) => (
-          <div key={type} className={styles.setItem}>
-            <LoadoutBuilderItem shiftClickCallback={excludeItem} item={armorpiece.item} />
-            <ItemTalentGrid item={armorpiece.item} className={styles.talentGrid} perksOnly={true} />
-            <div className={styles.label}>
-              {setType.tiers[activesets].configs[0][armorpiece.item.bucket.hash as ArmorTypes] ===
-              'int'
-                ? t('Stats.Intellect')
-                : setType.tiers[activesets].configs[0][
-                      armorpiece.item.bucket.hash as ArmorTypes
-                    ] === 'dis'
-                  ? t('Stats.Discipline')
-                  : setType.tiers[activesets].configs[0][
-                        armorpiece.item.bucket.hash as ArmorTypes
-                      ] === 'str'
-                    ? t('Stats.Strength')
-                    : t('Stats.NoBonus')}
+        {Object.entries(setType.set.armor).map(([type, armorpiece]) => {
+          const itemType: ArmorTypes = armorpiece.item.bucket.hash;
+          return (
+            <div key={type} className={styles.setItem}>
+              <LoadoutBuilderItem shiftClickCallback={excludeItem} item={armorpiece.item} />
+              <ItemTalentGrid
+                item={armorpiece.item}
+                className={styles.talentGrid}
+                perksOnly={true}
+              />
+              <ConfigLabel stat={setType.tiers[activesets].configs[0][itemType]} />
+              {!collapsed &&
+                setType.tiers[activesets].configs.map(
+                  (config, i) => i > 0 && <ConfigLabel key={i} stat={config[itemType]} />,
+                )}
             </div>
-            {setType.tiers[activesets].configs.map(
-              (config, i) =>
-                i > 0 &&
-                !collapsed && (
-                  <div key={i} className={styles.label}>
-                    {config[armorpiece.item.bucket.hash as ArmorTypes] === 'int'
-                      ? t('Stats.Intellect')
-                      : config[armorpiece.item.bucket.hash as ArmorTypes] === 'dis'
-                        ? t('Stats.Discipline')
-                        : config[armorpiece.item.bucket.hash as ArmorTypes] === 'str'
-                          ? t('Stats.Strength')
-                          : t('Stats.NoBonus')}
-                  </div>
-                ),
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
       {setType.tiers[activesets].configs.length > 1 && (
         <div className={styles.expandConfigs} onClick={toggle}>
-          {!collapsed ? (
-            <>
-              <AppIcon icon={faMinusSquare} title={t('LB.HideConfigs')} />
-              {t('LB.HideAllConfigs')}
-            </>
-          ) : (
+          {collapsed ? (
             <>
               <AppIcon icon={faPlusSquare} title={t('LB.ShowConfigs')} />
               {t('LB.ShowAllConfigs')}
             </>
+          ) : (
+            <>
+              <AppIcon icon={faMinusSquare} title={t('LB.HideConfigs')} />
+              {t('LB.HideAllConfigs')}
+            </>
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function ConfigLabel({ stat }: { stat: string | null }) {
+  return (
+    <div className={styles.label}>
+      {stat === 'int'
+        ? t('Stats.Intellect')
+        : stat === 'dis'
+          ? t('Stats.Discipline')
+          : stat === 'str'
+            ? t('Stats.Strength')
+            : t('Stats.NoBonus')}
     </div>
   );
 }

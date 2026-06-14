@@ -333,7 +333,8 @@ describe('loadout-builder item-filter', () => {
     });
 
     pinInvariants(filteredItems, filterInfo);
-    expect(filteredItems[exotic.bucket.hash as ArmorBucketHash].length).toBe(0);
+    const bucketHash: ArmorBucketHash = exotic.bucket.hash;
+    expect(filteredItems[bucketHash].length).toBe(0);
   });
 
   it('does not filter exotic class items when no perks are specified', () => {
@@ -408,6 +409,7 @@ describe('loadout-builder item-filter', () => {
     });
 
     const matching = items.filter((i) => i.hash === targetExotic.hash);
-    expect(filteredItems[targetExotic.bucket.hash as ArmorBucketHash].length).toBe(matching.length);
+    const bucketHash: ArmorBucketHash = targetExotic.bucket.hash;
+    expect(filteredItems[bucketHash].length).toBe(matching.length);
   });
 });

@@ -10,11 +10,8 @@ function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[
   ];
 
   for (const constraint of desiredStatRanges) {
-    comparators.push(
-      compareBy(
-        (s) => -Math.min(s.stats[constraint.statHash as ArmorStatHashes], constraint.maxStat),
-      ),
-    );
+    const statHash: ArmorStatHashes = constraint.statHash;
+    comparators.push(compareBy((s) => -Math.min(s.stats[statHash], constraint.maxStat)));
   }
 
   comparators.push(
@@ -38,7 +35,8 @@ export function sortGeneratedSets(
 }
 
 export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
-  return sumBy(desiredStatRanges, (constraint) =>
-    Math.min(stats[constraint.statHash as ArmorStatHashes], constraint.maxStat),
-  );
+  return sumBy(desiredStatRanges, (constraint) => {
+    const statHash: ArmorStatHashes = constraint.statHash;
+    return Math.min(stats[statHash], constraint.maxStat);
+  });
 }

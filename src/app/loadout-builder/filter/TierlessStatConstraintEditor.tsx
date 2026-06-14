@@ -122,7 +122,7 @@ export default function TierlessStatConstraintEditor({
         as="div"
       >
         {(draggingOrder ?? resolvedStatConstraints).map((c, index) => {
-          const statHash = c.statHash as ArmorStatHashes;
+          const statHash: ArmorStatHashes = c.statHash;
           return (
             <StatRow
               key={statHash}
@@ -162,7 +162,7 @@ function StatRow({
   processing: boolean;
 }) {
   const defs = useD2Definitions()!;
-  const statHash = statConstraint.statHash as ArmorStatHashes;
+  const statHash: ArmorStatHashes = statConstraint.statHash;
   const statDef = defs.Stat.get(statHash);
   const handleIgnore = () => onStatChange({ ...statConstraint, ignored: !statConstraint.ignored });
   // We use our own controls to avoid having the entire element be draggable.

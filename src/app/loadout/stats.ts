@@ -160,15 +160,16 @@ export function getTotalModStatChanges(
           })
         ) {
           const value = stat.value;
-          totals[stat.statTypeHash as ArmorStatHashes].value += value;
-          const breakdown = totals[stat.statTypeHash as ArmorStatHashes].breakdown!;
+          const statTypeHash: ArmorStatHashes = stat.statTypeHash;
+          totals[statTypeHash].value += value;
+          const breakdown = totals[statTypeHash].breakdown!;
           const lastEntry = breakdown[breakdown.length - 1];
           if (lastEntry?.hash === mod.hash) {
             // merge stacks of the same mod
             lastEntry.count!++;
             lastEntry.value += value;
           } else {
-            totals[stat.statTypeHash as ArmorStatHashes].breakdown!.push({
+            totals[statTypeHash].breakdown!.push({
               name: mod.displayProperties.name,
               icon: bungieNetPath(mod.displayProperties.icon),
               hash: mod.hash,

@@ -261,7 +261,8 @@ function doApplyLoadout(
       const applicableLoadoutItems = resolvedItems
         .sort(
           compareBy(({ item }) => {
-            const sortIndex = bucketHashToIndex[item.bucket.hash as BucketHashes];
+            const bucketHash: BucketHashes = item.bucket.hash;
+            const sortIndex = bucketHashToIndex[bucketHash];
             return sortIndex === undefined ? Number.MAX_SAFE_INTEGER : sortIndex;
           }),
         )

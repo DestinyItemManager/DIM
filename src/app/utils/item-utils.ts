@@ -97,8 +97,9 @@ export const getSpecialtySocketMetadata = (item?: DimItem): ModSocketMetadata | 
 /**
  * returns mod type tag if the plugCategoryHash (from a mod definition's .plug) is known
  */
-export const getModTypeTagByPlugCategoryHash = (plugCategoryHash: number): string | undefined =>
-  modTypeTagByPlugCategoryHash[plugCategoryHash as PlugCategoryHashes];
+export const getModTypeTagByPlugCategoryHash = (
+  plugCategoryHash: PlugCategoryHashes,
+): string | undefined => modTypeTagByPlugCategoryHash[plugCategoryHash];
 
 /** feed a **mod** definition into this */
 export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>

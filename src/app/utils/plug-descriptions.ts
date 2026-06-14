@@ -73,11 +73,10 @@ export function usePlugDescriptions(
   if (stats) {
     // preload the used string tracker with common text representations of stat modifications
     for (const stat of stats) {
-      const statDef = defs.Stat.get(stat.statHash);
+      const statHash: StatHashes = stat.statHash;
+      const statDef = defs.Stat.get(statHash);
       if (statDef) {
-        const statNames = [statDef.displayProperties.name].concat(
-          statNameAliases[stat.statHash as StatHashes] ?? [],
-        );
+        const statNames = [statDef.displayProperties.name].concat(statNameAliases[statHash] ?? []);
         for (const statName of statNames) {
           if (stat.value < 0) {
             statStrings.add(`${stat.value} ${statName}`);

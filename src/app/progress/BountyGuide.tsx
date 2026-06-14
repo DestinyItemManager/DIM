@@ -270,15 +270,17 @@ function PillContent({
           {defs.ItemCategory.get(value)?.displayProperties.name}
         </>
       );
-    case 'KillType':
+    case 'KillType': {
+      const killType: KillType = value;
       return (
         <>
-          {isIn(value, killTypeIcons) && (
-            <img className={styles.invert} height="16" src={killTypeIcons[value]} />
+          {isIn(killType, killTypeIcons) && (
+            <img className={styles.invert} height="16" src={killTypeIcons[killType]} />
           )}
-          {t(killTypeDescriptions[value as KillType])}
+          {t(killTypeDescriptions[killType])}
         </>
       );
+    }
     case 'Reward':
       return contentFromDisplayProperties(defs.InventoryItem.get(value));
     case 'QuestTrait':

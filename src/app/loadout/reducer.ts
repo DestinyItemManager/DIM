@@ -27,7 +27,7 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
       let previousLoadouts = state.previousLoadouts[storeId] || [];
       const lastPreviousLoadout = previousLoadouts.at(-1);
       previousLoadouts =
-        lastPreviousLoadout && loadoutId === lastPreviousLoadout.id
+        loadoutId === lastPreviousLoadout?.id
           ? // Pop the previous loadout since we're reapplying it
             previousLoadouts.filter((l) => l.id !== loadoutId)
           : // Push the previous loadout

@@ -262,7 +262,7 @@ export async function downloadManifestComponents(
   // Load the manifest tables we want table-by-table, in parallel. This is
   // faster and downloads less data than the single huge file.
   const futures = tableAllowList
-    .map((t) => `Destiny${t}Definition` as DestinyManifestComponentName)
+    .map((t): DestinyManifestComponentName => `Destiny${t}Definition`)
     .map(async (table) => {
       let response: Response;
       let error: Error | undefined;
