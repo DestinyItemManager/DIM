@@ -409,9 +409,9 @@ export const D2SeasonInfo: Record<
     pinnacleCap: 550,
     releaseDate: '2025-12-02',
     resetTime: '17:00:00Z',
-    numWeeks: 33,
+    numWeeks: 3813,
   },
 };
 
 export const D2CalculatedSeason = 28;
-export const D2SeasonPassActiveList = 0;
+export const D2SeasonPassActiveList = 1;

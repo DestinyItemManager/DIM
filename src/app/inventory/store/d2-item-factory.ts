@@ -6,6 +6,7 @@ import {
   ItemRarityMap,
   SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
+  breakerTypeByPerkHash,
   d2MissingIcon,
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
@@ -360,7 +361,7 @@ export function makeItem(
   if (
     itemInstanceData.primaryStat &&
     normalBucket.hash !== BucketHashes.Subclass &&
-    normalBucket.hash !== BucketHashes.SeasonalArtifact &&
+    normalBucket.hash !== BucketHashes.Artifacts &&
     !itemDef.stats?.disablePrimaryStatDisplay
   ) {
     primaryStat = itemInstanceData.primaryStat;
@@ -706,6 +707,14 @@ export function makeItem(
     )?.plugged?.plugDef.breakerTypeHash;
     if (breakerTypeHash) {
       createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
+    } else {
+      const intrinsicBreakerHash = createdItem.sockets.allSockets
+        .flatMap((s) => s.plugged?.plugDef.perks ?? [])
+        .map((p) => breakerTypeByPerkHash[p.perkHash])
+        .find((hash) => hash);
+      if (intrinsicBreakerHash) {
+        createdItem.breakerType = defs.BreakerType.get(intrinsicBreakerHash);
+      }
     }
   }
 

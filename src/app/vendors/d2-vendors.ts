@@ -17,6 +17,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import specialVendorStrings from 'data/d2/special-vendors-strings.json';
+import vendorIconOverrides from 'data/d2/vendor-image-overrides.json';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -80,7 +81,7 @@ export function toVendor(
   vendorsResponse: DestinyVendorsResponse | undefined,
 ): D2Vendor | undefined {
   const { defs } = context;
-  const vendorDef = defs.Vendor.get(vendorHash);
+  let vendorDef = defs.Vendor.get(vendorHash);
 
   if (!vendorDef) {
     return undefined;
@@ -122,6 +123,18 @@ export function toVendor(
     ),
   );
   currencies.sort(compareBy((i) => i.inventory?.tierType));
+
+  const iconOverride = (vendorIconOverrides as Record<string, string>)[vendorDef.hash];
+
+  if (iconOverride) {
+    vendorDef = {
+      ...vendorDef,
+      displayProperties: {
+        ...vendorDef.displayProperties,
+        smallTransparentIcon: iconOverride,
+      },
+    };
+  }
 
   return {
     component: vendor,

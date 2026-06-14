@@ -98,8 +98,6 @@ export default function SeasonalRank({
     return null;
   }
 
-  const rewardPassEnd = seasonPassStartEnd?.seasonPassEndDate;
-
   return !prestigeMode ? (
     <div
       className={clsx('milestone-quest', {
@@ -149,15 +147,7 @@ export default function SeasonalRank({
         <span className="milestone-name">
           {t('Milestone.SeasonalRank', { rank: seasonPassLevel })}
         </span>
-        <div className="milestone-description">
-          {seasonNameDisplay}
-          {rewardPassEnd && (
-            <div className={styles.seasonEnd}>
-              {t('Progress.RewardPassEndsIn')}
-              <Countdown endTime={new Date(rewardPassEnd)} compact={true} />
-            </div>
-          )}
-        </div>
+        <div className="milestone-description">{seasonNameDisplay}</div>
       </div>
     </div>
   ) : (

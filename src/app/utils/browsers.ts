@@ -36,6 +36,11 @@ const android = navigator.userAgent.includes('Android');
 export function isAndroid() {
   return android;
 }
+
+/** Is this a mobile browser (iOS or Android), where memory is tightly constrained? */
+export function isMobileBrowser() {
+  return iOS || android;
+}
 export const isNativeDragAndDropSupported = () => {
   // Chrome on Android should support native DnD, but React-DnD may not be able
   // to work around some quirk of it.

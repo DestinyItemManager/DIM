@@ -2,13 +2,13 @@
 // steps. Sadly these can't use a wildcard because TypeScript will not match
 // wildcards across `-` characters.
 
-declare module 'testing/data/profile-2025-12-02.json' {
+declare module 'testing/data/profile-2026-06-09.json' {
   import { DestinyProfileResponse, ServerResponse } from 'bungie-api-ts/destiny2';
   const value: ServerResponse<DestinyProfileResponse>;
   export default value;
 }
 
-declare module 'testing/data/vendors-2025-12-02.json' {
+declare module 'testing/data/vendors-2026-06-09.json' {
   import { DestinyVendorsResponse, ServerResponse } from 'bungie-api-ts/destiny2';
   const value: ServerResponse<DestinyVendorsResponse>;
   export default value;

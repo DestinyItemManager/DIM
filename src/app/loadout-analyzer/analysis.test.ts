@@ -255,6 +255,7 @@ describe('basic loadout analysis finding tests', () => {
             i.bucket.hash === hash &&
             i.energy &&
             i.energy.energyCapacity >= 2 &&
+            i.energy.energyCapacity < 10 &&
             i.rarity === 'Legendary' &&
             !i.masterwork &&
             i.stats?.every((stat) => stat.statHash !== StatHashes.Class || stat.base <= 20),

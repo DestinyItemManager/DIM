@@ -224,6 +224,6 @@ export function checkIfIsDupe(
   return (
     duplicates[dupeId]?.length > 1 &&
     item.hash !== DEFAULT_SHADER &&
-    item.bucket.hash !== BucketHashes.SeasonalArtifact
+    item.bucket.hash !== BucketHashes.Artifacts
   );
 }

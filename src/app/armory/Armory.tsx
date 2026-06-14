@@ -19,7 +19,6 @@ import {
 } from 'app/inventory/store/override-sockets';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { AmmoIcon } from 'app/item-popup/AmmoIcon';
-import BreakerType from 'app/item-popup/BreakerType';
 import EmblemPreview from 'app/item-popup/EmblemPreview';
 import ItemSockets from 'app/item-popup/ItemSockets';
 import ItemStats from 'app/item-popup/ItemStats';
@@ -125,7 +124,6 @@ export default function Armory({
         <div className={styles.headerContent}>
           <div className={styles.subtitle}>
             <ElementIcon element={item.element} className={styles.element} />
-            <BreakerType item={item} />
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <div>{itemTypeName(item)}</div>
             {item.pursuit?.questLine && (

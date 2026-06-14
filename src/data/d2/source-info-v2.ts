@@ -49,8 +49,10 @@ const D2Sources: {
   },
   battlegrounds: {
     itemHashes: [
+      1291040554, // Brass Attacks
       2121785039, // Brass Attacks
       3075224551, // Threaded Needle
+      3109297883, // Brass Attacks
     ],
     sourceHashes: [
       3391325445, // Source: Battlegrounds
@@ -314,6 +316,7 @@ const D2Sources: {
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Glory Rank of "Fabled" in Crucible
       2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
+      2602565384, // Source: Win competitive matches while at Ascendant 0 Rank.
       2622122683, // Source: Lord Shaxx Rank Up Reputation
       2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
@@ -326,6 +329,7 @@ const D2Sources: {
       3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
       3466789677, // Source: Place Ascendant III Division or Higher in Ranked Crucible Playlists
       3656787928, // Source: Crucible Salvager's Salvo Armament
+      4094465789, // Source: Win 77 Matches in the competitive playlist.
     ],
     aliases: ['shaxx'],
   },
@@ -372,6 +376,7 @@ const D2Sources: {
       3352019292, // Secret Victories
     ],
     sourceHashes: [
+      2180169027, // The Dreaming City
       2559145507, // Source: Complete activities in the Dreaming City.
       3874934421, // Source: Complete Nightfall strike "The Corrupted."
     ],
@@ -394,9 +399,11 @@ const D2Sources: {
       2607970476, // Source: Sundered Doctrine
       3247513834, // Source: Equilibrium
       3288974535, // Source: "Ghosts of the Deep" Dungeon
+      4051531374, // Complete the "Shattered Throne" dungeon.
     ],
     itemHashes: [
       14929251, // Long Arm
+      93061497, // VS Gravitic Arrest
       185321778, // The Eternal Return
       189194532, // No Survivors (Adept)
       233402416, // New Pacific Epitaph (Adept)
@@ -404,12 +411,18 @@ const D2Sources: {
       492673102, // New Pacific Epitaph
       749483159, // Prosecutor (Adept)
       814876684, // Wish-Ender
+      839344841, // Vengeful Whisper
+      839786290, // Cold Comfort
       1050582210, // Greasy Luck (Adept)
       1066598837, // Relentless (Adept)
+      1125217994, // New Pacific Epitaph
       1157220231, // No Survivors (Adept)
       1303313141, // Unsworn
       1460079227, // Liminal Vigil
       1685406703, // Greasy Luck
+      1757202961, // Greasy Luck
+      1762785662, // VS Chill Inhibitor
+      1762785663, // VS Velocity Baton
       1773934241, // Judgment
       1817605554, // Cold Comfort (Adept)
       1904170910, // A Sudden Death
@@ -417,21 +430,29 @@ const D2Sources: {
       2059741649, // New Pacific Epitaph
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
+      2226158470, // Unworthy
       2477408004, // Wilderflight (Adept)
+      2485881870, // Unloved
       2730671571, // Terminus Horizon
       2760833884, // Cold Comfort
       2764074355, // A Sudden Death (Adept)
+      2806569825, // Naeem's Lance
       2844014413, // Pallas Galliot
       2934305134, // Greasy Luck
       2982006965, // Wilderflight
       3185151619, // New Pacific Epitaph (Adept)
       3210739171, // Greasy Luck (Adept)
+      3262192268, // No Survivors
       3329218848, // Judgment (Adept)
+      3360937899, // Unvoiced
+      3381450498, // Indebted Kindness
       3421639790, // Liminal Vigil (Adept)
+      3668817296, // Dragoncult Sickle
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)
       4193602194, // No Survivors
       4228149269, // No Survivors
+      4232480042, // VS Pyroelectric Propellant
       4267192886, // Terminus Horizon (Adept)
     ],
   },
@@ -451,6 +472,7 @@ const D2Sources: {
   },
   edz: {
     sourceHashes: [
+      653764762, // European Dead Zone
       783399508, // Source: Adventure "Supply and Demand" in the European Dead Zone
       790433146, // Source: Adventure "Dark Alliance" in the European Dead Zone
       1373723300, // Source: Complete activities and earn rank-up packages in the EDZ.
@@ -489,6 +511,7 @@ const D2Sources: {
       2171520631, // Source: "Lost Lament" Exotic Quest
       3125456997, // Source: Europan Tour
       3965815470, // Source: Higher Difficulty Empire Hunts
+      4137963719, // Europa
     ],
   },
   events: {
@@ -500,6 +523,8 @@ const D2Sources: {
       2477980485, // Mechabre
       2603335652, // Jurassic Green
       2869466318, // BrayTech Werewolf
+      2873681799, // Zephyr
+      3003492238, // Zephyr
       3400256755, // Zephyr
       3558681245, // BrayTech Werewolf
       3559361670, // The Title
@@ -629,6 +654,7 @@ const D2Sources: {
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
       3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
       3422985544, // Source: Associated Gambit Quest
+      3468619545, // Gambit
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
       3522070610, // Source: Gambit
       3942778906, // Source: Drifter Rank Up Reputation
@@ -663,9 +689,12 @@ const D2Sources: {
       233402416, // New Pacific Epitaph (Adept)
       291447487, // Cold Comfort
       492673102, // New Pacific Epitaph
+      839786290, // Cold Comfort
       1050582210, // Greasy Luck (Adept)
+      1125217994, // New Pacific Epitaph
       1157220231, // No Survivors (Adept)
       1685406703, // Greasy Luck
+      1757202961, // Greasy Luck
       1817605554, // Cold Comfort (Adept)
       2059741649, // New Pacific Epitaph
       2126543269, // Cold Comfort (Adept)
@@ -673,6 +702,7 @@ const D2Sources: {
       2934305134, // Greasy Luck
       3185151619, // New Pacific Epitaph (Adept)
       3210739171, // Greasy Luck (Adept)
+      3262192268, // No Survivors
       4193602194, // No Survivors
       4228149269, // No Survivors
     ],
@@ -701,10 +731,6 @@ const D2Sources: {
     ],
   },
   haunted: {
-    itemHashes: [
-      1478986057, // Without Remorse
-      2778013407, // Firefright
-    ],
     sourceHashes: [
       620369433, // Source: Season of the Haunted Triumph
       976328308, // Source: The Derelict Leviathan
@@ -805,15 +831,7 @@ const D2Sources: {
   },
   lastwish: {
     itemHashes: [
-      70083888, // Nation of Beasts
-      424291879, // Age-Old Bond
-      501329015, // Chattering Bone
-      1851777734, // Apex Predator
-      2884596447, // The Supremacy
-      3388655311, // Tyranny of Heaven
-      3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
-      3885259140, // Transfiguration
     ],
     sourceHashes: [
       2455011338, // Source: Last Wish raid.
@@ -895,15 +913,13 @@ const D2Sources: {
     sourceHashes: [
       1253026984, // Source: Among the lost Ghosts of the Moon.
       1999000205, // Source: Exploring the Moon
+      3062439457, // The Moon
       3589340943, // Source: Altars of Sorrow
     ],
   },
   neomuna: {
     itemHashes: [
       1123421440, // Epochal Integration
-      1311684613, // Dimensional Hypotrochoid
-      3635821806, // Phyllotactic Spiral
-      3920310144, // Volta Bracket
     ],
     sourceHashes: [
       281362298, // Source: Strider Exotic Quest
@@ -920,6 +936,7 @@ const D2Sources: {
   nessus: {
     sourceHashes: [
       164571094, // Source: World Quest "Exodus Black" on Nessus.
+      779585227, // Nessus, Unstable Centaur
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
       1186140085, // Source: Adventure "Unbreakable" on Nessus
       1289998337, // Source: Adventure "Hack the Planet" on Nessus
@@ -1047,17 +1064,23 @@ const D2Sources: {
   },
   'pinnacle-weapon': {
     itemHashes: [
+      61391690, // Hush
       444627789, // Oxygen SR3
       578459533, // Wendigo GL3
+      631405394, // The Recluse
       654608616, // Revoker
       1050806815, // The Recluse
       1584643826, // Hush
       1600633250, // 21% Delirium
+      3001598094, // 21% Delirium
       3098328572, // The Recluse
+      3257283337, // The Recluse
       3354242550, // The Recluse
+      3638723317, // Hush
       3907337522, // Oxygen SR3
       3962575203, // Hush
       4104613038, // Oxygen SR3
+      4139847991, // 21% Delirium
     ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
@@ -1078,10 +1101,6 @@ const D2Sources: {
     ],
   },
   plunder: {
-    itemHashes: [
-      820890091, // Planck's Stride
-      1298815317, // Brigand's Law
-    ],
     sourceHashes: [
       790152021, // Source: Season of Plunder Triumph
       2982642634, // Source: Season of Plunder Grandmaster Nightfall
@@ -1113,10 +1132,6 @@ const D2Sources: {
     ],
   },
   psiops: {
-    itemHashes: [
-      2097055732, // Piece of Mind
-      4067556514, // Thoughtless
-    ],
     sourceHashes: [
       450719423, // Source: Season of the Risen
       2075569025, // PsiOps
@@ -1167,21 +1182,13 @@ const D2Sources: {
       4246883461, // Source: Found in the "Scourge of the Past" raid.
     ],
     itemHashes: [
-      70083888, // Nation of Beasts
-      424291879, // Age-Old Bond
-      501329015, // Chattering Bone
       947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
-      1851777734, // Apex Predator
       2027598066, // Imperial Opulence
       2027598067, // Imperial Dress
       2557722678, // Midnight Smith
-      2884596447, // The Supremacy
-      3388655311, // Tyranny of Heaven
       3580904580, // Legend of Acrius
-      3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
-      3885259140, // Transfiguration
       4103414242, // Divinity
     ],
   },
@@ -1253,18 +1260,33 @@ const D2Sources: {
   },
   'ritual-weapon': {
     itemHashes: [
+      218787950, // Felwinter's Lie
       805677041, // Buzzard
       838556752, // Python
       847329160, // Edgewise
+      891765152, // Adored
       1179141605, // Felwinter's Lie
+      1208809704, // Ecliptic Distaff
+      1405095983, // Adored
+      1458073737, // Python
       1644680957, // Null Composure
+      1692109318, // Salvager's Salvo
+      1942143745, // Ecliptic Distaff
       2060863616, // Salvager's Salvo
+      2150643740, // Null Composure
+      2454230106, // Adored
+      2461640837, // Salvager's Salvo
       2697058914, // Komodo-4FR
+      2963863503, // Salvager's Salvo
       3001205424, // Ecliptic Distaff
       3434944005, // Point of the Stag
       3535742959, // Randy's Throwing Knife
+      3613444087, // Null Composure
+      3719002817, // Felwinter's Lie
+      4162333225, // Null Composure
       4184808992, // Adored
       4227181568, // Exit Strategy
+      4276696962, // Python
     ],
     sourceHashes: [
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
@@ -1272,10 +1294,6 @@ const D2Sources: {
     ],
   },
   rivenslair: {
-    itemHashes: [
-      2563668388, // Scalar Potential
-      4153087276, // Appetence
-    ],
     sourceHashes: [
       561126969, // Source: "Starcrossed" Mission
       1664308183, // Source: Season of the Wish Activities
@@ -1365,13 +1383,6 @@ const D2Sources: {
     enteredDCV: 20,
   },
   sonar: {
-    itemHashes: [
-      1081724548, // Rapacious Appetite
-      1769847435, // A Distant Pull
-      3016891299, // Different Times
-      3890055324, // Targeted Redaction
-      4066778670, // Thin Precipice
-    ],
     sourceHashes: [
       813075729, // Source: Season of the Deep Vendor Reputation Reward
       927967626, // Source: Season of the Deep
@@ -1458,12 +1469,16 @@ const D2Sources: {
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
       3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
+      3405421310, // Commander Zavala
     ],
     aliases: ['zavala'],
   },
   sundereddoctrine: {
     itemHashes: [
       1303313141, // Unsworn
+      2226158470, // Unworthy
+      2485881870, // Unloved
+      3360937899, // Unvoiced
     ],
     sourceHashes: [
       2607970476, // Source: Sundered Doctrine
@@ -1493,9 +1508,6 @@ const D2Sources: {
     enteredDCV: 20,
   },
   throneworld: {
-    itemHashes: [
-      2721157927, // Tarnation
-    ],
     sourceHashes: [
       1141831282, // Source: "Of Queens and Worms" Exotic Quest
       1823766625, // Source: "Vox Obscura" Exotic Quest
@@ -1544,6 +1556,12 @@ const D2Sources: {
     aliases: ['vog'],
   },
   vespershost: {
+    itemHashes: [
+      93061497, // VS Gravitic Arrest
+      1762785662, // VS Chill Inhibitor
+      1762785663, // VS Velocity Baton
+      4232480042, // VS Pyroelectric Propellant
+    ],
     sourceHashes: [
       2463956052, // Source: Vesper's Host
     ],
@@ -1624,6 +1642,12 @@ const D2Sources: {
     aliases: ['vow', 'votd'],
   },
   warlordsruin: {
+    itemHashes: [
+      839344841, // Vengeful Whisper
+      2806569825, // Naeem's Lance
+      3381450498, // Indebted Kindness
+      3668817296, // Dragoncult Sickle
+    ],
     sourceHashes: [
       613435025, // Source: "Warlord's Ruin" Dungeon
     ],

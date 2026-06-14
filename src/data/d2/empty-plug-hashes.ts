@@ -102,6 +102,7 @@ export const emptyPlugHashes = new Set<number>([
   350414343, // Empty Mod Socket (Armor Mod, v404.armor.fotl.masks.abyss.perks)
   2287797791, // Empty Mod Socket (Power Core, v950.new.sword0.perk_upgrades)
   3224071925, // Empty Mod Socket (Blade Focus, v950.new.sword0.stat_upgrades)
+  2542427991, // Empty Origins Socket (crafting.recipes.empty_socket)
   51925409, // Empty Scopes Socket (crafting.recipes.empty_socket)
   1134447515, // Empty Stocks Socket (crafting.recipes.empty_socket)
   469511105, // Empty Traits Socket (crafting.recipes.empty_socket)
