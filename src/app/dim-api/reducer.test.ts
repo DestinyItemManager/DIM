@@ -68,15 +68,15 @@ describe('dim api reducer', () => {
   }[] = [
     {
       name: 'setSetting: changes settings',
-      actions: [setSettingAction('showNewItems', true)],
+      actions: [setSettingAction('autoLockTagged', true)],
       checkState: (state) => {
-        expect(state.settings.showNewItems).toBe(true);
+        expect(state.settings.autoLockTagged).toBe(true);
       },
       expectedQueue: [
         {
           action: 'setting',
           payload: {
-            showNewItems: true,
+            autoLockTagged: true,
           },
         },
       ],
@@ -534,23 +534,23 @@ describe('prepareToFlushUpdates', () => {
     {
       name: 'can coalesce settings',
       actions: [
-        // Turn new items on
-        setSettingAction('showNewItems', true),
+        // Turn autolock items on
+        setSettingAction('autoLockTagged', true),
         // Modify another setting
         setSettingAction('itemSize', 35),
-        // Turn new items back off
-        setSettingAction('showNewItems', false),
+        // Turn autolock items back off
+        setSettingAction('autoLockTagged', false),
       ],
       expectedActions: [
-        // The showNewItems setting should cancel out
+        // The autoLockTagged setting should cancel out
         setSettingAction('itemSize', 35),
       ],
     },
     {
       name: 'can handle multiple profile updates',
       actions: [
-        // Turn new items on
-        setSettingAction('showNewItems', true),
+        // Turn autolock items on
+        setSettingAction('autoLockTagged', true),
         // Save a tag for D2
         setItemTag({ itemId: '1234', tag: 'favorite' }),
         // Save a tag for D1, same profile
@@ -560,8 +560,8 @@ describe('prepareToFlushUpdates', () => {
       ],
       expectedInProgressWatermark: 3, // Because the D1 tag is outside the queue
       expectedActions: [
-        // Turn new items on
-        setSettingAction('showNewItems', true),
+        // Turn autolock items on
+        setSettingAction('autoLockTagged', true),
         // Save a tag for D2
         setItemTag({ itemId: '1234', tag: 'favorite' }),
         // Save a tag for D2, same profile
@@ -577,14 +577,14 @@ describe('prepareToFlushUpdates', () => {
         setItemTag({ itemId: '1234', tag: 'favorite' }),
         // Save a tag for D2, same profile
         setItemTag({ itemId: '76543', tag: 'junk' }),
-        // Turn new items on
-        setSettingAction('showNewItems', true),
+        // Turn autolock items on
+        setSettingAction('autoLockTagged', true),
       ],
       // Exactly the same
       expectedActions: [
         setItemTag({ itemId: '1234', tag: 'favorite' }),
         setItemTag({ itemId: '76543', tag: 'junk' }),
-        setSettingAction('showNewItems', true),
+        setSettingAction('autoLockTagged', true),
       ],
     },
     {
@@ -693,7 +693,7 @@ describe('prepareToFlushUpdates', () => {
 
 describe('finishedUpdates', () => {
   it('can mark success', () => {
-    let state = dimApi(initialState, setSettingAction('showNewItems', true));
+    let state = dimApi(initialState, setSettingAction('autoLockTagged', true));
     state = dimApi(state, setItemTag({ itemId: '1234', tag: 'favorite' }), currentAccount);
     state = dimApi(state, prepareToFlushUpdates());
 

@@ -4,9 +4,7 @@ import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import { t } from 'app/i18next-t';
-import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
-import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -458,7 +456,6 @@ export default function SettingsPage() {
               {exampleWeapon && (
                 <InventoryItem
                   item={exampleWeapon}
-                  isNew={settings.showNewItems}
                   tag="keep"
                   wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
@@ -467,30 +464,20 @@ export default function SettingsPage() {
               {exampleWeaponMasterworked && (
                 <InventoryItem
                   item={exampleWeaponMasterworked}
-                  isNew={settings.showNewItems}
                   tag="favorite"
                   wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
               {exampleArmor && (
-                <InventoryItem
-                  item={exampleArmor}
-                  isNew={settings.showNewItems}
-                  autoLockTagged={settings.autoLockTagged}
-                />
+                <InventoryItem item={exampleArmor} autoLockTagged={settings.autoLockTagged} />
               )}
               {exampleOrnament && (
-                <InventoryItem
-                  item={exampleOrnament}
-                  isNew={settings.showNewItems}
-                  autoLockTagged={settings.autoLockTagged}
-                />
+                <InventoryItem item={exampleOrnament} autoLockTagged={settings.autoLockTagged} />
               )}
               {exampleArchivedArmor && (
                 <InventoryItem
                   item={exampleArchivedArmor}
-                  isNew={settings.showNewItems}
                   tag="archive"
                   searchHidden={true}
                   autoLockTagged={settings.autoLockTagged}
@@ -534,25 +521,6 @@ export default function SettingsPage() {
                   : t('Settings.OrnamentDisplayExplanationDisabled')}
               </div>
             </div>
-
-            {$featureFlags.newItems && (
-              <div className={styles.setting}>
-                <Checkbox
-                  label={t('Settings.ShowNewItems')}
-                  name="showNewItems"
-                  value={settings.showNewItems}
-                  onChange={onCheckChange}
-                />
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={() => dispatch(clearAllNewItems())}
-                >
-                  <NewItemIndicator className={styles.newItem} />{' '}
-                  <span>{t('Hotkey.ClearNewItems')}</span>
-                </button>
-              </div>
-            )}
 
             {$featureFlags.clarityDescriptions && (
               <div className={styles.setting}>

@@ -1,9 +1,6 @@
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { currentAccountSelector } from 'app/accounts/selectors';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { infoLog, warnLog } from 'app/utils/log';
 import {
@@ -95,32 +92,6 @@ export const itemLockStateChanged = createAction('inventory/ITEM_LOCK')<{
   state: boolean;
   type: 'lock' | 'track';
 }>();
-
-/** Update the set of new items. */
-export const setNewItems = createAction('new_items/SET')<Set<string>>();
-/** Clear new-ness of an item by its instance ID */
-export const clearNewItem = createAction('new_items/CLEAR_NEW')<string>();
-/** Clear new-ness of all items */
-export const clearAllNewItems = createAction('new_items/CLEAR_ALL')();
-
-/** Load which items are new from IndexedDB */
-export function loadNewItems(account: DestinyAccount): ThunkResult {
-  return async (dispatch, getState) => {
-    if (getState().inventory.newItemsLoaded) {
-      return;
-    }
-
-    const key = `newItems-m${account.membershipId}-d${account.destinyVersion}`;
-    const newItems = await get<Set<string> | undefined>(key);
-    if (newItems) {
-      // If we switched account since starting this, give up
-      if (account !== currentAccountSelector(getState())) {
-        return;
-      }
-      dispatch(setNewItems(newItems));
-    }
-  };
-}
 
 export const setItemTag = createAction('tag_notes/SET_TAG')<{
   /** Item instance ID */

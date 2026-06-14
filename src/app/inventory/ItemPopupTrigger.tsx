@@ -9,7 +9,6 @@ import {
   showItemPopup,
   showItemPopup$,
 } from '../item-popup/item-popup';
-import { clearNewItem } from './actions';
 import { DimItem } from './item-types';
 
 /**
@@ -61,8 +60,6 @@ function itemPopupTriggerClicked(
   noCompare?: boolean,
 ): ThunkResult {
   return async (dispatch, getState) => {
-    dispatch(clearNewItem(item.id));
-
     if (!noCompare && compareOpenSelector(getState())) {
       dispatch(addCompareItem(item));
     } else if (ref.current) {

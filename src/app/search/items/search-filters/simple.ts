@@ -76,14 +76,6 @@ const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | fal
     description: tl('Filter.Locked'),
     filter: () => (item) => item.lockable && !item.locked,
   },
-  $featureFlags.newItems && {
-    keywords: 'new',
-    description: tl('Filter.NewItems'),
-    filter:
-      ({ newItems }) =>
-      (item) =>
-        newItems.has(item.id),
-  },
   {
     keywords: 'sunset',
     destinyVersion: 2,

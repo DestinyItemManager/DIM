@@ -1,5 +1,4 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { DimItem } from 'app/inventory/item-types';
 import {
   isBooleanObjective,
@@ -21,11 +20,9 @@ import * as styles from './PursuitItem.m.scss';
 
 export default function PursuitItem({
   item,
-  isNew,
   ref,
 }: {
   item: DimItem;
-  isNew: boolean;
   ref: React.Ref<HTMLDivElement>;
 }) {
   const defs = useD2Definitions()!;
@@ -73,7 +70,6 @@ export default function PursuitItem({
           full={item.maxStackSize > 1 && item.amount === item.maxStackSize}
         />
       )}
-      {$featureFlags.newItems && isNew && <NewItemIndicator />}
       {expired && <img className={styles.expired} src={pursuitExpired} />}
       {trackedInGame && <img className={styles.trackedIcon} src={trackedIcon} />}
       {trackedInDim && <img className={styles.trackedIcon} src={dimTrackedIcon} />}

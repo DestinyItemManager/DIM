@@ -40,12 +40,6 @@ export interface InventoryState {
   readonly profileError?: Error;
 
   /**
-   * The inventoryItemIds of all items that are "new".
-   */
-  readonly newItems: Set<string>;
-  readonly newItemsLoaded: boolean;
-
-  /**
    * An API profile response. If this is present,
    * we use it instead of talking to the Bungie API.
    */
@@ -57,8 +51,6 @@ export type InventoryAction = ActionType<typeof actions>;
 const initialState: InventoryState = {
   stores: [],
   currencies: [],
-  newItems: new Set(),
-  newItemsLoaded: false,
   live: false,
 };
 
@@ -132,34 +124,6 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         profileError: action.payload,
       };
 
-    // *** New items ***
-
-    case getType(actions.setNewItems):
-      return {
-        ...state,
-        newItems: action.payload,
-        newItemsLoaded: true,
-      };
-
-    case getType(actions.clearNewItem):
-      if (state.newItems.has(action.payload)) {
-        const newItems = new Set(state.newItems);
-        newItems.delete(action.payload);
-
-        return {
-          ...state,
-          newItems,
-        };
-      } else {
-        return state;
-      }
-
-    case getType(actions.clearAllNewItems):
-      return {
-        ...state,
-        newItems: new Set(),
-      };
-
     case getType(setCurrentAccount):
       return initialState;
 
@@ -197,7 +161,6 @@ function updateInventory(
     ...state,
     stores,
     currencies,
-    newItems: computeNewItems(state.stores, state.newItems, stores),
   };
 }
 
@@ -223,89 +186,6 @@ function updateCharacters(state: InventoryState, characters: actions.CharacterIn
       };
     }),
   };
-}
-
-/** Can an item be marked as new? */
-const canBeNew = (item: DimItem) =>
-  item.equipment && item.instanced && item.bucket.hash !== BucketHashes.Subclass;
-
-/**
- * Given an old inventory, a new inventory, and all the items that were previously marked as new,
- * calculate the new set of new items.
- */
-function computeNewItems(oldStores: DimStore[], oldNewItems: Set<string>, newStores: DimStore[]) {
-  if (oldStores === newStores) {
-    return oldNewItems;
-  }
-
-  // Get the IDs of all old items
-  const allOldItems = new Set<string>();
-  for (const store of oldStores) {
-    for (const item of store.items) {
-      if (canBeNew(item)) {
-        allOldItems.add(item.id);
-      }
-    }
-  }
-
-  // If we didn't have any items before, don't suddenly mark everything new
-  if (!allOldItems.size) {
-    return oldNewItems;
-  }
-
-  // Get the IDs of all new items
-  const allNewItems = new Set<string>();
-  for (const store of newStores) {
-    for (const item of store.items) {
-      if (canBeNew(item)) {
-        allNewItems.add(item.id);
-      }
-    }
-  }
-
-  const newItems = new Set<string>();
-
-  // Add all previous new items that are still in the new inventory
-  for (const itemId of oldNewItems) {
-    if (allNewItems.has(itemId)) {
-      newItems.add(itemId);
-    }
-  }
-
-  // Add all new items that aren't in old items
-  for (const itemId of allNewItems) {
-    if (!allOldItems.has(itemId)) {
-      newItems.add(itemId);
-    }
-  }
-
-  return setsEqual(newItems, oldNewItems) ? oldNewItems : newItems;
-}
-
-/**
- * Compute if two sets are equal by seeing that every item of each set is present in the other.
- */
-function setsEqual<T>(first: Set<T>, second: Set<T>) {
-  if (first.size !== second.size) {
-    return false;
-  }
-
-  let equal = true;
-  for (const itemId of first) {
-    if (!second.has(itemId)) {
-      equal = false;
-      break;
-    }
-  }
-  if (equal) {
-    for (const itemId of second) {
-      if (!first.has(itemId)) {
-        equal = false;
-        break;
-      }
-    }
-  }
-  return equal;
 }
 
 /**

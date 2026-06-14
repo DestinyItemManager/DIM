@@ -17,7 +17,7 @@ import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definition
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/sentry';
-import { error, loadNewItems, update } from './actions';
+import { error, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
 import { d1BucketsSelector, storesLoadedSelector } from './selectors';
@@ -45,9 +45,8 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
       try {
         resetItemIndexGenerator();
 
-        const [defs, , { characters, profileInventory, vaultInventory }] = await Promise.all([
+        const [defs, { characters, profileInventory, vaultInventory }] = await Promise.all([
           dispatch(getDefinitions()),
-          dispatch(loadNewItems(account)),
           getStores(account),
         ]);
 

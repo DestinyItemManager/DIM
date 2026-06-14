@@ -1,11 +1,7 @@
 import { ItemHashTag, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import {
-  currentProfileSelector,
-  customStatsSelector,
-  settingsSelector,
-} from 'app/dim-api/selectors';
+import { currentProfileSelector, customStatsSelector } from 'app/dim-api/selectors';
 import { tuningSocketReusablePlugSetHash } from 'app/loadout-builder/types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
@@ -99,12 +95,6 @@ export const equippedItemsSelector = currySelector(
 
 /** The vault */
 export const vaultSelector = (state: RootState) => getVault(storesSelector(state));
-
-/** The inventoryItemIds of all items that are "new". */
-export const newItemsSelector = (state: RootState) => state.inventory.newItems;
-
-export const isNewSelector = (item: DimItem) => (state: RootState) =>
-  settingsSelector(state).showNewItems ? newItemsSelector(state).has(item.id) : false;
 
 const visibleCurrencies = [
   3159615086, // Glimmer
