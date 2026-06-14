@@ -268,7 +268,6 @@
     "Equipped": "Items that are currently equipped on a character.",
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
-    "Featured": "Items that count as one of the \"New Gear\" or \"Featured Items\" in the current season.",
     "Filter": "Filter",
     "FilterWith": "Filter with:",
     "Focusable": "Shows items that can be focused at a vendor",
@@ -727,8 +726,7 @@
     "UnlockItem": "Unpin Item",
     "IncreaseStatPriority": "Increase stat priority",
     "DecreaseStatPriority": "Decrease stat priority",
-    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
-    "LimitToNewFeaturedGear": "Limit to new/featured gear"
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets"
   },
   "Loadouts": {
     "Abilities": "Abilities",
@@ -1110,7 +1108,6 @@
       "Damage": "Damage",
       "Ammo": "Ammo",
       "Foundry": "Foundry",
-      "Featured": "New Gear",
       "Holofoil": "Holofoil",
       "OriginTraits": "Origin Trait",
       "Shaders": "Cosmetics",
