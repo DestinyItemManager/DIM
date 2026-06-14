@@ -5,7 +5,7 @@ import { symbolsSelector } from './destiny-symbols';
 import { conversionTableSelector } from './rich-destiny-text';
 
 test('dim-custom-symbols symbols map', async () => {
-  setupi18n();
+  await setupi18n();
   const defs = await getTestDefinitions();
 
   for (const { codepoint, source } of symbolData) {

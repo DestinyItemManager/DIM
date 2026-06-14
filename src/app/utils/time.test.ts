@@ -7,8 +7,8 @@ import {
   timerDurationFromMsWithDecimal,
 } from './time';
 
-beforeAll(() => {
-  setupi18n();
+beforeAll(async () => {
+  await setupi18n();
 });
 
 test.each([
