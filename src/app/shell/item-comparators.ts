@@ -289,8 +289,6 @@ const ITEM_COMPARATORS: {
   crafted: compareBy((item) => (item.crafted ? 0 : 1)),
   // deepsight -> no deepsight
   deepsight: compareBy((item) => (item.deepsightInfo ? 1 : 2)),
-  // featured -> not featured
-  featured: compareBy((item) => (item.featured ? 0 : 1)),
   // high -> low
   tier: reverseComparator(compareBy((item) => item.tier)),
   // armor 3 archetypes -> artifice -> old specialty modslots -> nada

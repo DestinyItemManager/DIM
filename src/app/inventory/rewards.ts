@@ -43,8 +43,7 @@ export function useRewardMultiplier(
   }
 
   // Treat gearMultiplier as a whole number percentage first for math precision. 10 = 10%
-  // 1% for each featured item
-  let gearMultiplier = equippedGear.filter((i) => i.featured).length;
+  let gearMultiplier = 0;
   // 2% additional bonus for using all featured gear.
   if (gearMultiplier === 8) {
     gearMultiplier = 10;

@@ -111,12 +111,6 @@ const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | fal
       return (item) => ownedHashes.has(item.hash);
     },
   },
-  {
-    keywords: ['featured', 'newgear'],
-    description: tl('Filter.Featured'),
-    destinyVersion: 2,
-    filter: () => (item) => item.featured,
-  },
 ]);
 
 export default simpleFilters;

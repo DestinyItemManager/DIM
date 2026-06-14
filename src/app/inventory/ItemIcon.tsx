@@ -146,8 +146,6 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   ]);
   // These are aligned with the border, not the image
   const seasonAndPips = compact([
-    // Featured flags
-    item.featured ? itemConstants?.featuredItemFlagPath : undefined,
     // Tier pips
     item.tier > 0 &&
       !item.isEngram &&

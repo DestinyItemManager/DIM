@@ -557,7 +557,6 @@ export function makeItem(
     masterworkInfo: null,
     infusionCategoryHashes: null,
     tooltipNotifications,
-    featured: itemDef.isFeaturedItem,
     tier: itemInstanceData.gearTier ?? 0,
     traitHashes: itemDef.traitHashes,
     adept: itemDef.isAdept,

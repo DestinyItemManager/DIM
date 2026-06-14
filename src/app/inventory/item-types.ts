@@ -246,8 +246,6 @@ export interface DimItem {
   foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
-  /** Is this a "featured" weapon/armor that gains some bonus from being new? This was introduced in Edge of Fate. */
-  featured: boolean;
   /**
    * In D2 since Edge of Fate, items can drop at a particular tier, 1-5, which
    * provides increasing benefits. Pre-tiered items and all D1 items will have

@@ -298,7 +298,6 @@ function makeFakePursuitItem(
     uniqueStack: false,
     trackable: false,
     energy: null,
-    featured: false,
     tier: 0,
     adept: false,
     holofoil: false,

@@ -62,7 +62,6 @@ import {
   LoadoutOptimizerPinnedItems,
 } from './filter/LoadoutOptimizerMenuItems';
 import LoadoutOptimizerSetBonus from './filter/LoadoutOptimizerSetBonus';
-import NewFeaturedGearFilter from './filter/NewFeaturedGearFilter';
 import TierlessStatConstraintEditor from './filter/TierlessStatConstraintEditor';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
@@ -379,7 +378,6 @@ export default memo(function LoadoutBuilder({
         className={styles.loadoutEditSection}
         processing={processing}
       />
-      <NewFeaturedGearFilter className={styles.loadoutEditSection} />
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}
         lbDispatch={lbDispatch}
