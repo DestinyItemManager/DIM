@@ -285,7 +285,7 @@ function getStatsBreakdown(
   }>((memo, dimItem) => {
     const itemStats = calculateAssumedMasterworkStats(dimItem, armorEnergyRules);
     for (const [statHash, value] of Object.entries(itemStats)) {
-      const statHashNum = parseInt(statHash, 10) as ArmorStatHashes;
+      const statHashNum: ArmorStatHashes = parseInt(statHash, 10);
       memo[statHashNum] = (memo[statHashNum] || 0) + value;
     }
     return memo;

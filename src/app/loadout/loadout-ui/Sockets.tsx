@@ -93,6 +93,7 @@ function Sockets({
       // but always include specialty mod slots, Vow mods don't have
       // an itemTypeDisplayName https://github.com/Bungie-net/api/issues/1620
       (toSave.itemTypeDisplayName ||
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes]) &&
       // either it's some other kind of mod-slot, give it a pass, or
       (!trustBungieVisibility.has(socket.plugged?.plugDef.plug.plugCategoryHash) ||

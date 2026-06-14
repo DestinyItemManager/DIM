@@ -334,7 +334,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         (item) =>
           itemCanBeInLoadout(item) && item.equipped && d1ArmorTypes.includes(item.bucket.hash),
       ),
-      (i) => i.bucket.hash as ArmorTypes,
+      (i) => i.bucket.hash,
     );
 
     function nullWithoutStats(items: DimItem[] | undefined) {
@@ -443,7 +443,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
                 lockeditem={lockeditem}
                 activePerks={activePerks}
                 lockedPerks={lockedperks}
-                type={parseInt(type, 10) as ArmorTypes}
+                type={parseInt(type, 10)}
                 i18nItemNames={i18nItemNames}
                 onRemove={onRemove}
                 onPerkLocked={onPerkLocked}
@@ -781,7 +781,7 @@ function useActivePerks({
 
       // Build a map of perks
       for (const item of items) {
-        const itemType = item.bucket.hash as ArmorTypes;
+        const itemType: ArmorTypes = item.bucket.hash;
         if (item.classType === DestinyClass.Unknown) {
           for (const classType of allClassTypes) {
             perks[classType][itemType] = filterPerks(perks[classType][itemType], item);
@@ -809,7 +809,7 @@ function useActivePerks({
 
         // Build a map of perks
         for (const item of vendItems) {
-          const itemType = item.bucket.hash as ArmorTypes;
+          const itemType: ArmorTypes = item.bucket.hash;
           if (item.classType === DestinyClass.Unknown) {
             for (const classType of allClassTypes) {
               vendorPerks[classType][itemType] = filterPerks(

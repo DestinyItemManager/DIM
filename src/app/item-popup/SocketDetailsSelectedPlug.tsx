@@ -8,7 +8,6 @@ import {
   DimItem,
   DimPlug,
   DimSocket,
-  DimStat,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import { interpolateStatValue } from 'app/inventory/store/stats';
@@ -74,21 +73,18 @@ const socketCategoryToLocKey = {
 function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSocketEntryDefinition) {
   const socketTypeDef = socket.socketTypeHash && defs.SocketType.get(socket.socketTypeHash);
   if (socketTypeDef) {
-    const socketCategoryHash =
-      socketTypeDef.socketCategoryHash as keyof typeof socketCategoryToLocKey;
+    const socketCategoryHash: keyof typeof socketCategoryToLocKey =
+      socketTypeDef.socketCategoryHash;
     if (socketCategoryToLocKey[socketCategoryHash]) {
       return socketCategoryToLocKey[socketCategoryHash];
     } else {
-      const plug = socketTypeDef.plugWhitelist.find(
-        (p) =>
-          whitelistPlugCategoryToLocKey[
-            p.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
-          ],
-      );
+      const plug = socketTypeDef.plugWhitelist.find((p) => {
+        const plugCategoryHash: keyof typeof whitelistPlugCategoryToLocKey = p.categoryHash;
+        return whitelistPlugCategoryToLocKey[plugCategoryHash];
+      });
       if (plug) {
-        return whitelistPlugCategoryToLocKey[
-          plug.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
-        ];
+        const plugCategoryHash: keyof typeof whitelistPlugCategoryToLocKey = plug.categoryHash;
+        return whitelistPlugCategoryToLocKey[plugCategoryHash];
       }
     }
   }
@@ -169,7 +165,7 @@ export default function SocketDetailsSelectedPlug({
       dimStat: {
         ...itemStat,
         value: itemStatValue,
-      } as DimStat,
+      },
     };
   });
 

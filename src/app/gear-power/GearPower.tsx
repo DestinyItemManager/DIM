@@ -3,6 +3,7 @@ import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import RadioButtons from 'app/dim-ui/RadioButtons';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { locateItem } from 'app/inventory/locate-item';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
@@ -102,13 +103,11 @@ export default function GearPower() {
               const diffSymbol = powerDiff >= 0 ? '+' : '';
               const diffClass =
                 powerDiff > 0 ? styles.positive : powerDiff < 0 ? styles.negative : styles.neutral;
+              const bucketHash: BucketHashes = i.bucket.hash;
               return (
-                <div
-                  key={i.id}
-                  className={clsx(bucketClassNames[i.bucket.hash as BucketHashes], styles.gearItem)}
-                >
-                  <div onClick={() => locateItem(i)}>
-                    <BungieImage src={i.icon} className={styles.itemImage} />
+                <div key={i.id} className={clsx(bucketClassNames[bucketHash], styles.gearItem)}>
+                  <div onClick={() => locateItem(i)} className={clsx('item', styles.itemImage)}>
+                    <ConnectedInventoryItem item={i} />
                   </div>
                   <div className={styles.gearItemInfo}>
                     <div className={styles.power}>{i.power}</div>

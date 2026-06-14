@@ -133,10 +133,8 @@
 }
 
 .itemImage {
-  height: 40px;
-  width: 40px;
+  --item-size: 40px;
   margin: 0 5px;
-  border: 1px solid #ddd;
   cursor: pointer;
   pointer-events: auto;
 }

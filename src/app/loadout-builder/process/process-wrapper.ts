@@ -109,7 +109,7 @@ export function runProcess({
     [BucketHashes.ClassArmor]: [],
   };
   for (const [bucketHashStr, items] of Object.entries(filteredItems)) {
-    const bucketHash = parseInt(bucketHashStr, 10) as ArmorBucketHash;
+    const bucketHash: ArmorBucketHash = parseInt(bucketHashStr, 10);
     processItems[bucketHash] = [];
 
     const mappedItems: MappedItem[] = items.flatMap((dimItem) =>
@@ -278,14 +278,14 @@ function combineProcessInfo(a: ProcessStatistics, b: ProcessStatistics): Process
 
 function sliceInputForConcurrency(
   input: ProcessInputs,
-  longestItemsBucketHash: number,
+  longestItemsBucketHash: ArmorBucketHash,
   concurrency: number,
 ) {
   if (concurrency <= 1) {
     return [input];
   }
 
-  const itemsToSlice = input.filteredItems[longestItemsBucketHash as ArmorBucketHash];
+  const itemsToSlice = input.filteredItems[longestItemsBucketHash];
   if (itemsToSlice.length <= 1) {
     return [input];
   }

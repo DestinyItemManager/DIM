@@ -96,12 +96,12 @@ export default function ItemSocketsWeapons({
               {keyStats && keyStats.length > 0 && (
                 <div className={styles.stats}>
                   {keyStats
-                    ?.map(
-                      (s) =>
-                        `${s.value} ${(
-                          statLabels[s.statHash as StatHashes] || s.displayProperties.name
-                        ).toLowerCase()}`,
-                    )
+                    ?.map((s) => {
+                      const statHash: StatHashes = s.statHash;
+                      return `${s.value} ${(
+                        statLabels[statHash] || s.displayProperties.name
+                      ).toLowerCase()}`;
+                    })
                     ?.join(' / ')}
                 </div>
               )}

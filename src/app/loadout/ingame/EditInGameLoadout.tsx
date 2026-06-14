@@ -69,8 +69,7 @@ export default function EditInGameLoadout({
     if (
       destSlotLoadout &&
       ((nameHash === defaultName && colorHash === defaultColor && iconHash === defaultIcon) ||
-        (overwrittenLoadout &&
-          nameHash === overwrittenLoadout.nameHash &&
+        (nameHash === overwrittenLoadout?.nameHash &&
           colorHash === overwrittenLoadout.colorHash &&
           iconHash === overwrittenLoadout.iconHash))
     ) {

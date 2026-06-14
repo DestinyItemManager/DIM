@@ -557,7 +557,8 @@ export function getColumns(
           ),
         filter: (_val, item) =>
           item.breakerType
-            ? `breaker:${breakerTypeNames[item.breakerType.hash as BreakerTypeHashes]}`
+            ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+              `breaker:${breakerTypeNames[item.breakerType.hash as BreakerTypeHashes]}`
             : undefined,
       }),
     destinyVersion === 2 &&
@@ -1018,7 +1019,7 @@ export function getStatColumns(
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
   const statColumns: ColumnWithStat[] = filterMap(stats, (stat): ColumnWithStat | undefined => {
-    const statHash = stat.statHash as StatHashes;
+    const statHash: StatHashes = stat.statHash;
     if (customStatHashes.includes(statHash)) {
       // Exclude custom total, it has its own column
       return undefined;
@@ -1079,7 +1080,7 @@ export function getStatColumns(
         if (typeof firstValue === 'number' && typeof secondValue === 'number') {
           const firstItemTuningHash = getArmor3TuningStat(firstItem);
           const secondItemTuningHash = getArmor3TuningStat(secondItem);
-          if ((statHash as number) === TOTAL_STAT_HASH) {
+          if (Number(statHash) === TOTAL_STAT_HASH) {
             if (firstItemTuningHash) {
               firstValue += 0.5;
             } else if (isArtifice(firstItem)) {
@@ -1191,7 +1192,7 @@ export function getStatColumns(
     destinyVersion === 1 && isArmor
       ? stats
           .map((stat): ColumnWithStat => {
-            const statHash = stat.statHash as StatHashes;
+            const statHash = stat.statHash;
             return {
               statHash,
               id: `quality_${statHash}`,

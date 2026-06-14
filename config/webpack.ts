@@ -1,7 +1,7 @@
 import { InjectManifest } from '@aaroon/workbox-rspack-plugin';
 import filterWebpackStats from '@bundle-stats/plugin-webpack-filter';
 import { type Configuration, rspack } from '@rspack/core';
-import ReactRefreshPlugin from '@rspack/plugin-react-refresh';
+import { ReactRefreshRspackPlugin as ReactRefreshPlugin } from '@rspack/plugin-react-refresh';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
@@ -530,7 +530,7 @@ export default (env: Env) => {
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     plugins.push(new TsCheckerRspackPlugin());
-    plugins.push(new ReactRefreshPlugin({ overlay: false }));
+    plugins.push(new ReactRefreshPlugin());
   } else {
     // env.beta and env.release
     plugins.push(

@@ -62,7 +62,7 @@ export function TierlessSetStats({
         <TotalStats enabledStats={countedStatsTotal} totalStats={totalStats} />
       </div>
       {desiredStatRanges.map((c) => {
-        const statHash = c.statHash as ArmorStatHashes;
+        const statHash: ArmorStatHashes = c.statHash;
         const statDef = defs.Stat.get(statHash);
         const value = stats[statHash];
         return (
@@ -179,7 +179,7 @@ export function ReferenceConstraints({
     <div className={styles.container}>
       <TotalStats enabledStats={enabledStats} totalStats={totalStats} />
       {resolvedStatConstraints.map((c) => {
-        const statHash = c.statHash as ArmorStatHashes;
+        const statHash: ArmorStatHashes = c.statHash;
         const statDef = defs.Stat.get(statHash);
         const value = c.minStat;
         return (

@@ -119,7 +119,7 @@ export function filterItems({
       );
 
   // Group by bucket
-  const itemsByBucket = Map.groupBy(items, (item) => item.bucket.hash as ArmorBucketHash);
+  const itemsByBucket = Map.groupBy(items, (item): ArmorBucketHash => item.bucket.hash);
 
   const lockedExoticDef =
     lockedExoticHash && lockedExoticHash > 0 ? defs.InventoryItem.get(lockedExoticHash) : undefined;

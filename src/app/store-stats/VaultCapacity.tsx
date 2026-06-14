@@ -107,7 +107,7 @@ export default memo(function VaultCapacity() {
       {Object.keys(vaultCounts)
         .sort(compareByIndex(vaultBucketOrder, (id) => parseInt(id, 10)))
         .map((bucketIdStr) => {
-          const bucketId = parseInt(bucketIdStr, 10) as BucketHashes;
+          const bucketId: BucketHashes = parseInt(bucketIdStr, 10);
           const { count, bucket } = vaultCounts[bucketId];
           const isConsumables = bucketId === BucketHashes.Consumables;
           const title = isConsumables ? undefined : bucket.name;

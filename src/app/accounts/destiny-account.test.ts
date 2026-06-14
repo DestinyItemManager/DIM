@@ -4,7 +4,6 @@ import {
   DestinyLinkedProfilesResponse,
   PlatformErrorCodes,
 } from 'bungie-api-ts/destiny2';
-import { UserInfoCard } from 'bungie-api-ts/user';
 import d1Profile from 'testing/data/d1profiles-2022-10-24.json';
 import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json';
 import { generatePlatforms } from './destiny-account';
@@ -67,7 +66,7 @@ describe('generatePlatforms', () => {
         ...originalAccounts.profilesWithErrors,
         ...originalAccounts.profiles.map((p) => ({
           errorCode: PlatformErrorCodes.DestinyUnexpectedError,
-          infoCard: p as unknown as UserInfoCard,
+          infoCard: p,
         })),
       ],
     };
@@ -102,7 +101,7 @@ describe('generatePlatforms', () => {
         ...originalAccounts.profilesWithErrors,
         ...originalAccounts.profiles.map((p) => ({
           errorCode: PlatformErrorCodes.DestinyAccountNotFound,
-          infoCard: p as unknown as UserInfoCard,
+          infoCard: p,
         })),
       ],
     };

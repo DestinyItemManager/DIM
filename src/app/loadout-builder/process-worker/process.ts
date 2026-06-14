@@ -86,7 +86,7 @@ export async function process(
   const pstart = performance.now();
 
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.
-  const statOrder = desiredStatRanges.map(({ statHash }) => statHash as ArmorStatHashes);
+  const statOrder = desiredStatRanges.map(({ statHash }): ArmorStatHashes => statHash);
   // The maximum stat constraints for each stat
   const maxStatConstraints = desiredStatRanges.map(({ maxStat }) => maxStat);
   // Convert the list of stat bonuses from mods into a flat array in the same order as `statOrder`.

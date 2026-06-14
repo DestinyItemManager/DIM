@@ -224,6 +224,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
   const intrinsic = getWeaponArchetype(exampleItem);
   const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
   const adeptStripped = stripAdept(exampleItem.name);
+  const bucketHash: keyof typeof bucketToSearch = exampleItem.bucket.hash;
 
   let comparisonSets: CompareButton[] = compact([
     // same weapon type
@@ -250,7 +251,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
-      query: `(${bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch]} ${
+      query: `(${bucketToSearch[bucketHash]} ${
         exampleItem.destinyVersion === 2 && intrinsic
           ? `exactperk:${quoteFilterString(intrinsic.displayProperties.name)}`
           : `stat:rpm:${getRpm(exampleItem)}`
@@ -263,7 +264,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
-      query: bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch],
+      query: bucketToSearch[bucketHash],
     },
 
     // same weapon type and also matching element (& usually same-slot because same element)

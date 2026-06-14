@@ -136,7 +136,7 @@ export function getBestArmor(
   const excludedIndices = new Set(excluded.map((i) => i.index));
 
   for (const armortypestr in bucket) {
-    const armortype = parseInt(armortypestr, 10) as ArmorTypes;
+    const armortype: ArmorTypes = parseInt(armortypestr, 10);
     const combined = includeVendors
       ? bucket[armortype].concat(vendorBucket[armortype])
       : bucket[armortype];
@@ -240,9 +240,8 @@ export function mergeBuckets<T extends any[]>(
 ) {
   const merged: Partial<{ [armorType in ArmorTypes]: T }> = {};
   for (const [type, bucket] of Object.entries(bucket1)) {
-    merged[parseInt(type, 10) as ArmorTypes] = bucket.concat(
-      bucket2[parseInt(type, 10) as ArmorTypes],
-    ) as T;
+    const armorType: ArmorTypes = parseInt(type, 10);
+    merged[armorType] = bucket.concat(bucket2[armorType]) as T;
   }
   return merged as { [armorType in ArmorTypes]: T };
 }

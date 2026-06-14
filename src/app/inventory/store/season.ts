@@ -15,7 +15,7 @@ import { DimItem } from '../item-types';
 
 const D2SourcesToEvent = Object.fromEntries(
   Object.entries(D2EventInfo).flatMap(([index, event]) =>
-    event.sources.map((source) => [source, Number(index) as D2EventEnum]),
+    event.sources.map((source) => [source, Number(index)]),
   ),
 );
 
