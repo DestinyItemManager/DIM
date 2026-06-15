@@ -24,7 +24,9 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 //
 
 // In Edge of Fate, Tier 5 armor was introduced that has 11 energy instead of 10.
-export const maxEnergyCapacity = (item: DimItem): number => (item.tier === 5 ? 11 : 10);
+// Tier 5 Exotics are capped at 10.
+export const maxEnergyCapacity = (item: DimItem): number =>
+  item.tier === 5 && !item.isExotic ? 11 : 10;
 /**
  * @deprecated: use `maxEnergyCapacity` instead
  */
