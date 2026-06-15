@@ -151,7 +151,10 @@ def post_to_discord(report):
         data = json.dumps(payload).encode()
         req = urllib.request.Request(
             webhook, data=data,
-            headers={"Content-Type": "application/json"}
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": "DiscordBot (https://github.com/DestinyItemManager/DIM, 1.0)",
+            }
         )
         try:
             urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT)
