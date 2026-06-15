@@ -79,7 +79,11 @@ def bot_api(method, path, token, data=None):
     body = json.dumps(data).encode() if data else None
     req = urllib.request.Request(
         url, data=body,
-        headers={"Authorization": f"Bot {token}", "Content-Type": "application/json"},
+        headers={
+            "Authorization": f"Bot {token}",
+            "Content-Type": "application/json",
+            "User-Agent": "DiscordBot (https://github.com/DestinyItemManager/DIM, 1.0)",
+        },
         method=method
     )
     try:
@@ -189,7 +193,10 @@ if __name__ == "__main__":
         data = json.dumps(payload).encode()
         req = urllib.request.Request(
             webhook, data=data,
-            headers={"Content-Type": "application/json"}
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": "DiscordBot (https://github.com/DestinyItemManager/DIM, 1.0)",
+            }
         )
         urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT)
         print(f"Posted chunk ({len(chunk)} chars)")
