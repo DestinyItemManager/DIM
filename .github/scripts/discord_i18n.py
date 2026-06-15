@@ -4,22 +4,22 @@ Discord i18n diff helper for DIMi18n.
 Used by .github/workflows/notify-discord-i18n.yml
 
 Usage:
-  python3 i18n_discord.py
+  python3 discord_i18n.py
 
 Environment variables:
   DISCORD_I18N_WEBHOOK  — required (posts the diff embed)
+
+Depends on shared.py (must be co-located on the runner).
 """
 
 import json
 import os
 import subprocess
 import sys
-import urllib.request
-import urllib.error
+
+from shared import chunk_content, post_webhook
 
 LOCALE_FILE = "src/locale/en.json"
-CHUNK_SIZE = 4000  # safely under Discord's 4096 embed limit
-REQUEST_TIMEOUT = 10  # seconds
 ROLE_MENTION = "<@&622449489008918548>"
 AVATAR_URL = "https://raw.githubusercontent.com/DestinyItemManager/DIM/refs/heads/master/icons/pr/android-chrome-mask-512x512-6-2018.png"
 COLOR = 0xFF64E7
@@ -117,27 +117,12 @@ def generate_report(diff, total):
 
 # ── Discord posting ────────────────────────────────────────────────────────────
 
-def chunk_content(content):
-    """Split content into <=CHUNK_SIZE chunks on newline boundaries."""
-    chunks = []
-    current = ""
-    for line in content.splitlines(keepends=True):
-        if len(current) + len(line) > CHUNK_SIZE:
-            chunks.append(current.rstrip())
-            current = line
-        else:
-            current += line
-    if current.strip():
-        chunks.append(current.rstrip())
-    return chunks
-
-
 def post_to_discord(report):
     webhook = os.environ["DISCORD_I18N_WEBHOOK"]
     chunks = chunk_content(report)
 
     for i, chunk in enumerate(chunks):
-        payload = {
+        post_webhook(webhook, {
             "username": "i18n Bot",
             "avatar_url": AVATAR_URL,
             "content": ROLE_MENTION if i == 0 else "",
@@ -146,22 +131,9 @@ def post_to_discord(report):
                 "url": CROWDIN_URL,
                 "description": chunk,
                 "color": COLOR,
-            }]
-        }
-        data = json.dumps(payload).encode()
-        req = urllib.request.Request(
-            webhook, data=data,
-            headers={
-                "Content-Type": "application/json",
-                "User-Agent": "DiscordBot (https://github.com/DestinyItemManager/DIM, 1.0)",
-            }
-        )
-        try:
-            urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT)
-            print(f"Posted chunk {i + 1}/{len(chunks)} ({len(chunk)} chars)")
-        except urllib.error.HTTPError as e:
-            print(f"HTTP {e.code}: {e.read().decode()}")
-            raise
+            }],
+        })
+        print(f"Posted chunk {i + 1}/{len(chunks)} ({len(chunk)} chars)")
 
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
