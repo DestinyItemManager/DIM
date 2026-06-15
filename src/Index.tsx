@@ -13,7 +13,6 @@ import {
   setCssVariableEventListeners,
 } from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
-import { createSaveItemInfosObserver } from 'app/inventory/observers';
 import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
 import { infoLog } from 'app/utils/log';
@@ -69,8 +68,6 @@ const i18nPromise = initi18n();
   store.dispatch(observe(createThemeObserver()));
   store.dispatch(observe(createTilesPerCharColumnObserver()));
   setCssVariableEventListeners();
-
-  store.dispatch(observe(createSaveItemInfosObserver()));
 
   store.dispatch(loadDimApiData());
 

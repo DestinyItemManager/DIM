@@ -45,13 +45,6 @@
   }
 }
 
-.newItem {
-  position: static;
-  display: inline-block;
-  transform: scale(1.5);
-  margin-right: 8px;
-}
-
 .setting {
   composes: flexColumn from '../dim-ui/common.m.scss';
   gap: 8px;

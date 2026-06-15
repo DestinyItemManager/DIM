@@ -23,14 +23,12 @@ import * as styles from './InventoryItem.m.scss';
 import { DimItem } from './item-types';
 import ItemIcon from './ItemIcon';
 import ItemIconPlaceholder from './ItemIconPlaceholder';
-import NewItemIndicator from './NewItemIndicator';
 import { getSubclassIconInfo } from './subclass';
 import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
 
 export default function InventoryItem({
   item,
-  isNew,
   tag,
   notes,
   searchHidden,
@@ -43,8 +41,6 @@ export default function InventoryItem({
   ref,
 }: {
   item: DimItem;
-  /** Show this item as new? */
-  isNew?: boolean;
   /** User defined tag */
   tag?: TagValue;
   /** Notes for the item. Used to show the icon and put notes in tooltips. */
@@ -140,12 +136,10 @@ export default function InventoryItem({
         ) : (
           item.bucket.inWeapons && <WeaponFrame item={item} />
         )}
-        {(nonPullablePostmasterItem(item) && <AlertIcon className={styles.warningIcon} />) ||
-          ($featureFlags.newItems && isNew && <NewItemIndicator />)}
+        {nonPullablePostmasterItem(item) && <AlertIcon className={styles.warningIcon} />}
       </>
     );
   }, [
-    isNew,
     item,
     hasNotes,
     subclassIconInfo,

@@ -7,7 +7,6 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
@@ -240,7 +239,6 @@ export function getColumns(
   hasWishList: boolean,
   customStatDefs: CustomStatDef[],
   loadoutsByItem: LoadoutsByItem,
-  newItems: Set<string>,
   destinyVersion: DestinyVersion,
   onPlugClicked?: PlugClickedHandler,
 ): ColumnDefinition[] {
@@ -389,18 +387,6 @@ export function getColumns(
       filter: (value) => `tag:${value || 'none'}`,
       csv: (value) => ['Tag', value || undefined],
     }),
-    !isSpreadsheet &&
-      $featureFlags.newItems &&
-      c({
-        id: 'new',
-        header: t('Organizer.Columns.New'),
-        className: styles.new,
-        headerClassName: styles.centered,
-        value: (item) => newItems.has(item.id),
-        cell: (value) => (value ? <NewItemIndicator /> : undefined),
-        defaultSort: SortDirection.DESC,
-        filter: (value) => `${value ? '' : '-'}is:new`,
-      }),
     c({
       id: 'holofoil',
       header: t('Organizer.Columns.Holofoil'),

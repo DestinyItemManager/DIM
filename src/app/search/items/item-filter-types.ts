@@ -25,7 +25,6 @@ export interface FilterContext {
   loadoutsByItem: LoadoutsByItem;
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined;
   wishListsByHash: Map<number, WishListRoll[]>;
-  newItems: Set<string>;
   getTag: (item: DimItem) => TagValue | undefined;
   getNotes: (item: DimItem) => string | undefined;
   language: DimLanguage;

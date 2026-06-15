@@ -12,7 +12,6 @@ import {
   displayableBucketHashesSelector,
   getNotesSelector,
   getTagSelector,
-  newItemsSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -134,7 +133,6 @@ const filterContextSelector = createSelector(
   loadoutsByItemSelector,
   wishListFunctionSelector,
   wishListsByHashSelector,
-  newItemsSelector,
   getTagSelector,
   getNotesSelector,
   languageSelector,
@@ -150,7 +148,6 @@ function makeFilterContext(
   loadoutsByItem: LoadoutsByItem,
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
   wishListsByHash: Map<number, WishListRoll[]>,
-  newItems: Set<string>,
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   language: DimLanguage,
@@ -163,7 +160,6 @@ function makeFilterContext(
     currentStore: currentStore!,
     loadoutsByItem,
     wishListFunction,
-    newItems,
     getTag,
     getNotes,
     language,

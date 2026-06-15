@@ -1,5 +1,5 @@
 import { addCompareItem } from 'app/compare/actions';
-import { clearNewItem, setTag } from 'app/inventory/actions';
+import { setTag } from 'app/inventory/actions';
 import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -19,7 +19,6 @@ export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue
 
   const handleSetTag = (tag: TagValue) => {
     dispatch(setTag(item, tag));
-    dispatch(clearNewItem(item.id));
   };
 
   const openCompare = () => {

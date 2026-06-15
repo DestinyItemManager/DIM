@@ -30,7 +30,6 @@ import {
   CharacterInfo,
   charactersUpdated,
   error,
-  loadNewItems,
   profileError,
   profileLoaded,
   update,
@@ -152,7 +151,6 @@ export function loadStores({
 
             dispatch(loadCoreSettings()); // no need to wait
             $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
-            await dispatch(loadNewItems(account));
             // The first time we load, allow the data to be loaded from IDB. We then do a second
             // load to make sure that we immediately try to get remote data.
             if (firstTime) {

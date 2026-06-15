@@ -1,7 +1,6 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimItem } from 'app/inventory/item-types';
-import { isNewSelector } from 'app/inventory/selectors';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -27,7 +26,6 @@ export default function Pursuit({
   className?: string;
 }) {
   const defs = useD2Definitions()!;
-  const isNew = useSelector(isNewSelector(item));
   const searchHidden = useSelector(
     (state: RootState) => alreadySearchHidden || !searchFilterSelector(state)(item),
   );
@@ -55,7 +53,7 @@ export default function Pursuit({
           onClick={onClick}
         >
           <div className="milestone-icon">
-            <PursuitItem item={item} isNew={isNew} ref={ref} />
+            <PursuitItem item={item} ref={ref} />
             {!item.complete && !expired && showObjectiveProgress && firstObjective && (
               <span>
                 {item.objectives && showObjectiveDetail ? (

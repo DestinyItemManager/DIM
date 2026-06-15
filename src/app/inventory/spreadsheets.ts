@@ -143,7 +143,6 @@ export function generateCSVExportData(
     false /* hasWishList */,
     customStats,
     loadoutsByItem,
-    new Set<string>() /* newItems */,
     destinyVersion /* destinyVersion */,
   );
 
