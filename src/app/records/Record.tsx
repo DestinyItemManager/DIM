@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import osteoStrigaCatalyst from 'images/osteo-striga-catalyst.jpg';
+import praxicBladeCatalyst from 'images/praxic-blade-catalyst.jpg';
 import trackedIcon from 'images/trackedIcon.svg';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -80,13 +81,18 @@ function Record({
     : recordDef.displayProperties.description;
 
   const OSTEO_STRIGA_RECORD_HASH = 494981303;
+  const PRAXIC_BLADE_RECORD_HASH = 39338609;
+
+  // catalysts whose icon we override with a bundled asset
+  const CUSTOM_CATALYST_ICONS: Record<number, string> = {
+    [OSTEO_STRIGA_RECORD_HASH]: `~${osteoStrigaCatalyst}`,
+    [PRAXIC_BLADE_RECORD_HASH]: `~${praxicBladeCatalyst}`,
+  };
+
   const isCatalyst = recordHash in catalystIconsTable;
   const recordIcon =
-    recordHash === OSTEO_STRIGA_RECORD_HASH
-      ? `~${osteoStrigaCatalyst}`
-      : isCatalyst
-        ? catalystIconsTable[recordHash]
-        : recordDef.displayProperties.icon;
+    CUSTOM_CATALYST_ICONS[recordHash] ??
+    (isCatalyst ? catalystIconsTable[recordHash] : recordDef.displayProperties.icon);
 
   const itemCreationContext = useSelector(createItemContextSelector);
   const catalystTarget = isCatalyst && makeItemForCatalystRecord(recordHash, itemCreationContext);
