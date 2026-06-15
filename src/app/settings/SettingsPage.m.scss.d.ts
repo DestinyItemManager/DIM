@@ -5,7 +5,6 @@ interface CssExports {
   'fineprint': string;
   'horizontal': string;
   'itemSize': string;
-  'newItem': string;
   'radioOptions': string;
   'setting': string;
   'settings': string;
