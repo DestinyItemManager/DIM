@@ -1,5 +1,7 @@
 ## Next
 
+## 8.129.1 <span class="changelog-date">(2026-06-14)</span>
+
 ## 8.129.0 <span class="changelog-date">(2026-06-14)</span>
 
 * Remove references to the "New Gear" or "Featured Items" concepts.
