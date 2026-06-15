@@ -21,7 +21,7 @@ import time
 import urllib.request
 import urllib.error
 
-from shared import chunk_content, post_webhook, USER_AGENT, REQUEST_TIMEOUT
+from shared import chunk_content, post_webhook, debug, notice, USER_AGENT, REQUEST_TIMEOUT
 
 CHANGELOG_FILE = "docs/CHANGELOG.md"
 CHANNEL_ID = "894808801109245952"
@@ -118,7 +118,7 @@ def _bot_api_with_retry(method, path, token, data=None, retries=5):
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 retry_after = float(json.loads(e.read()).get("retry_after", 1))
-                print(f"Rate limited, retrying in {retry_after}s...")
+                debug(f"rate limited, retrying in {retry_after}s")
                 time.sleep(retry_after)
             else:
                 raise
@@ -150,7 +150,7 @@ def delete_beta():
             deleted += 1
             time.sleep(0.5)  # stay under rate limit
 
-    print(f"Deleted {deleted} beta message(s)")
+    debug(f"scanned {len(messages)} message(s), deleted {deleted} beta message(s)")
 
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
@@ -160,10 +160,11 @@ if __name__ == "__main__":
     profile = detect_profile(sections)
 
     if profile == "none":
-        print("No changelog content detected, skipping Discord post.")
+        notice("no changelog content detected, skipping Discord post")
         sys.exit(0)
 
     content = get_content(sections, profile)
+    debug(f"detected profile={profile}, {len(content)} chars")
     delete_beta()
 
     webhook = os.environ["DISCORD_CHANGELOG_WEBHOOK"]
