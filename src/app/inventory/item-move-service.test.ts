@@ -2,8 +2,10 @@ import { equip, transfer } from 'app/bungie-api/destiny2-api';
 import {
   buildFreshStores,
   findItemsByBucket,
+  getTestBuckets,
   getVault,
   itemsInBucketUncached,
+  placeItemInPostmaster,
   setBucketFreeSlots,
   setupMoveTestStore,
 } from 'testing/move-item-test-utils';
@@ -270,8 +272,28 @@ describe('item-move-service', () => {
     expect(amountOfItem(getVault(newStores)!, item)).toBe(startVault + startSource);
   });
 
-  // TODO: pulling an item out of the postmaster. The blind-pull path to the
-  // current character calls the (mocked) transfer API but doesn't appear to
-  // relocate the item out of the postmaster in the in-memory model. That needs
-  // a closer look (possible bug, or a quirk of the mock) before asserting on it.
+  it('pulls a lost item out of the postmaster onto its character', async () => {
+    const buckets = await getTestBuckets();
+    const stores = await buildFreshStores();
+    const owner = stores.find((s) => !s.isVault && s.current)!;
+
+    // Take a normal weapon on the character and send it to the postmaster.
+    const item = owner.items.find(
+      (i) => i.bucket.sort === 'Weapons' && i.instanced && !i.equipped && !i.location.inPostmaster,
+    )!;
+    expect(item).toBeDefined();
+    const destinationBucket = item.bucket.hash;
+    placeItemInPostmaster(item, buckets);
+    expect(item.location.inPostmaster).toBe(true);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    const moved = await move(item, owner);
+
+    expect(transferMock).toHaveBeenCalled();
+    // It left the postmaster and landed in its real destination bucket.
+    expect(moved.location.inPostmaster).toBeFalsy();
+    expect(moved.location.hash).toBe(destinationBucket);
+    const newOwner = getStores().find((s) => s.id === owner.id)!;
+    expect(newOwner.items.some((i) => i.id === item.id && !i.location.inPostmaster)).toBe(true);
+  });
 });

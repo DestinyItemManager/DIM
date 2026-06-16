@@ -2,6 +2,7 @@ import { accountsLoaded, setCurrentAccount } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { update } from 'app/inventory/actions';
+import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { createMoveSession, executeMoveItem } from 'app/inventory/item-move-service';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -13,6 +14,7 @@ import {
   getStore,
   getVault,
 } from 'app/inventory/stores-helpers';
+import { BucketHashes } from 'data/d2/generated-enums';
 // Use the app's real Redux store singleton. Importing it (rather than building our
 // own from app/store/reducers) sidesteps a circular module-init dependency
 // (reducers -> shell/reducer -> media-queries -> store/store -> reducers).
@@ -58,6 +60,11 @@ export async function buildFreshStores(): Promise<DimStore[]> {
     profileResponse: getTestProfile(),
     customStats: [],
   });
+}
+
+/** The inventory bucket definitions for the sample manifest. */
+export async function getTestBuckets(): Promise<InventoryBuckets> {
+  return getBuckets(await getTestDefinitions());
 }
 
 /**
@@ -122,6 +129,21 @@ export function cloneItem(item: DimItem, overrides: Partial<DimItem> = {}): DimI
 export function addItemToStore(store: DimStore, item: DimItem) {
   item.owner = store.id;
   store.items = [...store.items, item];
+}
+
+/**
+ * Make `item` look like a "lost item" sitting in the postmaster (Lost Items
+ * bucket), as if it had been sent there because its real bucket was full. The
+ * item's real destination `bucket` is preserved, so pulling it should relocate
+ * it out of the postmaster.
+ *
+ * Note: engrams are NOT lost items - the Engrams bucket is itself in the
+ * Postmaster category, so engrams always report `location.inPostmaster`. Use a
+ * normal weapon/armor item here to model a genuine pull-from-postmaster.
+ */
+export function placeItemInPostmaster(item: DimItem, buckets: InventoryBuckets) {
+  item.location = buckets.byHash[BucketHashes.LostItems];
+  item.canPullFromPostmaster = true;
 }
 
 /** Remove a specific item from whatever store it's in. */
