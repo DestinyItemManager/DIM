@@ -172,6 +172,33 @@ export default (env: Env) => {
           return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        cacheGroups: {
+          // node_modules shared by 2+ async (lazy) chunks get hoisted into a
+          // single shared vendor chunk instead of being duplicated into each
+          // route bundle. minSize: 0 so small-but-shared deps (comlink,
+          // react-dnd, framer-motion, es-toolkit helpers, …) are deduped too.
+          sharedVendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'shared-vendor',
+            chunks: 'async',
+            minChunks: 2,
+            minSize: 0,
+            priority: 10,
+            reuseExistingChunk: true,
+          },
+          // App code shared by 2+ lazy chunks (shared components + their
+          // .m.scss) gets hoisted likewise rather than copied per route.
+          common: {
+            name: 'shared',
+            chunks: 'async',
+            minChunks: 2,
+            minSize: 0,
+            priority: 5,
+            reuseExistingChunk: true,
+          },
+        },
       },
       minimizer: [
         new rspack.SwcJsMinimizerRspackPlugin({
