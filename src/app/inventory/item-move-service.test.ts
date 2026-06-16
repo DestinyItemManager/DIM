@@ -10,6 +10,7 @@ import {
   getVault,
   itemsInBucketUncached,
   placeItemInPostmaster,
+  removeItemFromStore,
   setBucketFreeSlots,
   setupMoveTestStore,
 } from 'testing/move-item-test-utils';
@@ -562,7 +563,67 @@ describe('item-move-service', () => {
     // and DIM shuffles many unrelated items out of the vault instead of doing a
     // single clean move (and may ultimately fail). This is why loadout-apply
     // must mark moved items as involved.
-    await move(item, vault, { involvedItems: [] }).catch(() => {});
+    await move(item, vault, { involvedItems: [] }).catch(() => undefined);
     expect(transferMock.mock.calls.length).toBeGreaterThan(1);
+  });
+
+  // Regression test for issue #9121: equipping an exotic pulled from the vault
+  // must still de-equip the existing exotic, even when the replacement for that
+  // exotic's slot has to come from the vault too.
+  it('de-equips the existing exotic when equipping a vault exotic that needs a vault replacement (#9121)', async () => {
+    const stores = await buildFreshStores();
+    const character = stores.find((s) => !s.isVault && s.current)!;
+    const vault = getVault(stores)!;
+
+    // The exotic armor currently equipped, in slot A.
+    const equippedExotic = character.items.find(
+      (i) => i.equipped && i.isExotic && i.equippingLabel && i.bucket.sort === 'Armor',
+    )!;
+    expect(equippedExotic).toBeDefined();
+    const slotA = equippedExotic.bucket.hash;
+
+    // Clone a non-exotic slot-A item into the vault as the ONLY possible
+    // replacement, then strip every other slot-A item off the character so the
+    // replacement has to be pulled from the vault.
+    const nonExoticInA = character.items.find(
+      (i) => !i.equipped && !i.isExotic && i.bucket.hash === slotA,
+    )!;
+    expect(nonExoticInA).toBeDefined();
+    const vaultReplacement = cloneItem(nonExoticInA);
+    addItemToStore(vault, vaultReplacement);
+    for (const i of character.items.filter((i) => i.bucket.hash === slotA && !i.equipped)) {
+      removeItemFromStore(stores, i);
+    }
+
+    // A different exotic armor (slot B, same equipping label) moved into the
+    // vault, so equipping it requires a vault pull and an exotic swap.
+    const exoticB = character.items.find(
+      (i) =>
+        !i.equipped &&
+        i.isExotic &&
+        i.equippingLabel === equippedExotic.equippingLabel &&
+        i.bucket.hash !== slotA &&
+        !i.location.inPostmaster,
+    )!;
+    expect(exoticB).toBeDefined();
+    removeItemFromStore(stores, exoticB);
+    addItemToStore(vault, exoticB);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    await move(exoticB, character, { equip: true });
+
+    const newCharacter = getStores().find((s) => s.id === character.id)!;
+
+    // Exactly one exotic armor is equipped, and it's the new one.
+    const equippedExoticArmor = newCharacter.items.filter(
+      (i) => i.equipped && i.isExotic && i.bucket.sort === 'Armor',
+    );
+    expect(equippedExoticArmor).toHaveLength(1);
+    expect(equippedExoticArmor[0].id).toBe(exoticB.id);
+
+    // The old exotic's slot now holds a single equipped non-exotic.
+    const equippedInSlotA = findItemsByBucket(newCharacter, slotA).filter((i) => i.equipped);
+    expect(equippedInSlotA).toHaveLength(1);
+    expect(equippedInSlotA[0].isExotic).toBe(false);
   });
 });

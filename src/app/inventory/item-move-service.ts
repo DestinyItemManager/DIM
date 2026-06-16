@@ -1005,7 +1005,11 @@ export function executeMoveItem(
       !session.bucketsFullOnCurrentStore.has(item.bucket.hash) &&
       // don't blind move consumables to character,
       // because we don't want to unintentionally max out consumables
-      item.bucket.hash !== BucketHashes.Consumables
+      item.bucket.hash !== BucketHashes.Consumables &&
+      // don't blind move an exotic we're about to equip - the blind move skips
+      // the one-exotic check, so it would equip a second exotic without moving
+      // aside the one that's already equipped (and fail). See issue #9121.
+      !(equip && item.equippingLabel)
     ) {
       try {
         infoLog(TAG, 'Try blind move of', item.name, 'to', target.name);
