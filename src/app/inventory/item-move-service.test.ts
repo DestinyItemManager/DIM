@@ -83,6 +83,32 @@ function findSplitStack(stores: DimStore[]): { item: DimItem; source: DimStore }
   return undefined;
 }
 
+/**
+ * Find a large unique-stack consumable on a character with room to grow - e.g.
+ * Hymn of Desecration (maxStackSize 999). These are the items that trip up
+ * issue #8872.
+ */
+function findLargeUniqueStackConsumable(
+  stores: DimStore[],
+): { item: DimItem; source: DimStore } | undefined {
+  let best: { item: DimItem; source: DimStore } | undefined;
+  for (const source of stores.filter((s) => !s.isVault)) {
+    for (const item of source.items) {
+      if (
+        item.uniqueStack &&
+        item.bucket.hash === BucketHashes.Consumables &&
+        item.maxStackSize >= 99 &&
+        !item.notransfer &&
+        !item.location.inPostmaster &&
+        (!best || item.maxStackSize > best.item.maxStackSize)
+      ) {
+        best = { item, source };
+      }
+    }
+  }
+  return best;
+}
+
 describe('item-move-service', () => {
   beforeAll(async () => {
     await setupi18n();
@@ -501,5 +527,42 @@ describe('item-move-service', () => {
 
     await expect(move(extra, character, { amount: 1 })).rejects.toThrow(DimError);
     expect(transferMock).not.toHaveBeenCalled();
+  });
+
+  // Regression tests for issues #8872 / #8506: bulk-moving consumables via a
+  // filtered search (which goes through loadout-apply) broke on unique-stack
+  // consumables like Hymn of Desecration and Ghost Fragments.
+  it('moves a large unique-stack consumable to the vault in one transfer (#8872)', async () => {
+    const stores = await buildFreshStores();
+    const found = findLargeUniqueStackConsumable(stores);
+    expect(found).toBeDefined();
+    const { item } = found!;
+    const vault = getVault(stores)!;
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    // The default involvedItems = [item] models a deliberate, user-requested move.
+    const moved = await move(item, vault);
+
+    // A single clean transfer - no cascade of move-asides.
+    expect(transferMock).toHaveBeenCalledTimes(1);
+    expect(moved.owner).toBe('vault');
+    expect(amountOfItem(getVault(getStores())!, item)).toBeGreaterThanOrEqual(item.amount);
+  });
+
+  it('cascades move-asides when a moved consumable is left out of the session (#8872 mechanism)', async () => {
+    const stores = await buildFreshStores();
+    const found = findLargeUniqueStackConsumable(stores);
+    expect(found).toBeDefined();
+    const { item } = found!;
+    const vault = getVault(stores)!;
+
+    const { move } = setupMoveTestStore(stores);
+    // Reproduce the old loadout-apply bug: the moved item isn't "involved", so
+    // the consumables penalty (left -= maxStackSize) makes the vault look full
+    // and DIM shuffles many unrelated items out of the vault instead of doing a
+    // single clean move (and may ultimately fail). This is why loadout-apply
+    // must mark moved items as involved.
+    await move(item, vault, { involvedItems: [] }).catch(() => {});
+    expect(transferMock.mock.calls.length).toBeGreaterThan(1);
   });
 });

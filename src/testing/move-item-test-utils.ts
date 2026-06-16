@@ -90,13 +90,21 @@ export function setupMoveTestStore(stores: DimStore[]) {
   /**
    * Run a smart move of `item` to `target`, returning the resulting item. Throws
    * if the move can't complete (e.g. no space).
+   *
+   * `involvedItems` controls the move session's "explicitly requested" item set
+   * (defaults to just `item`). Pass a different set to model bulk moves /
+   * loadout applies, where the session is shared across many items.
    */
   const move = (
     item: DimItem,
     target: DimStore,
-    { equip = false, amount }: { equip?: boolean; amount?: number } = {},
+    {
+      equip = false,
+      amount,
+      involvedItems = [item],
+    }: { equip?: boolean; amount?: number; involvedItems?: DimItem[] } = {},
   ) => {
-    const session = createMoveSession(neverCanceled, [item]);
+    const session = createMoveSession(neverCanceled, involvedItems);
     return thunkDispatch(
       executeMoveItem(item, target, { equip, amount: amount ?? item.amount }, session),
     );
