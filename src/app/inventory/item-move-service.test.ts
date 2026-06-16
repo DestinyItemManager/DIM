@@ -296,4 +296,38 @@ describe('item-move-service', () => {
     const newOwner = getStores().find((s) => s.id === owner.id)!;
     expect(newOwner.items.some((i) => i.id === item.id && !i.location.inPostmaster)).toBe(true);
   });
+
+  it('pulls a lost item out of the postmaster onto another character', async () => {
+    const buckets = await getTestBuckets();
+    const stores = await buildFreshStores();
+    const characters = stores.filter((s) => !s.isVault);
+    const source = characters.find((s) => s.current)!;
+    const target = characters.find((s) => s.id !== source.id)!;
+
+    // Send one of the source character's weapons to its postmaster.
+    const item = source.items.find(
+      (i) => i.bucket.sort === 'Weapons' && i.instanced && !i.equipped && !i.location.inPostmaster,
+    )!;
+    expect(item).toBeDefined();
+    const destinationBucket = item.bucket.hash;
+    placeItemInPostmaster(item, buckets);
+
+    // Make sure the destination character has room for it.
+    setBucketFreeSlots(target, destinationBucket, 3);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    const moved = await move(item, target);
+
+    // Pull onto source (1) then transfer source->vault->target (2 more).
+    expect(transferMock).toHaveBeenCalledTimes(3);
+    expect(moved.owner).toBe(target.id);
+    expect(moved.location.inPostmaster).toBeFalsy();
+    expect(moved.location.hash).toBe(destinationBucket);
+
+    const newStores = getStores();
+    const newTarget = newStores.find((s) => s.id === target.id)!;
+    const newSource = newStores.find((s) => s.id === source.id)!;
+    expect(newTarget.items.some((i) => i.id === item.id && !i.location.inPostmaster)).toBe(true);
+    expect(newSource.items.some((i) => i.id === item.id)).toBe(false);
+  });
 });
