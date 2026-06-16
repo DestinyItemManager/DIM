@@ -1,6 +1,10 @@
 import { equip, transfer } from 'app/bungie-api/destiny2-api';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import {
+  addItemToStore,
   buildFreshStores,
+  cloneItem,
   findItemsByBucket,
   getTestBuckets,
   getVault,
@@ -380,5 +384,122 @@ describe('item-move-service', () => {
     );
     expect(equippedInOldBucket).toHaveLength(1);
     expect(equippedInOldBucket[0].isExotic).toBe(false);
+  });
+
+  it('equips an item pulled from the vault', async () => {
+    const stores = await buildFreshStores();
+    const vault = getVault(stores)!;
+    const character = stores.find((s) => !s.isVault && s.current)!;
+
+    // A non-exotic weapon (equippable by any class) sitting in the vault.
+    const item = vault.items.find(
+      (i) =>
+        i.bucket.sort === 'Weapons' &&
+        i.instanced &&
+        !i.isExotic &&
+        !i.notransfer &&
+        !i.location.inPostmaster &&
+        Boolean(i.bucket.vaultBucket),
+    )!;
+    expect(item).toBeDefined();
+    setBucketFreeSlots(character, item.bucket.hash, 2);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    const moved = await move(item, character, { equip: true });
+
+    expect(transferMock).toHaveBeenCalled();
+    expect(equipMock).toHaveBeenCalled();
+    expect(moved.owner).toBe(character.id);
+    expect(moved.equipped).toBe(true);
+
+    const newCharacter = getStores().find((s) => s.id === character.id)!;
+    const equippedInBucket = findItemsByBucket(newCharacter, item.bucket.hash).filter(
+      (i) => i.equipped,
+    );
+    expect(equippedInBucket).toHaveLength(1);
+    expect(equippedInBucket[0].id).toBe(item.id);
+  });
+
+  it('refuses to equip an item the character cannot use', async () => {
+    const stores = await buildFreshStores();
+    const vault = getVault(stores)!;
+    // A non-current character so we go through the equip-validation path rather
+    // than a blind move to the current character.
+    const character = stores.find((s) => !s.isVault && !s.current)!;
+
+    // Class-specific armor for a *different* class than this character.
+    const item = vault.items.find(
+      (i) =>
+        i.bucket.sort === 'Armor' &&
+        i.classType !== DestinyClass.Unknown &&
+        i.classType !== character.classType &&
+        !i.notransfer &&
+        !i.location.inPostmaster &&
+        Boolean(i.bucket.vaultBucket),
+    )!;
+    expect(item).toBeDefined();
+
+    const { move } = setupMoveTestStore(stores);
+
+    await expect(move(item, character, { equip: true })).rejects.toThrow(DimError);
+    // Validation fails before anything is transferred.
+    expect(transferMock).not.toHaveBeenCalled();
+  });
+
+  it('de-equips an equipped item when moving it to the vault', async () => {
+    const stores = await buildFreshStores();
+    const character = stores.find((s) => !s.isVault && s.current)!;
+    const vault = getVault(stores)!;
+
+    // An equipped non-exotic weapon (so a similar item can replace it).
+    const item = character.items.find(
+      (i) => i.equipped && i.bucket.sort === 'Weapons' && !i.isExotic && !i.notransfer,
+    )!;
+    expect(item).toBeDefined();
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    const moved = await move(item, vault);
+
+    expect(equipMock).toHaveBeenCalled();
+    expect(moved.owner).toBe('vault');
+    expect(moved.equipped).toBe(false);
+
+    // The character's slot is filled by a single different equipped item.
+    const newCharacter = getStores().find((s) => s.id === character.id)!;
+    const equippedInBucket = findItemsByBucket(newCharacter, item.bucket.hash).filter(
+      (i) => i.equipped,
+    );
+    expect(equippedInBucket).toHaveLength(1);
+    expect(equippedInBucket[0].id).not.toBe(item.id);
+  });
+
+  it('refuses to overfill a unique stack', async () => {
+    const stores = await buildFreshStores();
+    const character = stores.find((s) => !s.isVault && s.current)!;
+    const vault = getVault(stores)!;
+
+    // A unique-stack consumable that's already at max on the character. It must
+    // live in the Consumables bucket - other unique stacks (e.g. subclasses)
+    // take a blind-move fast path to the current character that skips the check.
+    const maxed = character.items.find(
+      (i) =>
+        i.uniqueStack &&
+        i.maxStackSize > 1 &&
+        i.amount === i.maxStackSize &&
+        i.bucket.hash === BucketHashes.Consumables &&
+        !i.notransfer &&
+        !i.location.inPostmaster,
+    )!;
+    expect(maxed).toBeDefined();
+    expect(amountOfItem(character, maxed)).toBe(maxed.maxStackSize);
+
+    // Put another copy in the vault and try to move it onto the full character.
+    const extra = cloneItem(maxed, { amount: 1 });
+    addItemToStore(vault, extra);
+
+    const { move } = setupMoveTestStore(stores);
+
+    await expect(move(extra, character, { amount: 1 })).rejects.toThrow(DimError);
+    expect(transferMock).not.toHaveBeenCalled();
   });
 });
