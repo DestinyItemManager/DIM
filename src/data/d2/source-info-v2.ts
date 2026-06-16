@@ -213,6 +213,11 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
+  cosmodrome: {
+    sourceHashes: [
+      2908547701, // Cosmodrome
+    ],
+  },
   crotasend: {
     sourceHashes: [
       1897187034, // Source: "Crota's End" Raid
@@ -643,6 +648,7 @@ const D2Sources: {
       571102497, // Source: Associated Gambit Quest
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
+      1084990426, // The Drifter
       1127923611, // Source: 3 Gambit Rank Resets in a Season
       1162859311, // Source: Complete the "Clean Getaway" quest.
       1465057711, // Source: Standard Ritual Playlist. (Vanguard Ops, Crucible, Gambit)
@@ -909,6 +915,17 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
+  monumentoftriumph: {
+    sourceHashes: [
+      1658014144, // Source: Monument of Triumph
+      2224236308, // Arena Ops
+      2371297108, // Worlds: Distortions
+      2908547701, // Cosmodrome
+      3457438830, // Solo Ops
+      4222891848, // Fireteam Ops
+    ],
+    aliases: ['mot'],
+  },
   moon: {
     sourceHashes: [
       1253026984, // Source: Among the lost Ghosts of the Moon.
@@ -1062,6 +1079,11 @@ const D2Sources: {
       3614199681, // Source: Pale Heart Triumph
     ],
   },
+  pantheon: {
+    sourceHashes: [
+      383611049, // Source: Pantheon
+    ],
+  },
   'pinnacle-weapon': {
     itemHashes: [
       61391690, // Hush
@@ -1148,6 +1170,7 @@ const D2Sources: {
   raid: {
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
+      383611049, // Source: Pantheon
       557146120, // Source: Complete a Guided Game as a guide or seeker.
       596084342, // Source: "The Desert Perpetual" Raid
       654652973, // Guide 25 Last Wish encounters
@@ -1393,6 +1416,12 @@ const D2Sources: {
       2959452483, // Season of the Deep - WEAPONS
     ],
     enteredDCV: 24,
+  },
+  sparrowracingleague: {
+    sourceHashes: [
+      4077197178, // Source: Sparrow Racing League
+    ],
+    aliases: ['srl'],
   },
   spireofstars: {
     sourceHashes: [

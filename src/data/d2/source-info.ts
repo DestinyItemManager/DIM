@@ -286,6 +286,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  cosmodrome: {
+    itemHashes: [],
+    sourceHashes: [
+      2908547701, // Cosmodrome
+    ],
+    searchString: [],
+  },
   crota: {
     itemHashes: [],
     sourceHashes: [
@@ -721,6 +728,7 @@ const D2Sources: {
       571102497, // Source: Associated Gambit Quest
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
+      1084990426, // The Drifter
       1127923611, // Source: 3 Gambit Rank Resets in a Season
       1162859311, // Source: Complete the "Clean Getaway" quest.
       1465057711, // Source: Standard Ritual Playlist. (Vanguard Ops, Crucible, Gambit)
@@ -1040,6 +1048,7 @@ const D2Sources: {
       571102497, // Source: Associated Gambit Quest
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
+      1084990426, // The Drifter
       1127923611, // Source: 3 Gambit Rank Resets in a Season
       1162859311, // Source: Complete the "Clean Getaway" quest.
       1465057711, // Source: Standard Ritual Playlist. (Vanguard Ops, Crucible, Gambit)
@@ -1433,6 +1442,18 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  monumentoftriumph: {
+    itemHashes: [],
+    sourceHashes: [
+      1658014144, // Source: Monument of Triumph
+      2224236308, // Arena Ops
+      2371297108, // Worlds: Distortions
+      2908547701, // Cosmodrome
+      3457438830, // Solo Ops
+      4222891848, // Fireteam Ops
+    ],
+    searchString: [],
+  },
   moon: {
     itemHashes: [],
     sourceHashes: [
@@ -1440,6 +1461,18 @@ const D2Sources: {
       1999000205, // Source: Exploring the Moon
       3062439457, // The Moon
       3589340943, // Source: Altars of Sorrow
+    ],
+    searchString: [],
+  },
+  mot: {
+    itemHashes: [],
+    sourceHashes: [
+      1658014144, // Source: Monument of Triumph
+      2224236308, // Arena Ops
+      2371297108, // Worlds: Distortions
+      2908547701, // Cosmodrome
+      3457438830, // Solo Ops
+      4222891848, // Fireteam Ops
     ],
     searchString: [],
   },
@@ -1597,6 +1630,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  pantheon: {
+    itemHashes: [],
+    sourceHashes: [
+      383611049, // Source: Pantheon
+    ],
+    searchString: [],
+  },
   'pinnacle-weapon': {
     itemHashes: [
       61391690, // Hush
@@ -1707,6 +1747,7 @@ const D2Sources: {
     ],
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
+      383611049, // Source: Pantheon
       557146120, // Source: Complete a Guided Game as a guide or seeker.
       596084342, // Source: "The Desert Perpetual" Raid
       654652973, // Guide 25 Last Wish encounters
@@ -2145,6 +2186,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  sparrowracingleague: {
+    itemHashes: [],
+    sourceHashes: [
+      4077197178, // Source: Sparrow Racing League
+    ],
+    searchString: [],
+  },
   spireofstars: {
     itemHashes: [],
     sourceHashes: [
@@ -2157,6 +2205,13 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
+    ],
+    searchString: [],
+  },
+  srl: {
+    itemHashes: [],
+    sourceHashes: [
+      4077197178, // Source: Sparrow Racing League
     ],
     searchString: [],
   },

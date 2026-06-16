@@ -2744,6 +2744,32 @@ const missingSources: { [key: string]: number[] } = {
   mercury: [
     2920548486, // D.F.A.
   ],
+  monumentoftriumph: [
+    407150808, // Ribbontail
+    407150809, // Ribbontail
+    407150810, // Ribbontail
+    407150811, // Ribbontail
+    1704597062, // The Spiteful Fang
+    1832481283, // Positive Outlook
+    2121132948, // Hardline Cut
+    2121132949, // Hardline Cut
+    2121132950, // Hardline Cut
+    2121132951, // Hardline Cut
+    2271714488, // Convened Recurve
+    2765451288, // Synanceia
+    2765451289, // Synanceia
+    2765451290, // Synanceia
+    2765451291, // Synanceia
+    2888021252, // Trachinus
+    2888021253, // Trachinus
+    2888021254, // Trachinus
+    2888021255, // Trachinus
+    4032097588, // Sixth Sense
+    4032097589, // Sixth Sense
+    4032097590, // Sixth Sense
+    4032097591, // Sixth Sense
+    4206550094, // The Ringing Nail
+  ],
   moon: [
     103494859, // Dreambane Helm
     193805725, // Dreambane Cloak
@@ -2775,6 +2801,32 @@ const missingSources: { [key: string]: number[] } = {
     3571441640, // Dreambane Grips
     3692187003, // Dreambane Robes
     3977088116, // Dreambane Greaves
+  ],
+  mot: [
+    407150808, // Ribbontail
+    407150809, // Ribbontail
+    407150810, // Ribbontail
+    407150811, // Ribbontail
+    1704597062, // The Spiteful Fang
+    1832481283, // Positive Outlook
+    2121132948, // Hardline Cut
+    2121132949, // Hardline Cut
+    2121132950, // Hardline Cut
+    2121132951, // Hardline Cut
+    2271714488, // Convened Recurve
+    2765451288, // Synanceia
+    2765451289, // Synanceia
+    2765451290, // Synanceia
+    2765451291, // Synanceia
+    2888021252, // Trachinus
+    2888021253, // Trachinus
+    2888021254, // Trachinus
+    2888021255, // Trachinus
+    4032097588, // Sixth Sense
+    4032097589, // Sixth Sense
+    4032097590, // Sixth Sense
+    4032097591, // Sixth Sense
+    4206550094, // The Ringing Nail
   ],
   neomuna: [
     1271409273, // Thunderhead Robes
@@ -2938,6 +2990,13 @@ const missingSources: { [key: string]: number[] } = {
     3430954245, // First Ascent Plate
     3490372701, // First Ascent Greaves
     3555622028, // First Ascent Robes
+  ],
+  pantheon: [
+    501329015, // Chattering Bone
+    1802315656, // Reckless Oracle
+    2601084711, // Bane of Sorrow
+    3066945855, // Zaouli's Bane
+    4157371152, // Chattering Bone
   ],
   pinnacleops: [
     1715391576, // Mint Retrograde
@@ -3880,6 +3939,14 @@ const missingSources: { [key: string]: number[] } = {
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
   ],
+  sparrowracingleague: [
+    406384293, // Veillantif-D
+    1229624538, // Vikala SMG4
+    1540621132, // Accelerando-42
+    2587567543, // Snipehunt Mk. 47
+    2775462168, // Terciopelo-4bl
+    2846261712, // Crux Celeritas IV
+  ],
   spireofstars: [
     223783885, // Insigne Shade Bond
     503773817, // Insigne Shade Gloves
@@ -3943,6 +4010,14 @@ const missingSources: { [key: string]: number[] } = {
     4039955353, // TM-Moss Custom Hat
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
+  ],
+  srl: [
+    406384293, // Veillantif-D
+    1229624538, // Vikala SMG4
+    1540621132, // Accelerando-42
+    2587567543, // Snipehunt Mk. 47
+    2775462168, // Terciopelo-4bl
+    2846261712, // Crux Celeritas IV
   ],
   strikes: [
     24244626, // Mark of Shelter
