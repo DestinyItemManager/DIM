@@ -9,6 +9,8 @@ Usage:
 Environment variables:
   DISCORD_CHANGELOG_BOT_TOKEN  — required (deletes existing beta messages before posting)
   DISCORD_CHANGELOG_WEBHOOK    — required (posts the new changelog embed)
+
+Depends on shared.py (must be co-located on the runner).
 """
 
 import json
@@ -19,11 +21,11 @@ import time
 import urllib.request
 import urllib.error
 
+from shared import chunk_content, post_webhook, debug, notice, USER_AGENT, REQUEST_TIMEOUT
+
 CHANGELOG_FILE = "docs/CHANGELOG.md"
 CHANNEL_ID = "894808801109245952"
 BETA_AVATAR_HASH = "5153E66D003AFF489DC73FF9EE151A6F"
-CHUNK_SIZE = 4000  # safely under Discord's 4096 embed limit
-REQUEST_TIMEOUT = 10  # seconds
 
 ICONS_BASE = "https://raw.githubusercontent.com/DestinyItemManager/DIM/refs/heads/master/icons"
 AVATAR_BETA = f"{ICONS_BASE}/beta/favicon-96x96.png"
@@ -82,7 +84,7 @@ def bot_api(method, path, token, data=None):
         headers={
             "Authorization": f"Bot {token}",
             "Content-Type": "application/json",
-            "User-Agent": "DiscordBot (https://github.com/DestinyItemManager/DIM, 1.0)",
+            "User-Agent": USER_AGENT,
         },
         method=method
     )
@@ -93,21 +95,6 @@ def bot_api(method, path, token, data=None):
     except urllib.error.HTTPError as e:
         print(f"HTTP {e.code} on {method} {path}: {e.read().decode()}")
         raise
-
-
-def chunk_content(content):
-    """Split content into <=CHUNK_SIZE chunks on newline boundaries."""
-    chunks = []
-    current = ""
-    for line in content.splitlines(keepends=True):
-        if len(current) + len(line) > CHUNK_SIZE:
-            chunks.append(current.rstrip())
-            current = line
-        else:
-            current += line
-    if current.strip():
-        chunks.append(current.rstrip())
-    return chunks
 
 
 # ── Commands ───────────────────────────────────────────────────────────────────
@@ -131,7 +118,7 @@ def _bot_api_with_retry(method, path, token, data=None, retries=5):
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
                 retry_after = float(json.loads(e.read()).get("retry_after", 1))
-                print(f"Rate limited, retrying in {retry_after}s...")
+                debug(f"rate limited, retrying in {retry_after}s")
                 time.sleep(retry_after)
             else:
                 raise
@@ -163,8 +150,7 @@ def delete_beta():
             deleted += 1
             time.sleep(0.5)  # stay under rate limit
 
-    print(f"Deleted {deleted} beta message(s)")
-
+    debug(f"scanned {len(messages)} message(s), deleted {deleted} beta message(s)")
 
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
@@ -174,29 +160,21 @@ if __name__ == "__main__":
     profile = detect_profile(sections)
 
     if profile == "none":
-        print("No changelog content detected, skipping Discord post.")
+        notice("no changelog content detected, skipping Discord post")
         sys.exit(0)
 
     content = get_content(sections, profile)
+    debug(f"detected profile={profile}, {len(content)} chars")
     delete_beta()
 
     webhook = os.environ["DISCORD_CHANGELOG_WEBHOOK"]
     avatar = PROFILES[profile]
 
     for chunk in chunk_content(content):
-        payload = {
+        post_webhook(webhook, {
             "username": "DIMmit",
             "avatar_url": avatar["avatar_url"],
             "content": "",
-            "embeds": [{"description": chunk, "color": avatar["color"]}]
-        }
-        data = json.dumps(payload).encode()
-        req = urllib.request.Request(
-            webhook, data=data,
-            headers={
-                "Content-Type": "application/json",
-                "User-Agent": "DiscordBot (https://github.com/DestinyItemManager/DIM, 1.0)",
-            }
-        )
-        urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT)
+            "embeds": [{"description": chunk, "color": avatar["color"]}],
+        })
         print(f"Posted chunk ({len(chunk)} chars)")

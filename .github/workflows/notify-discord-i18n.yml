@@ -20,4 +20,4 @@ jobs:
       - name: Post i18n diff to Discord
         env:
           DISCORD_I18N_WEBHOOK: ${{ secrets.DISCORD_I18N_WEBHOOK }}
-        run: python3 .github/scripts/i18n_discord.py
+        run: python3 .github/scripts/discord_i18n.py
