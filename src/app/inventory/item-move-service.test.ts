@@ -11,6 +11,7 @@ import { setupi18n } from 'testing/test-utils';
 import { DimError } from '../utils/dim-error';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
+import { amountOfItem } from './stores-helpers';
 
 // Mock the Bungie.net write APIs so moves don't hit the network. Each just
 // reports success - the in-memory store model is updated by the reducer, not by
@@ -39,6 +40,41 @@ function findTransferableWeapon(store: DimStore): DimItem | undefined {
       !i.isExotic &&
       Boolean(i.bucket.vaultBucket),
   );
+}
+
+/** Find a non-unique stackable with room to split off a few. */
+function findStackable(store: DimStore): DimItem | undefined {
+  return store.items.find(
+    (i) =>
+      i.maxStackSize > 1 &&
+      !i.uniqueStack &&
+      i.amount > 5 &&
+      !i.notransfer &&
+      !i.location.inPostmaster &&
+      Boolean(i.bucket.vaultBucket),
+  );
+}
+
+/**
+ * Find a stackable item that exists both on a character and in the vault, so
+ * moving the character's copy to the vault will merge stacks.
+ */
+function findSplitStack(stores: DimStore[]): { item: DimItem; source: DimStore } | undefined {
+  const vault = stores.find((s) => s.isVault)!;
+  for (const source of stores.filter((s) => !s.isVault)) {
+    const item = source.items.find(
+      (i) =>
+        i.maxStackSize > 1 &&
+        !i.uniqueStack &&
+        !i.notransfer &&
+        !i.location.inPostmaster &&
+        vault.items.some((v) => v.hash === i.hash && !v.location.inPostmaster),
+    );
+    if (item) {
+      return { item, source };
+    }
+  }
+  return undefined;
 }
 
 describe('item-move-service', () => {
@@ -190,4 +226,52 @@ describe('item-move-service', () => {
     await expect(move(item, character)).rejects.toThrow(DimError);
     expect(transferMock).not.toHaveBeenCalled();
   });
+
+  it('moves part of a stack, leaving the remainder behind', async () => {
+    const stores = await buildFreshStores();
+    const vault = getVault(stores)!;
+    const source = stores.find((s) => !s.isVault && findStackable(s))!;
+    const item = findStackable(source)!;
+    expect(item).toBeDefined();
+
+    const moveAmount = 3;
+    const startSource = amountOfItem(source, item);
+    const startVault = amountOfItem(vault, item);
+    expect(startSource).toBeGreaterThan(moveAmount);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    await move(item, vault, { amount: moveAmount });
+
+    const newStores = getStores();
+    const newSource = newStores.find((s) => s.id === source.id)!;
+    // The source keeps the remainder, the vault gains exactly the moved amount.
+    expect(amountOfItem(newSource, item)).toBe(startSource - moveAmount);
+    expect(amountOfItem(getVault(newStores)!, item)).toBe(startVault + moveAmount);
+  });
+
+  it('merges a stack into an existing stack on the destination', async () => {
+    const stores = await buildFreshStores();
+    const split = findSplitStack(stores);
+    expect(split).toBeDefined();
+    const { item, source } = split!;
+
+    const startSource = amountOfItem(source, item);
+    const vault = getVault(stores)!;
+    const startVault = amountOfItem(vault, item);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    await move(item, vault, { amount: startSource });
+
+    const newStores = getStores();
+    const newSource = newStores.find((s) => s.id === source.id)!;
+    // All of it left the source; the vault's total reflects the combined amount
+    // (regardless of how many physical stacks it ends up in).
+    expect(amountOfItem(newSource, item)).toBe(0);
+    expect(amountOfItem(getVault(newStores)!, item)).toBe(startVault + startSource);
+  });
+
+  // TODO: pulling an item out of the postmaster. The blind-pull path to the
+  // current character calls the (mocked) transfer API but doesn't appear to
+  // relocate the item out of the postmaster in the in-memory model. That needs
+  // a closer look (possible bug, or a quirk of the mock) before asserting on it.
 });
