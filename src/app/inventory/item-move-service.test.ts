@@ -330,4 +330,55 @@ describe('item-move-service', () => {
     expect(newTarget.items.some((i) => i.id === item.id && !i.location.inPostmaster)).toBe(true);
     expect(newSource.items.some((i) => i.id === item.id)).toBe(false);
   });
+
+  it('de-equips the existing exotic when equipping another one (one-exotic rule)', async () => {
+    const stores = await buildFreshStores();
+    const character = stores.find((s) => !s.isVault && s.current)!;
+
+    // The exotic weapon that's currently equipped.
+    const equippedExotic = character.items.find(
+      (i) => i.equipped && i.isExotic && i.equippingLabel && i.bucket.sort === 'Weapons',
+    )!;
+    expect(equippedExotic).toBeDefined();
+
+    // A different, unequipped exotic weapon in another bucket but with the same
+    // equipping label (so the one-exotic rule applies).
+    const newExotic = character.items.find(
+      (i) =>
+        !i.equipped &&
+        i.isExotic &&
+        i.equippingLabel === equippedExotic.equippingLabel &&
+        i.bucket.hash !== equippedExotic.bucket.hash &&
+        !i.location.inPostmaster,
+    )!;
+    expect(newExotic).toBeDefined();
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    await move(newExotic, character, { equip: true });
+
+    // Two equips: a non-exotic to replace the old exotic, then the new exotic.
+    expect(equipMock).toHaveBeenCalledTimes(2);
+
+    const newCharacter = getStores().find((s) => s.id === character.id)!;
+    const movedNew = newCharacter.items.find((i) => i.id === newExotic.id)!;
+    const movedOld = newCharacter.items.find((i) => i.id === equippedExotic.id)!;
+
+    // The new exotic is equipped; the old one was forced off.
+    expect(movedNew.equipped).toBe(true);
+    expect(movedOld.equipped).toBe(false);
+
+    // Only one exotic weapon is equipped across the character.
+    const equippedExoticWeapons = newCharacter.items.filter(
+      (i) => i.equipped && i.isExotic && i.bucket.sort === 'Weapons',
+    );
+    expect(equippedExoticWeapons).toHaveLength(1);
+    expect(equippedExoticWeapons[0].id).toBe(newExotic.id);
+
+    // The old exotic's slot now holds a single equipped non-exotic.
+    const equippedInOldBucket = findItemsByBucket(newCharacter, equippedExotic.bucket.hash).filter(
+      (i) => i.equipped,
+    );
+    expect(equippedInOldBucket).toHaveLength(1);
+    expect(equippedInOldBucket[0].isExotic).toBe(false);
+  });
 });
