@@ -16,7 +16,11 @@ const ignoreDimErrors: (string | PlatformErrorCodes)[] = [
   'BungieService.NotConnected',
   'BungieService.NotConnectedOrBlocked',
   'ItemService.ExoticError',
+  // Both of these mean the character's equipment is locked (in an activity, or logged
+  // out of one) - expected, and DIM already shows the user a helpful message. See
+  // checkEquipNotPossible in loadout-apply.ts, which treats them as the same condition.
   PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation,
+  PlatformErrorCodes.DestinyItemUnequippable,
 ];
 
 const options: BrowserOptions = {
