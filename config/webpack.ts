@@ -569,7 +569,7 @@ export default (env: Env) => {
           chunks: true,
           modules: true,
           excludeAssets: [
-            /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
+            /data\/d1\/manifests\/d1-manifest-.*\.json(\.br|\.gz)?/,
             /^(?!en).+.json/,
             /webpack-stats.json/,
             /screenshots\//,

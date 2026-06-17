@@ -64,39 +64,82 @@ function doGetManifest(): ThunkResult<AllD1DestinyManifestComponents> {
   };
 }
 
+// Bump this when the manifest files or split format change to invalidate cached copies.
+const manifestVersionStamp = 'split-2024-04-19';
+
 function loadManifest(): ThunkResult<AllD1DestinyManifestComponents> {
   return async (dispatch, getState) => {
     await settingsReady; // wait for settings to be ready
     const language = settingsSelector(getState()).language;
     const manifestLang = manifestLangs.has(language) ? language : 'en';
-    const path = `/data/d1/manifests/d1-manifest-${manifestLang}.json?v=2021-12-05`;
 
-    // Use the path as the version
-    version = path;
+    // The manifest is split into a language-independent base (hashes, stats, etc.) and a small
+    // per-language strings overlay (names, descriptions, ...). We download both and merge them
+    // back into a full manifest. This avoids shipping the large numeric data once per language.
+    const basePath = `/data/d1/manifests/d1-manifest-base.json?v=${manifestVersionStamp}`;
+    const stringsPath = `/data/d1/manifests/d1-manifest-strings-${manifestLang}.json?v=${manifestVersionStamp}`;
+
+    // The cached, merged manifest is keyed by the version stamp + language.
+    version = `${manifestVersionStamp}-${manifestLang}`;
 
     try {
       return await loadManifestFromCache(version);
     } catch {
-      return dispatch(loadManifestRemote(version, path));
+      return dispatch(loadManifestRemote(version, basePath, stringsPath));
     }
   };
 }
 
 /**
- * Returns a promise for the manifest data as a Uint8Array. Will cache it on success.
+ * Deep-merges a per-language strings overlay onto the shared base manifest, reconstructing a full
+ * manifest. Mirrors the split logic in build/split-d1-manifests.js:
+ *  - objects merge per key (a key lives in exactly one of base/strings),
+ *  - arrays merge per index, where a `null` strings slot means "use the base value".
+ */
+function mergeManifest(base: unknown, strings: unknown): unknown {
+  if (strings === undefined) {
+    return base;
+  }
+  if (Array.isArray(base) && Array.isArray(strings)) {
+    const baseArr = base as unknown[];
+    return (strings as unknown[]).map((s, i) =>
+      s === null ? baseArr[i] : mergeManifest(baseArr[i], s),
+    );
+  }
+  if (
+    base &&
+    typeof base === 'object' &&
+    !Array.isArray(base) &&
+    strings &&
+    typeof strings === 'object' &&
+    !Array.isArray(strings)
+  ) {
+    const baseObj = base as Record<string, unknown>;
+    const stringsObj = strings as Record<string, unknown>;
+    const out: Record<string, unknown> = { ...baseObj };
+    for (const k of Object.keys(stringsObj)) {
+      out[k] = mergeManifest(baseObj[k], stringsObj[k]);
+    }
+    return out;
+  }
+  return strings;
+}
+
+/**
+ * Downloads the base manifest and the language-specific strings, merges them, and caches the
+ * resulting full manifest.
  */
 function loadManifestRemote(
   version: string,
-  path: string,
+  basePath: string,
+  stringsPath: string,
 ): ThunkResult<AllD1DestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
 
     try {
-      const response = await fetch(path);
-      const manifest = await (response.ok
-        ? (response.json() as Promise<AllD1DestinyManifestComponents>)
-        : Promise.reject(await toHttpStatusError(response)));
+      const [base, strings] = await Promise.all([fetchJson(basePath), fetchJson(stringsPath)]);
+      const manifest = mergeManifest(base, strings) as AllD1DestinyManifestComponents;
 
       // We intentionally don't wait on this promise
       saveManifestToIndexedDB(manifest, version);
@@ -108,6 +151,14 @@ function loadManifestRemote(
       dispatch(loadingEnd(t('Manifest.Download')));
     }
   };
+}
+
+async function fetchJson(path: string): Promise<unknown> {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw await toHttpStatusError(response);
+  }
+  return response.json();
 }
 
 async function saveManifestToIndexedDB(typedArray: unknown, version: string) {
