@@ -87,6 +87,9 @@ export function setupMoveTestStore(stores: DimStore[]) {
   /** The current stores, reflecting any moves that have been applied. */
   const getStores = () => reduxStore.getState().inventory.stores;
 
+  /** The full Redux state, for selectors that need it (e.g. getSimilarItem). */
+  const getState = () => reduxStore.getState();
+
   /**
    * Run a smart move of `item` to `target`, returning the resulting item. Throws
    * if the move can't complete (e.g. no space).
@@ -110,7 +113,7 @@ export function setupMoveTestStore(stores: DimStore[]) {
     );
   };
 
-  return { getStores, move };
+  return { getState, getStores, move };
 }
 
 let cloneCounter = 0;

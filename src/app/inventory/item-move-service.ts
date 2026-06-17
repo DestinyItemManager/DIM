@@ -76,6 +76,13 @@ export interface MoveSession {
    * Contains instanceIds, or for uninstanced items, item hashes.
    */
   involvedItems: Set<string | number>;
+  /**
+   * The explicitly-involved items, as exclusions. When we need to de-equip an
+   * item to move it, we must not choose one of these as the replacement to
+   * equip - they're items the user is actively moving, so equipping one would
+   * fight the move it's part of.
+   */
+  involvedItemExclusions: Exclusion[];
   // TODO: a record of moves? something to prevent infinite moves loops?
 }
 
@@ -85,12 +92,15 @@ export function createMoveSession(
   items: DimItem[],
 ): MoveSession {
   const involvedItems = new Set<string | number>();
+  const involvedItemExclusions: Exclusion[] = [];
   for (const item of items) {
     involvedItems.add(item.instanced ? item.id : item.hash);
+    involvedItemExclusions.push({ id: item.id, hash: item.hash });
   }
   return {
     bucketsFullOnCurrentStore: new Set(),
     involvedItems,
+    involvedItemExclusions,
     cancelToken,
   };
 }
@@ -375,7 +385,12 @@ function dequipItem(
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
-    const similarItem = getSimilarItem(getState, stores, item, { excludeExotic });
+    // Don't replace the de-equipped item with something the user is already
+    // moving - that item is on its way elsewhere. See issues #8418 and #9416.
+    const similarItem = getSimilarItem(getState, stores, item, {
+      excludeExotic,
+      exclusions: session.involvedItemExclusions,
+    });
     if (!similarItem) {
       throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
     }

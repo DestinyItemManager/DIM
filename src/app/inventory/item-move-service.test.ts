@@ -16,6 +16,7 @@ import {
 } from 'testing/move-item-test-utils';
 import { setupi18n } from 'testing/test-utils';
 import { DimError } from '../utils/dim-error';
+import { getSimilarItem } from './item-move-service';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 import { amountOfItem } from './stores-helpers';
@@ -625,5 +626,46 @@ describe('item-move-service', () => {
     const equippedInSlotA = findItemsByBucket(newCharacter, slotA).filter((i) => i.equipped);
     expect(equippedInSlotA).toHaveLength(1);
     expect(equippedInSlotA[0].isExotic).toBe(false);
+  });
+
+  // Regression test for issue #8418 / #9416: when an equipped item is moved, the
+  // item picked to replace it must not be one of the items being moved.
+  it('does not pick an item being moved as the replacement for a de-equipped item (#8418)', async () => {
+    const stores = await buildFreshStores();
+    const character = stores.find((s) => !s.isVault && s.current)!;
+    const vault = getVault(stores)!;
+
+    // An equipped non-exotic weapon whose bucket has at least two unequipped,
+    // transferable replacements available.
+    const equipped = character.items.find(
+      (i) =>
+        i.equipped &&
+        i.bucket.sort === 'Weapons' &&
+        !i.isExotic &&
+        !i.notransfer &&
+        character.items.filter(
+          (c) => c.bucket.hash === i.bucket.hash && !c.equipped && !c.isExotic && !c.notransfer,
+        ).length >= 2,
+    )!;
+    expect(equipped).toBeDefined();
+
+    const { getState, getStores, move } = setupMoveTestStore(stores);
+
+    // The replacement DIM would naturally choose if nothing were excluded.
+    const naturalPick = getSimilarItem(getState, getStores(), equipped, {})!;
+    expect(naturalPick).toBeDefined();
+
+    // Move the equipped item to the vault, telling the session that the natural
+    // replacement is itself part of the move - so it must not be equipped.
+    await move(equipped, vault, { involvedItems: [equipped, naturalPick] });
+
+    const newCharacter = getStores().find((s) => s.id === character.id)!;
+    const equippedInBucket = findItemsByBucket(newCharacter, equipped.bucket.hash).filter(
+      (i) => i.equipped,
+    );
+    expect(equippedInBucket).toHaveLength(1);
+    // The replacement is neither the item being moved nor the de-equipped item.
+    expect(equippedInBucket[0].id).not.toBe(naturalPick.id);
+    expect(equippedInBucket[0].id).not.toBe(equipped.id);
   });
 });
