@@ -1,7 +1,10 @@
-import { transfer } from 'app/bungie-api/destiny2-api';
+import { equipItems, transfer } from 'app/bungie-api/destiny2-api';
+import { DimItem } from 'app/inventory/item-types';
+import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { setD2Manifest } from 'app/manifest/actions';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import {
   addItemToStore,
@@ -27,6 +30,7 @@ jest.mock('app/bungie-api/destiny2-api', () => ({
 }));
 
 const transferMock = transfer as jest.Mock;
+const equipItemsApiMock = equipItems as jest.Mock;
 
 describe('applyLoadout', () => {
   beforeAll(async () => {
@@ -36,6 +40,8 @@ describe('applyLoadout', () => {
   beforeEach(() => {
     transferMock.mockClear();
     transferMock.mockResolvedValue({});
+    equipItemsApiMock.mockReset();
+    equipItemsApiMock.mockResolvedValue({});
   });
 
   // Regression test for #8872 / #8506: bulk-moving consumables via a filtered
@@ -128,5 +134,84 @@ describe('applyLoadout', () => {
     expect(equippedInBucket[0].id).toBe(unmatchedReplacement.id);
     // The matched dupe stayed in the vault, unequipped.
     expect(newVault.items.some((i) => i.id === matchedDupe.id)).toBe(true);
+  });
+
+  // Regression test for #9416 (point 4): a crafted loadout item resolves to a
+  // different id than the loadout stores (crafting reassigns ids, matched back
+  // by craftedDate). The de-equip replacement search must exclude it by its
+  // resolved id, not the stale loadout-item id.
+  it('excludes a crafted loadout item from de-equip replacements by its resolved id', async () => {
+    // Bulk-equip API succeeds only for items actually in the target's inventory.
+    equipItemsApiMock.mockImplementation((_account: unknown, store: DimStore, items: DimItem[]) =>
+      Promise.resolve(
+        Object.fromEntries(
+          items.map((i) => [
+            i.id,
+            i.owner === store.id
+              ? PlatformErrorCodes.Success
+              : PlatformErrorCodes.DestinyItemNotFound,
+          ]),
+        ),
+      ),
+    );
+
+    const defs = await getTestDefinitions();
+    const stores = await buildFreshStores();
+    const vault = getVault(stores)!;
+    // A non-current character with two equipped non-exotic weapons (forces the
+    // bulk-dequip path, which is where the raw-exclusion bug lives).
+    const otherChar = stores.find(
+      (s) =>
+        !s.isVault &&
+        !s.current &&
+        s.items.filter((i) => i.equipped && i.bucket.sort === 'Weapons' && !i.isExotic).length >= 2,
+    )!;
+    expect(otherChar).toBeDefined();
+    const equippedWeapons = otherChar.items.filter(
+      (i) => i.equipped && i.bucket.sort === 'Weapons' && !i.isExotic,
+    );
+    const e1 = equippedWeapons[0];
+    const e2 = equippedWeapons[1];
+    const bucket1 = e1.bucket.hash;
+
+    // Force e1's replacement to come from the vault, and make our two clones the
+    // only candidates there.
+    for (const i of otherChar.items.filter((i) => i.bucket.hash === bucket1 && !i.equipped)) {
+      removeItemFromStore(stores, i);
+    }
+    for (const i of vault.items.filter((i) => i.bucket.hash === bucket1)) {
+      removeItemFromStore(stores, i);
+    }
+
+    const craftedDate = 999_999_999;
+    // A crafted "matched" weapon that ranks highest - it's in the loadout, so it
+    // must not be chosen as a replacement.
+    const matchedDupe = cloneItem(e1, {
+      primaryStat: { statHash: e1.primaryStat!.statHash, value: 9999 },
+      crafted: 'crafted',
+      craftedInfo: { level: 1, progress: 0, craftedDate, enhancementTier: 0 },
+    });
+    const unmatchedReplacement = cloneItem(e1, {
+      primaryStat: { statHash: e1.primaryStat!.statHash, value: 1 },
+    });
+    addItemToStore(vault, matchedDupe);
+    addItemToStore(vault, unmatchedReplacement);
+
+    const loadout = itemMoveLoadout([e1, e2, matchedDupe], vault);
+    // Simulate a loadout saved with the crafted item's OLD id - it now resolves
+    // by craftedDate to the live item, which has a different id.
+    loadout.items = loadout.items.map((li) =>
+      li.id === matchedDupe.id ? { ...li, id: 'stale-crafted-id' } : li,
+    );
+
+    const { dispatch, getStores } = setupMoveTestStore(stores);
+    dispatch(setD2Manifest(defs));
+    await dispatch(applyLoadout(vault, loadout));
+
+    const newOther = getStores().find((s) => s.id === otherChar.id)!;
+    const equippedInBucket1 = findItemsByBucket(newOther, bucket1).filter((i) => i.equipped);
+    expect(equippedInBucket1).toHaveLength(1);
+    // The replacement is the unmatched item, not the crafted loadout item.
+    expect(equippedInBucket1[0].id).toBe(unmatchedReplacement.id);
   });
 });

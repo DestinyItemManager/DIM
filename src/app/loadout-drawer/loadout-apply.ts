@@ -459,18 +459,16 @@ function doApplyLoadout(
           // else - so choose an appropriate replacement for each item.
           const itemsToEquip = filterMap(dequipItems, (i) =>
             getSimilarItem(getState, getStores(), i, {
-              exclusions: applicableLoadoutItems,
+              // Use the resolved items, not the raw loadout items - exclusions
+              // match by id, and shaped/crafted items resolve to a different id
+              // than the loadout stores. See #9416 (point 4).
+              exclusions: involvedItems,
               excludeExotic: i.isExotic,
             }),
           );
           try {
             const result = await dispatch(
-              equipItems(
-                getStore(getStores(), owner)!,
-                itemsToEquip,
-                applicableLoadoutItems,
-                moveSession,
-              ),
+              equipItems(getStore(getStores(), owner)!, itemsToEquip, involvedItems, moveSession),
             );
             // Bulk equip can partially fail
             setLoadoutState(
@@ -515,13 +513,9 @@ function doApplyLoadout(
         try {
           const initialItem = getLoadoutItem(loadoutItem)!;
           await dispatch(
-            applyLoadoutItem(
-              store.id,
-              loadoutItem,
-              getLoadoutItem,
-              applicableLoadoutItems,
-              moveSession,
-            ),
+            // involvedItems (resolved) rather than raw applicableLoadoutItems so
+            // the move-aside exclusions match shaped/crafted items. See #9416.
+            applyLoadoutItem(store.id, loadoutItem, getLoadoutItem, involvedItems, moveSession),
           );
           const updatedItem = getLoadoutItem(loadoutItem);
           if (updatedItem) {
