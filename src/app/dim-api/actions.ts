@@ -230,12 +230,11 @@ export function loadDimApiData(
       return;
     }
 
-    // don't load from remote if there is already an update queue from IDB - we'd roll back data otherwise!
-    if (getState().dimApi.updateQueue.length > 0) {
-      try {
-        await dispatch(flushUpdates()); // flushUpdates will call loadDimApiData again at the end
-        return;
-      } catch {}
+    // Don't load from remote if there is already an update queue from IDB - we'd roll back
+    // data otherwise. Flush it first; on success flushUpdates calls loadDimApiData again at
+    // the end so we're done. If the flush failed, fall through and load the profile directly.
+    if (getState().dimApi.updateQueue.length > 0 && (await dispatch(flushUpdates()))) {
+      return;
     }
 
     // get current account
@@ -317,18 +316,18 @@ let flushUpdatesBackoff = 0;
 /**
  * Process the queue of updates by sending them to the server
  */
-function flushUpdates(): ThunkResult {
+function flushUpdates(): ThunkResult<boolean> {
   return async (dispatch, getState) => {
     let dimApiState = getState().dimApi;
 
     // Skip flushing state if the API is disabled
     if (!dimApiState.globalSettings.dimApiEnabled) {
-      return;
+      return true;
     }
 
     // Skip if there's already an update going on, or the queue is empty
     if (dimApiState.updateInProgressWatermark !== 0 || dimApiState.updateQueue.length === 0) {
-      return;
+      return true;
     }
 
     // Prepare the queue
@@ -336,7 +335,7 @@ function flushUpdates(): ThunkResult {
     dimApiState = getState().dimApi;
 
     if (dimApiState.updateInProgressWatermark === 0) {
-      return;
+      return true;
     }
 
     infoLog(TAG, 'Flushing queue of', dimApiState.updateInProgressWatermark, 'updates');
@@ -367,6 +366,7 @@ function flushUpdates(): ThunkResult {
         // Load API data in case we didn't do it before
         dispatch(loadDimApiData());
       }
+      return true;
     } catch (e) {
       if (flushUpdatesBackoff === 0) {
         showUpdateErrorNotification(e);
@@ -390,7 +390,11 @@ function flushUpdates(): ThunkResult {
         dispatch(flushUpdates());
       })();
 
-      throw e;
+      // The failure is fully handled here (logged, user notified, retry scheduled), so
+      // return false rather than rethrowing. flushUpdates is mostly dispatched
+      // fire-and-forget, and rethrowing turned a handled failure into an unhandled
+      // promise rejection that got reported to Sentry as noise.
+      return false;
     }
   };
 }
