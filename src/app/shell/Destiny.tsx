@@ -26,10 +26,11 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
+import { lazyWithRetry } from 'app/utils/chunk-load';
 import { noop } from 'app/utils/functions';
 import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
-import { lazy, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
@@ -40,39 +41,49 @@ import * as styles from './Destiny.m.scss';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
-const Inventory = lazy(
+const Inventory = lazyWithRetry(
   () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory'),
 );
-const Progress = lazy(() => import(/* webpackChunkName: "progress" */ 'app/progress/Progress'));
-const LoadoutBuilderContainer = lazy(
+const Progress = lazyWithRetry(
+  () => import(/* webpackChunkName: "progress" */ 'app/progress/Progress'),
+);
+const LoadoutBuilderContainer = lazyWithRetry(
   () =>
     import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer'),
 );
-const D1LoadoutBuilder = lazy(
+const D1LoadoutBuilder = lazyWithRetry(
   () =>
     import(
       /* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder'
     ),
 );
-const Vendors = lazy(async () => import(/* webpackChunkName: "vendors" */ 'app/vendors/Vendors'));
-const SingleVendorPage = lazy(
+const Vendors = lazyWithRetry(
+  async () => import(/* webpackChunkName: "vendors" */ 'app/vendors/Vendors'),
+);
+const SingleVendorPage = lazyWithRetry(
   async () =>
     import(/* webpackChunkName: "vendors" */ 'app/vendors/single-vendor/SingleVendorPage'),
 );
-const D1Vendors = lazy(
+const D1Vendors = lazyWithRetry(
   () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors'),
 );
-const RecordBooks = lazy(
+const RecordBooks = lazyWithRetry(
   () => import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks'),
 );
-const Organizer = lazy(() => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer'));
-const Activities = lazy(
+const Organizer = lazyWithRetry(
+  () => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer'),
+);
+const Activities = lazyWithRetry(
   () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities'),
 );
-const Records = lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
-const Loadouts = lazy(() => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts'));
+const Records = lazyWithRetry(
+  () => import(/* webpackChunkName: "records" */ 'app/records/Records'),
+);
+const Loadouts = lazyWithRetry(
+  () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts'),
+);
 
-const SearchHistory = lazy(
+const SearchHistory = lazyWithRetry(
   () => import(/* webpackChunkName: "searchHistory" */ '../search/SearchHistory'),
 );
 

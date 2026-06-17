@@ -1,3 +1,3 @@
-import { lazy } from 'react';
+import { lazyWithRetry } from 'app/utils/chunk-load';
 
-export default lazy(() => import('./Armory' /* webpackChunkName: "item-popup-armory" */));
+export default lazyWithRetry(() => import('./Armory' /* webpackChunkName: "item-popup-armory" */));

@@ -2,11 +2,12 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { lazyWithRetry } from 'app/utils/chunk-load';
 import { usePageTitle } from 'app/utils/hooks';
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import * as styles from './ItemFeedPage.m.scss';
 
-const ItemFeed = lazy(() => import(/* webpackChunkName: "item-feed" */ './ItemFeed'));
+const ItemFeed = lazyWithRetry(() => import(/* webpackChunkName: "item-feed" */ './ItemFeed'));
 
 /**
  * The Item Feed in a full page for mobile.
