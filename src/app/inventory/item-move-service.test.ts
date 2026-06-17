@@ -782,4 +782,44 @@ describe('item-move-service', () => {
     expect(newCharacter.items.some((i) => i.id === w1.id)).toBe(true);
     expect(newCharacter.items.some((i) => i.id === w2.id)).toBe(true);
   });
+
+  // Regression test for #6895: a character-to-character move of a unique-stack
+  // item routes through the vault, but if a same-stack copy already sits in the
+  // vault the item can't transit. DIM must stop cleanly (no runaway of
+  // move-asides "transferring everything"), not thrash trying to make space.
+  it('stops cleanly when a uniqueStack item cannot transit a vault holding a same-stack copy', async () => {
+    const stores = await buildFreshStores();
+    const charX = stores.find((s) => !s.isVault && s.current)!;
+    const charY = stores.find((s) => !s.isVault && !s.current)!;
+    const vault = getVault(stores)!;
+
+    // Model a unique-stack item (like 2021 Solstice gear): take a transferable
+    // weapon as the template and flag it unique-stack, with one copy on charX
+    // and an identical copy in the vault.
+    const template = charX.items.find(
+      (i) =>
+        i.bucket.sort === 'Weapons' &&
+        i.instanced &&
+        !i.isExotic &&
+        !i.equipped &&
+        !i.notransfer &&
+        i.bucket.vaultBucket,
+    )!;
+    const a = cloneItem(template, { uniqueStack: true });
+    addItemToStore(charX, a);
+    addItemToStore(vault, cloneItem(a, { uniqueStack: true }));
+
+    const { getStores, move } = setupMoveTestStore(stores);
+
+    // The move stops with a clear error rather than running away.
+    await expect(move(a, charY)).rejects.toThrow(DimError);
+    // No transfers happened - it didn't start shuffling unrelated items.
+    expect(transferMock).not.toHaveBeenCalled();
+    // The item stayed put.
+    expect(
+      getStores()
+        .find((s) => s.id === charX.id)!
+        .items.some((i) => i.id === a.id),
+    ).toBe(true);
+  });
 });
