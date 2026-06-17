@@ -96,12 +96,15 @@ function loadManifest(): ThunkResult<AllD1DestinyManifestComponents> {
  *  - objects merge per key (a key lives in exactly one of base/strings),
  *  - arrays merge per index, where a `null` strings slot means "use the base value".
  */
-function mergeManifest(base: any, strings: any): any {
+function mergeManifest(base: unknown, strings: unknown): unknown {
   if (strings === undefined) {
     return base;
   }
   if (Array.isArray(base) && Array.isArray(strings)) {
-    return strings.map((s, i) => (s === null ? base[i] : mergeManifest(base[i], s)));
+    const baseArr = base as unknown[];
+    return (strings as unknown[]).map((s, i) =>
+      s === null ? baseArr[i] : mergeManifest(baseArr[i], s),
+    );
   }
   if (
     base &&
@@ -111,9 +114,11 @@ function mergeManifest(base: any, strings: any): any {
     typeof strings === 'object' &&
     !Array.isArray(strings)
   ) {
-    const out = { ...base };
-    for (const k of Object.keys(strings)) {
-      out[k] = mergeManifest(base[k], strings[k]);
+    const baseObj = base as Record<string, unknown>;
+    const stringsObj = strings as Record<string, unknown>;
+    const out: Record<string, unknown> = { ...baseObj };
+    for (const k of Object.keys(stringsObj)) {
+      out[k] = mergeManifest(baseObj[k], stringsObj[k]);
     }
     return out;
   }
