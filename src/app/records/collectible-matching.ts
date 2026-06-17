@@ -61,7 +61,11 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
         // where the icon matches our icon (e.g. Y1 Trials / Prophecy: Bond Judgment vs. Judgement's Wrap)
         const collectiblesByReverseItemIcon = keyBy(
           collectibles,
-          (c) => defs.InventoryItem.get(c.itemHash)?.displayProperties.icon,
+          // Some collectibles have itemHash 0 (no associated item). Skip the lookup for
+          // those - get(0) would report an invalidHash exception, and with no item there's
+          // no icon to match on anyway. '' is never a real icon path, so it won't match.
+          (c) =>
+            c.itemHash ? (defs.InventoryItem.get(c.itemHash)?.displayProperties.icon ?? '') : '',
         );
         return [classType, { collectiblesByName, collectiblesByReverseItemIcon }] as const;
       }),
