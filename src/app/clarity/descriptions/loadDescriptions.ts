@@ -130,17 +130,28 @@ export function loadClarity(): ThunkResult {
     // The latter helps if there was an error loading them - it forces the next
     // refresh to try again.
     if (!descriptions || Date.now() - lastDescriptionUpdate > descriptionReloadAfter) {
-      const newInfo = await loadClarityDescriptions(!descriptions);
-      if (newInfo) {
-        dispatch(actions.loadDescriptions(newInfo));
+      // Clarity is an optional enhancement loaded from GitHub Pages, which can be flaky.
+      // Swallow any failure so it doesn't become an unhandled rejection (loadClarity is
+      // dispatched without awaiting) - DIM works fine with whatever Clarity data it has.
+      try {
+        const newInfo = await loadClarityDescriptions(!descriptions);
+        if (newInfo) {
+          dispatch(actions.loadDescriptions(newInfo));
+        }
+      } catch (e) {
+        errorLog('clarity', 'failed to load descriptions', e);
       }
       lastDescriptionUpdate = Date.now();
     }
 
     if (!characterStats || Date.now() - lastStatsUpdate > descriptionReloadAfter) {
-      const newInfo = await loadClarityStats(!characterStats);
-      if (newInfo) {
-        dispatch(actions.loadCharacterStats(newInfo));
+      try {
+        const newInfo = await loadClarityStats(!characterStats);
+        if (newInfo) {
+          dispatch(actions.loadCharacterStats(newInfo));
+        }
+      } catch (e) {
+        errorLog('clarity', 'failed to load character stats', e);
       }
       lastStatsUpdate = Date.now();
     }
