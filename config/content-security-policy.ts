@@ -76,7 +76,6 @@ export default function csp(
       // Mastodon feed
       'https://www.mastofeed.com/apiv2/feed',
     ],
-    prefetchSrc: [SELF],
     objectSrc: SELF,
     // Web app manifest
     manifestSrc: SELF,
