@@ -668,4 +668,61 @@ describe('item-move-service', () => {
     expect(equippedInBucket[0].id).not.toBe(naturalPick.id);
     expect(equippedInBucket[0].id).not.toBe(equipped.id);
   });
+
+  // Regression test for #7935: pulling an account-wide consumable from another
+  // character's postmaster into the current character must not reserve (and try
+  // to clear) space in the vault - account-wide items go straight to the current
+  // character without a vault hop.
+  it('pulls an account-wide consumable from another character postmaster without clearing the vault', async () => {
+    const buckets = await getTestBuckets();
+    const stores = await buildFreshStores();
+    const currentChar = stores.find((s) => !s.isVault && s.current)!;
+    const otherChar = stores.find((s) => !s.isVault && !s.current)!;
+    const vault = getVault(stores)!;
+
+    // An account-wide consumable the current character already has a (non-full)
+    // stack of, so it has room for more without freeing a slot.
+    const existing = currentChar.items.find(
+      (i) =>
+        i.bucket.accountWide &&
+        i.bucket.hash === BucketHashes.Consumables &&
+        i.maxStackSize > i.amount &&
+        i.bucket.vaultBucket,
+    )!;
+    expect(existing).toBeDefined();
+
+    // A small stack of the same consumable, sitting in the other character's
+    // postmaster, to be pulled to the current character.
+    const coin = cloneItem(existing, { amount: 1 });
+    addItemToStore(otherChar, coin);
+    placeItemInPostmaster(coin, buckets);
+
+    // Completely fill the vault's General section so any (spurious) vault
+    // reservation would force move-asides out of the vault.
+    const vaultBucketHash = existing.bucket.vaultBucket!.hash;
+    const filler = vault.items.find(
+      (i) => i.bucket.vaultBucket?.hash === vaultBucketHash && i.hash !== existing.hash,
+    )!;
+    const occupied = vault.items.filter(
+      (i) => i.bucket.vaultBucket?.hash === vaultBucketHash,
+    ).length;
+    for (let i = occupied; i < existing.bucket.vaultBucket!.capacity; i++) {
+      addItemToStore(vault, cloneItem(filler));
+    }
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    await move(coin, currentChar, { amount: 1 });
+
+    // A single, direct pull - no move-asides shuffling the full vault.
+    expect(transferMock).toHaveBeenCalledTimes(1);
+
+    // The coin landed on the current character (merged into the existing stack)
+    // and is gone from the other character's postmaster.
+    const newCurrentChar = getStores().find((s) => s.id === currentChar.id)!;
+    expect(amountOfItem(newCurrentChar, existing)).toBe(existing.amount + 1);
+    const newOtherChar = getStores().find((s) => s.id === otherChar.id)!;
+    expect(newOtherChar.items.some((i) => i.hash === coin.hash && i.location.inPostmaster)).toBe(
+      false,
+    );
+  });
 });

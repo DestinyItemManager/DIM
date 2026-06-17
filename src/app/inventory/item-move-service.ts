@@ -816,8 +816,18 @@ function ensureCanMoveToStore(
     const storeReservations: { [storeId: string]: number } = {};
     storeReservations[store.id] = amount;
 
-    // guardian-to-guardian transfer will also need space in the vault
-    if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
+    // A guardian-to-guardian transfer routes through the vault, so it also needs
+    // transient space there. Account-wide items (consumables, etc.) are the
+    // exception: they go straight to the current character without a vault hop,
+    // so reserving vault space for them is wrong and can trigger needless
+    // move-asides (e.g. pulling a stackable from another character's postmaster
+    // when the vault is full). See #7935.
+    if (
+      item.owner !== 'vault' &&
+      !store.isVault &&
+      item.owner !== store.id &&
+      !item.bucket.accountWide
+    ) {
       storeReservations.vault = amount;
     }
 
