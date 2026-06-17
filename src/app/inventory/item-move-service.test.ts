@@ -1,5 +1,6 @@
-import { equip, transfer } from 'app/bungie-api/destiny2-api';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { equip, equipItems, transfer } from 'app/bungie-api/destiny2-api';
+import { neverCanceled } from 'app/utils/cancel';
+import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import {
   addItemToStore,
@@ -16,7 +17,11 @@ import {
 } from 'testing/move-item-test-utils';
 import { setupi18n } from 'testing/test-utils';
 import { DimError } from '../utils/dim-error';
-import { getSimilarItem } from './item-move-service';
+import {
+  createMoveSession,
+  equipItems as equipItemsThunk,
+  getSimilarItem,
+} from './item-move-service';
 import { DimItem } from './item-types';
 import { DimStore } from './store-types';
 import { amountOfItem } from './stores-helpers';
@@ -35,6 +40,7 @@ jest.mock('app/bungie-api/destiny2-api', () => ({
 
 const transferMock = transfer as jest.Mock;
 const equipMock = equip as jest.Mock;
+const equipItemsApiMock = equipItems as jest.Mock;
 
 /** Find an item suitable for transfer tests: instanced, transferable, not exotic. */
 function findTransferableWeapon(store: DimStore): DimItem | undefined {
@@ -724,5 +730,56 @@ describe('item-move-service', () => {
     expect(newOtherChar.items.some((i) => i.hash === coin.hash && i.location.inPostmaster)).toBe(
       false,
     );
+  });
+
+  // Regression test for #9416 (point 3): bulk-equipping items that live on
+  // another store (e.g. de-equip replacements chosen from the vault) must move
+  // them onto the store first - you can't equip an item that isn't there.
+  it('moves items onto the store before bulk-equipping them', async () => {
+    // Model the real bulk-equip API: it only succeeds for items that are
+    // actually in the target character's inventory.
+    equipItemsApiMock.mockImplementation((_account: unknown, store: DimStore, items: DimItem[]) =>
+      Promise.resolve(
+        Object.fromEntries(
+          items.map((i) => [
+            i.id,
+            i.owner === store.id
+              ? PlatformErrorCodes.Success
+              : PlatformErrorCodes.DestinyItemNotFound,
+          ]),
+        ),
+      ),
+    );
+
+    const stores = await buildFreshStores();
+    const character = stores.find((s) => !s.isVault && s.current)!;
+    const vault = getVault(stores)!;
+
+    // Two non-exotic weapons from different buckets, relocated into the vault.
+    const w1 = character.items.find(
+      (i) =>
+        i.bucket.hash === BucketHashes.KineticWeapons && !i.isExotic && !i.equipped && i.instanced,
+    )!;
+    const w2 = character.items.find(
+      (i) =>
+        i.bucket.hash === BucketHashes.PowerWeapons && !i.isExotic && !i.equipped && i.instanced,
+    )!;
+    expect(w1).toBeDefined();
+    expect(w2).toBeDefined();
+    for (const w of [w1, w2]) {
+      removeItemFromStore(stores, w);
+      addItemToStore(vault, w);
+    }
+
+    const { dispatch, getStores } = setupMoveTestStore(stores);
+    const session = createMoveSession(neverCanceled, []);
+    const result = await dispatch(equipItemsThunk(character, [w1, w2], [], session));
+
+    // Both items were moved onto the character and equipped successfully.
+    expect(result[w1.id]).toBe(PlatformErrorCodes.Success);
+    expect(result[w2.id]).toBe(PlatformErrorCodes.Success);
+    const newCharacter = getStores().find((s) => s.id === character.id)!;
+    expect(newCharacter.items.some((i) => i.id === w1.id)).toBe(true);
+    expect(newCharacter.items.some((i) => i.id === w2.id)).toBe(true);
   });
 });

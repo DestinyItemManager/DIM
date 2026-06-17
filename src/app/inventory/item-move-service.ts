@@ -278,6 +278,20 @@ export function equipItems(
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
 
+    // You can only equip items that are in the character's inventory. The items
+    // we're handed (e.g. replacements chosen by getSimilarItem) may live in the
+    // vault or on another character, so move each one onto the store first. See
+    // #9416 (point 3). Items already on the store are left as-is.
+    const itemsOnStore: DimItem[] = [];
+    for (const i of items) {
+      itemsOnStore.push(
+        i.owner === store.id
+          ? i
+          : await dispatch(executeMoveItem(i, store, { equip: false }, session)),
+      );
+    }
+    items = itemsOnStore;
+
     // Check for (and move aside) exotics
     const extraItemsToEquip: Promise<DimItem>[] = filterMap(items, (i) => {
       if (i.equippingLabel) {
