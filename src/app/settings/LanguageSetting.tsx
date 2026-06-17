@@ -49,7 +49,9 @@ export default function LanguageSetting() {
       }
       await dispatch(getDefinitions(true));
     } else if (currentAccount?.destinyVersion === 1) {
-      await dispatch(getDefinitionsD1(false));
+      // force=true so we re-download the manifest in the new language instead of
+      // returning the already-loaded definitions from the store.
+      await dispatch(getDefinitionsD1(true));
     }
     dispatch(clearStores());
   };
