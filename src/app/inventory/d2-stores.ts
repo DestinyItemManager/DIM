@@ -366,7 +366,7 @@ function loadStoresData(
             return;
           }
 
-          for (let i = 0; i < 2; i++) {
+          for (let attempt = 0; attempt < 2; attempt++) {
             if (!defs || !profileInfo) {
               infoLog(TAG, 'No defs or profile info, skipping store load', {
                 defs: Boolean(defs),
@@ -381,12 +381,18 @@ function loadStoresData(
 
             const buckets = d2BucketsSelector(getState())!;
             const customStats = customStatsSelector(getState());
-            const stores = buildStores({
-              defs,
-              buckets,
-              customStats,
-              profileResponse,
-            });
+            const stores = buildStores(
+              {
+                defs,
+                buckets,
+                customStats,
+                profileResponse,
+              },
+              // Only report missing-def items on the second attempt: the loop only
+              // reaches attempt 1 after we've already refreshed the manifest below, so a
+              // def that's still missing here isn't just a stale manifest.
+              attempt === 1,
+            );
 
             // One reason stores could have errors is if the manifest was not up
             // to date. Check to see if it has updated, and if so, download it and
