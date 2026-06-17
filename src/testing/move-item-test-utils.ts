@@ -113,7 +113,7 @@ export function setupMoveTestStore(stores: DimStore[]) {
     );
   };
 
-  return { getState, getStores, move };
+  return { dispatch: thunkDispatch, getState, getStores, move };
 }
 
 let cloneCounter = 0;
