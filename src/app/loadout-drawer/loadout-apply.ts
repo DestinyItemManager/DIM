@@ -433,13 +433,18 @@ function doApplyLoadout(
 
       const realItemsToDequip = filterMap(itemsToDequip, getLoadoutItem);
 
-      // Every item the loadout moves is "explicitly requested" - not just the
-      // equips/dequips. Otherwise the move session treats moved consumables as
-      // incidental and refuses to fill their bucket, which for unique-stack
-      // consumables (e.g. Hymn of Desecration, Ghost Fragments) makes the
-      // destination look full and either silently skips the item or triggers a
-      // cascade of move-asides. See issues #8872 and #8506.
-      const involvedItems = filterMap(loadoutItemsToMove, getLoadoutItem);
+      // Every item in the loadout is "explicitly requested" - not just the
+      // equips/dequips, and not just the ones that need to move. This drives two
+      // things in the move session:
+      //  - moved consumables aren't treated as incidental (which for unique
+      //    stacks like Hymn of Desecration / Ghost Fragments would make the
+      //    destination look full and silently skip the item or cascade
+      //    move-asides). See #8872 / #8506.
+      //  - none of the loadout's items get picked as a replacement when
+      //    de-equipping something, even ones already sitting in the vault. See
+      //    #3573 / #8418 / #9416. Resolving via getLoadoutItem first keeps the
+      //    exclusion ids accurate for shaped/crafted items.
+      const involvedItems = filterMap(applicableLoadoutItems, getLoadoutItem);
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
