@@ -5,7 +5,7 @@ import './app/main.scss';
 import './app/dim-ui/Sheet.m.scss';
 import './app/utils/sentry';
 // Guard React against browser translation tools mutating the DOM - must run before React renders.
-import './app/utils/translation-dom-guard';
+// import './app/utils/translation-dom-guard';
 import { createSaveAccountsObserver } from 'app/accounts/observers';
 import {
   createItemSizeObserver,
