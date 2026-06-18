@@ -136,6 +136,32 @@ describe('mergeEververseVendors', () => {
     expect(primary.currencies.map((c) => c.hash).sort()).toEqual([100, 200, 300]);
   });
 
+  it('folds in loose Eververse vendors that are not part of any group', () => {
+    // The rotator sub-vendors have no `groups`, so they arrive via sales.data
+    // rather than a vendor group - they're passed in as the loose list.
+    const primary = mockVendor(
+      VendorHashes.Eververse,
+      'EVERVERSE',
+      ['cat-p'],
+      [{ mark: 'p', displayCategoryIndex: 0 }],
+    );
+    const looseRotator = mockVendor(
+      2031393824,
+      'EVERVERSE_BRIGHT_DUST_ROTATOR_ARMOR',
+      ['cat-r'],
+      [{ mark: 'r', displayCategoryIndex: 0 }],
+    );
+
+    const groups = [group([primary])];
+    mergeEververseVendors(groups, [looseRotator]);
+
+    // The loose rotator was never in a group; its items fold into Tess.
+    expect(groups[0].vendors).toEqual([primary]);
+    expect(itemsOf(primary).map((i) => i.mark)).toEqual(['p', 'r']);
+    expect(itemsOf(primary).find((i) => i.mark === 'r')!.displayCategoryIndex).toBe(1);
+    expect(primary.def.displayCategories).toHaveLength(2);
+  });
+
   it('merges sub-vendors even when they live in a different group', () => {
     const primary = mockVendor(
       VendorHashes.Eververse,

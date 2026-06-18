@@ -52,24 +52,41 @@ export function toVendorGroups(
 
   const { defs } = context;
 
+  const buildVendor = (vendorHash: number) =>
+    toVendor(
+      // Override the item components from the profile with this vendor's item components
+      { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
+      vendorHash,
+      vendorsResponse.vendors.data?.[vendorHash],
+      characterId,
+      vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+      vendorsResponse,
+    );
+
   // Build every vendor first (including empty ones) so the Eververse merge below
   // can stitch the split vendors back together before we drop empties.
   const groups = Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => ({
     def: defs.VendorGroup.get(group.vendorGroupHash),
-    vendors: filterMap(group.vendorHashes, (vendorHash) =>
-      toVendor(
-        // Override the item components from the profile with this vendor's item components
-        { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
-        vendorHash,
-        vendorsResponse.vendors.data?.[vendorHash],
-        characterId,
-        vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-        vendorsResponse,
-      ),
-    ),
+    vendors: filterMap(group.vendorHashes, buildVendor),
   }));
 
-  mergeEververseVendors(groups);
+  // The split Eververse "rotator" sub-vendors aren't part of any vendor group
+  // (their definitions have no `groups`), so they never show up via the groups
+  // above. Find any that came back with sales and build them so the merge can
+  // fold them into Tess. See https://github.com/Bungie-net/api/issues/2069.
+  const builtVendorHashes = new Set(groups.flatMap((g) => g.vendors.map((v) => v.def.hash)));
+  const looseEververseVendors = filterMap(Object.keys(vendorsResponse.sales.data ?? {}), (key) => {
+    const vendorHash = Number(key);
+    if (builtVendorHashes.has(vendorHash)) {
+      return undefined;
+    }
+    const vendorDef = defs.Vendor.get(vendorHash);
+    return vendorDef?.vendorIdentifier?.startsWith(eververseVendorIdentifierPrefix)
+      ? buildVendor(vendorHash)
+      : undefined;
+  });
+
+  mergeEververseVendors(groups, looseEververseVendors);
 
   return filterMap(groups, (group) => {
     const vendors = group.vendors
@@ -91,12 +108,17 @@ export function toVendorGroups(
  */
 export function mergeEververseVendors(
   groups: { def: DestinyVendorGroupDefinition; vendors: D2Vendor[] }[],
+  /** Eververse vendors that aren't part of any group (e.g. the rotator sub-vendors). */
+  looseEververseVendors: D2Vendor[] = [],
 ) {
-  const eververseVendors = groups.flatMap((group) =>
-    group.vendors.filter((vendor) =>
-      vendor.def.vendorIdentifier?.startsWith(eververseVendorIdentifierPrefix),
+  const eververseVendors = [
+    ...groups.flatMap((group) =>
+      group.vendors.filter((vendor) =>
+        vendor.def.vendorIdentifier?.startsWith(eververseVendorIdentifierPrefix),
+      ),
     ),
-  );
+    ...looseEververseVendors,
+  ];
   if (eververseVendors.length <= 1) {
     return;
   }
