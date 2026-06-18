@@ -84,7 +84,7 @@ describe('applyLoadout', () => {
   // replacement.
   it('does not equip a matched vault item as a de-equip replacement', async () => {
     const defs = await getTestDefinitions();
-    const stores = await buildFreshStores();
+    let stores = await buildFreshStores();
     const character = stores.find((s) => !s.isVault && s.current)!;
     const vault = getVault(stores)!;
 
@@ -99,12 +99,12 @@ describe('applyLoadout', () => {
     // Remove every other weapon in that bucket from the character so the
     // replacement for the de-equipped weapon has to come from the vault.
     for (const i of character.items.filter((i) => i.bucket.hash === bucketHash && !i.equipped)) {
-      removeItemFromStore(stores, i);
+      stores = removeItemFromStore(stores, i);
     }
     // Clear that bucket in the vault too, so the only replacement candidates are
     // the two we add below.
     for (const i of vault.items.filter((i) => i.bucket.hash === bucketHash)) {
-      removeItemFromStore(stores, i);
+      stores = removeItemFromStore(stores, i);
     }
 
     // Two non-exotic weapons in the vault: a "matched" one that ranks highest
@@ -115,8 +115,8 @@ describe('applyLoadout', () => {
     const unmatchedReplacement = cloneItem(equipped, {
       primaryStat: { statHash: equipped.primaryStat!.statHash, value: 1 },
     });
-    addItemToStore(vault, matchedDupe);
-    addItemToStore(vault, unmatchedReplacement);
+    [stores] = addItemToStore(stores, vault.id, matchedDupe);
+    [stores] = addItemToStore(stores, vault.id, unmatchedReplacement);
 
     const { dispatch, getStores } = setupMoveTestStore(stores);
     dispatch(setD2Manifest(defs));
@@ -156,7 +156,7 @@ describe('applyLoadout', () => {
     );
 
     const defs = await getTestDefinitions();
-    const stores = await buildFreshStores();
+    let stores = await buildFreshStores();
     const vault = getVault(stores)!;
     // A non-current character with two equipped non-exotic weapons (forces the
     // bulk-dequip path, which is where the raw-exclusion bug lives).
@@ -177,10 +177,10 @@ describe('applyLoadout', () => {
     // Force e1's replacement to come from the vault, and make our two clones the
     // only candidates there.
     for (const i of otherChar.items.filter((i) => i.bucket.hash === bucket1 && !i.equipped)) {
-      removeItemFromStore(stores, i);
+      stores = removeItemFromStore(stores, i);
     }
     for (const i of vault.items.filter((i) => i.bucket.hash === bucket1)) {
-      removeItemFromStore(stores, i);
+      stores = removeItemFromStore(stores, i);
     }
 
     const craftedDate = 999_999_999;
@@ -194,8 +194,8 @@ describe('applyLoadout', () => {
     const unmatchedReplacement = cloneItem(e1, {
       primaryStat: { statHash: e1.primaryStat!.statHash, value: 1 },
     });
-    addItemToStore(vault, matchedDupe);
-    addItemToStore(vault, unmatchedReplacement);
+    [stores] = addItemToStore(stores, vault.id, matchedDupe);
+    [stores] = addItemToStore(stores, vault.id, unmatchedReplacement);
 
     const loadout = itemMoveLoadout([e1, e2, matchedDupe], vault);
     // Simulate a loadout saved with the crafted item's OLD id - it now resolves

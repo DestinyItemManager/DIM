@@ -71,18 +71,15 @@ export interface MoveSession {
   /** A token that can be checked to see if the whole operation is canceled. */
   readonly cancelToken: CancelToken;
   /**
-   * Items explicitly involved in the requested move.
-   * Used to distinguish user-intentional moves vs make-space moves.
-   * Contains instanceIds, or for uninstanced items, item hashes.
+   * Items explicitly involved in the requested move, as {id, hash} exclusions.
+   * Two uses:
+   *  - distinguish user-intentional moves vs incidental make-space moves (so a
+   *    deliberately-moved consumable isn't penalized as if it were incidental).
+   *  - when we de-equip an item to move it, none of these may be chosen as the
+   *    replacement to equip - they're items the user is actively moving, so
+   *    equipping one would fight the move it's part of.
    */
-  involvedItems: Set<string | number>;
-  /**
-   * The explicitly-involved items, as exclusions. When we need to de-equip an
-   * item to move it, we must not choose one of these as the replacement to
-   * equip - they're items the user is actively moving, so equipping one would
-   * fight the move it's part of.
-   */
-  involvedItemExclusions: Exclusion[];
+  involvedItems: Exclusion[];
   // TODO: a record of moves? something to prevent infinite moves loops?
 }
 
@@ -91,16 +88,9 @@ export function createMoveSession(
   /** Items explicitly involved in the move. */
   items: DimItem[],
 ): MoveSession {
-  const involvedItems = new Set<string | number>();
-  const involvedItemExclusions: Exclusion[] = [];
-  for (const item of items) {
-    involvedItems.add(item.instanced ? item.id : item.hash);
-    involvedItemExclusions.push({ id: item.id, hash: item.hash });
-  }
   return {
     bucketsFullOnCurrentStore: new Set(),
-    involvedItems,
-    involvedItemExclusions,
+    involvedItems: items.map((item) => ({ id: item.id, hash: item.hash })),
     cancelToken,
   };
 }
@@ -267,6 +257,12 @@ export function getSimilarItem(
  * Returns a map of item ids to their success status (PlatformErrorCodes.Success if it succeeded), which can be less
  * that what was passed in or even more than what was passed in because
  * sometimes we have to de-equip an exotic to equip another exotic.
+ *
+ * Ideally callers pass items that are already on `store` - loadout-apply moves
+ * them into place first. But the de-equip path picks replacements via
+ * getSimilarItem, which may live in the vault or on another character, so as a
+ * safety net we move any off-store items onto `store` before equipping. See
+ * #9416 (point 3).
  */
 export function equipItems(
   store: DimStore,
@@ -278,10 +274,11 @@ export function equipItems(
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
 
-    // You can only equip items that are in the character's inventory. The items
-    // we're handed (e.g. replacements chosen by getSimilarItem) may live in the
-    // vault or on another character, so move each one onto the store first. See
-    // #9416 (point 3). Items already on the store are left as-is.
+    // You can only equip items that are in the character's inventory. Callers
+    // are expected to have moved them onto `store` already, but the de-equip
+    // replacements chosen by getSimilarItem may still live in the vault or on
+    // another character, so move any stragglers onto the store first. See #9416
+    // (point 3). Items already on the store are left as-is.
     const itemsOnStore: DimItem[] = [];
     for (const i of items) {
       itemsOnStore.push(
@@ -403,7 +400,7 @@ function dequipItem(
     // moving - that item is on its way elsewhere. See issues #8418 and #9416.
     const similarItem = getSimilarItem(getState, stores, item, {
       excludeExotic,
-      exclusions: session.involvedItemExclusions,
+      exclusions: session.involvedItems,
     });
     if (!similarItem) {
       throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
@@ -808,7 +805,10 @@ function ensureCanMoveToStore(
 
       // if this is a consumable, and wasn't an explicitly requested move,
       // pretend the consumables bucket is 1 stack smaller, so we don't automatically max it out
-      if (i.bucket.hash === BucketHashes.Consumables && !session.involvedItems.has(i.hash)) {
+      if (
+        i.bucket.hash === BucketHashes.Consumables &&
+        !session.involvedItems.some((e) => e.hash === i.hash)
+      ) {
         left -= i.maxStackSize;
       }
 
