@@ -78,6 +78,13 @@ export function processItems(
   context: ItemCreationContext,
   owner: DimStore,
   items: DestinyItemComponent[],
+  /**
+   * Whether to report items that have no definition to Sentry. A missing def normally
+   * just means the user's manifest is stale, so this should only be true after we've
+   * already refreshed the manifest and the def is *still* missing - which shouldn't
+   * happen, since any item a player owns is in Bungie's current manifest.
+   */
+  reportMissingDefs: boolean,
 ): DimItem[] {
   const result: DimItem[] = [];
 
@@ -112,16 +119,35 @@ export function processItems(
         bucketDef.category !== BucketCategory.Invisible &&
         bucketDef.displayProperties.name
       ) {
-        const itemDef = defs.InventoryItem.get(item.itemHash);
-        reportException('setting store hadErrors', new Error('setting store hadErrors'), {
-          itemHash: item.itemHash,
-          hasDefinition: Boolean(itemDef),
-          hasName: Boolean(itemDef?.displayProperties.name),
-          hasQuestLineName: Boolean(itemDef?.setData?.questLineName),
-          itemBucketHash: item.bucketHash,
-          defBucketHash: itemDef?.inventory?.bucketTypeHash,
-          bucketName: bucketDef.displayProperties.name,
-        });
+        // getOptional so we don't log a second hashLookupFailure for a hash that's
+        // already known to be missing.
+        const itemDef = defs.InventoryItem.getOptional(item.itemHash);
+        if (itemDef) {
+          // We have a definition but still couldn't build the item - an actual DIM bug.
+          reportException('setting store hadErrors', new Error('setting store hadErrors'), {
+            itemHash: item.itemHash,
+            hasDefinition: true,
+            hasName: Boolean(itemDef.displayProperties.name),
+            hasQuestLineName: Boolean(itemDef.setData?.questLineName),
+            itemBucketHash: item.bucketHash,
+            defBucketHash: itemDef.inventory?.bucketTypeHash,
+            bucketName: bucketDef.displayProperties.name,
+          });
+        } else if (reportMissingDefs) {
+          // No definition at all. Normally that just means the manifest is stale, and
+          // flagging hadErrors below kicks off a re-download that fixes it - so we don't
+          // report it on the first pass. reportMissingDefs means we've already refreshed
+          // the manifest and it's *still* missing, which shouldn't happen.
+          reportException('setting store hadErrors', new Error('setting store hadErrors'), {
+            itemHash: item.itemHash,
+            hasDefinition: false,
+            itemBucketHash: item.bucketHash,
+            bucketName: bucketDef.displayProperties.name,
+          });
+        }
+        // Always flag the store: a missing def means the manifest is stale and needs a
+        // re-download, and either way we must not purge tags/notes for items that failed
+        // to load.
         owner.hadErrors = true;
       }
     }
