@@ -14,6 +14,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
@@ -21,7 +22,6 @@ import { debounce } from 'es-toolkit';
 import { AnimatePresence, LayoutGroup, Variants, motion } from 'motion/react';
 import React, {
   Suspense,
-  lazy,
   memo,
   useCallback,
   useDeferredValue,

@@ -1,7 +1,8 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { gaPageView } from 'app/google';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { Suspense, lazy, useEffect } from 'react';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
+import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { endCompareSession } from './actions';
