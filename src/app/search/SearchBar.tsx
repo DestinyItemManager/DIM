@@ -14,7 +14,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { lazyWithRetry } from 'app/utils/chunk-load';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
@@ -86,9 +86,7 @@ const loadoutAutoCompleterSelector = createSelector(
   createAutocompleter,
 );
 
-const LazyFilterHelp = lazyWithRetry(
-  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp'),
-);
+const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
 
 const RowContents = memo(({ item }: { item: SearchItem }) => {
   function highlight(text: string, section: string) {

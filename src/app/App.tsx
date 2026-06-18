@@ -1,6 +1,6 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
-import { lazyWithRetry } from 'app/utils/chunk-load';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import clsx from 'clsx';
 import { Suspense } from 'react';
 import { useSelector } from 'react-redux';
@@ -23,19 +23,19 @@ import Header from './shell/Header';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
 
-const WhatsNew = lazyWithRetry(
+const WhatsNew = lazy(
   () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './whats-new/WhatsNew'),
 );
-const SettingsPage = lazyWithRetry(
+const SettingsPage = lazy(
   () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage'),
 );
-const Debug = lazyWithRetry(
+const Debug = lazy(
   () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './debug/Debug'),
 );
-const Privacy = lazyWithRetry(
+const Privacy = lazy(
   () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './shell/Privacy'),
 );
-const About = lazyWithRetry(
+const About = lazy(
   () => import(/* webpackChunkName: "about-whatsnew-privacy-debug" */ './shell/About'),
 );
 

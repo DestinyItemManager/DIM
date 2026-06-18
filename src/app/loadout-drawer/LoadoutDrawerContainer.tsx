@@ -7,7 +7,7 @@ import { warnMissingClass } from 'app/loadout-builder/loadout-builder-reducer';
 import { decodeUrlLoadout } from 'app/loadout/loadout-share/loadout-import';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { lazyWithRetry } from 'app/utils/chunk-load';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import { errorMessage } from 'app/utils/errors';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -17,10 +17,10 @@ import { useLocation, useNavigate } from 'react-router';
 import { EditLoadoutState, addItem$, editLoadout$ } from './loadout-events';
 import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
-const LoadoutDrawer = lazyWithRetry(
+const LoadoutDrawer = lazy(
   () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer'),
 );
-const D1LoadoutDrawer = lazyWithRetry(
+const D1LoadoutDrawer = lazy(
   () =>
     import(
       /* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/D1LoadoutDrawer'

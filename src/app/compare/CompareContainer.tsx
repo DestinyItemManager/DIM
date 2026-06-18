@@ -1,14 +1,14 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { gaPageView } from 'app/google';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { lazyWithRetry } from 'app/utils/chunk-load';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { endCompareSession } from './actions';
 import { compareSessionSelector } from './selectors';
 
-const Compare = lazyWithRetry(() => import(/* webpackChunkName: "compare" */ './Compare'));
+const Compare = lazy(() => import(/* webpackChunkName: "compare" */ './Compare'));
 
 export default function CompareContainer({ destinyVersion }: { destinyVersion: DestinyVersion }) {
   const session = useSelector(compareSessionSelector);
