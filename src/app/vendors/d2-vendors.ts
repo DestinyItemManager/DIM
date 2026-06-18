@@ -7,6 +7,7 @@ import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparator
 import {
   DestinyCollectibleState,
   DestinyDestinationDefinition,
+  DestinyDisplayCategoryDefinition,
   DestinyInventoryItemDefinition,
   DestinyPlaceDefinition,
   DestinyVendorComponent,
@@ -18,6 +19,7 @@ import {
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import specialVendorStrings from 'data/d2/special-vendors-strings.json';
 import vendorIconOverrides from 'data/d2/vendor-image-overrides.json';
+import { maxBy } from 'es-toolkit';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -136,7 +138,16 @@ export function mergeEververseVendors(
 
   for (const vendor of subVendors) {
     const categoryOffset = displayCategories.length;
-    displayCategories.push(...vendor.def.displayCategories);
+    // The rotator sub-vendors have unnamed display categories, so name each one
+    // after the kind of item it sells (e.g. "Shader", "Ghost Shell").
+    const itemsByCategory = Map.groupBy(vendor.items, (item) => item.displayCategoryIndex);
+    for (const [index, category] of vendor.def.displayCategories.entries()) {
+      displayCategories.push(
+        category.displayProperties?.name
+          ? category
+          : nameCategoryFromItems(category, itemsByCategory.get(index)),
+      );
+    }
     for (const item of vendor.items) {
       items.push(
         item.displayCategoryIndex === undefined
@@ -158,6 +169,28 @@ export function mergeEververseVendors(
   for (const group of groups) {
     group.vendors = group.vendors.filter((vendor) => !mergedAway.has(vendor));
   }
+}
+
+/**
+ * Give an unnamed display category a name based on the most common item type it
+ * sells, so a merged-in Eververse rotator shows up as e.g. "Shader" rather than
+ * a blank header. Returns the original category unchanged if we can't tell.
+ */
+function nameCategoryFromItems(
+  category: DestinyDisplayCategoryDefinition,
+  items: VendorItem[] = [],
+): DestinyDisplayCategoryDefinition {
+  const typeNameCounts = new Map<string, number>();
+  for (const { item } of items) {
+    if (item?.typeName) {
+      typeNameCounts.set(item.typeName, (typeNameCounts.get(item.typeName) ?? 0) + 1);
+    }
+  }
+  if (typeNameCounts.size === 0) {
+    return category;
+  }
+  const name = maxBy([...typeNameCounts], ([, count]) => count)![0];
+  return { ...category, displayProperties: { ...category.displayProperties, name } };
 }
 
 export function toVendor(

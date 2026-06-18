@@ -54,12 +54,14 @@ describe('process vendors', () => {
 interface MockItem {
   mark: string;
   displayCategoryIndex?: number;
+  /** Becomes the VendorItem's item.typeName, used to name unnamed categories. */
+  typeName?: string;
 }
 
 function mockVendor(
   hash: number,
   vendorIdentifier: string,
-  categories: string[],
+  categories: { identifier?: string; name?: string }[] | string[],
   items: MockItem[],
   currencyHashes: number[] = [],
 ): D2Vendor {
@@ -67,9 +69,13 @@ function mockVendor(
     def: {
       hash,
       vendorIdentifier,
-      displayCategories: categories.map((identifier) => ({ identifier })),
+      displayCategories: categories.map((c) =>
+        typeof c === 'string'
+          ? { identifier: c }
+          : { identifier: c.identifier, displayProperties: { name: c.name } },
+      ),
     },
-    items,
+    items: items.map((i) => ({ ...i, item: i.typeName ? { typeName: i.typeName } : undefined })),
     currencies: currencyHashes.map((h) => ({ hash: h })),
   } as unknown as D2Vendor;
 }
@@ -77,6 +83,9 @@ function mockVendor(
 const itemsOf = (vendor: D2Vendor) => vendor.items as unknown as MockItem[];
 const catId = (vendor: D2Vendor, i: number) =>
   (vendor.def.displayCategories[i] as { identifier: string }).identifier;
+const catName = (vendor: D2Vendor, i: number) =>
+  (vendor.def.displayCategories[i] as { displayProperties?: { name?: string } }).displayProperties
+    ?.name;
 const group = (vendors: D2Vendor[]) => ({ def: { order: 0 } as never, vendors });
 
 // Bungie split Eververse into ~25 separate vendors (Bungie-net/api#2069); these
@@ -134,6 +143,32 @@ describe('mergeEververseVendors', () => {
 
     // Currencies merged and de-duped by hash.
     expect(primary.currencies.map((c) => c.hash).sort()).toEqual([100, 200, 300]);
+  });
+
+  it('names an unnamed merged category after the item type it sells', () => {
+    const primary = mockVendor(
+      VendorHashes.Eververse,
+      'EVERVERSE',
+      ['cat-p'],
+      [{ mark: 'p', displayCategoryIndex: 0 }],
+    );
+    // A rotator with an unnamed category that sells mostly shaders.
+    const shaders = mockVendor(
+      2041776156,
+      'EVERVERSE_BRIGHT_DUST_ROTATOR_SHADERS',
+      [{ identifier: 'rotator', name: '' }],
+      [
+        { mark: 's1', displayCategoryIndex: 0, typeName: 'Shader' },
+        { mark: 's2', displayCategoryIndex: 0, typeName: 'Shader' },
+        { mark: 's3', displayCategoryIndex: 0, typeName: 'Emblem' },
+      ],
+    );
+
+    const groups = [group([primary])];
+    mergeEververseVendors(groups, [shaders]);
+
+    // The merged-in (index 1) category is named after the most common item type.
+    expect(catName(primary, 1)).toBe('Shader');
   });
 
   it('folds in loose Eververse vendors that are not part of any group', () => {
