@@ -35,6 +35,12 @@ export interface D2Vendor {
 
 const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashes.Eververse];
 
+/**
+ * All of the split Eververse vendors share this `vendorIdentifier` prefix (e.g.
+ * `EVERVERSE`, `EVERVERSE_BRIGHT_DUST_ROTATOR_*`, `EVERVERSE_SILVER_ROTATOR_*`).
+ */
+const eververseVendorIdentifierPrefix = 'EVERVERSE';
+
 export function toVendorGroups(
   context: ItemCreationContext,
   vendorsResponse: DestinyVendorsResponse,
@@ -46,26 +52,90 @@ export function toVendorGroups(
 
   const { defs } = context;
 
-  return Object.values(vendorsResponse.vendorGroups.data.groups)
-    .map((group) => {
-      const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
-      return {
-        def: groupDef,
-        vendors: filterMap(group.vendorHashes, (vendorHash) => {
-          const vendor = toVendor(
-            // Override the item components from the profile with this vendor's item components
-            { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
-            vendorHash,
-            vendorsResponse.vendors.data?.[vendorHash],
-            characterId,
-            vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-            vendorsResponse,
-          );
-          return vendor?.items.length ? vendor : undefined;
-        }).sort(compareByIndex(vendorOrder, (v) => v.def.hash)),
-      };
-    })
-    .sort(compareBy((g) => g.def.order));
+  // Build every vendor first (including empty ones) so the Eververse merge below
+  // can stitch the split vendors back together before we drop empties.
+  const groups = Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => ({
+    def: defs.VendorGroup.get(group.vendorGroupHash),
+    vendors: filterMap(group.vendorHashes, (vendorHash) =>
+      toVendor(
+        // Override the item components from the profile with this vendor's item components
+        { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
+        vendorHash,
+        vendorsResponse.vendors.data?.[vendorHash],
+        characterId,
+        vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+        vendorsResponse,
+      ),
+    ),
+  }));
+
+  mergeEververseVendors(groups);
+
+  return filterMap(groups, (group) => {
+    const vendors = group.vendors
+      .filter((vendor) => vendor.items.length)
+      .sort(compareByIndex(vendorOrder, (v) => v.def.hash));
+    return vendors.length ? { def: group.def, vendors } : undefined;
+  }).sort(compareBy((g) => g.def.order));
+}
+
+/**
+ * As of the Monument of Triumph update, Bungie split the Eververse vendor (Tess
+ * Everis) into ~25 separate vendor definitions - a main vendor plus Bright Dust
+ * / Silver / Featured "rotator" sub-vendors. Merge them all back into the single
+ * canonical Eververse vendor so all of Tess's wares (especially Bright Dust)
+ * appear together, instead of as a bunch of separate, mostly-unnamed tiles. See
+ * https://github.com/Bungie-net/api/issues/2069.
+ *
+ * Mutates `groups` in place.
+ */
+export function mergeEververseVendors(
+  groups: { def: DestinyVendorGroupDefinition; vendors: D2Vendor[] }[],
+) {
+  const eververseVendors = groups.flatMap((group) =>
+    group.vendors.filter((vendor) =>
+      vendor.def.vendorIdentifier?.startsWith(eververseVendorIdentifierPrefix),
+    ),
+  );
+  if (eververseVendors.length <= 1) {
+    return;
+  }
+
+  const primary =
+    eververseVendors.find((vendor) => vendor.def.hash === VendorHashes.Eververse) ??
+    eververseVendors[0];
+  const subVendors = eververseVendors.filter((vendor) => vendor !== primary);
+
+  // Each sub-vendor's items reference its own def's displayCategories by index,
+  // so append those categories and shift the merged-in items to match.
+  const displayCategories = [...primary.def.displayCategories];
+  const items = [...primary.items];
+  const currenciesByHash = new Map(primary.currencies.map((c) => [c.hash, c]));
+
+  for (const vendor of subVendors) {
+    const categoryOffset = displayCategories.length;
+    displayCategories.push(...vendor.def.displayCategories);
+    for (const item of vendor.items) {
+      items.push(
+        item.displayCategoryIndex === undefined
+          ? item
+          : { ...item, displayCategoryIndex: item.displayCategoryIndex + categoryOffset },
+      );
+    }
+    for (const currency of vendor.currencies) {
+      currenciesByHash.set(currency.hash, currency);
+    }
+  }
+
+  primary.def = { ...primary.def, displayCategories };
+  primary.items = items;
+  primary.currencies = [...currenciesByHash.values()];
+
+  // Drop the now-merged sub-vendors from their groups.
+  const mergedAway = new Set(subVendors);
+  for (const group of groups) {
+    group.vendors = group.vendors.filter((vendor) => !mergedAway.has(vendor));
+  }
 }
 
 export function toVendor(
