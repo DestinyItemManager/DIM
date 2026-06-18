@@ -1,7 +1,13 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { VendorHashes } from 'app/search/d2-known-values';
 import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
-import { D2Vendor, D2VendorGroup, mergeEververseVendors, toVendorGroups } from './d2-vendors';
+import {
+  D2Vendor,
+  D2VendorGroup,
+  mergeEververseVendors,
+  nameUnnamedCategories,
+  toVendorGroups,
+} from './d2-vendors';
 
 async function getTestVendorGroups() {
   const defs = await getTestDefinitions();
@@ -88,6 +94,34 @@ const catName = (vendor: D2Vendor, i: number) =>
     ?.name;
 const group = (vendors: D2Vendor[]) => ({ def: { order: 0 } as never, vendors });
 
+const categoryName = (category: unknown) =>
+  (category as { displayProperties?: { name?: string } }).displayProperties?.name;
+
+describe('nameUnnamedCategories', () => {
+  it('names an unnamed category after the most common item type it sells', () => {
+    const vendor = mockVendor(
+      123,
+      'SOME_VENDOR',
+      [
+        { identifier: 'named', name: 'Featured' },
+        { identifier: 'blank', name: '' },
+      ],
+      [
+        { mark: 'f', displayCategoryIndex: 0, typeName: 'Emote' },
+        { mark: 's1', displayCategoryIndex: 1, typeName: 'Shader' },
+        { mark: 's2', displayCategoryIndex: 1, typeName: 'Shader' },
+        { mark: 'e', displayCategoryIndex: 1, typeName: 'Emblem' },
+      ],
+    );
+    const result = nameUnnamedCategories(vendor.def.displayCategories, vendor.items);
+
+    // The already-named category is untouched; the blank one is named after its
+    // most common item type.
+    expect(categoryName(result[0])).toBe('Featured');
+    expect(categoryName(result[1])).toBe('Shader');
+  });
+});
+
 // Bungie split Eververse into ~25 separate vendors (Bungie-net/api#2069); these
 // cover stitching them back into the single canonical Eververse vendor.
 describe('mergeEververseVendors', () => {
@@ -145,30 +179,40 @@ describe('mergeEververseVendors', () => {
     expect(primary.currencies.map((c) => c.hash).sort()).toEqual([100, 200, 300]);
   });
 
-  it('names an unnamed merged category after the item type it sells', () => {
+  it('collapses merged categories that share a name', () => {
     const primary = mockVendor(
       VendorHashes.Eververse,
       'EVERVERSE',
-      ['cat-p'],
+      [{ identifier: 'p', name: 'Featured' }],
       [{ mark: 'p', displayCategoryIndex: 0 }],
     );
-    // A rotator with an unnamed category that sells mostly shaders.
-    const shaders = mockVendor(
-      2041776156,
-      'EVERVERSE_BRIGHT_DUST_ROTATOR_SHADERS',
-      [{ identifier: 'rotator', name: '' }],
-      [
-        { mark: 's1', displayCategoryIndex: 0, typeName: 'Shader' },
-        { mark: 's2', displayCategoryIndex: 0, typeName: 'Shader' },
-        { mark: 's3', displayCategoryIndex: 0, typeName: 'Emblem' },
-      ],
+    // Two rotators that both sell ghosts - their categories share a name.
+    const ghosts1 = mockVendor(
+      3702989297,
+      'EVERVERSE_BRIGHT_DUST_ROTATOR_GHOSTS',
+      [{ identifier: 'g1', name: 'Ghost Shell' }],
+      [{ mark: 'g1', displayCategoryIndex: 0 }],
+    );
+    const ghosts2 = mockVendor(
+      3358239265,
+      'EVERVERSE_SILVER_ROTATOR_GHOSTS',
+      [{ identifier: 'g2', name: 'Ghost Shell' }],
+      [{ mark: 'g2', displayCategoryIndex: 0 }],
     );
 
     const groups = [group([primary])];
-    mergeEververseVendors(groups, [shaders]);
+    mergeEververseVendors(groups, [ghosts1, ghosts2]);
 
-    // The merged-in (index 1) category is named after the most common item type.
-    expect(catName(primary, 1)).toBe('Shader');
+    // Featured + a single combined "Ghost Shell" category, not two.
+    expect(primary.def.displayCategories).toHaveLength(2);
+    expect(catName(primary, 0)).toBe('Featured');
+    expect(catName(primary, 1)).toBe('Ghost Shell');
+    // Both rotators' items live under that one Ghost Shell category.
+    expect(
+      itemsOf(primary)
+        .filter((i) => i.displayCategoryIndex === 1)
+        .map((i) => i.mark),
+    ).toEqual(['g1', 'g2']);
   });
 
   it('folds in loose Eververse vendors that are not part of any group', () => {

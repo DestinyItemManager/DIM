@@ -130,29 +130,48 @@ export function mergeEververseVendors(
     eververseVendors[0];
   const subVendors = eververseVendors.filter((vendor) => vendor !== primary);
 
-  // Each sub-vendor's items reference its own def's displayCategories by index,
-  // so append those categories and shift the merged-in items to match.
+  // Each sub-vendor's items reference its own def's displayCategories by index.
+  // Append those categories (collapsing ones that share a name, e.g. several
+  // "Ghost Shell" rotators) and remap the merged-in items to the combined index.
   const displayCategories = [...primary.def.displayCategories];
   const items = [...primary.items];
   const currenciesByHash = new Map(primary.currencies.map((c) => [c.hash, c]));
 
+  const categoryIndexByName = new Map<string, number>();
+  for (const [index, category] of displayCategories.entries()) {
+    const name = category.displayProperties?.name;
+    if (name && !categoryIndexByName.has(name)) {
+      categoryIndexByName.set(name, index);
+    }
+  }
+
   for (const vendor of subVendors) {
-    const categoryOffset = displayCategories.length;
-    // The rotator sub-vendors have unnamed display categories, so name each one
-    // after the kind of item it sells (e.g. "Shader", "Ghost Shell").
-    const itemsByCategory = Map.groupBy(vendor.items, (item) => item.displayCategoryIndex);
-    for (const [index, category] of vendor.def.displayCategories.entries()) {
-      displayCategories.push(
-        category.displayProperties?.name
-          ? category
-          : nameCategoryFromItems(category, itemsByCategory.get(index)),
-      );
+    // Map this vendor's category indices into the combined list, reusing an
+    // existing same-named category where there is one.
+    const localToCombined = new Map<number, number>();
+    for (const [localIndex, category] of vendor.def.displayCategories.entries()) {
+      const name = category.displayProperties?.name;
+      const existing = name ? categoryIndexByName.get(name) : undefined;
+      if (existing !== undefined) {
+        localToCombined.set(localIndex, existing);
+      } else {
+        const combinedIndex = displayCategories.length;
+        displayCategories.push(category);
+        if (name) {
+          categoryIndexByName.set(name, combinedIndex);
+        }
+        localToCombined.set(localIndex, combinedIndex);
+      }
     }
     for (const item of vendor.items) {
       items.push(
         item.displayCategoryIndex === undefined
           ? item
-          : { ...item, displayCategoryIndex: item.displayCategoryIndex + categoryOffset },
+          : {
+              ...item,
+              displayCategoryIndex:
+                localToCombined.get(item.displayCategoryIndex) ?? item.displayCategoryIndex,
+            },
       );
     }
     for (const currency of vendor.currencies) {
@@ -172,9 +191,28 @@ export function mergeEververseVendors(
 }
 
 /**
+ * Replace the name of any unnamed display category with the most common item
+ * type sold in it, so those categories render as e.g. "Shader" instead of
+ * "Unknown". Returns the original array unchanged when every category is named.
+ */
+export function nameUnnamedCategories(
+  displayCategories: DestinyDisplayCategoryDefinition[],
+  items: VendorItem[],
+): DestinyDisplayCategoryDefinition[] {
+  if (displayCategories.every((category) => category.displayProperties?.name)) {
+    return displayCategories;
+  }
+  const itemsByCategory = Map.groupBy(items, (item) => item.displayCategoryIndex);
+  return displayCategories.map((category, index) =>
+    category.displayProperties?.name
+      ? category
+      : nameCategoryFromItems(category, itemsByCategory.get(index)),
+  );
+}
+
+/**
  * Give an unnamed display category a name based on the most common item type it
- * sells, so a merged-in Eververse rotator shows up as e.g. "Shader" rather than
- * a blank header. Returns the original category unchanged if we can't tell.
+ * sells. Returns the original category unchanged if we can't tell.
  */
 function nameCategoryFromItems(
   category: DestinyDisplayCategoryDefinition,
@@ -259,6 +297,14 @@ export function toVendor(
         smallTransparentIcon: iconOverride,
       },
     };
+  }
+
+  // Name any unnamed display categories after the item type they sell, so they
+  // don't render as "Unknown" (e.g. the split Eververse rotator sub-vendors,
+  // whose categories come through blank).
+  const namedCategories = nameUnnamedCategories(vendorDef.displayCategories, vendorItems);
+  if (namedCategories !== vendorDef.displayCategories) {
+    vendorDef = { ...vendorDef, displayCategories: namedCategories };
   }
 
   return {
