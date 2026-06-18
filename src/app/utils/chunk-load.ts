@@ -1,5 +1,5 @@
 import { ComponentType, lazy, LazyExoticComponent } from 'react';
-
+import { delay } from './promises';
 /**
  * Was this error a failure to load a lazily-imported JS or CSS chunk? webpack throws a
  * ChunkLoadError for JS and an error with code CSS_CHUNK_LOAD_FAILED for CSS.
@@ -31,7 +31,7 @@ async function retryChunkImport<T>(
     return await factory();
   } catch (e) {
     if (retries > 0 && isChunkLoadError(e)) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      await delay(delayMs);
       return retryChunkImport(factory, retries - 1, delayMs);
     }
     throw e;
