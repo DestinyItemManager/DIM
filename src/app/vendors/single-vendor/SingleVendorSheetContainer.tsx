@@ -1,6 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import { useEventBusListener } from 'app/utils/hooks';
-import React, { Suspense, createContext, lazy, useCallback, useState } from 'react';
+import React, { Suspense, createContext, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { SingleVendorState, hideVendorSheet$ } from './single-vendor-sheet';
 

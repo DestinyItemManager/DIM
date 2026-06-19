@@ -2,7 +2,8 @@ import { createItemContextSelector, sortedStoresSelector } from 'app/inventory/s
 import { DimStore } from 'app/inventory/store-types';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
+import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { useSubscription } from 'use-subscription';

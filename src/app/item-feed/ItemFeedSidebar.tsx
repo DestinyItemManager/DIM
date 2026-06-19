@@ -2,8 +2,9 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, collapseIcon, faCaretUp } from 'app/shell/icons';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import clsx from 'clsx';
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import * as styles from './ItemFeedSidebar.m.scss';
 
 const ItemFeed = lazy(() => import(/* webpackChunkName: "item-feed" */ './ItemFeed'));

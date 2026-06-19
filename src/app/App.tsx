@@ -1,7 +1,8 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
+import { lazyWithRetry as lazy } from 'app/utils/chunk-load';
 import clsx from 'clsx';
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import * as styles from './App.m.scss';

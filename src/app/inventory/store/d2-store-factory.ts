@@ -20,7 +20,11 @@ import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { DimCharacterStat, DimStore, DimTitle } from '../store-types';
 import { ItemCreationContext, processItems } from './d2-item-factory';
 
-export function buildStores(itemCreationContext: ItemCreationContext): DimStore[] {
+export function buildStores(
+  itemCreationContext: ItemCreationContext,
+  /** Report items with no definition to Sentry - see processItems. */
+  reportMissingDefs = false,
+): DimStore[] {
   // TODO: components may be hidden (privacy)
 
   const { profileResponse } = itemCreationContext;
@@ -47,10 +51,10 @@ Please carefully read the instructions in docs/CONTRIBUTING.md -> \
 
     const lastPlayedDate = findLastPlayedDate(profileResponse);
 
-    const vault = processVault(itemCreationContext);
+    const vault = processVault(itemCreationContext, reportMissingDefs);
 
     const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
-      processCharacter(itemCreationContext, characterId, lastPlayedDate),
+      processCharacter(itemCreationContext, characterId, lastPlayedDate, reportMissingDefs),
     );
     const stores = [...characters, vault];
 
@@ -65,6 +69,7 @@ function processCharacter(
   itemCreationContext: ItemCreationContext,
   characterId: string,
   lastPlayedDate: Date,
+  reportMissingDefs: boolean,
 ): DimStore {
   const { defs, buckets, profileResponse } = itemCreationContext;
   const character = profileResponse.characters.data![characterId];
@@ -88,11 +93,14 @@ function processCharacter(
     }
   }
 
-  store.items = processItems(itemCreationContext, store, items);
+  store.items = processItems(itemCreationContext, store, items, reportMissingDefs);
   return store;
 }
 
-function processVault(itemCreationContext: ItemCreationContext): DimStore {
+function processVault(
+  itemCreationContext: ItemCreationContext,
+  reportMissingDefs: boolean,
+): DimStore {
   const { buckets, profileResponse } = itemCreationContext;
   const profileInventory = profileResponse.profileInventory.data
     ? profileResponse.profileInventory.data.items
@@ -109,7 +117,7 @@ function processVault(itemCreationContext: ItemCreationContext): DimStore {
     }
   }
 
-  store.items = processItems(itemCreationContext, store, items);
+  store.items = processItems(itemCreationContext, store, items, reportMissingDefs);
   return store;
 }
 
