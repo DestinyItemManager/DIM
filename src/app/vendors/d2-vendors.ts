@@ -35,6 +35,71 @@ export interface D2Vendor {
 
 const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashes.Eververse];
 
+/**
+ * Cache of built vendors so that when a single vendor's data updates (e.g. its
+ * item components trickle in one vendor at a time on the vendors page), we only
+ * rebuild that vendor instead of every vendor.
+ *
+ * This works because immer's structural sharing means a trickle update only
+ * changes the reference of the affected vendor's `itemComponents`; `context`,
+ * `sales.data`, and `vendors.data` keep their references, so all the other
+ * vendors' cache entries stay valid. Keyed by `${characterId}-${vendorHash}`.
+ */
+interface BuiltVendorCacheEntry {
+  context: ItemCreationContext;
+  vendorComponent: DestinyVendorComponent | undefined;
+  sales: { [key: string]: DestinyVendorSaleItemComponent } | undefined;
+  itemComponents: NonNullable<DestinyVendorsResponse['itemComponents']>[number] | undefined;
+  salesData: DestinyVendorsResponse['sales']['data'];
+  result: D2Vendor | undefined;
+}
+const builtVendorCache = new Map<string, BuiltVendorCacheEntry>();
+
+function buildVendorMemoized(
+  context: ItemCreationContext,
+  vendorsResponse: DestinyVendorsResponse,
+  characterId: string,
+  vendorHash: number,
+): D2Vendor | undefined {
+  const vendorComponent = vendorsResponse.vendors.data?.[vendorHash];
+  const sales = vendorsResponse.sales.data?.[vendorHash]?.saleItems;
+  const itemComponents = vendorsResponse.itemComponents?.[vendorHash];
+  // sales.data of the whole response is read when gathering (sub-)vendor
+  // currencies, so it's part of this vendor's inputs.
+  const salesData = vendorsResponse.sales.data;
+
+  const key = `${characterId}-${vendorHash}`;
+  const cached = builtVendorCache.get(key);
+  if (
+    cached?.context === context &&
+    cached.vendorComponent === vendorComponent &&
+    cached.sales === sales &&
+    cached.itemComponents === itemComponents &&
+    cached.salesData === salesData
+  ) {
+    return cached.result;
+  }
+
+  const result = toVendor(
+    // Override the item components from the profile with this vendor's item components
+    { ...context, itemComponents },
+    vendorHash,
+    vendorComponent,
+    characterId,
+    sales,
+    vendorsResponse,
+  );
+  builtVendorCache.set(key, {
+    context,
+    vendorComponent,
+    sales,
+    itemComponents,
+    salesData,
+    result,
+  });
+  return result;
+}
+
 export function toVendorGroups(
   context: ItemCreationContext,
   vendorsResponse: DestinyVendorsResponse,
@@ -52,15 +117,7 @@ export function toVendorGroups(
       return {
         def: groupDef,
         vendors: filterMap(group.vendorHashes, (vendorHash) => {
-          const vendor = toVendor(
-            // Override the item components from the profile with this vendor's item components
-            { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
-            vendorHash,
-            vendorsResponse.vendors.data?.[vendorHash],
-            characterId,
-            vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-            vendorsResponse,
-          );
+          const vendor = buildVendorMemoized(context, vendorsResponse, characterId, vendorHash);
           return vendor?.items.length ? vendor : undefined;
         }).sort(compareByIndex(vendorOrder, (v) => v.def.hash)),
       };
