@@ -1,11 +1,11 @@
-import { Placement } from '@popperjs/core';
+import { Placement } from '@floating-ui/dom';
 import { expandDownIcon, kebabIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
 import { ReactNode, useRef } from 'react';
 import * as styles from './Dropdown.m.scss';
-import { usePopper } from './usePopper';
+import { useFloatingUI } from './useFloatingUI';
 
 interface Separator {
   key: string;
@@ -74,7 +74,7 @@ export default function Dropdown({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  usePopper(
+  useFloatingUI(
     {
       contents: menuRef,
       reference: buttonRef,

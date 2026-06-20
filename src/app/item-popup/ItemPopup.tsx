@@ -3,7 +3,7 @@ import ClickOutside from 'app/dim-ui/ClickOutside';
 import { PressTipRoot } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { usePopper } from 'app/dim-ui/usePopper';
+import { useFloatingUI } from 'app/dim-ui/useFloatingUI';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';
@@ -62,7 +62,7 @@ export default function ItemPopup({
   const isPhonePortrait = useIsPhonePortrait();
 
   const popupRef = useRef<HTMLDivElement>(null);
-  usePopper({
+  useFloatingUI({
     placement: 'right',
     contents: popupRef,
     reference: { current: element || null },
@@ -71,7 +71,7 @@ export default function ItemPopup({
     menuClassName: menuClassName,
   });
 
-  // TODO: we need this to fire after popper repositions the popup. Maybe try again when we switch to floatingui.
+  // TODO: we need this to fire after Floating UI repositions the popup (positioning is async).
   // useFocusFirstFocusableElement(popupRef);
 
   const itemActionsModel = useMemo(

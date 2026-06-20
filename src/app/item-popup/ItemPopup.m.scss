@@ -38,7 +38,7 @@
     --background-color: rgb(18, 18, 18, 1);
   }
 
-  &[data-popper-placement^='top'] .arrow {
+  &[data-placement^='top'] .arrow {
     width: 0;
     height: 0;
     border-bottom-width: 0;
@@ -46,7 +46,7 @@
     bottom: calc(-1 * $theme-tooltip-arrow-size);
   }
 
-  &[data-popper-placement^='bottom'] .arrow {
+  &[data-placement^='bottom'] .arrow {
     width: 0;
     height: 0;
     border-top-width: 0;
@@ -69,14 +69,14 @@
       border-bottom-color: $common;
     }
   }
-  &[data-popper-placement^='right'] .arrow {
+  &[data-placement^='right'] .arrow {
     width: 0;
     height: 0;
     border-left-width: 0;
     border-right-color: var(--theme-item-popup-arrow);
     left: calc(-1 * $theme-tooltip-arrow-size);
   }
-  &[data-popper-placement^='left'] .arrow {
+  &[data-placement^='left'] .arrow {
     width: 0;
     height: 0;
     border-right-width: 0;
@@ -102,7 +102,7 @@
 .desktopPopup {
   display: flex;
   flex-direction: row;
-  .movePopupDialog[data-popper-placement^='right'] & {
+  .movePopupDialog[data-placement^='right'] & {
     flex-direction: row-reverse;
   }
 }
