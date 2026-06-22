@@ -162,26 +162,15 @@ export default (env: Env) => {
       hints: false,
     },
 
-    // On Windows the build ends up with one stray watched file dependency in a
-    // malformed drive-relative form, "C:package.json" (every other watched path
-    // is a normal absolute path). The watcher can't stat it, so it reports it
-    // removed on the first tick (~7s after startup) and forces a spurious
-    // recompile. Its exact origin is unconfirmed; no such file legitimately
-    // exists, so ignoring it is safe. We also restate rspack's default ignore
-    // (node_modules + .git), because setting `ignored` replaces the default
-    // rather than extending it.
+    // Ignore a bogus "C:package.json" watch dependency that appears on Windows
+    // and triggers a spurious recompile. Must restate the default ignore since
+    // `ignored` replaces it rather than extending it.
     watchOptions: {
       ignored: /[\\/](?:\.git|node_modules)[\\/]|^[a-zA-Z]:[\\/]?package\.json$/,
     },
 
-    // `rspack serve` (via @rspack/cli) auto-enables lazy compilation for a
-    // web-only app unless the config sets it. With it on, our many dynamic
-    // imports are compiled on demand: during the initial page load the browser
-    // requests several deferred modules, and each request calls
-    // compiler.watching.invalidate(), forcing a recompile + HMR update that lands
-    // on the still-loading page and fails with "factory is undefined" across
-    // split chunks (a manual reload recovers). Setting it explicitly stops the
-    // CLI default, so the initial build is complete and stable.
+    // `rspack serve` enables lazy compilation by default, which invalidates the
+    // build as dynamic imports load and breaks the initial page. Disable it.
     lazyCompilation: false,
 
     optimization: {
