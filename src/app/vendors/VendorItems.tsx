@@ -1,12 +1,15 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import FactionIcon from 'app/progress/FactionIcon';
 import { ReputationRank } from 'app/progress/ReputationRank';
 import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
+import { ReactNode } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
+import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import VendorItemComponent from './VendorItemComponent';
 import * as styles from './VendorItems.m.scss';
 import { D2Vendor } from './d2-vendors';
@@ -65,8 +68,9 @@ export default function VendorItems({
           <div>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
-              {factionProgress &&
-                (vendor.def.vendorProgressionType !== DestinyVendorProgressionType.Default ? (
+              {/* Clicking the rep track opens the vendor's "help" item popup, if it has one. */}
+              <RepTrackTrigger item={vendor.helpItem?.item}>
+                {vendor.def.vendorProgressionType !== DestinyVendorProgressionType.Default ? (
                   <ReputationRank progress={factionProgress} />
                 ) : (
                   <PressTip
@@ -81,7 +85,8 @@ export default function VendorItems({
                       />
                     </div>
                   </PressTip>
-                ))}
+                )}
+              </RepTrackTrigger>
             </div>
           </div>
         )}
@@ -123,5 +128,21 @@ export default function VendorItems({
         )}
       </div>
     </div>
+  );
+}
+
+/** Wraps the rep track so clicking it opens the given "help" item's popup, if there is one. */
+function RepTrackTrigger({ item, children }: { item: DimItem | undefined; children: ReactNode }) {
+  if (!item) {
+    return children;
+  }
+  return (
+    <ItemPopupTrigger item={item}>
+      {(ref, onClick) => (
+        <div ref={ref} role="button" tabIndex={0} onClick={onClick}>
+          {children}
+        </div>
+      )}
+    </ItemPopupTrigger>
   );
 }

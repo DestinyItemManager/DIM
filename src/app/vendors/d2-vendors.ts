@@ -31,6 +31,12 @@ export interface D2Vendor {
   place?: DestinyPlaceDefinition;
   items: VendorItem[];
   currencies: DestinyInventoryItemDefinition[];
+  /**
+   * The vendor's "help" item, if it has one. It describes the reputation track and
+   * is pulled out of the regular sale items so it can be shown alongside the rep
+   * track instead. Only set when the vendor actually has a rep track.
+   */
+  helpItem?: VendorItem;
 }
 
 const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashes.Eververse];
@@ -105,6 +111,21 @@ function buildVendorMemoized(
   return result;
 }
 
+/**
+ * Some vendors contain a "help" item that isn't a real sale item, but instead
+ * describes the vendor's reputation track. We pull it out of the regular sale
+ * items and show it alongside the rep track instead.
+ *
+ * These items all use the shared "vendor_help" icon (icon def 13580639, foreground
+ * `.../vendor_help...png`). The more semantic-looking `tooltipStyle: 'vendor_action'`
+ * can't be used because DIM's manifest trimmer blanks `tooltipStyle` out.
+ */
+const HELP_ITEM_ICON_HASH = 13580639;
+
+function isHelpVendorItem(vendorItem: VendorItem) {
+  return vendorItem.displayProperties?.iconHash === HELP_ITEM_ICON_HASH;
+}
+
 export function toVendorGroups(
   context: ItemCreationContext,
   vendorsResponse: DestinyVendorsResponse,
@@ -167,6 +188,21 @@ export function toVendor(
     ),
   );
 
+  // Pull the "help" item out of the regular sale items so it isn't shown as a
+  // normal tile. Surface it on the rep track (if there is one) instead.
+  let helpItem: VendorItem | undefined;
+  const helpIndex = vendorItems.findIndex(isHelpVendorItem);
+  if (helpIndex >= 0) {
+    const [extracted] = vendorItems.splice(helpIndex, 1);
+    if (vendorDef.factionHash && vendor?.progression) {
+      helpItem = extracted;
+      if (helpItem.item) {
+        // It's not a real item, so don't show its placeholder type ("Unknown") in the popup.
+        helpItem.item.typeName = '';
+      }
+    }
+  }
+
   const destinationHash =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0
       ? // Unadvertised nullability: DestinyVendorDefinition.locations
@@ -205,6 +241,7 @@ export function toVendor(
     place: placeDef,
     items: vendorItems,
     currencies,
+    helpItem,
   };
 }
 
