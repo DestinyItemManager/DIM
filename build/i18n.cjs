@@ -17,39 +17,29 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const localeFile = path.join(root, 'src', 'locale', 'en.json');
 const tmpOut = fs.mkdtempSync(path.join(os.tmpdir(), 'dim-i18n-'));
+// Clean up the scratch dir on any exit. Has to be an exit handler rather than a
+// finally: the process.exit() below short-circuits finally blocks.
+process.on('exit', () => fs.rmSync(tmpOut, { recursive: true, force: true }));
 
-try {
-  // Resolve the scanner's CLI so this works whether invoked via pnpm or directly.
-  let result;
-  const env = { ...process.env, I18N_OUTPUT_DIR: tmpOut };
-  try {
-    const pkg = require('i18next-scanner/package.json');
-    const pkgDir = path.dirname(require.resolve('i18next-scanner/package.json'));
-    const binRel = typeof pkg.bin === 'string' ? pkg.bin : pkg.bin['i18next-scanner'];
-    result = spawnSync(
-      process.execPath,
-      [path.join(pkgDir, binRel), '--config', './i18next-scanner.config.cjs'],
-      { stdio: 'inherit', env },
-    );
-  } catch {
-    result = spawnSync('i18next-scanner', ['--config', './i18next-scanner.config.cjs'], {
-      stdio: 'inherit',
-      shell: true,
-      env,
-    });
-  }
+// Run the scanner's CLI via its resolved entry point rather than relying on a
+// `i18next-scanner` shim being on PATH.
+const pkg = require('i18next-scanner/package.json');
+const pkgDir = path.dirname(require.resolve('i18next-scanner/package.json'));
+const binRel = typeof pkg.bin === 'string' ? pkg.bin : pkg.bin['i18next-scanner'];
+const result = spawnSync(
+  process.execPath,
+  [path.join(pkgDir, binRel), '--config', './i18next-scanner.config.cjs'],
+  { stdio: 'inherit', env: { ...process.env, I18N_OUTPUT_DIR: tmpOut } },
+);
 
-  if (result.status !== 0) {
-    process.exit(result.status ?? 1);
-  }
+if (result.status !== 0) {
+  process.exit(result.status ?? 1);
+}
 
-  const generated = path.join(tmpOut, 'src', 'locale', 'en.json');
-  const next = fs.readFileSync(generated, 'utf8');
-  const current = fs.existsSync(localeFile) ? fs.readFileSync(localeFile, 'utf8') : null;
-  if (next !== current) {
-    fs.mkdirSync(path.dirname(localeFile), { recursive: true });
-    fs.writeFileSync(localeFile, next);
-  }
-} finally {
-  fs.rmSync(tmpOut, { recursive: true, force: true });
+const generated = path.join(tmpOut, 'src', 'locale', 'en.json');
+const next = fs.readFileSync(generated, 'utf8');
+const current = fs.existsSync(localeFile) ? fs.readFileSync(localeFile, 'utf8') : null;
+if (next !== current) {
+  fs.mkdirSync(path.dirname(localeFile), { recursive: true });
+  fs.writeFileSync(localeFile, next);
 }
