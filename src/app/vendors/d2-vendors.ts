@@ -36,14 +36,16 @@ export interface D2Vendor {
 const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashes.Eververse];
 
 /**
- * Cache of built vendors so that when a single vendor's data updates (e.g. its
- * item components trickle in one vendor at a time on the vendors page), we only
- * rebuild that vendor instead of every vendor.
+ * Cache of built vendors. On the vendors page each vendor's item components
+ * arrive separately, so the stored response updates many times before it's
+ * complete. Rebuilding every vendor on each of those updates is wasteful, so we
+ * reuse a previously built vendor whenever none of its inputs changed identity.
  *
- * This works because immer's structural sharing means a trickle update only
- * changes the reference of the affected vendor's `itemComponents`; `context`,
- * `sales.data`, and `vendors.data` keep their references, so all the other
- * vendors' cache entries stay valid. Keyed by `${characterId}-${vendorHash}`.
+ * We can compare inputs by reference because the response is updated
+ * immutably: an update that touches one vendor produces a new reference for
+ * that vendor's slice but leaves the other vendors' `vendorComponent`, `sales`,
+ * and `itemComponents` referencing the same objects as before. So an unchanged
+ * vendor's cached entry still matches and is reused.
  */
 interface BuiltVendorCacheEntry {
   context: ItemCreationContext;
@@ -53,6 +55,9 @@ interface BuiltVendorCacheEntry {
   salesData: DestinyVendorsResponse['sales']['data'];
   result: D2Vendor | undefined;
 }
+// Keyed by `${characterId}-${vendorHash}` since a vendor is built per
+// character. The number of entries is bounded by characters times vendors, so
+// it never grows large enough to need eviction.
 const builtVendorCache = new Map<string, BuiltVendorCacheEntry>();
 
 function buildVendorMemoized(
