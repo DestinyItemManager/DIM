@@ -6,7 +6,7 @@ import { useSelect } from 'downshift';
 import { useHeightFromViewportBottom } from 'app/utils/hooks';
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 import * as styles from './Select.m.scss';
-import { useFloatingUI } from './useFloatingUI';
+import { usePopper } from './usePopper';
 
 export interface Option<T> {
   key: string;
@@ -79,7 +79,7 @@ export default function Select<T>({
   );
   const [dropdownHeight, setDropdownHeight] = useState<number | undefined>();
 
-  useFloatingUI(
+  usePopper(
     {
       contents: menuRef,
       reference: buttonRef,

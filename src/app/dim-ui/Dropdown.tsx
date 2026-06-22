@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useSelect } from 'downshift';
 import { ReactNode, useRef } from 'react';
 import * as styles from './Dropdown.m.scss';
-import { useFloatingUI } from './useFloatingUI';
+import { usePopper } from './usePopper';
 
 interface Separator {
   key: string;
@@ -74,7 +74,7 @@ export default function Dropdown({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useFloatingUI(
+  usePopper(
     {
       contents: menuRef,
       reference: buttonRef,

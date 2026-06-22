@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
 import ClickOutside from '../ClickOutside';
 import { PressTipRoot } from '../PressTip';
-import { useFloatingUI } from '../useFloatingUI';
+import { usePopper } from '../usePopper';
 import ColorDestinySymbols from './ColorDestinySymbols';
 import * as styles from './SymbolsPicker.m.scss';
 import { symbolsSelector } from './destiny-symbols';
@@ -108,7 +108,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
   const [open, setOpen] = useState(false);
   const pressTipRoot = use(PressTipRoot);
 
-  useFloatingUI(
+  usePopper(
     {
       contents: tooltipContents,
       reference: controlRef,

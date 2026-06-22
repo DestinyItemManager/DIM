@@ -15,7 +15,7 @@ import React, { useLayoutEffect } from 'react';
 // ensure this stays in sync with '$theme-tooltip-arrow-size' in '_variables.scss'
 const arrowSize = 8;
 
-export function useFloatingUI(
+export function usePopper(
   {
     contents,
     reference,
@@ -108,7 +108,7 @@ export function useFloatingUI(
           top: `${y}px`,
         });
         // Expose the resolved placement to CSS (arrow orientation keys off this attribute)
-        contentsElement.setAttribute('data-placement', finalPlacement);
+        contentsElement.setAttribute('data-popper-placement', finalPlacement);
 
         if (arrowElement && middlewareData.arrow) {
           const { x: arrowX, y: arrowY } = middlewareData.arrow;
@@ -137,7 +137,7 @@ export function useFloatingUI(
 
     /**
      * Doing ...deps allows us to pass dependencies from the components that rely on
-     * useFloatingUI. Certain popovers are only shown when specific conditions are met,
+     * usePopper. Certain popovers are only shown when specific conditions are met,
      * so by making those conditions dependencies we can position the popover
      * correctly once the popover is actually shown.
      */

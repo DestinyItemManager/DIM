@@ -12,7 +12,7 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import * as styles from './PressTip.m.scss';
-import { useFloatingUI } from './useFloatingUI';
+import { usePopper } from './usePopper';
 
 /**
  * The element where the PressTip should be added to. By default it's the body,
@@ -94,7 +94,7 @@ function Control({
   const pressTipRoot = use(PressTipRoot);
   const [customization, customizeTooltip] = useState<TooltipCustomization>({ className: null });
 
-  useFloatingUI(
+  usePopper(
     {
       contents: tooltipContents,
       reference: triggerRef,

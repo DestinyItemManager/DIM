@@ -89,23 +89,23 @@ $horizontal-padding: 11px;
     border-width: var(--arrow-size);
   }
 
-  &[data-placement='top'] .arrow {
+  &[data-popper-placement='top'] .arrow {
     border-bottom-width: 0;
     border-top-color: var(--theme-tooltip-border);
     bottom: calc(var(--arrow-size) * -1);
   }
-  &[data-placement='bottom'] .arrow {
+  &[data-popper-placement='bottom'] .arrow {
     border-top-width: 0;
     border-bottom-color: var(--theme-tooltip-border);
     // Include corner radius so the arrow doesn't overlap with the ribbon
     top: calc((var(--arrow-size) + $theme-tooltip-corner-radius) * -1);
   }
-  &[data-placement='right'] .arrow {
+  &[data-popper-placement='right'] .arrow {
     border-left-width: 0;
     border-right-color: var(--theme-tooltip-border);
     left: calc(var(--arrow-size) * -1);
   }
-  &[data-placement='left'] .arrow {
+  &[data-popper-placement='left'] .arrow {
     border-right-width: 0;
     border-left-color: var(--theme-tooltip-border);
     right: calc(var(--arrow-size) * -1);
@@ -130,16 +130,16 @@ $horizontal-padding: 11px;
       padding: 3px 6px;
     }
 
-    &[data-placement='left'] .arrow {
+    &[data-popper-placement='left'] .arrow {
       border-left-color: var(--theme-tooltip-minimal-bg);
     }
-    &[data-placement='right'] .arrow {
+    &[data-popper-placement='right'] .arrow {
       border-right-color: var(--theme-tooltip-minimal-bg);
     }
-    &[data-placement='top'] .arrow {
+    &[data-popper-placement='top'] .arrow {
       border-top-color: var(--theme-tooltip-minimal-bg);
     }
-    &[data-placement='bottom'] .arrow {
+    &[data-popper-placement='bottom'] .arrow {
       border-bottom-color: var(--theme-tooltip-minimal-bg);
       // Exclude corner radius because minimal tooltips don't have a ribbon
       top: calc(var(--arrow-size) * -1);

@@ -1,5 +1,5 @@
 import { useFixOverscrollBehavior } from 'app/dim-ui/useFixOverscrollBehavior';
-import { useFloatingUI } from 'app/dim-ui/useFloatingUI';
+import { usePopper } from 'app/dim-ui/usePopper';
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import LoadoutPopup from 'app/loadout/loadout-menu/LoadoutPopup';
@@ -101,7 +101,7 @@ function LoadoutMenuContents({
 
   useFixOverscrollBehavior(menuRef);
 
-  useFloatingUI({
+  usePopper({
     contents: menuRef,
     reference: menuTrigger,
     placement: 'bottom-start',
