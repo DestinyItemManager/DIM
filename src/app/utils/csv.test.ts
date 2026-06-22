@@ -33,3 +33,13 @@ test('csv unpack', () => {
   const output = serializeCsv(arrayData, { unpackArrays: ['arr'] });
   expect(output).toMatchSnapshot();
 });
+
+test('csv escapes formula-like cells', () => {
+  const data = [{ name: '=cmd|calc', note: '@SUM(1)', tag: '+1', id: '-2' }];
+
+  const output = serializeCsv(data, {});
+  expect(output).toContain("'=cmd|calc");
+  expect(output).toContain("'@SUM(1)");
+  expect(output).toContain("'+1");
+  expect(output).toContain("'-2");
+});
