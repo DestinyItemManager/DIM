@@ -185,9 +185,7 @@ function useActivities(defs: D1ManifestDefinitions | undefined, characters: D1St
         tier.activityData.recommendedLight === 390
           ? '390'
           : tier.tierDisplayName
-            ? t(`Activities.${tier.tierDisplayName}`, {
-                metadata: { keys: 'difficulty' },
-              })
+            ? t(`Activities.${tier.tierDisplayName}`)
             : tierDef.activityName;
 
       const characters =
