@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout DIM
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
