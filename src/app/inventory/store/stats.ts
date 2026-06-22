@@ -13,11 +13,19 @@ import {
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
+import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { once, partition } from 'es-toolkit';
 import { Draft } from 'immer';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
-import { DimItem, DimPlug, DimPlugInvestmentStat, DimSocket, DimStat } from '../item-types';
+import {
+  DimItem,
+  DimPlug,
+  DimPlugInvestmentStat,
+  DimSocket,
+  DimStat,
+  PluggableInventoryItemDefinition,
+} from '../item-types';
 import { isPlugStatActive, mapAndFilterInvestmentStats } from './stats-conditional';
 import { makeCustomStat } from './stats-custom';
 
@@ -359,7 +367,11 @@ function applyPlugsToStats(
         }
 
         // we've ruled out reasons to ignore this investment stat. apply its effects to the investmentValue
-        existingStat.investmentValue += getPlugStatValue(createdItem, pluggedInvestmentStat);
+        existingStat.investmentValue += getPlugStatValue(
+          createdItem,
+          pluggedInvestmentStat,
+          socket.plugged.plugDef,
+        );
 
         // finally, re-interpolate the stat value
         const statDisplay = statDisplaysByStatHash[affectedStatHash];
@@ -411,7 +423,11 @@ function generateAssumedMasterworkStats(
   }
 }
 
-function getPlugStatValue(createdItem: DimItem, stat: DimPlugInvestmentStat) {
+function getPlugStatValue(
+  createdItem: DimItem,
+  stat: DimPlugInvestmentStat,
+  plugDef: PluggableInventoryItemDefinition,
+) {
   // Adept raid weapons that were randomly acquired can be enhanced to get an
   // enhanced intrinsic, at which point they're functionally crafted. Their
   // intrinsic says "conditionally +2 to some stats", but they get +3 because
@@ -428,6 +444,21 @@ function getPlugStatValue(createdItem: DimItem, stat: DimPlugInvestmentStat) {
   // nothing in the defs to indicate this.
   if (stat.activationRule?.rule === 'tieredWeaponMW') {
     return stat.value + createdItem.tier;
+  }
+
+  // A crafted weapon that's been added to the tiered format gets the same
+  // "+tier to every stat" masterwork bonus, but unlike a non-crafted tiered
+  // weapon it carries that bonus on its enhanced intrinsic (which DIM already
+  // treats as the masterwork) rather than on a masterwork plug, so the
+  // tieredWeaponMW rule above never fires for it. Mirror that behavior here:
+  // the primary (always-active) intrinsic stat keeps its value and gains +tier,
+  // while the conditional secondary stats become +tier (their enhanced-crafting
+  // +2 is replaced, matching how a non-crafted tiered weapon grants +tier to
+  // every secondary masterwork stat). None of this is in the defs.
+  if (createdItem.tier > 0 && enhancedIntrinsics.has(plugDef.hash)) {
+    return stat.activationRule?.rule === 'enhancedIntrinsic'
+      ? createdItem.tier
+      : stat.value + createdItem.tier;
   }
 
   return stat.value;
@@ -465,7 +496,11 @@ function attachPlugStats(
       ) {
         continue;
       }
-      const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
+      const plugStatInvestmentValue = getPlugStatValue(
+        createdItem,
+        plugInvestmentStat,
+        activePlug.plugDef,
+      );
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
@@ -515,7 +550,11 @@ function attachPlugStats(
       ) {
         continue;
       }
-      const plugStatInvestmentValue = getPlugStatValue(createdItem, plugInvestmentStat);
+      const plugStatInvestmentValue = getPlugStatValue(
+        createdItem,
+        plugInvestmentStat,
+        plug.plugDef,
+      );
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
       let plugStatValue = plugStatInvestmentValue;
