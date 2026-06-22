@@ -42,6 +42,76 @@ export interface D2Vendor {
 const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashes.Eververse];
 
 /**
+ * Cache of built vendors. On the vendors page each vendor's item components
+ * arrive separately, so the stored response updates many times before it's
+ * complete. Rebuilding every vendor on each of those updates is wasteful, so we
+ * reuse a previously built vendor whenever none of its inputs changed identity.
+ *
+ * We can compare inputs by reference because the response is updated
+ * immutably: an update that touches one vendor produces a new reference for
+ * that vendor's slice but leaves the other vendors' `vendorComponent`, `sales`,
+ * and `itemComponents` referencing the same objects as before. So an unchanged
+ * vendor's cached entry still matches and is reused.
+ */
+interface BuiltVendorCacheEntry {
+  context: ItemCreationContext;
+  vendorComponent: DestinyVendorComponent | undefined;
+  sales: { [key: string]: DestinyVendorSaleItemComponent } | undefined;
+  itemComponents: NonNullable<DestinyVendorsResponse['itemComponents']>[number] | undefined;
+  salesData: DestinyVendorsResponse['sales']['data'];
+  result: D2Vendor | undefined;
+}
+// Keyed by `${characterId}-${vendorHash}` since a vendor is built per
+// character. The number of entries is bounded by characters times vendors, so
+// it never grows large enough to need eviction.
+const builtVendorCache = new Map<string, BuiltVendorCacheEntry>();
+
+function buildVendorMemoized(
+  context: ItemCreationContext,
+  vendorsResponse: DestinyVendorsResponse,
+  characterId: string,
+  vendorHash: number,
+): D2Vendor | undefined {
+  const vendorComponent = vendorsResponse.vendors.data?.[vendorHash];
+  const sales = vendorsResponse.sales.data?.[vendorHash]?.saleItems;
+  const itemComponents = vendorsResponse.itemComponents?.[vendorHash];
+  // sales.data of the whole response is read when gathering (sub-)vendor
+  // currencies, so it's part of this vendor's inputs.
+  const salesData = vendorsResponse.sales.data;
+
+  const key = `${characterId}-${vendorHash}`;
+  const cached = builtVendorCache.get(key);
+  if (
+    cached?.context === context &&
+    cached.vendorComponent === vendorComponent &&
+    cached.sales === sales &&
+    cached.itemComponents === itemComponents &&
+    cached.salesData === salesData
+  ) {
+    return cached.result;
+  }
+
+  const result = toVendor(
+    // Override the item components from the profile with this vendor's item components
+    { ...context, itemComponents },
+    vendorHash,
+    vendorComponent,
+    characterId,
+    sales,
+    vendorsResponse,
+  );
+  builtVendorCache.set(key, {
+    context,
+    vendorComponent,
+    sales,
+    itemComponents,
+    salesData,
+    result,
+  });
+  return result;
+}
+
+/**
  * Some vendors contain a "help" item that isn't a real sale item, but instead
  * describes the vendor's reputation track. We pull it out of the regular sale
  * items and show it alongside the rep track instead.
@@ -73,15 +143,7 @@ export function toVendorGroups(
       return {
         def: groupDef,
         vendors: filterMap(group.vendorHashes, (vendorHash) => {
-          const vendor = toVendor(
-            // Override the item components from the profile with this vendor's item components
-            { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
-            vendorHash,
-            vendorsResponse.vendors.data?.[vendorHash],
-            characterId,
-            vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-            vendorsResponse,
-          );
+          const vendor = buildVendorMemoized(context, vendorsResponse, characterId, vendorHash);
           return vendor?.items.length ? vendor : undefined;
         }).sort(compareByIndex(vendorOrder, (v) => v.def.hash)),
       };
