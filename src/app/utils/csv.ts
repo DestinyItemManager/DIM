@@ -72,7 +72,7 @@ export function serializeCsv(data: CsvRow[], exportOptions: CsvExportOptions): s
     );
   }
 
-  return Papa.unparse(data, { columns: [...columnSet] });
+  return Papa.unparse(data, { columns: [...columnSet], escapeFormulae: true });
 }
 
 export function downloadCsv(
