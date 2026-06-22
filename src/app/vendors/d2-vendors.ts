@@ -88,7 +88,12 @@ export function toVendorGroups(
       : undefined;
   });
 
-  mergeEververseVendors(groups, looseEververseVendors);
+  mergeVendors(
+    groups,
+    VendorHashes.Eververse,
+    eververseVendorIdentifierPrefix,
+    looseEververseVendors,
+  );
 
   return filterMap(groups, (group) => {
     const vendors = group.vendors
@@ -99,36 +104,41 @@ export function toVendorGroups(
 }
 
 /**
- * As of the Monument of Triumph update, Bungie split the Eververse vendor (Tess
- * Everis) into ~25 separate vendor definitions - a main vendor plus Bright Dust
- * / Silver / Featured "rotator" sub-vendors. Merge them all back into the single
- * canonical Eververse vendor so all of Tess's wares (especially Bright Dust)
- * appear together, instead of as a bunch of separate, mostly-unnamed tiles. See
+ * Merge a family of related vendors - all sharing a `vendorIdentifier` prefix -
+ * into a single primary vendor, folding their items, display categories, and
+ * currencies together.
+ *
+ * The motivating case: as of the Monument of Triumph update, Bungie split the
+ * Eververse vendor (Tess Everis) into ~25 separate vendor definitions - a main
+ * vendor plus Bright Dust / Silver / Featured "rotator" sub-vendors. Merging
+ * them back together makes all of Tess's wares (especially Bright Dust) appear
+ * together, instead of as a bunch of separate, mostly-unnamed tiles. See
  * https://github.com/Bungie-net/api/issues/2069.
  *
  * Mutates `groups` in place.
  */
-export function mergeEververseVendors(
+export function mergeVendors(
   groups: { def: DestinyVendorGroupDefinition; vendors: D2Vendor[] }[],
-  /** Eververse vendors that aren't part of any group (e.g. the rotator sub-vendors). */
-  looseEververseVendors: D2Vendor[] = [],
+  /** The vendor that the others fold into; falls back to the first match if absent. */
+  primaryVendorHash: number,
+  /** Shared `vendorIdentifier` prefix that identifies the family to merge. */
+  identifierPrefix: string,
+  /** Family members that aren't part of any group (e.g. loose rotator sub-vendors). */
+  looseVendors: D2Vendor[] = [],
 ) {
-  const eververseVendors = [
+  const familyVendors = [
     ...groups.flatMap((group) =>
-      group.vendors.filter((vendor) =>
-        vendor.def.vendorIdentifier?.startsWith(eververseVendorIdentifierPrefix),
-      ),
+      group.vendors.filter((vendor) => vendor.def.vendorIdentifier?.startsWith(identifierPrefix)),
     ),
-    ...looseEververseVendors,
+    ...looseVendors,
   ];
-  if (eververseVendors.length <= 1) {
+  if (familyVendors.length <= 1) {
     return;
   }
 
   const primary =
-    eververseVendors.find((vendor) => vendor.def.hash === VendorHashes.Eververse) ??
-    eververseVendors[0];
-  const subVendors = eververseVendors.filter((vendor) => vendor !== primary);
+    familyVendors.find((vendor) => vendor.def.hash === primaryVendorHash) ?? familyVendors[0];
+  const subVendors = familyVendors.filter((vendor) => vendor !== primary);
 
   // Each sub-vendor's items reference its own def's displayCategories by index.
   // Append those categories (collapsing ones that share a name, e.g. several

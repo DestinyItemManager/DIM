@@ -4,7 +4,7 @@ import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test
 import {
   D2Vendor,
   D2VendorGroup,
-  mergeEververseVendors,
+  mergeVendors,
   nameUnnamedCategories,
   toVendorGroups,
 } from './d2-vendors';
@@ -123,8 +123,14 @@ describe('nameUnnamedCategories', () => {
 });
 
 // Bungie split Eververse into ~25 separate vendors (Bungie-net/api#2069); these
-// cover stitching them back into the single canonical Eververse vendor.
-describe('mergeEververseVendors', () => {
+// cover stitching them back into the single canonical Eververse vendor. We mock
+// the vendors here because the captured vendor fixture predates the split (only
+// the main EVERVERSE vendor has sales in it, none of the rotator sub-vendors),
+// so it can't exercise the merge on its own.
+const mergeEververse = (groups: ReturnType<typeof group>[], loose?: D2Vendor[]) =>
+  mergeVendors(groups, VendorHashes.Eververse, 'EVERVERSE', loose);
+
+describe('mergeVendors', () => {
   it('merges all EVERVERSE* sub-vendors into the canonical Eververse vendor', () => {
     const primary = mockVendor(
       VendorHashes.Eververse,
@@ -158,7 +164,7 @@ describe('mergeEververseVendors', () => {
     );
 
     const groups = [group([primary, rotator1, rotator2, unrelated])];
-    mergeEververseVendors(groups);
+    mergeEververse(groups);
 
     // Only the primary Eververse and the unrelated vendor remain.
     expect(groups[0].vendors).toEqual([primary, unrelated]);
@@ -201,7 +207,7 @@ describe('mergeEververseVendors', () => {
     );
 
     const groups = [group([primary])];
-    mergeEververseVendors(groups, [ghosts1, ghosts2]);
+    mergeEververse(groups, [ghosts1, ghosts2]);
 
     // Featured + a single combined "Ghost Shell" category, not two.
     expect(primary.def.displayCategories).toHaveLength(2);
@@ -232,7 +238,7 @@ describe('mergeEververseVendors', () => {
     );
 
     const groups = [group([primary])];
-    mergeEververseVendors(groups, [looseRotator]);
+    mergeEververse(groups, [looseRotator]);
 
     // The loose rotator was never in a group; its items fold into Tess.
     expect(groups[0].vendors).toEqual([primary]);
@@ -256,7 +262,7 @@ describe('mergeEververseVendors', () => {
     );
 
     const groups = [group([primary]), group([rotator])];
-    mergeEververseVendors(groups);
+    mergeEververse(groups);
 
     expect(groups[1].vendors).toHaveLength(0);
     expect(itemsOf(primary).map((i) => i.mark)).toEqual(['p', 'r']);
@@ -270,7 +276,7 @@ describe('mergeEververseVendors', () => {
       [{ mark: 'p', displayCategoryIndex: 0 }],
     );
     const groups = [group([primary])];
-    mergeEververseVendors(groups);
+    mergeEververse(groups);
 
     expect(groups[0].vendors).toEqual([primary]);
     expect(itemsOf(primary)).toHaveLength(1);
