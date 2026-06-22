@@ -4,7 +4,9 @@ const typescript = require('typescript');
 
 module.exports = {
   input: ['src/app/**/*.{js,jsx,ts,tsx,cjs,mjs,cts,mts}', 'src/browsercheck.js'],
-  output: './',
+  // build/i18n.cjs points this at a temp dir so it can diff the result and only
+  // overwrite src/locale/en.json on a real change (see that file for why).
+  output: process.env.I18N_OUTPUT_DIR || './',
   options: {
     debug: false,
     removeUnusedKeys: true,
