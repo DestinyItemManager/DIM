@@ -1,8 +1,9 @@
 import { getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { getTestStores, setupi18n } from 'testing/test-utils';
+import { getTestDefinitions, getTestStores, setupi18n } from 'testing/test-utils';
 import { generateCSVExportData } from './spreadsheets';
 import { DimStore } from './store-types';
+import { buildDefinedPlug } from './store/sockets';
 
 describe('process stores', () => {
   let stores: DimStore[];
@@ -81,24 +82,24 @@ describe('process stores', () => {
     }
   });
 
-  // This relies on the sample profile having at least one item that has a plug
-  // that can no longer roll. I keep a Commemoration around for that.
-  /*
-     this no longer passes after Monument of Triumph. Intentional?
+  // cannotCurrentlyRoll marks a perk that can no longer drop on a fresh item.
+  // We used to assert the sample profile contained such a roll, but that depends
+  // on the profile happening to hold a "stuck" item (it no longer does), so test
+  // the mechanism directly: buildDefinedPlug sets the flag from currentlyCanRoll.
+  it('marks a plug as cannotCurrentlyRoll when the perk cannot currently roll', async () => {
+    const defs = await getTestDefinitions();
+    // Any real pluggable hash from the sample data, so the def resolves.
+    const plugHash = stores
+      .flatMap((s) => s.items)
+      .flatMap((i) => i.sockets?.allSockets ?? [])
+      .find((socket) => socket.plugged)?.plugged!.plugDef.hash;
+    expect(plugHash).toBeDefined();
 
-  it('item perks can be marked as cannotCurrentlyRoll', async () => {
-    for (const store of stores) {
-      for (const item of store.items) {
-        if (
-          item.sockets?.allSockets.some((s) => s.plugOptions.some((p) => p.cannotCurrentlyRoll))
-        ) {
-          return; // All good, we found one!
-        }
-      }
-    }
-    throw new Error('Expected at least one item with a perk that cannot roll');
+    expect(buildDefinedPlug(defs, plugHash!, false)?.cannotCurrentlyRoll).toBe(true);
+    expect(buildDefinedPlug(defs, plugHash!, true)?.cannotCurrentlyRoll).toBe(false);
+    // No information about rollability means we don't flag it.
+    expect(buildDefinedPlug(defs, plugHash!, undefined)?.cannotCurrentlyRoll).toBe(false);
   });
-  */
 
   test.each(['weapon', 'armor', 'ghost'] as const)(
     'generates a correct %s CSV export',
