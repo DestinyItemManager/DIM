@@ -162,6 +162,17 @@ export default (env: Env) => {
       hints: false,
     },
 
+    // Ignore a bogus "C:package.json" watch dependency that appears on Windows
+    // and triggers a spurious recompile. Must restate the default ignore since
+    // `ignored` replaces it rather than extending it.
+    watchOptions: {
+      ignored: /[\\/](?:\.git|node_modules)[\\/]|^[a-zA-Z]:[\\/]?package\.json$/,
+    },
+
+    // `rspack serve` enables lazy compilation by default, which invalidates the
+    // build as dynamic imports load and breaks the initial page. Disable it.
+    lazyCompilation: false,
+
     optimization: {
       // We always want the chunk name, otherwise it's just numbers
       // chunkIds: 'named',

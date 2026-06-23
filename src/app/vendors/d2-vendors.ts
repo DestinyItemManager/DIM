@@ -50,6 +50,76 @@ const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashe
 const eververseVendorIdentifierPrefix = 'EVERVERSE';
 
 /**
+ * Cache of built vendors. On the vendors page each vendor's item components
+ * arrive separately, so the stored response updates many times before it's
+ * complete. Rebuilding every vendor on each of those updates is wasteful, so we
+ * reuse a previously built vendor whenever none of its inputs changed identity.
+ *
+ * We can compare inputs by reference because the response is updated
+ * immutably: an update that touches one vendor produces a new reference for
+ * that vendor's slice but leaves the other vendors' `vendorComponent`, `sales`,
+ * and `itemComponents` referencing the same objects as before. So an unchanged
+ * vendor's cached entry still matches and is reused.
+ */
+interface BuiltVendorCacheEntry {
+  context: ItemCreationContext;
+  vendorComponent: DestinyVendorComponent | undefined;
+  sales: { [key: string]: DestinyVendorSaleItemComponent } | undefined;
+  itemComponents: NonNullable<DestinyVendorsResponse['itemComponents']>[number] | undefined;
+  salesData: DestinyVendorsResponse['sales']['data'];
+  result: D2Vendor | undefined;
+}
+// Keyed by `${characterId}-${vendorHash}` since a vendor is built per
+// character. The number of entries is bounded by characters times vendors, so
+// it never grows large enough to need eviction.
+const builtVendorCache = new Map<string, BuiltVendorCacheEntry>();
+
+function buildVendorMemoized(
+  context: ItemCreationContext,
+  vendorsResponse: DestinyVendorsResponse,
+  characterId: string,
+  vendorHash: number,
+): D2Vendor | undefined {
+  const vendorComponent = vendorsResponse.vendors.data?.[vendorHash];
+  const sales = vendorsResponse.sales.data?.[vendorHash]?.saleItems;
+  const itemComponents = vendorsResponse.itemComponents?.[vendorHash];
+  // sales.data of the whole response is read when gathering (sub-)vendor
+  // currencies, so it's part of this vendor's inputs.
+  const salesData = vendorsResponse.sales.data;
+
+  const key = `${characterId}-${vendorHash}`;
+  const cached = builtVendorCache.get(key);
+  if (
+    cached?.context === context &&
+    cached.vendorComponent === vendorComponent &&
+    cached.sales === sales &&
+    cached.itemComponents === itemComponents &&
+    cached.salesData === salesData
+  ) {
+    return cached.result;
+  }
+
+  const result = toVendor(
+    // Override the item components from the profile with this vendor's item components
+    { ...context, itemComponents },
+    vendorHash,
+    vendorComponent,
+    characterId,
+    sales,
+    vendorsResponse,
+  );
+  builtVendorCache.set(key, {
+    context,
+    vendorComponent,
+    sales,
+    itemComponents,
+    salesData,
+    result,
+  });
+  return result;
+}
+
+/**
  * Some vendors contain a "help" item that isn't a real sale item, but instead
  * describes the vendor's reputation track. We pull it out of the regular sale
  * items and show it alongside the rep track instead.
@@ -76,15 +146,7 @@ export function toVendorGroups(
   const { defs } = context;
 
   const buildVendor = (vendorHash: number) =>
-    toVendor(
-      // Override the item components from the profile with this vendor's item components
-      { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
-      vendorHash,
-      vendorsResponse.vendors.data?.[vendorHash],
-      characterId,
-      vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-      vendorsResponse,
-    );
+    buildVendorMemoized(context, vendorsResponse, characterId, vendorHash);
 
   // Build every vendor first (including empty ones) so the Eververse merge below
   // can stitch the split vendors back together before we drop empties.
@@ -210,14 +272,22 @@ export function mergeVendors(
     }
   }
 
-  primary.def = { ...primary.def, displayCategories };
-  primary.items = items;
-  primary.currencies = [...currenciesByHash.values()];
+  // Build a new merged vendor rather than mutating `primary` in place: it may be
+  // a reused, cached build result, and mutating it would re-merge sub-vendors on
+  // every subsequent rebuild.
+  const mergedPrimary: D2Vendor = {
+    ...primary,
+    def: { ...primary.def, displayCategories },
+    items,
+    currencies: [...currenciesByHash.values()],
+  };
 
-  // Drop the now-merged sub-vendors from their groups.
+  // Swap the merged primary in and drop the now-merged sub-vendors from their groups.
   const mergedAway = new Set(subVendors);
   for (const group of groups) {
-    group.vendors = group.vendors.filter((vendor) => !mergedAway.has(vendor));
+    group.vendors = group.vendors
+      .filter((vendor) => !mergedAway.has(vendor))
+      .map((vendor) => (vendor === primary ? mergedPrimary : vendor));
   }
 }
 

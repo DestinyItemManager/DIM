@@ -130,6 +130,12 @@ describe('nameUnnamedCategories', () => {
 const mergeEververse = (groups: ReturnType<typeof group>[], loose?: D2Vendor[]) =>
   mergeVendors(groups, VendorHashes.Eververse, 'EVERVERSE', loose);
 
+// mergeVendors produces a new merged vendor object (rather than mutating the
+// primary, which may be a reused cached build result) and swaps it into the
+// groups. Find it by the canonical Eververse hash.
+const findMerged = (groups: ReturnType<typeof group>[]) =>
+  groups.flatMap((g) => g.vendors).find((v) => v.def.hash === VendorHashes.Eververse)!;
+
 describe('mergeVendors', () => {
   it('merges all EVERVERSE* sub-vendors into the canonical Eververse vendor', () => {
     const primary = mockVendor(
@@ -166,23 +172,26 @@ describe('mergeVendors', () => {
     const groups = [group([primary, rotator1, rotator2, unrelated])];
     mergeEververse(groups);
 
-    // Only the primary Eververse and the unrelated vendor remain.
-    expect(groups[0].vendors).toEqual([primary, unrelated]);
+    // Only the merged Eververse and the unrelated vendor remain. The original
+    // primary is left untouched (it may be a shared cached object).
+    const merged = findMerged(groups);
+    expect(groups[0].vendors).toEqual([merged, unrelated]);
+    expect(itemsOf(primary)).toHaveLength(1);
 
-    // All items folded into the primary, with category indices shifted per vendor.
-    const items = itemsOf(primary);
+    // All items folded into the merged vendor, with category indices shifted per vendor.
+    const items = itemsOf(merged);
     expect(items.map((i) => i.mark)).toEqual(['p0', 'r1', 'r2a', 'r2b']);
     expect(items.find((i) => i.mark === 'r1')!.displayCategoryIndex).toBe(1);
     expect(items.find((i) => i.mark === 'r2a')!.displayCategoryIndex).toBe(2);
     expect(items.find((i) => i.mark === 'r2b')!.displayCategoryIndex).toBe(3);
 
     // Categories appended in order, so the shifted indices line up.
-    expect(primary.def.displayCategories).toHaveLength(4);
-    expect(catId(primary, 1)).toBe('cat-r1');
-    expect(catId(primary, 3)).toBe('cat-r2b');
+    expect(merged.def.displayCategories).toHaveLength(4);
+    expect(catId(merged, 1)).toBe('cat-r1');
+    expect(catId(merged, 3)).toBe('cat-r2b');
 
     // Currencies merged and de-duped by hash.
-    expect(primary.currencies.map((c) => c.hash).sort()).toEqual([100, 200, 300]);
+    expect(merged.currencies.map((c) => c.hash).sort()).toEqual([100, 200, 300]);
   });
 
   it('collapses merged categories that share a name', () => {
@@ -210,12 +219,13 @@ describe('mergeVendors', () => {
     mergeEververse(groups, [ghosts1, ghosts2]);
 
     // Featured + a single combined "Ghost Shell" category, not two.
-    expect(primary.def.displayCategories).toHaveLength(2);
-    expect(catName(primary, 0)).toBe('Featured');
-    expect(catName(primary, 1)).toBe('Ghost Shell');
+    const merged = findMerged(groups);
+    expect(merged.def.displayCategories).toHaveLength(2);
+    expect(catName(merged, 0)).toBe('Featured');
+    expect(catName(merged, 1)).toBe('Ghost Shell');
     // Both rotators' items live under that one Ghost Shell category.
     expect(
-      itemsOf(primary)
+      itemsOf(merged)
         .filter((i) => i.displayCategoryIndex === 1)
         .map((i) => i.mark),
     ).toEqual(['g1', 'g2']);
@@ -241,10 +251,11 @@ describe('mergeVendors', () => {
     mergeEververse(groups, [looseRotator]);
 
     // The loose rotator was never in a group; its items fold into Tess.
-    expect(groups[0].vendors).toEqual([primary]);
-    expect(itemsOf(primary).map((i) => i.mark)).toEqual(['p', 'r']);
-    expect(itemsOf(primary).find((i) => i.mark === 'r')!.displayCategoryIndex).toBe(1);
-    expect(primary.def.displayCategories).toHaveLength(2);
+    const merged = findMerged(groups);
+    expect(groups[0].vendors).toEqual([merged]);
+    expect(itemsOf(merged).map((i) => i.mark)).toEqual(['p', 'r']);
+    expect(itemsOf(merged).find((i) => i.mark === 'r')!.displayCategoryIndex).toBe(1);
+    expect(merged.def.displayCategories).toHaveLength(2);
   });
 
   it('merges sub-vendors even when they live in a different group', () => {
@@ -265,7 +276,7 @@ describe('mergeVendors', () => {
     mergeEververse(groups);
 
     expect(groups[1].vendors).toHaveLength(0);
-    expect(itemsOf(primary).map((i) => i.mark)).toEqual(['p', 'r']);
+    expect(itemsOf(findMerged(groups)).map((i) => i.mark)).toEqual(['p', 'r']);
   });
 
   it('does nothing when there is only one Eververse vendor', () => {
