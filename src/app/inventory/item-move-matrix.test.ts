@@ -383,8 +383,7 @@ describe('item-move matrix', () => {
   // --- Cascade when the vault is full ---------------------------------------
   // Moving onto a character whose bucket is full normally bumps an item into the
   // vault. When the vault is *also* full, the move-aside has to cascade onto
-  // another character (it recursively squeezes a vault item out). This is the
-  // "vault full but another character has room" combo from review.
+  // another character (it recursively squeezes a vault item out).
   it('cascades a move-aside onto another character when the vault is full', async () => {
     const dest = storeForRole(stores, 'other');
     const current = storeForRole(stores, 'current');
@@ -403,10 +402,9 @@ describe('item-move matrix', () => {
     const { getStores, move } = setupMoveTestStore(stores);
     const moved = await move(item, dest);
 
-    // The move still completes onto the destination despite the full vault...
+    // Succeeds despite the full vault, and the extra transfers show it cascaded.
     expect(moved.owner).toBe(dest.id);
     expect(locationsOf(getStores(), item.id)).toEqual([dest.id]);
-    // ...and it took more than one transfer (the bump cascaded).
     expect(transferMock.mock.calls.length).toBeGreaterThan(1);
   });
 
@@ -422,13 +420,10 @@ describe('item-move matrix', () => {
       getVault(stores)!.id,
       cloneItem(templateWeapon(stores)),
     );
-    // The whole account is packed: the destination bucket is full and can't move
-    // anything aside, every character's bucket is likewise full and unmovable,
-    // and the vault has no room either - so there is nowhere for the item to go.
-    // (A movable-but-cascading deep-fail isn't asserted here: with a reserved
-    // slot on the destination the engine can shuffle bumps around indefinitely,
-    // which isn't deterministic. The cascade *success* test covers the positive
-    // path; this locks in the clean failure when nothing can move.)
+    // The whole account is packed: every bucket full and unmovable, vault full,
+    // so there's nowhere for the item to go. Only the all-unmovable case is
+    // asserted: a movable deep-cascade fail isn't deterministic (a reserved
+    // destination slot lets the engine shuffle bumps).
     for (const s of stores.filter((s) => !s.isVault)) {
       stores = makeBucketUnmovable(
         setBucketFreeSlots(stores, s.id, bucketHash, 0),
@@ -444,10 +439,9 @@ describe('item-move matrix', () => {
 
   // --- Stacked vs. unstacked across destinations ----------------------------
   // The source x destination matrix above uses an instanced weapon; stacks
-  // behave differently and are covered here. The dedicated stack-merge blocks
-  // cover vault and current destinations; this documents the remaining axes: a
-  // character -> vault stack move, and the account-wide redirect when a stack is
-  // sent to a non-current character.
+  // behave differently. The stack-merge blocks cover vault and current
+  // destinations; these cover the remaining axes: a character -> vault move, and
+  // the account-wide redirect when a stack is sent to a non-current character.
   it('moves a stack from a character to the vault', async () => {
     const { item, source } = findMovableStack(stores);
     const startSource = amountOfItem(source, item);
