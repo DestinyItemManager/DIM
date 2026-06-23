@@ -79,7 +79,8 @@
     "@types/react": "$@types/react",
     "react-redux": "$react-redux",
     "redux": "$redux",
-    "react-is": "^18.3.1"
+    "react-is": "^18.3.1",
+    "js-yaml": "^4.2.0"
   },
   "devDependencies": {
     "@aaroon/workbox-rspack-plugin": "^1.0.1",
