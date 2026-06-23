@@ -75,10 +75,8 @@ export function usePopper(
       const isAuto = placement === 'auto';
       const strategy = fixed ? 'fixed' : 'absolute';
 
-      // Floating UI measures the floating element to position it, so it must already
-      // be positioned and anchored at a known origin before computePosition runs.
-      // Otherwise it's measured while still in normal document flow, which yields
-      // incorrect coordinates (notably for flipped placements).
+      // Anchor at a known origin before measuring, otherwise it's measured in normal
+      // document flow and positioned with wrong coordinates (notably when flipped).
       Object.assign(contentsElement.style, { position: strategy, left: '0', top: '0' });
 
       const arrowElement = arrowClassName

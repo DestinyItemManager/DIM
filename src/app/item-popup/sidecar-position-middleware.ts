@@ -19,7 +19,6 @@ export default function computeSidecarPosition(options: SidecarOptions): Middlew
     fn({ elements, rects, middlewareData }) {
       const { element } = options;
 
-      // Find the sidecar menu element
       let sidecarMenu: HTMLElement | null;
       if (!element) {
         return {};
