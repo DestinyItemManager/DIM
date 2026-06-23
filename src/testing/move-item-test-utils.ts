@@ -256,5 +256,30 @@ export function setBucketFreeSlots(
   });
 }
 
+/**
+ * Fill the vault to capacity for the vault bucket that `item` would occupy, by
+ * cloning it as filler, so the vault reports no room for that item type. Returns
+ * the new stores array.
+ *
+ * The vault models all gear of a kind as one big bucket (see
+ * `potentialSpaceLeftForItem`), so this fills that shared bucket - enough to
+ * force move-asides to look past the vault (e.g. onto another character).
+ */
+export function setVaultBucketFull(stores: DimStore[], item: DimItem): DimStore[] {
+  const vaultBucket = item.bucket.vaultBucket;
+  if (!vaultBucket) {
+    throw new Error(`${item.name} has no vault bucket`);
+  }
+  const vault = getVault(stores)!;
+  const occupied = vault.items.filter(
+    (i) => i.bucket.vaultBucket?.hash === vaultBucket.hash,
+  ).length;
+  const fillers: DimItem[] = [];
+  for (let i = occupied; i < vaultBucket.capacity; i++) {
+    fillers.push(cloneItem(item, { owner: vault.id }));
+  }
+  return replaceStore(stores, vault.id, (s) => ({ ...s, items: [...s.items, ...fillers] }));
+}
+
 /** Convenience re-exports so tests don't have to reach into stores-helpers. */
 export { findItemsByBucket, getStore, getVault };

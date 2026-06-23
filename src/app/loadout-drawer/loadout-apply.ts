@@ -467,8 +467,21 @@ function doApplyLoadout(
             }),
           );
           try {
+            const target = getStore(getStores(), owner)!;
+            // The getSimilarItem replacements can still live in the vault or on
+            // another character. equipItems requires its items to already be on
+            // the target store, so move them there first. A failure here lands
+            // in the catch below and marks the dequip as failed.
+            const itemsOnStore: DimItem[] = [];
+            for (const i of itemsToEquip) {
+              itemsOnStore.push(
+                i.owner === target.id
+                  ? i
+                  : await dispatch(executeMoveItem(i, target, { equip: false }, moveSession)),
+              );
+            }
             const result = await dispatch(
-              equipItems(getStore(getStores(), owner)!, itemsToEquip, involvedItems, moveSession),
+              equipItems(target, itemsOnStore, involvedItems, moveSession),
             );
             // Bulk equip can partially fail
             setLoadoutState(

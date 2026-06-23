@@ -715,10 +715,12 @@ describe('item-move-service', () => {
     );
   });
 
-  // Regression test for #9416 (point 3): bulk-equipping items that live on
-  // another store (e.g. de-equip replacements chosen from the vault) must move
-  // them onto the store first - you can't equip an item that isn't there.
-  it('moves items onto the store before bulk-equipping them', async () => {
+  // equipItems requires its items to already be on the store - it can't equip
+  // an item that isn't in the character's inventory. Moving off-store de-equip
+  // replacements (e.g. chosen from the vault) onto the store is the caller's
+  // responsibility; loadout-apply does that before calling equipItems. See
+  // #9416 (point 3) and the loadout-apply regression tests.
+  it('equips items already on the store and leaves off-store items for the caller', async () => {
     // Model the real bulk-equip API: it only succeeds for items that are
     // actually in the target character's inventory.
     equipItemsApiMock.mockImplementation((_account: unknown, store: DimStore, items: DimItem[]) =>
@@ -737,8 +739,9 @@ describe('item-move-service', () => {
     const character = stores.find((s) => !s.isVault && s.current)!;
     const vault = getVault(stores)!;
 
-    // Two non-exotic weapons from different buckets, relocated into the vault.
-    let w1 = character.items.find(
+    // w1 is already on the character; w2 sits in the vault (a precondition
+    // violation - equipItems should not silently move it).
+    const w1 = character.items.find(
       (i) =>
         i.bucket.hash === BucketHashes.KineticWeapons && !i.isExotic && !i.equipped && i.instanced,
     )!;
@@ -748,8 +751,6 @@ describe('item-move-service', () => {
     )!;
     expect(w1).toBeDefined();
     expect(w2).toBeDefined();
-    stores = removeItemFromStore(stores, w1);
-    [stores, w1] = addItemToStore(stores, vault.id, w1);
     stores = removeItemFromStore(stores, w2);
     [stores, w2] = addItemToStore(stores, vault.id, w2);
 
@@ -757,12 +758,12 @@ describe('item-move-service', () => {
     const session = createMoveSession(neverCanceled, []);
     const result = await dispatch(equipItemsThunk(character, [w1, w2], [], session));
 
-    // Both items were moved onto the character and equipped successfully.
+    // The on-store item equips; the vault item is reported not-found and is
+    // left in the vault rather than moved by equipItems.
     expect(result[w1.id]).toBe(PlatformErrorCodes.Success);
-    expect(result[w2.id]).toBe(PlatformErrorCodes.Success);
-    const newCharacter = getStores().find((s) => s.id === character.id)!;
-    expect(newCharacter.items.some((i) => i.id === w1.id)).toBe(true);
-    expect(newCharacter.items.some((i) => i.id === w2.id)).toBe(true);
+    expect(result[w2.id]).toBe(PlatformErrorCodes.DestinyItemNotFound);
+    expect(transferMock).not.toHaveBeenCalled();
+    expect(getVault(getStores())!.items.some((i) => i.id === w2.id)).toBe(true);
   });
 
   // Regression test for #6895: a character-to-character move of a unique-stack

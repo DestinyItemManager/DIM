@@ -258,11 +258,10 @@ export function getSimilarItem(
  * that what was passed in or even more than what was passed in because
  * sometimes we have to de-equip an exotic to equip another exotic.
  *
- * Ideally callers pass items that are already on `store` - loadout-apply moves
- * them into place first. But the de-equip path picks replacements via
- * getSimilarItem, which may live in the vault or on another character, so as a
- * safety net we move any off-store items onto `store` before equipping. See
- * #9416 (point 3).
+ * Precondition: every item in `items` must already be on `store` - the
+ * Bungie.net equip API only succeeds for items in the character's inventory.
+ * Callers (loadout-apply) are responsible for moving them into place first,
+ * including de-equip replacements pulled from the vault. See #9416 (point 3).
  */
 export function equipItems(
   store: DimStore,
@@ -273,21 +272,6 @@ export function equipItems(
 ): ThunkResult<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
-
-    // You can only equip items that are in the character's inventory. Callers
-    // are expected to have moved them onto `store` already, but the de-equip
-    // replacements chosen by getSimilarItem may still live in the vault or on
-    // another character, so move any stragglers onto the store first. See #9416
-    // (point 3). Items already on the store are left as-is.
-    const itemsOnStore: DimItem[] = [];
-    for (const i of items) {
-      itemsOnStore.push(
-        i.owner === store.id
-          ? i
-          : await dispatch(executeMoveItem(i, store, { equip: false }, session)),
-      );
-    }
-    items = itemsOnStore;
 
     // Check for (and move aside) exotics
     const extraItemsToEquip: Promise<DimItem>[] = filterMap(items, (i) => {

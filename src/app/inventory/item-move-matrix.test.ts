@@ -12,6 +12,7 @@ import {
   removeItemFromStore,
   setBucketFreeSlots,
   setupMoveTestStore,
+  setVaultBucketFull,
 } from 'testing/move-item-test-utils';
 import { setupi18n } from 'testing/test-utils';
 import { DimError } from '../utils/dim-error';
@@ -344,6 +345,7 @@ describe('item-move matrix', () => {
     { name: 'onto its own character with room', to: 'current', fill: 'room' },
     { name: 'onto its own character whose bucket is full', to: 'current', fill: 'bucketFull' },
     { name: 'onto another character with room', to: 'other', fill: 'room' },
+    { name: 'onto another character whose bucket is full', to: 'other', fill: 'bucketFull' },
   ];
 
   describe.each(postmasterCases)('pulling a lost item $name', ({ to, fill }) => {
@@ -376,5 +378,122 @@ describe('item-move matrix', () => {
       const newDest = getStores().find((s) => s.id === dest.id)!;
       expect(newDest.items.some((i) => i.id === item.id && !i.location.inPostmaster)).toBe(true);
     });
+  });
+
+  // --- Cascade when the vault is full ---------------------------------------
+  // Moving onto a character whose bucket is full normally bumps an item into the
+  // vault. When the vault is *also* full, the move-aside has to cascade onto
+  // another character (it recursively squeezes a vault item out). This is the
+  // "vault full but another character has room" combo from review.
+  it('cascades a move-aside onto another character when the vault is full', async () => {
+    const dest = storeForRole(stores, 'other');
+    const current = storeForRole(stores, 'current');
+    const bucketHash = templateWeapon(stores).bucket.hash;
+
+    // Give the current character room to absorb the squeezed-out vault item,
+    // then seed the item to move there.
+    stores = setBucketFreeSlots(stores, current.id, bucketHash, 4);
+    let item: DimItem;
+    [stores, item] = addItemToStore(stores, current.id, cloneItem(templateWeapon(stores)));
+    // The destination bucket is full of movable items, and the vault has no room
+    // of its own, so the only way to make space is to push onto another character.
+    stores = setBucketFreeSlots(stores, dest.id, bucketHash, 0);
+    stores = setVaultBucketFull(stores, item);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    const moved = await move(item, dest);
+
+    // The move still completes onto the destination despite the full vault...
+    expect(moved.owner).toBe(dest.id);
+    expect(locationsOf(getStores(), item.id)).toEqual([dest.id]);
+    // ...and it took more than one transfer (the bump cascaded).
+    expect(transferMock.mock.calls.length).toBeGreaterThan(1);
+  });
+
+  it('fails with a no-space error when the destination and vault are both full', async () => {
+    const dest = storeForRole(stores, 'other');
+    const bucketHash = templateWeapon(stores).bucket.hash;
+
+    // The item to move starts in the vault (so blocking the characters' buckets
+    // below doesn't touch it).
+    let item: DimItem;
+    [stores, item] = addItemToStore(
+      stores,
+      getVault(stores)!.id,
+      cloneItem(templateWeapon(stores)),
+    );
+    // The whole account is packed: the destination bucket is full and can't move
+    // anything aside, every character's bucket is likewise full and unmovable,
+    // and the vault has no room either - so there is nowhere for the item to go.
+    // (A movable-but-cascading deep-fail isn't asserted here: with a reserved
+    // slot on the destination the engine can shuffle bumps around indefinitely,
+    // which isn't deterministic. The cascade *success* test covers the positive
+    // path; this locks in the clean failure when nothing can move.)
+    for (const s of stores.filter((s) => !s.isVault)) {
+      stores = makeBucketUnmovable(
+        setBucketFreeSlots(stores, s.id, bucketHash, 0),
+        s.id,
+        bucketHash,
+      );
+    }
+    stores = setVaultBucketFull(stores, item);
+
+    const { move } = setupMoveTestStore(stores);
+    await expect(move(item, dest)).rejects.toThrow(DimError);
+  });
+
+  // --- Stacked vs. unstacked across destinations ----------------------------
+  // The source x destination matrix above uses an instanced weapon; stacks
+  // behave differently and are covered here. The dedicated stack-merge blocks
+  // cover vault and current destinations; this documents the remaining axes: a
+  // character -> vault stack move, and the account-wide redirect when a stack is
+  // sent to a non-current character.
+  it('moves a stack from a character to the vault', async () => {
+    const { item, source } = findMovableStack(stores);
+    const startSource = amountOfItem(source, item);
+    const startVault = amountOfItem(getVault(stores)!, item);
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    await move(item, getVault(stores)!, { amount: 2 });
+
+    const after = getStores();
+    expect(amountOfItem(after.find((s) => s.id === source.id)!, item)).toBe(startSource - 2);
+    expect(amountOfItem(getVault(after)!, item)).toBe(startVault + 2);
+  });
+
+  it('redirects a stack sent to a non-current character onto the current one', async () => {
+    // Account-wide consumables resolve onto the current character no matter
+    // which character you target, so a move to a non-current character never
+    // lands there.
+    const { item } = findMovableStack(stores);
+    expect(item.bucket.accountWide).toBe(true);
+    const other = storeForRole(stores, 'other');
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    const moved = await move(item, other, { amount: 2 });
+
+    expect(moved.owner).toBe(storeForRole(getStores(), 'current').id);
+  });
+
+  // --- Postmaster pulls to the vault ----------------------------------------
+  it('pulls a lost item from the postmaster into the vault', async () => {
+    const buckets = await getTestBuckets();
+    const current = storeForRole(stores, 'current');
+    const original = current.items.find(
+      (i) => i.bucket.sort === 'Weapons' && i.instanced && !i.equipped && !i.location.inPostmaster,
+    )!;
+    const destinationBucket = original.bucket.hash;
+
+    let item: DimItem;
+    [stores, item] = placeItemInPostmaster(stores, original, buckets);
+    const vault = getVault(stores)!;
+
+    const { getStores, move } = setupMoveTestStore(stores);
+    const moved = await move(item, vault);
+
+    expect(moved.owner).toBe(vault.id);
+    expect(moved.location.inPostmaster).toBeFalsy();
+    expect(moved.location.hash).toBe(destinationBucket);
+    expect(getVault(getStores())!.items.some((i) => i.id === item.id)).toBe(true);
   });
 });
