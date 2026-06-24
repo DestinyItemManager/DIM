@@ -15,7 +15,7 @@ Due to what information is provided by Bungie about item names and descriptions 
   - Chinese (Simplified)
 
 # Join the translation team @ Crowdin
- [Crowdin](https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4)
+ [Crowdin](https://crowdin.com/project/destiny-item-manager/invite?h=117dfaeab15a7795e24259903e677f8a2807461)
 
 There are two different roles available per language
 
