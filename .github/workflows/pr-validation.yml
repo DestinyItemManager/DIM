@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Inline setup - required for fork PR compatibility
       # Cannot use ./.github/actions/setup-pnpm as it won't work from forks
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Inline setup - required for fork PR compatibility
       - uses: pnpm/action-setup@v6
@@ -117,7 +117,7 @@ jobs:
       name: pr
       url: ${{ steps.deploy-url.outputs.url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Inline setup - required for fork PR compatibility
       - uses: pnpm/action-setup@v6
