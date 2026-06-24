@@ -17,8 +17,11 @@ import {
 // this file has non-programatically decided information
 // hashes, names, & enums, hand-crafted and chosen by us
 
+// An image like ⍁ that one should try to find a replacement image for.
 export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
-
+// A "Default Ornament" definition that advertises having a screenshot,
+// but doesn't have one, and shouldn't be used if it did.
+export const badDefaultOrnament = 3854296178;
 //
 // GAME MECHANICS KNOWN VALUES
 //
