@@ -86,11 +86,13 @@ export async function initi18n(): Promise<void> {
   await i18next.use(HttpApi).init<HttpBackendOptions>({
     debug: false,
     lng: lang,
-    // The two Chinese variants are mutually intelligible enough that a missing
-    // key is better served by the other variant than by English.
+    // Variants of the same language are mutually intelligible enough that a
+    // missing key is better served by the sibling variant than by English.
     fallbackLng: {
       'zh-cht': ['zh-chs', 'en'],
       'zh-chs': ['zh-cht', 'en'],
+      'es-mx': ['es', 'en'],
+      es: ['es-mx', 'en'],
       default: ['en'],
     },
     lowerCaseLng: true,
