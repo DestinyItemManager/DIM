@@ -26,7 +26,6 @@ export function D1CharacterStats({
     const tier = Math.floor(Math.min(300, stat.value) / 60);
     const next = t('Stats.TierProgress', {
       context: tier === 5 ? 'Max' : '',
-      metadata: { context: ['max'] },
       progress: tier === 5 ? stat.value : stat.value % 60,
       tier,
       nextTier: tier + 1,

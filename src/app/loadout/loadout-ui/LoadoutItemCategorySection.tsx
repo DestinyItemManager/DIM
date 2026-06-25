@@ -137,7 +137,7 @@ export default function LoadoutItemCategorySection({
       ) : (
         <>
           <div className={clsx(styles.placeholder, `category-${category}`)}>
-            {t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+            {t(`Bucket.${category}`)}
           </div>
         </>
       )}
