@@ -83,10 +83,24 @@ export async function getTestManifestJson() {
 
     await fs.mkdir(cacheDir, { recursive: true });
 
-    const manifestDb = await downloadManifestComponents(
-      manifest.jsonWorldComponentContentPaths.en,
-      allTables,
-    );
+    // The component download can fail partway through on a flaky network (e.g. a
+    // premature stream close on the largest table), so retry with a delay like
+    // the manifest fetch above rather than failing CI on a transient error.
+    let manifestDb: AllDestinyManifestComponents;
+    for (let i = 0; ; i++) {
+      try {
+        manifestDb = await downloadManifestComponents(
+          manifest.jsonWorldComponentContentPaths.en,
+          allTables,
+        );
+        break;
+      } catch (e) {
+        if (i === 4) {
+          throw e;
+        }
+        await delay(1000);
+      }
+    }
     await fs.writeFile(filename, JSON.stringify(manifestDb), 'utf-8');
     return [manifestDb, filename] as const;
   } finally {
