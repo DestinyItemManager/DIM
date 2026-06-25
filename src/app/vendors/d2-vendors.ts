@@ -7,6 +7,7 @@ import { chainComparator, compareBy, compareByIndex } from 'app/utils/comparator
 import {
   DestinyCollectibleState,
   DestinyDestinationDefinition,
+  DestinyDisplayCategoryDefinition,
   DestinyInventoryItemDefinition,
   DestinyPlaceDefinition,
   DestinyVendorComponent,
@@ -18,6 +19,7 @@ import {
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import specialVendorStrings from 'data/d2/special-vendors-strings.json';
 import vendorIconOverrides from 'data/d2/vendor-image-overrides.json';
+import { maxBy } from 'es-toolkit';
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;
@@ -40,6 +42,12 @@ export interface D2Vendor {
 }
 
 const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashes.Eververse];
+
+/**
+ * All of the split Eververse vendors share this `vendorIdentifier` prefix (e.g.
+ * `EVERVERSE`, `EVERVERSE_BRIGHT_DUST_ROTATOR_*`, `EVERVERSE_SILVER_ROTATOR_*`).
+ */
+const eververseVendorIdentifierPrefix = 'EVERVERSE';
 
 /**
  * Cache of built vendors. On the vendors page each vendor's item components
@@ -137,18 +145,191 @@ export function toVendorGroups(
 
   const { defs } = context;
 
-  return Object.values(vendorsResponse.vendorGroups.data.groups)
-    .map((group) => {
-      const groupDef = defs.VendorGroup.get(group.vendorGroupHash);
-      return {
-        def: groupDef,
-        vendors: filterMap(group.vendorHashes, (vendorHash) => {
-          const vendor = buildVendorMemoized(context, vendorsResponse, characterId, vendorHash);
-          return vendor?.items.length ? vendor : undefined;
-        }).sort(compareByIndex(vendorOrder, (v) => v.def.hash)),
-      };
-    })
-    .sort(compareBy((g) => g.def.order));
+  const buildVendor = (vendorHash: number) =>
+    buildVendorMemoized(context, vendorsResponse, characterId, vendorHash);
+
+  // Build every vendor first (including empty ones) so the Eververse merge below
+  // can stitch the split vendors back together before we drop empties.
+  const groups = Object.values(vendorsResponse.vendorGroups.data.groups).map((group) => ({
+    def: defs.VendorGroup.get(group.vendorGroupHash),
+    vendors: filterMap(group.vendorHashes, buildVendor),
+  }));
+
+  // The split Eververse "rotator" sub-vendors aren't part of any vendor group
+  // (their definitions have no `groups`), so they never show up via the groups
+  // above. Find any that came back with sales and build them so the merge can
+  // fold them into Tess. See https://github.com/Bungie-net/api/issues/2069.
+  const builtVendorHashes = new Set(groups.flatMap((g) => g.vendors.map((v) => v.def.hash)));
+  const looseEververseVendors = filterMap(Object.keys(vendorsResponse.sales.data ?? {}), (key) => {
+    const vendorHash = Number(key);
+    if (builtVendorHashes.has(vendorHash)) {
+      return undefined;
+    }
+    const vendorDef = defs.Vendor.get(vendorHash);
+    return vendorDef?.vendorIdentifier?.startsWith(eververseVendorIdentifierPrefix)
+      ? buildVendor(vendorHash)
+      : undefined;
+  });
+
+  mergeVendors(
+    groups,
+    VendorHashes.Eververse,
+    eververseVendorIdentifierPrefix,
+    looseEververseVendors,
+  );
+
+  return filterMap(groups, (group) => {
+    const vendors = group.vendors
+      .filter((vendor) => vendor.items.length)
+      .sort(compareByIndex(vendorOrder, (v) => v.def.hash));
+    return vendors.length ? { def: group.def, vendors } : undefined;
+  }).sort(compareBy((g) => g.def.order));
+}
+
+/**
+ * Merge a family of related vendors - all sharing a `vendorIdentifier` prefix -
+ * into a single primary vendor, folding their items, display categories, and
+ * currencies together.
+ *
+ * The motivating case: as of the Monument of Triumph update, Bungie split the
+ * Eververse vendor (Tess Everis) into ~25 separate vendor definitions - a main
+ * vendor plus Bright Dust / Silver / Featured "rotator" sub-vendors. Merging
+ * them back together makes all of Tess's wares (especially Bright Dust) appear
+ * together, instead of as a bunch of separate, mostly-unnamed tiles. See
+ * https://github.com/Bungie-net/api/issues/2069.
+ *
+ * Mutates `groups` in place.
+ */
+export function mergeVendors(
+  groups: { def: DestinyVendorGroupDefinition; vendors: D2Vendor[] }[],
+  /** The vendor that the others fold into; falls back to the first match if absent. */
+  primaryVendorHash: number,
+  /** Shared `vendorIdentifier` prefix that identifies the family to merge. */
+  identifierPrefix: string,
+  /** Family members that aren't part of any group (e.g. loose rotator sub-vendors). */
+  looseVendors: D2Vendor[] = [],
+) {
+  const familyVendors = [
+    ...groups.flatMap((group) =>
+      group.vendors.filter((vendor) => vendor.def.vendorIdentifier?.startsWith(identifierPrefix)),
+    ),
+    ...looseVendors,
+  ];
+  if (familyVendors.length <= 1) {
+    return;
+  }
+
+  const primary =
+    familyVendors.find((vendor) => vendor.def.hash === primaryVendorHash) ?? familyVendors[0];
+  const subVendors = familyVendors.filter((vendor) => vendor !== primary);
+
+  // Each sub-vendor's items reference its own def's displayCategories by index.
+  // Append those categories (collapsing ones that share a name, e.g. several
+  // "Ghost Shell" rotators) and remap the merged-in items to the combined index.
+  const displayCategories = [...primary.def.displayCategories];
+  const items = [...primary.items];
+  const currenciesByHash = new Map(primary.currencies.map((c) => [c.hash, c]));
+
+  const categoryIndexByName = new Map<string, number>();
+  for (const [index, category] of displayCategories.entries()) {
+    const name = category.displayProperties?.name;
+    if (name && !categoryIndexByName.has(name)) {
+      categoryIndexByName.set(name, index);
+    }
+  }
+
+  for (const vendor of subVendors) {
+    // Map this vendor's category indices into the combined list, reusing an
+    // existing same-named category where there is one.
+    const localToCombined = new Map<number, number>();
+    for (const [localIndex, category] of vendor.def.displayCategories.entries()) {
+      const name = category.displayProperties?.name;
+      const existing = name ? categoryIndexByName.get(name) : undefined;
+      if (existing !== undefined) {
+        localToCombined.set(localIndex, existing);
+      } else {
+        const combinedIndex = displayCategories.length;
+        displayCategories.push(category);
+        if (name) {
+          categoryIndexByName.set(name, combinedIndex);
+        }
+        localToCombined.set(localIndex, combinedIndex);
+      }
+    }
+    for (const item of vendor.items) {
+      items.push(
+        item.displayCategoryIndex === undefined
+          ? item
+          : {
+              ...item,
+              displayCategoryIndex:
+                localToCombined.get(item.displayCategoryIndex) ?? item.displayCategoryIndex,
+            },
+      );
+    }
+    for (const currency of vendor.currencies) {
+      currenciesByHash.set(currency.hash, currency);
+    }
+  }
+
+  // Build a new merged vendor rather than mutating `primary` in place: it may be
+  // a reused, cached build result, and mutating it would re-merge sub-vendors on
+  // every subsequent rebuild.
+  const mergedPrimary: D2Vendor = {
+    ...primary,
+    def: { ...primary.def, displayCategories },
+    items,
+    currencies: [...currenciesByHash.values()],
+  };
+
+  // Swap the merged primary in and drop the now-merged sub-vendors from their groups.
+  const mergedAway = new Set(subVendors);
+  for (const group of groups) {
+    group.vendors = group.vendors
+      .filter((vendor) => !mergedAway.has(vendor))
+      .map((vendor) => (vendor === primary ? mergedPrimary : vendor));
+  }
+}
+
+/**
+ * Replace the name of any unnamed display category with the most common item
+ * type sold in it, so those categories render as e.g. "Shader" instead of
+ * "Unknown". Returns the original array unchanged when every category is named.
+ */
+export function nameUnnamedCategories(
+  displayCategories: DestinyDisplayCategoryDefinition[],
+  items: VendorItem[],
+): DestinyDisplayCategoryDefinition[] {
+  if (displayCategories.every((category) => category.displayProperties?.name)) {
+    return displayCategories;
+  }
+  const itemsByCategory = Map.groupBy(items, (item) => item.displayCategoryIndex);
+  return displayCategories.map((category, index) =>
+    category.displayProperties?.name
+      ? category
+      : nameCategoryFromItems(category, itemsByCategory.get(index)),
+  );
+}
+
+/**
+ * Give an unnamed display category a name based on the most common item type it
+ * sells. Returns the original category unchanged if we can't tell.
+ */
+function nameCategoryFromItems(
+  category: DestinyDisplayCategoryDefinition,
+  items: VendorItem[] = [],
+): DestinyDisplayCategoryDefinition {
+  const typeNameCounts = new Map<string, number>();
+  for (const { item } of items) {
+    if (item?.typeName) {
+      typeNameCounts.set(item.typeName, (typeNameCounts.get(item.typeName) ?? 0) + 1);
+    }
+  }
+  if (typeNameCounts.size === 0) {
+    return category;
+  }
+  const name = maxBy([...typeNameCounts], ([, count]) => count)![0];
+  return { ...category, displayProperties: { ...category.displayProperties, name } };
 }
 
 export function toVendor(
@@ -232,6 +413,14 @@ export function toVendor(
         smallTransparentIcon: iconOverride,
       },
     };
+  }
+
+  // Name any unnamed display categories after the item type they sell, so they
+  // don't render as "Unknown" (e.g. the split Eververse rotator sub-vendors,
+  // whose categories come through blank).
+  const namedCategories = nameUnnamedCategories(vendorDef.displayCategories, vendorItems);
+  if (namedCategories !== vendorDef.displayCategories) {
+    vendorDef = { ...vendorDef, displayCategories: namedCategories };
   }
 
   return {
