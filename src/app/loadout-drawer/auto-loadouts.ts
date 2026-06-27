@@ -99,7 +99,15 @@ export function maxLightItemSet(
 ): ReturnType<typeof optimalItemSet> {
   const applicableItems: DimItem[] = [];
   for (const i of allItems) {
-    if ((i.power && i.bucket.inWeapons) || i.bucket.inArmor) {
+    if (
+      (i.power && i.bucket.inWeapons) ||
+      i.bucket.inArmor ||
+      // In D1, ghosts and artifacts also contribute to Light level, so they
+      // should be part of the max-light set. See issue #11648.
+      (store.destinyVersion === 1 &&
+        i.power &&
+        (i.bucket.hash === BucketHashes.Ghost || i.bucket.hash === D1BucketHashes.Artifact))
+    ) {
       applicableItems.push(i);
     }
   }

@@ -433,7 +433,18 @@ function doApplyLoadout(
 
       const realItemsToDequip = filterMap(itemsToDequip, getLoadoutItem);
 
-      const involvedItems = [...filterMap(itemsToEquip, getLoadoutItem), ...realItemsToDequip];
+      // Every item in the loadout is "explicitly requested" - not just the
+      // equips/dequips, and not just the ones that need to move. This drives two
+      // things in the move session:
+      //  - moved consumables aren't treated as incidental (which for unique
+      //    stacks like Hymn of Desecration / Ghost Fragments would make the
+      //    destination look full and silently skip the item or cascade
+      //    move-asides). See #8872 / #8506.
+      //  - none of the loadout's items get picked as a replacement when
+      //    de-equipping something, even ones already sitting in the vault. See
+      //    #3573 / #8418 / #9416. Resolving via getLoadoutItem first keeps the
+      //    exclusion ids accurate for shaped/crafted items.
+      const involvedItems = filterMap(applicableLoadoutItems, getLoadoutItem);
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
@@ -448,18 +459,29 @@ function doApplyLoadout(
           // else - so choose an appropriate replacement for each item.
           const itemsToEquip = filterMap(dequipItems, (i) =>
             getSimilarItem(getState, getStores(), i, {
-              exclusions: applicableLoadoutItems,
+              // Use the resolved items, not the raw loadout items - exclusions
+              // match by id, and shaped/crafted items resolve to a different id
+              // than the loadout stores. See #9416 (point 4).
+              exclusions: involvedItems,
               excludeExotic: i.isExotic,
             }),
           );
           try {
+            const target = getStore(getStores(), owner)!;
+            // The getSimilarItem replacements can still live in the vault or on
+            // another character. equipItems requires its items to already be on
+            // the target store, so move them there first. A failure here lands
+            // in the catch below and marks the dequip as failed.
+            const itemsOnStore: DimItem[] = [];
+            for (const i of itemsToEquip) {
+              itemsOnStore.push(
+                i.owner === target.id
+                  ? i
+                  : await dispatch(executeMoveItem(i, target, { equip: false }, moveSession)),
+              );
+            }
             const result = await dispatch(
-              equipItems(
-                getStore(getStores(), owner)!,
-                itemsToEquip,
-                applicableLoadoutItems,
-                moveSession,
-              ),
+              equipItems(target, itemsOnStore, involvedItems, moveSession),
             );
             // Bulk equip can partially fail
             setLoadoutState(
@@ -504,13 +526,9 @@ function doApplyLoadout(
         try {
           const initialItem = getLoadoutItem(loadoutItem)!;
           await dispatch(
-            applyLoadoutItem(
-              store.id,
-              loadoutItem,
-              getLoadoutItem,
-              applicableLoadoutItems,
-              moveSession,
-            ),
+            // involvedItems (resolved) rather than raw applicableLoadoutItems so
+            // the move-aside exclusions match shaped/crafted items. See #9416.
+            applyLoadoutItem(store.id, loadoutItem, getLoadoutItem, involvedItems, moveSession),
           );
           const updatedItem = getLoadoutItem(loadoutItem);
           if (updatedItem) {
