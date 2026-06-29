@@ -286,6 +286,7 @@ export function fitMostMods({
   items,
   plannedMods,
   armorEnergyRules,
+  tuningModsByItemId,
 }: {
   defs: D2ManifestDefinitions;
   /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
@@ -293,6 +294,12 @@ export function fitMostMods({
   /** mods we are trying to place on the items */
   plannedMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
+  /**
+   * Explicit tuning-mod-to-item assignment from the LO worker, by item id. The
+   * worker knows which item each tuning mod belongs on; balanced tuning's effect
+   * depends on the item, so we can't re-derive it here and must honor this.
+   */
+  tuningModsByItemId?: { [itemId: string]: number };
 }): {
   itemModAssignments: {
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
@@ -375,33 +382,42 @@ export function fitMostMods({
     }
   }
 
-  // Tuning mods are also free, but we assign them in exactly the order they
-  // appear in the mods list to the list of armor (assuming armor is ordered
-  // helmet, arms, chest, legs, classitem). We *don't* try to minimize how many
-  // mod changes are made. This is because balanced mods provide different stat
-  // benefits depending on what item they're assigned to (+1 to the three lowest
-  // stats), so if we assigned them in a different order than they were chosen
-  // in the process loop, we might end up with different stats than the user
-  // expected.
-  //
-  // Exclude exotics since they blow up the combos since they have all the tuning sockets.
-  //
-  const tuningItems = items.filter((i) => !i.isExotic && getArmor3TuningStat(i) !== undefined);
-  for (const tuningMod of tuningMods) {
-    // Find the tuning stat hash, which is the stat that gets +5 when this mod
-    // is applied. For "Balanced Tuning" this should be 0.
-    const tuningStatHash = tuningMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
-    const targetItemIndex = tuningItems.findIndex((i) =>
-      tuningStatHash === 0
-        ? true // Balanced tuning can go on any item with a tuning socket
-        : // Otherwise the item's tuning stat must match the mod's
-          getArmor3TuningStat(i) === tuningStatHash,
-    );
-    if (targetItemIndex !== -1) {
-      bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
-      tuningItems.splice(targetItemIndex, 1);
-    } else {
-      unassignedMods.push(tuningMod);
+  // Tuning mods are free, but balanced tuning gives +1 to whichever item's three
+  // lowest stats, so the item it lands on changes the build's stats.
+  if (tuningModsByItemId) {
+    // The worker handed us the exact item for each tuning mod, so just place
+    // them. This is the only way to reproduce the worker's stats: exotics expose
+    // every tuning stat so they can't be matched by stat here, and balanced
+    // tuning's effect depends on its item.
+    const remainingTuningMods = [...tuningMods];
+    for (const [itemId, modHash] of Object.entries(tuningModsByItemId)) {
+      const idx = remainingTuningMods.findIndex((m) => m.hash === modHash);
+      if (idx !== -1 && bucketSpecificAssignments[itemId]) {
+        bucketSpecificAssignments[itemId].assigned.push(remainingTuningMods[idx]);
+        remainingTuningMods.splice(idx, 1);
+      }
+    }
+    unassignedMods.push(...remainingTuningMods);
+  } else {
+    // Exclude exotics since we can't tell which of their many tuning stats this
+    // item is locked to here.
+    const tuningItems = items.filter((i) => !i.isExotic && getArmor3TuningStat(i) !== undefined);
+    for (const tuningMod of tuningMods) {
+      // Find the tuning stat hash, which is the stat that gets +5 when this mod
+      // is applied. For "Balanced Tuning" this should be 0.
+      const tuningStatHash = tuningMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
+      const targetItemIndex = tuningItems.findIndex((i) =>
+        tuningStatHash === 0
+          ? true // Balanced tuning can go on any item with a tuning socket
+          : // Otherwise the item's tuning stat must match the mod's
+            getArmor3TuningStat(i) === tuningStatHash,
+      );
+      if (targetItemIndex !== -1) {
+        bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
+        tuningItems.splice(targetItemIndex, 1);
+      } else {
+        unassignedMods.push(tuningMod);
+      }
     }
   }
 

@@ -572,12 +572,20 @@ export async function process(
       return undefined;
     }
 
+    const tuningModsByItemId: { [itemId: string]: number } = {};
+    for (const item of armor) {
+      if (item.includedTuningMod !== undefined) {
+        tuningModsByItemId[item.id] = item.includedTuningMod;
+      }
+    }
+
     return {
       ...rest,
       armor: armor.map((item) => item.id),
       stats: fullStats as ArmorStats,
       armorStats: armorOnlyStats as ArmorStats,
       statMods: mods,
+      tuningModsByItemId,
     };
   });
 
