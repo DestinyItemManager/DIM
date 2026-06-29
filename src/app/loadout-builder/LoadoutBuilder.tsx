@@ -312,6 +312,7 @@ export default memo(function LoadoutBuilder({
         stats: processed.stats,
         armorStats: processed.armorStats,
         statMods: processed.statMods,
+        tuningModsByItemId: processed.tuningModsByItemId,
       };
     }
     return (
