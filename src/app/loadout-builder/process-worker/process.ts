@@ -204,37 +204,46 @@ export async function process(
   let comboCount = 0;
   // required perks' hashes
   const perkHashes = requiredPerks.map((p) => p.hash);
+  const hasPerkReqs = requiredPerks.length > 0;
   // count of each perk on this item, in an array w/ same order as perkHashes
   const perkCount = (item: ProcessItem) =>
     perkHashes.map((hash) => (item.intrinsicPerks?.includes(hash) ? 1 : 0));
+
+  // Reused across iterations to avoid per-combo allocation in this hot loop.
+  // Safe because each is only read within one iteration and copied before being
+  // stored in the set tracker.
+  const stats = [0, 0, 0, 0, 0, 0];
+  const effectiveStats = [0, 0, 0, 0, 0, 0];
+  const neededStats = [0, 0, 0, 0, 0, 0];
+  const armor: ProcessItem[] = new Array<ProcessItem>(5);
 
   itemLoop: for (let helmIdx = 0; helmIdx < helms.length; helmIdx++) {
     const helm = helms[helmIdx];
     const helmExotic = Number(helm.isExotic);
     const helmArtifice = Number(helm.isArtifice);
     const helmWildcard = helm.hasSetBonusModSocket ? 1 : 0;
-    const helmPerks = perkCount(helm);
+    const helmPerks = hasPerkReqs ? perkCount(helm) : undefined;
     const helmStats = statsCache.get(helm)!;
     for (let gauntIdx = 0; gauntIdx < gauntlets.length; gauntIdx++) {
       const gaunt = gauntlets[gauntIdx];
       const gauntletExotic = Number(gaunt.isExotic);
       const gauntArtifice = Number(gaunt.isArtifice);
       const gauntWildcard = gaunt.hasSetBonusModSocket ? 1 : 0;
-      const gauntPerks = perkCount(gaunt);
+      const gauntPerks = hasPerkReqs ? perkCount(gaunt) : undefined;
       const gauntStats = statsCache.get(gaunt)!;
       for (let chestIdx = 0; chestIdx < chests.length; chestIdx++) {
         const chest = chests[chestIdx];
         const chestExotic = Number(chest.isExotic);
         const chestArtifice = Number(chest.isArtifice);
         const chestWildcard = chest.hasSetBonusModSocket ? 1 : 0;
-        const chestPerks = perkCount(chest);
+        const chestPerks = hasPerkReqs ? perkCount(chest) : undefined;
         const chestStats = statsCache.get(chest)!;
         for (let legIdx = 0; legIdx < legs.length; legIdx++) {
           const leg = legs[legIdx];
           const legExotic = Number(leg.isExotic);
           const legArtifice = Number(leg.isArtifice);
           const legWildcard = leg.hasSetBonusModSocket ? 1 : 0;
-          const legPerks = perkCount(leg);
+          const legPerks = hasPerkReqs ? perkCount(leg) : undefined;
           const legStats = statsCache.get(leg)!;
           innerloop: for (let classItemIdx = 0; classItemIdx < classItems.length; classItemIdx++) {
             const classItem = classItems[classItemIdx];
@@ -265,13 +274,19 @@ export async function process(
             }
 
             // Check required perk counts across the set
-            const classItemPerks = perkCount(classItem);
-            for (let i = 0; i < requiredPerks.length; i++) {
-              const actualCount =
-                helmPerks[i] + gauntPerks[i] + chestPerks[i] + legPerks[i] + classItemPerks[i];
-              if (actualCount < requiredPerks[i].count) {
-                setStatistics.skipReasons.insufficientPerks++;
-                continue innerloop;
+            if (hasPerkReqs) {
+              const classItemPerks = perkCount(classItem);
+              for (let i = 0; i < requiredPerks.length; i++) {
+                const actualCount =
+                  helmPerks![i] +
+                  gauntPerks![i] +
+                  chestPerks![i] +
+                  legPerks![i] +
+                  classItemPerks[i];
+                if (actualCount < requiredPerks[i].count) {
+                  setStatistics.skipReasons.insufficientPerks++;
+                  continue innerloop;
+                }
               }
             }
 
@@ -306,60 +321,67 @@ export async function process(
             //
             // Note: JavaScript engines apparently don't unroll loops
             // automatically and this makes a big difference in speed.
-            const stats = [
+            stats[0] =
               modStatsInStatOrder[0] +
-                helmStats[0] +
-                gauntStats[0] +
-                chestStats[0] +
-                legStats[0] +
-                classItemStats[0],
+              helmStats[0] +
+              gauntStats[0] +
+              chestStats[0] +
+              legStats[0] +
+              classItemStats[0];
+            stats[1] =
               modStatsInStatOrder[1] +
-                helmStats[1] +
-                gauntStats[1] +
-                chestStats[1] +
-                legStats[1] +
-                classItemStats[1],
+              helmStats[1] +
+              gauntStats[1] +
+              chestStats[1] +
+              legStats[1] +
+              classItemStats[1];
+            stats[2] =
               modStatsInStatOrder[2] +
-                helmStats[2] +
-                gauntStats[2] +
-                chestStats[2] +
-                legStats[2] +
-                classItemStats[2],
+              helmStats[2] +
+              gauntStats[2] +
+              chestStats[2] +
+              legStats[2] +
+              classItemStats[2];
+            stats[3] =
               modStatsInStatOrder[3] +
-                helmStats[3] +
-                gauntStats[3] +
-                chestStats[3] +
-                legStats[3] +
-                classItemStats[3],
+              helmStats[3] +
+              gauntStats[3] +
+              chestStats[3] +
+              legStats[3] +
+              classItemStats[3];
+            stats[4] =
               modStatsInStatOrder[4] +
-                helmStats[4] +
-                gauntStats[4] +
-                chestStats[4] +
-                legStats[4] +
-                classItemStats[4],
+              helmStats[4] +
+              gauntStats[4] +
+              chestStats[4] +
+              legStats[4] +
+              classItemStats[4];
+            stats[5] =
               modStatsInStatOrder[5] +
-                helmStats[5] +
-                gauntStats[5] +
-                chestStats[5] +
-                legStats[5] +
-                classItemStats[5],
-            ];
+              helmStats[5] +
+              gauntStats[5] +
+              chestStats[5] +
+              legStats[5] +
+              classItemStats[5];
 
             // A version of the set stats that have been clamped to the max stat
             // constraint.
-            const effectiveStats = [
-              Math.min(stats[0], maxStatConstraints[0]),
-              Math.min(stats[1], maxStatConstraints[1]),
-              Math.min(stats[2], maxStatConstraints[2]),
-              Math.min(stats[3], maxStatConstraints[3]),
-              Math.min(stats[4], maxStatConstraints[4]),
-              Math.min(stats[5], maxStatConstraints[5]),
-            ];
+            effectiveStats[0] = Math.min(stats[0], maxStatConstraints[0]);
+            effectiveStats[1] = Math.min(stats[1], maxStatConstraints[1]);
+            effectiveStats[2] = Math.min(stats[2], maxStatConstraints[2]);
+            effectiveStats[3] = Math.min(stats[3], maxStatConstraints[3]);
+            effectiveStats[4] = Math.min(stats[4], maxStatConstraints[4]);
+            effectiveStats[5] = Math.min(stats[5], maxStatConstraints[5]);
 
             // neededStats is the extra stats we'd need in each stat in order to
             // hit the stat minimums, and totalNeededStats is just the sum of
             // those. This informs the logic for deciding how to add stat mods.
-            const neededStats = [0, 0, 0, 0, 0, 0];
+            neededStats[0] = 0;
+            neededStats[1] = 0;
+            neededStats[2] = 0;
+            neededStats[3] = 0;
+            neededStats[4] = 0;
+            neededStats[5] = 0;
             let totalNeededStats = 0;
 
             // Check which stats we're under the stat minimums on.
@@ -402,7 +424,11 @@ export async function process(
               continue;
             }
 
-            const armor = [helm, gaunt, chest, leg, classItem];
+            armor[0] = helm;
+            armor[1] = gaunt;
+            armor[2] = chest;
+            armor[3] = leg;
+            armor[4] = classItem;
 
             // Items that individually can't fit their slot-specific mods were
             // filtered out before even passing them to the worker, so we only
@@ -513,8 +539,9 @@ export async function process(
               enabledStatsTotal: finalTotalStats,
               statMix: numericStatMix,
               power: getPower(armor),
-              armor,
-              stats,
+              // Copy the reused scratch arrays since the tracker retains them.
+              armor: armor.slice(),
+              stats: stats.slice(),
               statsTotal: sum(stats),
               mods,
               bonusStats,
