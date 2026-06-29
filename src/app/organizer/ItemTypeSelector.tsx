@@ -1,8 +1,11 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import { getClassTypeNameLocalized } from 'app/inventory/store/d2-item-factory';
 import { useDefinitions } from 'app/manifest/selectors';
 import { filteredItemsSelector } from 'app/search/items/item-search-filter';
 import { count } from 'app/utils/collections';
+import { LookupTable } from 'app/utils/util-types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -328,6 +331,15 @@ export const armorTopLevelCatHashes: ItemCategoryHashes[] = [
   ItemCategoryHashes.Warlock,
 ];
 
+// Class armor categories have their own ItemCategory definitions, but those names
+// can be mistranslated (zh-cht renders the "Titan" category as the destination, not
+// the class). Use the Class definition's name instead, matching the rest of the app.
+const classCategoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
+  [ItemCategoryHashes.Hunter]: DestinyClass.Hunter,
+  [ItemCategoryHashes.Titan]: DestinyClass.Titan,
+  [ItemCategoryHashes.Warlock]: DestinyClass.Warlock,
+};
+
 /**
  * This component offers a means for narrowing down your selection to a single item type
  * (hunter helmets, hand cannons, etc.) for the Organizer table.
@@ -367,6 +379,14 @@ export default function ItemTypeSelector({
                 }
 
                 const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
+                const classType =
+                  classCategoryToClass[subCategory.itemCategoryHash as ItemCategoryHashes];
+                const categoryName =
+                  classType !== undefined && defs.isDestiny2
+                    ? getClassTypeNameLocalized(defs)(classType)
+                    : 'displayProperties' in itemCategory
+                      ? itemCategory.displayProperties.name
+                      : itemCategory.title;
                 return (
                   <label
                     key={subCategory.itemCategoryHash}
@@ -385,9 +405,7 @@ export default function ItemTypeSelector({
                     {subCategory.itemCategoryHash !== 0 && (
                       <BucketIcon itemCategoryHash={subCategory.itemCategoryHash} />
                     )}
-                    {'displayProperties' in itemCategory
-                      ? itemCategory.displayProperties.name
-                      : itemCategory.title}{' '}
+                    {categoryName}{' '}
                     <span className={styles.buttonItemCount}>
                       (
                       {count(
