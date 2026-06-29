@@ -455,7 +455,6 @@ export async function process(
             // At this point we know this set satisfies all constraints.
             // Update the max stat ranges. We need to do this before we short
             // circuit anything so that the stat ranges are accurate.
-            // TODO: Then updateMaxStats assigns auto mods AGAIN, potentially many times, to figure out the max possible stats in each stat individually.
             const foundAnyImprovement = updateMaxStats(
               precalculatedInfo,
               armor,
