@@ -110,10 +110,10 @@ export function mapDimItemToProcessItems({
   const tuningSocket = getArmor3TuningSocket(dimItem);
 
   // Make a version of the item for each possible tuning mod that could be applied.
-  //
-  // exclude tuning mods for exotics since they have so many tuning options that it blows up the combinations.
-  //
-  if (autoStatMods && !isExotic && tuningSocket?.reusablePlugItems?.length) {
+  // Tier 5 exotics expose every tuning mod rather than a single set, so they
+  // produce many more variants here, but the dump-stat filter below prunes them
+  // to the ones actually worth considering.
+  if (autoStatMods && tuningSocket?.reusablePlugItems?.length) {
     const processItems: ProcessItem[] = [];
     const allPlugs = tuningSocket.plugSet?.plugs;
     // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums
