@@ -21,6 +21,7 @@ import {
 } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import {
+  getArmor3TuningSocket,
   getSocketByIndex,
   getSocketsByCategoryHash,
   plugFitsIntoSocket,
@@ -281,6 +282,58 @@ function compareCosts(a: number[], b: number[]) {
  * - bucket specific (gauntlets-only, etc), and
  * - bucket independent (intellect mod, charged w/ light, etc)
  */
+/**
+ * Assign tuning mods to items when we don't have the worker's exact per-item
+ * assignment (e.g. when equipping a saved loadout). Directional tuning is placed
+ * first since it needs a specific stat (or an exotic, which accepts any), then
+ * balanced tuning fills what's left, preferring an exotic. This can't always
+ * reproduce the worker's choice (balanced tuning's effect depends on its item),
+ * but it's correct for the common cases.
+ */
+export function assignTuningModsHeuristically(
+  /** Each tuning mod paired with the stat it boosts (0 for balanced tuning). */
+  tuningMods: { mod: PluggableInventoryItemDefinition; statHash: number }[],
+  /**
+   * Tuning-capable items in armor order, with the single stat the item is locked
+   * to (undefined for exotics, which can be tuned to any stat).
+   */
+  tuningItems: { id: string; isExotic: boolean; tuningStat: number | undefined }[],
+): {
+  assignments: { itemId: string; mod: PluggableInventoryItemDefinition }[];
+  unassigned: PluggableInventoryItemDefinition[];
+} {
+  const remaining = [...tuningItems];
+  const assignments: { itemId: string; mod: PluggableInventoryItemDefinition }[] = [];
+  const unassigned: PluggableInventoryItemDefinition[] = [];
+
+  const place = (mod: PluggableInventoryItemDefinition, index: number) => {
+    if (index !== -1) {
+      assignments.push({ itemId: remaining[index].id, mod });
+      remaining.splice(index, 1);
+    } else {
+      unassigned.push(mod);
+    }
+  };
+
+  // Directional tuning first - it needs a specific stat (or an exotic). Doing
+  // these before balanced stops balanced, which fits anywhere, from claiming an
+  // item a directional mod needed.
+  for (const { mod, statHash } of tuningMods) {
+    if (statHash !== 0) {
+      const matched = remaining.findIndex((i) => i.tuningStat === statHash);
+      place(mod, matched !== -1 ? matched : remaining.findIndex((i) => i.isExotic));
+    }
+  }
+  // Then balanced tuning fills what's left, preferring an exotic.
+  for (const { mod, statHash } of tuningMods) {
+    if (statHash === 0) {
+      const exotic = remaining.findIndex((i) => i.isExotic);
+      place(mod, exotic !== -1 ? exotic : remaining.length ? 0 : -1);
+    }
+  }
+  return { assignments, unassigned };
+}
+
 export function fitMostMods({
   defs,
   items,
@@ -399,26 +452,26 @@ export function fitMostMods({
     }
     unassignedMods.push(...remainingTuningMods);
   } else {
-    // Exclude exotics since we can't tell which of their many tuning stats this
-    // item is locked to here.
-    const tuningItems = items.filter((i) => !i.isExotic && getArmor3TuningStat(i) !== undefined);
-    for (const tuningMod of tuningMods) {
-      // Find the tuning stat hash, which is the stat that gets +5 when this mod
-      // is applied. For "Balanced Tuning" this should be 0.
-      const tuningStatHash = tuningMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
-      const targetItemIndex = tuningItems.findIndex((i) =>
-        tuningStatHash === 0
-          ? true // Balanced tuning can go on any item with a tuning socket
-          : // Otherwise the item's tuning stat must match the mod's
-            getArmor3TuningStat(i) === tuningStatHash,
-      );
-      if (targetItemIndex !== -1) {
-        bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
-        tuningItems.splice(targetItemIndex, 1);
-      } else {
-        unassignedMods.push(tuningMod);
-      }
+    // No per-item assignment (e.g. equipping a saved loadout), so we have to
+    // guess which item each tuning mod goes on. See assignTuningModsHeuristically.
+    const tuningItems = items.filter((i) =>
+      Boolean(getArmor3TuningSocket(i)?.reusablePlugItems?.length),
+    );
+    const { assignments, unassigned: unassignedTuning } = assignTuningModsHeuristically(
+      tuningMods.map((mod) => ({
+        mod,
+        statHash: mod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0,
+      })),
+      tuningItems.map((i) => ({
+        id: i.id,
+        isExotic: i.isExotic,
+        tuningStat: getArmor3TuningStat(i),
+      })),
+    );
+    for (const { itemId, mod } of assignments) {
+      bucketSpecificAssignments[itemId].assigned.push(mod);
     }
+    unassignedMods.push(...unassignedTuning);
   }
 
   // A object of item ids to energy information. This is so we can precalculate
