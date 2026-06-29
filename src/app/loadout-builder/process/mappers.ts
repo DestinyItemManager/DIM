@@ -68,12 +68,20 @@ export function mapDimItemToProcessItems({
   modsForSlot,
   desiredStatRanges,
   autoStatMods,
+  expandExoticTuning,
 }: {
   dimItem: DimItem;
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
   desiredStatRanges: DesiredStatRange[];
   autoStatMods: boolean;
+  /**
+   * Whether to generate tuning-mod variants for exotics. Tier 5 exotics expose
+   * every tuning mod (not a single set), so this multiplies combinations. We
+   * only do it when the user is actually targeting an exotic, otherwise the
+   * default unfiltered run would pay that cost for exotics nobody asked for.
+   */
+  expandExoticTuning: boolean;
 }): ProcessItem[] {
   const { id, hash, name, isExotic, power, setBonus } = dimItem;
 
@@ -110,10 +118,12 @@ export function mapDimItemToProcessItems({
   const tuningSocket = getArmor3TuningSocket(dimItem);
 
   // Make a version of the item for each possible tuning mod that could be applied.
-  // Tier 5 exotics expose every tuning mod rather than a single set, so they
-  // produce many more variants here, but the dump-stat filter below prunes them
-  // to the ones actually worth considering.
-  if (autoStatMods && tuningSocket?.reusablePlugItems?.length) {
+  // The dump-stat filter below keeps the number of variants bounded.
+  if (
+    autoStatMods &&
+    (!isExotic || expandExoticTuning) &&
+    tuningSocket?.reusablePlugItems?.length
+  ) {
     const processItems: ProcessItem[] = [];
     const allPlugs = tuningSocket.plugSet?.plugs;
     // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums

@@ -128,6 +128,7 @@ describe('process-utils mod assignment', () => {
             armorEnergyRules,
             desiredStatRanges: [],
             autoStatMods: true,
+            expandExoticTuning: false,
           })[0];
         }
         if (!arms && isArmor2Arms(storeItem)) {
@@ -136,6 +137,7 @@ describe('process-utils mod assignment', () => {
             armorEnergyRules,
             desiredStatRanges: [],
             autoStatMods: true,
+            expandExoticTuning: false,
           })[0];
         }
         if (!chest && isArmor2Chest(storeItem)) {
@@ -144,6 +146,7 @@ describe('process-utils mod assignment', () => {
             armorEnergyRules,
             desiredStatRanges: [],
             autoStatMods: true,
+            expandExoticTuning: false,
           })[0];
         }
         if (!legs && isArmor2Legs(storeItem)) {
@@ -152,6 +155,7 @@ describe('process-utils mod assignment', () => {
             armorEnergyRules,
             desiredStatRanges: [],
             autoStatMods: true,
+            expandExoticTuning: false,
           })[0];
         }
         if (!classItem && isArmor2ClassItem(storeItem)) {
@@ -160,6 +164,7 @@ describe('process-utils mod assignment', () => {
             armorEnergyRules,
             desiredStatRanges: [],
             autoStatMods: true,
+            expandExoticTuning: false,
           })[0];
         }
 
