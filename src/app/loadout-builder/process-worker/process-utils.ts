@@ -1,7 +1,13 @@
 import { MAX_STAT } from 'app/loadout/known-values';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import { ArmorStatHashes, artificeStatBoost, DesiredStatRange, MinMaxStat } from '../types';
+import {
+  ArmorStatHashes,
+  artificeStatBoost,
+  DesiredStatRange,
+  majorStatBoost,
+  MinMaxStat,
+} from '../types';
 import { AutoModsCache, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
@@ -162,6 +168,11 @@ export function updateMaxStats(
     return foundAnyImprovement;
   }
 
+  // Cheap upper bound on what auto mods can add to one stat (ignoring energy and
+  // slot limits), used to skip the search for sets that can't raise the max.
+  const maxSingleStatBonus =
+    info.numAvailableGeneralMods * majorStatBoost + numArtificeMods * artificeStatBoost;
+
   let remainingEnergyResult: ReturnType<typeof getRemainingEnergiesPerAssignment> | undefined;
 
   // You wouldn't believe it, but Firefox is actually slow loading constants
@@ -179,50 +190,63 @@ export function updateMaxStats(
       continue;
     }
 
+    // If even the best-case mod bonus can't beat the running max, the search
+    // below would just fail, so skip it (and its energy precompute).
+    if (value + maxSingleStatBonus <= statRange.maxStat) {
+      continue;
+    }
+
     remainingEnergyResult ??= getRemainingEnergiesPerAssignment(
       info.activityModPermutations,
       armor,
     );
     const { remainingEnergiesPerAssignment, setEnergy } = remainingEnergyResult;
+    const energyBudget = setEnergy - info.totalModEnergyCost;
 
-    // Since we calculate the maximum stat value we can hit for a stat in
-    // isolation, require all other stats to hit their constrained minimums, but
-    // for this stat we start from the highest stat max we've observed. Remember
-    // that this array is expressed in terms of additional stat points.
+    // We push this stat as high as it'll go with the other stats held at their
+    // minimums. Values here are additional stat points, not totals.
     const previousRequiredMinimum = requiredMinimumExtraStats[statIndex];
-    requiredMinimumExtraStats[statIndex] = statRange.maxStat - value;
 
-    // TODO: Rather than iterating one point at a time, we could run our greedy
-    // assignment search that maximizes stats but with stat ranges that prevent
-    // us from going over our minimum? Or maybe do a binary search for the
-    // maximum we can reach?
-    while (statRange.maxStat < maxStat) {
-      // Now that tiers no longer matter (since Edge of Fate), we consider any
-      // stat point increase a "tier". This should be a short-term change -
-      // ideally we'd reconsider all these algorithms to see if they could be
-      // simplified now that the tier concept is gone.
-      requiredMinimumExtraStats[statIndex] += 1;
-
-      // Now see if there's any way to hit that stat with mods.
-      if (
-        !chooseAutoMods(
-          info,
-          requiredMinimumExtraStats,
-          numArtificeMods,
-          remainingEnergiesPerAssignment,
-          setEnergy - info.totalModEnergyCost,
-        )
-      ) {
-        break;
+    // First just probe whether we can beat the current max at all. In steady
+    // state most sets can't, so this single check replaces the old
+    // increment-by-one loop.
+    requiredMinimumExtraStats[statIndex] = statRange.maxStat - value + 1;
+    if (
+      chooseAutoMods(
+        info,
+        requiredMinimumExtraStats,
+        numArtificeMods,
+        remainingEnergiesPerAssignment,
+        energyBudget,
+      )
+    ) {
+      // We can do better than the running max. Binary search for the highest
+      // reachable value rather than stepping one point at a time. chooseAutoMods
+      // is monotonic in a single stat's requirement, so this is exact.
+      let good = requiredMinimumExtraStats[statIndex];
+      let high = maxStat - value;
+      while (good < high) {
+        const mid = (good + high + 1) >> 1;
+        requiredMinimumExtraStats[statIndex] = mid;
+        if (
+          chooseAutoMods(
+            info,
+            requiredMinimumExtraStats,
+            numArtificeMods,
+            remainingEnergiesPerAssignment,
+            energyBudget,
+          )
+        ) {
+          good = mid;
+        } else {
+          high = mid - 1;
+        }
       }
-
-      const newValue = value + requiredMinimumExtraStats[statIndex];
+      const newValue = value + good;
       // filter.minStat < filter.maxStat just checks to make sure you can
       // actually improve the stat given the user's new constraints.
       foundAnyImprovement ||= filter.minStat < filter.maxStat && newValue > filter.minStat;
       statRange.maxStat = newValue;
-
-      // Keep going until we hit the max or we can no longer find mods to improve the stat.
     }
 
     requiredMinimumExtraStats[statIndex] = previousRequiredMinimum;
