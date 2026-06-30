@@ -167,7 +167,10 @@ describe('item-move matrix', () => {
       const moved = await move(item, dest);
 
       expect(moved.owner).toBe(dest.id);
-      expect(transferMock).toHaveBeenCalled();
+      // Character-to-character has to hop through the vault (two transfers); a
+      // move with the vault on either end is a single transfer.
+      const expectedTransfers = from === 'vault' || to === 'vault' ? 1 : 2;
+      expect(transferMock).toHaveBeenCalledTimes(expectedTransfers);
       // The item lives at exactly the destination - not duplicated, not stranded.
       expect(locationsOf(getStores(), item.id)).toEqual([dest.id]);
     });
@@ -332,23 +335,38 @@ describe('item-move matrix', () => {
 
     const { move } = setupMoveTestStore(stores);
     await expect(move(extra, character, { amount: 1 })).rejects.toThrow(DimError);
+    expect(transferMock).not.toHaveBeenCalled();
   });
 
   // --- Postmaster pulls x destination ---------------------------------------
   // Pull a lost item out of the current character's postmaster to a range of
   // destinations and fullness states.
+  // A pull onto the owning character is a single transfer; pulling onto another
+  // character adds the vault hop (3), and a full destination bucket costs one
+  // more transfer to bump an item aside.
   const postmasterCases: {
     name: string;
     to: Role;
     fill: 'room' | 'bucketFull';
+    transfers: number;
   }[] = [
-    { name: 'onto its own character with room', to: 'current', fill: 'room' },
-    { name: 'onto its own character whose bucket is full', to: 'current', fill: 'bucketFull' },
-    { name: 'onto another character with room', to: 'other', fill: 'room' },
-    { name: 'onto another character whose bucket is full', to: 'other', fill: 'bucketFull' },
+    { name: 'onto its own character with room', to: 'current', fill: 'room', transfers: 1 },
+    {
+      name: 'onto its own character whose bucket is full',
+      to: 'current',
+      fill: 'bucketFull',
+      transfers: 1,
+    },
+    { name: 'onto another character with room', to: 'other', fill: 'room', transfers: 3 },
+    {
+      name: 'onto another character whose bucket is full',
+      to: 'other',
+      fill: 'bucketFull',
+      transfers: 4,
+    },
   ];
 
-  describe.each(postmasterCases)('pulling a lost item $name', ({ to, fill }) => {
+  describe.each(postmasterCases)('pulling a lost item $name', ({ to, fill, transfers }) => {
     it('relocates it out of the postmaster to the destination', async () => {
       const buckets = await getTestBuckets();
       const current = storeForRole(stores, 'current');
@@ -377,6 +395,9 @@ describe('item-move matrix', () => {
       expect(moved.location.hash).toBe(destinationBucket);
       const newDest = getStores().find((s) => s.id === dest.id)!;
       expect(newDest.items.some((i) => i.id === item.id && !i.location.inPostmaster)).toBe(true);
+      // It ends up at exactly the destination - no stray copy left on the source.
+      expect(locationsOf(getStores(), item.id)).toEqual([dest.id]);
+      expect(transferMock).toHaveBeenCalledTimes(transfers);
     });
   });
 
