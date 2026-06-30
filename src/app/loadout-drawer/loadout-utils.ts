@@ -425,9 +425,8 @@ export function optimalItemSet(
   bestItemFn: (item: DimItem) => number,
 ): Record<'equippable' | 'equipUnrestricted' | 'classUnrestricted', DimItem[]> {
   const anyClassItemsByBucket = Object.groupBy(applicableItems, (i) => i.bucket.hash);
-  const anyClassBestItemByBucket = mapValues(
-    anyClassItemsByBucket,
-    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn)!,
+  const anyClassBestItemByBucket = mapValues(anyClassItemsByBucket, (thisSlotItems) =>
+    maxBy(thisSlotItems, bestItemFn)!,
   );
   const classUnrestricted = Object.values(anyClassBestItemByBucket).sort(
     compareByIndex(gearSlotOrder, (i) => i.bucket.hash),
@@ -437,9 +436,8 @@ export function optimalItemSet(
     applicableItems.filter((i) => itemCanBeEquippedBy(i, store, true)),
     (i) => i.bucket.hash,
   );
-  const thisClassBestItemByBucket = mapValues(
-    thisClassItemsByBucket,
-    (thisSlotItems) => maxBy(thisSlotItems, bestItemFn)!,
+  const thisClassBestItemByBucket = mapValues(thisClassItemsByBucket, (thisSlotItems) =>
+    maxBy(thisSlotItems, bestItemFn)!,
   );
   const equipUnrestricted = Object.values(thisClassBestItemByBucket).sort(
     compareByIndex(gearSlotOrder, (i) => i.bucket.hash),

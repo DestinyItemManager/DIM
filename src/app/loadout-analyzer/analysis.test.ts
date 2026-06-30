@@ -166,15 +166,14 @@ describe('basic loadout analysis finding tests', () => {
   });
 
   it('finds UsesSeasonalMods/ModsDontFit', async () => {
-    const items = ArmorBucketHashes.map(
-      (hash) =>
-        allItems.find(
-          (i) =>
-            i.classType === store.classType &&
-            i.bucket.hash === hash &&
-            i.energy &&
-            i.rarity === 'Legendary',
-        )!,
+    const items = ArmorBucketHashes.map((hash) =>
+      allItems.find(
+        (i) =>
+          i.classType === store.classType &&
+          i.bucket.hash === hash &&
+          i.energy &&
+          i.rarity === 'Legendary',
+      )!,
     );
     const loadout = newLoadout(
       'UsesSeasonalMods',
@@ -247,19 +246,18 @@ describe('basic loadout analysis finding tests', () => {
   });
 
   it('finds DoesNotSatisfyStatConstraints', async () => {
-    const nonMasterworkedArmor = ArmorBucketHashes.map(
-      (hash) =>
-        allItems.find(
-          (i) =>
-            i.classType === store.classType &&
-            i.bucket.hash === hash &&
-            i.energy &&
-            i.energy.energyCapacity >= 2 &&
-            i.energy.energyCapacity < 10 &&
-            i.rarity === 'Legendary' &&
-            !i.masterwork &&
-            i.stats?.every((stat) => stat.statHash !== StatHashes.Class || stat.base <= 20),
-        )!,
+    const nonMasterworkedArmor = ArmorBucketHashes.map((hash) =>
+      allItems.find(
+        (i) =>
+          i.classType === store.classType &&
+          i.bucket.hash === hash &&
+          i.energy &&
+          i.energy.energyCapacity >= 2 &&
+          i.energy.energyCapacity < 10 &&
+          i.rarity === 'Legendary' &&
+          !i.masterwork &&
+          i.stats?.every((stat) => stat.statHash !== StatHashes.Class || stat.base <= 20),
+      )!,
     );
 
     // Make sure we have an item from each bucket
