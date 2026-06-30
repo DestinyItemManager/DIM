@@ -472,7 +472,12 @@ describe('item-move matrix', () => {
     await move(item, getVault(stores)!, { amount: 2 });
 
     const after = getStores();
-    expect(amountOfItem(after.find((s) => s.id === source.id)!, item)).toBe(startSource - 2);
+    expect(
+      amountOfItem(
+        after.find((s) => s.id === source.id)!,
+        item,
+      ),
+    ).toBe(startSource - 2);
     expect(amountOfItem(getVault(after)!, item)).toBe(startVault + 2);
   });
 
