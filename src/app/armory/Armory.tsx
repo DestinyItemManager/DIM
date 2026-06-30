@@ -27,6 +27,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
+import { badDefaultOrnament } from 'app/search/d2-known-values';
 import { AppIcon, compareIcon, faMinusSquare, faPlusSquare, thumbsUpIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -92,8 +93,10 @@ export default function Armory({
 
   const collectible = item.collectibleHash ? defs.Collectible.get(item.collectibleHash) : undefined;
 
-  // Use the ornament's screenshot if available
-  const ornamentSocket = item.sockets?.allSockets.find((s) => s.plugged?.plugDef.screenshot);
+  // Use the ornament's screenshot if available (and valid)
+  const ornamentSocket = item.sockets?.allSockets.find(
+    (s) => s.plugged?.plugDef.screenshot && s.plugged?.plugDef.hash !== badDefaultOrnament,
+  );
   const screenshot = ornamentSocket?.plugged?.plugDef.screenshot || itemDef.screenshot;
   const flavorText = itemDef.flavorText || itemDef.displaySource;
 

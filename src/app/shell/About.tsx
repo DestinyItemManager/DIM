@@ -15,7 +15,7 @@ import { discordLink, userGuideLink } from './links';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =
-  'https://crowdin.com/project/destiny-item-manager/invite?d=65a5l46565176393s2a3p403a3u22323e46383232393h4k4r443o4h3d4c333t2a3j4f453f4f3o4u643g393b343n4';
+  'https://crowdin.com/project/destiny-item-manager/invite?h=117dfaeab15a7795e24259903e677f8a2807461';
 const bungieLinkDirect = 'https://www.bungie.net';
 const openCollectiveLinkDirect = 'https://opencollective.com/dim';
 const storeLinkDirect = 'https://www.designbyhumans.com/shop/DestinyItemManager/';

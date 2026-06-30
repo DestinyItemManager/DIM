@@ -226,14 +226,12 @@ export default function SettingsPage() {
   const sortSettings = useSelector(itemSortSettingsSelector);
 
   const itemSortCustom = Object.entries(itemSortProperties)
-    .map(
-      ([id, displayName]): SortProperty => ({
-        id,
-        displayName,
-        enabled: sortSettings.sortOrder.includes(id),
-        reversed: sortSettings.sortReversals.includes(id),
-      }),
-    )
+    .map(([id, displayName]): SortProperty => ({
+      id,
+      displayName,
+      enabled: sortSettings.sortOrder.includes(id),
+      reversed: sortSettings.sortReversals.includes(id),
+    }))
     .sort(compareByIndex(sortSettings.sortOrder, (o) => o.id));
 
   const menuItems = compact([

@@ -7,7 +7,7 @@ export type I18nKey = ParseKeys;
 export const t = (
   key: I18nKey,
   opts?:
-    | { count?: number; context?: string; metadata?: { context?: string[]; keys?: string } }
+    | { count?: number; context?: string }
     | {
         [arg: string]: number | string;
       },

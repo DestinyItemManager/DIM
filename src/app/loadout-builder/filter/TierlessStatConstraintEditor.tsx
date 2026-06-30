@@ -55,14 +55,12 @@ export default function TierlessStatConstraintEditor({
   const handleRandomize = () => lbDispatch({ type: 'statConstraintRandomize' });
 
   const handleSyncFromEquipped = () => {
-    const constraints = Object.values(store.stats).map(
-      (s): ResolvedStatConstraint => ({
-        statHash: s.hash,
-        ignored: false,
-        maxStat: MAX_STAT,
-        minStat: s.value,
-      }),
-    );
+    const constraints = Object.values(store.stats).map((s): ResolvedStatConstraint => ({
+      statHash: s.hash,
+      ignored: false,
+      maxStat: MAX_STAT,
+      minStat: s.value,
+    }));
     lbDispatch({ type: 'setStatConstraints', constraints });
   };
 

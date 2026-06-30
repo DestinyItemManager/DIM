@@ -1,101 +1,19 @@
 import {
-  applyStyles,
   arrow,
-  computeStyles,
+  autoPlacement,
+  computePosition,
   flip,
-  Instance,
-  offset,
-  Options,
+  offset as offsetMiddleware,
   Padding,
   Placement,
-  popperGenerator,
-  popperOffsets,
-  preventOverflow,
-} from '@popperjs/core';
-import computeSidecarPosition from 'app/item-popup/sidecar-popper-modifier';
+  shift,
+} from '@floating-ui/dom';
+import computeSidecarPosition from 'app/item-popup/sidecar-position-middleware';
 import { compact } from 'app/utils/collections';
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect } from 'react';
 
 // ensure this stays in sync with '$theme-tooltip-arrow-size' in '_variables.scss'
-const popperArrowSize = 8;
-
-/** Makes a custom popper that doesn't have the event listeners modifier */
-const createPopper = popperGenerator({
-  defaultModifiers: [
-    popperOffsets,
-    offset,
-    computeStyles,
-    applyStyles,
-    flip,
-    preventOverflow,
-    arrow,
-    computeSidecarPosition,
-  ],
-});
-
-const popperOptions = (
-  placement: Options['placement'] = 'auto',
-  arrowClassName?: string,
-  menuClassName?: string,
-  boundarySelector?: string,
-  offset = arrowClassName ? popperArrowSize : 0,
-  fixed = false,
-  padding?: Padding,
-): Partial<Options> => {
-  const headerHeight = parseInt(
-    document.querySelector('html')!.style.getPropertyValue('--header-height'),
-    10,
-  );
-  const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
-  padding ??= {
-    left: 10,
-    top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
-    right: 10,
-    bottom: 10,
-  };
-  const hasArrow = Boolean(arrowClassName);
-  const hasMenu = Boolean(menuClassName);
-  return {
-    strategy: fixed ? 'fixed' : 'absolute',
-    placement,
-    modifiers: compact([
-      {
-        name: 'preventOverflow',
-        options: {
-          priority: ['bottom', 'top', 'right', 'left'],
-          boundariesElement: 'viewport',
-          padding,
-        },
-      },
-      {
-        name: 'flip',
-        options: {
-          behavior: ['top', 'bottom', 'right', 'left'],
-          boundariesElement: 'viewport',
-          padding,
-        },
-      },
-      {
-        name: 'offset',
-        options: {
-          offset: [0, offset],
-        },
-      },
-      hasArrow && {
-        name: 'arrow',
-        options: {
-          element: `.${arrowClassName}`,
-        },
-      },
-      hasMenu && {
-        name: 'computeSidecarPosition',
-        options: {
-          element: `.${menuClassName}`,
-        },
-      },
-    ]),
-  };
-};
+const arrowSize = 8;
 
 export function usePopper(
   {
@@ -104,14 +22,14 @@ export function usePopper(
     arrowClassName,
     menuClassName,
     boundarySelector,
-    placement,
+    placement = 'auto',
     offset,
     fixed,
     padding,
   }: {
-    /** A ref to the rendered contents of a popper-positioned item */
+    /** A ref to the rendered contents of the floating element */
     contents: React.RefObject<HTMLElement | null>;
-    /** An ref to the item that triggered the popper, which anchors it */
+    /** A ref to the element that triggered the popup, which anchors it */
     reference: React.RefObject<HTMLElement | null>;
     /** A class used to identify the arrow */
     arrowClassName?: string;
@@ -119,50 +37,91 @@ export function usePopper(
     menuClassName?: string;
     /** An optional additional selector for a "boundary area" */
     boundarySelector?: string;
-    /** Placement preference of the popper. Defaults to "auto" */
-    placement?: Placement;
-    /** Offset of how far from the element to shift the popper. */
+    /** Placement preference of the floating element. Defaults to "auto" */
+    placement?: Placement | 'auto';
+    /** Offset of how far to shift the floating element away from the anchor. */
     offset?: number;
-    /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
+    /** Is this placed on a fixed item? */
     fixed?: boolean;
     padding?: Padding;
   },
   deps: React.DependencyList = [],
 ) {
-  const popper = useRef<Instance>(undefined);
-
-  const destroy = () => {
-    if (popper.current) {
-      try {
-        // Work around a popper issue with our custom modifier until we can switch to floating-ui
-        popper.current.destroy();
-      } catch {}
-      popper.current = undefined;
-    }
-  };
-
   useLayoutEffect(() => {
-    // log('Effect', name, contents.current, reference.current);
     // Reposition the popup as it is shown or if its size changes
-    if (!contents.current || !reference.current) {
-      return destroy();
-    } else if (popper.current) {
-      popper.current.update();
-    } else {
-      const options = popperOptions(
-        placement,
-        arrowClassName,
-        menuClassName,
-        boundarySelector,
-        offset,
-        fixed,
-        padding,
-      );
-      popper.current = createPopper(reference.current, contents.current, options);
-      popper.current.update();
+    const contentsElement = contents.current;
+    const referenceElement = reference.current;
+    if (!contentsElement || !referenceElement) {
+      return;
     }
 
-    return destroy;
+    // Floating UI's computePosition is async, so guard against the elements being
+    // torn down before it resolves.
+    let cancelled = false;
+
+    const reposition = () => {
+      const headerHeight = parseInt(
+        document.querySelector('html')!.style.getPropertyValue('--header-height'),
+        10,
+      );
+      const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
+      const resolvedPadding: Padding = padding ?? {
+        left: 10,
+        top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
+        right: 10,
+        bottom: 10,
+      };
+      const offsetValue = offset ?? (arrowClassName ? arrowSize : 0);
+      const isAuto = placement === 'auto';
+      const strategy = fixed ? 'fixed' : 'absolute';
+
+      // Anchor at a known origin before measuring, otherwise it's measured in normal
+      // document flow and positioned with wrong coordinates (notably when flipped).
+      Object.assign(contentsElement.style, { position: strategy, left: '0', top: '0' });
+
+      const arrowElement = arrowClassName
+        ? contentsElement.querySelector<HTMLElement>(`.${arrowClassName}`)
+        : null;
+
+      const middleware = compact([
+        offsetMiddleware(offsetValue),
+        isAuto ? autoPlacement({ padding: resolvedPadding }) : flip({ padding: resolvedPadding }),
+        shift({ padding: resolvedPadding }),
+        arrowElement && arrow({ element: arrowElement }),
+        menuClassName && computeSidecarPosition({ element: `.${menuClassName}` }),
+      ]);
+
+      void computePosition(referenceElement, contentsElement, {
+        // autoPlacement chooses the side itself, so leave placement at its default
+        placement: isAuto ? undefined : placement,
+        strategy,
+        middleware,
+      }).then(({ x, y, placement: finalPlacement, middlewareData }) => {
+        if (cancelled) {
+          return;
+        }
+        Object.assign(contentsElement.style, {
+          position: strategy,
+          left: `${x}px`,
+          top: `${y}px`,
+        });
+        // Expose the resolved placement to CSS (arrow orientation keys off this attribute)
+        contentsElement.setAttribute('data-popper-placement', finalPlacement);
+
+        if (arrowElement && middlewareData.arrow) {
+          const { x: arrowX, y: arrowY } = middlewareData.arrow;
+          // Only set the cross-axis offset; the static side is positioned by CSS.
+          arrowElement.style.left = arrowX !== undefined ? `${arrowX}px` : '';
+          arrowElement.style.top = arrowY !== undefined ? `${arrowY}px` : '';
+        }
+      });
+    };
+
+    reposition();
+
+    return () => {
+      cancelled = true;
+    };
   }, [
     contents,
     reference,
