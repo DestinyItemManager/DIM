@@ -680,14 +680,12 @@ test('process-utils activity mods', async () => {
     statOrder,
   );
 
-  const resolvedStatConstraints = statOrder.map(
-    (statHash): ResolvedStatConstraint => ({
-      statHash,
-      ignored: false,
-      maxStat: MAX_STAT,
-      minStat: 0,
-    }),
-  );
+  const resolvedStatConstraints = statOrder.map((statHash): ResolvedStatConstraint => ({
+    statHash,
+    ignored: false,
+    maxStat: MAX_STAT,
+    minStat: 0,
+  }));
 
   const setStats = [55, 55, 55, 50, 50, 50];
 

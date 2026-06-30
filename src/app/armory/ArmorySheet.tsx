@@ -12,8 +12,7 @@ export default function ArmorySheet({
   itemHash,
   onClose,
 }: { onClose: () => void } & (
-  | { item: DimItem; itemHash?: undefined }
-  | { itemHash: number; item?: undefined }
+  { item: DimItem; itemHash?: undefined } | { itemHash: number; item?: undefined }
 )) {
   const realItemSockets = useMemo(
     () =>
