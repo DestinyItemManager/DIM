@@ -22,7 +22,7 @@ export default {
   setupFiles: ['./src/testing/jest-setup.cjs'],
   // Babel transform is required to handle some es modules?
   transformIgnorePatterns: [
-    'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@popper|@react-hook)',
+    'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@floating-ui|@react-hook)',
   ],
   globals: {
     $BROWSERS: [],

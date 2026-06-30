@@ -176,9 +176,7 @@ export default function SocketDetailsSelectedPlug({
     canInsertPlug(socket, plug.hash, destiny2CoreSettings, defs);
 
   const kind = uiCategorizeSocket(defs, socket.socketDefinition);
-  const insertName = canDoAWA
-    ? t(`Sockets.Insert.${kind}`, { metadata: { keys: 'sockets' } })
-    : t(`Sockets.Select.${kind}`, { metadata: { keys: 'sockets' } });
+  const insertName = canDoAWA ? t(`Sockets.Insert.${kind}`) : t(`Sockets.Select.${kind}`);
 
   const [insertInProgress, setInsertInProgress] = useState(false);
 

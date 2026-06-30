@@ -171,10 +171,7 @@ interface SendPickerItemsArgs {
 }
 
 export type SendToStreamDeckArgs =
-  | SendStateArgs
-  | SendFarmingModeArgs
-  | SendPickerItemsArgs
-  | SendPerksArgs;
+  SendStateArgs | SendFarmingModeArgs | SendPickerItemsArgs | SendPerksArgs;
 
 export interface HandlerArgs<T> {
   msg: T;

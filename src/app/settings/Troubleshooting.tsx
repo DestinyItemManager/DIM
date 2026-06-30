@@ -70,8 +70,7 @@ function importMockProfileResponse(file: File): ThunkResult {
   return async (dispatch) => {
     const fileText = await file.text();
     const profileResponseOrWrapped = JSON.parse(fileText) as
-      | DestinyProfileResponse
-      | ServerResponse<DestinyProfileResponse>;
+      DestinyProfileResponse | ServerResponse<DestinyProfileResponse>;
     // if it's a full copy of the bnet Response wrapper, unwrap it
     let profileResponse: DestinyProfileResponse;
     if ('Response' in profileResponseOrWrapped) {

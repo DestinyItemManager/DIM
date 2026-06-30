@@ -63,10 +63,7 @@ export default function Pursuits({ store }: { store: DimStore }) {
         (group) =>
           pursuits[group] && (
             <section id={group} key={group}>
-              <CollapsibleTitle
-                title={t(`Progress.${group}`, { metadata: { keys: 'progress' } })}
-                sectionId={`pursuits-${group}`}
-              >
+              <CollapsibleTitle title={t(`Progress.${group}`)} sectionId={`pursuits-${group}`}>
                 <PursuitsGroup defs={defs} pursuits={pursuits[group]} store={store} />
               </CollapsibleTitle>
             </section>
