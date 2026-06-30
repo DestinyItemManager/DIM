@@ -55,6 +55,32 @@ describe('process vendors', () => {
     }
     expect(vendorItemPatternFound).toBe(true);
   });
+
+  it('merges the split Eververse vendors in the real vendor data', async () => {
+    const defs = await getTestDefinitions();
+    const vendorsResponse = getTestVendors();
+
+    // Guard against a future fixture that no longer has the split family to merge.
+    const eververseVendorsWithSales = Object.keys(vendorsResponse.sales.data ?? {}).filter((key) =>
+      defs.Vendor.get(Number(key))?.vendorIdentifier?.startsWith('EVERVERSE'),
+    );
+    expect(eververseVendorsWithSales.length).toBeGreaterThan(1);
+
+    const vendorGroups = await getTestVendorGroups();
+    const allVendors = vendorGroups.flatMap((g) => g.vendors);
+
+    // The whole family collapses into just the canonical Eververse vendor.
+    const eververseVendors = allVendors.filter((v) =>
+      v.def.vendorIdentifier?.startsWith('EVERVERSE'),
+    );
+    expect(eververseVendors).toHaveLength(1);
+    expect(eververseVendors[0].def.hash).toBe(VendorHashes.Eververse);
+
+    // Sub-vendor categories were folded in, so there are more than the def alone has.
+    const merged = eververseVendors[0];
+    const canonicalCategoryCount = defs.Vendor.get(VendorHashes.Eververse).displayCategories.length;
+    expect(merged.def.displayCategories.length).toBeGreaterThan(canonicalCategoryCount);
+  });
 });
 
 interface MockItem {
@@ -122,11 +148,9 @@ describe('nameUnnamedCategories', () => {
   });
 });
 
-// Bungie split Eververse into ~25 separate vendors (Bungie-net/api#2069); these
-// cover stitching them back into the single canonical Eververse vendor. We mock
-// the vendors here because the captured vendor fixture predates the split (only
-// the main EVERVERSE vendor has sales in it, none of the rotator sub-vendors),
-// so it can't exercise the merge on its own.
+// Bungie split Eververse into ~25 separate vendors (Bungie-net/api#2069). The
+// real fixture covers the end-to-end merge (see 'process vendors' above); these
+// mocks pin down the individual behaviors that are awkward to assert on live data.
 const mergeEververse = (groups: ReturnType<typeof group>[], loose?: D2Vendor[]) =>
   mergeVendors(groups, VendorHashes.Eververse, 'EVERVERSE', loose);
 
