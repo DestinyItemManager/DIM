@@ -26,8 +26,7 @@ export default function EditInGameLoadout({
   characterId?: string;
   onClose: () => void;
 } & (
-  | { loadout: InGameLoadout; characterId?: undefined }
-  | { loadout?: undefined; characterId: string }
+  { loadout: InGameLoadout; characterId?: undefined } | { loadout?: undefined; characterId: string }
 )) {
   const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();

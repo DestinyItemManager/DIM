@@ -411,20 +411,17 @@ export function groupItems(
 
   const groupedItems = Map.groupBy(items, (item) => getValue(item, getTag));
 
-  return Array.from(
-    groupedItems.entries(),
-    ([groupingValue, items]): VaultGroup => ({
-      groupingValue,
-      items,
-      icon:
-        groupingValue === undefined
-          ? // Don't display an icon if they are ungrouped
-            {
-              type: 'none',
-            }
-          : getIcon(items[0], getTag),
-    }),
-  ).sort(comparator);
+  return Array.from(groupedItems.entries(), ([groupingValue, items]): VaultGroup => ({
+    groupingValue,
+    items,
+    icon:
+      groupingValue === undefined
+        ? // Don't display an icon if they are ungrouped
+          {
+            type: 'none',
+          }
+        : getIcon(items[0], getTag),
+  })).sort(comparator);
 }
 
 // Used to create string keys for vault grouping values

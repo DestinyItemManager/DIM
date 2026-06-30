@@ -290,10 +290,7 @@ type LoadoutBuilderUIAction =
   | { type: 'closeCompareDrawer' };
 
 export type LoadoutBuilderAction =
-  | LoadoutBuilderConfigAction
-  | LoadoutBuilderUIAction
-  | { type: 'undo' }
-  | { type: 'redo' };
+  LoadoutBuilderConfigAction | LoadoutBuilderUIAction | { type: 'undo' } | { type: 'redo' };
 
 function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
   switch (action.type) {

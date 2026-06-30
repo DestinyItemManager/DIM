@@ -76,9 +76,7 @@ export function testStringsFromDisplayProperties(
 export function testStringsFromDisplayPropertiesMap(
   test: (str: string) => boolean,
   displayProperties?:
-    | { name: string; description: string }
-    | { name: string; description: string }[]
-    | null,
+    { name: string; description: string } | { name: string; description: string }[] | null,
   includeDescription = true,
 ): boolean {
   if (!displayProperties) {

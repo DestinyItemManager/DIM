@@ -38,6 +38,4 @@ export interface DeleteSearchUpdateWithRollback extends DeleteSearchUpdate {
  * A version of ProfileUpdate that also includes rollback info in a "before" property.
  */
 export type ProfileUpdateWithRollback =
-  | DeleteSearchUpdateWithRollback
-  | DeleteLoadoutUpdateWithRollback
-  | AddUpdateInfo<ProfileUpdate>;
+  DeleteSearchUpdateWithRollback | DeleteLoadoutUpdateWithRollback | AddUpdateInfo<ProfileUpdate>;
