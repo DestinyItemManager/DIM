@@ -4,6 +4,7 @@ import {
   createItemContextSelector,
   ownedItemsSelector,
   ownedUncollectiblePlugsSelector,
+  profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -14,6 +15,7 @@ import { RootState } from 'app/store/types';
 import { compact } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
+import { DestinyItemPlug } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import {
@@ -128,15 +130,52 @@ export const characterVendorItemsSelector = createSelector(
   },
 );
 
+/**
+ * Subclass aspects, supers, and fragments are owned plugs in the profile/character plug
+ * sets, but the vendor "Owned" augment isn't reliably set for them, and their `enabled` flag
+ * reflects current build/equip state (only the active super/aspects read enabled) rather than
+ * ownership. So treat presence in the plug sets as ownership, which is what Collections
+ * considers unlocked.
+ */
+export const ownedSubclassPlugsSelector = createSelector(
+  d2ManifestSelector,
+  profileResponseSelector,
+  (defs, profileResponse) => {
+    const owned = new Set<number>();
+    if (!defs || !profileResponse) {
+      return owned;
+    }
+    const collect = (plugs: { [plugSetHash: number]: DestinyItemPlug[] }) => {
+      for (const plugSet of Object.values(plugs)) {
+        for (const plug of plugSet) {
+          const def = defs.InventoryItem.get(plug.plugItemHash);
+          if (def?.itemCategoryHashes?.includes(ItemCategoryHashes.SubclassMods)) {
+            owned.add(plug.plugItemHash);
+          }
+        }
+      }
+    };
+    if (profileResponse.profilePlugSets?.data) {
+      collect(profileResponse.profilePlugSets.data.plugs);
+    }
+    for (const characterPlugs of Object.values(profileResponse.characterPlugSets?.data ?? {})) {
+      collect(characterPlugs.plugs);
+    }
+    return owned;
+  },
+);
+
 export const ownedVendorItemsSelector = currySelector(
   createSelector(
     ownedItemsSelector,
     ownedUncollectiblePlugsSelector,
+    ownedSubclassPlugsSelector,
     (_: any, storeId?: string) => storeId,
-    (ownedItems, ownedPlugs, storeId) =>
+    (ownedItems, ownedPlugs, ownedSubclassPlugs, storeId) =>
       new Set([
         ...ownedItems.accountWideOwned,
         ...ownedPlugs.accountWideOwned,
+        ...ownedSubclassPlugs,
         ...((storeId && ownedItems.storeSpecificOwned[storeId]) || []),
         ...((storeId && ownedPlugs.storeSpecificOwned[storeId]) || []),
       ]),
