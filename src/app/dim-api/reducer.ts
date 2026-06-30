@@ -21,6 +21,8 @@ import { recentSearchComparator } from 'app/search/autocomplete';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/items/item-filter-types';
 import { buildItemFiltersMap } from 'app/search/items/item-search-filter';
+import { LoadoutFilterContext } from 'app/search/loadouts/loadout-filter-types';
+import { buildLoadoutsFiltersMap } from 'app/search/loadouts/loadout-search-filter';
 import { parseAndValidateQuery } from 'app/search/search-filter';
 import { count, isEmpty, uniqBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
@@ -1212,13 +1214,18 @@ function searchUsed(
   type: SearchType,
 ) {
   const destinyVersion = account.destinyVersion;
-  // Note: memoized
-  const filtersMap = buildItemFiltersMap(destinyVersion);
 
   // Canonicalize the query so we always save it the same way
-  const { canonical, saveInHistory } = parseAndValidateQuery(query, filtersMap, {
-    customStats: draft.settings.customStats ?? [],
-  } as FilterContext);
+  const { canonical, saveInHistory } =
+    type === SearchType.Item
+      ? parseAndValidateQuery(query, buildItemFiltersMap(destinyVersion), {
+          customStats: draft.settings.customStats ?? [],
+        } as FilterContext)
+      : parseAndValidateQuery(
+          query,
+          buildLoadoutsFiltersMap(destinyVersion),
+          {} as LoadoutFilterContext,
+        );
   if (!saveInHistory) {
     errorLog('searchUsed', 'Query not eligible to be saved in history', query);
     return;
