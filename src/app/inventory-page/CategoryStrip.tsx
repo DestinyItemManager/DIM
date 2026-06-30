@@ -25,7 +25,7 @@ export default function CategoryStrip({
               onClick={() => onCategorySelected(category)}
               className={clsx({ [styles.selected]: category === selectedCategoryId })}
             >
-              {t(`Bucket.${category as BucketSortType}`, { metadata: { keys: 'buckets' } })}
+              {t(`Bucket.${category as BucketSortType}`)}
             </div>
           ),
       )}
