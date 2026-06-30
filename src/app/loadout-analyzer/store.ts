@@ -350,15 +350,11 @@ async function analysisTask(cancelToken: CancelToken, analyzer: LoadoutBackgroun
     };
 
     // Reasons not to bother processing a loadout:
-    if (
-      !(
-        // If it's the automatic "Max Power" loadout
-        (
-          task.loadout.name === t('Loadouts.MaximizePower') ||
-          task.loadout.name === t('Loadouts.MaximizeLight')
-        )
-      )
-    ) {
+    if (!(
+      // If it's the automatic "Max Power" loadout
+      task.loadout.name === t('Loadouts.MaximizePower') ||
+      task.loadout.name === t('Loadouts.MaximizeLight')
+    )) {
       try {
         result = await analyzeLoadout(
           task.analysisContext,

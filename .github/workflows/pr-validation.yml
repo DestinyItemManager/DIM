@@ -38,6 +38,13 @@ jobs:
           restore-keys: |
             destiny-manifest-
 
+      # Seed the cache with the current manifest via curl when the restored cache
+      # is missing or stale. The in-test download streams a ~190MB body that
+      # truncates from GitHub runners; this avoids relying on it. No-op when the
+      # current manifest is already cached.
+      - name: Download manifest
+        run: bash build/download-manifest.sh
+
       - name: Run tests
         run: pnpm test
         env:

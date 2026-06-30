@@ -8,7 +8,7 @@ declare module 'testing/data/profile-2026-06-09.json' {
   export default value;
 }
 
-declare module 'testing/data/vendors-2026-06-09.json' {
+declare module 'testing/data/vendors-2026-06-29.json' {
   import { DestinyVendorsResponse, ServerResponse } from 'bungie-api-ts/destiny2';
   const value: ServerResponse<DestinyVendorsResponse>;
   export default value;

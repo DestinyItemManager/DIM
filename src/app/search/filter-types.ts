@@ -17,13 +17,7 @@ export type ItemFilter<I = DimItem> = (item: I) => ValidFilterOutput;
  * * `stat`:  `[keyword]:[suggestion]:op?[number]`
  */
 export type FilterFormat =
-  | 'simple'
-  | 'query'
-  | 'multiquery'
-  | 'freeform'
-  | 'range'
-  | 'stat'
-  | 'custom';
+  'simple' | 'query' | 'multiquery' | 'freeform' | 'range' | 'stat' | 'custom';
 
 export function canonicalFilterFormats<I, FilterCtx, SuggestionsCtx>(
   format: FilterDefinition<I, FilterCtx, SuggestionsCtx>['format'],

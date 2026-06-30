@@ -1,0 +1,46 @@
+name: Warm Manifest Cache
+
+# PR validation needs the current Destiny manifest, but a PR can only restore
+# caches from its own branch or the default branch. Since PR Validation is
+# pull_request-only, nothing keeps a default-branch manifest cache fresh, so once
+# Bungie ships a new manifest every PR falls back to the (unreliable) live
+# download. This job runs on the default branch to publish a current manifest
+# cache that all PRs can restore.
+
+on:
+  schedule:
+    # Every 6 hours - manifest updates are infrequent and this only re-downloads
+    # when the version actually changed.
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: warm-manifest-cache
+  cancel-in-progress: true
+
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      # A unique key always saves a fresh entry; restore-keys reuses the previous
+      # one so an unchanged manifest is a no-op. PRs find this via the shared
+      # `destiny-manifest-` prefix.
+      - name: Cache Manifest
+        uses: actions/cache@v5
+        with:
+          path: manifest-cache
+          key: destiny-manifest-${{ github.run_id }}
+          restore-keys: |
+            destiny-manifest-
+
+      - name: Download manifest
+        run: bash build/download-manifest.sh
+
+      # Keep only the newest manifest so the cache doesn't accumulate old versions.
+      - name: Prune old manifests
+        run: |
+          cd manifest-cache
+          ls -t | tail -n +2 | xargs -r rm -f

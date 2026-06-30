@@ -387,13 +387,7 @@ export const ItemRarityMap = {
  * game (e.g. Legendary = TierType.Superior, Uncommon = TierType.Common).
  */
 export type ItemRarityName =
-  | 'Unknown'
-  | 'Currency'
-  | 'Common'
-  | 'Uncommon'
-  | 'Rare'
-  | 'Legendary'
-  | 'Exotic';
+  'Unknown' | 'Currency' | 'Common' | 'Uncommon' | 'Rare' | 'Legendary' | 'Exotic';
 
 export const breakerTypes = {
   any: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],
