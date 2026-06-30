@@ -12,7 +12,10 @@ $horizontal-padding: 11px;
   position: absolute;
   background-color: var(--theme-tooltip-body-bg);
   color: #dadaea;
-  width: fit-content;
+  // Size to the content (capped by max-width), not the available space. The
+  // tooltip is positioned by offset within its containing block (often the item
+  // popup), and fit-content would shrink it to whatever room is left there.
+  width: max-content;
   max-width: 306px;
   border: 1px solid var(--theme-tooltip-border);
   border-top-width: $theme-tooltip-corner-radius;
