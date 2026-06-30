@@ -221,7 +221,12 @@ export default function ExoticPicker({
             <FakeExoticTile
               selected={lockedExoticHash === undefined}
               title={t('LoadoutBuilder.NoExoticPreference')}
-              description={t('LoadoutBuilder.NoExoticPreferenceDescription')}
+              description={
+                <>
+                  <span>{t('LoadoutBuilder.NoExoticPreferenceDescription')}</span>
+                  <span>{t('LoadoutBuilder.ExoticTuningNote')}</span>
+                </>
+              }
               icon={noExoticPreferenceIcon}
               onSelected={() => {
                 onSelected(undefined);

@@ -283,6 +283,10 @@ export default memo(function LoadoutBuilder({
     armorEnergyRules,
     desiredStatRanges,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
+    // Only pay for exotic tuning variants when the user is actually targeting an
+    // exotic (any exotic, or a specific one), not on the default unfiltered run.
+    expandExoticTuning:
+      lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC || (lockedExoticHash ?? 0) > 0,
     autoStatMods,
     strictUpgrades: Boolean(strictUpgradesStatConstraints && !mergedConstraintsImplyStrictUpgrade),
   });
@@ -308,6 +312,7 @@ export default memo(function LoadoutBuilder({
         stats: processed.stats,
         armorStats: processed.armorStats,
         statMods: processed.statMods,
+        tuningModsByItemId: processed.tuningModsByItemId,
       };
     }
     return (

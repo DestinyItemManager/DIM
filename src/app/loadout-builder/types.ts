@@ -56,6 +56,8 @@ export interface ArmorSet {
   readonly armor: DimItem[];
   /** Which stat mods were added? */
   readonly statMods: number[];
+  /** Which tuning mod the worker put on each item, by item id. */
+  readonly tuningModsByItemId: { [itemId: string]: number };
 }
 
 export type ItemsByBucket = Readonly<{
