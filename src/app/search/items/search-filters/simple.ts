@@ -112,9 +112,13 @@ const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | fal
     filter: ({ allItems, d2Definitions, profileResponse }) => {
       const ownedHashes = new Set(allItems.map((i) => i.hash));
       return (item) => {
-        // No collectible, or you own it (covers crafted exotics whose collectible isn't flagged acquired)
-        if (!item.collectibleHash || ownedHashes.has(item.hash)) {
+        // Owning one counts as collected (covers crafted exotics whose collectible isn't flagged)
+        if (ownedHashes.has(item.hash)) {
           return true;
+        }
+        // Without a collectible there's nothing to have collected
+        if (!item.collectibleHash) {
+          return false;
         }
         const collectibleDef = d2Definitions!.Collectible.get(item.collectibleHash);
         const state = collectibleDef && getCollectibleState(collectibleDef, profileResponse!);
