@@ -207,13 +207,17 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
           )}
         </div>
       )}
-      {item.plug?.energyCost !== undefined && item.plug.energyCost > 0 && (
-        <svg viewBox="0 0 100 100" className={styles.energyCost}>
-          <text x="87" y="26" fontSize="18px" textAnchor="end">
-            {item.plug.energyCost}
-          </text>
-        </svg>
-      )}
+      {item.plug?.energyCost !== undefined &&
+        item.plug.energyCost > 0 &&
+        // Subclass fragments report an energy cost, but at vendors this pip is misleading
+        // since it isn't the armor energy it represents.
+        !(item.vendor && item.itemCategoryHashes.includes(ItemCategoryHashes.SubclassMods)) && (
+          <svg viewBox="0 0 100 100" className={styles.energyCost}>
+            <text x="87" y="26" fontSize="18px" textAnchor="end">
+              {item.plug.energyCost}
+            </text>
+          </svg>
+        )}
       {item.highlightedObjective && !item.deepsightInfo && (
         <img className={styles.highlightedObjective} src={pursuitComplete} />
       )}
