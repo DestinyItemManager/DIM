@@ -1,4 +1,4 @@
-import { Placement } from '@popperjs/core';
+import { Placement } from '@floating-ui/dom';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import React, {

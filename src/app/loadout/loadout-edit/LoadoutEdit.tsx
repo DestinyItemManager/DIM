@@ -330,7 +330,7 @@ function LoadoutEditCategorySection({
   return (
     <LoadoutEditSection
       className={styles.section}
-      title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+      title={t(`Bucket.${category}`)}
       onClear={() => handleClearCategory(category)}
       onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
       hasRandomizeQuery={searchFilter !== stubTrue}
