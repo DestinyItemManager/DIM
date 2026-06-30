@@ -1,6 +1,8 @@
 import { tl } from 'app/i18next-t';
+import { getCollectibleState } from 'app/records/presentation-nodes';
 import { compact } from 'app/utils/collections';
 import { isArmor3 } from 'app/utils/item-utils';
+import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 
@@ -101,6 +103,23 @@ const simpleFilters: ItemFilterDefinition[] = compact<ItemFilterDefinition | fal
     filter: ({ allItems }) => {
       const ownedHashes = new Set(allItems.map((item) => item.hash));
       return (item) => ownedHashes.has(item.hash);
+    },
+  },
+  {
+    keywords: 'collected',
+    description: tl('Filter.Collected'),
+    destinyVersion: 2,
+    filter: ({ allItems, d2Definitions, profileResponse }) => {
+      const ownedHashes = new Set(allItems.map((i) => i.hash));
+      return (item) => {
+        // No collectible, or you own it (covers crafted exotics whose collectible isn't flagged acquired)
+        if (!item.collectibleHash || ownedHashes.has(item.hash)) {
+          return true;
+        }
+        const collectibleDef = d2Definitions!.Collectible.get(item.collectibleHash);
+        const state = collectibleDef && getCollectibleState(collectibleDef, profileResponse!);
+        return state !== undefined && !(state & DestinyCollectibleState.NotAcquired);
+      };
     },
   },
 ]);

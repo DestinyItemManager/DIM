@@ -11,6 +11,7 @@ import { FiltersMap, SearchConfig } from 'app/search/search-config';
 import { Settings } from 'app/settings/initial-settings';
 import { WishListRoll } from 'app/wishlists/types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 
 /**
  * A slice of data that could be used by filter functions to
@@ -30,6 +31,8 @@ export interface FilterContext {
   language: DimLanguage;
   customStats: Settings['customStats'];
   d2Definitions: D2ManifestDefinitions | undefined;
+  /** The raw profile response, for filters that need Collections/records state. */
+  profileResponse: DestinyProfileResponse | undefined;
 }
 
 /**

@@ -281,6 +281,7 @@
     "Harrowed": "\\(Harrowed\\)",
     "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes. When used with a range, it shows items that are in that many loadouts.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
+    "Collected": "is:collected shows items that are unlocked in your Collections. Everything in your inventory counts as collected, so use -is:collected on the Records screen to find items you haven't collected yet.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "Infusable": "Shows items that can be infused.",
     "IsAdept": "Shows weapons compatible with Adept mods.",
