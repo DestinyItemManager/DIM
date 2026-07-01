@@ -12,7 +12,6 @@ import {
   displayableBucketHashesSelector,
   getNotesSelector,
   getTagSelector,
-  profileResponseSelector,
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -27,7 +26,6 @@ import { querySelector } from 'app/shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from 'app/wishlists/selectors';
 import { WishListRoll } from 'app/wishlists/types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 import { FilterContext, SuggestionsContext } from './item-filter-types';
@@ -140,7 +138,6 @@ const filterContextSelector = createSelector(
   languageSelector,
   customStatsSelector,
   d2ManifestSelector,
-  profileResponseSelector,
   makeFilterContext,
 );
 
@@ -156,7 +153,6 @@ function makeFilterContext(
   language: DimLanguage,
   customStats: Settings['customStats'],
   d2Definitions: D2ManifestDefinitions | undefined,
-  profileResponse: DestinyProfileResponse | undefined,
 ): FilterContext {
   return {
     stores,
@@ -170,7 +166,6 @@ function makeFilterContext(
     customStats,
     wishListsByHash,
     d2Definitions,
-    profileResponse,
   };
 }
 

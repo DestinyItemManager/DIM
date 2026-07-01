@@ -43,8 +43,14 @@ export default function PresentationNode({
   const headerRef = useScrollNodeIntoView(path, presentationNodeHash);
 
   const expandChildren = () => {
-    const childrenExpanded = path.includes(presentationNodeHash);
-    onNodePathSelected(childrenExpanded ? parents : [...parents, presentationNodeHash]);
+    // Toggle just this node so multiple branches can be open independently (and any
+    // node - including those auto-opened by the "only uncollected" toggle - can be
+    // collapsed again).
+    onNodePathSelected(
+      path.includes(presentationNodeHash)
+        ? path.filter((h) => h !== presentationNodeHash)
+        : [...path, presentationNodeHash],
+    );
     return false;
   };
 

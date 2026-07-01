@@ -2,14 +2,16 @@ import { createItemContextSelector, currentStoreSelector } from 'app/inventory/s
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PresentationNode from './PresentationNode';
 import * as styles from './PresentationNodeRoot.m.scss';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 import { makeItemsForCatalystRecords } from './catalysts';
 import {
+  collectibleNodeHashes,
   filterPresentationNodesToSearch,
+  hideAcquiredCollectibles,
   hideCompletedRecords,
   toPresentationNodeTree,
 } from './presentation-nodes';
@@ -23,6 +25,7 @@ interface Props {
   isTriumphs?: boolean;
   overrideName?: string;
   completedRecordsHidden?: boolean;
+  acquiredCollectiblesHidden?: boolean;
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
@@ -50,6 +53,7 @@ export default function PresentationNodeRoot({
   isTriumphs,
   overrideName,
   completedRecordsHidden,
+  acquiredCollectiblesHidden,
 }: Props) {
   const itemCreationContext = useSelector(createItemContextSelector);
   const defs = useD2Definitions()!;
@@ -81,13 +85,35 @@ export default function PresentationNodeRoot({
     [itemCreationContext, presentationNodeHash, showPlugSets, currentStore?.genderHash],
   );
 
-  const nodeTree = useMemo(
-    () =>
-      unfilteredNodeTree && completedRecordsHidden
-        ? hideCompletedRecords(unfilteredNodeTree)
-        : unfilteredNodeTree,
-    [completedRecordsHidden, unfilteredNodeTree],
-  );
+  const nodeTree = useMemo(() => {
+    let tree = unfilteredNodeTree;
+    if (tree && completedRecordsHidden) {
+      tree = hideCompletedRecords(tree);
+    }
+    if (tree && acquiredCollectiblesHidden) {
+      tree = hideAcquiredCollectibles(tree);
+    }
+    return tree;
+  }, [completedRecordsHidden, acquiredCollectiblesHidden, unfilteredNodeTree]);
+
+  // When the "only uncollected" toggle is on, seed the expanded path with every
+  // collectible-bearing node so all matching items are revealed at once. This also
+  // runs on mount, since opening the (force-opened) section mounts this component
+  // fresh with the toggle already on. The user can still collapse/expand individual
+  // nodes from there. Toggling off resets to the default collapsed view - but we
+  // skip that reset on the initial mount so a deep-linked node from
+  // `openedPresentationHash` isn't clobbered.
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (acquiredCollectiblesHidden && nodeTree) {
+      setNodePath(collectibleNodeHashes(nodeTree));
+    } else if (didMount.current) {
+      setNodePath([]);
+    }
+    didMount.current = true;
+    // Only react to the toggle flipping, not to every tree change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [acquiredCollectiblesHidden]);
 
   if (!nodeTree) {
     return null;

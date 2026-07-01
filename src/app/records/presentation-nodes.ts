@@ -310,6 +310,50 @@ export function hideCompletedRecords(node: DimPresentationNode): DimPresentation
   return node;
 }
 
+/** Whether this node (or any of its descendants) contains collectibles. */
+export function nodeHasCollectibles(node: DimPresentationNode): boolean {
+  return Boolean(
+    node.collectibles?.length || node.childPresentationNodes?.some(nodeHasCollectibles),
+  );
+}
+
+/**
+ * The hashes of every node (from the root down) whose subtree contains
+ * collectibles. Used to seed the expanded path so the "only uncollected" toggle
+ * reveals all matching items without the user drilling in, while leaving
+ * collectible-free branches (e.g. Triumphs/Metrics) collapsed.
+ */
+export function collectibleNodeHashes(node: DimPresentationNode, acc: number[] = []): number[] {
+  if (nodeHasCollectibles(node)) {
+    acc.push(node.hash);
+    for (const child of node.childPresentationNodes ?? []) {
+      collectibleNodeHashes(child, acc);
+    }
+  }
+  return acc;
+}
+
+/** Filter the node tree down to only collectibles that haven't been acquired yet. */
+export function hideAcquiredCollectibles(node: DimPresentationNode): DimPresentationNode {
+  if (node.childPresentationNodes) {
+    return {
+      ...node,
+      childPresentationNodes: filterMap(node.childPresentationNodes, (node) =>
+        dropEmptyNodes(hideAcquiredCollectibles(node)),
+      ),
+    };
+  }
+
+  if (node.collectibles) {
+    return {
+      ...node,
+      collectibles: node.collectibles.filter((c) => c.state & DestinyCollectibleState.NotAcquired),
+    };
+  }
+
+  return node;
+}
+
 // TODO: how to flatten this down to individual category trees
 // TODO: how to handle simple searches plus bigger queries
 // TODO: this uses the entire search field as one big string search. no "and". no fun.

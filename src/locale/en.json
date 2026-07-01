@@ -221,7 +221,6 @@
     "BulkTag_other": "Tagged {{count}} selected items as {{tag}}.",
     "Catalyst": "Shows catalysts based on their status. catalyst:complete shows catalysts you have completed and applied, catalyst:incomplete shows catalysts you have unlocked but either not completed the objective or applied the catalyst, and catalyst:missing shows items that can have a catalyst but you haven't found it yet.",
     "Class": "Shows items based on their class affinity.",
-    "Collected": "is:collected shows items that are unlocked in your Collections. Everything in your inventory counts as collected, so use -is:collected on the Records screen to find items you haven't collected yet.",
     "Combine": "Filters can be combined or grouped with parentheses, \"or\" and \"and\" to narrow down your search, for example \"{{example}}\".",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
