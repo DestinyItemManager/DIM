@@ -3,6 +3,7 @@
 interface CssExports {
   'artifactUnlock': string;
   'buttons': string;
+  'compact': string;
   'fineprint': string;
   'missingItem': string;
   'modsGrid': string;

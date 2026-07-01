@@ -59,6 +59,7 @@ export function useItemsFromInGameLoadout(loadout: InGameLoadout) {
 
 export const gameLoadoutCompatibleBuckets = [
   BucketHashes.Subclass,
+  BucketHashes.Artifacts,
   ...D2Categories.Weapons,
   ...D2Categories.Armor,
 ];

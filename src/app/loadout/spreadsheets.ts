@@ -4,7 +4,6 @@ import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
   allItemsSelector,
-  artifactUnlocksSelector,
   bucketsSelector,
   createItemContextSelector,
   storesSelector,
@@ -51,13 +50,7 @@ export function downloadLoadoutsCsv(): ThunkResult {
 
     const equippedLoadouts = stores
       .filter((s) => !s.isVault)
-      .map((s) =>
-        newLoadoutFromEquipped(
-          `Equipped ${s.className}`,
-          s,
-          artifactUnlocksSelector(s.id)(getState()),
-        ),
-      );
+      .map((s) => newLoadoutFromEquipped(`Equipped ${s.className}`, s));
 
     const data = filterMap(equippedLoadouts.concat(allLoadouts), (loadout) => {
       const storeId = pickBackingStore(stores, undefined, loadout.classType)?.id;

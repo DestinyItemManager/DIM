@@ -111,6 +111,13 @@ export function addItem(
     if (item.sockets && item.bucket.hash === BucketHashes.Subclass && !socketOverrides) {
       loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
     }
+    if (item.sockets && item.bucket.hash === BucketHashes.Artifacts && !socketOverrides) {
+      loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
+    }
+
+    if (item.bucket.hash === BucketHashes.Artifacts) {
+      delete draftLoadout.parameters?.artifactUnlocks;
+    }
 
     // We only allow one subclass, and it must be equipped. Same with a couple other things.
     const singular = singularBucketHashes.includes(item.bucket.hash);
@@ -358,6 +365,31 @@ export function clearSubclass(
   };
 }
 
+/** Remove the current artifact from the loadout. */
+export function clearArtifact(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+): LoadoutUpdateFunction {
+  return (loadout) => {
+    if (!defs.isDestiny2) {
+      return loadout;
+    }
+
+    const isArtifact = (i: LoadoutItem) =>
+      defs.InventoryItem.get(i.hash)?.inventory?.bucketTypeHash === BucketHashes.Artifacts;
+
+    return {
+      ...loadout,
+      items: loadout.items.filter((i) => !isArtifact(i)),
+      parameters: loadout.parameters
+        ? {
+            ...loadout.parameters,
+            artifactUnlocks: undefined,
+          }
+        : undefined,
+    };
+  };
+}
+
 /**
  * Remove a specific mod by its inventory item hash.
  */
@@ -393,13 +425,31 @@ export function setLoadoutSubclassFromEquipped(
   };
 }
 
+/** Replace the loadout's artifact with the store's currently equipped artifact */
+export function setLoadoutArtifactFromEquipped(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  store: DimStore,
+): LoadoutUpdateFunction {
+  return (loadout) => {
+    const newArtifact = store.items.find(
+      (item) =>
+        item.equipped && item.bucket.hash === BucketHashes.Artifacts && itemCanBeInLoadout(item),
+    );
+
+    if (!newArtifact || !defs.isDestiny2) {
+      return loadout;
+    }
+
+    return addItem(defs, newArtifact, true)(loadout);
+  };
+}
+
 /**
  * Fill in items from the store's equipped items, keeping any equipped items already in the loadout in place.
  */
 export function fillLoadoutFromEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
-  artifactUnlocks: LoadoutParameters['artifactUnlocks'] | undefined,
   /** Fill in from only this specific category */
   category?: D2BucketCategory,
 ): LoadoutUpdateFunction {
@@ -433,11 +483,6 @@ export function fillLoadoutFromEquipped(
     // Populate mods if they aren't already there
     if (!category && !loadout.parameters?.mods?.length) {
       loadout = syncModsFromEquipped(store)(loadout);
-    }
-
-    // Populate artifactUnlocks if they aren't already there
-    if (!category && isEmpty(loadout.parameters?.artifactUnlocks)) {
-      loadout = syncArtifactUnlocksFromEquipped(artifactUnlocks)(loadout);
     }
 
     // Save "fashion" mods for newly equipped items, but don't overwrite existing fashion
@@ -679,49 +724,6 @@ export function updateModsByBucket(
 ): LoadoutUpdateFunction {
   return setLoadoutParameters({
     modsByBucket: isEmpty(modsByBucket) ? undefined : modsByBucket,
-  });
-}
-
-/**
- * Replace the artifact unlocks with the currently equipped ones.
- */
-export function syncArtifactUnlocksFromEquipped(
-  artifactUnlocks:
-    | {
-        unlockedItemHashes: number[];
-        seasonNumber: number;
-      }
-    | undefined,
-): LoadoutUpdateFunction {
-  if (artifactUnlocks?.unlockedItemHashes.length) {
-    return setLoadoutParameters({
-      artifactUnlocks,
-    });
-  } else {
-    return (loadout) => loadout;
-  }
-}
-
-/**
- * Clear the artifact unlocks.
- */
-export function clearArtifactUnlocks(): LoadoutUpdateFunction {
-  return setLoadoutParameters({
-    artifactUnlocks: undefined,
-  });
-}
-
-/**
- * Remove one artifact mod.
- */
-export function removeArtifactUnlock(mod: number): LoadoutUpdateFunction {
-  return produce((loadout) => {
-    if (loadout.parameters?.artifactUnlocks) {
-      const index = loadout.parameters?.artifactUnlocks.unlockedItemHashes.indexOf(mod);
-      if (index !== -1) {
-        loadout.parameters.artifactUnlocks.unlockedItemHashes.splice(index, 1);
-      }
-    }
   });
 }
 

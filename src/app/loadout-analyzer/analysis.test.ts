@@ -77,7 +77,7 @@ beforeAll(async () => {
   ]);
   allItems = stores.flatMap((store) => store.items);
   store = stores.find((s) => s.classType === DestinyClass.Hunter)!;
-  equippedLoadout = newLoadoutFromEquipped('Test Loadout', store, /* artifactUnlocks */ undefined);
+  equippedLoadout = newLoadoutFromEquipped('Test Loadout', store);
   const reducedVoidScavengerModHash = normalToReducedMod[voidScavengerModHash];
   const unlockedPlugs = new Set([reducedVoidScavengerModHash]);
   context = {
