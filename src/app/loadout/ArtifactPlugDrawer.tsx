@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSelectionType, PlugSet } from 'app/loadout/plug-drawer/types';
@@ -26,17 +26,12 @@ export default function ArtifactPlugDrawer({
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
+  const sortPlugGroups = compareBy((group: PlugSet) => group.plugs.length);
 
-  const { plugSets, sortPlugGroups } = useMemo(() => {
-    const { plugSets } = getPlugsForArtifact(defs, artifact, socketOverrides);
-
-    const flatPlugs = plugSets.flatMap((set) => set.plugs);
-    const sortPlugGroups = compareBy(
-      (group: PlugSet) => group.plugs.length && flatPlugs.indexOf(group.plugs[0]),
-    );
-
-    return { plugSets, sortPlugGroups };
-  }, [artifact, defs, socketOverrides]);
+  const { plugSets, plugCounts } = useMemo(
+    () => getPlugsForArtifact(defs, artifact, socketOverrides),
+    [defs, artifact, socketOverrides],
+  );
 
   const handleAccept = useCallback(
     (selected: PluggableInventoryItemDefinition[]) => {
@@ -78,10 +73,11 @@ export default function ArtifactPlugDrawer({
       onAccept={handleAccept}
       onClose={onClose}
       sortPlugGroups={sortPlugGroups}
-      isPlugSelectable={(plug, selected) => {
-        const selectedHashes = new Set(selected.map((s) => s.hash));
-        return !selectedHashes.has(plug.hash);
-      }}
+      isPlugSelectable={(plug, selected) =>
+        !selected.find((s) => s.hash === plug.hash) &&
+        plugCounts[plug.hash] >
+          selected.filter((s) => plugCounts[s.hash] <= plugCounts[plug.hash]).length
+      }
     />
   );
 }
@@ -91,58 +87,62 @@ function getPlugsForArtifact(
   artifact: DimItem,
   socketOverrides: SocketOverrides,
 ) {
-  const plugSets: PlugSet[] = [];
-
   if (!artifact.sockets || !defs) {
-    return { plugSets };
+    return { plugSets: [], plugCounts: {} };
   }
 
-  const artifactSockets = artifact.sockets.allSockets.filter((socket) => socket.plugSet);
+  const artifactSockets = artifact.sockets.allSockets.filter(
+    (socket) => socket.plugSet && socket.socketDefinition.socketTypeHash !== RESET_SOCKET,
+  );
 
-  const groupedSockets = new Map<number, DimSocket[]>();
-  const groupOrder: number[] = [];
-  for (const socket of artifactSockets) {
-    const groupHash = socket.socketDefinition.reusablePlugSetHash ?? socket.plugSet!.hash;
-    if (!groupedSockets.has(groupHash)) {
-      groupedSockets.set(groupHash, []);
-      groupOrder.push(groupHash);
-    }
-    groupedSockets.get(groupHash)!.push(socket);
+  if (artifactSockets.length === 0) {
+    return { plugSets: [], plugCounts: {} };
   }
 
-  const socketGroups = groupOrder.map((groupHash) => groupedSockets.get(groupHash)!);
-
-  for (const socketGroup of socketGroups) {
-    const firstSocket = socketGroup[0];
-    const plugSetHash =
-      firstSocket.socketDefinition.reusablePlugSetHash ?? firstSocket.plugSet!.hash;
-    const plugSet: PlugSet = {
-      plugs: [],
-      selected: [],
-      plugSetHash,
-      maxSelectable: socketGroup.length,
-      selectionType: PlugSelectionType.Multi,
-    };
-
-    plugSet.plugs = uniqBy(
-      firstSocket
-        .plugSet!.plugs.filter((dimPlug) => !excludedMods.includes(dimPlug.plugDef.hash))
-        .map((dimPlug) => dimPlug.plugDef),
-      (plug) => plug.hash,
-    );
-
-    for (const socket of socketGroup) {
-      const overrideHash = socketOverrides[socket.socketIndex];
-      if (overrideHash) {
-        const initialPlug = plugSet.plugs.find((plug) => plug.hash === overrideHash);
-        if (initialPlug) {
-          plugSet.selected.push(initialPlug);
+  const plugCounts = artifactSockets.reduce(
+    (counts, socket) => {
+      for (const dimPlug of socket.plugSet!.plugs) {
+        const plugHash = dimPlug.plugDef.hash;
+        if (!excludedMods.includes(plugHash)) {
+          counts[plugHash] = (counts[plugHash] || 0) + 1;
         }
       }
-    }
+      return counts;
+    },
+    {} as Record<number, number>,
+  );
+  const biggestSocket = artifactSockets.reduce(
+    (biggest, socket) =>
+      socket.plugSet!.plugs.length > biggest.plugSet!.plugs.length ? socket : biggest,
+    artifactSockets[0],
+  );
 
-    plugSets.push(plugSet);
+  const plugSetHash =
+    biggestSocket.socketDefinition.reusablePlugSetHash ?? biggestSocket.plugSet!.hash;
+  const plugSet: PlugSet = {
+    plugs: [],
+    selected: [],
+    plugSetHash,
+    maxSelectable: artifactSockets.length,
+    selectionType: PlugSelectionType.Unique,
+  };
+
+  plugSet.plugs = uniqBy(
+    biggestSocket
+      .plugSet!.plugs.filter((dimPlug) => !excludedMods.includes(dimPlug.plugDef.hash))
+      .map((dimPlug) => dimPlug.plugDef),
+    (plug) => plug.hash,
+  );
+
+  for (const socket of artifactSockets) {
+    const overrideHash = socketOverrides[socket.socketIndex];
+    if (overrideHash) {
+      const initialPlug = plugSet.plugs.find((plug) => plug.hash === overrideHash);
+      if (initialPlug) {
+        plugSet.selected.push(initialPlug);
+      }
+    }
   }
 
-  return { plugSets };
+  return { plugSets: [plugSet], plugCounts };
 }
