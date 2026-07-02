@@ -4,7 +4,9 @@ interface CssExports {
   'count': string;
   'fineprint': string;
   'icon': string;
+  'keep': string;
   'recipe': string;
+  'setNote': string;
   'tertiary': string;
   'verdict': string;
 }

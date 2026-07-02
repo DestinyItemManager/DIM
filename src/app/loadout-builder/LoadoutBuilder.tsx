@@ -387,6 +387,11 @@ export default memo(function LoadoutBuilder({
       />
       <HypotheticalPlanner
         desiredStatRanges={desiredStatRanges}
+        filteredItems={filteredItems}
+        lockedExoticHash={lockedExoticHash}
+        setBonuses={setBonuses}
+        modStatChanges={modStatChanges}
+        armorEnergyRules={armorEnergyRules}
         className={styles.loadoutEditSection}
       />
       {isPhonePortrait && (
