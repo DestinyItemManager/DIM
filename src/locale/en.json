@@ -717,6 +717,8 @@
     "FarmingPlannerKeep": "Combined with your: {{items}}",
     "FarmingPlannerKeepOwned": "Keep armor I already own",
     "FarmingPlannerMod": "+10 {{stat}} mod",
+    "FarmingPlannerNeedIdeal_one": "You need {{count}} piece to complete this:",
+    "FarmingPlannerNeedIdeal_other": "You need {{count}} pieces to complete this:",
     "FarmingPlannerNeed_one": "You need {{count}} new piece to complete this:",
     "FarmingPlannerNeed_other": "You need {{count}} new pieces to complete this:",
     "FarmingPlannerNoTargets": "Set minimum stat values to see which armor you still need to farm.",

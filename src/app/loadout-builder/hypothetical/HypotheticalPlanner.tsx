@@ -7,7 +7,9 @@ import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
-import { memo, useDeferredValue, useMemo, useState } from 'react';
+import { getArmor3StatFocus } from 'app/utils/item-utils';
+import { getArmorArchetype } from 'app/utils/socket-utils';
+import { memo, useCallback, useDeferredValue, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { mapDimItemToProcessItems } from '../process/mappers';
 import {
@@ -89,6 +91,20 @@ export default memo(function HypotheticalPlanner({
     return { itemStats };
   }, [armorEnergyRules]);
 
+  // Identify the exact roll: "Geomag Stabilizers (Grenadier / Class)".
+  const describeItem = useCallback(
+    (item: DimItem) => {
+      const archetypeName = getArmorArchetype(item)?.displayProperties.name;
+      const focus = getArmor3StatFocus(item);
+      const tertiaryName =
+        focus.length === 3 ? defs.Stat.get(focus[2])?.displayProperties.name : undefined;
+      return archetypeName && tertiaryName
+        ? `${item.name} (${archetypeName} / ${tertiaryName})`
+        : item.name;
+    },
+    [defs],
+  );
+
   const plan = useMemo(() => {
     if (!blocks || !hasTargets) {
       return undefined;
@@ -137,7 +153,7 @@ export default memo(function HypotheticalPlanner({
         .filter((item) => !item.isExotic)
         .map((item): PlannerOwnedPiece & { item: DimItem } => ({
           item,
-          name: item.name,
+          name: describeItem(item),
           stats: ownedStats.itemStats(item),
           setBonusHash: item.setBonus?.hash,
         }))
@@ -177,6 +193,7 @@ export default memo(function HypotheticalPlanner({
     setBonuses,
     modStatChanges,
     keepOwned,
+    describeItem,
   ]);
 
   if (!blocks) {
@@ -185,7 +202,7 @@ export default memo(function HypotheticalPlanner({
 
   const farmCount = plan?.farm.reduce((total, { count }) => total + count, 0) ?? 0;
   const keepNames = plan
-    ? [...(plan.exoticItem ? [plan.exoticItem.name] : []), ...plan.keep.map((p) => p.name)]
+    ? [...(plan.exoticItem ? [describeItem(plan.exoticItem)] : []), ...plan.keep.map((p) => p.name)]
     : [];
 
   return (
@@ -206,7 +223,9 @@ export default memo(function HypotheticalPlanner({
               ? t('LoadoutBuilder.FarmingPlannerUnreachable', { points: plan.shortfall })
               : farmCount === 0
                 ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
-                : t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount })}
+                : keepOwned
+                  ? t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount })
+                  : t('LoadoutBuilder.FarmingPlannerNeedIdeal', { count: farmCount })}
           </div>
           {farmCount > 0 && (
             <ul className={styles.recipe}>
