@@ -45,7 +45,6 @@ import { Dispatch, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
-  artifactUnlocksSelector,
   createItemContextSelector,
   sortedStoresSelector,
   unlockedPlugSetItemsSelector,
@@ -154,7 +153,7 @@ export default memo(function LoadoutBuilder({
   } = loadoutParameters.modsByBucket ?? emptyObject();
 
   // Turn loadout items into real DimItems, filtering out unequippable items
-  const [_items, subclass, _warnitems] = useMemo(
+  const [_items, _artifact, subclass, _warnitems] = useMemo(
     () =>
       getItemsAndSubclassFromLoadout(
         itemCreationContext,
@@ -617,20 +616,15 @@ export default memo(function LoadoutBuilder({
  */
 function useRelevantLoadouts(selectedStore: DimStore) {
   const allSavedLoadouts = useSelector(loadoutsSelector);
-  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStore.id));
 
   // TODO: consider using fullyResolvedLoadoutsSelector
   const loadouts = useMemo(() => {
     const classLoadouts = allSavedLoadouts.filter((l) => l.classType === selectedStore.classType);
 
     // TODO: use a selector / weakMemoize for this?
-    const equippedLoadout = newLoadoutFromEquipped(
-      t('Loadouts.CurrentlyEquipped'),
-      selectedStore,
-      artifactUnlocks,
-    );
+    const equippedLoadout = newLoadoutFromEquipped(t('Loadouts.CurrentlyEquipped'), selectedStore);
     return [...classLoadouts, equippedLoadout];
-  }, [allSavedLoadouts, selectedStore, artifactUnlocks]);
+  }, [allSavedLoadouts, selectedStore]);
 
   return loadouts;
 }

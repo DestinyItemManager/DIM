@@ -10,6 +10,7 @@ import { Loadout } from '../loadout/loadout-types';
 import {
   addItem,
   applySocketOverrides,
+  clearArtifact,
   clearBucketCategory,
   clearSubclass,
   fillLoadoutFromEquipped,
@@ -178,6 +179,17 @@ describe('addItem', () => {
     expect(loadout.items[0].socketOverrides).toBeDefined();
   });
 
+  it('clears legacy artifact unlocks when adding a new artifact', () => {
+    const artifact = items.find((i) => i.bucket.hash === BucketHashes.Artifacts)!;
+
+    const loadout = addItem(
+      defs,
+      artifact,
+    )(setLoadoutParameters({ artifactUnlocks })(emptyLoadout));
+
+    expect(loadout.parameters?.artifactUnlocks).toBeUndefined();
+  });
+
   it('replaces the existing subclass when adding a new one', () => {
     const [subclass, subclass2] = items.filter((i) => i.bucket.hash === BucketHashes.Subclass);
 
@@ -262,6 +274,21 @@ describe('addItem', () => {
         id: exotic2.id,
       },
     ]);
+  });
+});
+
+describe('clearArtifact', () => {
+  it('clears the artifact section and legacy artifact unlocks', () => {
+    const artifact = items.find((i) => i.bucket.hash === BucketHashes.Artifacts)!;
+
+    const loadout = clearArtifact(defs)({
+      ...emptyLoadout,
+      items: [{ hash: artifact.hash, id: artifact.id, amount: 1, equip: true }],
+      parameters: { artifactUnlocks },
+    });
+
+    expect(loadout.items).toEqual([]);
+    expect(loadout.parameters?.artifactUnlocks).toBeUndefined();
   });
 });
 
@@ -477,7 +504,7 @@ describe('fillLoadoutFromEquipped', () => {
     const item = items.find((i) => i.bucket.hash === BucketHashes.KineticWeapons && !i.equipped)!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
-    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks, 'Weapons')(loadout);
+    loadout = fillLoadoutFromEquipped(defs, store, 'Weapons')(loadout);
 
     // Three equipped items, and the original item was left in place
     expect(loadout.items).toMatchObject([
@@ -500,7 +527,7 @@ describe('fillLoadoutFromEquipped', () => {
     )!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
-    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks, 'Armor')(loadout);
+    loadout = fillLoadoutFromEquipped(defs, store, 'Armor')(loadout);
 
     // Five equipped items, and the original item was left in place
     expect(loadout.items).toMatchObject([
@@ -528,7 +555,7 @@ describe('fillLoadoutFromEquipped', () => {
     )!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
-    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(loadout);
+    loadout = fillLoadoutFromEquipped(defs, store)(loadout);
 
     // Five equipped items, and the original item was left in place
     expect(loadout.items.length).toBe(13); // Subclass, weapons, armor, emblem, ship, ghost, sparrow
@@ -544,7 +571,7 @@ describe('fillLoadoutFromEquipped', () => {
   it('will not overwrite mods if they are already there', () => {
     let loadout = updateMods([1, 2, 3])(emptyLoadout);
 
-    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(loadout);
+    loadout = fillLoadoutFromEquipped(defs, store)(loadout);
 
     expect(loadout.parameters?.mods).toEqual([1, 2, 3]);
   });
@@ -554,7 +581,7 @@ describe('fillLoadoutFromEquipped', () => {
       artifactUnlocks: { unlockedItemHashes: [1], seasonNumber: 1 },
     })(emptyLoadout);
 
-    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(loadout);
+    loadout = fillLoadoutFromEquipped(defs, store)(loadout);
 
     expect(loadout.parameters?.artifactUnlocks).toEqual({
       unlockedItemHashes: [1],
@@ -647,7 +674,7 @@ describe('fillLoadoutFromUnequipped', () => {
 
 describe('clearBucketCategory', () => {
   it('clears the weapons category', () => {
-    let loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(emptyLoadout);
+    let loadout = fillLoadoutFromEquipped(defs, store)(emptyLoadout);
     loadout = clearBucketCategory(defs, 'Weapons')(loadout);
 
     expect(
@@ -662,7 +689,7 @@ describe('clearBucketCategory', () => {
   });
 
   it('clears the general category without clearing subclass', () => {
-    let loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(emptyLoadout);
+    let loadout = fillLoadoutFromEquipped(defs, store)(emptyLoadout);
     loadout = clearBucketCategory(defs, 'General')(loadout);
 
     expect(

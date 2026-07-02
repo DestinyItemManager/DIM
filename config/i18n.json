@@ -59,7 +59,8 @@
     "Reputation": "Reputation",
     "Unknown": "Unknown",
     "Vault": "Vault",
-    "Weapons": "Weapons"
+    "Weapons": "Weapons",
+    "Artifact": "Artifact"
   },
   "BulkNote": {
     "Title_one": "Change notes for 1 item",
@@ -624,6 +625,7 @@
     "AddStack": "Add another copy of this mod",
     "RemoveStack": "Remove a copy of this mod",
     "SelectSubclassOptions": "Customize subclass",
+    "SelectArtifactOptions": "Customize artifact",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
     "ShowGear": "{{class}} Armor",

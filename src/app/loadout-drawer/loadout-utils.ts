@@ -1,4 +1,3 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
@@ -86,11 +85,13 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
   BucketHashes.Ships,
   BucketHashes.Vehicle,
   BucketHashes.Emblems,
+  BucketHashes.Artifacts,
 ];
 
 // Bucket hashes, in order, that are contained within ingame loadouts
 const inGameLoadoutBuckets: BucketHashes[] = [
   BucketHashes.Subclass,
+  BucketHashes.Artifacts,
   BucketHashes.KineticWeapons,
   BucketHashes.EnergyWeapons,
   BucketHashes.PowerWeapons,
@@ -107,6 +108,7 @@ const inGameLoadoutBuckets: BucketHashes[] = [
  */
 export const singularBucketHashes = [
   BucketHashes.Subclass,
+  BucketHashes.Artifacts,
   BucketHashes.Emblems,
   BucketHashes.Emotes,
 ];
@@ -133,7 +135,7 @@ export function newLoadout(name: string, items: LoadoutItem[], classType?: Desti
 /**
  * Create a socket overrides structure from the item's currently plugged sockets.
  * This will ignore all default plugs except for abilities where the default values
- * will be included.
+ * will be included. Used for Subclass and Artifact sockets.
  */
 export function createSocketOverridesFromEquipped(item: DimItem) {
   if (item.sockets) {
@@ -177,11 +179,7 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
 /**
  * Create a new loadout that includes all the equipped items and mods on the character.
  */
-export function newLoadoutFromEquipped(
-  name: string,
-  dimStore: DimStore,
-  artifactUnlocks: LoadoutParameters['artifactUnlocks'],
-) {
+export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   const items = dimStore.items.filter(
     (item) =>
       item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash),
@@ -189,6 +187,9 @@ export function newLoadoutFromEquipped(
   const loadoutItems = items.map((i) => {
     const item = convertToLoadoutItem(i, true);
     if (i.bucket.hash === BucketHashes.Subclass) {
+      item.socketOverrides = createSocketOverridesFromEquipped(i);
+    }
+    if (i.bucket.hash === BucketHashes.Artifacts) {
       item.socketOverrides = createSocketOverridesFromEquipped(i);
     }
     return item;
@@ -200,12 +201,6 @@ export function newLoadoutFromEquipped(
   if (mods.length) {
     loadout.parameters = {
       mods,
-    };
-  }
-  if (artifactUnlocks?.unlockedItemHashes.length) {
-    loadout.parameters = {
-      ...loadout.parameters,
-      artifactUnlocks,
     };
   }
   // Save "fashion" mods for equipped items

@@ -67,6 +67,10 @@
   @include items-width(2);
 }
 
+.categoryArtifact {
+  @include items-width(1);
+}
+
 .missingItem {
   opacity: 0.3;
   height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});

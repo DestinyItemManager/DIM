@@ -20,13 +20,13 @@ export const D2Categories: {
   ],
   General: [
     BucketHashes.Subclass,
+    BucketHashes.Artifacts,
     BucketHashes.Ghost,
     BucketHashes.Emblems,
     BucketHashes.Ships,
     BucketHashes.Vehicle,
     BucketHashes.Emotes,
     BucketHashes.Finishers,
-    BucketHashes.Artifacts,
   ],
   Inventory: [BucketHashes.Accessories, BucketHashes.Consumables, BucketHashes.Modifications],
 };
