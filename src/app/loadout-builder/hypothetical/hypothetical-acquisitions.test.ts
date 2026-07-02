@@ -8,6 +8,7 @@ import {
   PlannerOwnedPiece,
   zeroArmorStats,
 } from './hypothetical-items';
+import { planForTargets, PlannerInputs, PlannerPiece } from './planner';
 
 /**
  * Synthetic-fixture tests for the acquisition planner — no manifest needed.
@@ -255,5 +256,99 @@ describe('mod and energy accounting', () => {
     expect(plan.keep).toHaveLength(5);
     expect(plan.minorModsPerStat[G]).toBe(2);
     expect(plan.modsPerStat[G]).toBe(0);
+  });
+});
+
+describe('planForTargets (worker orchestration)', () => {
+  function makePiece(
+    id: string,
+    statValues: Partial<Record<ArmorStatHashes, number>>,
+    isExotic = false,
+  ): PlannerPiece {
+    return { ...makeOwned(id, statValues), id, isExotic };
+  }
+
+  function makeInputs(overrides: Partial<PlannerInputs>): PlannerInputs {
+    return {
+      blocks: BLOCKS,
+      desiredStatRanges: makeRanges({ [G]: 150 }),
+      modStatTotals: zeroArmorStats(),
+      piecesByBucket: [[], [], [], [], []],
+      pinnedIds: [undefined, undefined, undefined, undefined, undefined],
+      exoticMode: { type: 'none' },
+      keepOwned: true,
+      setBonusRequirements: [],
+      numGeneralMods: 0,
+      lockedGeneralModCosts: [],
+      bucketSpecificCosts: [0, 0, 0, 0, 0],
+      ...overrides,
+    };
+  }
+
+  const farmTotalOf = (result: { farm: { count: number }[] }) =>
+    result.farm.reduce((total, { count }) => total + count, 0);
+
+  it('flags a locked exotic the user does not own and farms its slot', () => {
+    const result = planForTargets(makeInputs({ exoticMode: { type: 'locked', bucketIndex: 0 } }));
+    expect(result.exoticMissing).toBe(true);
+    expect(result.exoticId).toBeUndefined();
+    expect(result.shortfall).toBe(0);
+    expect(farmTotalOf(result)).toBe(5);
+  });
+
+  it('builds around the best owned copy of a locked exotic', () => {
+    const exotic = makePiece('geomag', { [G]: 30, [S]: 25 }, true);
+    const worse = makePiece('geomag-weak', { [G]: 30 }, true);
+    const result = planForTargets(
+      makeInputs({
+        piecesByBucket: [[], [], [worse, exotic], [], []],
+        desiredStatRanges: makeRanges({ [G]: 150, [S]: 25 }),
+        exoticMode: { type: 'locked', bucketIndex: 2 },
+      }),
+    );
+    expect(result.exoticMissing).toBe(false);
+    expect(result.exoticId).toBe('geomag');
+    expect(result.shortfall).toBe(0);
+    // The exotic covers its slot; the other four are farmed.
+    expect(farmTotalOf(result)).toBe(4);
+    expect(result.keepIds).not.toContain('geomag');
+  });
+
+  it('Any Exotic: tries each slot and picks the exotic that minimizes the gap', () => {
+    const weak = makePiece('weak-exotic', { [W]: 30 }, true);
+    const strong = makePiece('strong-exotic', { [G]: 30 }, true);
+    const result = planForTargets(
+      makeInputs({
+        piecesByBucket: [[weak], [strong], [], [], []],
+        desiredStatRanges: makeRanges({ [G]: 150 }),
+        exoticMode: { type: 'any' },
+      }),
+    );
+    // Only the Grenade exotic reaches 30 + 4×30 = 150.
+    expect(result.exoticId).toBe('strong-exotic');
+    expect(result.shortfall).toBe(0);
+    expect(result.anyExoticMissing).toBe(false);
+  });
+
+  it('Any Exotic with no owned exotics degrades to ideal drops plus a note', () => {
+    const result = planForTargets(makeInputs({ exoticMode: { type: 'any' } }));
+    expect(result.anyExoticMissing).toBe(true);
+    expect(result.exoticId).toBeUndefined();
+    expect(result.shortfall).toBe(0);
+    expect(farmTotalOf(result)).toBe(5);
+  });
+
+  it('Any Exotic respects a pinned exotic as the chosen one', () => {
+    const pinnedExotic = makePiece('pinned-exotic', { [W]: 30 }, true);
+    const betterExotic = makePiece('better-exotic', { [G]: 30 }, true);
+    const result = planForTargets(
+      makeInputs({
+        piecesByBucket: [[pinnedExotic], [betterExotic], [], [], []],
+        pinnedIds: ['pinned-exotic', undefined, undefined, undefined, undefined],
+        desiredStatRanges: makeRanges({ [G]: 120 }),
+        exoticMode: { type: 'any' },
+      }),
+    );
+    expect(result.exoticId).toBe('pinned-exotic');
   });
 });

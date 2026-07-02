@@ -289,8 +289,11 @@ describe('stat-target planner prototype (#11832)', () => {
         );
         expect(result.processInfo.numValidSets).toBeGreaterThan(0);
         const best = result.sets[0];
-        for (const [statHash, minStat] of Object.entries(targets)) {
-          expect(best.stats[Number(statHash) as ArmorStatHashes]).toBeGreaterThanOrEqual(minStat);
+        for (const statHash of armorStats) {
+          const minStat = targets[statHash];
+          if (minStat !== undefined) {
+            expect(best.stats[statHash]).toBeGreaterThanOrEqual(minStat);
+          }
         }
       } else {
         // The worker searches a subset of the planner's space, so any valid

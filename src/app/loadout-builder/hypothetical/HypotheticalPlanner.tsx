@@ -11,18 +11,18 @@ import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
-import { mapValues, sumBy } from 'app/utils/collections';
-import { compareBy, reverseComparator } from 'app/utils/comparators';
+import { filterMap, mapValues, sumBy } from 'app/utils/collections';
 import { getArmor3StatFocus } from 'app/utils/item-utils';
+import { errorLog } from 'app/utils/log';
 import { getArmorArchetype } from 'app/utils/socket-utils';
-import { memo, useCallback, useDeferredValue, useMemo, useState } from 'react';
+import { releaseProxy, wrap } from 'comlink';
+import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { allItemsSelector } from '../../inventory/selectors';
 import { useAutoMods } from '../process/useProcess';
 import {
   ArmorBucketHashes,
   ArmorEnergyRules,
-  ArmorStatHashes,
   ArmorStats,
   DesiredStatRange,
   ItemsByBucket,
@@ -31,31 +31,89 @@ import {
   PinnedItems,
 } from '../types';
 import {
-  AcquisitionPlan,
   assumedMasterworkStats,
   buildHypotheticalBlocks,
   deriveArmor3ArchetypeModel,
-  planMinimumAcquisitions,
-  PlannerOwnedPiece,
   SetBonusRequirement,
 } from './hypothetical-items';
 import * as styles from './HypotheticalPlanner.m.scss';
-
-/** How many owned candidates to consider per slot (plus set-bonus pieces). */
-const OWNED_PER_SLOT = 10;
-/** How many extra set-bonus candidates to consider per slot per required set. */
-const OWNED_PER_SLOT_PER_SET = 4;
-/** How many hypothetical stat blocks the owned search considers. */
-const MAX_BLOCKS = 24;
-/** Energy capacity of a masterworked piece. */
-const MAX_ENERGY = 10;
+import { PlannerExoticMode, PlannerInputs, PlannerPiece, PlannerResult } from './planner';
 
 const modEnergyCost = (mod: PluggableInventoryItemDefinition) =>
   mod.plug.energyCost?.energyCost ?? 0;
 
-interface MappedItem extends PlannerOwnedPiece {
-  item: DimItem;
-  isExotic: boolean;
+function createPlannerWorker() {
+  const instance = new Worker(
+    /* webpackChunkName: "planner-worker" */ new URL('./PlannerWorker', import.meta.url),
+    { type: 'module' },
+  );
+  const worker = wrap<import('./PlannerWorker').PlannerWorker>(instance);
+  const cleanup = () => {
+    worker[releaseProxy]();
+    instance.terminate();
+  };
+  return { worker, cleanup };
+}
+
+interface PlanState {
+  result: PlannerResult;
+  planTimeMs: number;
+}
+
+/**
+ * Run the planner in a web worker whenever the inputs change, keeping the
+ * last result while a new one computes. A still-running computation is
+ * terminated (worker and all) when new inputs arrive so stale work never
+ * blocks fresh work.
+ */
+function usePlannerWorker(inputs: PlannerInputs | undefined): PlanState | undefined {
+  const [planState, setPlanState] = useState<PlanState>();
+  const workerRef = useRef<ReturnType<typeof createPlannerWorker>>(undefined);
+  const busyRef = useRef(false);
+
+  // Terminate the worker on unmount.
+  useEffect(
+    () => () => {
+      workerRef.current?.cleanup();
+      workerRef.current = undefined;
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (!inputs) {
+      setPlanState(undefined);
+      return;
+    }
+    if (busyRef.current) {
+      // The previous computation is still running on stale inputs — kill it.
+      workerRef.current?.cleanup();
+      workerRef.current = undefined;
+    }
+    workerRef.current ??= createPlannerWorker();
+    busyRef.current = true;
+    let cancelled = false;
+    const start = performance.now();
+    workerRef.current.worker.planForTargets(inputs).then(
+      (result) => {
+        busyRef.current = false;
+        if (!cancelled) {
+          setPlanState({ result, planTimeMs: performance.now() - start });
+        }
+      },
+      (e: unknown) => {
+        busyRef.current = false;
+        if (!cancelled) {
+          errorLog('planner prototype', 'planner worker failed', e);
+        }
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [inputs]);
+
+  return planState;
 }
 
 /**
@@ -64,7 +122,8 @@ interface MappedItem extends PlannerOwnedPiece {
  * Answers "what armor do I still need to farm to hit these stat targets?"
  * Keeps as many owned pieces as possible (the locked exotic, pinned items,
  * and pieces contributing to required set bonuses included) and fills the
- * remaining slots with ideal hypothetical drops.
+ * remaining slots with ideal hypothetical drops. The search itself runs in a
+ * web worker (see planner.ts / PlannerWorker.ts).
  */
 export default memo(function HypotheticalPlanner({
   desiredStatRanges,
@@ -154,38 +213,46 @@ export default memo(function HypotheticalPlanner({
     [defs],
   );
 
-  // Assumed stats etc. for every filtered item, computed once per inventory
-  // change rather than per stat-slider change.
-  const mappedByBucket = useMemo(
-    () =>
-      ArmorBucketHashes.map((bucketHash, bucketIdx) =>
-        filteredItems[bucketHash]
-          // Guard against stat-less (e.g. classified) items poisoning sums with NaN
-          .filter((item) => item.stats?.length)
-          .map((item): MappedItem => ({
-            item,
+  // Plain candidate pieces for the worker, plus the id → DimItem mapping to
+  // resolve its answer back to real items. Computed once per inventory change
+  // rather than per stat-slider change.
+  const mapped = useMemo(() => {
+    const itemsById = new Map<string, DimItem>();
+    const piecesByBucket = ArmorBucketHashes.map((bucketHash, bucketIdx) =>
+      filteredItems[bucketHash]
+        // Guard against stat-less (e.g. classified) items poisoning sums with NaN
+        .filter((item) => item.stats?.length)
+        .map((item): PlannerPiece => {
+          itemsById.set(item.id, item);
+          return {
+            id: item.id,
             isExotic: item.isExotic,
             name: describeItem(item),
             stats: assumedMasterworkStats(item, armorEnergyRules) as ArmorStats,
             setBonusHash: item.setBonus?.hash,
             energy:
               calculateAssumedItemEnergy(item, armorEnergyRules) - bucketSpecificCosts[bucketIdx],
-          })),
-      ),
-    [filteredItems, armorEnergyRules, describeItem, bucketSpecificCosts],
-  );
+          };
+        }),
+    );
+    return { piecesByBucket, itemsById };
+  }, [filteredItems, armorEnergyRules, describeItem, bucketSpecificCosts]);
 
-  const plan = useMemo(() => {
+  const inputs = useMemo((): PlannerInputs | undefined => {
     if (!modelAndBlocks || !hasTargets) {
       return undefined;
     }
-    const start = performance.now();
 
-    const enabledStats = deferredStatRanges
-      .filter((r) => r.maxStat > 0)
-      .map(({ statHash }): ArmorStatHashes => statHash);
-    const statTotal = (stats: ArmorStats) =>
-      enabledStats.reduce((total, statHash) => total + stats[statHash], 0);
+    let exoticMode: PlannerExoticMode = { type: 'none' };
+    if (lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC) {
+      exoticMode = { type: 'any' };
+    } else if (lockedExoticHash !== undefined && lockedExoticHash > 0) {
+      const bucketHash = defs.InventoryItem.get(lockedExoticHash)?.inventory?.bucketTypeHash;
+      const bucketIndex = bucketHash !== undefined ? ArmorBucketHashes.indexOf(bucketHash) : -1;
+      if (bucketIndex >= 0) {
+        exoticMode = { type: 'locked', bucketIndex };
+      }
+    }
 
     const setBonusRequirements: SetBonusRequirement[] = Object.keys(setBonuses)
       .map((setHash) => ({
@@ -194,163 +261,21 @@ export default memo(function HypotheticalPlanner({
       }))
       .filter((r) => r.count > 0);
 
-    const modStatTotals = mapValues(modStatChanges, (stat) => stat.value);
-    const lockedGeneralModCosts = lockedModMap.generalMods.map(modEnergyCost);
-    // Mirror the worker: auto stat mods use the general sockets not taken by
-    // user-locked general mods, and none at all when the toggle is off.
-    const numGeneralMods = autoStatMods ? Math.max(0, 5 - lockedModMap.generalMods.length) : 0;
-
-    // Run one acquisition plan with the given exotic (or none) locked into its
-    // slot. Owned candidates per remaining slot: pinned items are locked in;
-    // else the best pieces overall plus the best pieces from each required set
-    // so set bonuses stay satisfiable. With keepOwned off, unpinned slots are
-    // planned as ideal drops.
-    const planWithExotic = (
-      exoticEntry: MappedItem | undefined,
-      exoticBucketHash: number | undefined,
-    ): AcquisitionPlan<MappedItem> => {
-      const remainingBucketHashes = ArmorBucketHashes.filter(
-        (bucketHash) => !(exoticEntry && bucketHash === exoticBucketHash),
-      );
-      const requiredSlots: number[] = [];
-      const ownedByBucket = remainingBucketHashes.map((bucketHash, slotIndex) => {
-        const entries = mappedByBucket[ArmorBucketHashes.indexOf(bucketHash)];
-        const pinned = pinnedItems[bucketHash];
-        if (pinned) {
-          const pinnedEntry = entries.find((e) => e.item.id === pinned.id);
-          if (pinnedEntry) {
-            requiredSlots.push(slotIndex);
-            return [pinnedEntry];
-          }
-          return [];
-        }
-        if (!keepOwned || (!exoticEntry && bucketHash === exoticBucketHash)) {
-          return [];
-        }
-        const scored = entries
-          .filter((entry) => !entry.isExotic)
-          .map((entry) => ({ entry, total: statTotal(entry.stats) }));
-        scored.sort(reverseComparator(compareBy((s) => s.total)));
-        const kept = new Set(scored.slice(0, OWNED_PER_SLOT).map((s) => s.entry));
-        for (const { setHash } of setBonusRequirements) {
-          for (const { entry } of scored
-            .filter((s) => s.entry.setBonusHash === setHash)
-            .slice(0, OWNED_PER_SLOT_PER_SET)) {
-            kept.add(entry);
-          }
-        }
-        return [...kept];
-      });
-      const farmedEnergyBySlot = remainingBucketHashes.map(
-        (bucketHash) => MAX_ENERGY - bucketSpecificCosts[ArmorBucketHashes.indexOf(bucketHash)],
-      );
-
-      return planMinimumAcquisitions({
-        blocks: modelAndBlocks.blocks,
-        desiredStatRanges: deferredStatRanges,
-        modStatTotals,
-        fixedPieces: exoticEntry ? [exoticEntry.stats] : [],
-        ownedByBucket,
-        requiredSlots,
-        setBonusRequirements,
-        numGeneralMods,
-        searchBlockLimit: MAX_BLOCKS,
-        autoModCosts,
-        lockedGeneralModCosts,
-        fixedPieceEnergies: exoticEntry ? [exoticEntry.energy ?? MAX_ENERGY] : [],
-        farmedEnergyBySlot,
-      });
-    };
-
-    const farmCount = (p: AcquisitionPlan) => sumBy(p.farm, ({ count }) => count);
-    const bestExoticIn = (bucketIdx: number) => {
-      let best: MappedItem | undefined;
-      for (const entry of mappedByBucket[bucketIdx]) {
-        if (entry.isExotic && (!best || statTotal(entry.stats) > statTotal(best.stats))) {
-          best = entry;
-        }
-      }
-      return best;
-    };
-
-    let result: AcquisitionPlan<MappedItem>;
-    let exoticItem: DimItem | undefined;
-    let exoticMissing = false;
-    let anyExoticMissing = false;
-    let combosTotal = 0;
-
-    if (lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC) {
-      // "Any Exotic": the set must include one exotic. Try each slot with the
-      // user's best owned exotic there and take the best outcome. A pinned
-      // exotic decides the slot; a pinned legendary rules its slot out.
-      const pinnedExoticBucket = ArmorBucketHashes.findIndex((bucketHash) =>
-        Boolean(pinnedItems[bucketHash]?.isExotic),
-      );
-      const candidates: { entry: MappedItem; bucketIdx: number }[] = [];
-      for (let bucketIdx = 0; bucketIdx < ArmorBucketHashes.length; bucketIdx++) {
-        if (pinnedExoticBucket >= 0 && bucketIdx !== pinnedExoticBucket) {
-          continue;
-        }
-        const pinned = pinnedItems[ArmorBucketHashes[bucketIdx]];
-        if (pinned && !pinned.isExotic) {
-          continue;
-        }
-        const entry = pinned
-          ? mappedByBucket[bucketIdx].find((e) => e.item.id === pinned.id)
-          : bestExoticIn(bucketIdx);
-        if (entry) {
-          candidates.push({ entry, bucketIdx });
-        }
-      }
-      let best: { plan: AcquisitionPlan<MappedItem>; entry: MappedItem } | undefined;
-      for (const { entry, bucketIdx } of candidates) {
-        const candidatePlan = planWithExotic(entry, ArmorBucketHashes[bucketIdx]);
-        combosTotal += candidatePlan.combosExamined;
-        if (
-          !best ||
-          candidatePlan.shortfall < best.plan.shortfall ||
-          (candidatePlan.shortfall === best.plan.shortfall &&
-            farmCount(candidatePlan) < farmCount(best.plan))
-        ) {
-          best = { plan: candidatePlan, entry };
-        }
-      }
-      if (best) {
-        result = best.plan;
-        exoticItem = best.entry.item;
-      } else {
-        // No owned exotic anywhere — plan ideal drops and say one must be exotic.
-        result = planWithExotic(undefined, undefined);
-        combosTotal += result.combosExamined;
-        anyExoticMissing = true;
-      }
-    } else {
-      // The locked exotic occupies its slot with the user's best owned copy.
-      // filterItems already restricted the exotic's bucket to matching copies
-      // (by hash or name), so any exotic there is the locked one.
-      const exoticDef =
-        lockedExoticHash !== undefined && lockedExoticHash > 0
-          ? defs.InventoryItem.get(lockedExoticHash)
-          : undefined;
-      const exoticBucketHash = exoticDef?.inventory?.bucketTypeHash;
-      const bucketIdx =
-        exoticBucketHash !== undefined ? ArmorBucketHashes.indexOf(exoticBucketHash) : -1;
-      const exoticEntry = bucketIdx >= 0 ? bestExoticIn(bucketIdx) : undefined;
-      // The user locked an exotic they have no available copy of — its slot
-      // must be farmed (approximated by an ideal legendary block) and we say so.
-      exoticMissing = exoticBucketHash !== undefined && !exoticEntry;
-      result = planWithExotic(exoticEntry, exoticBucketHash);
-      combosTotal += result.combosExamined;
-      exoticItem = exoticEntry?.item;
-    }
-
     return {
-      ...result,
-      combosExamined: combosTotal,
-      exoticItem,
-      exoticMissing,
-      anyExoticMissing,
-      planTimeMs: performance.now() - start,
+      blocks: modelAndBlocks.blocks,
+      desiredStatRanges: deferredStatRanges,
+      modStatTotals: mapValues(modStatChanges, (stat) => stat.value),
+      piecesByBucket: mapped.piecesByBucket,
+      pinnedIds: ArmorBucketHashes.map((bucketHash) => pinnedItems[bucketHash]?.id),
+      exoticMode,
+      keepOwned,
+      setBonusRequirements,
+      // Mirror the worker: auto stat mods use the general sockets not taken by
+      // user-locked general mods, and none at all when the toggle is off.
+      numGeneralMods: autoStatMods ? Math.max(0, 5 - lockedModMap.generalMods.length) : 0,
+      autoModCosts,
+      lockedGeneralModCosts: lockedModMap.generalMods.map(modEnergyCost),
+      bucketSpecificCosts,
     };
   }, [
     modelAndBlocks,
@@ -358,7 +283,7 @@ export default memo(function HypotheticalPlanner({
     deferredStatRanges,
     lockedExoticHash,
     defs,
-    mappedByBucket,
+    mapped,
     pinnedItems,
     setBonuses,
     modStatChanges,
@@ -369,13 +294,18 @@ export default memo(function HypotheticalPlanner({
     keepOwned,
   ]);
 
+  const planState = usePlannerWorker(inputs);
+
   if (!modelAndBlocks) {
     return null;
   }
 
+  const plan = planState?.result;
   const farmCount = plan?.farm.reduce((total, { count }) => total + count, 0) ?? 0;
   const keepItems: DimItem[] = plan
-    ? [...(plan.exoticItem ? [plan.exoticItem] : []), ...plan.keep.map((p) => p.item)]
+    ? filterMap([plan.exoticId, ...plan.keepIds], (id) =>
+        id !== undefined ? mapped.itemsById.get(id) : undefined,
+      )
     : [];
   // The worker is ground truth for owned armor — it models tuning mods,
   // artifice sockets and every exotic copy, which the planner's model doesn't.
@@ -416,107 +346,117 @@ export default memo(function HypotheticalPlanner({
       <CheckButton name="lo-farming-planner-keep-owned" checked={keepOwned} onChange={setKeepOwned}>
         {t('LoadoutBuilder.FarmingPlannerKeepOwned')}
       </CheckButton>
-      {!hasTargets || !plan ? (
+      {!hasTargets ? (
         <div className={styles.fineprint}>{t('LoadoutBuilder.FarmingPlannerNoTargets')}</div>
       ) : (
-        <>
-          <div className={styles.verdict}>
-            {alreadyBuildable
-              ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
-              : plan.shortfall > 0
-                ? t('LoadoutBuilder.FarmingPlannerUnreachable', { points: plan.shortfall })
-                : farmCount === 0
-                  ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
-                  : keepOwned
-                    ? t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount })
-                    : t('LoadoutBuilder.FarmingPlannerNeedIdeal', { count: farmCount })}
-          </div>
-          {!alreadyBuildable && farmCount > 0 && (
-            <ul className={styles.recipe}>
-              {plan.farm.map(({ block, count }) => {
-                const archetypeDef = defs.InventoryItem.get(block.archetypePlugHash);
-                const statDef = defs.Stat.get(block.tertiaryStatHash);
-                return (
-                  <li key={`${block.archetypePlugHash}-${block.tertiaryStatHash}`}>
-                    <span className={styles.count}>{count}×</span>
-                    {archetypeDef && (
-                      <BungieImage
-                        className={styles.icon}
-                        src={archetypeDef.displayProperties.icon}
-                      />
-                    )}
-                    <span>{block.archetypeName}</span>
-                    <span className={styles.tertiary}>
-                      {statDef && (
-                        <BungieImage className={styles.icon} src={statDef.displayProperties.icon} />
-                      )}
-                      {statDef?.displayProperties.name}
-                    </span>
-                  </li>
-                );
-              })}
-              {plan.farmFromSets.map(({ setHash, count }) => (
-                <li key={setHash} className={styles.setNote}>
-                  {t('LoadoutBuilder.FarmingPlannerFromSet', {
-                    numPieces: count,
-                    set: defs.EquipableItemSet.get(setHash)?.displayProperties.name ?? setHash,
-                  })}
-                </li>
-              ))}
-            </ul>
-          )}
-          {!alreadyBuildable && modLines.length > 0 && (
-            <ul className={styles.recipe}>
-              {modLines.map(({ key, numMods, label, statDef }) => (
-                <li key={key}>
-                  <span className={styles.count}>{numMods}×</span>
-                  {statDef && (
-                    <BungieImage className={styles.icon} src={statDef.displayProperties.icon} />
-                  )}
-                  <span>{label}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-          {!alreadyBuildable && (farmCount > 0 || plan.shortfall > 0) && keepItems.length > 0 && (
-            <div className={styles.keep}>
-              {t('LoadoutBuilder.FarmingPlannerKeep')}
-              <div className={styles.keepItems}>
-                {keepItems.map((item) => (
-                  <DraggableInventoryItem item={item} key={item.id}>
-                    <ItemPopupTrigger item={item}>
-                      {(ref, onClick) => (
-                        <ConnectedInventoryItem item={item} onClick={onClick} ref={ref} />
-                      )}
-                    </ItemPopupTrigger>
-                  </DraggableInventoryItem>
-                ))}
-              </div>
+        plan &&
+        planState && (
+          <>
+            <div className={styles.verdict}>
+              {alreadyBuildable
+                ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
+                : plan.shortfall > 0
+                  ? t('LoadoutBuilder.FarmingPlannerUnreachable', { points: plan.shortfall })
+                  : farmCount === 0
+                    ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
+                    : keepOwned
+                      ? t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount })
+                      : t('LoadoutBuilder.FarmingPlannerNeedIdeal', { count: farmCount })}
             </div>
-          )}
-          {!alreadyBuildable && plan.exoticMissing && (
-            <div className={styles.keep}>{t('LoadoutBuilder.FarmingPlannerExoticMissing')}</div>
-          )}
-          {!alreadyBuildable && plan.anyExoticMissing && (
-            <div className={styles.keep}>{t('LoadoutBuilder.FarmingPlannerAnyExoticMissing')}</div>
-          )}
-          {!alreadyBuildable && plan.setBonusUnsatisfiable && (
-            <div className={styles.verdict}>{t('LoadoutBuilder.FarmingPlannerSetImpossible')}</div>
-          )}
-          <div className={styles.fineprint}>
-            {keepOwned
-              ? t('LoadoutBuilder.FarmingPlannerFinePrint', {
-                  tier: modelAndBlocks.model.gearTier,
-                  combos: plan.combosExamined.toLocaleString(),
-                  time: Math.round(plan.planTimeMs),
-                })
-              : t('LoadoutBuilder.FarmingPlannerFinePrintIdeal', {
-                  tier: modelAndBlocks.model.gearTier,
-                  combos: plan.combosExamined.toLocaleString(),
-                  time: Math.round(plan.planTimeMs),
+            {!alreadyBuildable && farmCount > 0 && (
+              <ul className={styles.recipe}>
+                {plan.farm.map(({ block, count }) => {
+                  const archetypeDef = defs.InventoryItem.get(block.archetypePlugHash);
+                  const statDef = defs.Stat.get(block.tertiaryStatHash);
+                  return (
+                    <li key={`${block.archetypePlugHash}-${block.tertiaryStatHash}`}>
+                      <span className={styles.count}>{count}×</span>
+                      {archetypeDef && (
+                        <BungieImage
+                          className={styles.icon}
+                          src={archetypeDef.displayProperties.icon}
+                        />
+                      )}
+                      <span>{block.archetypeName}</span>
+                      <span className={styles.tertiary}>
+                        {statDef && (
+                          <BungieImage
+                            className={styles.icon}
+                            src={statDef.displayProperties.icon}
+                          />
+                        )}
+                        {statDef?.displayProperties.name}
+                      </span>
+                    </li>
+                  );
                 })}
-          </div>
-        </>
+                {plan.farmFromSets.map(({ setHash, count }) => (
+                  <li key={setHash} className={styles.setNote}>
+                    {t('LoadoutBuilder.FarmingPlannerFromSet', {
+                      numPieces: count,
+                      set: defs.EquipableItemSet.get(setHash)?.displayProperties.name ?? setHash,
+                    })}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!alreadyBuildable && modLines.length > 0 && (
+              <ul className={styles.recipe}>
+                {modLines.map(({ key, numMods, label, statDef }) => (
+                  <li key={key}>
+                    <span className={styles.count}>{numMods}×</span>
+                    {statDef && (
+                      <BungieImage className={styles.icon} src={statDef.displayProperties.icon} />
+                    )}
+                    <span>{label}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!alreadyBuildable && (farmCount > 0 || plan.shortfall > 0) && keepItems.length > 0 && (
+              <div className={styles.keep}>
+                {t('LoadoutBuilder.FarmingPlannerKeep')}
+                <div className={styles.keepItems}>
+                  {keepItems.map((item) => (
+                    <DraggableInventoryItem item={item} key={item.id}>
+                      <ItemPopupTrigger item={item}>
+                        {(ref, onClick) => (
+                          <ConnectedInventoryItem item={item} onClick={onClick} ref={ref} />
+                        )}
+                      </ItemPopupTrigger>
+                    </DraggableInventoryItem>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!alreadyBuildable && plan.exoticMissing && (
+              <div className={styles.keep}>{t('LoadoutBuilder.FarmingPlannerExoticMissing')}</div>
+            )}
+            {!alreadyBuildable && plan.anyExoticMissing && (
+              <div className={styles.keep}>
+                {t('LoadoutBuilder.FarmingPlannerAnyExoticMissing')}
+              </div>
+            )}
+            {!alreadyBuildable && plan.setBonusUnsatisfiable && (
+              <div className={styles.verdict}>
+                {t('LoadoutBuilder.FarmingPlannerSetImpossible')}
+              </div>
+            )}
+            <div className={styles.fineprint}>
+              {keepOwned
+                ? t('LoadoutBuilder.FarmingPlannerFinePrint', {
+                    tier: modelAndBlocks.model.gearTier,
+                    combos: plan.combosExamined.toLocaleString(),
+                    time: Math.round(planState.planTimeMs),
+                  })
+                : t('LoadoutBuilder.FarmingPlannerFinePrintIdeal', {
+                    tier: modelAndBlocks.model.gearTier,
+                    combos: plan.combosExamined.toLocaleString(),
+                    time: Math.round(planState.planTimeMs),
+                  })}
+            </div>
+          </>
+        )
       )}
     </CollapsibleTitle>
   );
