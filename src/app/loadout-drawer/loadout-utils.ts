@@ -186,10 +186,7 @@ export function newLoadoutFromEquipped(name: string, dimStore: DimStore) {
   );
   const loadoutItems = items.map((i) => {
     const item = convertToLoadoutItem(i, true);
-    if (i.bucket.hash === BucketHashes.Subclass) {
-      item.socketOverrides = createSocketOverridesFromEquipped(i);
-    }
-    if (i.bucket.hash === BucketHashes.Artifacts) {
+    if (i.bucket.hash === BucketHashes.Subclass || i.bucket.hash === BucketHashes.Artifacts) {
       item.socketOverrides = createSocketOverridesFromEquipped(i);
     }
     return item;
