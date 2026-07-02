@@ -1,5 +1,10 @@
+import { createRequire } from 'module';
 import { pathsToModuleNameMapper } from 'ts-jest';
 import tsconfig from './tsconfig.json' with { type: 'json' };
+
+// Resolve babel-jest from the project root so it uses @babel/core@8 (the project's
+// version) rather than the @babel/core@7 version bundled with jest-config.
+const require = createRequire(import.meta.url);
 
 const tsconfigPaths = { ...tsconfig.compilerOptions.paths };
 delete tsconfigPaths['*'];
@@ -20,6 +25,11 @@ export default {
     'Library\\.mjs$': 'identity-obj-proxy',
   },
   setupFiles: ['./src/testing/jest-setup.cjs'],
+  // Explicitly resolve babel-jest from the project root to ensure @babel/core@8 is used.
+  // Without this, jest-config resolves babel-jest from its own node_modules which uses @babel/core@7.
+  transform: {
+    '\\.[jt]sx?$': require.resolve('babel-jest'),
+  },
   // Babel transform is required to handle some es modules?
   transformIgnorePatterns: [
     'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@floating-ui|@react-hook)',
