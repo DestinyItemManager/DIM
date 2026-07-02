@@ -82,6 +82,38 @@ export default (env: Env) => {
     },
   };
 
+  // Transform JS/TS/JSX with rspack's built-in SWC loader (replacing babel-loader).
+  // SWC handles TS/JSX natively, so ts-loader is dropped and TsCheckerRspackPlugin
+  // type-checks in every mode instead (see below).
+  // A few babel-only transforms have no SWC equivalent and are intentionally not
+  // carried over: optimize-clsx, object-to-json-parse, and
+  // transform-react-constant-elements. core-js is still injected via
+  // env.mode='usage'; SWC can't honor babel's fine-grained polyfill exclude list,
+  // but with our modern browserslist targets the difference is negligible.
+  const swcLoader = (tsx: boolean) => ({
+    loader: 'builtin:swc-loader',
+    options: {
+      jsc: {
+        parser: tsx ? { syntax: 'typescript', tsx: true } : { syntax: 'ecmascript', jsx: true },
+        loose: true,
+        externalHelpers: false,
+        transform: {
+          react: {
+            runtime: 'automatic',
+            development: env.dev,
+            refresh: env.dev,
+          },
+        },
+      },
+      env: {
+        targets: packageJson.browserslist,
+        mode: 'usage' as const,
+        coreJs: '3',
+      },
+      isModule: true,
+    },
+  });
+
   const config: Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
 
@@ -261,14 +293,7 @@ export default (env: Env) => {
         {
           test: /\.js$/,
           exclude: [/node_modules/, /browsercheck\.js$/],
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                cacheDirectory: true,
-              },
-            },
-          ],
+          use: [swcLoader(false)],
         },
         {
           // Optimize SVGs - mostly for destiny-icons.
@@ -365,23 +390,12 @@ export default (env: Env) => {
           ],
           type: 'javascript/auto',
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by SWC.
+        // Type-checking is handled separately by TsCheckerRspackPlugin (see below).
         {
           test: /\.tsx?$/,
           exclude: [/testing/, /\.test\.ts$/],
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                cacheDirectory: true,
-              },
-            },
-            env.dev
-              ? null
-              : {
-                  loader: 'ts-loader',
-                },
-          ].filter((l) => l !== null),
+          use: [swcLoader(true)],
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
@@ -565,9 +579,11 @@ export default (env: Env) => {
     }),
   ];
 
+  // SWC strips types without checking them, so run the fork typechecker in every
+  // mode (in babel builds this ran inline via ts-loader for prod).
+  plugins.push(new TsCheckerRspackPlugin());
+
   if (env.dev) {
-    // In dev we use babel to compile TS, and fork off a separate typechecker
-    plugins.push(new TsCheckerRspackPlugin());
     plugins.push(new ReactRefreshPlugin());
   } else {
     // env.beta and env.release
