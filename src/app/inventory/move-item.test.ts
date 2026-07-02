@@ -3,7 +3,7 @@ import { buildFreshStores, getVault, setupMoveTestStore } from 'testing/move-ite
 import { getTestDefinitions, setupi18n } from 'testing/test-utils';
 import { moveItemTo } from './move-item';
 
-jest.mock('app/bungie-api/destiny2-api', () => ({
+rs.mock('app/bungie-api/destiny2-api', () => ({
   transfer: jest.fn().mockResolvedValue({}),
   equip: jest.fn().mockResolvedValue({}),
   equipItems: jest.fn().mockResolvedValue({}),

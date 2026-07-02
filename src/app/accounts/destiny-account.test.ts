@@ -8,7 +8,9 @@ import d1Profile from 'testing/data/d1profiles-2022-10-24.json';
 import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json';
 import { generatePlatforms } from './destiny-account';
 
-jest.mock('app/bungie-api/oauth-tokens', () => ({
+// rstest hoists mock calls only when it sees `rs.mock`/`rstest.mock` literally,
+// not the `jest` alias, so this test uses rs.mock under the rstest runner.
+rs.mock('app/bungie-api/oauth-tokens', () => ({
   getToken: (): Tokens =>
     ({
       accessToken: { value: 'foo' },

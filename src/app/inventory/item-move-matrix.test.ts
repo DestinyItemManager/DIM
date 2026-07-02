@@ -22,7 +22,7 @@ import { amountOfItem } from './stores-helpers';
 
 // Mock the Bungie.net write APIs so moves don't hit the network (see
 // item-move-service.test.ts for why resolving is enough).
-jest.mock('app/bungie-api/destiny2-api', () => ({
+rs.mock('app/bungie-api/destiny2-api', () => ({
   transfer: jest.fn().mockResolvedValue({}),
   equip: jest.fn().mockResolvedValue({}),
   equipItems: jest.fn(),

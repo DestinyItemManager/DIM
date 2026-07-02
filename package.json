@@ -11,6 +11,7 @@
   "type": "module",
   "scripts": {
     "test": "jest -i src/testing/precache-manifest.test.ts && jest --verbose --testPathIgnorePatterns=precache-manifest.test.ts",
+    "test:rstest": "rstest run src/testing/precache-manifest.test.ts && rstest run --exclude \"**/precache-manifest.test.ts\"",
     "lint": "pnpm run '/^lint:.*/'",
     "lint:eslint": "eslint src",
     "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --check",
@@ -93,6 +94,7 @@
     "@rspack/core": "^2.1.1",
     "@rspack/dev-server": "^2.1.0",
     "@rspack/plugin-react-refresh": "^2.0.2",
+    "@rstest/core": "^0.10.6",
     "@svgr/webpack": "^8.1.0",
     "@swc/core": "^1.15.43",
     "@swc/jest": "^0.2.39",

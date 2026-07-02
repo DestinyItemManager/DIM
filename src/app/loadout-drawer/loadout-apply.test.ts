@@ -20,7 +20,7 @@ import { getTestDefinitions, setupi18n } from 'testing/test-utils';
 // Mock the Bungie.net write APIs (and the post-apply character refresh) so
 // applying a loadout doesn't hit the network. The in-memory model is updated by
 // the reducer, so resolving is enough. (jest hoists this above the imports.)
-jest.mock('app/bungie-api/destiny2-api', () => ({
+rs.mock('app/bungie-api/destiny2-api', () => ({
   transfer: jest.fn().mockResolvedValue({}),
   equip: jest.fn().mockResolvedValue({}),
   equipItems: jest.fn().mockResolvedValue({}),

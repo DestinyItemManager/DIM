@@ -29,7 +29,7 @@ import { amountOfItem } from './stores-helpers';
 // reports success - the in-memory store model is updated by the reducer, not by
 // these responses, so resolving is enough to drive the move logic. (jest hoists
 // this above the imports above.)
-jest.mock('app/bungie-api/destiny2-api', () => ({
+rs.mock('app/bungie-api/destiny2-api', () => ({
   transfer: jest.fn().mockResolvedValue({}),
   equip: jest.fn().mockResolvedValue({}),
   equipItems: jest.fn(),
