@@ -182,10 +182,8 @@ describe('addItem', () => {
   it('clears legacy artifact unlocks when adding a new artifact', () => {
     const artifact = items.find((i) => i.bucket.hash === BucketHashes.Artifacts)!;
 
-    const loadout = addItem(
-      defs,
-      artifact,
-    )(setLoadoutParameters({ artifactUnlocks })(emptyLoadout));
+    let loadout = setLoadoutParameters({ artifactUnlocks })(emptyLoadout);
+    loadout = addItem(defs, artifact)(loadout);
 
     expect(loadout.parameters?.artifactUnlocks).toBeUndefined();
   });
@@ -576,17 +574,14 @@ describe('fillLoadoutFromEquipped', () => {
     expect(loadout.parameters?.mods).toEqual([1, 2, 3]);
   });
 
-  it('will not overwrite artifact unlocks if they are already there', () => {
+  it('does not preserve artifact unlocks when filling loadout', () => {
     let loadout = setLoadoutParameters({
       artifactUnlocks: { unlockedItemHashes: [1], seasonNumber: 1 },
     })(emptyLoadout);
 
     loadout = fillLoadoutFromEquipped(defs, store)(loadout);
 
-    expect(loadout.parameters?.artifactUnlocks).toEqual({
-      unlockedItemHashes: [1],
-      seasonNumber: 1,
-    });
+    expect(loadout.parameters?.artifactUnlocks).toBeUndefined();
   });
 });
 
