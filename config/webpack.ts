@@ -96,7 +96,6 @@ export default (env: Env) => {
       jsc: {
         parser: tsx ? { syntax: 'typescript', tsx: true } : { syntax: 'ecmascript', jsx: true },
         loose: true,
-        externalHelpers: false,
         transform: {
           react: {
             runtime: 'automatic',
@@ -110,6 +109,12 @@ export default (env: Env) => {
         mode: 'usage' as const,
         coreJs: '3',
       },
+      // Collect cross-module const enum info so exported const enums (notably the
+      // large src/data/d2/generated-enums.ts) are inlined at their use sites. SWC
+      // otherwise emits them as side-effectful objects with no /*#__PURE__*/
+      // annotation, which can't be tree-shaken and get duplicated into every
+      // importing chunk (including web workers).
+      ...(tsx ? { collectTypeScriptInfo: { exportedEnum: 'const-only' as const } } : {}),
       isModule: true,
     },
   });
