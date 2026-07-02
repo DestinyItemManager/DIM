@@ -310,39 +310,6 @@ export function hideCompletedRecords(node: DimPresentationNode): DimPresentation
   return node;
 }
 
-const ornamentTraitHashes = [TraitHashes.ItemOrnamentArmor, TraitHashes.ItemOrnamentWeapon];
-
-/** Whether this node's subtree contains only ornament collectibles. */
-function isOrnamentNode(node: DimPresentationNode): boolean {
-  if (node.childPresentationNodes?.length) {
-    return node.childPresentationNodes.every(isOrnamentNode);
-  }
-  return Boolean(
-    node.collectibles?.length &&
-    node.collectibles.every((c) =>
-      c.item.traitHashes?.some((h) => ornamentTraitHashes.includes(h)),
-    ),
-  );
-}
-
-/**
- * The hashes of every node in the tree, to seed the expanded path so the "only
- * uncollected" toggle reveals all matching items without the user drilling in. The
- * tree is already filtered to uncollected collectibles by this point. Ornament sections
- * are left collapsed since they hold far too many collectibles to auto-expand usefully;
- * individual nodes stay collapsible from there.
- */
-export function collectibleNodeHashes(node: DimPresentationNode, acc: number[] = []): number[] {
-  if (isOrnamentNode(node)) {
-    return acc;
-  }
-  acc.push(node.hash);
-  for (const child of node.childPresentationNodes ?? []) {
-    collectibleNodeHashes(child, acc);
-  }
-  return acc;
-}
-
 /** Filter the node tree down to only collectibles that haven't been acquired yet. */
 export function hideAcquiredCollectibles(node: DimPresentationNode): DimPresentationNode {
   if (node.childPresentationNodes) {
