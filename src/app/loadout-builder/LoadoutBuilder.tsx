@@ -385,18 +385,21 @@ export default memo(function LoadoutBuilder({
         lbDispatch={lbDispatch}
         className={styles.loadoutEditSection}
       />
-      <HypotheticalPlanner
-        desiredStatRanges={desiredStatRanges}
-        filteredItems={filteredItems}
-        pinnedItems={pinnedItems}
-        lockedExoticHash={lockedExoticHash}
-        setBonuses={setBonuses}
-        modStatChanges={modStatChanges}
-        armorEnergyRules={armorEnergyRules}
-        autoStatMods={autoStatMods}
-        numLockedGeneralMods={lockedModMap.generalMods.length}
-        className={styles.loadoutEditSection}
-      />
+      {$featureFlags.loFarmingPlanner && (
+        <HypotheticalPlanner
+          desiredStatRanges={desiredStatRanges}
+          filteredItems={filteredItems}
+          pinnedItems={pinnedItems}
+          lockedExoticHash={lockedExoticHash}
+          setBonuses={setBonuses}
+          modStatChanges={modStatChanges}
+          armorEnergyRules={armorEnergyRules}
+          autoStatMods={autoStatMods}
+          lockedModMap={lockedModMap}
+          storeId={selectedStore.id}
+          className={styles.loadoutEditSection}
+        />
+      )}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={2}>

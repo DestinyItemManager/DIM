@@ -6,6 +6,7 @@ import { sumBy } from 'app/utils/collections';
 import { getArmor3StatFocus, isArmor3 } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/memoize';
 import { getArmorArchetype } from 'app/utils/socket-utils';
+import armorArchetypeStats from 'data/d2/armor-archetypes.json';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ProcessItem } from '../process-worker/types';
 import {
@@ -14,6 +15,7 @@ import {
   ArmorStats,
   DesiredStatRange,
   majorStatBoost,
+  minorStatBoost,
   permissiveArmorEnergyRules,
 } from '../types';
 
@@ -107,23 +109,43 @@ export function assumedMasterworkStats(
 }
 
 /**
- * All armor archetypes from the manifest, with primary/secondary stats parsed
- * from the plug description ("Primary Stat: X\nSecondary Stat: Y"). The defs
- * carry no structured stat data for these plugs, so this only works on an
- * English manifest — good enough for a prototype; production would ship a
- * d2ai-generated table instead. Memoized per manifest since it scans the
+ * All armor archetypes from the manifest. The primary/secondary stats come
+ * from the generated armor-archetypes.json table (built by d2ai — the defs
+ * carry no structured stat data for these plugs). Archetypes the table
+ * doesn't know yet (a new season before a d2ai refresh) fall back to parsing
+ * the plug description ("Primary Stat: X\nSecondary Stat: Y"), which only
+ * works on an English manifest. Memoized per manifest since it scans the
  * whole InventoryItem table.
  */
 export const archetypesFromManifest = weakMemoize(
   (defs: D2ManifestDefinitions): Armor3Archetype[] => {
+    const archetypes: Armor3Archetype[] = [];
+    const known = new Set<number>();
+    for (const [plugHashStr, [primaryStatHash, secondaryStatHash]] of Object.entries(
+      armorArchetypeStats,
+    )) {
+      const plugHash = Number(plugHashStr);
+      const def = defs.InventoryItem.get(plugHash);
+      if (def?.displayProperties.name) {
+        known.add(plugHash);
+        archetypes.push({
+          plugHash,
+          name: def.displayProperties.name,
+          primaryStatHash,
+          secondaryStatHash,
+          observedTertiaries: new Set(),
+        });
+      }
+    }
+
     const statHashByName = new Map(
       armorStats.map((statHash) => [defs.Stat.get(statHash)?.displayProperties.name, statHash]),
     );
-    const archetypes: Armor3Archetype[] = [];
     for (const def of Object.values(defs.InventoryItem.getAll())) {
       if (
         def.plug?.plugCategoryHash !== PlugCategoryHashes.ArmorArchetypes ||
-        !def.displayProperties?.name
+        !def.displayProperties?.name ||
+        known.has(def.hash)
       ) {
         continue;
       }
@@ -377,31 +399,145 @@ export function pruneBlocksForTargets(
   return result;
 }
 
+/** Energy costs of the +10/+5 general stat mods for each stat. */
+export type PlannerAutoModCosts = {
+  [statHash in ArmorStatHashes]?: { major: number; minor: number };
+};
+
+/** Optional energy-aware mod modeling inputs. Without them, mods are free. */
+export interface PlannerModOptions {
+  /** Energy costs of the auto stat mods per stat. */
+  autoModCosts?: PlannerAutoModCosts;
+  /** Energy costs of user-locked general mods (they occupy sockets and energy). */
+  lockedGeneralModCosts?: number[];
+  /** Remaining energy of every piece in the set (fixed pieces + planned slots). */
+  energyBudgets?: number[];
+}
+
+/** Precomputed per-plan-call mod data, in enabled-stat order. */
+interface ModContext {
+  /** General sockets available for auto stat mods. */
+  numAutoMods: number;
+  majorCosts: number[];
+  minorCosts: number[];
+  /** Locked general mods' costs, descending — they claim pieces before auto mods. */
+  lockedCosts: number[];
+  /** The largest cost that might need to fit on a piece. */
+  maxCost: number;
+}
+
+function buildModContext(
+  numAutoMods: number,
+  statOrder: ArmorStatHashes[],
+  autoModCosts?: PlannerAutoModCosts,
+  lockedGeneralModCosts?: number[],
+): ModContext {
+  const majorCosts = statOrder.map((statHash) => autoModCosts?.[statHash]?.major ?? 0);
+  const minorCosts = statOrder.map((statHash) => autoModCosts?.[statHash]?.minor ?? 0);
+  const lockedCosts = [...(lockedGeneralModCosts ?? [])].sort((a, b) => b - a);
+  const maxCost = Math.max(0, ...majorCosts, ...minorCosts, ...lockedCosts);
+  return { numAutoMods, majorCosts, minorCosts, lockedCosts, maxCost };
+}
+
 /**
- * Greedily spend up to numGeneralMods major (+10) mods on the largest
- * remaining needs. Mutates `needed` and increments `mods`; returns the
- * remaining shortfall.
+ * Reserve pieces for the user's locked general mods (each piece has one
+ * general socket) and return the energy budgets left for auto mods, sorted
+ * descending. Each locked mod takes the smallest budget that fits it, keeping
+ * the big budgets available for auto mods. A locked mod nothing fits consumes
+ * the smallest budget anyway — the planner errs on the optimistic side.
+ */
+function budgetsAfterLockedMods(budgets: number[], ctx: ModContext): number[] {
+  const remaining = [...budgets].sort((a, b) => b - a);
+  for (const cost of ctx.lockedCosts) {
+    if (!remaining.length) {
+      break;
+    }
+    let pick = remaining.length - 1;
+    for (let i = remaining.length - 1; i >= 0; i--) {
+      if (remaining[i] >= cost) {
+        pick = i;
+        break;
+      }
+    }
+    remaining.copyWithin(pick, pick + 1);
+    remaining.length--;
+  }
+  return remaining;
+}
+
+/**
+ * Greedily spend up to ctx.numAutoMods general stat mods (+10 major or +5
+ * minor) on the largest remaining needs. When `budgets` is given (descending,
+ * after locked general mods), every mod must fit the energy of some remaining
+ * piece; without it mods are unconstrained. Mutates `needed`, `majors`,
+ * `minors` and `budgets`; returns the remaining shortfall.
  */
 function applyGreedyMods(
   needed: number[],
-  mods: number[],
+  majors: number[],
+  minors: number[],
   shortfall: number,
-  numGeneralMods: number,
+  ctx: ModContext,
+  budgets?: number[],
 ): number {
-  for (let i = 0; i < numGeneralMods && shortfall > 0; i++) {
-    let biggest = 0;
-    for (let s = 1; s < needed.length; s++) {
-      if (needed[s] > needed[biggest]) {
-        biggest = s;
-      }
-    }
-    const reduction = Math.min(majorStatBoost, needed[biggest]);
-    if (reduction === 0) {
+  for (let socket = 0; socket < ctx.numAutoMods && shortfall > 0; socket++) {
+    if (budgets?.length === 0) {
       break;
     }
-    needed[biggest] -= reduction;
-    shortfall -= reduction;
-    mods[biggest]++;
+    let bestStat = -1;
+    let bestReduction = 0;
+    let bestCost = 0;
+    let bestIsMajor = true;
+    for (let s = 0; s < needed.length; s++) {
+      const need = needed[s];
+      if (need === 0) {
+        continue;
+      }
+      let reduction = need > majorStatBoost ? majorStatBoost : need;
+      let cost = ctx.majorCosts[s];
+      let isMajor = true;
+      // An equal-reduction minor is strictly better when it's cheaper.
+      if (need <= minorStatBoost && ctx.minorCosts[s] <= cost) {
+        cost = ctx.minorCosts[s];
+        isMajor = false;
+      }
+      // budgets[0] is the largest remaining budget — the mod fits iff it fits there.
+      if (budgets && budgets[0] < cost) {
+        // The preferred mod doesn't fit anywhere; fall back to the minor.
+        if (isMajor && budgets[0] >= ctx.minorCosts[s]) {
+          reduction = need > minorStatBoost ? minorStatBoost : need;
+          cost = ctx.minorCosts[s];
+          isMajor = false;
+        } else {
+          continue;
+        }
+      }
+      if (reduction > bestReduction || (reduction === bestReduction && cost < bestCost)) {
+        bestStat = s;
+        bestReduction = reduction;
+        bestCost = cost;
+        bestIsMajor = isMajor;
+      }
+    }
+    if (bestStat < 0) {
+      break;
+    }
+    needed[bestStat] -= bestReduction;
+    shortfall -= bestReduction;
+    if (bestIsMajor) {
+      majors[bestStat]++;
+    } else {
+      minors[bestStat]++;
+    }
+    if (budgets) {
+      // Consume the smallest budget that fits, allocation-free.
+      let pick = budgets.length - 1;
+      while (budgets[pick] < bestCost) {
+        pick--;
+      }
+      budgets.copyWithin(pick, pick + 1);
+      budgets.length--;
+    }
   }
   return shortfall;
 }
@@ -433,6 +569,8 @@ export interface HypotheticalPlan {
   armorTotals: ArmorStats;
   /** Number of +10 general stat mods assigned per stat. */
   modsPerStat: ArmorStats;
+  /** Number of +5 general stat mods assigned per stat. */
+  minorModsPerStat: ArmorStats;
   /** How many 5-piece compositions were examined. */
   combosExamined: number;
 }
@@ -448,8 +586,9 @@ export interface HypotheticalPlan {
  * combinations instead of n^5 — for n=48 that's ~2.6M instead of ~255M.
  *
  * Simplifications vs. the real worker (fine for a feasibility prototype):
- * set bonuses, tuning mods, and mod energy are ignored; stat mods are modeled
- * as up to numGeneralMods majors (+10) assigned greedily.
+ * set bonuses and tuning mods are ignored; stat mods are up to numGeneralMods
+ * majors (+10) or minors (+5) assigned greedily, respecting per-piece energy
+ * budgets when modOptions provides them.
  */
 export function planBestComposition(
   blocks: HypotheticalArmorBlock[],
@@ -457,6 +596,7 @@ export function planBestComposition(
   numGeneralMods = 5,
   baseStats?: ArmorStats,
   numSlots = 5,
+  modOptions?: PlannerModOptions,
 ): HypotheticalPlan {
   const n = blocks.length;
   // Ignored stats (max 0) are clamped to 0 and can't contribute to the score
@@ -470,18 +610,35 @@ export function planBestComposition(
   const blockStats = blocks.map((block) => statOrder.map((statHash) => block.stats[statHash]));
   const base = statOrder.map((statHash) => baseStats?.[statHash] ?? 0);
 
+  const ctx = buildModContext(
+    numGeneralMods,
+    statOrder,
+    modOptions?.autoModCosts,
+    modOptions?.lockedGeneralModCosts,
+  );
+  // Energy budgets only matter when some cost exceeds some piece's budget;
+  // otherwise every mod fits everywhere and we can skip the bookkeeping.
+  const energyBudgets = modOptions?.energyBudgets;
+  const autoBudgets =
+    energyBudgets && ctx.maxCost > Math.min(...energyBudgets)
+      ? budgetsAfterLockedMods(energyBudgets, ctx)
+      : undefined;
+  const budgetScratch = autoBudgets ? new Array<number>(autoBudgets.length) : undefined;
+
   let combosExamined = 0;
   let bestShortfall = Number.MAX_SAFE_INTEGER;
   let bestScore = -1;
   let bestIndices: number[] | undefined;
-  let bestMods: number[] | undefined;
+  let bestMajors: number[] | undefined;
+  let bestMinors: number[] | undefined;
 
   // Partial sums hoisted out of the inner loops, plus scratch arrays, all
   // reused across iterations to avoid allocation. partials[d] holds the sum of
   // base + the first d chosen blocks.
   const partials = Array.from({ length: numSlots }, () => new Array<number>(numStats));
   const needed = new Array<number>(numStats);
-  const mods = new Array<number>(numStats);
+  const majors = new Array<number>(numStats);
+  const minors = new Array<number>(numStats);
   const indices = new Array<number>(numSlots);
 
   const evaluate = (prev: number[], lastIdx: number) => {
@@ -495,16 +652,26 @@ export function planBestComposition(
       needed[s] = need > 0 ? need : 0;
       shortfall += needed[s];
       score += value;
-      mods[s] = 0;
+      majors[s] = 0;
+      minors[s] = 0;
     }
     if (shortfall > 0) {
-      shortfall = applyGreedyMods(needed, mods, shortfall, numGeneralMods);
+      let budgets: number[] | undefined;
+      if (autoBudgets && budgetScratch) {
+        budgetScratch.length = autoBudgets.length;
+        for (let i = 0; i < autoBudgets.length; i++) {
+          budgetScratch[i] = autoBudgets[i];
+        }
+        budgets = budgetScratch;
+      }
+      shortfall = applyGreedyMods(needed, majors, minors, shortfall, ctx, budgets);
     }
     if (shortfall < bestShortfall || (shortfall === bestShortfall && score > bestScore)) {
       bestShortfall = shortfall;
       bestScore = score;
       bestIndices = indices.slice();
-      bestMods = mods.slice();
+      bestMajors = majors.slice();
+      bestMinors = minors.slice();
     }
   };
 
@@ -530,13 +697,14 @@ export function planBestComposition(
     enumerate(0, 0);
   }
 
-  if (!bestIndices || !bestMods) {
+  if (!bestIndices || !bestMajors || !bestMinors) {
     // No blocks or no enabled stats — nothing to plan.
     return {
       shortfall: 0,
       counts: [],
       armorTotals: zeroArmorStats(),
       modsPerStat: zeroArmorStats(),
+      minorModsPerStat: zeroArmorStats(),
       combosExamined,
     };
   }
@@ -553,7 +721,8 @@ export function planBestComposition(
     shortfall: bestShortfall,
     counts,
     armorTotals,
-    modsPerStat: modsToArmorStats(bestMods, statOrder),
+    modsPerStat: modsToArmorStats(bestMajors, statOrder),
+    minorModsPerStat: modsToArmorStats(bestMinors, statOrder),
     combosExamined,
   };
 }
@@ -565,6 +734,8 @@ export interface PlannerOwnedPiece {
   stats: ArmorStats;
   /** The set bonus this piece contributes to, if any. */
   setBonusHash?: number;
+  /** Energy left for stat mods (after locked bucket-specific mods). Default 10. */
+  energy?: number;
 }
 
 export interface SetBonusRequirement {
@@ -585,6 +756,8 @@ export interface AcquisitionPlan {
   setBonusUnsatisfiable: boolean;
   /** Number of +10 general stat mods assigned per stat. */
   modsPerStat: ArmorStats;
+  /** Number of +5 general stat mods assigned per stat. */
+  minorModsPerStat: ArmorStats;
   /** How many combinations were examined. */
   combosExamined: number;
 }
@@ -604,8 +777,9 @@ export interface AcquisitionPlan {
  * count owned pieces of the set plus farmed pieces (all archetypes drop from
  * all sources, so a farmed piece can always come from the required set).
  *
- * Same simplifications as planBestComposition: tuning mods and mod energy are
- * ignored; stat mods are up to `numGeneralMods` majors (+10) assigned greedily.
+ * Same simplifications as planBestComposition: tuning mods are ignored; stat
+ * mods are up to `numGeneralMods` majors (+10) or minors (+5) assigned
+ * greedily, respecting per-piece energy when the energy inputs are provided.
  */
 export function planMinimumAcquisitions({
   blocks,
@@ -617,6 +791,10 @@ export function planMinimumAcquisitions({
   setBonusRequirements = [],
   numGeneralMods = 5,
   searchBlockLimit = 24,
+  autoModCosts,
+  lockedGeneralModCosts,
+  fixedPieceEnergies,
+  farmedEnergyBySlot,
 }: {
   blocks: HypotheticalArmorBlock[];
   desiredStatRanges: DesiredStatRange[];
@@ -632,6 +810,14 @@ export function planMinimumAcquisitions({
   numGeneralMods?: number;
   /** Cap on blocks considered in the owned search (multisets are materialized). */
   searchBlockLimit?: number;
+  /** Energy costs of the auto stat mods; without this, mods are assumed free. */
+  autoModCosts?: PlannerAutoModCosts;
+  /** Energy costs of user-locked general mods. */
+  lockedGeneralModCosts?: number[];
+  /** Energy left for stat mods on each fixed piece (parallel to fixedPieces). Default 10. */
+  fixedPieceEnergies?: number[];
+  /** Energy a farmed piece would have in each slot (10 minus that slot's locked mod costs). */
+  farmedEnergyBySlot?: number[];
 }): AcquisitionPlan {
   const enabledRanges = desiredStatRanges.filter((r) => r.maxStat > 0);
   const numStats = enabledRanges.length;
@@ -650,6 +836,20 @@ export function planMinimumAcquisitions({
   const reqSetCounts = setBonusRequirements.map((r) => r.count);
   const reqSetTotal = sumBy(setBonusRequirements, (r) => r.count);
 
+  // Energy left for stat mods per piece (10 = a masterworked piece with no
+  // other mods; matches hypotheticalProcessItem).
+  const fixedEnergies = fixedPieces.map((_, i) => fixedPieceEnergies?.[i] ?? 10);
+  const farmedEnergies = ownedByBucket.map((_, i) => farmedEnergyBySlot?.[i] ?? 10);
+  const ctx = buildModContext(numGeneralMods, statOrder, autoModCosts, lockedGeneralModCosts);
+  // Energy budgets only bind when some mod cost exceeds some piece's budget.
+  let minBudget = Math.min(...fixedEnergies, ...farmedEnergies);
+  for (const list of ownedByBucket) {
+    for (const piece of list) {
+      minBudget = Math.min(minBudget, piece.energy ?? 10);
+    }
+  }
+  const constrained = ctx.maxCost > minBudget;
+
   // Exact ideal bound over the FULL block list, which doubles as the answer
   // when no owned candidates are provided (ideal mode) or when the targets
   // are unreachable even with perfect drops everywhere.
@@ -659,6 +859,11 @@ export function planMinimumAcquisitions({
     numGeneralMods,
     baseTotals,
     numSlots,
+    {
+      autoModCosts,
+      lockedGeneralModCosts,
+      energyBudgets: [...fixedEnergies, ...farmedEnergies],
+    },
   );
   const boundAsPlan = (): AcquisitionPlan => ({
     shortfall: bound.shortfall,
@@ -669,6 +874,7 @@ export function planMinimumAcquisitions({
       .filter((r) => r.count > 0),
     setBonusUnsatisfiable: reqSetTotal > numSlots,
     modsPerStat: bound.modsPerStat,
+    minorModsPerStat: bound.minorModsPerStat,
     combosExamined: bound.combosExamined,
   });
 
@@ -685,6 +891,7 @@ export function planMinimumAcquisitions({
     list.map((piece) => ({
       piece,
       stats: statOrder.map((statHash) => piece.stats[statHash]),
+      energy: piece.energy ?? 10,
     })),
   );
   // Component-wise best owned stats per bucket, for upper-bound pruning.
@@ -736,13 +943,15 @@ export function planMinimumAcquisitions({
     m: number;
     keptOwned: { bucket: number; index: number }[];
     multisetIndices: number[];
-    mods: number[];
+    majors: number[];
+    minors: number[];
     setDeficits: number[];
   }
   let best: Best | undefined;
 
   const needed = new Array<number>(numStats);
-  const mods = new Array<number>(numStats);
+  const majors = new Array<number>(numStats);
+  const minors = new Array<number>(numStats);
   const chosen: { bucket: number; index: number }[] = [];
   // Per-depth scratch arrays so the recursion allocates nothing per node.
   const partialStack = Array.from({ length: numSlots + 1 }, () => new Array<number>(numStats));
@@ -750,6 +959,11 @@ export function planMinimumAcquisitions({
     { length: numSlots + 1 },
     () => new Array<number>(reqSetHashes.length),
   );
+  // Energy budgets for the composition being evaluated (constrained mode only):
+  // set up once per leaf of the owned recursion, copied per evaluate since
+  // applyGreedyMods consumes them.
+  let leafAutoBudgets: number[] | undefined;
+  const budgetScratch: number[] = [];
 
   const evaluate = (partial: number[], multiset: MultisetEntry, m: number, deficits: number[]) => {
     combosExamined++;
@@ -761,10 +975,19 @@ export function planMinimumAcquisitions({
       needed[s] = need > 0 ? need : 0;
       shortfall += needed[s];
       score += value;
-      mods[s] = 0;
+      majors[s] = 0;
+      minors[s] = 0;
     }
     if (shortfall > 0) {
-      shortfall = applyGreedyMods(needed, mods, shortfall, numGeneralMods);
+      let budgets: number[] | undefined;
+      if (leafAutoBudgets) {
+        budgetScratch.length = leafAutoBudgets.length;
+        for (let i = 0; i < leafAutoBudgets.length; i++) {
+          budgetScratch[i] = leafAutoBudgets[i];
+        }
+        budgets = budgetScratch;
+      }
+      shortfall = applyGreedyMods(needed, majors, minors, shortfall, ctx, budgets);
     }
     let better = false;
     if (!best) {
@@ -781,7 +1004,8 @@ export function planMinimumAcquisitions({
         m,
         keptOwned: chosen.slice(),
         multisetIndices: multiset.indices,
-        mods: mods.slice(),
+        majors: majors.slice(),
+        minors: minors.slice(),
         setDeficits: deficits.slice(),
       };
     }
@@ -799,9 +1023,11 @@ export function planMinimumAcquisitions({
       const need = minStats[s] - Math.min(value, maxStats[s]);
       needed[s] = need > 0 ? need : 0;
       shortfall += needed[s];
-      mods[s] = 0;
+      majors[s] = 0;
+      minors[s] = 0;
     }
-    return shortfall <= 0 || applyGreedyMods(needed, mods, shortfall, numGeneralMods) <= 0;
+    // Deliberately unconstrained by energy — this must stay an upper bound.
+    return shortfall <= 0 || applyGreedyMods(needed, majors, minors, shortfall, ctx) <= 0;
   };
 
   const required = new Set(requiredSlots);
@@ -822,6 +1048,10 @@ export function planMinimumAcquisitions({
         partialStack[0][s] = base[s];
       }
       setCountsStack[0].fill(0);
+      // Energy budgets of the farmed pieces: the slots this subset doesn't keep.
+      const farmSlotEnergies = constrained
+        ? farmedEnergies.filter((_, slot) => !keepSlots.includes(slot))
+        : undefined;
       const recur = (depth: number) => {
         const partial = partialStack[depth];
         const setCounts = setCountsStack[depth];
@@ -840,6 +1070,16 @@ export function planMinimumAcquisitions({
             }
             setBonusUnsatisfiable = true;
           }
+          leafAutoBudgets = farmSlotEnergies
+            ? budgetsAfterLockedMods(
+                [
+                  ...fixedEnergies,
+                  ...chosen.map(({ bucket, index }) => ownedVecs[bucket][index].energy),
+                  ...farmSlotEnergies,
+                ],
+                ctx,
+              )
+            : undefined;
           for (const multiset of multisets) {
             evaluate(partial, multiset, m, deficits);
           }
@@ -888,7 +1128,8 @@ export function planMinimumAcquisitions({
       .map((r, i) => ({ setHash: r.setHash, count: result.setDeficits[i] }))
       .filter((r) => r.count > 0),
     setBonusUnsatisfiable,
-    modsPerStat: modsToArmorStats(result.mods, statOrder),
+    modsPerStat: modsToArmorStats(result.majors, statOrder),
+    minorModsPerStat: modsToArmorStats(result.minors, statOrder),
     combosExamined,
   };
 }
