@@ -60,13 +60,11 @@ export function getItemsAndSubclassFromLoadout(
     .find((li) => li.item.bucket.hash === BucketHashes.Artifacts);
 
   items = items.filter((li) => itemCanBeEquippedBy(li.item, store, true));
-  if (subclass) {
-    items = items.filter((li) => li.item.hash !== subclass.item.hash);
-    warnitems = warnitems.filter((li) => li.item.hash !== subclass.item.hash);
-  }
-  if (artifact) {
-    items = items.filter((li) => li.item.hash !== artifact.item.hash);
-    warnitems = warnitems.filter((li) => li.item.hash !== artifact.item.hash);
+  if (subclass || artifact) {
+    const valid = (li: ResolvedLoadoutItem) =>
+      li.item.hash !== subclass?.item.hash && li.item.hash !== artifact?.item.hash;
+    items = items.filter(valid);
+    warnitems = warnitems.filter(valid);
   }
 
   return [items, artifact, subclass, warnitems];
