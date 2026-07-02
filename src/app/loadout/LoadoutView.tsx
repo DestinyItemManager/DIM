@@ -125,6 +125,9 @@ export default function LoadoutView({
   );
   const power = loadoutPower(store, loadoutItemsByCategory);
 
+  const displayLoadout =
+    items.length > 0 || subclass || artifact || allMods.length > 0 || !isEmpty(modsByBucket);
+
   return (
     <div className={styles.loadout} id={loadout.id}>
       <div className={styles.title}>
@@ -171,7 +174,7 @@ export default function LoadoutView({
         <ColorDestinySymbols className={styles.loadoutNotes} text={loadout.notes} />
       )}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass || allMods.length > 0 || !isEmpty(modsByBucket)) && (
+        {displayLoadout && (
           <>
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection subclass={subclass} power={power} />
