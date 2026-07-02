@@ -318,9 +318,14 @@ export function planBestComposition(
   numGeneralMods = 5,
 ): HypotheticalPlan {
   const n = blocks.length;
-  const numStats = desiredStatRanges.length;
-  const statOrder = desiredStatRanges.map(({ statHash }): ArmorStatHashes => statHash);
-  // Per-block stat arrays in desiredStatRanges order, for tight inner loops.
+  // Ignored stats (max 0) are clamped to 0 and can't contribute to the score
+  // or the shortfall, so skip them entirely in the hot loop.
+  const enabledRanges = desiredStatRanges.filter((r) => r.maxStat > 0);
+  const numStats = enabledRanges.length;
+  const statOrder = enabledRanges.map(({ statHash }): ArmorStatHashes => statHash);
+  const minStats = enabledRanges.map((r) => r.minStat);
+  const maxStats = enabledRanges.map((r) => r.maxStat);
+  // Per-block stat arrays in enabled-stat order, for tight inner loops.
   const blockStats = blocks.map((block) => statOrder.map((statHash) => block.stats[statHash]));
 
   let combosExamined = 0;
@@ -329,28 +334,42 @@ export function planBestComposition(
   let bestIndices: number[] | undefined;
   let bestMods: number[] | undefined;
 
+  // Partial sums hoisted out of the inner loops, plus scratch arrays, all
+  // reused across iterations to avoid allocation.
+  const p1 = new Array<number>(numStats);
+  const p2 = new Array<number>(numStats);
+  const p3 = new Array<number>(numStats);
   const needed = new Array<number>(numStats);
   const mods = new Array<number>(numStats);
 
   for (let i0 = 0; i0 < n; i0++) {
+    const s0 = blockStats[i0];
     for (let i1 = i0; i1 < n; i1++) {
+      const s1 = blockStats[i1];
+      for (let s = 0; s < numStats; s++) {
+        p1[s] = s0[s] + s1[s];
+      }
       for (let i2 = i1; i2 < n; i2++) {
+        const s2 = blockStats[i2];
+        for (let s = 0; s < numStats; s++) {
+          p2[s] = p1[s] + s2[s];
+        }
         for (let i3 = i2; i3 < n; i3++) {
+          const s3 = blockStats[i3];
+          for (let s = 0; s < numStats; s++) {
+            p3[s] = p2[s] + s3[s];
+          }
           for (let i4 = i3; i4 < n; i4++) {
             combosExamined++;
-            const s0 = blockStats[i0];
-            const s1 = blockStats[i1];
-            const s2 = blockStats[i2];
-            const s3 = blockStats[i3];
             const s4 = blockStats[i4];
 
             // Sum stats, clamp to the max constraint, and work out what's missing.
             let shortfall = 0;
             let score = 0;
             for (let s = 0; s < numStats; s++) {
-              const { minStat, maxStat } = desiredStatRanges[s];
-              const value = Math.min(s0[s] + s1[s] + s2[s] + s3[s] + s4[s], maxStat);
-              needed[s] = Math.max(0, minStat - value);
+              const value = Math.min(p3[s] + s4[s], maxStats[s]);
+              const need = minStats[s] - value;
+              needed[s] = need > 0 ? need : 0;
               shortfall += needed[s];
               score += value;
               mods[s] = 0;

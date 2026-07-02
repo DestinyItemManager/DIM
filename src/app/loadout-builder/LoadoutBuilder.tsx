@@ -68,6 +68,7 @@ import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { ReferenceConstraints } from './generated-sets/SetStats';
 import { sortGeneratedSets } from './generated-sets/utils';
+import HypotheticalPlanner from './hypothetical/HypotheticalPlanner';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
@@ -382,6 +383,10 @@ export default memo(function LoadoutBuilder({
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}
         lbDispatch={lbDispatch}
+        className={styles.loadoutEditSection}
+      />
+      <HypotheticalPlanner
+        desiredStatRanges={desiredStatRanges}
         className={styles.loadoutEditSection}
       />
       {isPhonePortrait && (
