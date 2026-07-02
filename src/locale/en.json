@@ -713,6 +713,8 @@
     "FarmingPlannerAlreadyBuildable": "Your targets are buildable from armor you already have.",
     "FarmingPlannerAnyExoticMissing": "You have no available exotic, so one of the planned pieces must be an exotic drop instead.",
     "FarmingPlannerExoticMissing": "You have no available copy of the chosen exotic, so its slot is planned as an ideal drop.",
+    "FarmingPlannerFinePrint": "Uses your best copy of the chosen exotic and keeps your best owned armor. Farmed pieces assume ideal Tier {{tier}} legendary drops; tuning mods are ignored. Evaluated {{combos}} combinations in {{time}}ms.",
+    "FarmingPlannerFinePrintIdeal": "Plans every unpinned slot as an ideal Tier {{tier}} legendary drop (plus your chosen exotic). Tuning mods are ignored. Evaluated {{combos}} combinations in {{time}}ms.",
     "FarmingPlannerFromSet": "…with at least {{numPieces}} of these from {{set}}",
     "FarmingPlannerKeep": "Combined with your: {{items}}",
     "FarmingPlannerKeepOwned": "Keep armor I already own",

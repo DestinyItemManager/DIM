@@ -477,16 +477,17 @@ export default memo(function HypotheticalPlanner({
             <div className={styles.verdict}>{t('LoadoutBuilder.FarmingPlannerSetImpossible')}</div>
           )}
           <div className={styles.fineprint}>
-            {t(
-              keepOwned
-                ? 'LoadoutBuilder.FarmingPlannerFinePrint'
-                : 'LoadoutBuilder.FarmingPlannerFinePrintIdeal',
-              {
-                tier: modelAndBlocks.model.gearTier,
-                combos: plan.combosExamined.toLocaleString(),
-                time: Math.round(plan.planTimeMs),
-              },
-            )}
+            {keepOwned
+              ? t('LoadoutBuilder.FarmingPlannerFinePrint', {
+                  tier: modelAndBlocks.model.gearTier,
+                  combos: plan.combosExamined.toLocaleString(),
+                  time: Math.round(plan.planTimeMs),
+                })
+              : t('LoadoutBuilder.FarmingPlannerFinePrintIdeal', {
+                  tier: modelAndBlocks.model.gearTier,
+                  combos: plan.combosExamined.toLocaleString(),
+                  time: Math.round(plan.planTimeMs),
+                })}
           </div>
         </>
       )}
