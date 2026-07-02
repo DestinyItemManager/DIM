@@ -200,7 +200,7 @@ export function toVendorGroups(
  *
  * Mutates `groups` in place.
  */
-export function mergeVendors(
+function mergeVendors(
   groups: { def: DestinyVendorGroupDefinition; vendors: D2Vendor[] }[],
   /** The vendor that the others fold into; falls back to the first match if absent. */
   primaryVendorHash: number,
@@ -296,7 +296,7 @@ export function mergeVendors(
  * type sold in it, so those categories render as e.g. "Shader" instead of
  * "Unknown". Returns the original array unchanged when every category is named.
  */
-export function nameUnnamedCategories(
+function nameUnnamedCategories(
   displayCategories: DestinyDisplayCategoryDefinition[],
   items: VendorItem[],
 ): DestinyDisplayCategoryDefinition[] {
