@@ -20,7 +20,21 @@ export default {
     'Library\\.mjs$': 'identity-obj-proxy',
   },
   setupFiles: ['./src/testing/jest-setup.cjs'],
-  // Babel transform is required to handle some es modules?
+  // Transform TS/JS(X) with SWC instead of babel-jest. The TS parser is a JS
+  // superset, so it also handles the (few) non-ignored node_modules below.
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
+      {
+        jsc: {
+          parser: { syntax: 'typescript', tsx: true },
+          transform: { react: { runtime: 'automatic' } },
+          target: 'es2022',
+        },
+        module: { type: 'commonjs' },
+      },
+    ],
+  },
   transformIgnorePatterns: [
     'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@floating-ui|@react-hook)',
   ],
