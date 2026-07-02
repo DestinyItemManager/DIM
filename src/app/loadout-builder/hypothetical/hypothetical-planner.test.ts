@@ -27,6 +27,7 @@ import {
   hypotheticalProcessItem,
   planBestComposition,
   predictStats,
+  pruneBlocksForTargets,
 } from './hypothetical-items';
 
 /**
@@ -214,17 +215,10 @@ describe('stat-target planner prototype (#11832)', () => {
     // With 12 archetypes, 48^5 ≈ 255M ordered combos is too slow to brute-force
     // through the worker; a real integration would pre-filter hypothetical
     // candidates the way item-filter.ts prunes real items. Keep the 24 blocks
-    // most relevant to the targeted stats. (The multiset enumerator above is
-    // the better approach anyway — it covers the full space.)
-    const targetedStatTotal = (block: HypotheticalArmorBlock) =>
-      armorStats.reduce(
-        (total, statHash) =>
-          total + ((EXAMPLE_TARGETS[statHash] ?? 0) > 0 ? block.stats[statHash] : 0),
-        0,
-      );
-    const relevantBlocks = [...blocks]
-      .sort((a, b) => targetedStatTotal(b) - targetedStatTotal(a))
-      .slice(0, 24);
+    // most relevant to the targeted stats — the same pruning the acquisition
+    // planner uses. (The multiset enumerator above is the better approach
+    // anyway — it covers the full space.)
+    const relevantBlocks = pruneBlocksForTargets(blocks, desiredStatRanges, 24);
     infoLog(
       'planner prototype',
       `pruned hypothetical space from ${blocks.length} to ${relevantBlocks.length} blocks for the worker path`,

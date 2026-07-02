@@ -1,12 +1,15 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { armorStats } from 'app/search/d2-known-values';
+import { sumBy } from 'app/utils/collections';
 import { getArmor3StatFocus, isArmor3 } from 'app/utils/item-utils';
+import { weakMemoize } from 'app/utils/memoize';
 import { getArmorArchetype } from 'app/utils/socket-utils';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ProcessItem } from '../process-worker/types';
-import { mapDimItemToProcessItems } from '../process/mappers';
 import {
+  ArmorEnergyRules,
   ArmorStatHashes,
   ArmorStats,
   DesiredStatRange,
@@ -68,12 +71,17 @@ export interface Armor3ArchetypeModel {
 
 /** A hypothetical armor piece, i.e. one stat-distinct (archetype, tertiary) combination. */
 export interface HypotheticalArmorBlock {
-  /** e.g. "Gunner / Super" */
+  /** e.g. "Gunner / tertiary 4043523819" */
   name: string;
   archetypePlugHash: number;
   archetypeName: string;
   tertiaryStatHash: ArmorStatHashes;
   stats: ArmorStats;
+}
+
+/** An ArmorStats object with every stat at 0. */
+export function zeroArmorStats(): ArmorStats {
+  return Object.fromEntries(armorStats.map((statHash) => [statHash, 0])) as ArmorStats;
 }
 
 /** Is this an item the planner's stat model can be derived from? */
@@ -87,15 +95,15 @@ function isModelSourceItem(item: DimItem) {
   );
 }
 
-/** The item's stats under LO's most permissive rules (assume masterworked), untuned. */
-export function assumedMasterworkStats(item: DimItem): { [statHash: number]: number } {
-  return mapDimItemToProcessItems({
-    dimItem: item,
-    armorEnergyRules: permissiveArmorEnergyRules,
-    desiredStatRanges: [],
-    // No tuning-mod variants — we want the canonical untuned block.
-    autoStatMods: false,
-  })[0].stats;
+/**
+ * The item's stats under the given armor energy rules (assumed masterwork),
+ * untuned — the canonical stat block for planning.
+ */
+export function assumedMasterworkStats(
+  item: DimItem,
+  armorEnergyRules: ArmorEnergyRules = permissiveArmorEnergyRules,
+): { [statHash: number]: number } {
+  return calculateAssumedMasterworkStats(item, armorEnergyRules);
 }
 
 /**
@@ -103,49 +111,63 @@ export function assumedMasterworkStats(item: DimItem): { [statHash: number]: num
  * from the plug description ("Primary Stat: X\nSecondary Stat: Y"). The defs
  * carry no structured stat data for these plugs, so this only works on an
  * English manifest — good enough for a prototype; production would ship a
- * d2ai-generated table instead.
+ * d2ai-generated table instead. Memoized per manifest since it scans the
+ * whole InventoryItem table.
  */
-export function archetypesFromManifest(defs: D2ManifestDefinitions): Armor3Archetype[] {
-  const statHashByName = new Map(
-    armorStats.map((statHash) => [defs.Stat.get(statHash)?.displayProperties.name, statHash]),
-  );
-  const archetypes: Armor3Archetype[] = [];
-  for (const def of Object.values(defs.InventoryItem.getAll())) {
-    if (
-      def.plug?.plugCategoryHash !== PlugCategoryHashes.ArmorArchetypes ||
-      !def.displayProperties?.name
-    ) {
-      continue;
-    }
-    const match = /Primary Stat: (.+)\nSecondary Stat: (.+)/.exec(
-      def.displayProperties.description,
+export const archetypesFromManifest = weakMemoize(
+  (defs: D2ManifestDefinitions): Armor3Archetype[] => {
+    const statHashByName = new Map(
+      armorStats.map((statHash) => [defs.Stat.get(statHash)?.displayProperties.name, statHash]),
     );
-    const primaryStatHash = match && statHashByName.get(match[1].trim());
-    const secondaryStatHash = match && statHashByName.get(match[2].trim());
-    if (primaryStatHash && secondaryStatHash) {
-      archetypes.push({
-        plugHash: def.hash,
-        name: def.displayProperties.name,
-        primaryStatHash,
-        secondaryStatHash,
-        observedTertiaries: new Set(),
-      });
+    const archetypes: Armor3Archetype[] = [];
+    for (const def of Object.values(defs.InventoryItem.getAll())) {
+      if (
+        def.plug?.plugCategoryHash !== PlugCategoryHashes.ArmorArchetypes ||
+        !def.displayProperties?.name
+      ) {
+        continue;
+      }
+      const match = /Primary Stat: (.+)\nSecondary Stat: (.+)/.exec(
+        def.displayProperties.description,
+      );
+      const primaryStatHash = match && statHashByName.get(match[1].trim());
+      const secondaryStatHash = match && statHashByName.get(match[2].trim());
+      if (primaryStatHash && secondaryStatHash) {
+        archetypes.push({
+          plugHash: def.hash,
+          name: def.displayProperties.name,
+          primaryStatHash,
+          secondaryStatHash,
+          observedTertiaries: new Set(),
+        });
+      }
     }
-  }
-  return archetypes;
-}
+    return archetypes;
+  },
+);
 
 /**
- * Derive the archetype stat model from real items, optionally merging in
- * manifest archetypes the user doesn't own any of. Returns undefined if the
- * items contain no usable Armor 3.0 legendaries (we need at least one to
- * establish per-tier stat values).
+ * Derive the archetype stat model: archetype identities from the manifest
+ * (authoritative where parseable) plus the user's items (fallback for
+ * non-English manifests, and the source of per-tier stat values). Returns
+ * undefined if the items contain no usable Armor 3.0 legendaries (we need at
+ * least one to establish per-tier stat values).
  */
 export function deriveArmor3ArchetypeModel(
   allItems: DimItem[],
   defs?: D2ManifestDefinitions,
 ): Armor3ArchetypeModel | undefined {
   const archetypes = new Map<number, Armor3Archetype>();
+
+  // Seed from the manifest first so a single weirdly-rolled item can't
+  // register a wrong primary/secondary for an archetype.
+  if (defs) {
+    for (const archetype of archetypesFromManifest(defs)) {
+      // Fresh observedTertiaries so the memoized manifest entries stay pure.
+      archetypes.set(archetype.plugHash, { ...archetype, observedTertiaries: new Set() });
+    }
+  }
+
   const valuesByTier = new Map<number, Armor3TierValues>();
   let gearTier = 0;
 
@@ -172,8 +194,8 @@ export function deriveArmor3ArchetypeModel(
       };
       archetypes.set(archetypePlug.hash, archetype);
     } else if (archetype.primaryStatHash !== primary || archetype.secondaryStatHash !== secondary) {
-      // Inconsistent with previous observations of this archetype — skip
-      // rather than poison the model. The validation test surfaces these.
+      // Inconsistent with the manifest or previous observations — skip rather
+      // than poison the model. The validation test surfaces these.
       continue;
     }
     archetype.observedTertiaries.add(tertiary);
@@ -196,18 +218,9 @@ export function deriveArmor3ArchetypeModel(
     }
   }
 
-  if (!archetypes.size) {
+  // Without at least one real item we have no stat values to build blocks from.
+  if (!gearTier) {
     return undefined;
-  }
-
-  // Merge in archetypes from the manifest that the user owns no items of —
-  // "what to farm" must cover armor the user has never seen.
-  if (defs) {
-    for (const archetype of archetypesFromManifest(defs)) {
-      if (!archetypes.has(archetype.plugHash)) {
-        archetypes.set(archetype.plugHash, archetype);
-      }
-    }
   }
 
   return { archetypes: [...archetypes.values()], valuesByTier, gearTier };
@@ -287,21 +300,262 @@ export function hypotheticalProcessItem(
   };
 }
 
-/** Keep the blocks most relevant to the targeted stats, to bound search size. */
+/**
+ * Keep the blocks most relevant to the targeted stats, to bound search size.
+ *
+ * Every block at a given tier has the same multiset of stat values (just on
+ * different stats), so a straight relevance sort ties and would arbitrarily
+ * drop whole archetypes. Instead: within each archetype, drop all but one
+ * block whose tertiary lands on an ignored stat (they're interchangeable),
+ * order the rest targeted-tertiary-first, and select round-robin across
+ * archetypes so every archetype stays represented.
+ */
 export function pruneBlocksForTargets(
   blocks: HypotheticalArmorBlock[],
   desiredStatRanges: DesiredStatRange[],
   limit: number,
 ): HypotheticalArmorBlock[] {
+  if (blocks.length <= limit) {
+    return blocks;
+  }
   const targeted = desiredStatRanges
     .filter((r) => r.maxStat > 0 && r.minStat > 0)
     .map(({ statHash }): ArmorStatHashes => statHash);
-  if (!targeted.length || blocks.length <= limit) {
-    return blocks;
+  const ignored = new Set(
+    desiredStatRanges.filter((r) => r.maxStat === 0).map(({ statHash }) => statHash),
+  );
+
+  // Group by archetype, preserving block order within each group.
+  const groups = new Map<number, HypotheticalArmorBlock[]>();
+  for (const block of blocks) {
+    const group = groups.get(block.archetypePlugHash);
+    if (group) {
+      group.push(block);
+    } else {
+      groups.set(block.archetypePlugHash, [block]);
+    }
   }
-  const relevance = (block: HypotheticalArmorBlock) =>
-    targeted.reduce((total, statHash) => total + block.stats[statHash], 0);
-  return [...blocks].sort((a, b) => relevance(b) - relevance(a)).slice(0, limit);
+
+  const rank = (block: HypotheticalArmorBlock) => {
+    const idx = targeted.indexOf(block.tertiaryStatHash);
+    return idx >= 0 ? idx : targeted.length;
+  };
+  for (const [plugHash, group] of groups) {
+    // Blocks whose tertiary is on an ignored stat are interchangeable — keep one.
+    let keptIgnored = false;
+    const deduped = group.filter((block) => {
+      if (!ignored.has(block.tertiaryStatHash)) {
+        return true;
+      }
+      if (keptIgnored) {
+        return false;
+      }
+      keptIgnored = true;
+      return true;
+    });
+    deduped.sort((a, b) => rank(a) - rank(b));
+    groups.set(plugHash, deduped);
+  }
+
+  // Round-robin: the best block of each archetype, then the second-best, etc.
+  const result: HypotheticalArmorBlock[] = [];
+  for (let i = 0; result.length < limit; i++) {
+    let added = false;
+    for (const group of groups.values()) {
+      if (i < group.length) {
+        result.push(group[i]);
+        added = true;
+        if (result.length >= limit) {
+          break;
+        }
+      }
+    }
+    if (!added) {
+      break;
+    }
+  }
+  return result;
+}
+
+/**
+ * Greedily spend up to numGeneralMods major (+10) mods on the largest
+ * remaining needs. Mutates `needed` and increments `mods`; returns the
+ * remaining shortfall.
+ */
+function applyGreedyMods(
+  needed: number[],
+  mods: number[],
+  shortfall: number,
+  numGeneralMods: number,
+): number {
+  for (let i = 0; i < numGeneralMods && shortfall > 0; i++) {
+    let biggest = 0;
+    for (let s = 1; s < needed.length; s++) {
+      if (needed[s] > needed[biggest]) {
+        biggest = s;
+      }
+    }
+    const reduction = Math.min(majorStatBoost, needed[biggest]);
+    if (reduction === 0) {
+      break;
+    }
+    needed[biggest] -= reduction;
+    shortfall -= reduction;
+    mods[biggest]++;
+  }
+  return shortfall;
+}
+
+/** Collapse a list of block indices into {block, count} entries. */
+function tallyBlocks(indices: number[], blocks: HypotheticalArmorBlock[]) {
+  const countsByIndex = new Map<number, number>();
+  for (const idx of indices) {
+    countsByIndex.set(idx, (countsByIndex.get(idx) ?? 0) + 1);
+  }
+  return [...countsByIndex.entries()].map(([idx, count]) => ({ block: blocks[idx], count }));
+}
+
+/** Spread per-enabled-stat mod counts back into a full ArmorStats object. */
+function modsToArmorStats(mods: number[], statOrder: ArmorStatHashes[]): ArmorStats {
+  const result = zeroArmorStats();
+  for (let s = 0; s < statOrder.length; s++) {
+    result[statOrder[s]] = mods[s];
+  }
+  return result;
+}
+
+export interface HypotheticalPlan {
+  /** Total stat points short of the target after armor + stat mods. 0 = reachable. */
+  shortfall: number;
+  /** The recommended composition: how many pieces of each block to farm. */
+  counts: { block: HypotheticalArmorBlock; count: number }[];
+  /** Stat totals from the armor alone. */
+  armorTotals: ArmorStats;
+  /** Number of +10 general stat mods assigned per stat. */
+  modsPerStat: ArmorStats;
+  /** How many 5-piece compositions were examined. */
+  combosExamined: number;
+}
+
+/**
+ * Find the 5-piece composition of hypothetical blocks that best satisfies the
+ * stat targets, allowing for auto stat mods on top. `baseStats` (mods,
+ * subclass, a locked exotic) are added to every composition; when set, the
+ * composition covers 5 - (pieces included in baseStats) slots via numSlots.
+ *
+ * Because hypothetical pieces are slot-interchangeable, sets are multisets:
+ * we enumerate index combinations i0 <= i1 <= ... <= i4, which is C(n+4, 5)
+ * combinations instead of n^5 — for n=48 that's ~2.6M instead of ~255M.
+ *
+ * Simplifications vs. the real worker (fine for a feasibility prototype):
+ * set bonuses, tuning mods, and mod energy are ignored; stat mods are modeled
+ * as up to numGeneralMods majors (+10) assigned greedily.
+ */
+export function planBestComposition(
+  blocks: HypotheticalArmorBlock[],
+  desiredStatRanges: DesiredStatRange[],
+  numGeneralMods = 5,
+  baseStats?: ArmorStats,
+  numSlots = 5,
+): HypotheticalPlan {
+  const n = blocks.length;
+  // Ignored stats (max 0) are clamped to 0 and can't contribute to the score
+  // or the shortfall, so skip them entirely in the hot loop.
+  const enabledRanges = desiredStatRanges.filter((r) => r.maxStat > 0);
+  const numStats = enabledRanges.length;
+  const statOrder = enabledRanges.map(({ statHash }): ArmorStatHashes => statHash);
+  const minStats = enabledRanges.map((r) => r.minStat);
+  const maxStats = enabledRanges.map((r) => r.maxStat);
+  // Per-block stat arrays in enabled-stat order, for tight inner loops.
+  const blockStats = blocks.map((block) => statOrder.map((statHash) => block.stats[statHash]));
+  const base = statOrder.map((statHash) => baseStats?.[statHash] ?? 0);
+
+  let combosExamined = 0;
+  let bestShortfall = Number.MAX_SAFE_INTEGER;
+  let bestScore = -1;
+  let bestIndices: number[] | undefined;
+  let bestMods: number[] | undefined;
+
+  // Partial sums hoisted out of the inner loops, plus scratch arrays, all
+  // reused across iterations to avoid allocation. partials[d] holds the sum of
+  // base + the first d chosen blocks.
+  const partials = Array.from({ length: numSlots }, () => new Array<number>(numStats));
+  const needed = new Array<number>(numStats);
+  const mods = new Array<number>(numStats);
+  const indices = new Array<number>(numSlots);
+
+  const evaluate = (prev: number[], lastIdx: number) => {
+    combosExamined++;
+    const last = blockStats[lastIdx];
+    let shortfall = 0;
+    let score = 0;
+    for (let s = 0; s < numStats; s++) {
+      const value = Math.min(prev[s] + last[s], maxStats[s]);
+      const need = minStats[s] - value;
+      needed[s] = need > 0 ? need : 0;
+      shortfall += needed[s];
+      score += value;
+      mods[s] = 0;
+    }
+    if (shortfall > 0) {
+      shortfall = applyGreedyMods(needed, mods, shortfall, numGeneralMods);
+    }
+    if (shortfall < bestShortfall || (shortfall === bestShortfall && score > bestScore)) {
+      bestShortfall = shortfall;
+      bestScore = score;
+      bestIndices = indices.slice();
+      bestMods = mods.slice();
+    }
+  };
+
+  // Enumerate non-decreasing index tuples of length numSlots. `prev` holds
+  // base + the blocks chosen at shallower depths.
+  const enumerate = (depth: number, start: number) => {
+    const prev = depth === 0 ? base : partials[depth - 1];
+    for (let i = start; i < n; i++) {
+      indices[depth] = i;
+      if (depth === numSlots - 1) {
+        evaluate(prev, i);
+      } else {
+        const partial = partials[depth];
+        const stats = blockStats[i];
+        for (let s = 0; s < numStats; s++) {
+          partial[s] = prev[s] + stats[s];
+        }
+        enumerate(depth + 1, i);
+      }
+    }
+  };
+  if (numSlots > 0 && n > 0 && numStats > 0) {
+    enumerate(0, 0);
+  }
+
+  if (!bestIndices || !bestMods) {
+    // No blocks or no enabled stats — nothing to plan.
+    return {
+      shortfall: 0,
+      counts: [],
+      armorTotals: zeroArmorStats(),
+      modsPerStat: zeroArmorStats(),
+      combosExamined,
+    };
+  }
+
+  const counts = tallyBlocks(bestIndices, blocks);
+  const armorTotals = zeroArmorStats();
+  for (const { block, count } of counts) {
+    for (const statHash of armorStats) {
+      armorTotals[statHash] += block.stats[statHash] * count;
+    }
+  }
+
+  return {
+    shortfall: bestShortfall,
+    counts,
+    armorTotals,
+    modsPerStat: modsToArmorStats(bestMods, statOrder),
+    combosExamined,
+  };
 }
 
 /** An owned armor piece the acquisition planner may keep in the build. */
@@ -339,12 +593,16 @@ export interface AcquisitionPlan {
  * Find the smallest number of new (hypothetical, ideal-drop) armor pieces that
  * completes the user's stat targets, keeping as many owned pieces as possible.
  *
- * For each farm-count m (ascending), we try every choice of which slots keep
- * owned armor, every combination of owned candidates in those slots, and every
- * multiset of m hypothetical blocks for the rest, returning at the first m
- * with a feasible solution. Set bonus requirements count owned pieces of the
- * set plus farmed pieces (all archetypes drop from all sources, so a farmed
- * piece can always come from the required set).
+ * The search first computes the ideal-drops-everywhere answer over the full
+ * block list as an exact bound: if even that falls short, keeping owned
+ * (weaker) pieces can't help, so we return the ideal composition as the
+ * "closest" result without the expensive owned search. Otherwise, for each
+ * farm-count m (ascending), we try every choice of which slots keep owned
+ * armor, every combination of owned candidates in those slots, and every
+ * multiset of m hypothetical blocks (pruned to searchBlockLimit) for the rest,
+ * returning at the first m with a feasible solution. Set bonus requirements
+ * count owned pieces of the set plus farmed pieces (all archetypes drop from
+ * all sources, so a farmed piece can always come from the required set).
  *
  * Same simplifications as planBestComposition: tuning mods and mod energy are
  * ignored; stat mods are up to `numGeneralMods` majors (+10) assigned greedily.
@@ -355,8 +613,10 @@ export function planMinimumAcquisitions({
   modStatTotals,
   fixedPieces = [],
   ownedByBucket = [],
+  requiredSlots = [],
   setBonusRequirements = [],
   numGeneralMods = 5,
+  searchBlockLimit = 24,
 }: {
   blocks: HypotheticalArmorBlock[];
   desiredStatRanges: DesiredStatRange[];
@@ -366,8 +626,12 @@ export function planMinimumAcquisitions({
   fixedPieces?: ArmorStats[];
   /** Owned candidate pieces for each remaining slot. Length = slots to fill. */
   ownedByBucket?: PlannerOwnedPiece[][];
+  /** Indices into ownedByBucket that must keep an owned piece (pinned items). */
+  requiredSlots?: number[];
   setBonusRequirements?: SetBonusRequirement[];
   numGeneralMods?: number;
+  /** Cap on blocks considered in the owned search (multisets are materialized). */
+  searchBlockLimit?: number;
 }): AcquisitionPlan {
   const enabledRanges = desiredStatRanges.filter((r) => r.maxStat > 0);
   const numStats = enabledRanges.length;
@@ -376,21 +640,66 @@ export function planMinimumAcquisitions({
   const maxStats = enabledRanges.map((r) => r.maxStat);
   const numSlots = ownedByBucket.length;
 
-  const base = statOrder.map(
-    (statHash) =>
-      (modStatTotals?.[statHash] ?? 0) +
-      fixedPieces.reduce((total, piece) => total + piece[statHash], 0),
-  );
+  const baseTotals = zeroArmorStats();
+  for (const statHash of armorStats) {
+    baseTotals[statHash] =
+      (modStatTotals?.[statHash] ?? 0) + sumBy(fixedPieces, (piece) => piece[statHash]);
+  }
 
+  const reqSetHashes = setBonusRequirements.map((r) => r.setHash);
+  const reqSetCounts = setBonusRequirements.map((r) => r.count);
+  const reqSetTotal = sumBy(setBonusRequirements, (r) => r.count);
+
+  // Exact ideal bound over the FULL block list, which doubles as the answer
+  // when no owned candidates are provided (ideal mode) or when the targets
+  // are unreachable even with perfect drops everywhere.
+  const bound = planBestComposition(
+    blocks,
+    desiredStatRanges,
+    numGeneralMods,
+    baseTotals,
+    numSlots,
+  );
+  const boundAsPlan = (): AcquisitionPlan => ({
+    shortfall: bound.shortfall,
+    farm: bound.counts,
+    keep: [],
+    farmFromSets: setBonusRequirements
+      .map((r) => ({ setHash: r.setHash, count: Math.min(r.count, numSlots) }))
+      .filter((r) => r.count > 0),
+    setBonusUnsatisfiable: reqSetTotal > numSlots,
+    modsPerStat: bound.modsPerStat,
+    combosExamined: bound.combosExamined,
+  });
+
+  const anyOwned = ownedByBucket.some((list) => list.length > 0);
+  if (bound.shortfall > 0 || !anyOwned || numStats === 0) {
+    return boundAsPlan();
+  }
+
+  // The owned search materializes multiset sums, so bound the block list.
+  const searchBlocks = pruneBlocksForTargets(blocks, desiredStatRanges, searchBlockLimit);
+
+  const base = statOrder.map((statHash) => baseTotals[statHash]);
   const ownedVecs = ownedByBucket.map((list) =>
     list.map((piece) => ({
       piece,
       stats: statOrder.map((statHash) => piece.stats[statHash]),
     })),
   );
-  const blockVecs = blocks.map((block) => statOrder.map((statHash) => block.stats[statHash]));
+  // Component-wise best owned stats per bucket, for upper-bound pruning.
+  const bestOwnedVec = ownedVecs.map((candidates) => {
+    const best = new Array<number>(numStats).fill(0);
+    for (const { stats } of candidates) {
+      for (let s = 0; s < numStats; s++) {
+        best[s] = Math.max(best[s], stats[s]);
+      }
+    }
+    return best;
+  });
+  const blockVecs = searchBlocks.map((block) => statOrder.map((statHash) => block.stats[statHash]));
 
-  // Precompute stat sums for every multiset of blocks of each size 0..numSlots.
+  // Stat sums for every multiset of search blocks, built lazily per size.
   interface MultisetEntry {
     sum: number[];
     indices: number[];
@@ -398,24 +707,28 @@ export function planMinimumAcquisitions({
   const multisetsBySize: MultisetEntry[][] = [
     [{ sum: new Array<number>(numStats).fill(0), indices: [] }],
   ];
-  for (let m = 1; m <= numSlots; m++) {
-    const entries: MultisetEntry[] = [];
-    for (const entry of multisetsBySize[m - 1]) {
-      const minIdx = entry.indices.length ? entry.indices[entry.indices.length - 1] : 0;
-      for (let i = minIdx; i < blockVecs.length; i++) {
-        entries.push({
-          sum: entry.sum.map((v, s) => v + blockVecs[i][s]),
-          indices: [...entry.indices, i],
-        });
+  // Component-wise max across each level's sums, for upper-bound pruning.
+  const maxMultisetSum: number[][] = [new Array<number>(numStats).fill(0)];
+  const ensureMultisets = (m: number) => {
+    while (multisetsBySize.length <= m) {
+      const entries: MultisetEntry[] = [];
+      const maxSum = new Array<number>(numStats).fill(0);
+      for (const entry of multisetsBySize[multisetsBySize.length - 1]) {
+        const minIdx = entry.indices.length ? entry.indices[entry.indices.length - 1] : 0;
+        for (let i = minIdx; i < blockVecs.length; i++) {
+          const sum = entry.sum.map((v, s) => v + blockVecs[i][s]);
+          for (let s = 0; s < numStats; s++) {
+            maxSum[s] = Math.max(maxSum[s], sum[s]);
+          }
+          entries.push({ sum, indices: [...entry.indices, i] });
+        }
       }
+      multisetsBySize.push(entries);
+      maxMultisetSum.push(maxSum);
     }
-    multisetsBySize.push(entries);
-  }
+  };
 
-  const reqSetHashes = setBonusRequirements.map((r) => r.setHash);
-  const reqSetCounts = setBonusRequirements.map((r) => r.count);
-
-  let combosExamined = 0;
+  let combosExamined = bound.combosExamined;
   let setBonusUnsatisfiable = false;
   interface Best {
     shortfall: number;
@@ -430,14 +743,15 @@ export function planMinimumAcquisitions({
 
   const needed = new Array<number>(numStats);
   const mods = new Array<number>(numStats);
+  const chosen: { bucket: number; index: number }[] = [];
+  // Per-depth scratch arrays so the recursion allocates nothing per node.
+  const partialStack = Array.from({ length: numSlots + 1 }, () => new Array<number>(numStats));
+  const setCountsStack = Array.from(
+    { length: numSlots + 1 },
+    () => new Array<number>(reqSetHashes.length),
+  );
 
-  const evaluate = (
-    partial: number[],
-    multiset: MultisetEntry,
-    m: number,
-    keptOwned: { bucket: number; index: number }[],
-    setDeficits: number[],
-  ) => {
+  const evaluate = (partial: number[], multiset: MultisetEntry, m: number, deficits: number[]) => {
     combosExamined++;
     let shortfall = 0;
     let score = 0;
@@ -450,21 +764,7 @@ export function planMinimumAcquisitions({
       mods[s] = 0;
     }
     if (shortfall > 0) {
-      for (let i = 0; i < numGeneralMods && shortfall > 0; i++) {
-        let biggest = 0;
-        for (let s = 1; s < numStats; s++) {
-          if (needed[s] > needed[biggest]) {
-            biggest = s;
-          }
-        }
-        const reduction = Math.min(majorStatBoost, needed[biggest]);
-        if (reduction === 0) {
-          break;
-        }
-        needed[biggest] -= reduction;
-        shortfall -= reduction;
-        mods[biggest]++;
-      }
+      shortfall = applyGreedyMods(needed, mods, shortfall, numGeneralMods);
     }
     let better = false;
     if (!best) {
@@ -479,23 +779,52 @@ export function planMinimumAcquisitions({
         shortfall,
         score,
         m,
-        keptOwned: keptOwned.slice(),
+        keptOwned: chosen.slice(),
         multisetIndices: multiset.indices,
         mods: mods.slice(),
-        setDeficits: setDeficits.slice(),
+        setDeficits: deficits.slice(),
       };
     }
   };
 
-  const chosen: { bucket: number; index: number }[] = [];
+  /** Would this subset's best case (best owned per slot + best multiset) even reach the targets? */
+  const subsetUpperBoundFeasible = (keepSlots: number[], m: number) => {
+    let shortfall = 0;
+    const maxSum = maxMultisetSum[m];
+    for (let s = 0; s < numStats; s++) {
+      let value = base[s] + maxSum[s];
+      for (const bucket of keepSlots) {
+        value += bestOwnedVec[bucket][s];
+      }
+      const need = minStats[s] - Math.min(value, maxStats[s]);
+      needed[s] = need > 0 ? need : 0;
+      shortfall += needed[s];
+      mods[s] = 0;
+    }
+    return shortfall <= 0 || applyGreedyMods(needed, mods, shortfall, numGeneralMods) <= 0;
+  };
 
-  for (let m = 0; m <= numSlots; m++) {
+  const required = new Set(requiredSlots);
+  const maxM = numSlots - required.size;
+
+  for (let m = 0; m <= maxM; m++) {
+    ensureMultisets(m);
     const multisets = multisetsBySize[m];
     for (const keepSlots of kSubsets(numSlots, numSlots - m)) {
-      if (keepSlots.some((bucket) => ownedVecs[bucket].length === 0)) {
+      if (
+        keepSlots.some((bucket) => ownedVecs[bucket].length === 0) ||
+        ![...required].every((r) => keepSlots.includes(r)) ||
+        !subsetUpperBoundFeasible(keepSlots, m)
+      ) {
         continue;
       }
-      const recur = (depth: number, partial: number[], setCounts: number[]) => {
+      for (let s = 0; s < numStats; s++) {
+        partialStack[0][s] = base[s];
+      }
+      setCountsStack[0].fill(0);
+      const recur = (depth: number) => {
+        const partial = partialStack[depth];
+        const setCounts = setCountsStack[depth];
         if (depth === keepSlots.length) {
           let deficitTotal = 0;
           const deficits = reqSetCounts.map((count, i) => {
@@ -506,71 +835,60 @@ export function planMinimumAcquisitions({
           if (deficitTotal > m) {
             // Not enough farmed pieces to cover the set bonus. At the last
             // possible m, degrade gracefully rather than returning nothing.
-            if (m < numSlots) {
+            if (m < maxM) {
               return;
             }
             setBonusUnsatisfiable = true;
           }
           for (const multiset of multisets) {
-            evaluate(partial, multiset, m, chosen, deficits);
+            evaluate(partial, multiset, m, deficits);
           }
           return;
         }
         const bucket = keepSlots[depth];
         const candidates = ownedVecs[bucket];
+        const nextPartial = partialStack[depth + 1];
+        const nextSetCounts = setCountsStack[depth + 1];
         for (let i = 0; i < candidates.length; i++) {
           const owned = candidates[i];
+          for (let s = 0; s < numStats; s++) {
+            nextPartial[s] = partial[s] + owned.stats[s];
+          }
           const setBonusHash = owned.piece.setBonusHash;
+          for (let r = 0; r < reqSetHashes.length; r++) {
+            nextSetCounts[r] =
+              setCounts[r] +
+              (setBonusHash !== undefined && reqSetHashes[r] === setBonusHash ? 1 : 0);
+          }
           chosen.push({ bucket, index: i });
-          recur(
-            depth + 1,
-            partial.map((v, s) => v + owned.stats[s]),
-            setBonusHash === undefined
-              ? setCounts
-              : setCounts.map((c, r) => (reqSetHashes[r] === setBonusHash ? c + 1 : c)),
-          );
+          recur(depth + 1);
           chosen.pop();
         }
       };
-      recur(
-        0,
-        base,
-        reqSetCounts.map(() => 0),
-      );
+      recur(0);
     }
     if (best?.shortfall === 0 && best.m === m) {
       break;
     }
   }
 
-  // With at least the all-hypothetical case (keep nothing) always evaluated,
-  // best is guaranteed to be set.
-  const result = best!;
-
-  const countsByIndex = new Map<number, number>();
-  for (const idx of result.multisetIndices) {
-    countsByIndex.set(idx, (countsByIndex.get(idx) ?? 0) + 1);
-  }
-  const farm = [...countsByIndex.entries()].map(([idx, count]) => ({
-    block: blocks[idx],
-    count,
-  }));
-  const keep = result.keptOwned.map(({ bucket, index }) => ownedVecs[bucket][index].piece);
-  const farmFromSets = setBonusRequirements
-    .map((r, i) => ({ setHash: r.setHash, count: result.setDeficits[i] }))
-    .filter((r) => r.count > 0);
-  const modsPerStat = Object.fromEntries(armorStats.map((h) => [h, 0])) as ArmorStats;
-  for (let s = 0; s < numStats; s++) {
-    modsPerStat[statOrder[s]] = result.mods[s];
+  // The pruned owned search can miss compositions the full-block bound found;
+  // if it came up short while the ideal bound is feasible, fall back to the
+  // ideal answer rather than reporting a false shortfall.
+  if (!best || best.shortfall > 0) {
+    return boundAsPlan();
   }
 
+  const result = best;
   return {
     shortfall: result.shortfall,
-    farm,
-    keep,
-    farmFromSets,
+    farm: tallyBlocks(result.multisetIndices, searchBlocks),
+    keep: result.keptOwned.map(({ bucket, index }) => ownedVecs[bucket][index].piece),
+    farmFromSets: setBonusRequirements
+      .map((r, i) => ({ setHash: r.setHash, count: result.setDeficits[i] }))
+      .filter((r) => r.count > 0),
     setBonusUnsatisfiable,
-    modsPerStat,
+    modsPerStat: modsToArmorStats(result.mods, statOrder),
     combosExamined,
   };
 }
@@ -592,146 +910,4 @@ function kSubsets(n: number, k: number): number[][] {
   };
   recur(0);
   return results;
-}
-
-export interface HypotheticalPlan {
-  /** Total stat points short of the target after armor + stat mods. 0 = reachable. */
-  shortfall: number;
-  /** The recommended composition: how many pieces of each block to farm. */
-  counts: { block: HypotheticalArmorBlock; count: number }[];
-  /** Stat totals from the armor alone. */
-  armorTotals: ArmorStats;
-  /** Number of +10 general stat mods assigned per stat. */
-  modsPerStat: ArmorStats;
-  /** How many 5-piece compositions were examined. */
-  combosExamined: number;
-}
-
-/**
- * Find the 5-piece composition of hypothetical blocks that best satisfies the
- * stat targets, allowing for auto stat mods on top.
- *
- * Because hypothetical pieces are slot-interchangeable, sets are multisets:
- * we enumerate index combinations i0 <= i1 <= ... <= i4, which is C(n+4, 5)
- * combinations instead of n^5 — for n=48 that's ~2.6M instead of ~255M.
- *
- * Simplifications vs. the real worker (fine for a feasibility prototype):
- * exotics, set bonuses, tuning mods, and mod energy are ignored; stat mods are
- * modeled as up to 5 major (+10) general mods assigned greedily.
- */
-export function planBestComposition(
-  blocks: HypotheticalArmorBlock[],
-  desiredStatRanges: DesiredStatRange[],
-  numGeneralMods = 5,
-): HypotheticalPlan {
-  const n = blocks.length;
-  // Ignored stats (max 0) are clamped to 0 and can't contribute to the score
-  // or the shortfall, so skip them entirely in the hot loop.
-  const enabledRanges = desiredStatRanges.filter((r) => r.maxStat > 0);
-  const numStats = enabledRanges.length;
-  const statOrder = enabledRanges.map(({ statHash }): ArmorStatHashes => statHash);
-  const minStats = enabledRanges.map((r) => r.minStat);
-  const maxStats = enabledRanges.map((r) => r.maxStat);
-  // Per-block stat arrays in enabled-stat order, for tight inner loops.
-  const blockStats = blocks.map((block) => statOrder.map((statHash) => block.stats[statHash]));
-
-  let combosExamined = 0;
-  let bestShortfall = Number.MAX_SAFE_INTEGER;
-  let bestScore = -1;
-  let bestIndices: number[] | undefined;
-  let bestMods: number[] | undefined;
-
-  // Partial sums hoisted out of the inner loops, plus scratch arrays, all
-  // reused across iterations to avoid allocation.
-  const p1 = new Array<number>(numStats);
-  const p2 = new Array<number>(numStats);
-  const p3 = new Array<number>(numStats);
-  const needed = new Array<number>(numStats);
-  const mods = new Array<number>(numStats);
-
-  for (let i0 = 0; i0 < n; i0++) {
-    const s0 = blockStats[i0];
-    for (let i1 = i0; i1 < n; i1++) {
-      const s1 = blockStats[i1];
-      for (let s = 0; s < numStats; s++) {
-        p1[s] = s0[s] + s1[s];
-      }
-      for (let i2 = i1; i2 < n; i2++) {
-        const s2 = blockStats[i2];
-        for (let s = 0; s < numStats; s++) {
-          p2[s] = p1[s] + s2[s];
-        }
-        for (let i3 = i2; i3 < n; i3++) {
-          const s3 = blockStats[i3];
-          for (let s = 0; s < numStats; s++) {
-            p3[s] = p2[s] + s3[s];
-          }
-          for (let i4 = i3; i4 < n; i4++) {
-            combosExamined++;
-            const s4 = blockStats[i4];
-
-            // Sum stats, clamp to the max constraint, and work out what's missing.
-            let shortfall = 0;
-            let score = 0;
-            for (let s = 0; s < numStats; s++) {
-              const value = Math.min(p3[s] + s4[s], maxStats[s]);
-              const need = minStats[s] - value;
-              needed[s] = need > 0 ? need : 0;
-              shortfall += needed[s];
-              score += value;
-              mods[s] = 0;
-            }
-
-            // Greedily throw major stat mods at the biggest remaining gaps.
-            if (shortfall > 0) {
-              for (let m = 0; m < numGeneralMods && shortfall > 0; m++) {
-                let biggest = 0;
-                for (let s = 1; s < numStats; s++) {
-                  if (needed[s] > needed[biggest]) {
-                    biggest = s;
-                  }
-                }
-                const reduction = Math.min(majorStatBoost, needed[biggest]);
-                if (reduction === 0) {
-                  break;
-                }
-                needed[biggest] -= reduction;
-                shortfall -= reduction;
-                mods[biggest]++;
-              }
-            }
-
-            if (shortfall < bestShortfall || (shortfall === bestShortfall && score > bestScore)) {
-              bestShortfall = shortfall;
-              bestScore = score;
-              bestIndices = [i0, i1, i2, i3, i4];
-              bestMods = mods.slice();
-            }
-          }
-        }
-      }
-    }
-  }
-
-  const countsByIndex = new Map<number, number>();
-  for (const idx of bestIndices!) {
-    countsByIndex.set(idx, (countsByIndex.get(idx) ?? 0) + 1);
-  }
-  const counts = [...countsByIndex.entries()].map(([idx, count]) => ({
-    block: blocks[idx],
-    count,
-  }));
-
-  const armorTotals = Object.fromEntries(armorStats.map((h) => [h, 0])) as ArmorStats;
-  for (const { block, count } of counts) {
-    for (const statHash of armorStats) {
-      armorTotals[statHash] += block.stats[statHash] * count;
-    }
-  }
-  const modsPerStat = Object.fromEntries(armorStats.map((h) => [h, 0])) as ArmorStats;
-  for (let s = 0; s < numStats; s++) {
-    modsPerStat[statOrder[s]] = bestMods![s];
-  }
-
-  return { shortfall: bestShortfall, counts, armorTotals, modsPerStat, combosExamined };
 }

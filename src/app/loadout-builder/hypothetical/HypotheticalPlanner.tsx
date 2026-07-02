@@ -4,14 +4,15 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
+import { mapValues } from 'app/utils/collections';
+import { compareBy, reverseComparator } from 'app/utils/comparators';
 import { getArmor3StatFocus } from 'app/utils/item-utils';
 import { getArmorArchetype } from 'app/utils/socket-utils';
 import { memo, useCallback, useDeferredValue, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { mapDimItemToProcessItems } from '../process/mappers';
+import { allItemsSelector } from '../../inventory/selectors';
 import {
   ArmorBucketHashes,
   ArmorEnergyRules,
@@ -20,76 +21,77 @@ import {
   DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
+  PinnedItems,
 } from '../types';
 import * as styles from './HypotheticalPlanner.m.scss';
 import {
+  assumedMasterworkStats,
   buildHypotheticalBlocks,
   deriveArmor3ArchetypeModel,
   planMinimumAcquisitions,
   PlannerOwnedPiece,
-  pruneBlocksForTargets,
+  SetBonusRequirement,
 } from './hypothetical-items';
 
 /** How many owned candidates to consider per slot (plus set-bonus pieces). */
 const OWNED_PER_SLOT = 10;
 /** How many extra set-bonus candidates to consider per slot per required set. */
 const OWNED_PER_SLOT_PER_SET = 4;
-/** How many hypothetical stat blocks to consider. */
+/** How many hypothetical stat blocks the owned search considers. */
 const MAX_BLOCKS = 24;
+
+interface MappedItem extends PlannerOwnedPiece {
+  item: DimItem;
+  isExotic: boolean;
+}
 
 /**
  * PROTOTYPE for https://github.com/DestinyItemManager/DIM/issues/11832
  *
  * Answers "what armor do I still need to farm to hit these stat targets?"
- * Keeps as many owned pieces as possible (including the locked exotic and
- * pieces contributing to required set bonuses) and fills the remaining slots
- * with ideal hypothetical tier-5 drops.
+ * Keeps as many owned pieces as possible (the locked exotic, pinned items,
+ * and pieces contributing to required set bonuses included) and fills the
+ * remaining slots with ideal hypothetical drops.
  */
 export default memo(function HypotheticalPlanner({
   desiredStatRanges,
   filteredItems,
+  pinnedItems,
   lockedExoticHash,
   setBonuses,
   modStatChanges,
   armorEnergyRules,
+  autoStatMods,
+  numLockedGeneralMods,
   className,
 }: {
   desiredStatRanges: DesiredStatRange[];
   filteredItems: ItemsByBucket;
+  pinnedItems: PinnedItems;
   lockedExoticHash: number | undefined;
   setBonuses: SetBonusCounts;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
+  autoStatMods: boolean;
+  numLockedGeneralMods: number;
   className?: string;
 }) {
   const defs = useD2Definitions()!;
   const allItems = useSelector(allItemsSelector);
 
   // Whether to build around owned armor (minimize farming) or plan the ideal
-  // build from drops alone. The locked exotic is respected either way.
+  // build from drops alone. The locked exotic and pins are respected either way.
   const [keepOwned, setKeepOwned] = useState(true);
 
   // Let stat slider drags repaint before we recompute the plan.
   const deferredStatRanges = useDeferredValue(desiredStatRanges);
 
-  const blocks = useMemo(() => {
+  const modelAndBlocks = useMemo(() => {
     const model = deriveArmor3ArchetypeModel(allItems, defs);
-    return model && buildHypotheticalBlocks(model);
+    return model && { model, blocks: buildHypotheticalBlocks(model) };
   }, [allItems, defs]);
 
   const hasTargets = deferredStatRanges.some((r) => r.maxStat > 0 && r.minStat > 0);
-
-  // The assumed stats of every filtered owned item, independent of stat targets.
-  const ownedStats = useMemo(() => {
-    const itemStats = (item: DimItem): ArmorStats =>
-      mapDimItemToProcessItems({
-        dimItem: item,
-        armorEnergyRules,
-        desiredStatRanges: [],
-        autoStatMods: false,
-      })[0].stats as ArmorStats;
-    return { itemStats };
-  }, [armorEnergyRules]);
 
   // Identify the exact roll: "Geomag Stabilizers (Grenadier / Class)".
   const describeItem = useCallback(
@@ -105,8 +107,27 @@ export default memo(function HypotheticalPlanner({
     [defs],
   );
 
+  // Assumed stats etc. for every filtered item, computed once per inventory
+  // change rather than per stat-slider change.
+  const mappedByBucket = useMemo(
+    () =>
+      ArmorBucketHashes.map((bucketHash) =>
+        filteredItems[bucketHash]
+          // Guard against stat-less (e.g. classified) items poisoning sums with NaN
+          .filter((item) => item.stats?.length)
+          .map((item): MappedItem => ({
+            item,
+            isExotic: item.isExotic,
+            name: describeItem(item),
+            stats: assumedMasterworkStats(item, armorEnergyRules) as ArmorStats,
+            setBonusHash: item.setBonus?.hash,
+          })),
+      ),
+    [filteredItems, armorEnergyRules, describeItem],
+  );
+
   const plan = useMemo(() => {
-    if (!blocks || !hasTargets) {
+    if (!modelAndBlocks || !hasTargets) {
       return undefined;
     }
     const start = performance.now();
@@ -118,85 +139,115 @@ export default memo(function HypotheticalPlanner({
       enabledStats.reduce((total, statHash) => total + stats[statHash], 0);
 
     // The locked exotic occupies its slot with the user's best owned copy.
-    let exoticItem: DimItem | undefined;
-    if (lockedExoticHash !== undefined && lockedExoticHash > 0) {
-      for (const bucketHash of ArmorBucketHashes) {
-        for (const item of filteredItems[bucketHash]) {
+    // filterItems already restricted the exotic's bucket to matching copies
+    // (by hash or name), so any exotic there is the locked one.
+    const exoticDef =
+      lockedExoticHash !== undefined && lockedExoticHash > 0
+        ? defs.InventoryItem.get(lockedExoticHash)
+        : undefined;
+    const exoticBucketHash = exoticDef?.inventory?.bucketTypeHash;
+    let exoticEntry: MappedItem | undefined;
+    if (exoticBucketHash !== undefined) {
+      const bucketIdx = ArmorBucketHashes.indexOf(exoticBucketHash);
+      if (bucketIdx >= 0) {
+        for (const entry of mappedByBucket[bucketIdx]) {
           if (
-            item.hash === lockedExoticHash &&
-            (!exoticItem ||
-              statTotal(ownedStats.itemStats(item)) > statTotal(ownedStats.itemStats(exoticItem)))
+            entry.isExotic &&
+            (!exoticEntry || statTotal(entry.stats) > statTotal(exoticEntry.stats))
           ) {
-            exoticItem = item;
+            exoticEntry = entry;
           }
         }
       }
     }
+    // The user locked an exotic they have no available copy of — its slot must
+    // be farmed (approximated by an ideal legendary block) and we say so.
+    const exoticMissing = exoticBucketHash !== undefined && !exoticEntry;
 
-    const setBonusRequirements = Object.keys(setBonuses)
+    const setBonusRequirements: SetBonusRequirement[] = Object.keys(setBonuses)
       .map((setHash) => ({
         setHash: Number(setHash),
         count: setBonuses[Number(setHash)] ?? 0,
       }))
       .filter((r) => r.count > 0);
 
-    // Owned candidates per remaining slot: the best pieces overall, plus the
-    // best pieces from each required set so set bonuses stay satisfiable.
-    // With keepOwned off, every remaining slot is planned as an ideal drop.
-    const ownedByBucket = ArmorBucketHashes.filter(
-      (bucketHash) => bucketHash !== exoticItem?.bucket.hash,
-    ).map((bucketHash) => {
-      if (!keepOwned) {
+    // Owned candidates per remaining slot: pinned items are locked in; else
+    // the best pieces overall plus the best pieces from each required set so
+    // set bonuses stay satisfiable. With keepOwned off, unpinned slots are
+    // planned as ideal drops.
+    const remainingBucketHashes = ArmorBucketHashes.filter(
+      (bucketHash) => !(exoticEntry && bucketHash === exoticBucketHash),
+    );
+    const requiredSlots: number[] = [];
+    const ownedByBucket = remainingBucketHashes.map((bucketHash, slotIndex) => {
+      const entries = mappedByBucket[ArmorBucketHashes.indexOf(bucketHash)];
+      const pinned = pinnedItems[bucketHash];
+      if (pinned) {
+        const pinnedEntry = entries.find((e) => e.item.id === pinned.id);
+        if (pinnedEntry) {
+          requiredSlots.push(slotIndex);
+          return [pinnedEntry];
+        }
         return [];
       }
-      const candidates = filteredItems[bucketHash]
-        .filter((item) => !item.isExotic)
-        .map((item): PlannerOwnedPiece & { item: DimItem } => ({
-          item,
-          name: describeItem(item),
-          stats: ownedStats.itemStats(item),
-          setBonusHash: item.setBonus?.hash,
-        }))
-        .sort((a, b) => statTotal(b.stats) - statTotal(a.stats));
-      const kept = new Set(candidates.slice(0, OWNED_PER_SLOT));
+      if (!keepOwned || (exoticMissing && bucketHash === exoticBucketHash)) {
+        return [];
+      }
+      const scored = entries
+        .filter((entry) => !entry.isExotic)
+        .map((entry) => ({ entry, total: statTotal(entry.stats) }));
+      scored.sort(reverseComparator(compareBy((s) => s.total)));
+      const kept = new Set(scored.slice(0, OWNED_PER_SLOT).map((s) => s.entry));
       for (const { setHash } of setBonusRequirements) {
-        for (const piece of candidates
-          .filter((p) => p.setBonusHash === setHash)
+        for (const { entry } of scored
+          .filter((s) => s.entry.setBonusHash === setHash)
           .slice(0, OWNED_PER_SLOT_PER_SET)) {
-          kept.add(piece);
+          kept.add(entry);
         }
       }
       return [...kept];
     });
 
-    const modStatTotals = Object.fromEntries(
-      armorStats.map((statHash) => [statHash, modStatChanges[statHash].value]),
-    ) as ArmorStats;
+    const modStatTotals = mapValues(modStatChanges, (stat) => stat.value);
+
+    // Mirror the worker: auto stat mods use the general sockets not taken by
+    // user-locked general mods, and none at all when the toggle is off.
+    const numGeneralMods = autoStatMods ? Math.max(0, 5 - numLockedGeneralMods) : 0;
 
     const result = planMinimumAcquisitions({
-      blocks: pruneBlocksForTargets(blocks, deferredStatRanges, MAX_BLOCKS),
+      blocks: modelAndBlocks.blocks,
       desiredStatRanges: deferredStatRanges,
       modStatTotals,
-      fixedPieces: exoticItem ? [ownedStats.itemStats(exoticItem)] : [],
+      fixedPieces: exoticEntry ? [exoticEntry.stats] : [],
       ownedByBucket,
+      requiredSlots,
       setBonusRequirements,
+      numGeneralMods,
+      searchBlockLimit: MAX_BLOCKS,
     });
 
-    return { ...result, exoticItem, planTimeMs: performance.now() - start };
+    return {
+      ...result,
+      exoticItem: exoticEntry?.item,
+      exoticMissing,
+      planTimeMs: performance.now() - start,
+    };
   }, [
-    blocks,
+    modelAndBlocks,
     hasTargets,
     deferredStatRanges,
     lockedExoticHash,
-    filteredItems,
-    ownedStats,
+    defs,
+    mappedByBucket,
+    pinnedItems,
     setBonuses,
     modStatChanges,
+    autoStatMods,
+    numLockedGeneralMods,
     keepOwned,
-    describeItem,
   ]);
 
-  if (!blocks) {
+  if (!modelAndBlocks) {
     return null;
   }
 
@@ -254,7 +305,7 @@ export default memo(function HypotheticalPlanner({
               {plan.farmFromSets.map(({ setHash, count }) => (
                 <li key={setHash} className={styles.setNote}>
                   {t('LoadoutBuilder.FarmingPlannerFromSet', {
-                    count,
+                    numPieces: count,
                     set: defs.EquipableItemSet.get(setHash)?.displayProperties.name ?? setHash,
                   })}
                 </li>
@@ -285,19 +336,28 @@ export default memo(function HypotheticalPlanner({
               })}
             </ul>
           )}
-          {farmCount > 0 && keepNames.length > 0 && (
+          {(farmCount > 0 || plan.shortfall > 0) && keepNames.length > 0 && (
             <div className={styles.keep}>
               {t('LoadoutBuilder.FarmingPlannerKeep', { items: keepNames.join(', ') })}
             </div>
+          )}
+          {plan.exoticMissing && (
+            <div className={styles.keep}>{t('LoadoutBuilder.FarmingPlannerExoticMissing')}</div>
           )}
           {plan.setBonusUnsatisfiable && (
             <div className={styles.verdict}>{t('LoadoutBuilder.FarmingPlannerSetImpossible')}</div>
           )}
           <div className={styles.fineprint}>
-            {t('LoadoutBuilder.FarmingPlannerFinePrint', {
-              combos: plan.combosExamined.toLocaleString(),
-              time: Math.round(plan.planTimeMs),
-            })}
+            {t(
+              keepOwned
+                ? 'LoadoutBuilder.FarmingPlannerFinePrint'
+                : 'LoadoutBuilder.FarmingPlannerFinePrintIdeal',
+              {
+                tier: modelAndBlocks.model.gearTier,
+                combos: plan.combosExamined.toLocaleString(),
+                time: Math.round(plan.planTimeMs),
+              },
+            )}
           </div>
         </>
       )}
