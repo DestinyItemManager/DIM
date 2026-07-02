@@ -1,7 +1,9 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { getArmor3StatFocus, isArmor3 } from 'app/utils/item-utils';
 import { getArmorArchetype } from 'app/utils/socket-utils';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ProcessItem } from '../process-worker/types';
 import { mapDimItemToProcessItems } from '../process/mappers';
 import {
@@ -18,15 +20,17 @@ import {
  * A "stat-target planner" needs to reason about armor the user does not own.
  * The insight that keeps this from blowing up combinatorially: the stat block
  * of a hypothetical Armor 3.0 legendary is fully determined by
- * (archetype, tertiary stat) at a given gear tier — roughly 6 archetypes x 4
- * tertiaries = ~24 stat-distinct pieces, identical across all five slots.
+ * (archetype, tertiary stat) at a given gear tier — 12 archetypes x 4
+ * tertiaries = 48 stat-distinct pieces, identical across all five slots.
  *
- * DIM has no static table of archetype stat distributions, so we derive the
- * model empirically from the user's own items: archetype identities from every
- * Armor 3.0 legendary, per-tier stat values via DIM's own assumed-masterwork
- * stat pipeline. This keeps the numbers honest and self-updating if Bungie
- * rebalances. (A real implementation would probably source this from d2ai or
- * the archetype plug defs instead.)
+ * DIM has no static table of archetype stat distributions, so we combine two
+ * sources: archetype identities from the manifest's archetype plugs (complete,
+ * covers archetypes the user has never seen — but their primary/secondary
+ * stats only exist as localized description text, so the parsing here is
+ * en-manifest-only) plus the user's own items (locale-independent, and the
+ * source of per-tier stat values via DIM's assumed-masterwork pipeline).
+ * A real implementation should generate the archetype table in d2ai instead,
+ * like the other plug-set constants in loadout-builder/types.ts.
  */
 
 export interface Armor3Archetype {
@@ -95,10 +99,52 @@ export function assumedMasterworkStats(item: DimItem): { [statHash: number]: num
 }
 
 /**
- * Derive the archetype stat model from real items. Returns undefined if the
- * items contain no usable Armor 3.0 legendaries.
+ * All armor archetypes from the manifest, with primary/secondary stats parsed
+ * from the plug description ("Primary Stat: X\nSecondary Stat: Y"). The defs
+ * carry no structured stat data for these plugs, so this only works on an
+ * English manifest — good enough for a prototype; production would ship a
+ * d2ai-generated table instead.
  */
-export function deriveArmor3ArchetypeModel(allItems: DimItem[]): Armor3ArchetypeModel | undefined {
+export function archetypesFromManifest(defs: D2ManifestDefinitions): Armor3Archetype[] {
+  const statHashByName = new Map(
+    armorStats.map((statHash) => [defs.Stat.get(statHash)?.displayProperties.name, statHash]),
+  );
+  const archetypes: Armor3Archetype[] = [];
+  for (const def of Object.values(defs.InventoryItem.getAll())) {
+    if (
+      def.plug?.plugCategoryHash !== PlugCategoryHashes.ArmorArchetypes ||
+      !def.displayProperties?.name
+    ) {
+      continue;
+    }
+    const match = /Primary Stat: (.+)\nSecondary Stat: (.+)/.exec(
+      def.displayProperties.description,
+    );
+    const primaryStatHash = match && statHashByName.get(match[1].trim());
+    const secondaryStatHash = match && statHashByName.get(match[2].trim());
+    if (primaryStatHash && secondaryStatHash) {
+      archetypes.push({
+        plugHash: def.hash,
+        name: def.displayProperties.name,
+        primaryStatHash,
+        secondaryStatHash,
+        observedTertiaries: new Set(),
+      });
+    }
+  }
+  return archetypes;
+}
+
+/**
+ * Derive the archetype stat model from real items, optionally merging in
+ * manifest archetypes the user doesn't own any of. Returns undefined if the
+ * items contain no usable Armor 3.0 legendaries (we need at least one to
+ * establish per-tier stat values).
+ */
+export function deriveArmor3ArchetypeModel(
+  allItems: DimItem[],
+  defs?: D2ManifestDefinitions,
+): Armor3ArchetypeModel | undefined {
   const archetypes = new Map<number, Armor3Archetype>();
   const valuesByTier = new Map<number, Armor3TierValues>();
   let gearTier = 0;
@@ -152,6 +198,16 @@ export function deriveArmor3ArchetypeModel(allItems: DimItem[]): Armor3Archetype
 
   if (!archetypes.size) {
     return undefined;
+  }
+
+  // Merge in archetypes from the manifest that the user owns no items of —
+  // "what to farm" must cover armor the user has never seen.
+  if (defs) {
+    for (const archetype of archetypesFromManifest(defs)) {
+      if (!archetypes.has(archetype.plugHash)) {
+        archetypes.set(archetype.plugHash, archetype);
+      }
+    }
   }
 
   return { archetypes: [...archetypes.values()], valuesByTier, gearTier };
@@ -250,7 +306,7 @@ export interface HypotheticalPlan {
  *
  * Because hypothetical pieces are slot-interchangeable, sets are multisets:
  * we enumerate index combinations i0 <= i1 <= ... <= i4, which is C(n+4, 5)
- * combinations instead of n^5 — for n=24 that's ~98k instead of ~8M.
+ * combinations instead of n^5 — for n=48 that's ~2.6M instead of ~255M.
  *
  * Simplifications vs. the real worker (fine for a feasibility prototype):
  * exotics, set bonuses, tuning mods, and mod energy are ignored; stat mods are

@@ -18,6 +18,7 @@ import {
   permissiveArmorEnergyRules,
 } from '../types';
 import {
+  archetypesFromManifest,
   Armor3ArchetypeModel,
   assumedMasterworkStats,
   buildHypotheticalBlocks,
@@ -77,7 +78,7 @@ describe('stat-target planner prototype (#11832)', () => {
     const [defsResult, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
     defs = defsResult;
     allItems = stores.flatMap((s) => s.items);
-    model = deriveArmor3ArchetypeModel(allItems)!;
+    model = deriveArmor3ArchetypeModel(allItems, defs)!;
     expect(model).toBeDefined();
     blocks = buildHypotheticalBlocks(model);
     desiredStatRanges = makeDesiredStatRanges(EXAMPLE_TARGETS);
@@ -103,7 +104,21 @@ describe('stat-target planner prototype (#11832)', () => {
       `hypothetical space: ${blocks.length} stat-distinct pieces per slot`,
     );
 
-    expect(model.archetypes.length).toBeGreaterThanOrEqual(2);
+    // 12 archetypes since the mid-2026 update added six new ones.
+    expect(model.archetypes.length).toBeGreaterThanOrEqual(12);
+
+    // The manifest-parsed primary/secondary must agree with what the user's
+    // real items show for every archetype covered by both sources.
+    const fromManifest = archetypesFromManifest(defs);
+    for (const archetype of model.archetypes) {
+      if (archetype.observedTertiaries.size === 0) {
+        continue; // manifest-only, nothing to cross-check
+      }
+      const manifestEntry = fromManifest.find((a) => a.plugHash === archetype.plugHash);
+      expect(manifestEntry?.primaryStatHash).toBe(archetype.primaryStatHash);
+      expect(manifestEntry?.secondaryStatHash).toBe(archetype.secondaryStatHash);
+    }
+
     const bestValues = model.valuesByTier.get(model.gearTier)!;
     expect(bestValues.primaryValue).toBeGreaterThan(bestValues.secondaryValue);
     expect(bestValues.secondaryValue).toBeGreaterThan(bestValues.tertiaryValue);
@@ -181,7 +196,7 @@ describe('stat-target planner prototype (#11832)', () => {
     infoLog('planner prototype', `  armor totals: ${describeStats(plan.armorTotals)}`);
     infoLog('planner prototype', `  +10 mods: ${describeStats(plan.modsPerStat)}`);
 
-    expect(ms).toBeLessThan(5000);
+    expect(ms).toBeLessThan(30_000);
     // 160 grenade / 100 super / 60 weapons should be reachable with ideal drops
     expect(plan.shortfall).toBe(0);
 
@@ -195,12 +210,31 @@ describe('stat-target planner prototype (#11832)', () => {
     expect(impossiblePlan.shortfall).toBeGreaterThan(0);
   });
 
-  it('runs the full hypothetical space through the unmodified LO worker', async () => {
+  it('runs the hypothetical space through the unmodified LO worker', async () => {
+    // With 12 archetypes, 48^5 ≈ 255M ordered combos is too slow to brute-force
+    // through the worker; a real integration would pre-filter hypothetical
+    // candidates the way item-filter.ts prunes real items. Keep the 24 blocks
+    // most relevant to the targeted stats. (The multiset enumerator above is
+    // the better approach anyway — it covers the full space.)
+    const targetedStatTotal = (block: HypotheticalArmorBlock) =>
+      armorStats.reduce(
+        (total, statHash) =>
+          total + ((EXAMPLE_TARGETS[statHash] ?? 0) > 0 ? block.stats[statHash] : 0),
+        0,
+      );
+    const relevantBlocks = [...blocks]
+      .sort((a, b) => targetedStatTotal(b) - targetedStatTotal(a))
+      .slice(0, 24);
+    infoLog(
+      'planner prototype',
+      `pruned hypothetical space from ${blocks.length} to ${relevantBlocks.length} blocks for the worker path`,
+    );
+
     const autoModOptions = mapAutoMods(getAutoMods(defs, new Set()));
     const filteredItems = Object.fromEntries(
       ArmorBucketHashes.map((bucketHash) => [
         bucketHash,
-        blocks.map((block) => hypotheticalProcessItem(block, `${bucketHash}`)),
+        relevantBlocks.map((block) => hypotheticalProcessItem(block, `${bucketHash}`)),
       ]),
     ) as ProcessItemsByBucket;
 
