@@ -35,6 +35,7 @@ import { emptyObject } from 'app/utils/empty';
 import {
   isArmor3,
   isArmor3MasterworkSocket,
+  isArmor3TuningMod,
   isClassCompatible,
   isItemLoadoutCompatible,
   itemCanBeEquippedBy,
@@ -302,6 +303,8 @@ export function getLoadoutStats(
   includeRuntimeStatBenefits: boolean,
   /** Assume armor is masterworked according to these rules when calculating stats */
   armorEnergyRules?: ArmorEnergyRules,
+  /** Pinned tuning-mod-to-bucket assignment (see getLoadoutTuningModsByBucket). */
+  tuningModsByBucket?: { [bucketHash: number]: number[] },
 ) {
   const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
 
@@ -339,6 +342,7 @@ export function getLoadoutStats(
     items: armor,
     plannedMods: mods,
     armorEnergyRules: armorEnergyRules ?? inGameArmorEnergyRules,
+    tuningModsBySlot: tuningModsByBucket,
   });
 
   const modStats = getTotalModStatChanges(
@@ -879,10 +883,56 @@ export function getModsFromLoadout(
   defs: D2ManifestDefinitions | undefined,
   loadout: Loadout,
   unlockedPlugs = new Set<number>(),
+  /**
+   * Include tuning mods pinned via modsByBucket. On by default so they show in
+   * the mods area, but the apply path turns it off since it plugs those directly
+   * from modsByBucket and would otherwise assign them twice.
+   */
+  includePinnedTuning = true,
 ) {
-  const internalModHashes = loadout.parameters?.mods ?? [];
+  const internalModHashes = [...(loadout.parameters?.mods ?? [])];
+
+  // Tuning mods are pinned per-bucket (see updateLoadoutWithArmorSet) rather
+  // than living in the flat mod list, but they're still real mods, so surface
+  // them here for display alongside the rest.
+  if (includePinnedTuning && defs && loadout.parameters?.modsByBucket) {
+    for (const modHash of Object.values(loadout.parameters.modsByBucket).flat()) {
+      const modDef = defs.InventoryItem.getOptional(modHash);
+      if (modDef && isArmor3TuningMod(modDef)) {
+        internalModHashes.push(modHash);
+      }
+    }
+  }
 
   return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
+}
+
+/**
+ * The tuning mods pinned to each armor bucket in a loadout. These live in
+ * modsByBucket (see updateLoadoutWithArmorSet) rather than the flat mod list so
+ * their exact per-item placement survives, notably exotic tuning, which
+ * fitMostMods can't otherwise place. Pass this to fitMostMods so it reproduces
+ * that placement instead of falling back to guessing.
+ */
+export function getLoadoutTuningModsByBucket(
+  defs: D2ManifestDefinitions | undefined,
+  loadout: Loadout,
+): { [bucketHash: number]: number[] } | undefined {
+  const modsByBucket = loadout.parameters?.modsByBucket;
+  if (!defs || !modsByBucket) {
+    return undefined;
+  }
+  const result: { [bucketHash: number]: number[] } = {};
+  for (const [bucketHash, mods] of Object.entries(modsByBucket)) {
+    const tuning = mods.filter((h) => {
+      const modDef = defs.InventoryItem.getOptional(h);
+      return modDef && isArmor3TuningMod(modDef);
+    });
+    if (tuning.length) {
+      result[Number(bucketHash)] = tuning;
+    }
+  }
+  return isEmpty(result) ? undefined : result;
 }
 
 const oldToNewMod: HashLookup<number> = {

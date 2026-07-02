@@ -96,12 +96,20 @@ export default memo(function GeneratedSet({
   // Assign the chosen mods to items so we can display them as if they were slotted
   const [itemModAssignments, unassignedMods, resultingItemEnergies] = useMemo(() => {
     const allMods = [...lockedMods, ...autoMods];
+    // tuningModsBySlot lines up with set.armor; key it by bucket so it survives
+    // displayedItems swapping in interchangeable instances from the same slot.
+    const tuningModsBySlot: { [bucketHash: number]: number[] } = {};
+    for (const [i, mods] of set.tuningModsBySlot.entries()) {
+      if (mods.length) {
+        tuningModsBySlot[set.armor[i].bucket.hash] = mods;
+      }
+    }
     const { itemModAssignments, unassignedMods, invalidMods, resultingItemEnergies } = fitMostMods({
       defs,
       items: displayedItems,
       plannedMods: allMods,
       armorEnergyRules,
-      tuningModsByItemId: set.tuningModsByItemId,
+      tuningModsBySlot,
     });
 
     // Set rendering is a great place to verify that the worker process
@@ -116,7 +124,15 @@ export default memo(function GeneratedSet({
     }
 
     return [itemModAssignments, unassignedMods, resultingItemEnergies];
-  }, [lockedMods, autoMods, defs, displayedItems, armorEnergyRules, set.tuningModsByItemId]);
+  }, [
+    lockedMods,
+    autoMods,
+    defs,
+    displayedItems,
+    armorEnergyRules,
+    set.tuningModsBySlot,
+    set.armor,
+  ]);
 
   // Compute a presentable stat breakdown, lazily. This is a bit expensive, so we calculate it only
   // when it's actually needed (in the tooltip), and memoize this via once (no need to memoize

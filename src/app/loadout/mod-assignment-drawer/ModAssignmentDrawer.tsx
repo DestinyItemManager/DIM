@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { permissiveArmorEnergyRules } from 'app/loadout-builder/types';
+import { getLoadoutTuningModsByBucket } from 'app/loadout-drawer/loadout-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
@@ -71,6 +72,11 @@ export default function ModAssignmentDrawer({
 
   const [resolvedMods, modDefinitions] = useLoadoutMods(loadout, storeId);
 
+  const tuningModsBySlot = useMemo(
+    () => getLoadoutTuningModsByBucket(defs, loadout),
+    [defs, loadout],
+  );
+
   const { itemModAssignments, resultingItemEnergies, unassignedMods, invalidMods, upgradeCosts } =
     useMemo(
       () =>
@@ -81,8 +87,9 @@ export default function ModAssignmentDrawer({
           // assume everything is masterworked here -- fitMostMods will
           // ensure to use as few materials as possible
           armorEnergyRules: permissiveArmorEnergyRules,
+          tuningModsBySlot,
         }),
-      [armor, defs, modDefinitions],
+      [armor, defs, modDefinitions, tuningModsBySlot],
     );
 
   const onSocketClick = useCallback(

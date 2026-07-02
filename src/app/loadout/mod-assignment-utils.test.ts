@@ -14,11 +14,7 @@ import {
   reaperModHash,
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import {
-  assignTuningModsHeuristically,
-  createPluggingStrategy,
-  pickPlugPositions,
-} from './mod-assignment-utils';
+import { createPluggingStrategy, pickPlugPositions } from './mod-assignment-utils';
 import { getModExclusionGroup } from './mod-utils';
 
 function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, action: PluggingAction) {
@@ -221,67 +217,4 @@ describe('mod-assignment-utils plugging strategy', () => {
   // There's some situations we currently can't test -- e.g. the circular dependency in
   // https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 because
   // currently all mutex mods have the same energy cost -- 1.
-});
-
-describe('assignTuningModsHeuristically', () => {
-  const makeMod = (hash: number) => ({ hash }) as unknown as PluggableInventoryItemDefinition;
-  const withStat = (mod: PluggableInventoryItemDefinition, statHash: number) => ({ mod, statHash });
-  const item = (id: string, isExotic: boolean, tuningStat: number | undefined) => ({
-    id,
-    isExotic,
-    tuningStat,
-  });
-
-  it('puts a single balanced tuning mod on the exotic', () => {
-    const balanced = makeMod(1);
-    const { assignments, unassigned } = assignTuningModsHeuristically(
-      [withStat(balanced, 0)],
-      [item('helm', false, 50), item('chest', true, undefined)],
-    );
-    expect(unassigned).toHaveLength(0);
-    expect(assignments).toEqual([{ itemId: 'chest', mod: balanced }]);
-  });
-
-  it('places directional tuning before balanced so balanced does not steal the exotic', () => {
-    const directional = makeMod(1);
-    const balanced = makeMod(2);
-    const { assignments, unassigned } = assignTuningModsHeuristically(
-      [withStat(directional, 100), withStat(balanced, 0)],
-      [item('helm', false, 999), item('chest', true, undefined)],
-    );
-    expect(unassigned).toHaveLength(0);
-    // Directional has no matching legendary stat, so it takes the exotic;
-    // balanced then falls to the legendary instead of stealing the exotic.
-    expect(assignments).toContainEqual({ itemId: 'chest', mod: directional });
-    expect(assignments).toContainEqual({ itemId: 'helm', mod: balanced });
-  });
-
-  it('prefers the stat-matched legendary over the exotic for directional tuning', () => {
-    const directional = makeMod(1);
-    const { assignments } = assignTuningModsHeuristically(
-      [withStat(directional, 100)],
-      [item('legs', false, 100), item('chest', true, undefined)],
-    );
-    expect(assignments).toEqual([{ itemId: 'legs', mod: directional }]);
-  });
-
-  it('falls back to the first item for balanced tuning when there is no exotic', () => {
-    const balanced = makeMod(1);
-    const { assignments } = assignTuningModsHeuristically(
-      [withStat(balanced, 0)],
-      [item('helm', false, 50), item('arms', false, 60)],
-    );
-    expect(assignments).toEqual([{ itemId: 'helm', mod: balanced }]);
-  });
-
-  it('reports tuning mods that have nowhere to go as unassigned', () => {
-    const balanced1 = makeMod(1);
-    const balanced2 = makeMod(2);
-    const { assignments, unassigned } = assignTuningModsHeuristically(
-      [withStat(balanced1, 0), withStat(balanced2, 0)],
-      [item('helm', false, 50)],
-    );
-    expect(assignments).toEqual([{ itemId: 'helm', mod: balanced1 }]);
-    expect(unassigned).toEqual([balanced2]);
-  });
 });

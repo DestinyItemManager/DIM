@@ -8,7 +8,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { profileResponseSelector } from 'app/inventory/selectors';
 import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
+import { getLoadoutStats, getLoadoutTuningModsByBucket } from 'app/loadout-drawer/loadout-utils';
 import { getSubclassPlugHashes } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -230,6 +230,8 @@ export function LoadoutCharacterStats({
     equippedItems,
     allMods,
     loadout.parameters?.includeRuntimeStatBenefits ?? true,
+    undefined,
+    getLoadoutTuningModsByBucket(defs, loadout),
   );
 
   return (

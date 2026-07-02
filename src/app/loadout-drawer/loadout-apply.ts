@@ -314,7 +314,9 @@ function doApplyLoadout(
       const modsToApply = (
         (defs.isDestiny2 &&
           !store.isVault &&
-          getModsFromLoadout(defs, loadout, unlockedPlugSetItems()).map(
+          // Pinned tuning mods are applied via modsByBucketToApply below, so keep
+          // them out of the flat list to avoid assigning them twice.
+          getModsFromLoadout(defs, loadout, unlockedPlugSetItems(), false).map(
             (mod) => mod.resolvedMod.hash,
           )) ||
         []

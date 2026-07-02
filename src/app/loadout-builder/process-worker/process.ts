@@ -490,14 +490,11 @@ export async function process(
             // Only non-ignored stats are included, maintaining lexical ordering for priority.
             const numericStatMix = encodeStatMix(finalStats, desiredStatRanges);
 
-            // Add on any tuning mods that were preset on the items.
+            // Add any tuning mods preset on the items to the mod list so they're
+            // counted and displayed. Their exact per-item assignment (which the
+            // stats depend on for balanced tuning) is carried separately in
+            // tuningModsBySlot, so the order here doesn't matter.
             mods.push(
-              // It's important that we keep the order of these tuning mods in
-              // the order of the armor (even when we assign mods dynamically,
-              // later), so that when we assign them in fitMostMods they get
-              // assigned to the same item. Otherwise, we could end up swapping
-              // between one balanced mod and one tuning mod, and the balanced
-              // mod's stat bonuses could be slightly different.
               ...compact([
                 helm.includedTuningMod,
                 gaunt.includedTuningMod,
@@ -572,12 +569,10 @@ export async function process(
       return undefined;
     }
 
-    const tuningModsByItemId: { [itemId: string]: number } = {};
-    for (const item of armor) {
-      if (item.includedTuningMod !== undefined) {
-        tuningModsByItemId[item.id] = item.includedTuningMod;
-      }
-    }
+    // armor is in slot order, so this lines up with ArmorBucketHashes.
+    const tuningModsBySlot = armor.map((item) =>
+      item.includedTuningMod !== undefined ? [item.includedTuningMod] : [],
+    );
 
     return {
       ...rest,
@@ -585,7 +580,7 @@ export async function process(
       stats: fullStats as ArmorStats,
       armorStats: armorOnlyStats as ArmorStats,
       statMods: mods,
-      tuningModsByItemId,
+      tuningModsBySlot,
     };
   });
 

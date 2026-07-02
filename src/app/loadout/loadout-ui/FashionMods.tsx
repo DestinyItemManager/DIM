@@ -5,6 +5,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
+import { isArmor3TuningMod } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -23,8 +24,13 @@ export function FashionMods({
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
   const isShader = (m: number) =>
     defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
+  // Tuning mods share the per-bucket store but aren't fashion, so skip them here.
+  const isTuning = (m: number) => {
+    const def = defs.InventoryItem.get(m);
+    return def && isArmor3TuningMod(def);
+  };
   const shader = modsForBucket.find(isShader);
-  const ornament = modsForBucket.find((m) => !isShader(m));
+  const ornament = modsForBucket.find((m) => !isShader(m) && !isTuning(m));
 
   const shaderItem = shader ? defs.InventoryItem.get(shader) : undefined;
   const ornamentItem = ornament ? defs.InventoryItem.get(ornament) : undefined;
