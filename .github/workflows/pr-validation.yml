@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Inline setup - required for fork PR compatibility
       # Cannot use ./.github/actions/setup-pnpm as it won't work from forks
@@ -31,7 +31,7 @@ jobs:
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Cache Manifest
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: manifest-cache
           key: destiny-manifest-${{ github.run_number }}
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Inline setup - required for fork PR compatibility
       - uses: pnpm/action-setup@v6
@@ -78,7 +78,7 @@ jobs:
 
       # Optimized cache key: Only invalidate on config changes, not all dependencies
       - name: Cache ESLint
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             .eslintcache
@@ -124,7 +124,7 @@ jobs:
       name: pr
       url: ${{ steps.deploy-url.outputs.url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Inline setup - required for fork PR compatibility
       - uses: pnpm/action-setup@v6
