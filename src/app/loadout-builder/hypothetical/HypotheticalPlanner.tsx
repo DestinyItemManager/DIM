@@ -3,7 +3,10 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -27,7 +30,6 @@ import {
   ModStatChanges,
   PinnedItems,
 } from '../types';
-import * as styles from './HypotheticalPlanner.m.scss';
 import {
   AcquisitionPlan,
   assumedMasterworkStats,
@@ -37,6 +39,7 @@ import {
   PlannerOwnedPiece,
   SetBonusRequirement,
 } from './hypothetical-items';
+import * as styles from './HypotheticalPlanner.m.scss';
 
 /** How many owned candidates to consider per slot (plus set-bonus pieces). */
 const OWNED_PER_SLOT = 10;
@@ -74,6 +77,7 @@ export default memo(function HypotheticalPlanner({
   autoStatMods,
   lockedModMap,
   storeId,
+  ownedSetsFound,
   className,
 }: {
   desiredStatRanges: DesiredStatRange[];
@@ -86,6 +90,13 @@ export default memo(function HypotheticalPlanner({
   autoStatMods: boolean;
   lockedModMap: ModMap;
   storeId: string;
+  /**
+   * Whether the real Loadout Optimizer worker found sets meeting the targets
+   * from owned armor. The worker models things the planner doesn't (tuning
+   * mods, artifice sockets, every exotic copy), so when it found sets there's
+   * nothing to farm no matter what the planner's model says.
+   */
+  ownedSetsFound: boolean;
   className?: string;
 }) {
   const defs = useD2Definitions()!;
@@ -197,7 +208,7 @@ export default memo(function HypotheticalPlanner({
     const planWithExotic = (
       exoticEntry: MappedItem | undefined,
       exoticBucketHash: number | undefined,
-    ): AcquisitionPlan => {
+    ): AcquisitionPlan<MappedItem> => {
       const remainingBucketHashes = ArmorBucketHashes.filter(
         (bucketHash) => !(exoticEntry && bucketHash === exoticBucketHash),
       );
@@ -262,7 +273,7 @@ export default memo(function HypotheticalPlanner({
       return best;
     };
 
-    let result: AcquisitionPlan;
+    let result: AcquisitionPlan<MappedItem>;
     let exoticItem: DimItem | undefined;
     let exoticMissing = false;
     let anyExoticMissing = false;
@@ -291,7 +302,7 @@ export default memo(function HypotheticalPlanner({
           candidates.push({ entry, bucketIdx });
         }
       }
-      let best: { plan: AcquisitionPlan; entry: MappedItem } | undefined;
+      let best: { plan: AcquisitionPlan<MappedItem>; entry: MappedItem } | undefined;
       for (const { entry, bucketIdx } of candidates) {
         const candidatePlan = planWithExotic(entry, ArmorBucketHashes[bucketIdx]);
         combosTotal += candidatePlan.combosExamined;
@@ -363,9 +374,12 @@ export default memo(function HypotheticalPlanner({
   }
 
   const farmCount = plan?.farm.reduce((total, { count }) => total + count, 0) ?? 0;
-  const keepNames = plan
-    ? [...(plan.exoticItem ? [describeItem(plan.exoticItem)] : []), ...plan.keep.map((p) => p.name)]
+  const keepItems: DimItem[] = plan
+    ? [...(plan.exoticItem ? [plan.exoticItem] : []), ...plan.keep.map((p) => p.item)]
     : [];
+  // The worker is ground truth for owned armor — it models tuning mods,
+  // artifice sockets and every exotic copy, which the planner's model doesn't.
+  const alreadyBuildable = keepOwned && ownedSetsFound;
 
   const modLines = plan
     ? armorStats.flatMap((statHash) => {
@@ -407,15 +421,17 @@ export default memo(function HypotheticalPlanner({
       ) : (
         <>
           <div className={styles.verdict}>
-            {plan.shortfall > 0
-              ? t('LoadoutBuilder.FarmingPlannerUnreachable', { points: plan.shortfall })
-              : farmCount === 0
-                ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
-                : keepOwned
-                  ? t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount })
-                  : t('LoadoutBuilder.FarmingPlannerNeedIdeal', { count: farmCount })}
+            {alreadyBuildable
+              ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
+              : plan.shortfall > 0
+                ? t('LoadoutBuilder.FarmingPlannerUnreachable', { points: plan.shortfall })
+                : farmCount === 0
+                  ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
+                  : keepOwned
+                    ? t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount })
+                    : t('LoadoutBuilder.FarmingPlannerNeedIdeal', { count: farmCount })}
           </div>
-          {farmCount > 0 && (
+          {!alreadyBuildable && farmCount > 0 && (
             <ul className={styles.recipe}>
               {plan.farm.map(({ block, count }) => {
                 const archetypeDef = defs.InventoryItem.get(block.archetypePlugHash);
@@ -449,7 +465,7 @@ export default memo(function HypotheticalPlanner({
               ))}
             </ul>
           )}
-          {modLines.length > 0 && (
+          {!alreadyBuildable && modLines.length > 0 && (
             <ul className={styles.recipe}>
               {modLines.map(({ key, numMods, label, statDef }) => (
                 <li key={key}>
@@ -462,18 +478,29 @@ export default memo(function HypotheticalPlanner({
               ))}
             </ul>
           )}
-          {(farmCount > 0 || plan.shortfall > 0) && keepNames.length > 0 && (
+          {!alreadyBuildable && (farmCount > 0 || plan.shortfall > 0) && keepItems.length > 0 && (
             <div className={styles.keep}>
-              {t('LoadoutBuilder.FarmingPlannerKeep', { items: keepNames.join(', ') })}
+              {t('LoadoutBuilder.FarmingPlannerKeep')}
+              <div className={styles.keepItems}>
+                {keepItems.map((item) => (
+                  <DraggableInventoryItem item={item} key={item.id}>
+                    <ItemPopupTrigger item={item}>
+                      {(ref, onClick) => (
+                        <ConnectedInventoryItem item={item} onClick={onClick} ref={ref} />
+                      )}
+                    </ItemPopupTrigger>
+                  </DraggableInventoryItem>
+                ))}
+              </div>
             </div>
           )}
-          {plan.exoticMissing && (
+          {!alreadyBuildable && plan.exoticMissing && (
             <div className={styles.keep}>{t('LoadoutBuilder.FarmingPlannerExoticMissing')}</div>
           )}
-          {plan.anyExoticMissing && (
+          {!alreadyBuildable && plan.anyExoticMissing && (
             <div className={styles.keep}>{t('LoadoutBuilder.FarmingPlannerAnyExoticMissing')}</div>
           )}
-          {plan.setBonusUnsatisfiable && (
+          {!alreadyBuildable && plan.setBonusUnsatisfiable && (
             <div className={styles.verdict}>{t('LoadoutBuilder.FarmingPlannerSetImpossible')}</div>
           )}
           <div className={styles.fineprint}>

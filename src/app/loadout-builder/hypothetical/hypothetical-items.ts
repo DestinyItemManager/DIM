@@ -743,13 +743,13 @@ export interface SetBonusRequirement {
   count: number;
 }
 
-export interface AcquisitionPlan {
+export interface AcquisitionPlan<T extends PlannerOwnedPiece = PlannerOwnedPiece> {
   /** Stat points still missing at the best solution; 0 = targets reachable. */
   shortfall: number;
   /** Hypothetical pieces to farm. */
   farm: { block: HypotheticalArmorBlock; count: number }[];
   /** Owned pieces to keep alongside the farmed pieces. */
-  keep: PlannerOwnedPiece[];
+  keep: T[];
   /** How many of the farmed pieces must come from each required set. */
   farmFromSets: { setHash: number; count: number }[];
   /** True if the set bonus requirements can't be satisfied at all. */
@@ -781,7 +781,7 @@ export interface AcquisitionPlan {
  * mods are up to `numGeneralMods` majors (+10) or minors (+5) assigned
  * greedily, respecting per-piece energy when the energy inputs are provided.
  */
-export function planMinimumAcquisitions({
+export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
   blocks,
   desiredStatRanges,
   modStatTotals,
@@ -803,7 +803,7 @@ export function planMinimumAcquisitions({
   /** Stat blocks of pieces locked into the build (e.g. the chosen exotic). */
   fixedPieces?: ArmorStats[];
   /** Owned candidate pieces for each remaining slot. Length = slots to fill. */
-  ownedByBucket?: PlannerOwnedPiece[][];
+  ownedByBucket?: T[][];
   /** Indices into ownedByBucket that must keep an owned piece (pinned items). */
   requiredSlots?: number[];
   setBonusRequirements?: SetBonusRequirement[];
@@ -818,7 +818,7 @@ export function planMinimumAcquisitions({
   fixedPieceEnergies?: number[];
   /** Energy a farmed piece would have in each slot (10 minus that slot's locked mod costs). */
   farmedEnergyBySlot?: number[];
-}): AcquisitionPlan {
+}): AcquisitionPlan<T> {
   const enabledRanges = desiredStatRanges.filter((r) => r.maxStat > 0);
   const numStats = enabledRanges.length;
   const statOrder = enabledRanges.map(({ statHash }): ArmorStatHashes => statHash);
@@ -865,7 +865,7 @@ export function planMinimumAcquisitions({
       energyBudgets: [...fixedEnergies, ...farmedEnergies],
     },
   );
-  const boundAsPlan = (): AcquisitionPlan => ({
+  const boundAsPlan = (): AcquisitionPlan<T> => ({
     shortfall: bound.shortfall,
     farm: bound.counts,
     keep: [],

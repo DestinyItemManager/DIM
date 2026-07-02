@@ -211,6 +211,108 @@ describe('stat-target planner prototype (#11832)', () => {
     expect(impossiblePlan.shortfall).toBeGreaterThan(0);
   });
 
+  it('cross-validates planner verdicts against the LO worker', async () => {
+    // The correctness guarantee: for a battery of targets, the planner and the
+    // real optimizer worker must agree. If the planner says reachable, its
+    // exact recipe fed into the worker must produce a set meeting every
+    // minimum. If the planner says unreachable over the FULL block space, the
+    // worker searching a subset of that space must find nothing.
+    const cases: { name: string; targets: { [statHash: number]: number } }[] = [
+      { name: 'issue example', targets: EXAMPLE_TARGETS },
+      {
+        name: 'user build',
+        targets: {
+          [StatHashes.Melee]: 70,
+          [StatHashes.Grenade]: 100,
+          [StatHashes.Super]: 170,
+          [StatHashes.Class]: 100,
+        },
+      },
+      {
+        name: 'balanced 100s',
+        targets: {
+          [StatHashes.Health]: 100,
+          [StatHashes.Melee]: 100,
+          [StatHashes.Grenade]: 100,
+          [StatHashes.Super]: 100,
+        },
+      },
+      {
+        name: 'impossible pair',
+        targets: { [StatHashes.Grenade]: 200, [StatHashes.Super]: 200 },
+      },
+    ];
+
+    const autoModOptions = mapAutoMods(getAutoMods(defs, new Set()));
+    const runWorker = (filteredItems: ProcessItemsByBucket, ranges: DesiredStatRange[]) =>
+      runLoProcess(
+        0,
+        {
+          filteredItems,
+          modStatTotals: zeroStats(),
+          lockedMods: { generalMods: [], activityMods: [] },
+          setBonuses: {},
+          requiredPerks: [],
+          desiredStatRanges: ranges,
+          anyExotic: false,
+          autoModOptions,
+          autoStatMods: true,
+          strictUpgrades: false,
+          stopOnFirstSet: false,
+        },
+        () => {
+          /* progress not needed */
+        },
+      );
+
+    for (const { name, targets } of cases) {
+      const ranges = makeDesiredStatRanges(targets);
+      const plan = planBestComposition(blocks, ranges);
+
+      if (plan.shortfall === 0) {
+        // Materialize exactly the planner's recipe, one piece per slot.
+        const pieces = plan.counts.flatMap(({ block, count }) =>
+          Array.from({ length: count }, () => block),
+        );
+        expect(pieces).toHaveLength(5);
+        const filteredItems = Object.fromEntries(
+          ArmorBucketHashes.map((bucketHash, i) => [
+            bucketHash,
+            [hypotheticalProcessItem(pieces[i], `${bucketHash}`)],
+          ]),
+        ) as ProcessItemsByBucket;
+
+        const result = await runWorker(filteredItems, ranges);
+        infoLog(
+          'planner prototype',
+          `cross-validate "${name}": planner reachable, worker found ${result.processInfo.numValidSets} valid sets`,
+        );
+        expect(result.processInfo.numValidSets).toBeGreaterThan(0);
+        const best = result.sets[0];
+        for (const [statHash, minStat] of Object.entries(targets)) {
+          expect(best.stats[Number(statHash) as ArmorStatHashes]).toBeGreaterThanOrEqual(minStat);
+        }
+      } else {
+        // The worker searches a subset of the planner's space, so any valid
+        // set it finds would contradict the planner's "unreachable".
+        const relevantBlocks = pruneBlocksForTargets(blocks, ranges, 24);
+        const filteredItems = Object.fromEntries(
+          ArmorBucketHashes.map((bucketHash) => [
+            bucketHash,
+            relevantBlocks.map((block) => hypotheticalProcessItem(block, `${bucketHash}`)),
+          ]),
+        ) as ProcessItemsByBucket;
+
+        const result = await runWorker(filteredItems, ranges);
+        infoLog(
+          'planner prototype',
+          `cross-validate "${name}": planner short ${plan.shortfall}, worker found ${result.processInfo.numValidSets} valid sets`,
+        );
+        expect(result.processInfo.numValidSets).toBe(0);
+      }
+    }
+  });
+
   it('runs the hypothetical space through the unmodified LO worker', async () => {
     // With 12 archetypes, 48^5 ≈ 255M ordered combos is too slow to brute-force
     // through the worker; a real integration would pre-filter hypothetical

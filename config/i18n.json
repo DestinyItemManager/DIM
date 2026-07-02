@@ -681,7 +681,7 @@
     "FarmingPlannerFinePrint": "Uses your best copy of the chosen exotic and keeps your best owned armor. Farmed pieces assume ideal Tier {{tier}} legendary drops; tuning mods are ignored. Evaluated {{combos}} combinations in {{time}}ms.",
     "FarmingPlannerFinePrintIdeal": "Plans every unpinned slot as an ideal Tier {{tier}} legendary drop (plus your chosen exotic). Tuning mods are ignored. Evaluated {{combos}} combinations in {{time}}ms.",
     "FarmingPlannerFromSet": "…with at least {{numPieces}} of these from {{set}}",
-    "FarmingPlannerKeep": "Combined with your: {{items}}",
+    "FarmingPlannerKeep": "Combined with your:",
     "FarmingPlannerKeepOwned": "Keep armor I already own",
     "FarmingPlannerMod": "+10 {{stat}} mod",
     "FarmingPlannerModMinor": "+5 {{stat}} mod",

@@ -47,6 +47,14 @@
   opacity: 0.8;
 }
 
+.keepItems {
+  --item-size: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
 .fineprint {
   margin: 4px 0 0;
   font-size: 10px;

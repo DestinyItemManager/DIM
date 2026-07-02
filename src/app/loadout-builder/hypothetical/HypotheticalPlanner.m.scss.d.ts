@@ -5,6 +5,7 @@ interface CssExports {
   'fineprint': string;
   'icon': string;
   'keep': string;
+  'keepItems': string;
   'recipe': string;
   'setNote': string;
   'tertiary': string;
