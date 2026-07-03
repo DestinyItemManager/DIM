@@ -139,7 +139,7 @@ export function usePopper(
      * so by making those conditions dependencies we can position the popover
      * correctly once the popover is actually shown.
      */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
     ...deps,
   ]);
 }

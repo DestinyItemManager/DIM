@@ -249,7 +249,7 @@ function SearchBar({
   const [menuMaxHeight, setMenuMaxHeight] = useState<undefined | number>();
   const inputElement = useRef<HTMLInputElement>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // oxlint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdateQuery = useCallback(
     instant
       ? onQueryChanged
@@ -370,7 +370,7 @@ function SearchBar({
       setInputValue(searchQuery);
     }
     // This should only happen when the query version changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQueryVersion]);
 
   // Determine a maximum height for the results menu
@@ -428,7 +428,7 @@ function SearchBar({
     } else if (e.key === 'Home' || e.key === 'End') {
       // Disable the use of Home/End to select items in the menu
       // https://github.com/downshift-js/downshift/issues/1162
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // oxlint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (e.nativeEvent as any).preventDownshiftDefault = true;
     } else if (
       (e.key === 'Delete' || e.key === 'Backspace') &&

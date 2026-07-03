@@ -83,7 +83,7 @@ function doGeneralModsFit(
   remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[] | undefined,
 ) {
-  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+  // oxlint-disable-next-line @typescript-eslint/prefer-optional-chain
   if (pickedMods !== undefined && pickedMods.length) {
     generalModCosts = generalModCosts.slice();
     // Intentionally open-coded for performance

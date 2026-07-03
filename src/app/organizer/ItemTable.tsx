@@ -622,7 +622,7 @@ function TableRow({
   return (
     <>
       {filteredColumns.map((column) => (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+        // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           key={column.id}
           onClick={onRowClick(row, column)}

@@ -174,9 +174,9 @@ test.each(equivalentSearches)('|%s| is equivalent to |%s|', (firstQuery, secondQ
 
 /** Remove the startIndex and length from the AST to make them comparable */
 function stripIndexes(ast: QueryAST): AndOp | OrOp | NotOp | FilterOp | NoOp {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-member-access
   delete (ast as any).startIndex;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-member-access
   delete (ast as any).length;
 
   switch (ast.op) {

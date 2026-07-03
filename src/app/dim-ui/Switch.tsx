@@ -31,7 +31,7 @@ export default function Switch<K extends string>({
         onChange={change}
         disabled={disabled}
       />
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      {/* oxlint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label htmlFor={name} />
     </div>
   );

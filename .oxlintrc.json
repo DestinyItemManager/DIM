@@ -8,7 +8,7 @@
     "src/fa-subset.js",
     "src/data/font/symbol-name-sources.ts"
   ],
-  "plugins": ["react", "jsx-a11y", "typescript"],
+  "plugins": ["react", "react-hooks", "jsx-a11y", "typescript"],
   "categories": {
     "correctness": "error"
   },

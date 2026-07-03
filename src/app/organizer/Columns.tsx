@@ -532,7 +532,7 @@ export function getColumns(
           ),
         filter: (_val, item) =>
           item.breakerType
-            ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+            ? // oxlint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
               `breaker:${breakerTypeNames[item.breakerType.hash as BreakerTypeHashes]}`
             : undefined,
       }),

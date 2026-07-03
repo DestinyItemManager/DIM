@@ -157,7 +157,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       }
     }
     // Only depend on storesLoaded because we only want this to run once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [storesLoaded]);
 
   useEffect(() => {
@@ -223,7 +223,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       }
     }
     // Only depend on vendorsLoaded because we only want this to run once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [vendorsLoaded]);
 
   const activePerks = useActivePerks({

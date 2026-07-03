@@ -87,7 +87,7 @@ export default function Organizer({ account }: Props) {
     firstRender.current = false;
 
     // We only want to do this when the search query changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   // When new item categories are selected, set the URL to the new selection, and

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* oxlint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-console */
 /* eslint-disable no-alert */
 import type { DestinyVersion, ExportResponse } from '@destinyitemmanager/dim-api-types';

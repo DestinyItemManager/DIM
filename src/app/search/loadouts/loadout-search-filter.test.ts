@@ -25,7 +25,7 @@ describe('buildSearchConfig', () => {
       let formats = canonicalFilterFormats(filter.format);
 
       if (formats.length < 1) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        // oxlint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw new Error(`filter ${filter.keywords} has no formats`);
       }
 
@@ -33,7 +33,7 @@ describe('buildSearchConfig', () => {
         (f) => f === 'query' || f === 'freeform' || (f === 'range' && filter.overload),
       );
       if (formats.length > 1) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        // oxlint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw new Error(`filter ${filter.keywords} specifies ambiguous formats ${formats}`);
       }
     }

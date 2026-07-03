@@ -179,7 +179,7 @@ export async function generatePlatforms(
       }),
     );
   // Yes, this knowingly mixes promises and non-promises
-  // eslint-disable-next-line @typescript-eslint/await-thenable
+  // oxlint-disable-next-line @typescript-eslint/await-thenable
   return compact(await Promise.all(accountPromises));
 }
 

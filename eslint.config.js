@@ -16,17 +16,10 @@ import tseslint from 'typescript-eslint';
 // TODO: different configs for JS vs TS
 export default tseslint.config(
   { name: 'eslint/recommended', ...eslint.configs.recommended },
-  ...tseslint.configs.recommendedTypeChecked,
-  {
-    name: 'typescript-eslint/parser-options',
-    languageOptions: {
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-  ...tseslint.configs.stylisticTypeChecked,
+  // Type-aware rules are handled by oxlint (tsgolint/typescript-go), so ESLint
+  // uses the non-type-checked presets and no longer builds the TS program.
+  ...tseslint.configs.recommended,
+  ...tseslint.configs.stylistic,
   regexpPlugin.configs['flat/recommended'],
   {
     name: 'react',
@@ -100,7 +93,7 @@ export default tseslint.config(
   },
   {
     name: 'eslint-react',
-    ...react.configs['recommended-type-checked'],
+    ...react.configs['recommended-typescript'],
   },
   {
     name: 'global ignores',
@@ -472,4 +465,7 @@ export default tseslint.config(
   // config (.oxlintrc.json), so ESLint only runs the rules oxlint doesn't have
   // (sonarjs, github, css-modules, react-redux, no-restricted-syntax, etc.).
   ...oxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
+  // Type-aware linting moved to oxlint (tsgolint); turn off all type-checked
+  // rules here so ESLint no longer needs the TypeScript program.
+  tseslint.configs.disableTypeChecked,
 );

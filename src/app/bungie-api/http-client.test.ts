@@ -33,7 +33,7 @@ interface TroubleshootingResponse {
 }
 
 const makePretendFetch = (response?: any) => (req: any) => ({
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-return
   json: () => ({ req: req as Request, ErrorCode: 1, ...response }),
 });
 const pretendHttpClient = (response?: any) =>
@@ -104,7 +104,7 @@ const cases: [(...params: any) => any, object | undefined][] = [
 ];
 
 test.each(cases)('check Request builder for %p', async (apiFunc, apiFuncParams) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // oxlint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const request: TroubleshootingResponse = await apiFunc(pretendHttpClient(), apiFuncParams);
   const { headers, method, url, body } = request.req;
   expect({ headers, method, url, body }).toMatchSnapshot();

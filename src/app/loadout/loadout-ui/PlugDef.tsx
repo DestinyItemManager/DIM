@@ -35,7 +35,7 @@ export default function PlugDef({
       role={onClick ? 'button' : undefined}
       className={clsx('item', className)}
       onClick={onClick}
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+      // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={onClick ? 0 : undefined}
     >
       <PressTip

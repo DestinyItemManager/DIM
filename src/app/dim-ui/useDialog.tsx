@@ -77,7 +77,7 @@ function Dialog<Args = [], Result = void>({
   // We block click event propagation or else it'll trigger click handlers of the parent.
   return (
     <Portal>
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <dialog
         className={styles.dialog}
         ref={dialogRef}

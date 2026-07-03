@@ -76,7 +76,7 @@ export function useLoadoutUpdaters(
     fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction,
   ) {
     // exhaustive-deps wants us to remove the dependency on defs, but we really do need it
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
     return useCallback((...args: T) => setLoadout(fn(defs, ...args)), [fn, defs]);
   }
   function useDefsStoreUpdater<T extends unknown[]>(
@@ -87,7 +87,7 @@ export function useLoadoutUpdaters(
     ) => LoadoutUpdateFunction,
   ) {
     // exhaustive-deps wants us to remove the dependency on defs and store, but we really do need it
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
     return useCallback((...args: T) => setLoadout(fn(defs, store, ...args)), [fn, defs, store]);
   }
 

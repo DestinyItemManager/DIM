@@ -196,7 +196,7 @@ export const itemTypeFilter = {
     }
     return (item) => item.bucket.hash === bucketHash;
   },
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+  // oxlint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   fromItem: (item) => `is:${bucketToType[item.bucket.hash as BucketHashes]}`,
 } satisfies ItemFilterDefinition;
 
@@ -225,7 +225,7 @@ const d1itemTypeFilter = {
     }
     return (item) => item.bucket.hash === bucketHash;
   },
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+  // oxlint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   fromItem: (item) => `is:${d1BucketToType[item.bucket.hash as BucketHashes]}`,
 } satisfies ItemFilterDefinition;
 
