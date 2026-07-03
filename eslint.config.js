@@ -5,6 +5,7 @@ import eslint from '@eslint/js';
 import arrayFunc from 'eslint-plugin-array-func';
 import github from 'eslint-plugin-github';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import oxlint from 'eslint-plugin-oxlint';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import * as regexpPlugin from 'eslint-plugin-regexp';
@@ -467,4 +468,8 @@ export default tseslint.config(
       'no-restricted-imports': 'off',
     },
   },
+  // Must come last: turn off every ESLint rule already covered by our oxlint
+  // config (.oxlintrc.json), so ESLint only runs the rules oxlint doesn't have
+  // (sonarjs, github, css-modules, react-redux, no-restricted-syntax, etc.).
+  ...oxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
 );
