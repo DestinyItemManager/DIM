@@ -556,7 +556,7 @@ describe('fillLoadoutFromEquipped', () => {
     loadout = fillLoadoutFromEquipped(defs, store)(loadout);
 
     // Five equipped items, and the original item was left in place
-    expect(loadout.items.length).toBe(13); // Subclass, weapons, armor, emblem, ship, ghost, sparrow
+    expect(loadout.items.length).toBe(14); // Subclass, weapons, armor, emblem, ship, ghost, sparrow, artifact
     expect(loadout.items[0]).toMatchObject({ equip: true, id: item.id });
     // Mods get saved when everything is filled in, if they weren't defined before
     expect(loadout.parameters?.mods).not.toBeUndefined();
