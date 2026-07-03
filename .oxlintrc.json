@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [
+    "*.m.scss.d.ts",
+    "*.m.css.d.ts",
+    "src/build-browsercheck-utils.js",
+    "src/testing/jest-setup.cjs",
+    "src/fa-subset.js",
+    "src/data/font/symbol-name-sources.ts"
+  ],
+  "plugins": ["react", "jsx-a11y", "typescript", "import", "promise"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/no-did-update-set-state": "off",
+    "eslint/no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }]
+  }
+}
