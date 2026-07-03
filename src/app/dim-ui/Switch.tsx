@@ -27,6 +27,7 @@ export default function Switch<K extends string>({
         role="switch"
         className="onoffswitch-checkbox"
         checked={checked}
+        aria-checked={checked}
         onChange={change}
         disabled={disabled}
       />
