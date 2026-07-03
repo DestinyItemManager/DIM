@@ -12,7 +12,7 @@
   "scripts": {
     "test": "jest -i src/testing/precache-manifest.test.ts && jest --verbose --testPathIgnorePatterns=precache-manifest.test.ts",
     "lint": "pnpm run '/^lint:.*/'",
-    "lint:oxlint": "oxlint",
+    "lint:oxlint": "oxlint --type-aware src",
     "lint:eslint": "eslint src",
     "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --check",
     "lint:stylelint": "stylelint \"src/**/*.scss\"",
@@ -161,6 +161,7 @@
     "mkcert": "^3.2.0",
     "nodemon": "^3.1.14",
     "oxlint": "^1.72.0",
+    "oxlint-tsgolint": "^0.24.0",
     "prettier": "^3.9.4",
     "prettier-plugin-organize-imports": "^4.3.0",
     "react-refresh": "^0.18.0",

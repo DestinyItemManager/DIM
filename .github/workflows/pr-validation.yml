@@ -94,9 +94,10 @@ jobs:
       - name: StyleLint
         run: pnpm lint:stylelint
 
-      # Fast Rust-based lint pass; fails fast on correctness issues before the
-      # slower ESLint run below (which stays authoritative for type-aware and
-      # DIM-specific rules oxlint doesn't cover).
+      # Fast Rust-based lint pass, including type-aware rules via tsgolint
+      # (typescript-go). Fails fast before the slower ESLint run below, which
+      # stays authoritative only for DIM's plugin/custom rules oxlint doesn't
+      # cover (sonarjs, github, css-modules, react-redux, no-restricted-syntax).
       - name: Oxlint
         run: pnpm lint:oxlint
 
