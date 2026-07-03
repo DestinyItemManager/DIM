@@ -560,8 +560,8 @@ describe('fillLoadoutFromEquipped', () => {
     expect(loadout.items[0]).toMatchObject({ equip: true, id: item.id });
     // Mods get saved when everything is filled in, if they weren't defined before
     expect(loadout.parameters?.mods).not.toBeUndefined();
-    // Artifact unlocks are filled in too, if they weren't defined before
-    expect(loadout.parameters?.artifactUnlocks).not.toBeUndefined();
+    // Artifact unlocks are deprecated
+    expect(loadout.parameters?.artifactUnlocks).toBeUndefined();
     // As is fashion, if it wasn't defined before
     expect(loadout.parameters?.modsByBucket).not.toBeUndefined();
   });
