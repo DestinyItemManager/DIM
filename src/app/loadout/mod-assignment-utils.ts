@@ -2,12 +2,13 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { ArmorEnergyRules } from 'app/loadout-builder/types';
+import { ArmorBucketHashes, ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import {
   ItemRarityName,
   armor2PlugCategoryHashesByName,
   maxEnergyCapacity,
+  tuningModToTunedStathash,
 } from 'app/search/d2-known-values';
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { count, mapValues, sumBy } from 'app/utils/collections';
@@ -21,6 +22,7 @@ import {
 } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import {
+  getArmor3TuningSocket,
   getSocketByIndex,
   getSocketsByCategoryHash,
   plugFitsIntoSocket,
@@ -375,28 +377,30 @@ export function fitMostMods({
     }
   }
 
-  // Tuning mods are also free, but we assign them in exactly the order they
-  // appear in the mods list to the list of armor (assuming armor is ordered
-  // helmet, arms, chest, legs, classitem). We *don't* try to minimize how many
-  // mod changes are made. This is because balanced mods provide different stat
-  // benefits depending on what item they're assigned to (+1 to the three lowest
-  // stats), so if we assigned them in a different order than they were chosen
-  // in the process loop, we might end up with different stats than the user
-  // expected.
+  // Tuning mods are free. The LO worker keeps them in the flat mod list in
+  // canonical slot order (helmet, gauntlet, chest, legs, class -- see the comment
+  // in process.ts). Reproduce its assignment with a single greedy pass: give each
+  // tuning mod, in that order, to the first tuning-capable item that can take it.
+  // The candidate items are sorted into the same slot order so the result doesn't
+  // depend on the order the caller happened to pass items in. Exotics expose every
+  // tuning stat, so they can take any tuning mod; a legendary only takes balanced
+  // tuning or the directional mod matching its locked stat -- a subset of what an
+  // exotic accepts.
   //
-  // Exclude exotics since they blow up the combos since they have all the tuning sockets.
-  //
-  const tuningItems = items.filter((i) => !i.isExotic && getArmor3TuningStat(i) !== undefined);
+  // This previously filtered out exotics, which was only safe because tuning was
+  // never assigned to exotics. Now that it can be (expandExoticTuning), that
+  // exclusion dropped or scrambled the exotic's tuning mod -- the actual bug.
+  const tuningItems = items
+    .filter((item) => getArmor3TuningSocket(item) !== undefined)
+    .sort(compareBy((item) => (ArmorBucketHashes as number[]).indexOf(item.bucket.hash)));
   for (const tuningMod of tuningMods) {
-    // Find the tuning stat hash, which is the stat that gets +5 when this mod
-    // is applied. For "Balanced Tuning" this should be 0.
-    const tuningStatHash = tuningMod.investmentStats?.find((s) => s.value > 1)?.statTypeHash ?? 0;
-    const targetItemIndex = tuningItems.findIndex((i) =>
-      tuningStatHash === 0
-        ? true // Balanced tuning can go on any item with a tuning socket
-        : // Otherwise the item's tuning stat must match the mod's
-          getArmor3TuningStat(i) === tuningStatHash,
-    );
+    const modStat = tuningModToTunedStathash[tuningMod.hash];
+    const targetItemIndex = tuningItems.findIndex((item) => {
+      const itemStat = getArmor3TuningStat(item);
+      // Exotic (itemStat undefined) takes any tuning mod; a legendary takes
+      // balanced tuning (modStat undefined) or its own locked-stat directional.
+      return itemStat === undefined || modStat === undefined || itemStat === modStat;
+    });
     if (targetItemIndex !== -1) {
       bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
       tuningItems.splice(targetItemIndex, 1);

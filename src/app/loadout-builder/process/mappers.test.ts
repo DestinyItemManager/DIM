@@ -30,6 +30,7 @@ describe('lo process mappers', () => {
       modsForSlot: [],
       desiredStatRanges: [],
       autoStatMods: true,
+      expandExoticTuning: false,
     })[0];
 
     expect(mappedItem.remainingEnergyCapacity).toBe(10);
@@ -46,6 +47,7 @@ describe('lo process mappers', () => {
       modsForSlot: [],
       desiredStatRanges: [],
       autoStatMods: true,
+      expandExoticTuning: false,
     })[0];
 
     expect(mappedItem.remainingEnergyCapacity).toBe(modifiedItem.energy?.energyCapacity);
@@ -62,6 +64,7 @@ describe('lo process mappers', () => {
       modsForSlot: [],
       desiredStatRanges: [],
       autoStatMods: true,
+      expandExoticTuning: false,
     })[0];
 
     expect(mappedItem.remainingEnergyCapacity).toBe(MIN_LO_ITEM_ENERGY);
