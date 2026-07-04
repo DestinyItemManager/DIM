@@ -7,10 +7,27 @@ import { useSelector } from 'react-redux';
 import * as styles from './Description.m.scss';
 import { LinesContent, Perk } from './descriptionInterface';
 
+/**
+ * Clarity descriptions come from a community-maintained database we fetch at
+ * runtime, so the `link` on a line is untrusted input. Only render it as a real
+ * link if it's an http(s) URL - this mirrors the scheme check we already do for
+ * community wishlist URLs in validateWishListURLs.
+ */
+export function isAllowedLink(link: string): boolean {
+  try {
+    const { protocol } = new URL(link);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
 const customContent = (content: LinesContent) => {
-  if (content.link) {
+  if (content.link && isAllowedLink(content.link)) {
     return <ExternalLink href={content.link}>{content.text}</ExternalLink>;
   }
+  // Unsafe or malformed link: keep showing the text, just not as a link.
+  return applyFormatting(content.text);
 };
 
 const joinClassNames = (classNames?: (keyof typeof styles)[]) =>
