@@ -1,4 +1,5 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
+import { VendorHashes } from 'app/search/d2-known-values';
 import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
@@ -47,5 +48,31 @@ describe('process vendors', () => {
       }
     }
     expect(vendorItemPatternFound).toBe(true);
+  });
+
+  it('merges the split Eververse vendors in the real vendor data', async () => {
+    const defs = await getTestDefinitions();
+    const vendorsResponse = getTestVendors();
+
+    // Guard against a future fixture that no longer has the split family to merge.
+    const eververseVendorsWithSales = Object.keys(vendorsResponse.sales.data ?? {}).filter((key) =>
+      defs.Vendor.get(Number(key))?.vendorIdentifier?.startsWith('EVERVERSE'),
+    );
+    expect(eververseVendorsWithSales.length).toBeGreaterThan(1);
+
+    const vendorGroups = await getTestVendorGroups();
+    const allVendors = vendorGroups.flatMap((g) => g.vendors);
+
+    // The whole family collapses into just the canonical Eververse vendor.
+    const eververseVendors = allVendors.filter((v) =>
+      v.def.vendorIdentifier?.startsWith('EVERVERSE'),
+    );
+    expect(eververseVendors).toHaveLength(1);
+    expect(eververseVendors[0].def.hash).toBe(VendorHashes.Eververse);
+
+    // Sub-vendor categories were folded in, so there are more than the def alone has.
+    const merged = eververseVendors[0];
+    const canonicalCategoryCount = defs.Vendor.get(VendorHashes.Eververse).displayCategories.length;
+    expect(merged.def.displayCategories.length).toBeGreaterThan(canonicalCategoryCount);
   });
 });
