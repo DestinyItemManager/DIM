@@ -11,6 +11,7 @@ import { useSetting } from 'app/settings/hooks';
 import { querySelector } from 'app/shell/selectors';
 import { compact, filterMap } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -50,6 +51,8 @@ export default function Records({ account }: Props) {
   const [redactedRecordsRevealed, setRedactedRecordsRevealed] =
     useSetting('redactedRecordsRevealed');
   const [sortRecordProgression, setSortRecordProgression] = useSetting('sortRecordProgression');
+  // Transient toggle (like the Vendors page) to only show items you haven't collected yet.
+  const [acquiredCollectiblesHidden, setAcquiredCollectiblesHidden] = useState(false);
 
   const defs = useD2Definitions();
 
@@ -103,14 +106,27 @@ export default function Records({ account }: Props) {
 
   const presentationNodes = nodeHashes.map((h) => defs.PresentationNode.get(h)).filter(Boolean);
 
-  const menuItems = [
-    { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    ...presentationNodes.filter(Boolean).map((nodeDef) => ({
+  // The "only uncollected" toggle focuses the page on collectibles, so when it's on
+  // we hide the other record toggles and every section (and sidebar entry) that
+  // doesn't contain collectibles.
+  const isCollectibleSection = (hash: number) =>
+    hash === collectionsRootHash || hash === badgesRootNodeHash;
+  const visiblePresentationNodes = acquiredCollectiblesHidden
+    ? presentationNodes.filter((nodeDef) => isCollectibleSection(nodeDef.hash))
+    : presentationNodes;
+
+  const menuItems = compact([
+    acquiredCollectiblesHidden
+      ? undefined
+      : { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
+    ...visiblePresentationNodes.map((nodeDef) => ({
       id: `p_${nodeDef.hash}`,
       title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
     })),
-    { id: 'universalOrnaments', title: universalOrnamentsName },
-  ];
+    acquiredCollectiblesHidden
+      ? undefined
+      : { id: 'universalOrnaments', title: universalOrnamentsName },
+  ]);
 
   return (
     <PageWithMenu className="d2-vendors">
@@ -121,41 +137,58 @@ export default function Records({ account }: Props) {
           </PageWithMenu.MenuButton>
         ))}
         <div className={styles.presentationNodeOptions}>
+          {!acquiredCollectiblesHidden && (
+            <>
+              <CheckButton
+                name="hide-completed"
+                checked={completedRecordsHidden}
+                onChange={setCompletedRecordsHidden}
+              >
+                {t('Triumphs.HideCompleted')}
+              </CheckButton>
+              <CheckButton
+                name="reveal-redacted"
+                checked={redactedRecordsRevealed}
+                onChange={setRedactedRecordsRevealed}
+              >
+                {t('Triumphs.RevealRedacted')}
+              </CheckButton>
+              <CheckButton
+                name="sort-progression"
+                checked={sortRecordProgression}
+                onChange={setSortRecordProgression}
+              >
+                {t('Triumphs.SortRecords')}
+              </CheckButton>
+            </>
+          )}
           <CheckButton
-            name="hide-completed"
-            checked={completedRecordsHidden}
-            onChange={setCompletedRecordsHidden}
+            name="hide-collected"
+            checked={acquiredCollectiblesHidden}
+            onChange={setAcquiredCollectiblesHidden}
           >
-            {t('Triumphs.HideCompleted')}
-          </CheckButton>
-          <CheckButton
-            name="reveal-redacted"
-            checked={redactedRecordsRevealed}
-            onChange={setRedactedRecordsRevealed}
-          >
-            {t('Triumphs.RevealRedacted')}
-          </CheckButton>
-          <CheckButton
-            name="sort-progression"
-            checked={sortRecordProgression}
-            onChange={setSortRecordProgression}
-          >
-            {t('Triumphs.SortRecords')}
+            {t('Vendors.FilterToUnacquired')}
           </CheckButton>
         </div>
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents className={styles.page}>
-        <section id="trackedTriumphs">
-          <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
-            <TrackedTriumphs searchQuery={searchQuery} />
-          </CollapsibleTitle>
-        </section>
-        {presentationNodes.map((nodeDef) => (
+        {!acquiredCollectiblesHidden && (
+          <section id="trackedTriumphs">
+            <CollapsibleTitle title={t('Progress.TrackedTriumphs')} sectionId="trackedTriumphs">
+              <TrackedTriumphs searchQuery={searchQuery} />
+            </CollapsibleTitle>
+          </section>
+        )}
+        {visiblePresentationNodes.map((nodeDef) => (
           <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
             <CollapsibleTitle
               title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}
               sectionId={`p_${nodeDef.hash}`}
+              forceOpen={
+                acquiredCollectiblesHidden &&
+                (nodeDef.hash === collectionsRootHash || nodeDef.hash === badgesRootNodeHash)
+              }
             >
               <PresentationNodeRoot
                 presentationNodeHash={nodeDef.hash}
@@ -168,17 +201,20 @@ export default function Records({ account }: Props) {
                 isTriumphs={nodeDef.hash === recordsRootHash}
                 showPlugSets={nodeDef.hash === collectionsRootHash}
                 completedRecordsHidden={completedRecordsHidden}
+                acquiredCollectiblesHidden={acquiredCollectiblesHidden}
               />
             </CollapsibleTitle>
           </section>
         ))}
-        <section id="universalOrnaments">
-          <CollapsibleTitle title={universalOrnamentsName} sectionId="universalOrnaments">
-            <ErrorBoundary name={universalOrnamentsName}>
-              <UniversalOrnaments searchQuery={searchQuery} searchFilter={searchFilter} />
-            </ErrorBoundary>
-          </CollapsibleTitle>
-        </section>
+        {!acquiredCollectiblesHidden && (
+          <section id="universalOrnaments">
+            <CollapsibleTitle title={universalOrnamentsName} sectionId="universalOrnaments">
+              <ErrorBoundary name={universalOrnamentsName}>
+                <UniversalOrnaments searchQuery={searchQuery} searchFilter={searchFilter} />
+              </ErrorBoundary>
+            </CollapsibleTitle>
+          </section>
+        )}
       </PageWithMenu.Contents>
     </PageWithMenu>
   );

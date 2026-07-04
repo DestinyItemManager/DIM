@@ -70,6 +70,7 @@ export default function CollapsibleTitle({
   showExtraOnlyWhenCollapsed,
   className,
   disabled,
+  forceOpen,
   sectionId,
   style,
 }: {
@@ -82,13 +83,16 @@ export default function CollapsibleTitle({
   showExtraOnlyWhenCollapsed?: boolean;
   /** if true, this section is forced closed and ignores clicks */
   disabled?: boolean;
+  /** if true, this section is forced open regardless of the saved collapsed state */
+  forceOpen?: boolean;
   children?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
 }) {
   const dispatch = useThunkDispatch();
   const collapsedSetting = useSelector(collapsedSelector(sectionId));
-  const collapsed = Boolean(disabled) || (collapsedSetting ?? Boolean(defaultCollapsed));
+  const collapsed =
+    Boolean(disabled) || (!forceOpen && (collapsedSetting ?? Boolean(defaultCollapsed)));
 
   const toggle = useCallback(
     () => dispatch(toggleCollapsedSection(sectionId)),
