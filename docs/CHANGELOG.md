@@ -4,6 +4,7 @@
 * Improved Loadout Optimizer speed.
 * Actually show all items for sale in Eververse after Monument of Triumph release.
 * Only render community perk description links that are http(s) URLs
+* Loadout Optimizer now considers tuning mods on exotic armor when you select a specific exotic or Any Exotic.
 
 ## 8.131.0 <span class="changelog-date">(2026-06-28)</span>
 
