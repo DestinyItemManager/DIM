@@ -689,6 +689,7 @@
     "ExistingLoadout": "既存のロードアウト",
     "Exotic": "エキゾチックアーマー",
     "ExoticSpecialCategory": "スペシャル",
+    "ExoticTuningNote": "Lock a specific exotic, or choose Any Exotic, to also consider its tuning mods.",
     "Filter": "設定",
     "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
     "IncreaseStatPriority": "ステータス優先度を上げる",
