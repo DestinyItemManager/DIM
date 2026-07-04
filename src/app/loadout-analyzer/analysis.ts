@@ -23,7 +23,6 @@ import {
 import {
   getLoadoutStats,
   getLoadoutSubclassFragmentCapacity,
-  getLoadoutTuningModsByBucket,
   resolveLoadoutModHashes,
 } from 'app/loadout-drawer/loadout-utils';
 import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
@@ -84,7 +83,6 @@ export async function analyzeLoadout(
 
   const originalLoadoutMods = resolvedLoadout.resolvedMods;
   const originalModDefs = originalLoadoutMods.map((mod) => mod.resolvedMod);
-  const tuningModsByBucket = getLoadoutTuningModsByBucket(defs, loadout);
 
   const loadoutParameters: LoadoutParameters = {
     ...defaultLoadoutParameters,
@@ -197,13 +195,7 @@ export async function analyzeLoadout(
       assumeArmorMasterwork: loadoutParameters?.assumeArmorMasterwork ?? AssumeArmorMasterwork.None,
     };
 
-    const modProblems = getModProblems(
-      defs,
-      loadoutArmor,
-      modMap,
-      armorEnergyRules,
-      tuningModsByBucket,
-    );
+    const modProblems = getModProblems(defs, loadoutArmor, modMap, armorEnergyRules);
     needUpgrades ||= modProblems.needsUpgradesForMods;
     if (modProblems.cantFitMods) {
       findings.add(LoadoutFinding.ModsDontFit);
@@ -235,7 +227,6 @@ export async function analyzeLoadout(
         armorEnergyRules,
         statConstraints,
         includeRuntimeStatBenefits,
-        tuningModsByBucket,
       );
       const assumedLoadoutStats = statProblems.stats;
       // If Font mods cause a loadout stats to exceed MAX_STAT, note this for later
@@ -457,7 +448,6 @@ function getModProblems(
   loadoutArmor: DimItem[],
   modMap: ModMap,
   loadoutArmorEnergyRules: ArmorEnergyRules,
-  tuningModsByBucket: { [bucketHash: number]: number[] } | undefined,
 ): {
   cantFitMods: boolean;
   needsUpgradesForMods: boolean;
@@ -478,7 +468,6 @@ function getModProblems(
         armorEnergyRules,
         items: loadoutArmor,
         plannedMods: mods,
-        tuningModsBySlot: tuningModsByBucket,
       });
       return !invalidModsForThisSet.length && !unassignedMods.length;
     };
@@ -520,7 +509,6 @@ function getStatProblems(
   loadoutArmorEnergyRules: ArmorEnergyRules,
   resolvedStatConstraints: ResolvedStatConstraint[],
   includeRuntimeStatBenefits: boolean,
-  tuningModsByBucket: { [bucketHash: number]: number[] } | undefined,
 ): {
   stats: HashLookup<DimCharacterStat>;
   cantHitStats: boolean;
@@ -535,7 +523,6 @@ function getStatProblems(
       mods,
       includeRuntimeStatBenefits,
       armorEnergyRules,
-      tuningModsByBucket,
     );
     return {
       stats,

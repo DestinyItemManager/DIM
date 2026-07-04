@@ -59,14 +59,6 @@ export interface ProcessArmorSet {
   readonly armor: readonly string[];
   /** Which stat mods were added? */
   readonly statMods: number[];
-  /**
-   * The tuning mod the worker put on each item, in armor slot order (see
-   * ArmorBucketHashes). One entry per slot, empty if that item has no tuning
-   * mod. Balanced tuning's stat effect depends on the item it's on, so the
-   * assignment can't be re-derived from statMods alone and has to be carried
-   * through.
-   */
-  readonly tuningModsBySlot: number[][];
 
   /** Sum of enabled stats values. */
   readonly enabledStatsTotal: number;

@@ -16,7 +16,6 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { filterMap, isEmpty } from 'app/utils/collections';
-import { isArmor3TuningMod } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { HashLookup } from 'app/utils/util-types';
 import {
@@ -27,7 +26,7 @@ import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { keyBy, maxBy } from 'es-toolkit';
 import { produce } from 'immer';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import PlugDef from '../loadout-ui/PlugDef';
@@ -100,30 +99,7 @@ export default function FashionDrawer({
     }),
   );
 
-  // Tuning mods share the per-bucket store but aren't fashion. Keep them out of
-  // the drawer's working state so fashion edits (which rebuild modsByBucket from
-  // cosmetic sockets) can't drop them, and merge them back in when we commit.
-  const [fashionModsByBucket, tuningModsByBucket] = useMemo(() => {
-    const fashion: { [bucketHash: number]: number[] } = {};
-    const tuning: { [bucketHash: number]: number[] } = {};
-    for (const [bucketHash, mods] of Object.entries(loadout.parameters?.modsByBucket ?? {})) {
-      for (const modHash of mods) {
-        const modDef = defs.InventoryItem.getOptional(modHash);
-        const target = modDef && isArmor3TuningMod(modDef) ? tuning : fashion;
-        (target[Number(bucketHash)] ??= []).push(modHash);
-      }
-    }
-    return [fashion, tuning];
-  }, [loadout.parameters?.modsByBucket, defs]);
-
-  const [modsByBucket, setModsByBucket] = useState(fashionModsByBucket);
-  const commitModsByBucket = () => {
-    const merged = { ...modsByBucket };
-    for (const [bucketHash, tuning] of Object.entries(tuningModsByBucket)) {
-      merged[Number(bucketHash)] = [...(merged[Number(bucketHash)] ?? []), ...tuning];
-    }
-    onModsByBucketUpdated(merged);
-  };
+  const [modsByBucket, setModsByBucket] = useState(loadout.parameters?.modsByBucket ?? {});
   const isShader = (h: number) =>
     defs.InventoryItem.get(h)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
   const modHashes = Object.values(modsByBucket).flat();
@@ -142,7 +118,7 @@ export default function FashionDrawer({
         type="button"
         className="dim-button"
         onClick={() => {
-          commitModsByBucket();
+          onModsByBucketUpdated(modsByBucket);
           onClose();
         }}
       >

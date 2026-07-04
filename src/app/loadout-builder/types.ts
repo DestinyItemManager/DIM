@@ -56,8 +56,6 @@ export interface ArmorSet {
   readonly armor: DimItem[];
   /** Which stat mods were added? */
   readonly statMods: number[];
-  /** The tuning mod on each item, in `armor` (slot) order. Empty if none. */
-  readonly tuningModsBySlot: number[][];
 }
 
 export type ItemsByBucket = Readonly<{

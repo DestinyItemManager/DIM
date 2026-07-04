@@ -14,7 +14,6 @@ import { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { inGameArmorEnergyRules } from 'app/loadout-builder/types';
 import {
   getLoadoutStats,
-  getLoadoutTuningModsByBucket,
   newLoadoutFromEquipped,
   pickBackingStore,
 } from 'app/loadout-drawer/loadout-utils';
@@ -103,7 +102,6 @@ export function downloadLoadoutsCsv(): ThunkResult {
           resolvedLoadout.resolvedMods.map((mod) => mod.resolvedMod),
           includesFontStats,
           inGameArmorEnergyRules,
-          getLoadoutTuningModsByBucket(defs, loadout),
         );
         for (const [statHash_, val] of Object.entries(calculatedStats)) {
           const def = defs.Stat.get(parseInt(statHash_, 10));
