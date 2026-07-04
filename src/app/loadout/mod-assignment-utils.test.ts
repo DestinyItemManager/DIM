@@ -339,4 +339,66 @@ describe('fitMostMods tuning assignment', () => {
     expect(unassignedMods).toHaveLength(0);
     expect(itemModAssignments[legendary.id].map((mod) => mod.hash)).toContain(directionalHash);
   });
+
+  it("leaves an un-tuned exotic alone so it can't steal a legendary's tuning mod", () => {
+    const legendary = legendaryTuningItem;
+    if (!legendary || legendary.bucket.hash === exoticTuningItem.bucket.hash) {
+      return; // need an exotic and a legendary tuning piece in different buckets
+    }
+
+    // A set with a tuning-capable exotic and a tuning-capable legendary, filled out
+    // with non-tuning pieces. On a default LO run the exotic isn't given a tuning
+    // mod (expandExoticTuning is off), so the flat mod list holds only the
+    // legendary's mod. The exotic must not consume it -- both the exotic accepting
+    // any tuning mod and slot order could otherwise pull the mod onto the exotic.
+    const items = [
+      exoticTuningItem,
+      legendary,
+      ...nonTuningArmor.filter((item) => item.bucket.hash !== legendary.bucket.hash).slice(0, 3),
+    ];
+    const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
+      items,
+      plannedMods: [balancedTuningMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+
+    expect(unassignedMods).toHaveLength(0);
+    expect(itemModAssignments[legendary.id].map((mod) => mod.hash)).toContain(
+      balancedTuningMod.hash,
+    );
+    expect(itemModAssignments[exoticTuningItem.id].map((mod) => mod.hash)).not.toContain(
+      balancedTuningMod.hash,
+    );
+  });
+
+  it('keeps the exotic in play when there are more tuning mods than legendaries', () => {
+    const legendary = legendaryTuningItem;
+    if (!legendary || legendary.bucket.hash === exoticTuningItem.bucket.hash) {
+      return;
+    }
+
+    // Two tuning mods but only one tuning-capable legendary means the extra mod must
+    // belong to the exotic (the user targeted an exotic, so it got tuned too), so the
+    // exotic stays a candidate and both pieces end up with a mod.
+    const items = [
+      exoticTuningItem,
+      legendary,
+      ...nonTuningArmor.filter((item) => item.bucket.hash !== legendary.bucket.hash).slice(0, 3),
+    ];
+    const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
+      items,
+      plannedMods: [balancedTuningMod, balancedTuningMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+
+    expect(unassignedMods).toHaveLength(0);
+    expect(itemModAssignments[legendary.id].map((mod) => mod.hash)).toContain(
+      balancedTuningMod.hash,
+    );
+    expect(itemModAssignments[exoticTuningItem.id].map((mod) => mod.hash)).toContain(
+      balancedTuningMod.hash,
+    );
+  });
 });

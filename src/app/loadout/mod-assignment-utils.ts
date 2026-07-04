@@ -386,24 +386,35 @@ export function fitMostMods({
   // tuning stat, so they can take any tuning mod; a legendary only takes balanced
   // tuning or the directional mod matching its locked stat -- a subset of what an
   // exotic accepts.
-  //
-  // This previously filtered out exotics, which was only safe because tuning was
-  // never assigned to exotics. Now that it can be (expandExoticTuning), that
-  // exclusion dropped or scrambled the exotic's tuning mod -- the actual bug.
   const tuningItems = items
     .filter((item) => getArmor3TuningSocket(item) !== undefined)
     .sort(compareBy((item) => (ArmorBucketHashes as number[]).indexOf(item.bucket.hash)));
+
+  // The mapper always generates a tuning mod for every tuning-capable *legendary*,
+  // but only tunes an exotic when the user targeted one (expandExoticTuning). When
+  // it doesn't, the exotic still has a tuning socket, so leaving it in the candidate
+  // list lets it match the first mod (it accepts anything), steal a legendary's mod,
+  // and shift everything after it -- the actual bug. Since every legendary is always
+  // tuned, one more mod than there are tuning-capable legendaries is the tell that
+  // the exotic was tuned; otherwise it wasn't, so drop it from the candidates. Once
+  // the exotic is correctly kept or dropped the slot-order pass is exact.
+  const legendaryTuningCount = count(tuningItems, (item) => !item.isExotic);
+  const exoticWasTuned = tuningMods.length > legendaryTuningCount;
+  const tuningCandidates = exoticWasTuned
+    ? tuningItems
+    : tuningItems.filter((item) => !item.isExotic);
+
   for (const tuningMod of tuningMods) {
     const modStat = tuningModToTunedStathash[tuningMod.hash];
-    const targetItemIndex = tuningItems.findIndex((item) => {
+    const targetItemIndex = tuningCandidates.findIndex((item) => {
       const itemStat = getArmor3TuningStat(item);
       // Exotic (itemStat undefined) takes any tuning mod; a legendary takes
       // balanced tuning (modStat undefined) or its own locked-stat directional.
       return itemStat === undefined || modStat === undefined || itemStat === modStat;
     });
     if (targetItemIndex !== -1) {
-      bucketSpecificAssignments[tuningItems[targetItemIndex].id].assigned.push(tuningMod);
-      tuningItems.splice(targetItemIndex, 1);
+      bucketSpecificAssignments[tuningCandidates[targetItemIndex].id].assigned.push(tuningMod);
+      tuningCandidates.splice(targetItemIndex, 1);
     } else {
       unassignedMods.push(tuningMod);
     }
