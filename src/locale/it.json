@@ -706,6 +706,7 @@
     "ExistingLoadout": "Dotazione Esistente",
     "Exotic": "Armatura Esotica",
     "ExoticSpecialCategory": "Speciale",
+    "ExoticTuningNote": "Blocca un'esotica specifica, o scegli Qualunque Esotica, per considerare anche le sue modifiche di calibrazione.",
     "Filter": "Impostazioni",
     "IgnoreStat": "Se non selezionata, l'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
     "IncreaseStatPriority": "Aumenta la priorità della statistica",

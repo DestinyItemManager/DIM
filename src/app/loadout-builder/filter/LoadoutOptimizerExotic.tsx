@@ -225,7 +225,12 @@ function ChosenExoticOption({
     case undefined: {
       info = {
         title: t('LoadoutBuilder.NoExoticPreference'),
-        description: t('LoadoutBuilder.NoExoticPreferenceDescription'),
+        description: (
+          <>
+            <div>{t('LoadoutBuilder.NoExoticPreferenceDescription')}</div>
+            <div>{t('LoadoutBuilder.ExoticTuningNote')}</div>
+          </>
+        ),
         icon: (
           <div className="item">
             <img src={noExoticPreferenceIcon} className="item-img" />

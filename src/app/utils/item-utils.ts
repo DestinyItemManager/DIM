@@ -392,6 +392,13 @@ export function getArmor3StatFocus(item: DimItem): StatHashes[] {
     .map((s) => s.statHash);
 }
 
+/** Whether a mod definition is an Armor 3.0 tuning mod (directional or balanced). */
+export function isArmor3TuningMod(modDef: DestinyInventoryItemDefinition): boolean {
+  return (
+    modDef.plug?.plugCategoryHash === PlugCategoryHashes.CoreGearSystemsArmorTieringPlugsTuningMods
+  );
+}
+
 /**
  * Returns the stat hash of the item's tunable stat.
  * This stat can be upgraded at the cost of another stat.

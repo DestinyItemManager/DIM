@@ -706,6 +706,7 @@
     "ExistingLoadout": "Set Existente",
     "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
+    "ExoticTuningNote": "Lock a specific exotic, or choose Any Exotic, to also consider its tuning mods.",
     "Filter": "Configurações",
     "IgnoreStat": "Se desmarcado, o Otimizador de Sets vai fingir que este atributo não existe quando construir os sets",
     "IncreaseStatPriority": "Aumenta prioridade de atributo",

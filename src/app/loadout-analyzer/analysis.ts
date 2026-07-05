@@ -337,6 +337,9 @@ export async function analyzeLoadout(
 
             const processInfo = worker({
               anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
+              expandExoticTuning:
+                loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC ||
+                (loadoutParameters.exoticArmorHash ?? 0) > 0,
               armorEnergyRules,
               autoModDefs,
               autoStatMods: loadoutParameters.autoStatMods,

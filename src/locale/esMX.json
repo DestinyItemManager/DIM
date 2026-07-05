@@ -706,6 +706,7 @@
     "ExistingLoadout": "Equipamiento Existente",
     "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
+    "ExoticTuningNote": "Bloquea un exótico específico, o elige Cualquier Exótico, para considerar también sus modificadores de ajuste.",
     "Filter": "Configuración",
     "IgnoreStat": "Si no está marcado, el Optimizador de Equipaciones pretenderá que esta estadística no existe cuando se creen equipaciones",
     "IncreaseStatPriority": "Incrementar prioridad a la estadística",

@@ -706,6 +706,7 @@
     "ExistingLoadout": "Bestehendes Loadout",
     "Exotic": "Exotische Rüstung",
     "ExoticSpecialCategory": "Spezial",
+    "ExoticTuningNote": "Sperre ein bestimmtes Exotik oder wähle ein beliebiges Exotik, um auch seine Tuning-Mods zu berücksichtigen.",
     "Filter": "Einstellungen",
     "IgnoreStat": "Wenn nicht ausgewählt, wird der Loadout-Optimierer diesen Stat beim Zusammenstellen von Sets nicht beachten",
     "IncreaseStatPriority": "Erhöhe Stat-Priorität",
@@ -1307,7 +1308,7 @@
       "Mod": "Mod-Vorschau",
       "Ornament": "Ornament-Vorschau",
       "Projection": "Geist-Projektions-Vorschau",
-      "Shader": "Shader-Vorschau",
+      "Shader": "Shader verwenden",
       "Super": "Vorschau Super",
       "Transmat": "Teleporteffekt-Vorschau"
     },

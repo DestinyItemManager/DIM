@@ -98,7 +98,7 @@ export function FakeExoticTile({
   onSelected,
 }: {
   title: string;
-  description: string;
+  description: React.ReactNode;
   icon: string;
   selected: boolean;
   onSelected: React.MouseEventHandler<HTMLDivElement>;

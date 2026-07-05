@@ -1,10 +1,12 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { buildDefinedPlug } from 'app/inventory/store/sockets';
+import { loDefaultArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
+import { tuningModToTunedStathash } from 'app/search/d2-known-values';
 import { count } from 'app/utils/collections';
-import { getSpecialtySocketMetadata } from 'app/utils/item-utils';
-import { plugFitsIntoSocket } from 'app/utils/socket-utils';
+import { getArmor3TuningStat, getSpecialtySocketMetadata } from 'app/utils/item-utils';
+import { getArmor3TuningSocket, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { produce } from 'immer';
 import {
   bulwarkFinishModHash,
@@ -14,7 +16,7 @@ import {
   reaperModHash,
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { createPluggingStrategy, pickPlugPositions } from './mod-assignment-utils';
+import { createPluggingStrategy, fitMostMods, pickPlugPositions } from './mod-assignment-utils';
 import { getModExclusionGroup } from './mod-utils';
 
 function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, action: PluggingAction) {
@@ -217,4 +219,186 @@ describe('mod-assignment-utils plugging strategy', () => {
   // There's some situations we currently can't test -- e.g. the circular dependency in
   // https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 because
   // currently all mutex mods have the same energy cost -- 1.
+});
+
+describe('fitMostMods tuning assignment', () => {
+  const balancedTuningModHash = 3122197216;
+  let defs: D2ManifestDefinitions;
+  let exoticTuningItem: DimItem;
+  let legendaryTuningItem: DimItem | undefined;
+  let nonTuningArmor: DimItem[];
+  let balancedTuningMod: PluggableInventoryItemDefinition;
+  let exoticDirectionalMod: PluggableInventoryItemDefinition;
+
+  beforeAll(async () => {
+    const [defs_, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
+    defs = defs_;
+    const armor = stores.flatMap((store) => store.items).filter((item) => item.bucket.inArmor);
+
+    exoticTuningItem = armor.find((item) => item.isExotic && getArmor3TuningSocket(item))!;
+    legendaryTuningItem = armor.find(
+      (item) =>
+        !item.isExotic && getArmor3TuningSocket(item) && getArmor3TuningStat(item) !== undefined,
+    );
+
+    // Fill out a five-piece set with pieces that can't take tuning, in the other
+    // four buckets, so the exotic is the only tuning-capable item.
+    nonTuningArmor = [];
+    const usedBuckets = new Set<number>([exoticTuningItem.bucket.hash]);
+    for (const item of armor) {
+      if (nonTuningArmor.length >= 4) {
+        break;
+      }
+      if (!getArmor3TuningSocket(item) && !usedBuckets.has(item.bucket.hash)) {
+        nonTuningArmor.push(item);
+        usedBuckets.add(item.bucket.hash);
+      }
+    }
+
+    balancedTuningMod = defs.InventoryItem.get(
+      balancedTuningModHash,
+    ) as PluggableInventoryItemDefinition;
+    // A directional (+5/-5) tuning mod the exotic exposes -- exotics offer every
+    // tuning stat, so any directional mod is available on them.
+    const exoticDirectionalHash = getArmor3TuningSocket(exoticTuningItem)
+      ?.reusablePlugItems?.map((plug) => plug.plugItemHash)
+      .find((hash) => tuningModToTunedStathash[hash] !== undefined);
+    exoticDirectionalMod = defs.InventoryItem.get(
+      exoticDirectionalHash!,
+    ) as PluggableInventoryItemDefinition;
+  });
+
+  it('assigns a directional tuning mod to an exotic (exotics take any tuning mod; the old code excluded them)', () => {
+    const items = [exoticTuningItem, ...nonTuningArmor];
+    const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
+      items,
+      plannedMods: [exoticDirectionalMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+
+    // Before the fix, fitMostMods filtered exotics out, leaving the exotic's tuning
+    // mod unassigned. An exotic can hold any tuning mod, directional included.
+    expect(unassignedMods).toHaveLength(0);
+    expect(itemModAssignments[exoticTuningItem.id].map((mod) => mod.hash)).toContain(
+      exoticDirectionalMod.hash,
+    );
+  });
+
+  it('assigns tuning the same way regardless of the input item order', () => {
+    const items = [exoticTuningItem, ...nonTuningArmor];
+    const forward = fitMostMods({
+      defs,
+      items,
+      plannedMods: [balancedTuningMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+    const reversed = fitMostMods({
+      defs,
+      items: [...items].reverse(),
+      plannedMods: [balancedTuningMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+
+    // Assignment is driven by canonical slot order, not the caller's item order,
+    // so reversing the input must not move the tuning mod to a different piece.
+    expect(forward.itemModAssignments[exoticTuningItem.id].map((mod) => mod.hash)).toEqual(
+      reversed.itemModAssignments[exoticTuningItem.id].map((mod) => mod.hash),
+    );
+  });
+
+  it('gives a directional tuning mod to a legendary locked to its stat', () => {
+    const legendary = legendaryTuningItem;
+    if (!legendary) {
+      return; // no legendary tuning item in the test data to exercise this
+    }
+    const lockedStat = getArmor3TuningStat(legendary)!;
+    const directionalHash = getArmor3TuningSocket(legendary)
+      ?.reusablePlugItems?.map((plug) => plug.plugItemHash)
+      .find((hash) => tuningModToTunedStathash[hash] === lockedStat);
+    if (directionalHash === undefined) {
+      return;
+    }
+    const directionalMod = defs.InventoryItem.get(
+      directionalHash,
+    ) as PluggableInventoryItemDefinition;
+
+    // No exotic in the set, so the legendary is the only tuning-capable piece and
+    // the directional mod (matching its locked stat) lands on it.
+    const items = [
+      legendary,
+      ...nonTuningArmor.filter((item) => item.bucket.hash !== legendary.bucket.hash),
+    ];
+    const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
+      items,
+      plannedMods: [directionalMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+
+    expect(unassignedMods).toHaveLength(0);
+    expect(itemModAssignments[legendary.id].map((mod) => mod.hash)).toContain(directionalHash);
+  });
+
+  it("leaves an un-tuned exotic alone so it can't steal a legendary's tuning mod", () => {
+    const legendary = legendaryTuningItem;
+    if (!legendary || legendary.bucket.hash === exoticTuningItem.bucket.hash) {
+      return; // need an exotic and a legendary tuning piece in different buckets
+    }
+
+    // A set with a tuning-capable exotic and a tuning-capable legendary, filled out
+    // with non-tuning pieces. On a default LO run the exotic isn't given a tuning
+    // mod (expandExoticTuning is off), so the flat mod list holds only the
+    // legendary's mod. The exotic must not consume it -- both the exotic accepting
+    // any tuning mod and slot order could otherwise pull the mod onto the exotic.
+    const items = [
+      exoticTuningItem,
+      legendary,
+      ...nonTuningArmor.filter((item) => item.bucket.hash !== legendary.bucket.hash).slice(0, 3),
+    ];
+    const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
+      items,
+      plannedMods: [balancedTuningMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+
+    expect(unassignedMods).toHaveLength(0);
+    expect(itemModAssignments[legendary.id].map((mod) => mod.hash)).toContain(
+      balancedTuningMod.hash,
+    );
+    expect(itemModAssignments[exoticTuningItem.id].map((mod) => mod.hash)).not.toContain(
+      balancedTuningMod.hash,
+    );
+  });
+
+  it('keeps the exotic in play when there are more tuning mods than legendaries', () => {
+    const legendary = legendaryTuningItem;
+    if (!legendary || legendary.bucket.hash === exoticTuningItem.bucket.hash) {
+      return;
+    }
+
+    // Two tuning mods but only one tuning-capable legendary means the extra mod must
+    // belong to the exotic (the user targeted an exotic, so it got tuned too), so the
+    // exotic stays a candidate and both pieces end up with a mod.
+    const items = [
+      exoticTuningItem,
+      legendary,
+      ...nonTuningArmor.filter((item) => item.bucket.hash !== legendary.bucket.hash).slice(0, 3),
+    ];
+    const { itemModAssignments, unassignedMods } = fitMostMods({
+      defs,
+      items,
+      plannedMods: [balancedTuningMod, balancedTuningMod],
+      armorEnergyRules: loDefaultArmorEnergyRules,
+    });
+
+    expect(unassignedMods).toHaveLength(0);
+    expect(itemModAssignments[legendary.id].map((mod) => mod.hash)).toContain(
+      balancedTuningMod.hash,
+    );
+    expect(itemModAssignments[exoticTuningItem.id].map((mod) => mod.hash)).toContain(
+      balancedTuningMod.hash,
+    );
+  });
 });
