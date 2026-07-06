@@ -33,7 +33,9 @@ import { ProcessItem, ProcessItemsByBucket, ProcessMod, ProcessResult } from './
  * set is considered, i.e. on iteration order, which optimizations are allowed
  * to change. The four combo-local skip reasons are summed rather than listed
  * because subtree-level pruning may reclassify a combo that fails several
- * checks at once; only the total is invariant.
+ * checks at once; only the total is invariant. Sets are sorted by content
+ * rather than kept in display order, because sets fully tied on all the
+ * tracker's ordering keys may be displayed in any order among themselves.
  */
 function digest(result: ProcessResult) {
   const { skipReasons } = result.processInfo.statistics;
@@ -47,15 +49,17 @@ function digest(result: ProcessResult) {
       skipReasons.noExotic +
       skipReasons.insufficientPerks +
       skipReasons.insufficientSetBonus,
-    sets: result.sets.map((s) => ({
-      armor: s.armor,
-      stats: s.stats,
-      armorStats: s.armorStats,
-      statMods: s.statMods,
-      enabledStatsTotal: s.enabledStatsTotal,
-      statsTotal: s.statsTotal,
-      power: s.power,
-    })),
+    sets: result.sets
+      .map((s) => ({
+        armor: s.armor,
+        stats: s.stats,
+        armorStats: s.armorStats,
+        statMods: s.statMods,
+        enabledStatsTotal: s.enabledStatsTotal,
+        statsTotal: s.statsTotal,
+        power: s.power,
+      }))
+      .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
   };
 }
 
