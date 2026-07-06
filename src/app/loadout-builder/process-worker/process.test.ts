@@ -19,7 +19,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItems,
 } from '../process/mappers';
-import { ArmorStats, DesiredStatRange, MIN_LO_ITEM_ENERGY } from '../types';
+import { ArmorBucketHashes, ArmorStats, DesiredStatRange, MIN_LO_ITEM_ENERGY } from '../types';
 import { process, ProcessInputs } from './process';
 import { ProcessItem, ProcessItemsByBucket, ProcessMod, ProcessResult } from './types';
 
@@ -118,8 +118,8 @@ describe('process equivalence', () => {
       }
     }
     // Deterministic corpus: sort by id, cap at 8 per bucket (8^5 = 32k combos)
-    for (const bucketHash of Object.keys(baseItems)) {
-      const items = baseItems[Number(bucketHash) as keyof ProcessItemsByBucket];
+    for (const bucketHash of ArmorBucketHashes) {
+      const items = baseItems[bucketHash];
       items.sort((a, b) => a.id.localeCompare(b.id));
       items.splice(8);
     }
@@ -155,8 +155,8 @@ describe('process equivalence', () => {
   }
 
   function eachBucket(inputs: ProcessInputs, fn: (items: ProcessItem[]) => void) {
-    for (const bucketHash of Object.keys(inputs.filteredItems)) {
-      fn(inputs.filteredItems[Number(bucketHash) as keyof ProcessItemsByBucket]);
+    for (const bucketHash of ArmorBucketHashes) {
+      fn(inputs.filteredItems[bucketHash]);
     }
   }
 

@@ -114,6 +114,24 @@ export async function process(
   const legs = filteredItems[BucketHashes.LegArmor];
   const classItems = filteredItems[BucketHashes.ClassArmor];
 
+  // Visit high-stat items first so the top-200 heap fills with good sets early,
+  // which lets the couldInsert prune reject low-total sets much sooner. This
+  // doesn't change the results: the enumerated combination set is the same and
+  // the top 200 under the tracker's ordering is order-independent.
+  const enabledStatsTotal = (item: ProcessItem) => {
+    const itemStats = statsCache.get(item)!;
+    let total = 0;
+    for (let i = 0; i < 6; i++) {
+      if (desiredStatRanges[i].maxStat > 0) {
+        total += itemStats[i];
+      }
+    }
+    return total;
+  };
+  for (const bucket of [helms, gauntlets, chests, legs, classItems]) {
+    bucket.sort((a, b) => enabledStatsTotal(b) - enabledStatsTotal(a));
+  }
+
   // The maximum possible combos we could possibly have
   const combos = helms.length * gauntlets.length * chests.length * legs.length * classItems.length;
   const numItems =
