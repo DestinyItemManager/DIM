@@ -202,12 +202,19 @@ export async function process(
   }
 
   let comboCount = 0;
-  // required perks' hashes
+  // required perks' hashes and counts, in matching order
   const perkHashes = requiredPerks.map((p) => p.hash);
-  const hasPerkReqs = requiredPerks.length > 0;
-  // count of each perk on this item, in an array w/ same order as perkHashes
-  const perkCount = (item: ProcessItem) =>
-    perkHashes.map((hash) => (item.intrinsicPerks?.includes(hash) ? 1 : 0));
+  const requiredPerkCounts = requiredPerks.map((p) => p.count);
+  const numPerks = requiredPerks.length;
+  const hasPerkReqs = numPerks > 0;
+
+  // Parallel per-bucket arrays so the hot loop reads flat numbers instead of
+  // hashing into maps, converting booleans, or allocating per combination.
+  const helmSoA = buildBucketSoA(helms, statsCache, setBonusHashes, perkHashes);
+  const gauntSoA = buildBucketSoA(gauntlets, statsCache, setBonusHashes, perkHashes);
+  const chestSoA = buildBucketSoA(chests, statsCache, setBonusHashes, perkHashes);
+  const legSoA = buildBucketSoA(legs, statsCache, setBonusHashes, perkHashes);
+  const classItemSoA = buildBucketSoA(classItems, statsCache, setBonusHashes, perkHashes);
 
   // Reused across iterations to avoid per-combo allocation in this hot loop.
   // Safe because each is only read within one iteration and copied before being
@@ -219,32 +226,36 @@ export async function process(
 
   itemLoop: for (let helmIdx = 0; helmIdx < helms.length; helmIdx++) {
     const helm = helms[helmIdx];
-    const helmExotic = Number(helm.isExotic);
-    const helmArtifice = Number(helm.isArtifice);
-    const helmWildcard = helm.hasSetBonusModSocket ? 1 : 0;
-    const helmPerks = hasPerkReqs ? perkCount(helm) : undefined;
-    const helmStats = statsCache.get(helm)!;
+    const helmExotic = helmSoA.exotic[helmIdx];
+    const helmArtifice = helmSoA.artifice[helmIdx];
+    const helmWildcard = helmSoA.wildcard[helmIdx];
+    const helmSet = helmSoA.setBonusIdx[helmIdx];
+    const helmPerkBase = helmIdx * numPerks;
+    const helmBase = helmIdx * 6;
     for (let gauntIdx = 0; gauntIdx < gauntlets.length; gauntIdx++) {
       const gaunt = gauntlets[gauntIdx];
-      const gauntletExotic = Number(gaunt.isExotic);
-      const gauntArtifice = Number(gaunt.isArtifice);
-      const gauntWildcard = gaunt.hasSetBonusModSocket ? 1 : 0;
-      const gauntPerks = hasPerkReqs ? perkCount(gaunt) : undefined;
-      const gauntStats = statsCache.get(gaunt)!;
+      const gauntletExotic = gauntSoA.exotic[gauntIdx];
+      const gauntArtifice = gauntSoA.artifice[gauntIdx];
+      const gauntWildcard = gauntSoA.wildcard[gauntIdx];
+      const gauntSet = gauntSoA.setBonusIdx[gauntIdx];
+      const gauntPerkBase = gauntIdx * numPerks;
+      const gauntBase = gauntIdx * 6;
       for (let chestIdx = 0; chestIdx < chests.length; chestIdx++) {
         const chest = chests[chestIdx];
-        const chestExotic = Number(chest.isExotic);
-        const chestArtifice = Number(chest.isArtifice);
-        const chestWildcard = chest.hasSetBonusModSocket ? 1 : 0;
-        const chestPerks = hasPerkReqs ? perkCount(chest) : undefined;
-        const chestStats = statsCache.get(chest)!;
+        const chestExotic = chestSoA.exotic[chestIdx];
+        const chestArtifice = chestSoA.artifice[chestIdx];
+        const chestWildcard = chestSoA.wildcard[chestIdx];
+        const chestSet = chestSoA.setBonusIdx[chestIdx];
+        const chestPerkBase = chestIdx * numPerks;
+        const chestBase = chestIdx * 6;
         for (let legIdx = 0; legIdx < legs.length; legIdx++) {
           const leg = legs[legIdx];
-          const legExotic = Number(leg.isExotic);
-          const legArtifice = Number(leg.isArtifice);
-          const legWildcard = leg.hasSetBonusModSocket ? 1 : 0;
-          const legPerks = hasPerkReqs ? perkCount(leg) : undefined;
-          const legStats = statsCache.get(leg)!;
+          const legExotic = legSoA.exotic[legIdx];
+          const legArtifice = legSoA.artifice[legIdx];
+          const legWildcard = legSoA.wildcard[legIdx];
+          const legSet = legSoA.setBonusIdx[legIdx];
+          const legPerkBase = legIdx * numPerks;
+          const legBase = legIdx * 6;
           innerloop: for (let classItemIdx = 0; classItemIdx < classItems.length; classItemIdx++) {
             const classItem = classItems[classItemIdx];
             comboCount++;
@@ -256,10 +267,11 @@ export async function process(
               }
             }
 
-            const classItemExotic = Number(classItem.isExotic);
-            const classItemArtifice = Number(classItem.isArtifice);
-            const classItemWildcard = classItem.hasSetBonusModSocket ? 1 : 0;
-            const classItemStats = statsCache.get(classItem)!;
+            const classItemExotic = classItemSoA.exotic[classItemIdx];
+            const classItemArtifice = classItemSoA.artifice[classItemIdx];
+            const classItemWildcard = classItemSoA.wildcard[classItemIdx];
+            const classItemSet = classItemSoA.setBonusIdx[classItemIdx];
+            const ciBase = classItemIdx * 6;
 
             // Check exotic constraints
             const exoticSum =
@@ -275,15 +287,15 @@ export async function process(
 
             // Check required perk counts across the set
             if (hasPerkReqs) {
-              const classItemPerks = perkCount(classItem);
-              for (let i = 0; i < requiredPerks.length; i++) {
+              const ciPerkBase = classItemIdx * numPerks;
+              for (let i = 0; i < numPerks; i++) {
                 const actualCount =
-                  helmPerks![i] +
-                  gauntPerks![i] +
-                  chestPerks![i] +
-                  legPerks![i] +
-                  classItemPerks[i];
-                if (actualCount < requiredPerks[i].count) {
+                  helmSoA.perks[helmPerkBase + i] +
+                  gauntSoA.perks[gauntPerkBase + i] +
+                  chestSoA.perks[chestPerkBase + i] +
+                  legSoA.perks[legPerkBase + i] +
+                  classItemSoA.perks[ciPerkBase + i];
+                if (actualCount < requiredPerkCounts[i]) {
                   setStatistics.skipReasons.insufficientPerks++;
                   continue innerloop;
                 }
@@ -294,14 +306,13 @@ export async function process(
             let wildcardsRemaining =
               helmWildcard + gauntWildcard + chestWildcard + legWildcard + classItemWildcard;
             for (let i = 0; i < setBonusHashes.length; i++) {
-              const setHash = setBonusHashes[i];
               const setNeededCount = setBonusCounts[i];
               const setCount =
-                Number(helm.setBonus === setHash) +
-                Number(gaunt.setBonus === setHash) +
-                Number(chest.setBonus === setHash) +
-                Number(leg.setBonus === setHash) +
-                Number(classItem.setBonus === setHash);
+                (helmSet === i ? 1 : 0) +
+                (gauntSet === i ? 1 : 0) +
+                (chestSet === i ? 1 : 0) +
+                (legSet === i ? 1 : 0) +
+                (classItemSet === i ? 1 : 0);
               if (setCount < setNeededCount) {
                 const wildcardsNeeded = setNeededCount - setCount;
                 if (wildcardsRemaining >= wildcardsNeeded) {
@@ -323,46 +334,46 @@ export async function process(
             // automatically and this makes a big difference in speed.
             stats[0] =
               modStatsInStatOrder[0] +
-              helmStats[0] +
-              gauntStats[0] +
-              chestStats[0] +
-              legStats[0] +
-              classItemStats[0];
+              helmSoA.stats[helmBase] +
+              gauntSoA.stats[gauntBase] +
+              chestSoA.stats[chestBase] +
+              legSoA.stats[legBase] +
+              classItemSoA.stats[ciBase];
             stats[1] =
               modStatsInStatOrder[1] +
-              helmStats[1] +
-              gauntStats[1] +
-              chestStats[1] +
-              legStats[1] +
-              classItemStats[1];
+              helmSoA.stats[helmBase + 1] +
+              gauntSoA.stats[gauntBase + 1] +
+              chestSoA.stats[chestBase + 1] +
+              legSoA.stats[legBase + 1] +
+              classItemSoA.stats[ciBase + 1];
             stats[2] =
               modStatsInStatOrder[2] +
-              helmStats[2] +
-              gauntStats[2] +
-              chestStats[2] +
-              legStats[2] +
-              classItemStats[2];
+              helmSoA.stats[helmBase + 2] +
+              gauntSoA.stats[gauntBase + 2] +
+              chestSoA.stats[chestBase + 2] +
+              legSoA.stats[legBase + 2] +
+              classItemSoA.stats[ciBase + 2];
             stats[3] =
               modStatsInStatOrder[3] +
-              helmStats[3] +
-              gauntStats[3] +
-              chestStats[3] +
-              legStats[3] +
-              classItemStats[3];
+              helmSoA.stats[helmBase + 3] +
+              gauntSoA.stats[gauntBase + 3] +
+              chestSoA.stats[chestBase + 3] +
+              legSoA.stats[legBase + 3] +
+              classItemSoA.stats[ciBase + 3];
             stats[4] =
               modStatsInStatOrder[4] +
-              helmStats[4] +
-              gauntStats[4] +
-              chestStats[4] +
-              legStats[4] +
-              classItemStats[4];
+              helmSoA.stats[helmBase + 4] +
+              gauntSoA.stats[gauntBase + 4] +
+              chestSoA.stats[chestBase + 4] +
+              legSoA.stats[legBase + 4] +
+              classItemSoA.stats[ciBase + 4];
             stats[5] =
               modStatsInStatOrder[5] +
-              helmStats[5] +
-              gauntStats[5] +
-              chestStats[5] +
-              legStats[5] +
-              classItemStats[5];
+              helmSoA.stats[helmBase + 5] +
+              gauntSoA.stats[gauntBase + 5] +
+              chestSoA.stats[chestBase + 5] +
+              legSoA.stats[legBase + 5] +
+              classItemSoA.stats[ciBase + 5];
 
             // A version of the set stats that have been clamped to the max stat
             // constraint.
@@ -643,4 +654,59 @@ export async function process(
     statRangesFiltered,
     processInfo: processStatistics,
   };
+}
+
+/**
+ * Structure-of-arrays view of a bucket's items: flat 0/1 flags, stat values,
+ * and perk counts so the hot loop reads contiguous numbers instead of chasing
+ * object properties or hashing into maps.
+ */
+interface BucketSoA {
+  exotic: Int8Array;
+  artifice: Int8Array;
+  /** 1 if the item's set bonus socket lets it wildcard a requested set. */
+  wildcard: Int8Array;
+  /** n*6 item stats in stat priority order. */
+  stats: Int32Array;
+  /** Index of the item's set bonus in setBonusHashes, or -1. */
+  setBonusIdx: Int8Array;
+  /** n*numPerks 0/1 counts of the required perks. */
+  perks: Int8Array;
+  /** Whether any item in this bucket is exotic. */
+  hasExotic: boolean;
+}
+
+function buildBucketSoA(
+  items: ProcessItem[],
+  statsCache: Map<ProcessItem, number[]>,
+  setBonusHashes: number[],
+  perkHashes: number[],
+): BucketSoA {
+  const n = items.length;
+  const numPerks = perkHashes.length;
+  const soa: BucketSoA = {
+    exotic: new Int8Array(n),
+    artifice: new Int8Array(n),
+    wildcard: new Int8Array(n),
+    stats: new Int32Array(n * 6),
+    setBonusIdx: new Int8Array(n),
+    perks: new Int8Array(n * numPerks),
+    hasExotic: false,
+  };
+  for (let i = 0; i < n; i++) {
+    const item = items[i];
+    soa.exotic[i] = item.isExotic ? 1 : 0;
+    soa.artifice[i] = item.isArtifice ? 1 : 0;
+    soa.wildcard[i] = item.hasSetBonusModSocket ? 1 : 0;
+    soa.setBonusIdx[i] = item.setBonus !== undefined ? setBonusHashes.indexOf(item.setBonus) : -1;
+    soa.hasExotic ||= item.isExotic;
+    const stats = statsCache.get(item)!;
+    for (let s = 0; s < 6; s++) {
+      soa.stats[i * 6 + s] = stats[s];
+    }
+    for (let p = 0; p < numPerks; p++) {
+      soa.perks[i * numPerks + p] = item.intrinsicPerks?.includes(perkHashes[p]) ? 1 : 0;
+    }
+  }
+  return soa;
 }
