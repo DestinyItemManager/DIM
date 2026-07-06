@@ -19,6 +19,7 @@ import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
+  SetEnergyCache,
   updateMaxStats,
 } from './process-utils';
 import { encodeStatMix, HeapSetTracker } from './set-tracker';
@@ -260,6 +261,9 @@ export async function process(
   const effectiveStats = [0, 0, 0, 0, 0, 0];
   const neededStats = [0, 0, 0, 0, 0, 0];
   const armor: ProcessItem[] = new Array<ProcessItem>(5);
+  // Shares the activity-mod energy computation between updateMaxStats and
+  // pickOptimalStatMods for the same armor set; cleared per combination.
+  const energyCache: SetEnergyCache = { result: undefined };
   const statsAfterHelm = [0, 0, 0, 0, 0, 0];
   const statsAfterGaunt = [0, 0, 0, 0, 0, 0];
   const statsAfterChest = [0, 0, 0, 0, 0, 0];
@@ -691,6 +695,7 @@ export async function process(
             armor[2] = chest;
             armor[3] = leg;
             armor[4] = classItem;
+            energyCache.result = undefined;
 
             // Items that individually can't fit their slot-specific mods were
             // filtered out before even passing them to the worker, so we only
@@ -724,6 +729,7 @@ export async function process(
               numArtifice,
               desiredStatRanges,
               statRanges,
+              energyCache,
             );
 
             // Drop this set if it could never make it into our top
@@ -740,6 +746,8 @@ export async function process(
               armor,
               stats,
               desiredStatRanges,
+              numArtifice,
+              energyCache,
             );
             if (!optimalResult) {
               // This means we couldn't assign mods in a way that satisfied
