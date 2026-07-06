@@ -1,5 +1,7 @@
 ## Next
 
+## 8.132.0 <span class="changelog-date">(2026-07-05)</span>
+
 * Fixed a bug that prevented saving searches on the loadouts page
 * Improved Loadout Optimizer speed.
 * Actually show all items for sale in Eververse after Monument of Triumph release.
