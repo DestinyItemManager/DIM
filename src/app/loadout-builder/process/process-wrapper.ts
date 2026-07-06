@@ -2,11 +2,11 @@ import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
-import { mapValues } from 'app/utils/collections';
+import { mapValues, partitionEvenly } from 'app/utils/collections';
 import { getMaxParallelCores } from 'app/utils/parallel-cores';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { chunk, maxBy } from 'es-toolkit';
+import { maxBy } from 'es-toolkit';
 import { deepEqual } from 'fast-equals';
 import type { ProcessInputs } from '../process-worker/process';
 import { HeapSetTracker } from '../process-worker/set-tracker';
@@ -293,8 +293,7 @@ function sliceInputForConcurrency(
     return [input];
   }
 
-  const sliceSize = Math.ceil(itemsToSlice.length / concurrency);
-  return chunk(itemsToSlice, sliceSize).map((itemsSlice) => ({
+  return partitionEvenly(itemsToSlice, concurrency).map((itemsSlice) => ({
     ...input,
     filteredItems: {
       ...input.filteredItems,
