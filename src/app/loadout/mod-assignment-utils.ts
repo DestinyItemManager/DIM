@@ -288,6 +288,7 @@ export function fitMostMods({
   items,
   plannedMods,
   armorEnergyRules,
+  tuningAssignmentMode = 'default',
 }: {
   defs: D2ManifestDefinitions;
   /** a set (i.e. helmet, arms, etc) of items that we are trying to assign mods to */
@@ -295,6 +296,8 @@ export function fitMostMods({
   /** mods we are trying to place on the items */
   plannedMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
+  // Use loadoutApply to prioritize legendary directional tuning before exotics
+  tuningAssignmentMode?: 'default' | 'loadoutApply';
 }): {
   itemModAssignments: {
     [itemInstanceId: string]: PluggableInventoryItemDefinition[];
@@ -404,18 +407,39 @@ export function fitMostMods({
     ? tuningItems
     : tuningItems.filter((item) => !item.isExotic);
 
-  for (const tuningMod of tuningMods) {
+  const assignTuningMod = (tuningMod: PluggableInventoryItemDefinition, candidates: DimItem[]) => {
     const modStat = tuningModToTunedStathash[tuningMod.hash];
-    const targetItemIndex = tuningCandidates.findIndex((item) => {
+
+    if (tuningAssignmentMode === 'loadoutApply' && modStat !== undefined) {
+      // In loadout apply, directional mods should prefer an exact legendary stat match
+      // before falling back to exotic to prevent early consumption by an exotic armor piece
+      const legendaryTargetIndex = candidates.findIndex(
+        (item) => !item.isExotic && getArmor3TuningStat(item) === modStat,
+      );
+      if (legendaryTargetIndex !== -1) {
+        bucketSpecificAssignments[candidates[legendaryTargetIndex].id].assigned.push(tuningMod);
+        candidates.splice(legendaryTargetIndex, 1);
+        return true;
+      }
+    }
+
+    const targetItemIndex = candidates.findIndex((item) => {
       const itemStat = getArmor3TuningStat(item);
       // Exotic (itemStat undefined) takes any tuning mod; a legendary takes
       // balanced tuning (modStat undefined) or its own locked-stat directional.
       return itemStat === undefined || modStat === undefined || itemStat === modStat;
     });
+
     if (targetItemIndex !== -1) {
-      bucketSpecificAssignments[tuningCandidates[targetItemIndex].id].assigned.push(tuningMod);
-      tuningCandidates.splice(targetItemIndex, 1);
-    } else {
+      bucketSpecificAssignments[candidates[targetItemIndex].id].assigned.push(tuningMod);
+      candidates.splice(targetItemIndex, 1);
+      return true;
+    }
+    return false;
+  };
+
+  for (const tuningMod of tuningMods) {
+    if (!assignTuningMod(tuningMod, tuningCandidates)) {
       unassignedMods.push(tuningMod);
     }
   }

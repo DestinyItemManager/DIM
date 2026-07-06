@@ -1188,6 +1188,7 @@ function applyLoadoutMods(
       items: armor,
       plannedMods: mods,
       armorEnergyRules: inGameArmorEnergyRules,
+      tuningAssignmentMode: 'loadoutApply',
     });
 
     for (const mod of unassignedMods) {
