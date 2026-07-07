@@ -90,14 +90,7 @@ export function chooseAutoMods(
     memo = new Map();
     info.autoModsMemo.set(contextKey, memo);
   }
-  // Stat needs are 0-200, so 8 bits per stat packs all six exactly into 48 bits.
-  const needsKey =
-    neededStats[0] +
-    neededStats[1] * 0x100 +
-    neededStats[2] * 0x10000 +
-    neededStats[3] * 0x1000000 +
-    neededStats[4] * 0x100000000 +
-    neededStats[5] * 0x10000000000;
+  const needsKey = packStatNeeds(neededStats);
   const cached = memo.get(needsKey);
   if (cached !== undefined) {
     return cached ?? undefined;
@@ -132,7 +125,19 @@ function packEnergyVector(capacities: number[]) {
   return packed;
 }
 
-function buildContextKey(
+/** Stat needs are 0-200, so 8 bits per stat packs all six exactly into 48 bits. */
+export function packStatNeeds(neededStats: number[]): number {
+  return (
+    neededStats[0] +
+    neededStats[1] * 0x100 +
+    neededStats[2] * 0x10000 +
+    neededStats[3] * 0x1000000 +
+    neededStats[4] * 0x100000000 +
+    neededStats[5] * 0x10000000000
+  );
+}
+
+export function buildContextKey(
   remainingEnergyCapacities: number[][],
   numArtificeMods: number,
   remainingTotalEnergy: number,
