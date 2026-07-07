@@ -629,7 +629,12 @@ export async function process(
     'lower bounds:',
     JSON.stringify(setStatistics.lowerBoundsExceeded),
     'mod assignment stats:',
-    JSON.stringify(setStatistics.modsStatistics),
+    'early check:',
+    JSON.stringify(setStatistics.modsStatistics.earlyModsCheck),
+    'auto mods pick:',
+    JSON.stringify(setStatistics.modsStatistics.autoModsPick),
+    'final assignment:',
+    JSON.stringify(setStatistics.modsStatistics.finalAssignment),
   );
 
   const statRangesFiltered = Object.fromEntries(
