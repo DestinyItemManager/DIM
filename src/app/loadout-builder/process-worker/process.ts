@@ -125,13 +125,15 @@ export async function process(
     'combinations from',
     numItems,
     'items',
-    {
+    // Stringified because these workers get terminated when the run ends, and
+    // DevTools can't inspect live objects logged from a dead worker.
+    JSON.stringify({
       helms: helms.length,
       gauntlets: gauntlets.length,
       chests: chests.length,
       legs: legs.length,
       classItems: classItems.length,
-    },
+    }),
   );
 
   const setStatistics: ProcessStatistics['statistics'] = {
@@ -620,17 +622,14 @@ export async function process(
     'ms - ',
     Math.floor((combos * 1000) / totalTime),
     'combos/s',
-    // Split into multiple objects so console.log will show them all expanded
+    // Stringified because these workers get terminated when the run ends, and
+    // DevTools can't inspect live objects logged from a dead worker.
     'sets outright skipped:',
-    setStatistics.skipReasons,
+    JSON.stringify(setStatistics.skipReasons),
     'lower bounds:',
-    setStatistics.lowerBoundsExceeded,
+    JSON.stringify(setStatistics.lowerBoundsExceeded),
     'mod assignment stats:',
-    'early check:',
-    setStatistics.modsStatistics.earlyModsCheck,
-    'auto mods pick:',
-    setStatistics.modsStatistics.autoModsPick,
-    setStatistics.modsStatistics,
+    JSON.stringify(setStatistics.modsStatistics),
   );
 
   const statRangesFiltered = Object.fromEntries(
