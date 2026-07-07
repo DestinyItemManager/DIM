@@ -27,6 +27,12 @@ export interface LoSessionInfo {
   activityModPermutations: (ProcessMod | null)[][];
   /** How many activity mods we have per tag. */
   activityTagCounts: { [tag: string]: number };
+  /**
+   * Memoized chooseAutoMods results, keyed by (energy capacities + artifice
+   * count + energy budget) then by packed needed stats. Bounded: there are only
+   * a few thousand energy multisets and a few hundred stat patterns each.
+   */
+  autoModsMemo: Map<number | string, Map<number, ModsPick[] | null>>;
 }
 
 export function precalculateStructures(
@@ -54,6 +60,7 @@ export function precalculateStructures(
       }
       return acc;
     }, {}),
+    autoModsMemo: new Map(),
   };
 }
 
