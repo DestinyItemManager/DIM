@@ -29,9 +29,11 @@ import { ProcessItem, ProcessResult, ProcessStatistics } from './types';
 const RETURNED_ARMOR_SETS = 200;
 
 /**
- * FROZEN REFERENCE COPY of the #11862 `process()` implementation, used only by
- * the parity harness (`process-parity.test.ts`) as the pre-pareto oracle.
- * Do not edit to track `process.ts`; delete once the pareto work has landed.
+ * Frozen reference copy of the `process()` worker loop, captured at #11862.
+ * The parity and benchmark harnesses (`process-parity.test.ts`,
+ * `process.bench.test.ts`) run this against a candidate `process()` to check
+ * that a perf change stays correct and to measure its speedup. Don't edit it to
+ * track `process.ts` — its whole job is to stay fixed as the baseline.
  */
 export async function processBaseline(
   workerNum: number,

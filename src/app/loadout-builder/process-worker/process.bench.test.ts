@@ -5,9 +5,9 @@
  *   change test.skip -> test below, then
  *   npx jest process.bench --silent=false
  *
- * It interleaves the frozen pre-pareto implementation (`processBaseline`, the
- * #11862 code) against the current meet-in-the-middle `process` WITHIN each
- * round, and reports the min over rounds. This machine's clock speed drifts
+ * It interleaves the frozen baseline (`processBaseline`) against the candidate
+ * `process` WITHIN each round, and reports the min over rounds. This machine's
+ * clock speed drifts
  * ~2.5x over minutes (load/thermal), so only compare the two numbers printed by
  * a single run — never runs taken minutes apart. Each timed call gets a fresh
  * clone of the inputs, because the baseline sorts the item arrays in place.
@@ -83,7 +83,7 @@ async function runAB(name: string, inputs: ProcessInputs) {
   await processArmor(0, clone(inputs), noop);
 
   const baseTimes: number[] = [];
-  const paretoTimes: number[] = [];
+  const candidateTimes: number[] = [];
   for (let run = 0; run < 7; run++) {
     // Interleave within the round so thermal drift hits both roughly equally.
     const bIn = clone(inputs);
@@ -94,22 +94,22 @@ async function runAB(name: string, inputs: ProcessInputs) {
     const pIn = clone(inputs);
     start = performance.now();
     const pResult = await processArmor(0, pIn, noop);
-    paretoTimes.push(performance.now() - start);
+    candidateTimes.push(performance.now() - start);
 
     if (run === 0) {
       // eslint-disable-next-line no-console
       console.log(
-        `${name}: combos ${bResult.combos} | valid sets base ${bResult.processInfo.numValidSets} pareto ${pResult.processInfo.numValidSets} | returned base ${bResult.sets.length} pareto ${pResult.sets.length}`,
+        `${name}: combos ${bResult.combos} | valid sets base ${bResult.processInfo.numValidSets} candidate ${pResult.processInfo.numValidSets} | returned base ${bResult.sets.length} candidate ${pResult.sets.length}`,
       );
     }
   }
   baseTimes.sort((a, b) => a - b);
-  paretoTimes.sort((a, b) => a - b);
-  const speedup = baseTimes[0] / paretoTimes[0];
+  candidateTimes.sort((a, b) => a - b);
+  const speedup = baseTimes[0] / candidateTimes[0];
   // eslint-disable-next-line no-console
   console.log(
-    `BENCH ${name}: base min ${baseTimes[0].toFixed(0)}ms | pareto min ${paretoTimes[0].toFixed(0)}ms | ${speedup.toFixed(2)}x` +
-      `  (base all ${baseTimes.map((t) => t.toFixed(0)).join(' ')} | pareto all ${paretoTimes.map((t) => t.toFixed(0)).join(' ')})`,
+    `BENCH ${name}: base min ${baseTimes[0].toFixed(0)}ms | candidate min ${candidateTimes[0].toFixed(0)}ms | ${speedup.toFixed(2)}x` +
+      `  (base all ${baseTimes.map((t) => t.toFixed(0)).join(' ')} | candidate all ${candidateTimes.map((t) => t.toFixed(0)).join(' ')})`,
   );
 }
 
@@ -134,7 +134,7 @@ const baseInputs = {
   stopOnFirstSet: false,
 };
 
-test.skip('benchmark process(): baseline vs pareto', async () => {
+test.skip('benchmark process(): baseline vs candidate', async () => {
   const defs = await getTestDefinitions();
   const autoModOptions = mapAutoMods(getAutoMods(defs, emptySet()));
 
@@ -179,13 +179,12 @@ test.skip('benchmark process(): baseline vs pareto', async () => {
   });
 }, 300000);
 
-// Real-vault A/B: build the corpus from the checked-in Bungie profile fixture
-// (real, correlated armor rolls) rather than uniform-random synthetic stats.
-// This is the honest test of the meet-in-the-middle frontier sizes — dominated
-// pairs are far more common with correlated rolls. Items are taken for the
-// class with the most helmets and capped per bucket to keep baseline runtime
-// bearable across rounds; bump PER_BUCKET (or drop in a bigger profile) to
-// stress it harder.
+// Real-vault A/B: build the corpus from a real Bungie profile (correlated armor
+// rolls) rather than uniform-random synthetic stats — real rolls can behave
+// very differently, so a candidate that wins on synthetic data must be proven
+// here too. Items are taken for the class with the most helmets and capped per
+// bucket to keep baseline runtime bearable across rounds; bump PER_BUCKET (or
+// drop in a bigger profile) to stress it harder.
 const PER_BUCKET = Number(process.env.LO_BENCH_ITEMS) || 25;
 test.skip('benchmark process(): real vault', async () => {
   const defs = await getTestDefinitions();

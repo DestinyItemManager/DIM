@@ -31,21 +31,21 @@ import {
 } from './types';
 
 /**
- * Parity oracle for the meet-in-the-middle pareto rewrite (Phase C.2 of the
- * plan). `processBaseline` is a frozen copy of the pre-pareto (#11862)
- * `process()`; `process` is the pareto implementation. Meet-in-the-middle is
- * NOT byte-for-byte equivalent (dominated pairs no longer set the observed
- * `statRanges.minStat` floor, and boundary tie-breaking among equal-total sets
- * can differ), so instead of snapshot equality this asserts the invariants the
- * plan commits to keeping exact:
+ * Correctness oracle for `process()` worker perf changes. `processBaseline` is
+ * a frozen copy of the worker loop (see process-baseline.ts); `process` is the
+ * candidate. A perf change that only reorders how sets are enumerated need not
+ * be byte-for-byte equivalent — which equal-total sets fill the bottom of the
+ * top-N heap is iteration-order dependent — so instead of snapshot equality
+ * this asserts the invariants a correct optimization must keep exact:
  *
  *   - the retained top-N sets are identical (below tracker capacity: same
- *     armor + stats + mods; at capacity: same multiset of enabled-stat totals),
+ *     armor + stats + mods; at capacity: same multiset of enabled-stat totals,
+ *     and every set strictly above the worst retained total byte-identical),
  *   - every stat's observed maxStat is identical,
- *   - every stat's observed minStat only ever drifts UPWARD (pareto >= base).
+ *   - every stat's observed minStat is identical.
  *
- * The last one is the known product question (stat-slider lower bounds) that
- * gates landing; this test measures the drift rather than forbidding it.
+ * With no candidate loaded (`process` === the baseline) every assertion holds
+ * trivially; the harness earns its keep the moment `process.ts` is changed.
  */
 
 /** A stable identity for a set, independent of heap display order. */
@@ -63,7 +63,7 @@ const noProgress = () => {
   /* not used */
 };
 
-describe('process pareto parity', () => {
+describe('process candidate parity', () => {
   let baseItems: ProcessItemsByBucket;
   let baseInputs: ProcessInputs;
   let generalMod: ProcessMod;
@@ -153,12 +153,6 @@ describe('process pareto parity', () => {
     }
   }
 
-  /**
-   * Run the frozen baseline and the pareto implementation on identical inputs
-   * (each gets its own deep clone, since process() mutates item flags in place
-   * via the SoA build only through reads, but inputs are shared JSON) and
-   * assert the parity invariants.
-   */
   /** Assert the sets/maxStat invariants of `candidate` against `base`. */
   function assertSetsAndMax(base: ProcessResult, candidate: ProcessResult) {
     for (const statHash of armorStats) {
@@ -193,22 +187,24 @@ describe('process pareto parity', () => {
     }
   }
 
+  // Run the frozen baseline and the candidate on identical inputs (each gets
+  // its own deep clone, since process() sorts the item arrays in place) and
+  // assert the parity invariants.
   async function assertParity(makeInputs: () => ProcessInputs) {
     const base = await processBaseline(1, makeInputs(), noProgress);
-    const pareto = await process(1, makeInputs(), noProgress);
+    const candidate = await process(1, makeInputs(), noProgress);
 
     // Sets + max stat ranges are identical...
-    assertSetsAndMax(base, pareto);
+    assertSetsAndMax(base, candidate);
 
-    // ...and the exact stat-floor pass makes every minStat match the full
-    // enumeration byte-for-byte (no upward drift).
+    // ...and so is every stat's observed minStat.
     for (const statHash of armorStats) {
       const b = base.statRangesFiltered[statHash];
-      const p = pareto.statRangesFiltered[statHash];
+      const p = candidate.statRangesFiltered[statHash];
       expect({ statHash, minStat: p.minStat }).toEqual({ statHash, minStat: b.minStat });
     }
 
-    return { base, pareto };
+    return { base, candidate };
   }
 
   it('no constraints', async () => {
@@ -351,7 +347,7 @@ describe('process pareto parity', () => {
   };
 
   it('tail-resolved exotic tuning variants (below capacity)', async () => {
-    const { pareto } = await assertParity(() =>
+    const { candidate } = await assertParity(() =>
       cloneInputs((inputs) => {
         inputs.autoStatMods = true;
         inputs.desiredStatRanges[0].minStat = 20;
@@ -362,7 +358,7 @@ describe('process pareto parity', () => {
       }),
     );
     // The tuning mod actually shows up in the returned sets.
-    expect(pareto.sets.some((s) => s.statMods.includes(111) || s.statMods.includes(222))).toBe(
+    expect(candidate.sets.some((s) => s.statMods.includes(111) || s.statMods.includes(222))).toBe(
       true,
     );
   });
