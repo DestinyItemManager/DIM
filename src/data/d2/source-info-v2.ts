@@ -62,6 +62,8 @@ const D2Sources: {
   blackarmory: {
     itemHashes: [
       417164956, // Jötunn
+      2490460292, // Stryker's Sure-Hand
+      2531614757, // Tatara Gaze
       3211806999, // Izanagi's Burden
       3588934839, // Le Monarque
       3650581584, // New Age Black Armory
@@ -70,6 +72,7 @@ const D2Sources: {
       3650581587, // House of Meyrin
       3650581588, // Satou Tribe
       3650581589, // Bergusian Night
+      3961462214, // Kindled Orchid
     ],
     sourceHashes: [
       266896577, // Source: Solve the Norse glyph puzzle.
@@ -97,15 +100,27 @@ const D2Sources: {
   },
   brave: {
     itemHashes: [
+      52683113, // Blast Furnace
       205225492, // Hung Jury SR4
       211732170, // Hammerhead
       243425374, // Falling Guillotine
+      381446446, // Elsie's Rifle
       570866107, // Succession
+      697459665, // Hung Jury SR4
+      1346714574, // Hammerhead
+      2033531688, // Luna's Howl
+      2033531689, // Midnight Coup
       2228325504, // Edge Transit
       2480074702, // Forbearance
+      2480871539, // Falling Guillotine
       2499720827, // Midnight Coup
       2533990645, // Blast Furnace
+      2731922624, // Succession
       3098328572, // The Recluse
+      3257283337, // The Recluse
+      3736001860, // Forbearance
+      3736001861, // The Mountaintop
+      3736001863, // Edge Transit
       3757612024, // Luna's Howl
       3851176026, // Elsie's Rifle
       4043921923, // The Mountaintop
@@ -243,68 +258,144 @@ const D2Sources: {
       2307365, // The Inquisitor (Adept)
       51129316, // The Inquisitor
       161675590, // Whistler's Whim (Adept)
+      217940910, // Wild Anthem Vest
+      225063086, // Wild Anthem Gauntlets
+      250597586, // Disaster Corps Gauntlets
       303107619, // Tomorrow's Answer (Adept)
+      350102826, // Triumphal Anthem Robes
+      361848666, // Wild Anthem Grips
+      374648029, // Triumphal Anthem Strides
+      420604757, // Last Discipline Bond
+      438409602, // Disaster Corps Vest
       501345268, // Shayura's Wrath (Adept)
+      517814638, // Disaster Corps Grasps
+      536035447, // Wild Anthem Cloak
       548809020, // Exalted Truth
+      571839605, // Triumphal Anthem Gauntlets
+      586381823, // Disaster Corps Boots
       627188188, // Eye of Sol
+      651836012, // Disaster Corps Greaves
       711889599, // Whistler's Whim (Adept)
+      747743636, // Redrix's Estoc
+      747743637, // Belisarius-D
       769099721, // Devil in the Details
       825554997, // The Inquisitor (Adept)
       854379020, // Astral Horizon (Adept)
       874623537, // Cataphract GL3 (Adept)
       906840740, // Unwavering Duty
+      986920507, // Triumphal Anthem Bond
+      1041028434, // Rose
+      1064523906, // Triumphal Anthem Mark
+      1109145282, // Last Discipline Cloak
       1141586039, // Unexpected Resurgence (Adept)
+      1172384181, // Last Discipline Grasps
       1201528146, // Exalted Truth (Adept)
       1230660649, // Victory's Wreath
       1292594730, // The Summoner (Adept)
       1321626661, // Eye of Sol (Adept)
+      1334855187, // Wild Anthem Mark
       1401300690, // Eye of Sol
+      1459620921, // Last Discipline Plate
+      1516542120, // Frozen Orbit
       1574601402, // Whistler's Whim
+      1618320532, // Wild Anthem Strides
+      1644501332, // Anonymous Autumn
+      1644825026, // Wild Anthem Plate
       1661191197, // Disdain for Glitter
+      1703017178, // Disaster Corps Bond
       1705843397, // Exalted Truth (Adept)
       1711056134, // Incisor
       1820994983, // The Summoner
       1893967086, // Keen Thistle
+      1930651768, // Wild Anthem Cover
       1968410628, // The Prophet
       1973107014, // Igneous Hammer
+      1973631360, // Triumphal Anthem Boots
       2022294213, // Shayura's Wrath
+      2025110456, // Last Discipline Vestment
+      2039591531, // Wild Anthem Mask
       2059255495, // Eye of Sol (Adept)
+      2134373071, // Wild Anthem Robes
+      2147961687, // Triumphal Anthem Greaves
+      2150012406, // Joxer's Longsword
       2185327324, // The Inquisitor
+      2278464039, // Wild Anthem Helm
+      2297554989, // Riptide
       2300143112, // Yesterday's Question
       2314610827, // Igneous Hammer (Adept)
+      2324823787, // Triumphal Anthem Plate
       2330860573, // The Inquisitor (Adept)
       2378785953, // Yesterday's Question (Adept)
+      2394455241, // Wild Anthem Gloves
+      2403923088, // Last Discipline Gloves
       2414564781, // Punctuation Marks
+      2414602118, // Triumphal Anthem Gloves
       2420153991, // Made Shaxx Proud
       2421180981, // Incisor (Adept)
+      2480734911, // Triumphal Anthem Cover
+      2557300061, // Disaster Corps Gloves
+      2571112423, // Disaster Corps Mask
+      2579239008, // Out of Bounds
+      2579239009, // Unending Tempest
       2588739576, // Crucible Solemnity
       2588739578, // Crucible Legacy
       2588739579, // Crucible Metallic
+      2600892776, // Disaster Corps Strides
+      2629942414, // Last Discipline Helm
       2632846356, // Rain of Ashes
       2653171212, // The Inquisitor
       2653171213, // Astral Horizon
+      2686397083, // Wild Anthem Boots
+      2727863512, // Triumphal Anthem Cloak
+      2732598696, // Wild Anthem Greaves
       2738601016, // Cataphract GL3
+      2748506263, // Last Discipline Strides
+      2752429099, // Last Discipline Vest
+      2757996223, // Disaster Corps Mark
       2759251821, // Unwavering Duty (Adept)
+      2762558442, // Last Discipline Boots
+      2773786868, // Last Discipline Mark
+      2804194275, // Disaster Corps Vestment
       2839600459, // Incisor (Adept)
+      2932138009, // Last Discipline Hood
+      2992986244, // Disaster Corps Hood
+      3000956609, // Last Discipline Greaves
       3001205424, // Ecliptic Distaff
       3009199534, // Tomorrow's Answer
       3019024381, // The Prophet (Adept)
       3102421004, // Exalted Truth
+      3153400267, // Triumphal Anthem Grips
       3165143747, // Whistler's Whim
       3193598749, // The Immortal (Adept)
       3332125295, // Aisha's Care (Adept)
+      3364253967, // Last Perdition
+      3408026115, // Disaster Corps Helm
+      3428369046, // Disaster Corps Plate
       3436626079, // Exalted Truth
       3444632029, // Unwavering Duty (Adept)
+      3470352892, // Triumphal Anthem Helm
       3503560035, // Keen Thistle (Adept)
       3624844116, // Unwavering Duty
+      3688176697, // Retrofuturist
+      3805886046, // Wild Anthem Bond
+      3855332578, // Triumphal Anthem Mask
+      3902351469, // The Keening
       3920882229, // Exalted Truth (Adept)
+      3926987546, // Deadlock
       3928440584, // Crucible Carmine
       3928440585, // Crucible Redjack
+      3957372883, // Disaster Corps Cloak
       3969379530, // Aisha's Care
       4005780578, // Unexpected Resurgence
       4039572196, // The Immortal
+      4059111041, // Better Devils
       4060882456, // Rubicund Wrap (Ornament)
+      4071845509, // Triumphal Anthem Vest
+      4079706495, // Last Discipline Gauntlets
+      4112577340, // Last Discipline Mask
+      4176824345, // Randy's Throwing Knife
       4248997900, // Incisor
+      4257236930, // Mercurial Overreach
     ],
     sourceHashes: [
       164083100, // Source: Display of Supremacy, Weekly Challenge
@@ -378,7 +469,13 @@ const D2Sources: {
   dreaming: {
     itemHashes: [
       185321779, // Ennead
+      268357178, // Twilight Oath
+      1291270049, // Abide the Return
+      1727550459, // Waking Vigil
+      1738552769, // Sleepless
+      3218302023, // Vouchsafe
       3352019292, // Secret Victories
+      3442151842, // Retold Tale
     ],
     sourceHashes: [
       2180169027, // The Dreaming City
@@ -431,11 +528,14 @@ const D2Sources: {
       1773934241, // Judgment
       1817605554, // Cold Comfort (Adept)
       1904170910, // A Sudden Death
+      1969802090, // Premonition
       1987644603, // Judgment (Adept)
       2059741649, // New Pacific Epitaph
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
+      2130249527, // Death Adder
       2226158470, // Unworthy
+      2344383760, // Eighty-Six
       2477408004, // Wilderflight (Adept)
       2485881870, // Unloved
       2730671571, // Terminus Horizon
@@ -452,9 +552,11 @@ const D2Sources: {
       3360937899, // Unvoiced
       3381450498, // Indebted Kindness
       3421639790, // Liminal Vigil (Adept)
+      3490736392, // Seventh Seraph Officer Revolver
       3668817296, // Dragoncult Sickle
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)
+      4059111040, // Survivor's Epitaph
       4193602194, // No Survivors
       4228149269, // No Survivors
       4232480042, // VS Pyroelectric Propellant
@@ -462,6 +564,10 @@ const D2Sources: {
     ],
   },
   echoes: {
+    itemHashes: [
+      3156551030, // Patron of Lost Causes
+      4108648762, // Perfect Paradox
+    ],
     sourceHashes: [
       536806855, // Source: Episode: Echoes
       2306801178, // Source: Episode: Echoes Activities
@@ -509,6 +615,14 @@ const D2Sources: {
     ],
   },
   europa: {
+    itemHashes: [
+      642545454, // Thermal Erosion
+      856316142, // Coriolis Force
+      978122008, // Subzero Salvo
+      1529367715, // Bonechiller
+      2662459958, // High Albedo
+      4236134153, // Hailing Confusion
+    ],
     sourceHashes: [
       286427063, // Source: Fallen Empire Campaign
       1148859274, // Source: Exploring Europa
@@ -603,6 +717,7 @@ const D2Sources: {
       454251931, // Source: "What Remains" Exotic Quest
       483798855, // Source: "The Final Strand" Exotic Quest
       709680645, // Source: "Truly Satisfactory" Triumph
+      808611398, // Source: Oblation
       1141831282, // Source: "Of Queens and Worms" Exotic Quest
       1302157812, // Source: Wild Card Exotic Quest
       1388323447, // Source: Exotic Mission "The Whisper"
@@ -619,6 +734,9 @@ const D2Sources: {
       3237053501, // Source: Heliostat
       3597879858, // Source: "Presage" Exotic Quest
     ],
+    itemHashes: [
+      2200470033, // Cull's Shadow
+    ],
   },
   fwc: {
     sourceHashes: [
@@ -630,18 +748,34 @@ const D2Sources: {
     itemHashes: [
       180108390, // Kit and Kaboodle
       180108391, // Dance the Demons Away
+      713132408, // Doomsday
+      767170345, // Bygones
+      810474118, // Trust
+      810474119, // Spare Rations
+      843171043, // Lonesome
+      1277470844, // Backfang
       1335424933, // Gambit Suede
       1335424934, // Gambit Chrome
       1335424935, // Gambit Leather
+      1439354195, // Laser Painter
       1661191187, // Mistrust of Gifts
+      1996201272, // Bad Omens
       2026755633, // Breakneck
       2224920148, // Gambit Blackguard
       2224920149, // Gambit Steel
       2394866220, // Keep on Drifting
       2588647363, // Live for the Hustle
+      2916547559, // Night Watch
+      2920648677, // Sole Survivor
+      2953199259, // Bottom Dollar
       3001205424, // Ecliptic Distaff
+      3001598094, // 21% Delirium
       3217477988, // Gambit Duds
+      3327901954, // Bug-Out Bag
+      4028000428, // Yesteryear
       4060882457, // Snakeskin Wrap (Ornament)
+      4276696962, // Python
+      4276696963, // Last Man Standing
     ],
     sourceHashes: [
       186854335, // Source: Gambit
@@ -752,6 +886,12 @@ const D2Sources: {
     ],
   },
   heresy: {
+    itemHashes: [
+      324584913, // Cold Denial
+      2599520828, // Abyssal Edge
+      3058845782, // Watchful Eye
+      3977827673, // Temptation's Hook
+    ],
     sourceHashes: [
       21494224, // Source: Offer the correct final answer in an uncharted space.
       745481267, // Source: Intrinsic Iteration Triumph
@@ -771,15 +911,27 @@ const D2Sources: {
   },
   intothelight: {
     itemHashes: [
+      52683113, // Blast Furnace
       205225492, // Hung Jury SR4
       211732170, // Hammerhead
       243425374, // Falling Guillotine
+      381446446, // Elsie's Rifle
       570866107, // Succession
+      697459665, // Hung Jury SR4
+      1346714574, // Hammerhead
+      2033531688, // Luna's Howl
+      2033531689, // Midnight Coup
       2228325504, // Edge Transit
       2480074702, // Forbearance
+      2480871539, // Falling Guillotine
       2499720827, // Midnight Coup
       2533990645, // Blast Furnace
+      2731922624, // Succession
       3098328572, // The Recluse
+      3257283337, // The Recluse
+      3736001860, // Forbearance
+      3736001861, // The Mountaintop
+      3736001863, // Edge Transit
       3757612024, // Luna's Howl
       3851176026, // Elsie's Rifle
       4043921923, // The Mountaintop
@@ -805,13 +957,34 @@ const D2Sources: {
   },
   ironbanner: {
     itemHashes: [
+      91672792, // Archon's Thunder
+      218787950, // Felwinter's Lie
+      218787951, // Gunnora's Axe
       231533811, // Iron Strength
+      247984828, // Tinasha's Mastery
+      247984829, // Peacebond
+      247984830, // Allied Demand
+      293709640, // Pressurized Precision
+      293709641, // The Wizened Rebuke
+      491956886, // Tusk of the Boar
       1162929425, // The Golden Standard
+      1435062001, // Riiswalker
       1448664466, // Iron Bone
       1448664467, // Iron Gold
+      1617917863, // Crimil's Dagger
       1661191199, // Grizzled Wolf
+      1968711238, // Warlord's Spear
       1987234560, // Iron Ruby
+      2204165992, // The Time-Worn Spire
       2448092902, // Rusted Iron
+      2851703775, // Bite of the Fox
+      2881109029, // Roar of the Bear
+      3026836571, // Multimach CCX
+      3104013318, // Occluded Finality
+      3203303472, // Frontier's Cry
+      3634548598, // Jorum's Claw
+      3634548599, // Claws of the Wolf
+      4222913208, // The Hero's Burden
     ],
     sourceHashes: [
       561111210, // Source: Iron Banner Salvager's Salvo Armament
@@ -845,6 +1018,25 @@ const D2Sources: {
     aliases: ['lw'],
   },
   legendaryengram: {
+    itemHashes: [
+      324584912, // Ogma PR6
+      734476286, // Maahes HC4
+      870893339, // Ded Gramarye IV
+      960948343, // True Prophecy
+      1291040555, // Heliocentric QSc
+      1402874079, // Hawthorne's Field-Forged Shotgun
+      1517780158, // The Deicide
+      1525080480, // Battle Scar
+      1979417829, // Nasreddin
+      2366022261, // Nox Perennial V
+      3156551028, // Glissando-47
+      3156551029, // Admetus-D
+      3156551031, // Live Fire
+      3719824177, // Cartesian Coordinate
+      3769072067, // Parabellum
+      3786215462, // Aurvandil FR6
+      4118936670, // Last Foray
+    ],
     sourceHashes: [
       3334812276, // Source: Open Legendary engrams and earn faction rank-up packages.
     ],
@@ -900,6 +1092,9 @@ const D2Sources: {
     enteredDCV: 20,
   },
   mercury: {
+    itemHashes: [
+      3176697588, // Infinite Paths 8
+    ],
     sourceHashes: [
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
       1175566043, // Source: Complete Nightfall strike "A Garden World."
@@ -920,6 +1115,7 @@ const D2Sources: {
       1658014144, // Source: Monument of Triumph
       2224236308, // Arena Ops
       2371297108, // Worlds: Distortions
+      2387628034, // Source: Monument of Triumph
       2908547701, // Cosmodrome
       3457438830, // Solo Ops
       4222891848, // Fireteam Ops
@@ -927,6 +1123,19 @@ const D2Sources: {
     aliases: ['mot'],
   },
   moon: {
+    itemHashes: [
+      219610523, // Dream Breaker
+      846241148, // Tranquility
+      846241149, // Apostate
+      868076517, // Loud Lullaby
+      1487476133, // Every Waking Moment
+      2136808079, // Heretic
+      2527058296, // One Small Step
+      2527058297, // Blasphemer
+      2729232863, // Night Terror
+      3211332727, // A Fine Memorial
+      3482299617, // Love and Death
+    ],
     sourceHashes: [
       1253026984, // Source: Among the lost Ghosts of the Moon.
       1999000205, // Source: Exploring the Moon
@@ -937,6 +1146,10 @@ const D2Sources: {
   neomuna: {
     itemHashes: [
       1123421440, // Epochal Integration
+      2353274446, // Basso Ostinato
+      2528793321, // Circular Logic
+      3752860091, // Synchronic Roulette
+      3851394887, // Epochal Integration
     ],
     sourceHashes: [
       281362298, // Source: Strider Exotic Quest
@@ -976,18 +1189,26 @@ const D2Sources: {
       555148853, // Wendigo GL3 (Adept)
       566740455, // THE SWARM (Adept)
       672957262, // Undercurrent (Adept)
+      739029152, // The Palindrome
+      739029153, // D.F.A.
       772231794, // Hung Jury SR4
       817909300, // Undercurrent (Adept)
+      827835657, // Horror's Least
+      852069910, // Loaded Question
+      852069911, // PLUG ONE.1
       912222548, // Soldier On
+      924095500, // Lotus-Eater
       927835311, // Buzzard (Adept)
       959037361, // Wild Style (Adept)
       1056103557, // Shadow Price (Adept)
       1064132738, // BrayTech Osprey (Adept)
       1151688091, // Undercurrent
+      1207321710, // Scintillation
       1332123064, // Wild Style
       1354727549, // The Slammer (Adept)
       1492522228, // Scintillation (Adept)
       1586231351, // Mindbender's Ambition
+      1692372662, // The Hothead
       1821529912, // Warden's Law
       1854753404, // Wendigo GL3
       1854753405, // The Militia's Birthright
@@ -996,10 +1217,13 @@ const D2Sources: {
       2063217087, // Pre Astyanax IV (Adept)
       2074041946, // Mindbender's Ambition (Adept)
       2152484073, // Warden's Law
+      2201323795, // Rake Angle
       2298039571, // Rake Angle
       2322926844, // Shadow Price
       2347178967, // Cruel Mercy (Adept)
+      2363113134, // Warden's Law
       2450917538, // Uzume RR4
+      2466028274, // The Slammer
       2591257541, // Scintillation
       2697143634, // Lotus-Eater (Adept)
       2759590322, // THE SWARM
@@ -1020,9 +1244,14 @@ const D2Sources: {
       3915197957, // Wendigo GL3 (Adept)
       3922217119, // Lotus-Eater
       3997086838, // Rake Angle (Adept)
+      4011513985, // Cruel Mercy
+      4021098352, // Wild Style
+      4021098353, // Wendigo GL3
+      4037675261, // Uzume RR4
       4074251943, // Hung Jury SR4 (Adept)
       4077588826, // The Palindrome (Adept)
       4162642204, // The Militia's Birthright (Adept)
+      4237970862, // Buzzard
     ],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
@@ -1072,6 +1301,14 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
+  oblation: {
+    itemHashes: [
+      2200470033, // Cull's Shadow
+    ],
+    sourceHashes: [
+      808611398, // Source: Oblation
+    ],
+  },
   paleheart: {
     sourceHashes: [
       941123623, // Pale Heart - Cayde's Stash
@@ -1118,11 +1355,17 @@ const D2Sources: {
     ],
   },
   pit: {
+    itemHashes: [
+      1969802090, // Premonition
+    ],
     sourceHashes: [
       1745960977, // Source: "Pit of Heresy" Dungeon
     ],
   },
   plunder: {
+    itemHashes: [
+      768696858, // Cry Mutiny
+    ],
     sourceHashes: [
       790152021, // Source: Season of Plunder Triumph
       2982642634, // Source: Season of Plunder Grandmaster Nightfall
@@ -1149,11 +1392,17 @@ const D2Sources: {
     enteredDCV: 20,
   },
   prophecy: {
+    itemHashes: [
+      2130249527, // Death Adder
+    ],
     sourceHashes: [
       506073192, // Source: "Prophecy" Dungeon
     ],
   },
   psiops: {
+    itemHashes: [
+      1291040554, // Brass Attacks
+    ],
     sourceHashes: [
       450719423, // Source: Season of the Risen
       2075569025, // PsiOps
@@ -1205,10 +1454,13 @@ const D2Sources: {
       4246883461, // Source: Found in the "Scourge of the Past" raid.
     ],
     itemHashes: [
+      412265080, // Bellowing Giant
       947448544, // Shadow of Earth Shell
+      1271275406, // No Feelings
       1661191193, // Crown of Sorrow
       2027598066, // Imperial Opulence
       2027598067, // Imperial Dress
+      2274706510, // Tempered Dynamo
       2557722678, // Midnight Smith
       3580904580, // Legend of Acrius
       3668669364, // Dreaming Spectrum
@@ -1216,6 +1468,10 @@ const D2Sources: {
     ],
   },
   rasputin: {
+    itemHashes: [
+      453798564, // Seventh Seraph SI-2
+      2584201248, // Seventh Seraph SAW
+    ],
     sourceHashes: [
       504657809, // Source: Season of the Seraph Activities
       1126234343, // Source: Witness Rasputin's Full Power
@@ -1241,6 +1497,12 @@ const D2Sources: {
     ],
   },
   revenant: {
+    itemHashes: [
+      736362511, // Red Tape
+      2596736862, // Insurmountable
+      3176697589, // Gridskipper
+      3377522331, // Liturgy
+    ],
     sourceHashes: [
       792439255, // Source: Tonic Laboratory in the Last City
       1605890568, // Source: Episode Revenant Seasonal Activities
@@ -1284,27 +1546,36 @@ const D2Sources: {
   'ritual-weapon': {
     itemHashes: [
       218787950, // Felwinter's Lie
+      438540299, // Veles-X
       805677041, // Buzzard
       838556752, // Python
       847329160, // Edgewise
       891765152, // Adored
+      938936806, // Chivalric Fire
+      979721268, // Malediction
       1179141605, // Felwinter's Lie
       1208809704, // Ecliptic Distaff
       1405095983, // Adored
       1458073737, // Python
       1644680957, // Null Composure
       1692109318, // Salvager's Salvo
+      1713388226, // Ascendancy
+      1716620044, // Chain of Command
       1942143745, // Ecliptic Distaff
       2060863616, // Salvager's Salvo
       2150643740, // Null Composure
+      2191451996, // Perfect Pitch
       2454230106, // Adored
       2461640837, // Salvager's Salvo
       2697058914, // Komodo-4FR
       2963863503, // Salvager's Salvo
       3001205424, // Ecliptic Distaff
+      3085559077, // Reckless Endangerment
+      3273807888, // Resounding
       3434944005, // Point of the Stag
       3535742959, // Randy's Throwing Knife
       3613444087, // Null Composure
+      3708636616, // Last Rite
       3719002817, // Felwinter's Lie
       4162333225, // Null Composure
       4184808992, // Adored
@@ -1347,6 +1618,9 @@ const D2Sources: {
   },
   scourgeofthepast: {
     itemHashes: [
+      412265080, // Bellowing Giant
+      1271275406, // No Feelings
+      2274706510, // Tempered Dynamo
       2557722678, // Midnight Smith
     ],
     sourceHashes: [
@@ -1358,6 +1632,13 @@ const D2Sources: {
     enteredDCV: 20,
   },
   seasonpass: {
+    itemHashes: [
+      1719169808, // Seventh Seraph VY-7
+      2308010345, // Seventh Seraph CQC-12
+      2566169398, // Trophy Hunter
+      3132669561, // Temporal Clause
+      3161496501, // Pyroclastic Flow
+    ],
     sourceHashes: [
       333761108, // Source: Rewards Pass
       450719423, // Source: Season of the Risen
@@ -1432,6 +1713,10 @@ const D2Sources: {
     enteredDCV: 20,
   },
   spireofthewatcher: {
+    itemHashes: [
+      3490736392, // Seventh Seraph Officer Revolver
+      4059111040, // Survivor's Epitaph
+    ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
     ],
@@ -1439,47 +1724,166 @@ const D2Sources: {
   },
   strikes: {
     itemHashes: [
+      34731066, // Nightshade
       42874240, // Uzume RR4
+      63899322, // Smoke Jumper Boots
+      81786728, // Bushido Grips
+      95722356, // Techsec Boots
       192784503, // Pre Astyanax IV
+      198068259, // Empty Vessel
       213264394, // Buzzard
       233635202, // Cruel Mercy
+      262826703, // Swordmaster's Plate
       274843196, // Vanguard Unyielding
+      293267476, // Ferropotent Cloak
+      385833378, // Swordmaster's Cloak
+      407922163, // Bushido Helm
+      433193440, // Eutechnology Plate
+      445076215, // Swordmaster's Strides
+      464665629, // Bushido Cloak
+      489126477, // Techsec Gloves
+      503854896, // Techsec Vest
+      517096395, // Techsec Helm
+      545935602, // Bushido Cowl
+      589006711, // Smoke Jumper Gauntlets
+      591555944, // Eutechnology Gauntlets
+      593554567, // Luminopotent Mask
+      726639044, // Eutechnology Vest
+      743956488, // Bushido Bond
       772231794, // Hung Jury SR4
       781498181, // Persuader
+      951529995, // Mindbender's Ambition
+      963732594, // Xenoclast IV
+      963732595, // Fortissimo-11
+      970712027, // Bushido Gloves
+      986078848, // Smoke Jumper Gloves
+      1003997240, // Smoke Jumper Cloak
+      1047792392, // Luminopotent Strides
+      1057430865, // Ferropotent Bond
+      1066619413, // Ferropotent Cover
       1151688091, // Undercurrent
+      1152238701, // Eutechnology Cowl
+      1154629600, // Bushido Vest
+      1159925519, // Techsec Boots
+      1183125954, // Bushido Strides
+      1232186726, // Eutechnology Strides
+      1248547982, // Ferropotent Boots
       1296429091, // Deadpan Delivery
       1332123064, // Wild Style
+      1343009820, // Swordmaster's Mask
+      1465235089, // Bushido Cowl
+      1469372193, // Punching Out
+      1504698788, // Swordmaster's Robes
+      1575046822, // Smoke Jumper Helm
+      1589715538, // Techsec Strides
+      1604556427, // Swordmaster's Vest
+      1619647653, // Smoke Jumper Bond
       1661191186, // Disdain for Gold
+      1683071779, // Eutechnology Boots
+      1689821714, // Luminopotent Greaves
+      1692895170, // Eutechnology Greaves
       1821529912, // Warden's Law
+      1829877749, // Luminopotent Boots
+      1851922001, // Eutechnology Gloves
       1854753404, // Wendigo GL3
       1854753405, // The Militia's Birthright
+      1883377784, // Swordmaster's Helm
+      1924898304, // Luminopotent Bond
+      1934339678, // Swordmaster's Mark
+      1936503321, // Eutechnology Cloak
+      1957301533, // Nameless Midnight
+      1963424554, // Techsec Bond
+      1966593658, // Luminopotent Cover
       1974641289, // Nightshade
+      1975004305, // Eutechnology Helm
       1999754402, // The Showrunner
+      2046361909, // Bushido Robes
+      2082858804, // Techsec Hood
+      2107326067, // Luminopotent Cloak
       2152484073, // Warden's Law
+      2192886829, // Luminopotent Mark
+      2195895938, // Bushido Gauntlets
+      2199272806, // Bushido Plate
+      2248528889, // Swordmaster's Bond
+      2270938588, // Eutechnology Sleeves
+      2280816555, // Smoke Jumper Grasps
+      2292070913, // Techsec Mask
       2298039571, // Rake Angle
       2322926844, // Shadow Price
+      2347181257, // Swordmaster's Gauntlets
+      2348082405, // Smoke Jumper Vest
+      2370945771, // Ferropotent Gauntlets
+      2397541401, // Smoke Jumper Boots
+      2401760398, // Techsec Plate
       2450917538, // Uzume RR4
+      2517367247, // Bushido Mark
       2523776412, // Vanguard Burnished Steel
       2523776413, // Vanguard Steel
       2588647361, // Consequence of Duty
       2591257541, // Scintillation
+      2624561525, // Prolonged Engagement
+      2639123099, // Swordmaster's Greaves
+      2676446840, // Ferropotent Mark
+      2697887125, // Swordmaster's Grips
+      2709760314, // Techsec Gauntlets
+      2719854935, // Techsec Mark
       2759590322, // THE SWARM
       2788911997, // Vanguard Divide
       2788911998, // Vanguard Metallic
       2788911999, // Vanguard Veteran
+      2816737729, // Luminopotent Helm
+      2827141087, // Cynosure
+      2835120910, // Luminopotent Grips
+      2849508185, // Ferropotent Cuirass
       2876244791, // The Palindrome
+      2883433250, // Luminopotent Cuirass
       2889501828, // The Slammer
+      2897411591, // Eutechnology Robes
       2932922810, // Pre Astyanax IV
+      2941172034, // Smoke Jumper Mask
       3001205424, // Ecliptic Distaff
+      3031404418, // Ferropotent Head
+      3120202721, // Ferropotent Strides
       3125454907, // Loaded Question
+      3129990424, // Techsec Grasps
+      3173749166, // Ferropotent Mask
       3183283212, // Wendigo GL3
       3215252549, // Determination
       3293524502, // PLUG ONE.1
+      3307308272, // Luminopotent Plate
+      3345056013, // Luminopotent Robes
+      3347493825, // Smoke Jumper Plate
+      3462703357, // Ferropotent Greaves
+      3520307277, // Swordmaster's Cover
+      3554497829, // Ferropotent Plate
+      3558781766, // Swordmaster's Boots
+      3577550601, // Smoke Jumper Hood
+      3654657240, // Luminopotent Gauntlets
       3667553455, // BrayTech Osprey
       3686538757, // Undercurrent
+      3715719501, // Bushido Boots
+      3737830979, // Luminopotent Gloves
+      3744058588, // The Third Axiom
+      3755454909, // Smoke Jumper Strides
+      3788059976, // Smoke Jumper Vestment
+      3796682229, // Service Revolver
       3832743906, // Hung Jury SR4
       3922217119, // Lotus-Eater
+      4037429988, // Ferropotent Gloves
+      4038196765, // Eutechnology Mark
+      4045298482, // Spoiler Alert
+      4045298483, // The Last Dance
+      4046741099, // Main Ingredient
+      4052965875, // Techsec Vestment
       4060882458, // Balistraria Wrap (Ornament)
+      4066564572, // Ferropotent Robes
+      4078840342, // Eutechnology Bond
+      4129998876, // Smoke Jumper Mark
+      4150538093, // Techsec Cloak
+      4172973116, // Swordmaster's Gloves
+      4199055647, // Ferropotent Grips
+      4281618492, // Bushido Greaves
+      4285848704, // Eutechnology Cover
     ],
     sourceHashes: [
       288436121, // Source: Associated Vanguard Quest
@@ -1554,6 +1958,22 @@ const D2Sources: {
     enteredDCV: 20,
   },
   trials: {
+    itemHashes: [
+      1117787139, // Exile's Curse
+      1185633760, // The Inquisitor
+      1803480512, // Yesterday's Question
+      1940352487, // Tomorrow's Answer
+      2499834164, // Keen Thistle
+      2499834165, // Eye of Sol
+      2776092652, // Igneous Hammer
+      2776092653, // Exalted Truth
+      3267997292, // Reed's Regret
+      3614211586, // Aisha's Care
+      3747667917, // Shayura's Wrath
+      3790632261, // The Scholar
+      4089030727, // Sola's Scar
+      4277548087, // The Messenger
+    ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
       443793689, // Source: Win games on a completed Lighthouse Passage after earning a weekly win streak of five or higher.
@@ -1589,6 +2009,7 @@ const D2Sources: {
       93061497, // VS Gravitic Arrest
       1762785662, // VS Chill Inhibitor
       1762785663, // VS Velocity Baton
+      2344383760, // Eighty-Six
       4232480042, // VS Pyroelectric Propellant
     ],
     sourceHashes: [
