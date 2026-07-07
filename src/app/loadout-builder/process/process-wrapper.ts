@@ -65,7 +65,6 @@ export function runProcess({
   desiredStatRanges,
   anyExotic,
   autoStatMods,
-  expandExoticTuning,
   strictUpgrades,
   stopOnFirstSet,
   lastInput,
@@ -81,7 +80,6 @@ export function runProcess({
   desiredStatRanges: DesiredStatRange[];
   anyExotic: boolean;
   autoStatMods: boolean;
-  expandExoticTuning: boolean;
   strictUpgrades: boolean;
   stopOnFirstSet: boolean;
   lastInput: ProcessInputs | undefined;
@@ -121,7 +119,6 @@ export function runProcess({
         desiredStatRanges,
         modsForSlot: bucketSpecificMods[bucketHash] || [],
         autoStatMods,
-        expandExoticTuning,
       }).map((processItem) => ({
         dimItem,
         processItem,

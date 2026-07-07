@@ -108,7 +108,6 @@ describe('process equivalence', () => {
               armorEnergyRules,
               desiredStatRanges: defaultRanges(),
               autoStatMods: true,
-              expandExoticTuning: false,
             })[0];
             if (mapped) {
               baseItems[bucketHash as keyof ProcessItemsByBucket].push(mapped);
@@ -290,5 +289,129 @@ describe('process equivalence', () => {
     const result = await process(1, inputs, noProgress);
     // Which set is found first is iteration-order dependent; only existence matters
     expect(result.sets.length).toBeGreaterThan(0);
+  });
+
+  // A directional (+5/-5) and a balanced-style (+1/+1/+1) tuning variant for
+  // the equivalence scenarios below.
+  const makeVariants = (exotic: ProcessItem) => {
+    const statA = armorStats[1];
+    const statB = armorStats[4];
+    return [
+      {
+        modHash: 111,
+        stats: {
+          ...exotic.stats,
+          [statA]: exotic.stats[statA] + 5,
+          [statB]: exotic.stats[statB] - 5,
+        },
+      },
+      {
+        modHash: 222,
+        stats: {
+          ...exotic.stats,
+          [armorStats[0]]: exotic.stats[armorStats[0]] + 1,
+          [statA]: exotic.stats[statA] + 1,
+          [statB]: exotic.stats[statB] + 1,
+        },
+      },
+    ];
+  };
+
+  it('tail-resolved exotic tuning variants match the equivalent bucket expansion', async () => {
+    // An exotic's tuning choice is resolved in the per-set tail instead of
+    // being expanded into bucket items. Both formulations enumerate the same
+    // candidate sets, so everything except the combo count and the subtree
+    // skip accounting must be identical.
+    // Keep the corpus small enough that every valid set fits in the top-200
+    // tracker, so results can't differ by boundary tie-breaking.
+    const patchCommon = (inputs: ProcessInputs) => {
+      inputs.autoStatMods = true;
+      inputs.desiredStatRanges[0].minStat = 20;
+      eachBucket(inputs, (items) => items.splice(2));
+      inputs.filteredItems[BucketHashes.Helmet][0].isExotic = true;
+    };
+
+    const tailInputs = cloneInputs((inputs) => {
+      patchCommon(inputs);
+      const exotic = inputs.filteredItems[BucketHashes.Helmet][0];
+      exotic.tuningVariants = makeVariants(exotic);
+    });
+    const expandedInputs = cloneInputs((inputs) => {
+      patchCommon(inputs);
+      const helms = inputs.filteredItems[BucketHashes.Helmet];
+      const exotic = helms[0];
+      helms.splice(
+        0,
+        1,
+        ...makeVariants(exotic).map((v) => ({
+          ...exotic,
+          includedTuningMod: v.modHash,
+          stats: v.stats,
+        })),
+      );
+    });
+
+    const tailDigest = await runAndDigest(tailInputs);
+    const expandedDigest = await runAndDigest(expandedInputs);
+    expect(tailDigest.sets).toEqual(expandedDigest.sets);
+    expect(tailDigest.statRangesFiltered).toEqual(expandedDigest.statRangesFiltered);
+    expect(tailDigest.numProcessed).toBe(expandedDigest.numProcessed);
+    expect(tailDigest.lowerBoundsExceeded).toEqual(expandedDigest.lowerBoundsExceeded);
+    expect(tailDigest.sets.length).toBeGreaterThan(0);
+    // The tuning mod actually shows up in the returned sets
+    expect(tailDigest.sets.some((s) => s.statMods.includes(111) || s.statMods.includes(222))).toBe(
+      true,
+    );
+  });
+
+  it('tail-resolved tuning matches expansion when the tracker boundary prunes variants', async () => {
+    // With the full corpus the top-200 tracker fills up and most variant
+    // evaluations are skipped by the per-set pre-gate, which must not change
+    // anything observable. Which same-total sets sit at the heap boundary is
+    // iteration-order dependent, so compare order-independent invariants:
+    // the multiset of retained totals, the stat ranges, and the number of
+    // candidates considered.
+    const markExotics = (inputs: ProcessInputs) => {
+      inputs.autoStatMods = true;
+      inputs.filteredItems[BucketHashes.Helmet][0].isExotic = true;
+      inputs.filteredItems[BucketHashes.Helmet][3].isExotic = true;
+      inputs.filteredItems[BucketHashes.ChestArmor][2].isExotic = true;
+    };
+
+    const tailInputs = cloneInputs((inputs) => {
+      markExotics(inputs);
+      for (const bucketHash of ArmorBucketHashes) {
+        for (const item of inputs.filteredItems[bucketHash]) {
+          if (item.isExotic) {
+            item.tuningVariants = makeVariants(item);
+          }
+        }
+      }
+    });
+    const expandedInputs = cloneInputs((inputs) => {
+      markExotics(inputs);
+      for (const bucketHash of ArmorBucketHashes) {
+        inputs.filteredItems[bucketHash] = inputs.filteredItems[bucketHash].flatMap((item) =>
+          item.isExotic
+            ? makeVariants(item).map((v) => ({
+                ...item,
+                includedTuningMod: v.modHash,
+                stats: v.stats,
+              }))
+            : [item],
+        );
+      }
+    });
+
+    const tailDigest = await runAndDigest(tailInputs);
+    const expandedDigest = await runAndDigest(expandedInputs);
+    expect(tailDigest.sets.map((s) => s.enabledStatsTotal).sort()).toEqual(
+      expandedDigest.sets.map((s) => s.enabledStatsTotal).sort(),
+    );
+    expect(tailDigest.statRangesFiltered).toEqual(expandedDigest.statRangesFiltered);
+    expect(tailDigest.numProcessed).toBe(expandedDigest.numProcessed);
+    expect(tailDigest.sets.some((s) => s.statMods.includes(111) || s.statMods.includes(222))).toBe(
+      true,
+    );
   });
 });
