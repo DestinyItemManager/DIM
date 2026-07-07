@@ -44,10 +44,11 @@ export function useLoVendorItems(selectedStoreId: string) {
   const vendorItems = useSelector(loVendorItemsSelector(selectedStoreId));
   const vendors = useSelector(vendorsByCharacterSelector);
 
-  useLoadVendors(account, selectedStoreId);
+  const vendorItemsLoading = useLoadVendors(account, selectedStoreId);
 
   return {
     vendorItems,
+    vendorItemsLoading,
     error: vendors[selectedStoreId]?.error,
   };
 }
