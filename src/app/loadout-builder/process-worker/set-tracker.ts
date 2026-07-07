@@ -54,8 +54,11 @@ export class HeapSetTracker<T> {
     if (this.heap.length < this.capacity) {
       return true;
     }
-    // In min-heap, root is the worst item - check if new item is better
-    return totalTier >= this.heap[0].enabledStatsTotal;
+    // Strictly better than the worst retained set only. Sets that merely tie
+    // its total keep the first-found instead of re-ranking ties by stat mix;
+    // in large searches millions of sets tie the boundary total, and admitting
+    // them all would cost an expensive mod-picking pass each.
+    return totalTier > this.heap[0].enabledStatsTotal;
   }
 
   /**
