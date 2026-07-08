@@ -22,6 +22,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { buildStores } from 'app/inventory/store/d2-store-factory';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { noop } from 'es-toolkit';
 import fs from 'node:fs';
@@ -38,6 +39,13 @@ import { ArmorBucketHashes, DesiredStatRange, MIN_LO_ITEM_ENERGY } from '../type
 import { process as processArmor, ProcessInputs } from './process';
 import { processBaseline } from './process-baseline';
 import { ProcessItem, ProcessItemsByBucket } from './types';
+
+// A raw Bungie GetProfile response, or one wrapped in { Response }.
+function readProfileFixture(profilePath: string): DestinyProfileResponse {
+  const raw = JSON.parse(fs.readFileSync(profilePath, 'utf-8')) as
+    DestinyProfileResponse | { Response: DestinyProfileResponse };
+  return 'Response' in raw ? raw.Response : raw;
+}
 
 // Deterministic LCG so runs are comparable
 function makeRng(seed: number) {
@@ -188,17 +196,14 @@ test.skip('benchmark process(): baseline vs candidate', async () => {
 const PER_BUCKET = Number(process.env.LO_BENCH_ITEMS) || 25;
 test.skip('benchmark process(): real vault', async () => {
   const defs = await getTestDefinitions();
-  // LO_BENCH_PROFILE can point at a raw Bungie GetProfile response (or one
-  // wrapped in { Response }); otherwise fall back to the checked-in fixture.
+  // LO_BENCH_PROFILE can point at a profile fixture; otherwise fall back to
+  // the checked-in one.
   const profilePath = process.env.LO_BENCH_PROFILE;
   const stores = profilePath
     ? buildStores({
         defs,
         buckets: getBuckets(defs),
-        profileResponse: (() => {
-          const raw = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
-          return raw.Response ?? raw;
-        })(),
+        profileResponse: readProfileFixture(profilePath),
         customStats: [],
       })
     : await getTestStores();
@@ -295,10 +300,7 @@ async function loadRealVaultItems(perBucket: number): Promise<{
     ? buildStores({
         defs,
         buckets: getBuckets(defs),
-        profileResponse: (() => {
-          const raw = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
-          return raw.Response ?? raw;
-        })(),
+        profileResponse: readProfileFixture(profilePath),
         customStats: [],
       })
     : await getTestStores();
@@ -374,7 +376,9 @@ function sliceLongestBucket(base: ProcessInputs, n: number, interleaved: boolean
   const count = Math.min(n, items.length);
   const groups: ProcessItem[][] = Array.from({ length: count }, () => []);
   if (interleaved) {
-    items.forEach((it, k) => groups[k % count].push(it));
+    for (const [k, it] of items.entries()) {
+      groups[k % count].push(it);
+    }
   } else {
     const bs = Math.floor(items.length / count);
     const rem = items.length % count;

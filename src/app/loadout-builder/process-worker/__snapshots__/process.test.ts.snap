@@ -2,13 +2,13 @@
 
 exports[`process equivalence anyExotic with synthesized exotics 1`] = `
 {
-  "comboLocalSkips": 21120,
+  "comboLocalSkips": 11008,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 11648,
+    "timesChecked": 1592,
     "timesFailed": 0,
   },
-  "numProcessed": 11648,
+  "numProcessed": 1592,
   "sets": [
     {
       "armor": [
@@ -5845,10 +5845,10 @@ exports[`process equivalence locked general and activity mods 1`] = `
   "comboLocalSkips": 0,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 32768,
+    "timesChecked": 2232,
     "timesFailed": 0,
   },
-  "numProcessed": 32768,
+  "numProcessed": 2232,
   "sets": [
     {
       "armor": [
@@ -12485,10 +12485,10 @@ exports[`process equivalence no constraints 1`] = `
   "comboLocalSkips": 0,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 32768,
+    "timesChecked": 2232,
     "timesFailed": 0,
   },
-  "numProcessed": 32768,
+  "numProcessed": 2232,
   "sets": [
     {
       "armor": [
@@ -18322,13 +18322,13 @@ exports[`process equivalence no constraints 1`] = `
 
 exports[`process equivalence required perks 1`] = `
 {
-  "comboLocalSkips": 30464,
+  "comboLocalSkips": 24332,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 2304,
+    "timesChecked": 452,
     "timesFailed": 0,
   },
-  "numProcessed": 2304,
+  "numProcessed": 452,
   "sets": [
     {
       "armor": [
@@ -24165,10 +24165,10 @@ exports[`process equivalence set bonus satisfied only via wildcard 1`] = `
   "comboLocalSkips": 31360,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 1408,
+    "timesChecked": 720,
     "timesFailed": 0,
   },
-  "numProcessed": 1408,
+  "numProcessed": 720,
   "sets": [
     {
       "armor": [
@@ -30002,13 +30002,13 @@ exports[`process equivalence set bonus satisfied only via wildcard 1`] = `
 
 exports[`process equivalence set bonuses with wildcards 1`] = `
 {
-  "comboLocalSkips": 28692,
+  "comboLocalSkips": 22397,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 4076,
+    "timesChecked": 1219,
     "timesFailed": 0,
   },
-  "numProcessed": 4076,
+  "numProcessed": 1219,
   "sets": [
     {
       "armor": [
@@ -35845,10 +35845,10 @@ exports[`process equivalence stat minimums and maximums with auto stat mods 1`] 
   "comboLocalSkips": 0,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 32768,
+    "timesChecked": 1688,
     "timesFailed": 0,
   },
-  "numProcessed": 32768,
+  "numProcessed": 1688,
   "sets": [
     {
       "armor": [
@@ -42885,10 +42885,10 @@ exports[`process equivalence strict upgrades 1`] = `
   "comboLocalSkips": 0,
   "combos": 32768,
   "lowerBoundsExceeded": {
-    "timesChecked": 32768,
+    "timesChecked": 2360,
     "timesFailed": 0,
   },
-  "numProcessed": 32768,
+  "numProcessed": 2360,
   "sets": [
     {
       "armor": [
