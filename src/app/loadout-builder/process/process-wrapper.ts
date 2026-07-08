@@ -2,7 +2,7 @@ import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
-import { mapValues, partitionEvenly } from 'app/utils/collections';
+import { mapValues } from 'app/utils/collections';
 import { getMaxParallelCores } from 'app/utils/parallel-cores';
 import { proxy, releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -290,7 +290,31 @@ function sliceInputForConcurrency(
     return [input];
   }
 
-  return partitionEvenly(itemsToSlice, concurrency).map((itemsSlice) => ({
+  // Each worker runs an independent search with its own top-N tracker, and how
+  // hard it can prune depends on how good the items it holds are. Contiguous
+  // slices would hand one worker all the best items and another all the worst,
+  // so the workers finish at very different times and the weak ones prune
+  // poorly. Instead, sort the sliced bucket high-stat-first (the order the
+  // worker itself uses) and deal the items round-robin, so every worker gets a
+  // stratified spread and their trackers — and runtimes — stay comparable.
+  const enabledStatHashes = input.desiredStatRanges
+    .filter((r) => r.maxStat > 0)
+    .map((r) => r.statHash);
+  const enabledTotal = (item: ProcessItem) => {
+    let total = 0;
+    for (const statHash of enabledStatHashes) {
+      total += item.stats[statHash] ?? 0;
+    }
+    return total;
+  };
+  const sorted = [...itemsToSlice].sort((a, b) => enabledTotal(b) - enabledTotal(a));
+  const count = Math.min(concurrency, sorted.length);
+  const slices: ProcessItem[][] = Array.from({ length: count }, () => []);
+  for (let i = 0; i < sorted.length; i++) {
+    slices[i % count].push(sorted[i]);
+  }
+
+  return slices.map((itemsSlice) => ({
     ...input,
     filteredItems: {
       ...input.filteredItems,

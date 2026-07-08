@@ -283,3 +283,161 @@ test.skip('benchmark process(): real vault', async () => {
     autoModOptions,
   });
 }, 300000);
+
+// Build a real-vault ProcessItemsByBucket (see the real-vault test above).
+async function loadRealVaultItems(perBucket: number): Promise<{
+  filteredItems: ProcessItemsByBucket;
+  autoModOptions: ProcessInputs['autoModOptions'];
+}> {
+  const defs = await getTestDefinitions();
+  const profilePath = process.env.LO_BENCH_PROFILE;
+  const stores = profilePath
+    ? buildStores({
+        defs,
+        buckets: getBuckets(defs),
+        profileResponse: (() => {
+          const raw = JSON.parse(fs.readFileSync(profilePath, 'utf-8'));
+          return raw.Response ?? raw;
+        })(),
+        customStats: [],
+      })
+    : await getTestStores();
+  const autoModOptions = mapAutoMods(getAutoMods(defs, emptySet()));
+  const armorEnergyRules = {
+    assumeArmorMasterwork: AssumeArmorMasterwork.None,
+    minItemEnergy: MIN_LO_ITEM_ENERGY,
+  };
+  const bucketPredicates: [BucketHashes, (item: DimItem) => unknown][] = [
+    [BucketHashes.Helmet, isArmor2Helmet],
+    [BucketHashes.Gauntlets, isArmor2Arms],
+    [BucketHashes.ChestArmor, isArmor2Chest],
+    [BucketHashes.LegArmor, isArmor2Legs],
+    [BucketHashes.ClassArmor, isArmor2ClassItem],
+  ];
+  const helmsByClass = new Map<number, number>();
+  for (const store of stores) {
+    for (const item of store.items) {
+      if (isArmor2Helmet(item)) {
+        helmsByClass.set(item.classType, (helmsByClass.get(item.classType) ?? 0) + 1);
+      }
+    }
+  }
+  const classType = [...helmsByClass.entries()].sort((a, b) => b[1] - a[1])[0][0];
+  const filteredItems: ProcessItemsByBucket = {
+    [BucketHashes.Helmet]: [],
+    [BucketHashes.Gauntlets]: [],
+    [BucketHashes.ChestArmor]: [],
+    [BucketHashes.LegArmor]: [],
+    [BucketHashes.ClassArmor]: [],
+  };
+  for (const store of stores) {
+    for (const item of store.items) {
+      if (item.classType !== classType) {
+        continue;
+      }
+      for (const [bucketHash, predicate] of bucketPredicates) {
+        if (predicate(item)) {
+          const mapped = mapDimItemToProcessItems({
+            dimItem: item,
+            armorEnergyRules,
+            desiredStatRanges,
+            autoStatMods: true,
+          })[0];
+          if (mapped) {
+            filteredItems[bucketHash as keyof ProcessItemsByBucket].push(mapped);
+          }
+        }
+      }
+    }
+  }
+  for (const bucketHash of ArmorBucketHashes) {
+    const items = filteredItems[bucketHash];
+    items.sort(
+      (a, b) =>
+        armorStats.reduce((t, h) => t + b.stats[h], 0) -
+        armorStats.reduce((t, h) => t + a.stats[h], 0),
+    );
+    items.splice(perBucket);
+  }
+  return { filteredItems, autoModOptions };
+}
+
+// Slice the longest bucket across `n` workers the way process-wrapper does
+// (contiguous) vs. round-robin (interleaved). Interleaving gives each worker a
+// representative stat mix, so their tracker floors — and thus how hard each can
+// prune — stay similar.
+function sliceLongestBucket(base: ProcessInputs, n: number, interleaved: boolean): ProcessInputs[] {
+  const longest = ArmorBucketHashes.reduce((a, b) =>
+    base.filteredItems[b].length > base.filteredItems[a].length ? b : a,
+  );
+  const items = base.filteredItems[longest];
+  const count = Math.min(n, items.length);
+  const groups: ProcessItem[][] = Array.from({ length: count }, () => []);
+  if (interleaved) {
+    items.forEach((it, k) => groups[k % count].push(it));
+  } else {
+    const bs = Math.floor(items.length / count);
+    const rem = items.length % count;
+    let start = 0;
+    for (let i = 0; i < count; i++) {
+      const size = bs + (i < rem ? 1 : 0);
+      groups[i] = items.slice(start, start + size);
+      start += size;
+    }
+  }
+  return groups.map((slice) => ({
+    ...base,
+    filteredItems: { ...base.filteredItems, [longest]: slice },
+  }));
+}
+
+// Simulate multi-worker slicing on the candidate: does parallelism still help
+// after candidate #1's pruning, and is the split balanced? Runs process() per
+// slice sequentially (each worker is independent), reporting the wall-clock a
+// perfectly-parallel run would see (max slice) and the imbalance (max/min).
+test.skip('load balancing: contiguous vs interleaved', async () => {
+  const { filteredItems, autoModOptions } = await loadRealVaultItems(
+    Number(process.env.LO_BENCH_ITEMS) || 60,
+  );
+  const concurrency = Number(process.env.LO_BENCH_CORES) || 6;
+  const base: ProcessInputs = {
+    ...baseInputs,
+    desiredStatRanges: process.env.LO_BENCH_MINS
+      ? desiredStatRanges
+      : armorStats.map((statHash) => ({ statHash, minStat: 0, maxStat: 200 })),
+    filteredItems,
+    lockedMods: { generalMods: [], activityMods: [] },
+    autoModOptions,
+  };
+
+  const timeProcess = async (inp: ProcessInputs, runs = 3) => {
+    await processArmor(0, clone(inp), noop);
+    let best = Infinity;
+    for (let r = 0; r < runs; r++) {
+      const s = performance.now();
+      await processArmor(0, clone(inp), noop);
+      best = Math.min(best, performance.now() - s);
+    }
+    return best;
+  };
+
+  const full = await timeProcess(base);
+  // eslint-disable-next-line no-console
+  console.log(
+    `LB full single-worker ${full.toFixed(0)}ms | items/bucket ${ArmorBucketHashes.map((h) => base.filteredItems[h].length).join('/')} | concurrency ${concurrency}`,
+  );
+  for (const interleaved of [false, true]) {
+    const slices = sliceLongestBucket(base, concurrency, interleaved);
+    const times: number[] = [];
+    for (const slice of slices) {
+      times.push(await timeProcess(slice));
+    }
+    const max = Math.max(...times);
+    const min = Math.min(...times);
+    const sum = times.reduce((a, b) => a + b, 0);
+    // eslint-disable-next-line no-console
+    console.log(
+      `LB ${interleaved ? 'interleaved' : 'contiguous '}: wall(max) ${max.toFixed(0)}ms | total ${sum.toFixed(0)}ms | imbalance ${(max / min).toFixed(2)}x | per-slice ${times.map((t) => t.toFixed(0)).join('/')}`,
+    );
+  }
+}, 300000);
