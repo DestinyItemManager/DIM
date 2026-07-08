@@ -7,7 +7,11 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  unlockedExoticOrnamentsSelector,
+  unlockedPlugSetItemsSelector,
+} from 'app/inventory/selectors';
 import SocketDetails from 'app/item-popup/SocketDetails';
 import { ArmorBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
@@ -501,11 +505,16 @@ function FashionSocket({
   onRemovePlug: (bucketHash: number, modHash: number) => void;
 }) {
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
+  // Exotic ornament unlocks only show up on item instances, not in the plug sets
+  const unlockedExoticOrnaments = useSelector(unlockedExoticOrnamentsSelector);
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
 
-  const unlockedPlugsWithoutTheDefault = new Set(
-    Array.from(unlockedPlugSetItems).filter((plugHash) => plugHash !== defaultPlug.hash),
-  );
+  const unlockedPlugsWithoutTheDefault = new Set<number>();
+  for (const plugHash of [...unlockedPlugSetItems, ...unlockedExoticOrnaments]) {
+    if (plugHash !== defaultPlug.hash) {
+      unlockedPlugsWithoutTheDefault.add(plugHash);
+    }
+  }
 
   const canSlotOrnament =
     socket?.plugSet?.plugs.some((plug) => unlockedPlugsWithoutTheDefault.has(plug.plugDef.hash)) ||

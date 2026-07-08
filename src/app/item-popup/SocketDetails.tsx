@@ -20,7 +20,7 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { emptySet } from 'app/utils/empty';
 import { DestinyProfileResponse, PlugUiStyles, SocketPlugSources } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import '../inventory-page/StoreBucket.scss';
@@ -175,7 +175,12 @@ export default function SocketDetails({
   if (socket.reusablePlugItems) {
     for (const plugItem of socket.reusablePlugItems) {
       modHashes.add(plugItem.plugItemHash);
-      otherUnlockedPlugs.add(plugItem.plugItemHash);
+      // Armor cosmetic sockets list ornaments the account doesn't own, and
+      // canInsert is the only ownership signal for exotic ornaments since
+      // they're not reported in the profile plug sets.
+      if (plugItem.canInsert || socketCategory.hash !== SocketCategoryHashes.ArmorCosmetics) {
+        otherUnlockedPlugs.add(plugItem.plugItemHash);
+      }
     }
   }
 

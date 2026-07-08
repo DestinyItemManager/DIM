@@ -2,7 +2,10 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import {
+  unlockedExoticOrnamentsSelector,
+  unlockedPlugSetItemsSelector,
+} from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import clsx from 'clsx';
@@ -21,6 +24,8 @@ export function FashionMods({
 }) {
   const defs = useD2Definitions()!;
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
+  // Exotic ornament unlocks only show up on item instances, not in the plug sets
+  const unlockedExoticOrnaments = useSelector(unlockedExoticOrnamentsSelector);
   const isShader = (m: number) =>
     defs.InventoryItem.get(m)?.plug?.plugCategoryHash === PlugCategoryHashes.Shader;
   const shader = modsForBucket.find(isShader);
@@ -36,7 +41,9 @@ export function FashionMods({
     shader !== undefined && (shader === DEFAULT_SHADER || unlockedPlugSetItems.has(shader));
   const canSlotOrnament =
     ornament !== undefined &&
-    (DEFAULT_ORNAMENTS.includes(ornament) || unlockedPlugSetItems.has(ornament));
+    (DEFAULT_ORNAMENTS.includes(ornament) ||
+      unlockedPlugSetItems.has(ornament) ||
+      unlockedExoticOrnaments.has(ornament));
 
   return (
     <div className={clsx(styles.items, styles.unequipped)}>
