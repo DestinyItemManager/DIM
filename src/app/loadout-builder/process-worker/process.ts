@@ -409,6 +409,9 @@ export async function process(
 
   const generalModsBonus = precalculatedInfo.numAvailableGeneralMods * majorStatBoost;
   const maxStatValue = MAX_STAT;
+  // Scratch for canPruneSubtree's per-stat reserved-mod amounts (avoids a
+  // per-call allocation in this frequently-called prune).
+  const reservedScratch = [0, 0, 0, 0, 0, 0];
 
   // A set can affect the output in only three ways: enter the top-N tracker,
   // raise an observed max stat range, or lower an observed min stat range. If no
@@ -444,14 +447,32 @@ export async function process(
     if (setTracker.couldInsert(boundTotal + bonusBound + maxTuningNetGain)) {
       return false;
     }
+    // Stat mods that must be spent bringing other stats up to their minimums
+    // (best case: each other stat at its subtree max) can't also boost stat i,
+    // so the max-range bound reserves them. All zero when there are no minimums.
+    let totalReserved = 0;
+    for (let j = 0; j < 6; j++) {
+      const filter = desiredStatRanges[j];
+      let r = 0;
+      if (filter.maxStat > 0 && filter.minStat > 0) {
+        const best = Math.min(maxStatValue, partialStats[j] + suffixMax[j] + maxTuningDelta[j]);
+        if (filter.minStat > best) {
+          r = filter.minStat - best;
+        }
+      }
+      reservedScratch[j] = r;
+      totalReserved += r;
+    }
     for (let i = 0; i < 6; i++) {
       const statRange = statRanges[i];
       // Could any completion raise this max stat range? Mirrors updateMaxStats:
       // bump maxStat to the filter minimum, or to an achievable value above the
-      // observed max.
+      // observed max. Mods reserved for the other minimums can't boost stat i.
+      const reservedForOthers = totalReserved - reservedScratch[i];
+      const modBudget = bonusBound > reservedForOthers ? bonusBound - reservedForOthers : 0;
       if (
         statRange.maxStat < desiredStatRanges[i].minStat ||
-        Math.min(maxStatValue, partialStats[i] + suffixMax[i] + maxTuningDelta[i] + bonusBound) >
+        Math.min(maxStatValue, partialStats[i] + suffixMax[i] + maxTuningDelta[i] + modBudget) >
           statRange.maxStat
       ) {
         return false;
@@ -526,13 +547,14 @@ export async function process(
   // depends on the seed (the loop's bounds still compute the true ranges) — only
   // speed: the min seed is exact, and the max seed is a guaranteed-achievable
   // lower bound the loop refines upward.
-  // minStat is tracked over every coarsely-valid set regardless of stat
-  // minimums, so it can be seeded whenever no exotic/perk/set-bonus requirement
-  // couples the buckets. maxStat is tracked only over sets that hit the stat
-  // minimums, so seeding it additionally needs there to be no minimums.
-  const canSeedMin = !anyExotic && numPerks === 0 && numSetBonuses === 0;
-  const canSeedMax = canSeedMin && desiredStatRanges.every((r) => r.minStat === 0);
-  if (canSeedMin) {
+  // Seed the exact ranges whenever no exotic/perk/set-bonus requirement couples
+  // the buckets. minStat is tracked over every coarsely-valid set, so its summed
+  // per-bucket floor is exact. maxStat is tracked only over sets that meet the
+  // stat minimums, so each candidate max set is put through the same mod gate
+  // the main loop uses and seeds the max only if it meets them (trivially true
+  // when there are no minimums).
+  const canSeed = !anyExotic && numPerks === 0 && numSetBonuses === 0;
+  if (canSeed) {
     for (let i = 0; i < 6; i++) {
       if (maxStatConstraints[i] > 0) {
         const floor =
@@ -548,8 +570,6 @@ export async function process(
         }
       }
     }
-  }
-  if (canSeedMax) {
     const soas = [helmSoA, gauntSoA, chestSoA, legSoA, classItemSoA];
     const buckets = [helms, gauntlets, chests, legs, classItems];
     for (let i = 0; i < 6; i++) {
@@ -609,7 +629,37 @@ export async function process(
           numArtifice++;
         }
       }
+      // Put the candidate through the main loop's mod gate: it contributes to
+      // maxStat only if it can fit mods to meet the stat minimums.
+      let totalNeededStats = 0;
+      for (let s = 0; s < 6; s++) {
+        neededStats[s] = 0;
+        const filter = desiredStatRanges[s];
+        if (filter.maxStat > 0 && filter.minStat > 0) {
+          const need = filter.minStat - Math.min(stats[s], maxStatConstraints[s]);
+          if (need > 0) {
+            totalNeededStats += need;
+            neededStats[s] = need;
+          }
+        }
+      }
+      const maxModBonus = numArtifice * artificeStatBoost + generalModsBonus;
+      if (totalNeededStats > maxModBonus) {
+        continue;
+      }
       energyCache.result = undefined;
+      if (
+        (hasMods || totalNeededStats > 0) &&
+        !pickAndAssignSlotIndependentMods(
+          precalculatedInfo,
+          setStatistics.modsStatistics,
+          armor,
+          totalNeededStats > 0 ? neededStats : undefined,
+          numArtifice,
+        )
+      ) {
+        continue;
+      }
       updateMaxStats(
         precalculatedInfo,
         armor,
