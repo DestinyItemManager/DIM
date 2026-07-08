@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed saved loadouts placing tuning mods on the wrong armor piece when applying or previewing them.
+
 ## 8.132.0 <span class="changelog-date">(2026-07-05)</span>
 
 * Fixed a bug that prevented saving searches on the loadouts page
