@@ -14403,7 +14403,7 @@ exports[`process stores generates a correct ghost CSV export 1`] = `
     ],
     "Rarity": "Exotic",
     "Season": 8,
-    "Source": "deluxe",
+    "Source": "charity",
     "Tag": undefined,
     "Tier": 0,
     "Year": 3,

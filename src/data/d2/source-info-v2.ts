@@ -210,6 +210,53 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
+  charity: {
+    itemHashes: [
+      40494562, // Caped Cruiser
+      171635528, // Hearts of Gold
+      171635529, // Principled Porphyry
+      171635530, // Argent Champion
+      371705660, // Unconditional Love
+      765122182, // Tenderhearted Shell
+      826128643, // Small Luminance
+      902219633, // Bridge of Magpies
+      1047542010, // On Your Sleeve
+      1047542011, // Heart Felt
+      1059396448, // Tenth Muse
+      1059396449, // Boundless
+      1059396450, // Steadfast Column
+      1059396451, // True Self
+      1059396454, // Indivisible
+      1061507881, // Altair Runner
+      1165452712, // Cosmic Tune
+      1257250409, // Seventh Sail
+      1283654212, // Gilded Shell
+      2068483326, // Phosphor Gladiator
+      2268540161, // Warm Munificence
+      2609270227, // Arena Shell
+      2635366068, // Buoyant Shell
+      2650448800, // Love Note Shell
+      2650448801, // Heart's Oath Shell
+      2704911691, // Lovestruck
+      2749628923, // Disciple's Shell
+      2764545753, // Empathic Shell
+      2778157412, // Sweetheart Shell
+      2811138603, // Altrux Pura Mk1
+      3154194046, // Kilted Out
+      3159276286, // Cosmic Arcade
+      3229426560, // Laser Tag Brag
+      3596008431, // Pale Blue Dot
+      3919847952, // Circadian Guard
+      4163975820, // Lubraean Luxury
+      4182403848, // Prismatic Expanse
+      4201060647, // Offset
+      4222561358, // Light Hearted
+      4253857367, // Heartful Shell
+    ],
+    sourceHashes: [
+      2985242208, // Source: Earned from a charity promotion.
+    ],
+  },
   compass: {
     sourceHashes: [
       164083100, // Source: Display of Supremacy, Weekly Challenge
@@ -445,7 +492,6 @@ const D2Sources: {
       1743434737, // Source: Destiny 2 "Forsaken" preorder bonus gift.
       1866448829, // Source: Deluxe Edition Bonus
       2968206374, // Source: Earned as a Deluxe Edition bonus.
-      2985242208, // Source: Earned from a charity promotion.
       3173463761, // Source: Pre-order Bonus
       3212282221, // Source: Forsaken Annual Pass
       3672287903, // Source: The Witch Queen Digital Deluxe Edition
