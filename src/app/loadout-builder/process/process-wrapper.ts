@@ -46,7 +46,37 @@ function createWorker() {
     instance.terminate();
   };
 
-  return { worker, cleanup };
+  return { worker, cleanup, uses: 0 };
+}
+
+type PooledWorker = ReturnType<typeof createWorker>;
+
+// Retire a warm worker after this many runs and let the next acquire spin up a
+// fresh one. Bounds any slow accumulation across a long session (e.g. comlink
+// callback proxies) at a negligible cost — one spin-up per this many runs.
+const WORKER_MAX_USES = 50;
+
+// Creating a worker spawns a thread and parses the worker bundle — tens of ms
+// that used to be paid on every run, and which now dominate the wall clock for
+// searches whose compute is only a few ms. Workers are stateless between runs
+// (process() takes all its input each call), so keep a warm pool: a worker
+// returns to the pool when its run finishes cleanly, and is only terminated when
+// a run is cancelled (so its stale work stops) or errors (so a broken worker is
+// never reused).
+const idleWorkers: PooledWorker[] = [];
+let warmPoolLimit = 0;
+
+function acquireWorker(): PooledWorker {
+  return idleWorkers.pop() ?? createWorker();
+}
+
+function releaseWorker(pooled: PooledWorker) {
+  pooled.uses++;
+  if (idleWorkers.length < warmPoolLimit && pooled.uses < WORKER_MAX_USES) {
+    idleWorkers.push(pooled);
+  } else {
+    pooled.cleanup();
+  }
 }
 
 export type RunProcessResult = Omit<ProcessResult, 'sets'> & {
@@ -172,32 +202,51 @@ export function runProcess({
   const inputSlices = sliceInputForConcurrency(input, longestItemsBucketHash, concurrency);
 
   let progressTotal = 0;
+  warmPoolLimit = concurrency;
 
   for (let i = 0; i < inputSlices.length; i++) {
-    const { worker, cleanup: cleanupWorker } = createWorker();
-    let cleanupRef: (() => void) | undefined = cleanupWorker;
-    const existingCleanup = cleanup;
-    const cleanupThisWorker = () => {
-      cleanupRef?.();
-      cleanupRef = undefined;
-    };
-    cleanup = () => {
-      existingCleanup();
-      cleanupThisWorker();
-    };
+    const pooled = acquireWorker();
     const input = inputSlices[i];
+    // `settled` guards the one-time disposition of this worker — whichever of
+    // completion, error, or cancellation happens first wins.
+    let settled = false;
     const handleProgress = proxy((completed: number) => {
-      if (cleanupRef === undefined) {
+      if (settled) {
         return;
       }
       progressTotal += completed;
       onProgress?.(progressTotal, numCombinations);
     });
+    const existingCleanup = cleanup;
+    // Cancellation (a newer run supersedes this one): terminate so the stale
+    // computation stops, and don't return the worker to the pool.
+    const cancel = () => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      pooled.cleanup();
+    };
+    cleanup = () => {
+      existingCleanup();
+      cancel();
+    };
     const workerPromise = (async () => {
       try {
-        return await worker.process(i + 1, input, handleProgress);
-      } finally {
-        cleanupThisWorker();
+        const result = await pooled.worker.process(i + 1, input, handleProgress);
+        // Clean completion: hand the warm worker back for the next run.
+        if (!settled) {
+          settled = true;
+          releaseWorker(pooled);
+        }
+        return result;
+      } catch (e) {
+        // Error (or the reject from a cancel-driven terminate): never pool it.
+        if (!settled) {
+          settled = true;
+          pooled.cleanup();
+        }
+        throw e;
       }
     })();
     workerPromises.push(workerPromise);
