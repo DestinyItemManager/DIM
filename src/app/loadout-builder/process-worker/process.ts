@@ -307,6 +307,167 @@ export async function process(
   const maxSetContribAfterGaunt = maxSetContribAfterChest + chestSoA.maxSetContrib;
   const maxSetContribAfterHelm = maxSetContribAfterGaunt + gauntSoA.maxSetContrib;
 
+  // ---------- Stat-total suffix bounds for branch-and-bound subtree pruning ----------
+  // Per bucket: the highest/lowest base value each stat can contribute, and
+  // whether the bucket has an artifice item (worth one artifice mod).
+  const statBoundsOf = (soa: BucketSoA, n: number) => {
+    const max = [0, 0, 0, 0, 0, 0];
+    const min = [MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT];
+    // Lowest value each stat can reach including the worst exotic tuning delta,
+    // matching how the tail lowers minStat. (Legendary tuning is already in the
+    // base stats.) Used to seed the exact stat floor.
+    const floorMin = [MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT];
+    let hasArtifice = false;
+    // The single highest enabled-stat total any one item reaches — a tighter
+    // upper bound than summing the per-stat maxes (which come from different,
+    // stat-specialized items no single completion can combine).
+    let maxTotal = 0;
+    for (let i = 0; i < n; i++) {
+      const b = i * 6;
+      const entry = soa.tuning[i];
+      let itemTotal = 0;
+      for (let s = 0; s < 6; s++) {
+        const v = soa.stats[b + s];
+        if (v > max[s]) {
+          max[s] = v;
+        }
+        if (v < min[s]) {
+          min[s] = v;
+        }
+        const fv = entry ? v + entry.minDeltas[s] : v;
+        if (fv < floorMin[s]) {
+          floorMin[s] = fv;
+        }
+        if (maxStatConstraints[s] > 0) {
+          itemTotal += v;
+        }
+      }
+      if (itemTotal > maxTotal) {
+        maxTotal = itemTotal;
+      }
+      hasArtifice ||= soa.artifice[i] === 1;
+    }
+    return { max, min, floorMin, hasArtifice, maxTotal };
+  };
+  const addVec = (a: number[], b: number[]) => {
+    const out = [0, 0, 0, 0, 0, 0];
+    for (let s = 0; s < 6; s++) {
+      out[s] = a[s] + b[s];
+    }
+    return out;
+  };
+  const helmB = statBoundsOf(helmSoA, helms.length);
+  const gauntB = statBoundsOf(gauntSoA, gauntlets.length);
+  const chestB = statBoundsOf(chestSoA, chests.length);
+  const legB = statBoundsOf(legSoA, legs.length);
+  const classB = statBoundsOf(classItemSoA, classItems.length);
+  // Suffix stat bounds = the summed bounds of every bucket after this level, so
+  // the best/worst any completion could reach.
+  const maxStatsAfterLeg = classB.max;
+  const minStatsAfterLeg = classB.min;
+  const maxStatsAfterChest = addVec(legB.max, maxStatsAfterLeg);
+  const minStatsAfterChest = addVec(legB.min, minStatsAfterLeg);
+  const maxStatsAfterGaunt = addVec(chestB.max, maxStatsAfterChest);
+  const minStatsAfterGaunt = addVec(chestB.min, minStatsAfterChest);
+  const maxTotalAfterLeg = classB.maxTotal;
+  const maxTotalAfterChest = maxTotalAfterLeg + legB.maxTotal;
+  const maxTotalAfterGaunt = maxTotalAfterChest + chestB.maxTotal;
+  const maxTotalAfterHelm = maxTotalAfterGaunt + gauntB.maxTotal;
+  const maxStatsAfterHelm = addVec(gauntB.max, maxStatsAfterGaunt);
+  const minStatsAfterHelm = addVec(gauntB.min, minStatsAfterGaunt);
+  const artificeAfterLeg = classB.hasArtifice ? 1 : 0;
+  const artificeAfterChest = artificeAfterLeg + (legB.hasArtifice ? 1 : 0);
+  const artificeAfterGaunt = artificeAfterChest + (chestB.hasArtifice ? 1 : 0);
+  const artificeAfterHelm = artificeAfterGaunt + (gauntB.hasArtifice ? 1 : 0);
+
+  // Legendary tuning is already baked into each item's stats (the mapper
+  // expands a tunable legendary into one item per tuning mod), so the base-stat
+  // bounds above already cover it. Exotics instead defer their tuning choice to
+  // the tail via tuningVariants, and a valid set has at most one exotic — so a
+  // single global headroom (the best/worst delta any exotic variant offers)
+  // keeps the bounds valid whichever exotic ends up tuning.
+  const maxTuningDelta = [0, 0, 0, 0, 0, 0];
+  const minTuningDelta = [0, 0, 0, 0, 0, 0];
+  let maxTuningNetGain = 0;
+  for (const soa of [helmSoA, gauntSoA, chestSoA, legSoA, classItemSoA]) {
+    for (const entry of soa.tuning) {
+      if (entry) {
+        for (let s = 0; s < 6; s++) {
+          if (entry.maxDeltas[s] > maxTuningDelta[s]) {
+            maxTuningDelta[s] = entry.maxDeltas[s];
+          }
+          if (entry.minDeltas[s] < minTuningDelta[s]) {
+            minTuningDelta[s] = entry.minDeltas[s];
+          }
+        }
+        if (entry.maxNetGain > maxTuningNetGain) {
+          maxTuningNetGain = entry.maxNetGain;
+        }
+      }
+    }
+  }
+
+  const generalModsBonus = precalculatedInfo.numAvailableGeneralMods * majorStatBoost;
+  const maxStatValue = MAX_STAT;
+
+  // A set can affect the output in only three ways: enter the top-N tracker,
+  // raise an observed max stat range, or lower an observed min stat range. If no
+  // completion of the buckets after this level could do any of them, the whole
+  // subtree can be skipped without changing results. This works on any data
+  // (unlike item domination) because the tracker floor and the stat ranges
+  // saturate as good/extreme sets are seen. `partialStats`/`partialArtifice` are
+  // the mod stats plus the items chosen so far.
+  const canPruneSubtree = (
+    suffixMax: number[],
+    suffixMin: number[],
+    suffixArtifice: number,
+    suffixMaxTotal: number,
+    partialStats: number[],
+    partialArtifice: number,
+  ): boolean => {
+    const bonusBound = (partialArtifice + suffixArtifice) * artificeStatBoost + generalModsBonus;
+    let upperTotal = 0;
+    let partialTotal = 0;
+    for (let i = 0; i < 6; i++) {
+      if (maxStatConstraints[i] > 0) {
+        upperTotal += Math.min(
+          partialStats[i] + suffixMax[i] + maxTuningDelta[i],
+          maxStatConstraints[i],
+        );
+        partialTotal += partialStats[i];
+      }
+    }
+    // Tightest valid total upper bound: the per-stat-clamped sum, or the partial
+    // plus the best single-item totals of the remaining buckets — whichever is
+    // lower. The latter is far tighter on stat-specialized real armor.
+    const boundTotal = Math.min(upperTotal, partialTotal + suffixMaxTotal);
+    if (setTracker.couldInsert(boundTotal + bonusBound + maxTuningNetGain)) {
+      return false;
+    }
+    for (let i = 0; i < 6; i++) {
+      const statRange = statRanges[i];
+      // Could any completion raise this max stat range? Mirrors updateMaxStats:
+      // bump maxStat to the filter minimum, or to an achievable value above the
+      // observed max.
+      if (
+        statRange.maxStat < desiredStatRanges[i].minStat ||
+        Math.min(maxStatValue, partialStats[i] + suffixMax[i] + maxTuningDelta[i] + bonusBound) >
+          statRange.maxStat
+      ) {
+        return false;
+      }
+      // Could any completion lower this min stat range?
+      if (
+        maxStatConstraints[i] > 0 &&
+        Math.min(partialStats[i] + suffixMin[i] + minTuningDelta[i], maxStatConstraints[i]) <
+          statRange.minStat
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   // Reused across iterations to avoid per-combo allocation in this hot loop.
   // Safe because each is only read within one iteration and copied before being
   // stored in the set tracker. The statsAfter*/perksAfter*/setCountsAfter*
@@ -353,6 +514,113 @@ export async function process(
       await yieldTask();
     }
   };
+
+  // ---------- Seed exact stat ranges up front ----------
+  // When the search spans every combination — no exotic/perk/set-bonus
+  // requirement and no stat minimums, so every set is valid and contributes to
+  // the ranges — the exact min and max ranges can be computed directly instead
+  // of by visiting every set: each stat's minimum is the summed lowest per-bucket
+  // contribution, and its maximum is what the mod solver reaches on the set that
+  // maximizes it. Seeding these makes the subtree range checks non-blocking, so
+  // the tracker-floor prune can skip almost the whole search. Correctness never
+  // depends on the seed (the loop's bounds still compute the true ranges) — only
+  // speed: the min seed is exact, and the max seed is a guaranteed-achievable
+  // lower bound the loop refines upward.
+  // minStat is tracked over every coarsely-valid set regardless of stat
+  // minimums, so it can be seeded whenever no exotic/perk/set-bonus requirement
+  // couples the buckets. maxStat is tracked only over sets that hit the stat
+  // minimums, so seeding it additionally needs there to be no minimums.
+  const canSeedMin = !anyExotic && numPerks === 0 && numSetBonuses === 0;
+  const canSeedMax = canSeedMin && desiredStatRanges.every((r) => r.minStat === 0);
+  if (canSeedMin) {
+    for (let i = 0; i < 6; i++) {
+      if (maxStatConstraints[i] > 0) {
+        const floor =
+          modStatsInStatOrder[i] +
+          helmB.floorMin[i] +
+          gauntB.floorMin[i] +
+          chestB.floorMin[i] +
+          legB.floorMin[i] +
+          classB.floorMin[i];
+        const clamped = Math.min(floor, maxStatConstraints[i]);
+        if (clamped < statRanges[i].minStat) {
+          statRanges[i].minStat = clamped;
+        }
+      }
+    }
+  }
+  if (canSeedMax) {
+    const soas = [helmSoA, gauntSoA, chestSoA, legSoA, classItemSoA];
+    const buckets = [helms, gauntlets, chests, legs, classItems];
+    for (let i = 0; i < 6; i++) {
+      if (maxStatConstraints[i] === 0) {
+        continue;
+      }
+      // Build the stat-i-maximizing set, keeping at most one exotic so it's a
+      // real valid set (else its max would overstate what's achievable).
+      let exoticUsed = false;
+      let valid = true;
+      for (let b = 0; b < 5; b++) {
+        const soa = soas[b];
+        const items = buckets[b];
+        let bestIdx = 0;
+        let bestVal = -1;
+        let bestNonExoticIdx = -1;
+        let bestNonExoticVal = -1;
+        for (let k = 0; k < items.length; k++) {
+          const v = soa.stats[k * 6 + i];
+          if (v > bestVal) {
+            bestVal = v;
+            bestIdx = k;
+          }
+          if (soa.exotic[k] === 0 && v > bestNonExoticVal) {
+            bestNonExoticVal = v;
+            bestNonExoticIdx = k;
+          }
+        }
+        let pick = bestIdx;
+        if (soa.exotic[bestIdx] === 1) {
+          if (exoticUsed) {
+            if (bestNonExoticIdx >= 0) {
+              pick = bestNonExoticIdx;
+            } else {
+              valid = false;
+              break;
+            }
+          } else {
+            exoticUsed = true;
+          }
+        }
+        armor[b] = items[pick];
+      }
+      if (!valid) {
+        continue;
+      }
+      let numArtifice = 0;
+      for (let s = 0; s < 6; s++) {
+        stats[s] = modStatsInStatOrder[s];
+      }
+      for (let b = 0; b < 5; b++) {
+        const itStats = statsCache.get(armor[b])!;
+        for (let s = 0; s < 6; s++) {
+          stats[s] += itStats[s];
+        }
+        if (armor[b].isArtifice) {
+          numArtifice++;
+        }
+      }
+      energyCache.result = undefined;
+      updateMaxStats(
+        precalculatedInfo,
+        armor,
+        stats,
+        numArtifice,
+        desiredStatRanges,
+        statRanges,
+        energyCache,
+      );
+    }
+  }
 
   itemLoop: for (let helmIdx = 0; helmIdx < helms.length; helmIdx++) {
     const helm = helms[helmIdx];
@@ -416,6 +684,23 @@ export async function process(
     statsAfterHelm[3] = modStatsInStatOrder[3] + helmSoA.stats[helmBase + 3];
     statsAfterHelm[4] = modStatsInStatOrder[4] + helmSoA.stats[helmBase + 4];
     statsAfterHelm[5] = modStatsInStatOrder[5] + helmSoA.stats[helmBase + 5];
+    if (
+      canPruneSubtree(
+        maxStatsAfterHelm,
+        minStatsAfterHelm,
+        artificeAfterHelm,
+        maxTotalAfterHelm,
+        statsAfterHelm,
+        artificeP1,
+      )
+    ) {
+      skipLowTier += combosPerHelm;
+      comboCount += combosPerHelm;
+      if (comboCount >= 100000) {
+        await flushProgress();
+      }
+      continue;
+    }
     for (let gauntIdx = 0; gauntIdx < gauntlets.length; gauntIdx++) {
       const gaunt = gauntlets[gauntIdx];
       const exoticP2 = exoticP1 + gauntSoA.exotic[gauntIdx];
@@ -484,6 +769,23 @@ export async function process(
       statsAfterGaunt[3] = statsAfterHelm[3] + gauntSoA.stats[gauntBase + 3];
       statsAfterGaunt[4] = statsAfterHelm[4] + gauntSoA.stats[gauntBase + 4];
       statsAfterGaunt[5] = statsAfterHelm[5] + gauntSoA.stats[gauntBase + 5];
+      if (
+        canPruneSubtree(
+          maxStatsAfterGaunt,
+          minStatsAfterGaunt,
+          artificeAfterGaunt,
+          maxTotalAfterGaunt,
+          statsAfterGaunt,
+          artificeP2,
+        )
+      ) {
+        skipLowTier += combosPerGaunt;
+        comboCount += combosPerGaunt;
+        if (comboCount >= 100000) {
+          await flushProgress();
+        }
+        continue;
+      }
       for (let chestIdx = 0; chestIdx < chests.length; chestIdx++) {
         const chest = chests[chestIdx];
         const exoticP3 = exoticP2 + chestSoA.exotic[chestIdx];
@@ -552,6 +854,23 @@ export async function process(
         statsAfterChest[3] = statsAfterGaunt[3] + chestSoA.stats[chestBase + 3];
         statsAfterChest[4] = statsAfterGaunt[4] + chestSoA.stats[chestBase + 4];
         statsAfterChest[5] = statsAfterGaunt[5] + chestSoA.stats[chestBase + 5];
+        if (
+          canPruneSubtree(
+            maxStatsAfterChest,
+            minStatsAfterChest,
+            artificeAfterChest,
+            maxTotalAfterChest,
+            statsAfterChest,
+            artificeP3,
+          )
+        ) {
+          skipLowTier += combosPerChest;
+          comboCount += combosPerChest;
+          if (comboCount >= 100000) {
+            await flushProgress();
+          }
+          continue;
+        }
         for (let legIdx = 0; legIdx < legs.length; legIdx++) {
           const leg = legs[legIdx];
           const exoticP4 = exoticP3 + legSoA.exotic[legIdx];
@@ -620,6 +939,23 @@ export async function process(
           statsAfterLeg[3] = statsAfterChest[3] + legSoA.stats[legBase + 3];
           statsAfterLeg[4] = statsAfterChest[4] + legSoA.stats[legBase + 4];
           statsAfterLeg[5] = statsAfterChest[5] + legSoA.stats[legBase + 5];
+          if (
+            canPruneSubtree(
+              maxStatsAfterLeg,
+              minStatsAfterLeg,
+              artificeAfterLeg,
+              maxTotalAfterLeg,
+              statsAfterLeg,
+              artificeP4,
+            )
+          ) {
+            skipLowTier += combosPerLeg;
+            comboCount += combosPerLeg;
+            if (comboCount >= 100000) {
+              await flushProgress();
+            }
+            continue;
+          }
           innerloop: for (let classItemIdx = 0; classItemIdx < classItems.length; classItemIdx++) {
             comboCount++;
             if (comboCount >= 100000) {

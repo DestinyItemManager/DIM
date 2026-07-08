@@ -272,6 +272,12 @@ test.skip('benchmark process(): real vault', async () => {
 
   await runAB('real vault', {
     ...baseInputs,
+    // "Show everything": no stat minimums, so the ranges span every set — the
+    // slow case that range-seeding targets. Set LO_BENCH_MINS=1 to keep the
+    // 90/90/60 minimums instead.
+    desiredStatRanges: process.env.LO_BENCH_MINS
+      ? desiredStatRanges
+      : armorStats.map((statHash) => ({ statHash, minStat: 0, maxStat: 200 })),
     filteredItems,
     lockedMods: { generalMods: [], activityMods: [] },
     autoModOptions,
