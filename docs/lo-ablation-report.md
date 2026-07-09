@@ -60,6 +60,7 @@ Slicing (bench test 3, real profile, 60/bucket, 6 slices, minimums): contiguous 
 **Change (concrete follow-up, answers bhollis's #11860 string-key comment):**
 
 - **autoModsMemo** (#11860): helps 1.06-1.20x when there's a single energy vector (packed number keys) but **hurts** badly with locked activity mods, where multiple energy vectors force the string-key path: removing the memo made that scenario 1.9x faster (60ms vs 32ms). Recommendation: keep the memo but bypass it when `remainingEnergyCapacities.length > 1`, i.e. never build string keys. bhollis was right to be suspicious of that path.
+  **Validated:** with the gate applied (branch `lo-automods-memo-gate`, based on origin/master), the locked-mods scenario's all-on time dropped from ~60ms to 29.6ms, the memo ablation there flattened to 1.00x (no downside left), and the single-vector wins survived unchanged (1.22x vault showAll, 1.08x vault minimums). Results byte-identical in every scenario.
 
 **Removal candidates (no measurable value anywhere, per the <2% criterion):**
 
