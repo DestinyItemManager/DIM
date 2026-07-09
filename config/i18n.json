@@ -670,7 +670,6 @@
     "SetBonusModWarning": "This set contains an item with a configurable set bonus mod. Manually apply the correct mod to activate the desired set bonus.",
     "ExoticClassItemPerks": "If you want specific perks, use searches like exactperk:\"spirit of verity\". Click perks in the Optimizer results to add or remove them from the item filter.",
     "ExoticSpecialCategory": "Special",
-    "ExoticTuningNote": "Lock a specific exotic, or choose Any Exotic, to also consider its tuning mods.",
     "Filter": "Settings",
     "Legendary": "Legendary",
     "LockItem": "Pin item",

@@ -44,6 +44,12 @@ export interface ProcessItem {
    * to the ArmorSet.statMods list.
    */
   includedTuningMod?: number;
+  /**
+   * For exotics with a tuning socket: the candidate tuning mods and the item's
+   * stats with each one plugged. A valid set has at most one exotic, so the
+   * worker resolves this choice per set instead of multiplying the search.
+   */
+  tuningVariants?: { modHash: number; stats: { [statHash: number]: number } }[];
 }
 
 export type ProcessItemsByBucket = {

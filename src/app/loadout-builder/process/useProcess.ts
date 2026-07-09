@@ -62,7 +62,6 @@ export function useProcess({
   desiredStatRanges,
   anyExotic,
   autoStatMods,
-  expandExoticTuning,
   strictUpgrades,
 }: {
   selectedStore: DimStore;
@@ -75,7 +74,6 @@ export function useProcess({
   desiredStatRanges: DesiredStatRange[];
   anyExotic: boolean;
   autoStatMods: boolean;
-  expandExoticTuning: boolean;
   strictUpgrades: boolean;
 }) {
   const [{ result, processing, totalCombos, completedCombos, startTime, resultStoreId }, setState] =
@@ -131,7 +129,6 @@ export function useProcess({
         desiredStatRanges,
         anyExotic,
         autoStatMods,
-        expandExoticTuning,
         stopOnFirstSet: false,
         strictUpgrades,
         lastInput: inputsRef.current,
@@ -195,7 +192,6 @@ export function useProcess({
     anyExotic,
     armorEnergyRules,
     autoStatMods,
-    expandExoticTuning,
     lockedModMap,
     setBonuses,
     perks,
