@@ -1,8 +1,11 @@
 ## Next
 
-* Fixed saved loadouts placing tuning mods on the wrong armor piece when applying or previewing them.
+* Fixed saved loadouts placing tuning mods on the wrong armor piece when applying or previewing them. You must re-save the loadout via optimizer one time.
 * Exotic armor ornaments are correctly shown as unlocked in Fashion and are no longer skipped when applying loadouts.
-* Exotic armor ornaments are correctly shown as unlocked in Fashion and are no longer skipped when applying loadouts.
+* The Loadout Optimizer is dramatically faster, especially "show all sets" searches.
+* The Loadout Optimizer now applies tuning mods to Tier 5 exotics even when no exotic is pinned.
+* The Loadout Optimizer now waits for vendor items to finish loading before starting its search, instead of starting a search and immediately restarting it.
+* Fixed the Loadout Optimizer wrongly rejecting some sets with locked general mods when no stat constraints were set.
 
 ## 8.132.0 <span class="changelog-date">(2026-07-05)</span>
 

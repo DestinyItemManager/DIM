@@ -706,7 +706,6 @@
     "ExistingLoadout": "Existing Loadout",
     "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "Special",
-    "ExoticTuningNote": "Lock a specific exotic, or choose Any Exotic, to also consider its tuning mods.",
     "Filter": "Settings",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",

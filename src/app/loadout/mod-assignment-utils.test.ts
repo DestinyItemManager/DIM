@@ -347,10 +347,10 @@ describe('fitMostMods tuning assignment', () => {
     }
 
     // A set with a tuning-capable exotic and a tuning-capable legendary, filled out
-    // with non-tuning pieces. On a default LO run the exotic isn't given a tuning
-    // mod (expandExoticTuning is off), so the flat mod list holds only the
-    // legendary's mod. The exotic must not consume it -- both the exotic accepting
-    // any tuning mod and slot order could otherwise pull the mod onto the exotic.
+    // with non-tuning pieces. When LO didn't tune the exotic (auto stat mods off, or
+    // an older saved loadout), the flat mod list holds only the legendary's mod. The
+    // exotic must not consume it -- both the exotic accepting any tuning mod and
+    // slot order could otherwise pull the mod onto the exotic.
     const items = [
       exoticTuningItem,
       legendary,

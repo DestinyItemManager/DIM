@@ -97,6 +97,24 @@ export function reorder<T>(list: T[], startIndex: number, endIndex: number): T[]
 }
 
 /**
+ * Split `items` into up to `groups` contiguous slices whose sizes differ by at
+ * most one, so work divided across those groups stays balanced with none empty.
+ */
+export function partitionEvenly<T>(items: T[], groups: number): T[][] {
+  const count = Math.min(groups, items.length);
+  const base = Math.floor(items.length / count);
+  const remainder = items.length % count;
+  const result: T[][] = [];
+  let start = 0;
+  for (let i = 0; i < count; i++) {
+    const size = base + (i < remainder ? 1 : 0);
+    result.push(items.slice(start, start + size));
+    start += size;
+  }
+  return result;
+}
+
+/**
  * A fast/light alternative to Object.keys(obj).length === 0.
  */
 export function isEmpty<T extends object | undefined | null>(obj: T) {

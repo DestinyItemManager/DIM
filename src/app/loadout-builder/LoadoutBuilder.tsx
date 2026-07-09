@@ -182,7 +182,7 @@ export default memo(function LoadoutBuilder({
     [resolvedMods, autoStatMods],
   );
 
-  const { vendorItems } = useLoVendorItems(selectedStoreId);
+  const { vendorItems, vendorItemsLoading } = useLoVendorItems(selectedStoreId);
   const armorItems = useArmorItems(classType, vendorItems);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
@@ -283,12 +283,11 @@ export default memo(function LoadoutBuilder({
     armorEnergyRules,
     desiredStatRanges,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
-    // Only pay for exotic tuning variants when the user is actually targeting an
-    // exotic (any exotic, or a specific one), not on the default unfiltered run.
-    expandExoticTuning:
-      lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC || (lockedExoticHash ?? 0) > 0,
     autoStatMods,
     strictUpgrades: Boolean(strictUpgradesStatConstraints && !mergedConstraintsImplyStrictUpgrade),
+    // Vendor items get merged into the process inputs once they load, so
+    // starting before that just wastes a run that immediately gets restarted.
+    pauseProcessing: vendorItemsLoading,
   });
 
   const resultSets = result?.sets;

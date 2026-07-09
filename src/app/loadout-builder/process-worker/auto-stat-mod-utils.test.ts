@@ -3,6 +3,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { mapValues } from 'app/utils/collections';
 import { emptySet } from 'app/utils/empty';
 import { getTestDefinitions } from 'testing/test-utils';
+import { chooseAutoMods } from '../process-worker/auto-stat-mod-utils';
 import { precalculateStructures } from '../process-worker/process-utils';
 import { ProcessMod } from '../process-worker/types';
 import { getAutoMods, mapAutoMods } from '../process/mappers';
@@ -66,4 +67,23 @@ describe('process-utils auto mod structure', () => {
       expect(waysOfHittingStat).toMatchSnapshot();
     },
   );
+
+  test('chooseAutoMods memoizes across equal inputs and distinguishes different ones', () => {
+    const autoModData = mapAutoMods(getAutoMods(defs, emptySet<number>()));
+    const sessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+
+    // Energy vectors are sorted descending at construction, and the memo keys
+    // rely on that.
+    const pick = chooseAutoMods(sessionInfo, [10, 0, 0, 5, 0, 0], 2, [[10, 7, 4, 3, 0]], 24);
+    expect(pick).toBeDefined();
+    // A repeated ask must hit the memo, returning the identical result array.
+    const repeated = chooseAutoMods(sessionInfo, [10, 0, 0, 5, 0, 0], 2, [[10, 7, 4, 3, 0]], 24);
+    expect(repeated).toBe(pick);
+    // Different needs must not falsely hit
+    const different = chooseAutoMods(sessionInfo, [15, 0, 0, 5, 0, 0], 2, [[10, 7, 4, 3, 0]], 24);
+    expect(different).not.toBe(pick);
+    // ...and a fresh un-memoized session must agree with the memoized results
+    const freshInfo = precalculateStructures(autoModData, [], [], true, armorStats);
+    expect(chooseAutoMods(freshInfo, [10, 0, 0, 5, 0, 0], 2, [[10, 7, 4, 3, 0]], 24)).toEqual(pick);
+  });
 });

@@ -390,14 +390,15 @@ export function fitMostMods({
     .filter((item) => getArmor3TuningSocket(item) !== undefined)
     .sort(compareBy((item) => (ArmorBucketHashes as number[]).indexOf(item.bucket.hash)));
 
-  // The mapper always generates a tuning mod for every tuning-capable *legendary*,
-  // but only tunes an exotic when the user targeted one (expandExoticTuning). When
-  // it doesn't, the exotic still has a tuning socket, so leaving it in the candidate
-  // list lets it match the first mod (it accepts anything), steal a legendary's mod,
-  // and shift everything after it -- the actual bug. Since every legendary is always
-  // tuned, one more mod than there are tuning-capable legendaries is the tell that
-  // the exotic was tuned; otherwise it wasn't, so drop it from the candidates. Once
-  // the exotic is correctly kept or dropped the slot-order pass is exact.
+  // LO always tunes every tuning-capable *legendary*, but a set's exotic may or
+  // may not have been tuned (auto stat mods off, or a loadout saved before LO
+  // tuned exotics). When it wasn't, the exotic still has a tuning socket, so
+  // leaving it in the candidate list lets it match the first mod (it accepts
+  // anything), steal a legendary's mod, and shift everything after it -- the
+  // actual bug. Since every legendary is always tuned, one more mod than there
+  // are tuning-capable legendaries is the tell that the exotic was tuned;
+  // otherwise it wasn't, so drop it from the candidates. Once the exotic is
+  // correctly kept or dropped the slot-order pass is exact.
   const legendaryTuningCount = count(tuningItems, (item) => !item.isExotic);
   const exoticWasTuned = tuningMods.length > legendaryTuningCount;
   const tuningCandidates = exoticWasTuned

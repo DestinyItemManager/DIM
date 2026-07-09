@@ -170,9 +170,10 @@ for (const { name, ctor } of trackerImplementations) {
         ),
       ).toBe(true);
 
-      // At capacity: reject < worst, accept >= worst
+      // At capacity: only accept strictly better than the worst; ties keep
+      // the first-found set instead of paying to rank them by stat mix
       expect(tracker.couldInsert(7)).toBe(false); // < 8
-      expect(tracker.couldInsert(8)).toBe(true); // >= 8 (matches SetTracker behavior)
+      expect(tracker.couldInsert(8)).toBe(false); // ties the worst
       expect(tracker.couldInsert(15)).toBe(true); // > 8
     });
 
