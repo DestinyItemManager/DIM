@@ -431,14 +431,17 @@ function getPlugStatValue(
   // Adept raid weapons that were randomly acquired can be enhanced to get an
   // enhanced intrinsic, at which point they're functionally crafted. Their
   // intrinsic says "conditionally +2 to some stats", but they get +3 because
-  // that's how masterworked adepts behave, and an additional +1 by reaching
-  // weapon level 20. Once tiered, these stats also gain +tier on top (the
-  // masterwork stat is unaffected, unlike the crafted case below). There's no
-  // basis for this behavior in the defs, so we cheat when we calculate live
-  // stats and attribute these stats to the intrinsic since that's the
-  // "masterwork".
+  // that's how masterworked adepts behave, and an additional +1 by reaching the
+  // max enhancement tier. This is a function of the enhancement tier, not the
+  // weapon's level, so a max-enhanced weapon gets the +1 even below level 20.
+  // Once tiered, these stats also gain +tier on top (the masterwork stat is
+  // unaffected, unlike the crafted case below). There's no basis for this
+  // behavior in the defs, so we cheat when we calculate live stats and attribute
+  // these stats to the intrinsic since that's the "masterwork".
   if (stat.activationRule?.rule === 'enhancedIntrinsic' && createdItem.adept) {
-    return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1) + createdItem.tier;
+    return (
+      stat.value + ((createdItem.craftedInfo?.enhancementTier ?? 0) >= 3 ? 2 : 1) + createdItem.tier
+    );
   }
 
   // Tiered weapons at max masterwork get +tier to every stat ("Applies
