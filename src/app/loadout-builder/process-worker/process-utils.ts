@@ -89,8 +89,8 @@ function getRemainingEnergiesPerAssignment(
   /** Total remaining energy capacity across the set */
   setEnergy: number;
   /**
-   * For each valid permutation, how much energy is left on per item? These
-   * lists are NOT sorted.
+   * For each valid permutation, how much energy is left on per item? Each list
+   * is sorted descending; consumers treat them as multisets.
    */
   remainingEnergiesPerAssignment: number[][];
 } {
@@ -124,6 +124,9 @@ function getRemainingEnergiesPerAssignment(
         remainingEnergyCapacities[i] -= activityMod.energyCost;
       }
     }
+    // Sort once at construction so key packing and fit checks can rely on the
+    // order instead of re-sorting per call.
+    remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
 
@@ -397,6 +400,9 @@ export function pickAndAssignSlotIndependentMods(
       remainingEnergyCapacities[idx] =
         item.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0);
     }
+    // Descending order is required for the greedy fit check below and assumed
+    // by chooseAutoMods' key packing.
+    remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
       const result = chooseAutoMods(
@@ -535,7 +541,8 @@ export function greedyPickStatMods(
   /** The total amount of energy left over in this set */
   totalModEnergyCapacity: number,
 ): ModsPick[] {
-  if (remainingEnergyCapacities[0].every((e) => e === 0) && numArtificeMods === 0) {
+  // Vectors are sorted descending, so a 0 in front means all-zero.
+  if (remainingEnergyCapacities[0][0] === 0 && numArtificeMods === 0) {
     return [];
   }
   let picks: ModsPick[] | undefined = chooseAutoMods(
