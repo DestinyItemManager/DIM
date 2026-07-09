@@ -65,9 +65,12 @@ export function chooseAutoMods(
   // and greedyPickStatMods re-ask with only one neededStats entry changing,
   // and huge numbers of sets share the same energy profile, so hit rates are
   // very high in large searches. Callers must not mutate returned arrays.
-  if (remainingTotalEnergy < 0 || !info.useAutoModsMemo) {
+  if (remainingTotalEnergy < 0 || remainingEnergyCapacities.length > 1 || !info.useAutoModsMemo) {
     // Negative budgets (impossible via the process loop) would corrupt the
     // packed key, and unlike a 0 budget they reject even cost-0 picks.
+    // Multiple energy vectors (locked activity mods with several valid
+    // assignments) would need string keys, and building those costs more than
+    // the solver saves: benchmarked ~1.9x slower than not memoizing at all.
     // (!useAutoModsMemo is the ablation-bench bypass of the memo.)
     return recursivelyChooseMods(
       info.autoModOptions,
