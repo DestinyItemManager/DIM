@@ -1036,15 +1036,17 @@ export async function process(
               // skip the call for sets that provably can't raise any of them.
               // These conditions mirror its internal update conditions exactly.
               let mayImproveMax = !useConvergenceGate;
-              for (let index = 0; useConvergenceGate && index < 6; index++) {
-                const maxSeen = statRanges[index].maxStat;
-                if (
-                  maxSeen < desiredStatRanges[index].minStat ||
-                  stats[index] > maxSeen ||
-                  (maxSeen < MAX_STAT && stats[index] + maxModBonus > maxSeen)
-                ) {
-                  mayImproveMax = true;
-                  break;
+              if (useConvergenceGate) {
+                for (let index = 0; index < 6; index++) {
+                  const maxSeen = statRanges[index].maxStat;
+                  if (
+                    maxSeen < desiredStatRanges[index].minStat ||
+                    stats[index] > maxSeen ||
+                    (maxSeen < MAX_STAT && stats[index] + maxModBonus > maxSeen)
+                  ) {
+                    mayImproveMax = true;
+                    break;
+                  }
                 }
               }
               const foundAnyImprovement =
