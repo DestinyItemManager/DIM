@@ -6,12 +6,19 @@ import { tuningSocketReusablePlugSetHash } from 'app/loadout-builder/types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
+import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import { BucketHashes, ItemCategoryHashes, TraitHashes } from 'data/d2/generated-enums';
+import {
+  BucketHashes,
+  ItemCategoryHashes,
+  SocketCategoryHashes,
+  TraitHashes,
+} from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -351,6 +358,33 @@ function gatherUnlockedPlugSetItems(
 
   return unlockedPlugs;
 }
+
+/**
+ * Ornament hashes the account owns, according to exotic armor cosmetic
+ * sockets' live plug data. Since Universal Exotic Armor Ornaments, exotic
+ * ornament unlocks are no longer reported in the profile plug sets (only the
+ * Default Ornament appears there), so each item instance's reusablePlugs
+ * canInsert flag is the only ownership signal. These unlocks are account-wide,
+ * so any one instance is authoritative.
+ */
+export const unlockedExoticOrnamentsSelector = createSelector(allItemsSelector, (allItems) => {
+  const unlocked = new Set<number>();
+  for (const item of allItems) {
+    if (item.isExotic && item.bucket.inArmor && item.sockets) {
+      for (const socket of getSocketsByCategoryHash(
+        item.sockets,
+        SocketCategoryHashes.ArmorCosmetics,
+      )) {
+        for (const plug of socket.reusablePlugItems ?? []) {
+          if (plug.canInsert && !DEFAULT_ORNAMENTS.includes(plug.plugItemHash)) {
+            unlocked.add(plug.plugItemHash);
+          }
+        }
+      }
+    }
+  }
+  return unlocked;
+});
 
 /** gets all the dynamic strings from a profile response */
 export const dynamicStringsSelector = createSelector(profileResponseSelector, (profileResp) => {
