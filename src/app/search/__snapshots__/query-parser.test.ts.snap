@@ -5801,6 +5801,48 @@ exports[`parse |not:maxpower|: lexer 1`] = `
 ]
 `;
 
+exports[`parse |perk:"kill clip"+col3 is:weapon|: ast 1`] = `
+{
+  "length": 31,
+  "op": "and",
+  "operands": [
+    {
+      "args": "kill clip+col3",
+      "length": 21,
+      "op": "filter",
+      "startIndex": 0,
+      "type": "perk",
+    },
+    {
+      "args": "weapon",
+      "length": 9,
+      "op": "filter",
+      "startIndex": 22,
+      "type": "is",
+    },
+  ],
+  "startIndex": 0,
+}
+`;
+
+exports[`parse |perk:"kill clip"+col3 is:weapon|: lexer 1`] = `
+[
+  [
+    "filter",
+    "perk",
+    "kill clip+col3",
+  ],
+  [
+    "implicit_and",
+  ],
+  [
+    "filter",
+    "is",
+    "weapon",
+  ],
+]
+`;
+
 exports[`parse |perk:"수집가"|: ast 1`] = `
 {
   "args": "수집가",
@@ -5837,6 +5879,66 @@ exports[`parse |perk:수집가|: lexer 1`] = `
     "filter",
     "perk",
     "수집가",
+  ],
+]
+`;
+
+exports[`parse |perkname:"kill clip"+col3+col4|: ast 1`] = `
+{
+  "args": "kill clip+col3+col4",
+  "length": 30,
+  "op": "filter",
+  "startIndex": 0,
+  "type": "perkname",
+}
+`;
+
+exports[`parse |perkname:"kill clip"+col3+col4|: lexer 1`] = `
+[
+  [
+    "filter",
+    "perkname",
+    "kill clip+col3+col4",
+  ],
+]
+`;
+
+exports[`parse |perkname:"kill clip"+col3|: ast 1`] = `
+{
+  "args": "kill clip+col3",
+  "length": 25,
+  "op": "filter",
+  "startIndex": 0,
+  "type": "perkname",
+}
+`;
+
+exports[`parse |perkname:"kill clip"+col3|: lexer 1`] = `
+[
+  [
+    "filter",
+    "perkname",
+    "kill clip+col3",
+  ],
+]
+`;
+
+exports[`parse |perkname:rangefinder+col3|: ast 1`] = `
+{
+  "args": "rangefinder+col3",
+  "length": 25,
+  "op": "filter",
+  "startIndex": 0,
+  "type": "perkname",
+}
+`;
+
+exports[`parse |perkname:rangefinder+col3|: lexer 1`] = `
+[
+  [
+    "filter",
+    "perkname",
+    "rangefinder+col3",
   ],
 ]
 `;

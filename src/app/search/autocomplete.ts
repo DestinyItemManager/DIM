@@ -62,6 +62,23 @@ export type SearchItem =
 /** matches a keyword that's probably a math comparison, but not with a value on the RHS */
 const mathCheck = /[\d<>=]$/;
 
+/**
+ * The number of perk columns we offer to complete. Weapons top out at five
+ * meaningful perk columns (barrel, magazine, trait 1, trait 2, origin trait).
+ */
+const perkColumnCount = 5;
+
+/**
+ * Matches a perk filter whose value is already complete - a quoted string or a
+ * bareword - directly followed by a partially typed `+colN` selector, with no
+ * space in between. Group 1 is the part to keep (filter, value, and any complete
+ * `+colN` selectors already present); group 2 is the partial selector to replace.
+ * This lets `perkname:"firefly"+` (or `perkname:rangefinder+co`) suggest the next
+ * `+colN` term even though there's no space separating it from the value.
+ */
+const perkColumnCompletion =
+  /((?:perk|perkname|exactperk):(?:"[^"]*"|'[^']*'|[^\s()"'+]+)(?:\+col\d+)*)(\+(?:col\d*|co|c)?)$/i;
+
 /** if one of these has been typed, stop guessing which filter and just offer this filter's values */
 // TODO: Generate this from the search config
 const filterNames = [
@@ -313,6 +330,15 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
   caretIndex = (caretEndRegex.exec(query.slice(caretIndex))?.index || 0) + caretIndex;
 
   const queryUpToCaret = query.slice(0, caretIndex);
+
+  // A `+` typed right after a perk filter's value starts a `+colN` column
+  // selector attached to that value (no separating space), so offer those
+  // completions before the normal per-token logic runs.
+  const columnSuggestions = perkColumnCompletions(query, queryUpToCaret, caretIndex);
+  if (columnSuggestions.length) {
+    return columnSuggestions;
+  }
+
   const lastFilters = findLastFilter(queryUpToCaret);
   if (!lastFilters) {
     return [];
@@ -349,6 +375,43 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
     }
   }
   return [];
+}
+
+/**
+ * Offer `+col1`..`+colN` completions when the caret sits right after a perk
+ * filter's value and a partial `+colN` selector (e.g. `perkname:"firefly"+` or
+ * `perkname:rangefinder+co`). Returns an empty array when the query doesn't end
+ * that way, so normal suggestions take over.
+ */
+function perkColumnCompletions(
+  query: string,
+  queryUpToCaret: string,
+  caretIndex: number,
+): SearchItem[] {
+  const match = perkColumnCompletion.exec(queryUpToCaret);
+  if (!match) {
+    return [];
+  }
+  // Everything up to (but not including) the partial selector we're replacing.
+  const base = queryUpToCaret.slice(0, match.index) + match[1];
+  const rest = query.slice(caretIndex);
+  const suggestions: SearchItem[] = [];
+  for (let col = 1; col <= perkColumnCount; col++) {
+    const insert = `+col${col}`;
+    const body = base + insert + rest;
+    suggestions.push({
+      query: {
+        fullText: body,
+        body,
+      },
+      type: SearchItemType.Autocomplete,
+      highlightRange: {
+        section: 'body',
+        range: [base.length, base.length + insert.length],
+      },
+    });
+  }
+  return suggestions;
 }
 
 function findFilter<I, FilterCtx, SuggestionsCtx>(
