@@ -8,6 +8,7 @@ import {
   majorStatBoost,
   MinMaxStat,
 } from '../types';
+import { ablation } from './ablation-toggles';
 import {
   AutoModsCache,
   buildAutoModsMap,
@@ -45,6 +46,10 @@ export interface LoSessionInfo {
    * autoModsMemo, then by (statIndex, packed other-stat minimums).
    */
   maxBoostMemo: Map<number | string, Map<number, number>>;
+  /** Ablation bench only: whether to use autoModsMemo. */
+  useAutoModsMemo: boolean;
+  /** Ablation bench only: whether to use maxBoostMemo. */
+  useMaxBoostMemo: boolean;
 }
 
 export function precalculateStructures(
@@ -74,6 +79,8 @@ export function precalculateStructures(
     }, {}),
     autoModsMemo: new Map(),
     maxBoostMemo: new Map(),
+    useAutoModsMemo: ablation.autoModsMemo,
+    useMaxBoostMemo: ablation.maxBoostMemo,
   };
 }
 
@@ -254,7 +261,7 @@ export function updateMaxStats(
     // minimums) doesn't depend on the stat's current value or on the running
     // max, so it can be memoized across sets that share the same energy
     // profile and minimums.
-    if (boostMemo === undefined) {
+    if (info.useMaxBoostMemo && boostMemo === undefined) {
       const contextKey = buildContextKey(
         remainingEnergiesPerAssignment,
         numArtificeMods,
@@ -269,7 +276,7 @@ export function updateMaxStats(
     const previousRequiredMinimum = requiredMinimumExtraStats[statIndex];
     requiredMinimumExtraStats[statIndex] = 0;
     const boostKey = statIndex * 0x1000000000000 + packStatNeeds(requiredMinimumExtraStats);
-    let maxBoost = boostMemo.get(boostKey);
+    let maxBoost = boostMemo?.get(boostKey);
     if (maxBoost === undefined) {
       // Binary search for the largest achievable boost. chooseAutoMods is
       // monotonic in a single stat's requirement, so this is exact. -1 means
@@ -294,7 +301,7 @@ export function updateMaxStats(
         }
       }
       maxBoost = good;
-      boostMemo.set(boostKey, maxBoost);
+      boostMemo?.set(boostKey, maxBoost);
     }
     requiredMinimumExtraStats[statIndex] = previousRequiredMinimum;
 

@@ -1,4 +1,5 @@
 import { DesiredStatRange } from '../types';
+import { ablation } from './ablation-toggles';
 
 /**
  * Heap entry for the heap-based SetTracker. T is all the other properties you
@@ -41,6 +42,8 @@ function isWorse<T>(a: HeapEntry<T>, b: HeapEntry<T>): boolean {
 export class HeapSetTracker<T> {
   private heap: HeapEntry<T>[] = [];
   readonly capacity: number;
+  // Ablation bench: strict-beat admission toggle, read once per tracker.
+  private strictBeat = ablation.strictBeat;
 
   constructor(capacity: number) {
     this.capacity = capacity;
@@ -58,7 +61,9 @@ export class HeapSetTracker<T> {
     // its total keep the first-found instead of re-ranking ties by stat mix;
     // in large searches millions of sets tie the boundary total, and admitting
     // them all would cost an expensive mod-picking pass each.
-    return totalTier > this.heap[0].enabledStatsTotal;
+    return this.strictBeat
+      ? totalTier > this.heap[0].enabledStatsTotal
+      : totalTier >= this.heap[0].enabledStatsTotal;
   }
 
   /**

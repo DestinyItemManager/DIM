@@ -139,6 +139,13 @@ export interface ProcessStatistics {
       skippedLowTier: number;
       insufficientSetBonus: number;
       insufficientPerks: number;
+      /**
+       * Ablation bench only: skippedLowTier split by source. Only process.ts
+       * fills these; the baseline and the wrapper merge leave them unset.
+       */
+      subtreePruned?: number;
+      tuningGatePruned?: number;
+      trackerFloorPruned?: number;
     };
     lowerBoundsExceeded: RejectionRate;
     modsStatistics: ModAssignmentStatistics;

@@ -15,6 +15,7 @@ import {
   StatRanges,
 } from '../types';
 import { getPower } from '../utils';
+import { ablation } from './ablation-toggles';
 import {
   LoSessionInfo,
   pickAndAssignSlotIndependentMods,
@@ -88,6 +89,19 @@ export async function process(
 ): Promise<ProcessResult> {
   const pstart = performance.now();
 
+  // Ablation bench: hoist the toggles into locals once per run so the hot loop
+  // pays a predicted branch on a local, not a property read.
+  const {
+    subtreePrune: useSubtreePrune,
+    rangeSeeding: useRangeSeeding,
+    convergenceGate: useConvergenceGate,
+    energyCache: useEnergyCache,
+    highStatSort: useHighStatSort,
+    tuningPreGate: useTuningPreGate,
+    coarseLevelPrunes: useCoarseLevelPrunes,
+    unrolledAdds: useUnrolledAdds,
+  } = ablation;
+
   // For efficiency, we'll handle most stats as flat arrays in the order the user prioritized their stats.
   const statOrder = desiredStatRanges.map(({ statHash }): ArmorStatHashes => statHash);
   // The maximum stat constraints for each stat
@@ -131,8 +145,10 @@ export async function process(
     }
     return total;
   };
-  for (const bucket of buckets) {
-    bucket.sort((a, b) => enabledStatsTotal(b) - enabledStatsTotal(a));
+  if (useHighStatSort) {
+    for (const bucket of buckets) {
+      bucket.sort((a, b) => enabledStatsTotal(b) - enabledStatsTotal(a));
+    }
   }
 
   // The maximum possible combos we could possibly have
@@ -165,6 +181,9 @@ export async function process(
       skippedLowTier: 0,
       insufficientSetBonus: 0,
       insufficientPerks: 0,
+      subtreePruned: 0,
+      tuningGatePruned: 0,
+      trackerFloorPruned: 0,
     },
     lowerBoundsExceeded: { timesChecked: 0, timesFailed: 0 },
     modsStatistics: {
@@ -411,6 +430,10 @@ export async function process(
   let skipInsufficientPerks = 0;
   let skipInsufficientSetBonus = 0;
   let skipLowTier = 0;
+  // Ablation bench: skipLowTier split by which prune credited it.
+  let skipSubtree = 0;
+  let skipTuningGate = 0;
+  let skipTrackerFloor = 0;
 
   // Subtree prunes add the whole skipped subtree size to comboCount, so a
   // single flush can report far more than 100k combos; onProgress takes a
@@ -426,7 +449,7 @@ export async function process(
   // Seed the exact ranges whenever no exotic/perk/set-bonus requirement
   // couples the buckets, which makes the subtree range checks non-blocking so
   // the tracker-floor prune can skip almost the whole search.
-  if (!anyExotic && numPerks === 0 && numSetBonuses === 0) {
+  if (useRangeSeeding && !anyExotic && numPerks === 0 && numSetBonuses === 0) {
     seedExactStatRanges(
       soas,
       buckets,
@@ -447,7 +470,7 @@ export async function process(
     const exoticP1 = helmSoA.exotic[helmIdx];
     // A single item can't be a double exotic; only the noExotic prune can
     // apply at this level, and only when no later bucket has exotics either.
-    if (anyExotic && exoticP1 === 0 && !exoticAfterHelm) {
+    if (useCoarseLevelPrunes && anyExotic && exoticP1 === 0 && !exoticAfterHelm) {
       skipNoExotic += combosPerHelm;
       comboCount += combosPerHelm;
       if (comboCount >= 100000) {
@@ -464,7 +487,8 @@ export async function process(
         perksAfterHelm,
         maxPerksAfterHelm,
         requiredPerkCounts,
-      )
+      ) &&
+      useCoarseLevelPrunes
     ) {
       skipInsufficientPerks += combosPerHelm;
       comboCount += combosPerHelm;
@@ -484,7 +508,8 @@ export async function process(
         setBonusCounts,
         wildcardP1,
         maxSetContribAfterHelm,
-      )
+      ) &&
+      useCoarseLevelPrunes
     ) {
       skipInsufficientSetBonus += combosPerHelm;
       comboCount += combosPerHelm;
@@ -494,8 +519,13 @@ export async function process(
       continue;
     }
     const artificeP1 = helmSoA.artifice[helmIdx];
-    addItemStats(statsAfterHelm, modStatsInStatOrder, helmSoA.stats, helmIdx * 6);
+    if (useUnrolledAdds) {
+      addItemStats(statsAfterHelm, modStatsInStatOrder, helmSoA.stats, helmIdx * 6);
+    } else {
+      addItemStatsRolled(statsAfterHelm, modStatsInStatOrder, helmSoA.stats, helmIdx * 6);
+    }
     if (
+      useSubtreePrune &&
       canPruneSubtree(
         maxStatsAfterHelm,
         minStatsAfterHelm,
@@ -506,6 +536,7 @@ export async function process(
       )
     ) {
       skipLowTier += combosPerHelm;
+      skipSubtree += combosPerHelm;
       comboCount += combosPerHelm;
       if (comboCount >= 100000) {
         await flushProgress();
@@ -515,7 +546,7 @@ export async function process(
     for (let gauntIdx = 0; gauntIdx < gauntlets.length; gauntIdx++) {
       const gaunt = gauntlets[gauntIdx];
       const exoticP2 = exoticP1 + gauntSoA.exotic[gauntIdx];
-      if (exoticP2 > 1) {
+      if (useCoarseLevelPrunes && exoticP2 > 1) {
         skipDoubleExotic += combosPerGaunt;
         comboCount += combosPerGaunt;
         if (comboCount >= 100000) {
@@ -523,7 +554,7 @@ export async function process(
         }
         continue;
       }
-      if (anyExotic && exoticP2 === 0 && !exoticAfterGaunt) {
+      if (useCoarseLevelPrunes && anyExotic && exoticP2 === 0 && !exoticAfterGaunt) {
         skipNoExotic += combosPerGaunt;
         comboCount += combosPerGaunt;
         if (comboCount >= 100000) {
@@ -540,7 +571,8 @@ export async function process(
           perksAfterGaunt,
           maxPerksAfterGaunt,
           requiredPerkCounts,
-        )
+        ) &&
+        useCoarseLevelPrunes
       ) {
         skipInsufficientPerks += combosPerGaunt;
         comboCount += combosPerGaunt;
@@ -560,7 +592,8 @@ export async function process(
           setBonusCounts,
           wildcardP2,
           maxSetContribAfterGaunt,
-        )
+        ) &&
+        useCoarseLevelPrunes
       ) {
         skipInsufficientSetBonus += combosPerGaunt;
         comboCount += combosPerGaunt;
@@ -570,8 +603,13 @@ export async function process(
         continue;
       }
       const artificeP2 = artificeP1 + gauntSoA.artifice[gauntIdx];
-      addItemStats(statsAfterGaunt, statsAfterHelm, gauntSoA.stats, gauntIdx * 6);
+      if (useUnrolledAdds) {
+        addItemStats(statsAfterGaunt, statsAfterHelm, gauntSoA.stats, gauntIdx * 6);
+      } else {
+        addItemStatsRolled(statsAfterGaunt, statsAfterHelm, gauntSoA.stats, gauntIdx * 6);
+      }
       if (
+        useSubtreePrune &&
         canPruneSubtree(
           maxStatsAfterGaunt,
           minStatsAfterGaunt,
@@ -582,6 +620,7 @@ export async function process(
         )
       ) {
         skipLowTier += combosPerGaunt;
+        skipSubtree += combosPerGaunt;
         comboCount += combosPerGaunt;
         if (comboCount >= 100000) {
           await flushProgress();
@@ -591,7 +630,7 @@ export async function process(
       for (let chestIdx = 0; chestIdx < chests.length; chestIdx++) {
         const chest = chests[chestIdx];
         const exoticP3 = exoticP2 + chestSoA.exotic[chestIdx];
-        if (exoticP3 > 1) {
+        if (useCoarseLevelPrunes && exoticP3 > 1) {
           skipDoubleExotic += combosPerChest;
           comboCount += combosPerChest;
           if (comboCount >= 100000) {
@@ -599,7 +638,7 @@ export async function process(
           }
           continue;
         }
-        if (anyExotic && exoticP3 === 0 && !exoticAfterChest) {
+        if (useCoarseLevelPrunes && anyExotic && exoticP3 === 0 && !exoticAfterChest) {
           skipNoExotic += combosPerChest;
           comboCount += combosPerChest;
           if (comboCount >= 100000) {
@@ -616,7 +655,8 @@ export async function process(
             perksAfterChest,
             maxPerksAfterChest,
             requiredPerkCounts,
-          )
+          ) &&
+          useCoarseLevelPrunes
         ) {
           skipInsufficientPerks += combosPerChest;
           comboCount += combosPerChest;
@@ -636,7 +676,8 @@ export async function process(
             setBonusCounts,
             wildcardP3,
             maxSetContribAfterChest,
-          )
+          ) &&
+          useCoarseLevelPrunes
         ) {
           skipInsufficientSetBonus += combosPerChest;
           comboCount += combosPerChest;
@@ -646,8 +687,13 @@ export async function process(
           continue;
         }
         const artificeP3 = artificeP2 + chestSoA.artifice[chestIdx];
-        addItemStats(statsAfterChest, statsAfterGaunt, chestSoA.stats, chestIdx * 6);
+        if (useUnrolledAdds) {
+          addItemStats(statsAfterChest, statsAfterGaunt, chestSoA.stats, chestIdx * 6);
+        } else {
+          addItemStatsRolled(statsAfterChest, statsAfterGaunt, chestSoA.stats, chestIdx * 6);
+        }
         if (
+          useSubtreePrune &&
           canPruneSubtree(
             maxStatsAfterChest,
             minStatsAfterChest,
@@ -658,6 +704,7 @@ export async function process(
           )
         ) {
           skipLowTier += combosPerChest;
+          skipSubtree += combosPerChest;
           comboCount += combosPerChest;
           if (comboCount >= 100000) {
             await flushProgress();
@@ -667,7 +714,7 @@ export async function process(
         for (let legIdx = 0; legIdx < legs.length; legIdx++) {
           const leg = legs[legIdx];
           const exoticP4 = exoticP3 + legSoA.exotic[legIdx];
-          if (exoticP4 > 1) {
+          if (useCoarseLevelPrunes && exoticP4 > 1) {
             skipDoubleExotic += combosPerLeg;
             comboCount += combosPerLeg;
             if (comboCount >= 100000) {
@@ -675,7 +722,7 @@ export async function process(
             }
             continue;
           }
-          if (anyExotic && exoticP4 === 0 && !exoticAfterLeg) {
+          if (useCoarseLevelPrunes && anyExotic && exoticP4 === 0 && !exoticAfterLeg) {
             skipNoExotic += combosPerLeg;
             comboCount += combosPerLeg;
             if (comboCount >= 100000) {
@@ -692,7 +739,8 @@ export async function process(
               perksAfterLeg,
               maxPerksAfterLeg,
               requiredPerkCounts,
-            )
+            ) &&
+            useCoarseLevelPrunes
           ) {
             skipInsufficientPerks += combosPerLeg;
             comboCount += combosPerLeg;
@@ -712,7 +760,8 @@ export async function process(
               setBonusCounts,
               wildcardP4,
               maxSetContribAfterLeg,
-            )
+            ) &&
+            useCoarseLevelPrunes
           ) {
             skipInsufficientSetBonus += combosPerLeg;
             comboCount += combosPerLeg;
@@ -722,8 +771,13 @@ export async function process(
             continue;
           }
           const artificeP4 = artificeP3 + legSoA.artifice[legIdx];
-          addItemStats(statsAfterLeg, statsAfterChest, legSoA.stats, legIdx * 6);
+          if (useUnrolledAdds) {
+            addItemStats(statsAfterLeg, statsAfterChest, legSoA.stats, legIdx * 6);
+          } else {
+            addItemStatsRolled(statsAfterLeg, statsAfterChest, legSoA.stats, legIdx * 6);
+          }
           if (
+            useSubtreePrune &&
             canPruneSubtree(
               maxStatsAfterLeg,
               minStatsAfterLeg,
@@ -734,6 +788,7 @@ export async function process(
             )
           ) {
             skipLowTier += combosPerLeg;
+            skipSubtree += combosPerLeg;
             comboCount += combosPerLeg;
             if (comboCount >= 100000) {
               await flushProgress();
@@ -831,7 +886,7 @@ export async function process(
             // everything was perfectly assignable.
             const maxModBonus = numArtifice * artificeStatBoost + generalModsBonus;
 
-            if (tuningInfo !== undefined) {
+            if (useTuningPreGate && tuningInfo !== undefined) {
               // Almost all sets die at the couldInsert prune, and paying the
               // per-variant arithmetic for each of them adds up, so decide
               // once per set whether any variant could matter. Stat-range
@@ -841,7 +896,11 @@ export async function process(
               // per-variant maximums, so this only skips variants that could
               // neither improve the displayed ranges nor make the top sets.
               const { minDeltas, maxDeltas, maxNetGain } = tuningInfo;
-              addItemStats(stats, statsAfterLeg, classItemSoA.stats, ciBase);
+              if (useUnrolledAdds) {
+                addItemStats(stats, statsAfterLeg, classItemSoA.stats, ciBase);
+              } else {
+                addItemStatsRolled(stats, statsAfterLeg, classItemSoA.stats, ciBase);
+              }
               let totalBase = 0;
               let mayMatter = false;
               for (let index = 0; index < 6; index++) {
@@ -867,6 +926,7 @@ export async function process(
               if (!mayMatter && !setTracker.couldInsert(totalBase + maxNetGain + maxModBonus)) {
                 numProcessed += numVariants;
                 skipLowTier += numVariants;
+                skipTuningGate += numVariants;
                 continue;
               }
             }
@@ -878,7 +938,11 @@ export async function process(
               // partial sums to form the overall set stats.
               // Note that mod stats could theoretically take these negative, but
               // none do in practice.
-              addItemStats(stats, statsAfterLeg, classItemSoA.stats, ciBase);
+              if (useUnrolledAdds) {
+                addItemStats(stats, statsAfterLeg, classItemSoA.stats, ciBase);
+              } else {
+                addItemStatsRolled(stats, statsAfterLeg, classItemSoA.stats, ciBase);
+              }
               if (tuningVariants !== undefined) {
                 const deltas = tuningVariants[variantIdx].deltas;
                 stats[0] += deltas[0];
@@ -970,8 +1034,8 @@ export async function process(
               // have converged (the common steady state in large searches) we can
               // skip the call for sets that provably can't raise any of them.
               // These conditions mirror its internal update conditions exactly.
-              let mayImproveMax = false;
-              for (let index = 0; index < 6; index++) {
+              let mayImproveMax = !useConvergenceGate;
+              for (let index = 0; useConvergenceGate && index < 6; index++) {
                 const maxSeen = statRanges[index].maxStat;
                 if (
                   maxSeen < desiredStatRanges[index].minStat ||
@@ -991,7 +1055,7 @@ export async function process(
                   numArtifice,
                   desiredStatRanges,
                   statRanges,
-                  energyCache,
+                  useEnergyCache ? energyCache : undefined,
                 );
 
               // Drop this set if it could never make it into our top
@@ -1000,6 +1064,7 @@ export async function process(
               // max available tier info stays accurate.
               if (!setTracker.couldInsert(totalStats + maxModBonus)) {
                 skipLowTier++;
+                skipTrackerFloor++;
                 continue;
               }
 
@@ -1009,7 +1074,7 @@ export async function process(
                 stats,
                 desiredStatRanges,
                 numArtifice,
-                energyCache,
+                useEnergyCache ? energyCache : undefined,
               );
               if (!optimalResult) {
                 // This means we couldn't assign mods in a way that satisfied
@@ -1039,6 +1104,7 @@ export async function process(
               // Now use our more accurate extra tiers prediction
               if (!setTracker.couldInsert(finalTotalStats)) {
                 skipLowTier++;
+                skipTrackerFloor++;
                 continue;
               }
 
@@ -1111,6 +1177,9 @@ export async function process(
   setStatistics.skipReasons.insufficientPerks += skipInsufficientPerks;
   setStatistics.skipReasons.insufficientSetBonus += skipInsufficientSetBonus;
   setStatistics.skipReasons.skippedLowTier += skipLowTier;
+  setStatistics.skipReasons.subtreePruned! += skipSubtree;
+  setStatistics.skipReasons.tuningGatePruned! += skipTuningGate;
+  setStatistics.skipReasons.trackerFloorPruned! += skipTrackerFloor;
 
   const finalSets = setTracker.getArmorSets();
 
@@ -1361,6 +1430,13 @@ function addItemStats(out: number[], partial: number[], itemStats: Int32Array, b
   out[5] = partial[5] + itemStats[base + 5];
 }
 
+/** Ablation bench: the rolled-loop equivalent of addItemStats. */
+function addItemStatsRolled(out: number[], partial: number[], itemStats: Int32Array, base: number) {
+  for (let s = 0; s < 6; s++) {
+    out[s] = partial[s] + itemStats[base + s];
+  }
+}
+
 /** Bounds on what one bucket's items can contribute, for subtree pruning. */
 interface BucketStatBounds {
   /** The highest base value each stat can get from this bucket. */
@@ -1471,14 +1547,17 @@ function perkCountsPrune(
 ): boolean {
   const numPerks = requiredPerkCounts.length;
   const base = itemIdx * numPerks;
+  // Always fills all counts (no early exit) so the ablation config that
+  // ignores the verdict still gets correct running counts for deeper levels.
+  let impossible = false;
   for (let i = 0; i < numPerks; i++) {
     const p = prevCounts[i] + soa.perks[base + i];
     outCounts[i] = p;
     if (p + maxPerksAfter[i] < requiredPerkCounts[i]) {
-      return true;
+      impossible = true;
     }
   }
-  return false;
+  return impossible;
 }
 
 /**
