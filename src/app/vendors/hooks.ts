@@ -30,14 +30,11 @@ export function useLoadVendors(
 
   useEventBusListener(
     refresh$,
-    useCallback(
-      () => () => {
-        if (storeId && active) {
-          loadingTracker.addPromise(dispatch(loadAllVendors(account, storeId, true)));
-        }
-      },
-      [account, active, dispatch, storeId],
-    ),
+    useCallback(() => {
+      if (storeId && active) {
+        loadingTracker.addPromise(dispatch(loadAllVendors(account, storeId, true)));
+      }
+    }, [account, active, dispatch, storeId]),
   );
 
   const fullyLoaded = useSelector((state: RootState) =>
