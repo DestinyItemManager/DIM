@@ -8,6 +8,7 @@
 * Fixed the Loadout Optimizer wrongly rejecting some sets with locked general mods when no stat constraints were set.
 * Tiered Adept weapons now show correct stats.
 * Fixed stats for max-enhanced adept weapons below weapon level 20.
+* Vendor data now reloads when the app refreshes.
 
 ## 8.132.0 <span class="changelog-date">(2026-07-05)</span>
 
