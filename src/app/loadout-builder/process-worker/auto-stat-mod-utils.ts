@@ -60,8 +60,8 @@ export function chooseAutoMods(
   remainingTotalEnergy: number,
 ): ModsPick[] | undefined {
   // For a fixed session, the result is a pure function of the arguments, and
-  // the energy vectors only matter as multisets (doGeneralModsFit sorts both
-  // sides), so memoize on a packed key. The binary searches in updateMaxStats
+  // the energy vectors only matter as multisets (they're sorted descending at
+  // construction), so memoize on a packed key. The binary searches in updateMaxStats
   // and greedyPickStatMods re-ask with only one neededStats entry changing,
   // and huge numbers of sets share the same energy profile, so hit rates are
   // very high in large searches. Callers must not mutate returned arrays.
@@ -111,12 +111,10 @@ export function chooseAutoMods(
 }
 
 /**
- * Pack one 5-item energy vector into a number. Sorts the vector in place
- * (descending), which is safe because all consumers treat these as multisets
- * and doGeneralModsFit re-sorts them anyway.
+ * Pack one 5-item energy vector into a number. Capacities must be sorted
+ * descending (done at construction) so equal multisets pack to equal keys.
  */
 function packEnergyVector(capacities: number[]) {
-  capacities.sort((a, b) => b - a);
   // Remaining energies are 0-10, well within 5 bits each
   let packed = 0;
   for (let i = 0; i < capacities.length; i++) {
@@ -176,10 +174,9 @@ function doGeneralModsFit(
     generalModCosts.sort((a, b) => b - a);
   }
 
-  return remainingEnergyCapacities.some((capacities) => {
-    capacities.sort((a, b) => b - a);
-    return generalModCosts.every((cost, index) => cost <= capacities[index]);
-  });
+  return remainingEnergyCapacities.some((capacities) =>
+    generalModCosts.every((cost, index) => cost <= capacities[index]),
+  );
 }
 
 /**
