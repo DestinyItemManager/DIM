@@ -71,13 +71,14 @@ const perkColumnCount = 5;
 /**
  * Matches a perk filter whose value is already complete - a quoted string or a
  * bareword - directly followed by a partially typed `+colN` selector, with no
- * space in between. Group 1 is the part to keep (filter, value, and any complete
- * `+colN` selectors already present); group 2 is the partial selector to replace.
- * This lets `perkname:"firefly"+` (or `perkname:rangefinder+co`) suggest the next
- * `+colN` term even though there's no space separating it from the value.
+ * space in between. The capturing group is the part to keep (filter, value, and
+ * any complete `+colN` selectors already present); the trailing group is the
+ * partial selector to replace. This lets `perkname:"firefly"+` (or
+ * `perkname:rangefinder+co`) suggest the next `+colN` term even though there's no
+ * space separating it from the value.
  */
 const perkColumnCompletion =
-  /((?:perk|perkname|exactperk):(?:"[^"]*"|'[^']*'|[^\s()"'+]+)(?:\+col\d+)*)(\+(?:col\d*|co|c)?)$/i;
+  /((?:perk|perkname|exactperk):(?:"[^"]*"|'[^']*'|[^\s()"'+]+)(?:\+col\d+)*)\+(?:col\d*|co|c)?$/i;
 
 /** if one of these has been typed, stop guessing which filter and just offer this filter's values */
 // TODO: Generate this from the search config

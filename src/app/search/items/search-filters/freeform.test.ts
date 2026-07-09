@@ -33,7 +33,7 @@ describe('parsePerkColumns', () => {
 
 describe('perk column filtering', () => {
   let items: DimItem[];
-  let makeFilter: (query: string) => ItemFilter<DimItem>;
+  let makeFilter: (query: string) => ItemFilter;
 
   beforeAll(async () => {
     await setupi18n();
