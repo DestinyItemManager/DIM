@@ -6,6 +6,8 @@
 * The Loadout Optimizer now applies tuning mods to Tier 5 exotics even when no exotic is pinned.
 * The Loadout Optimizer now waits for vendor items to finish loading before starting its search, instead of starting a search and immediately restarting it.
 * Fixed the Loadout Optimizer wrongly rejecting some sets with locked general mods when no stat constraints were set.
+* Tiered Adept weapons now show correct stats.
+* Fixed stats for max-enhanced adept weapons below weapon level 20.
 
 ## 8.132.0 <span class="changelog-date">(2026-07-05)</span>
 
