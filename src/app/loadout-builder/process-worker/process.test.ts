@@ -24,18 +24,21 @@ import { process, ProcessInputs } from './process';
 import { ProcessItem, ProcessItemsByBucket, ProcessMod, ProcessResult } from './types';
 
 /**
- * Equivalence harness for the whole process() worker loop. The snapshots were
- * generated before the loop optimizations and pin down everything the UI can
- * observe, so optimized versions of the loop must reproduce them exactly.
+ * Equivalence harness for the whole process() worker loop. The snapshots pin
+ * down everything the UI can observe: sets and stat ranges must survive any
+ * optimization unchanged. The pruning counters (numProcessed, comboLocalSkips,
+ * lowerBoundsExceeded) are pinned too so accidental pruning regressions show
+ * up; they move when the pruning strategy intentionally changes, in which
+ * case regenerate with -u and check that only counter lines changed.
  *
  * Deliberately excluded from the digest: numValidSets, skippedLowTier and
  * modsStatistics, because they depend on how full the top-200 heap is when a
  * set is considered, i.e. on iteration order, which optimizations are allowed
  * to change. The four combo-local skip reasons are summed rather than listed
  * because subtree-level pruning may reclassify a combo that fails several
- * checks at once; only the total is invariant. Sets are sorted by content
- * rather than kept in display order, because sets fully tied on all the
- * tracker's ordering keys may be displayed in any order among themselves.
+ * checks at once. Sets are sorted by content rather than kept in display
+ * order, because sets fully tied on all the tracker's ordering keys may be
+ * displayed in any order among themselves.
  */
 function digest(result: ProcessResult) {
   const { skipReasons } = result.processInfo.statistics;
@@ -368,9 +371,10 @@ describe('process equivalence', () => {
     // With the full corpus the top-200 tracker fills up and most variant
     // evaluations are skipped by the per-set pre-gate, which must not change
     // anything observable. Which same-total sets sit at the heap boundary is
-    // iteration-order dependent, so compare order-independent invariants:
-    // the multiset of retained totals, the stat ranges, and the number of
-    // candidates considered.
+    // iteration-order dependent, and expanded variants are separate branches
+    // with tighter subtree bounds so the two formulations prune differently;
+    // compare order-independent invariants: the multiset of retained totals
+    // and the stat ranges.
     const markExotics = (inputs: ProcessInputs) => {
       inputs.autoStatMods = true;
       inputs.filteredItems[BucketHashes.Helmet][0].isExotic = true;
@@ -409,7 +413,6 @@ describe('process equivalence', () => {
       expandedDigest.sets.map((s) => s.enabledStatsTotal).sort(),
     );
     expect(tailDigest.statRangesFiltered).toEqual(expandedDigest.statRangesFiltered);
-    expect(tailDigest.numProcessed).toBe(expandedDigest.numProcessed);
     expect(tailDigest.sets.some((s) => s.statMods.includes(111) || s.statMods.includes(222))).toBe(
       true,
     );
