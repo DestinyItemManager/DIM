@@ -262,10 +262,16 @@ async function runScenario(scenario: Scenario, flags: AblationFlag[]) {
       ablation[flag] = true;
     }
 
-    // Every toggle except strictBeat must be result-preserving.
-    if (flag !== 'strictBeat' && offResult) {
-      expect(offResult.processInfo.numValidSets).toBe(allOnResult.processInfo.numValidSets);
-      expect(offResult.sets.length).toBe(allOnResult.sets.length);
+    // strictBeat (admission of ties) and highStatSort (visit order) change
+    // which boundary-tied sets are retained, so only the stat ranges are
+    // asserted for them; parity covers the retained-set invariants. Everything
+    // else must be exactly result-preserving.
+    if (offResult) {
+      const orderSensitive = flag === 'strictBeat' || flag === 'highStatSort';
+      if (!orderSensitive) {
+        expect(offResult.processInfo.numValidSets).toBe(allOnResult.processInfo.numValidSets);
+        expect(offResult.sets.length).toBe(allOnResult.sets.length);
+      }
       expect(offResult.statRangesFiltered).toEqual(allOnResult.statRangesFiltered);
     }
 
@@ -283,7 +289,7 @@ async function runScenario(scenario: Scenario, flags: AblationFlag[]) {
   }
 }
 
-test.skip('ablation: synthetic scenarios', async () => {
+test('ablation: synthetic scenarios', async () => {
   const defs = await getTestDefinitions();
   const autoModOptions = mapAutoMods(getAutoMods(defs, emptySet()));
   const items = (rng: () => number, opts?: MakeItemsOpts) => ({
@@ -365,7 +371,7 @@ test.skip('ablation: synthetic scenarios', async () => {
   }
 }, 600000);
 
-test.skip('ablation: real vault scenarios', async () => {
+test('ablation: real vault scenarios', async () => {
   const { filteredItems, autoModOptions } = await loadRealVaultItems(PER_BUCKET);
   const noMods = { generalMods: [], activityMods: [] };
   // eslint-disable-next-line no-console

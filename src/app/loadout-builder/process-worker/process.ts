@@ -286,7 +286,9 @@ export async function process(
   const maxSetContribAfterHelm = maxSetContribAfterGaunt + gauntSoA.maxSetContrib;
 
   // ---------- Stat-total suffix bounds for branch-and-bound subtree pruning ----------
-  const [helmB, gauntB, chestB, legB, classB] = soas.map((soa, i) =>
+  // The helm bucket needs no bounds: suffix bounds cover the buckets after
+  // each level, and the range seeding computes its own floors.
+  const [, gauntB, chestB, legB, classB] = soas.map((soa, i) =>
     computeBucketStatBounds(soa, buckets[i].length, maxStatConstraints),
   );
   // Suffix stat bounds = the summed bounds of every bucket after this level, so
@@ -453,7 +455,6 @@ export async function process(
     seedExactStatRanges(
       soas,
       buckets,
-      [helmB, gauntB, chestB, legB, classB],
       statsCache,
       modStatsInStatOrder,
       maxStatConstraints,
@@ -1443,12 +1444,6 @@ interface BucketStatBounds {
   max: number[];
   /** The lowest base value each stat can get from this bucket. */
   min: number[];
-  /**
-   * Lowest value each stat can reach including the worst exotic tuning delta,
-   * matching how the tail lowers minStat. (Legendary tuning is already in the
-   * base stats.) Used to seed the exact stat floor.
-   */
-  floorMin: number[];
   /** Whether the bucket has an artifice item (worth one artifice mod). */
   hasArtifice: boolean;
   /**
@@ -1466,12 +1461,10 @@ function computeBucketStatBounds(
 ): BucketStatBounds {
   const max = [0, 0, 0, 0, 0, 0];
   const min = [MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT];
-  const floorMin = [MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT];
   let hasArtifice = false;
   let maxTotal = 0;
   for (let i = 0; i < n; i++) {
     const b = i * 6;
-    const entry = soa.tuning[i];
     let itemTotal = 0;
     for (let s = 0; s < 6; s++) {
       const v = soa.stats[b + s];
@@ -1480,10 +1473,6 @@ function computeBucketStatBounds(
       }
       if (v < min[s]) {
         min[s] = v;
-      }
-      const fv = entry ? v + entry.minDeltas[s] : v;
-      if (fv < floorMin[s]) {
-        floorMin[s] = fv;
       }
       if (maxStatConstraints[s] > 0) {
         itemTotal += v;
@@ -1494,7 +1483,7 @@ function computeBucketStatBounds(
     }
     hasArtifice ||= soa.artifice[i] === 1;
   }
-  return { max, min, floorMin, hasArtifice, maxTotal };
+  return { max, min, hasArtifice, maxTotal };
 }
 
 /**
@@ -1598,16 +1587,15 @@ function setBonusPrune(
  * compute the true ranges) — only speed: the min seed is exact, and the max
  * seed is a guaranteed-achievable lower bound the loop refines upward.
  *
- * minStat is tracked over every coarsely-valid set, so its summed per-bucket
- * floor is exact. maxStat is tracked only over sets that meet the stat
- * minimums, so each candidate max set is put through the same mod gate the
- * main loop uses and seeds the max only if it meets them (trivially true when
- * there are no minimums).
+ * minStat is tracked over every coarsely-valid set, so its floor over sets
+ * with at most one exotic is exact. maxStat is tracked only over sets that
+ * meet the stat minimums, so each candidate max set is put through the same
+ * mod gate the main loop uses and seeds the max only if it meets them
+ * (trivially true when there are no minimums).
  */
 function seedExactStatRanges(
   soas: BucketSoA[],
   buckets: ProcessItem[][],
-  bounds: BucketStatBounds[],
   statsCache: Map<ProcessItem, number[]>,
   modStatsInStatOrder: number[],
   maxStatConstraints: number[],
@@ -1619,15 +1607,55 @@ function seedExactStatRanges(
 ): void {
   const generalModsBonus = precalculatedInfo.numAvailableGeneralMods * majorStatBoost;
   for (let i = 0; i < 6; i++) {
-    if (maxStatConstraints[i] > 0) {
-      let floor = modStatsInStatOrder[i];
-      for (const b of bounds) {
-        floor += b.floorMin[i];
+    if (maxStatConstraints[i] === 0) {
+      continue;
+    }
+    // The floor must respect the one-exotic rule: summing unconstrained
+    // per-bucket minimums can combine two exotics into a "set" the loop skips
+    // as double-exotic, seeding a minimum no real set reaches. Take each
+    // bucket's non-exotic minimum, then allow the single best exotic swap.
+    // Exotic minimums include their worst tuning delta, matching how the tail
+    // lowers minStat. (Legendary tuning is already in the base stats.)
+    let floor = modStatsInStatOrder[i];
+    let bestSwap = Infinity;
+    let forcedExotics = 0;
+    for (let b = 0; b < 5; b++) {
+      const soa = soas[b];
+      const n = buckets[b].length;
+      let minNonExotic = Infinity;
+      let minExotic = Infinity;
+      for (let k = 0; k < n; k++) {
+        const entry = soa.tuning[k];
+        const v = soa.stats[k * 6 + i] + (entry ? entry.minDeltas[i] : 0);
+        if (soa.exotic[k] === 1) {
+          if (v < minExotic) {
+            minExotic = v;
+          }
+        } else if (v < minNonExotic) {
+          minNonExotic = v;
+        }
       }
-      const clamped = Math.min(floor, maxStatConstraints[i]);
-      if (clamped < statRanges[i].minStat) {
-        statRanges[i].minStat = clamped;
+      if (minNonExotic === Infinity) {
+        // The bucket only has exotics, so it must supply the set's one exotic.
+        forcedExotics++;
+        floor += minExotic;
+      } else {
+        floor += minNonExotic;
+        if (minExotic - minNonExotic < bestSwap) {
+          bestSwap = minExotic - minNonExotic;
+        }
       }
+    }
+    if (forcedExotics > 1) {
+      // Every completion is a double exotic; there are no valid sets to seed.
+      continue;
+    }
+    if (forcedExotics === 0 && bestSwap < 0) {
+      floor += bestSwap;
+    }
+    const clamped = Math.min(floor, maxStatConstraints[i]);
+    if (clamped < statRanges[i].minStat) {
+      statRanges[i].minStat = clamped;
     }
   }
   const armor = new Array<ProcessItem>(5);
