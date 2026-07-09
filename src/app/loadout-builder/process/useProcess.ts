@@ -63,6 +63,7 @@ export function useProcess({
   anyExotic,
   autoStatMods,
   strictUpgrades,
+  pauseProcessing,
 }: {
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
@@ -75,6 +76,12 @@ export function useProcess({
   anyExotic: boolean;
   autoStatMods: boolean;
   strictUpgrades: boolean;
+  /**
+   * Hold off starting a new process run while the item inputs are still
+   * settling (e.g. vendor items are loading), so the first run isn't
+   * immediately thrown away and restarted.
+   */
+  pauseProcessing: boolean;
 }) {
   const [{ result, processing, totalCombos, completedCombos, startTime, resultStoreId }, setState] =
     useState<ProcessState>({
@@ -104,6 +111,10 @@ export function useProcess({
   const inputsRef = useRef<ProcessInputs>(undefined);
 
   useEffect(() => {
+    if (pauseProcessing) {
+      // When this flips back, the effect re-runs and starts the process.
+      return;
+    }
     const doProcess = async () => {
       const handleProgress = (completed: number, total: number) => {
         const now = Date.now();
@@ -199,11 +210,14 @@ export function useProcess({
     autoModDefs,
     strictUpgrades,
     firstTime,
+    pauseProcessing,
   ]);
 
   return {
     result: resultStoreId === selectedStore.id ? result : null,
-    processing,
+    // While paused, a run is imminent, so report it as processing to keep the
+    // UI from showing a "no results" state.
+    processing: processing || pauseProcessing,
     startTime,
     totalCombos,
     completedCombos,
