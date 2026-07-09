@@ -46,7 +46,7 @@ export const ablationFlags = Object.keys(ablation) as AblationFlag[];
 // parity suite) can exercise an ablated configuration without code changes.
 // process.env exists under jest/node but not in the browser worker.
 declare const process: { env?: { LO_ABLATE?: string } } | undefined;
-if (typeof process !== 'undefined' && process?.env?.LO_ABLATE) {
+if (typeof process !== 'undefined' && process.env?.LO_ABLATE) {
   for (const name of process.env.LO_ABLATE.split(',')) {
     const flag = name.trim() as AblationFlag;
     if (flag in ablation) {
