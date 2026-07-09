@@ -29,13 +29,6 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { noop } from 'es-toolkit';
 import fs from 'node:fs';
-import {
-  isArmor2Arms,
-  isArmor2Chest,
-  isArmor2ClassItem,
-  isArmor2Helmet,
-  isArmor2Legs,
-} from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { getAutoMods, mapAutoMods, mapDimItemToProcessItems } from '../process/mappers';
 import { ArmorBucketHashes, DesiredStatRange, MIN_LO_ITEM_ENERGY } from '../types';
@@ -142,17 +135,18 @@ async function loadRealVaultItems(perBucket: number): Promise<{
     assumeArmorMasterwork: AssumeArmorMasterwork.None,
     minItemEnergy: MIN_LO_ITEM_ENERGY,
   };
-  const bucketPredicates: [BucketHashes, (item: DimItem) => unknown][] = [
-    [BucketHashes.Helmet, isArmor2Helmet],
-    [BucketHashes.Gauntlets, isArmor2Arms],
-    [BucketHashes.ChestArmor, isArmor2Chest],
-    [BucketHashes.LegArmor, isArmor2Legs],
-    [BucketHashes.ClassArmor, isArmor2ClassItem],
-  ];
+  // Unlike the isArmor2* test predicates (legendary-only, no equippingLabel,
+  // which silently exclude every exotic), admit any energy-bearing armor so
+  // exotics and their tuning variants are represented like in production.
+  const isBenchArmor = (item: DimItem, bucketHash: BucketHashes) =>
+    Boolean(item.energy) && item.bucket.hash === bucketHash;
+  const bucketPredicates: [BucketHashes, (item: DimItem) => unknown][] = ArmorBucketHashes.map(
+    (bucketHash) => [bucketHash, (item: DimItem) => isBenchArmor(item, bucketHash)],
+  );
   const helmsByClass = new Map<number, number>();
   for (const store of stores) {
     for (const item of store.items) {
-      if (isArmor2Helmet(item)) {
+      if (isBenchArmor(item, BucketHashes.Helmet)) {
         helmsByClass.set(item.classType, (helmsByClass.get(item.classType) ?? 0) + 1);
       }
     }
