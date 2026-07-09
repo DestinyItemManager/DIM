@@ -3,6 +3,7 @@
 * Fixed saved loadouts placing tuning mods on the wrong armor piece when applying or previewing them.
 * Exotic armor ornaments are correctly shown as unlocked in Fashion and are no longer skipped when applying loadouts.
 * Exotic armor ornaments are correctly shown as unlocked in Fashion and are no longer skipped when applying loadouts.
+* The Loadout Optimizer is dramatically faster, especially "show all sets" searches.
 
 ## 8.132.0 <span class="changelog-date">(2026-07-05)</span>
 
