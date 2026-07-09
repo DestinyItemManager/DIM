@@ -440,7 +440,9 @@ function getPlugStatValue(
   // these stats to the intrinsic since that's the "masterwork".
   if (stat.activationRule?.rule === 'enhancedIntrinsic' && createdItem.adept) {
     return (
-      stat.value + ((createdItem.craftedInfo?.enhancementTier ?? 0) >= 3 ? 2 : 1) + createdItem.tier
+      stat.value +
+      ((createdItem.craftedInfo?.enhancementTier ?? 0) >= 3 ? 2 : 1) +
+      (createdItem.tier >= 5 ? (createdItem.craftedInfo?.enhancementTier ?? 0) : 0)
     );
   }
 
