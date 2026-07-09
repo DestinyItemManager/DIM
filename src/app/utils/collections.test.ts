@@ -1,8 +1,45 @@
-import { count, objectifyArray, reorder, uniqBy, wrap } from './collections';
+import { sum } from 'es-toolkit';
+import { count, objectifyArray, partitionEvenly, reorder, uniqBy, wrap } from './collections';
 
 describe('count', () => {
   test('counts elements that match the predicate', () =>
     expect(count([1, 2, 3], (i) => i > 1)).toBe(2));
+});
+
+describe('partitionEvenly', () => {
+  // [longest bucket size after filtering, concurrency]. Concurrency defaults to
+  // ~half of hardwareConcurrency, so 2-8 is typical; a filtered armor bucket
+  // ranges from a single exotic up to a few dozen items.
+  const cases: [n: number, groups: number][] = [
+    [37, 8], // items not a clean multiple of cores: the case that used to idle cores
+    [42, 8],
+    [50, 6],
+    [24, 4],
+    [15, 4],
+    [11, 3],
+    [7, 2],
+    [1, 4], // one exotic in the slot, several cores available
+    [4, 8], // fewer items than cores
+    [8, 8], // items exactly match cores
+  ];
+
+  for (const [n, groups] of cases) {
+    test(`splits ${n} items across ${groups} groups evenly`, () => {
+      const items = Array.from({ length: n }, (_, i) => i);
+      const slices = partitionEvenly(items, groups);
+
+      // Uses every available group without producing empty ones.
+      expect(slices.length).toBe(Math.min(groups, n));
+
+      // Sizes are as balanced as possible (differ by at most one).
+      const sizes = slices.map((s) => s.length);
+      expect(Math.max(...sizes) - Math.min(...sizes)).toBeLessThanOrEqual(1);
+      expect(sum(sizes)).toBe(n);
+
+      // Contiguous slices tile the input exactly, no dropped or duplicated items.
+      expect(slices.flat()).toEqual(items);
+    });
+  }
 });
 
 describe('objectifyArray', () => {
