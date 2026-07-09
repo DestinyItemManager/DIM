@@ -34,28 +34,33 @@ Synthetic (419,904 combos):
 
 Real vault (Rob's profile, 25/bucket, 9.77M combos):
 
-| Toggle | showAll | minimums (90/90/60) | anyExotic* |
+With exotics included (see gap 2 below; predicate fixed, memo gate applied, so autoModsMemo rows reflect the gated memo):
+
+| Toggle | showAll | minimums (90/90/60) | anyExotic |
 |---|---|---|---|
-| subtreePrune | **1003.84x** (7ms vs 7.2s) | **11.45x** (745ms vs 8.5s) | 1.00x |
-| strictBeat | **8.34x** | **1.16x** | 1.03x |
-| rangeSeeding | **1.72x** | 1.00x | 1.00x |
-| autoModsMemo | **1.20x** | 1.08x | 1.01x |
-| coarseLevelPrunes | 1.00x | 1.00x | **226x*** |
-| everything else | 0.99-1.03x | 0.99-1.02x | 1.00x |
+| subtreePrune | **46.34x** (162ms vs 7.5s) | **6.12x** (1.6s vs 9.8s) | **77.14x** (23ms vs 1.8s) |
+| coarseLevelPrunes | 1.00x | 1.00x | **16.38x** |
+| strictBeat | **1.09x** | 1.03x | **1.60x** |
+| tuningPreGate | **1.07x** | **1.14x** | **1.52x** |
+| rangeSeeding | **1.28x** | 1.01x | 1.02x |
+| autoModsMemo (gated) | 1.00x | **1.10x** | **1.10x** |
+| convergenceGate | 1.05x | 1.01x | 1.03x |
+| everything else | 0.99-1.00x | 0.99-1.01x | 1.00-1.02x |
 
-\* The bench's item mapping produced **zero exotics** from the real profile (0 doubleExotic prunes in 9.77M combos), so the anyExotic scenario degenerates to "prune everything at the top level" (hence 226x for coarseLevelPrunes) and `tuningPreGate` never fired (tuningGatePruned = 0 everywhere). See "gaps" below.
+Earlier run with the broken exotic-free corpus (kept for reference; it exaggerates some rows): subtreePrune 1003.84x showAll / 11.45x minimums, strictBeat 8.34x showAll, rangeSeeding 1.72x showAll, coarseLevelPrunes 226x on a fully-degenerate anyExotic.
 
-Slicing (bench test 3, real profile, 60/bucket, 6 slices, minimums): contiguous wall 5464ms, interleaved wall 5444ms (0.4% apart, imbalance 1.51x vs 1.55x). **No measurable benefit from interleaved slicing on this profile.**
+Slicing (bench test 3, real profile, 60/bucket, 6 slices, minimums, exotic-free corpus): contiguous wall 5464ms, interleaved wall 5444ms (0.4% apart, imbalance 1.51x vs 1.55x). **No measurable benefit from interleaved slicing on this profile.**
 
 ## Recommendations
 
 **Keep, clearly earning their weight:**
 
-- **subtreePrune** (B&B, #11868): 2.5x to 1000x. The headline result; on a real vault in "show everything" mode it is the difference between 7ms and 7.2 seconds.
-- **strictBeat** (#11860): up to 8.34x on the real vault showAll case, where huge numbers of sets tie the heap boundary; ~5 lines of code. Synthetic data (uncorrelated stats, few ties) hid most of its value.
-- **rangeSeeding** (#11868): 1.2x synthetic, 1.72x real showAll, free elsewhere; ~90 lines.
+- **subtreePrune** (B&B, #11868): 2.5x to 77x on realistic corpora (up to 1000x on the exotic-free one). The headline result; without it a real-vault show-everything search takes seconds instead of tens of milliseconds.
+- **coarseLevelPrunes** (#11860): free normally, **16.38x** on real-vault anyExotic, and its partial-sum accumulators are shared infrastructure for subtreePrune anyway.
+- **strictBeat** (#11860): 1.09-1.60x on the real vault (8.34x on the exotic-free corpus with its mass boundary ties); ~5 lines of code. Synthetic data (uncorrelated stats, few ties) hid most of its value.
+- **tuningPreGate** (#11862): 1.07-1.52x on the real vault once exotics are actually in the corpus. Earns its ~35 lines.
+- **rangeSeeding** (#11868): 1.2-1.28x in showAll modes, free elsewhere; ~90 lines.
 - **highStatSort** (#11860): 1.6-3.3x when the input isn't already sorted; 1.00x on the real-vault bench only because that harness pre-sorts while capping. 24 lines, keeps the heap floor rising early.
-- **coarseLevelPrunes** (#11860): near-free normally but the only defense when a constraint (anyExotic, set bonus, perks) excludes big regions, and its partial-sum accumulators are shared infrastructure for subtreePrune anyway.
 
 **Change (concrete follow-up, answers bhollis's #11860 string-key comment):**
 
@@ -74,13 +79,12 @@ Slicing (bench test 3, real profile, 60/bucket, 6 slices, minimums): contiguous 
 
 - **SoA layout** (#11860): structurally load-bearing; every prune reads it. Unmeasurable without a rewrite.
 - **Tail-resolved exotic tuning** (#11862): a feature as much as an optimization (its bounds feed subtreePrune); ablating it means restoring per-mod item expansion.
-- **tuningPreGate** (#11862): could not be exercised, see gaps.
 - **Warm worker pool** (#11868): real Workers don't run under jest; it's a latency feature (saves worker spawn + comlink handshake per run), not throughput. Not measured in this study; a browser-side timing would be needed and wasn't attempted.
 
 ## Bugs and gaps found by the harness
 
 1. **Range-seeding minStat bug (on master, fixed on this branch):** the min seed summed unconstrained per-bucket floors, which can combine two exotics into a "set" the loop skips as double-exotic, seeding a displayed stat minimum no valid set reaches (observed: 28 seeded vs 29 real). Fixed by computing the floor from non-exotic minimums plus the single best exotic swap (commit "Fix range seeding minStat undershooting with double-exotic floors"). **Needs extraction into a real PR.** Parity missed it because the parity corpus never trips it; the ablation ON/OFF equality assertion caught it immediately.
-2. **The bench maps zero exotics from a real profile** (0 doubleExotic in 9.77M combos), so anyExotic and tuningPreGate results are unreliable on real data. Likely the `isArmor2*` test predicates or the mapper path exclude current exotics; worth a look before trusting any exotic-related bench numbers.
+2. **The bench mapped zero exotics from a real profile**: the `isArmor2*` predicates in `testing/test-item-utils.ts` require Legendary rarity and no equippingLabel, so they exclude every exotic by construction (not an armor 3.0 thing). Fixed in the ablation bench with an inclusive energy-bearing-armor predicate; the vault tables above are from the fixed corpus. **The real-vault test in `process.bench.test.ts` on master has the same blind spot** and its historical "real vault" numbers were all-legendary.
 3. **Bonus measurement:** #11873 (sort energy vectors once) measured ~35% on the locked-mods synthetic scenario (frozen-baseline ratio moved from 6.75x to 10.18x) and ~20% on unconstrained, before the ablation toggles were added.
 
 ## Reproducing
