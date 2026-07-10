@@ -958,33 +958,14 @@ export async function process(
               // At this point we know this set satisfies all constraints.
               // Update the max stat ranges. We need to do this before we short
               // circuit anything so that the stat ranges are accurate.
-              //
-              // updateMaxStats only ever raises the running maxes, so once they
-              // have converged (the common steady state in large searches) we can
-              // skip the call for sets that provably can't raise any of them.
-              // These conditions mirror its internal update conditions exactly.
-              let mayImproveMax = false;
-              for (let index = 0; index < 6; index++) {
-                const maxSeen = statRanges[index].maxStat;
-                if (
-                  maxSeen < desiredStatRanges[index].minStat ||
-                  stats[index] > maxSeen ||
-                  (maxSeen < MAX_STAT && stats[index] + maxModBonus > maxSeen)
-                ) {
-                  mayImproveMax = true;
-                  break;
-                }
-              }
-              const foundAnyImprovement =
-                mayImproveMax &&
-                updateMaxStats(
-                  precalculatedInfo,
-                  armor,
-                  stats,
-                  numArtifice,
-                  desiredStatRanges,
-                  statRanges,
-                );
+              const foundAnyImprovement = updateMaxStats(
+                precalculatedInfo,
+                armor,
+                stats,
+                numArtifice,
+                desiredStatRanges,
+                statRanges,
+              );
 
               // Drop this set if it could never make it into our top
               // RETURNED_ARMOR_SETS sets. We do this only after confirming that
