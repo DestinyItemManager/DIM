@@ -20,6 +20,7 @@
     "lint-report": "pnpm lint:eslint --output-file eslint_report.json --format json",
     "lint-report:cached": "pnpm lintcached:eslint --output-file eslint.results.json --format json",
     "typecheck": "tsc --noEmit",
+    "ablation:browser": "node build/browser-ablation.mjs",
     "fix": "pnpm run --sequential '/^fix:.*/'",
     "fix:eslint": "pnpm lint:eslint --fix",
     "fix:json": "jsonsort src/locale",

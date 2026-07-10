@@ -1,14 +1,19 @@
 /**
  * Ablation benchmark for individual LO optimizations. BENCH BRANCH ONLY.
  *
- * For each (scenario, toggle) pair this interleaves process() with the toggle
- * ON and OFF within each round and reports min-over-rounds for both, so the
- * ratio is immune to this machine's clock drift. All other toggles stay ON, so
- * each number is "what does removing just this optimization cost on top of the
- * current code".
+ * For each (scenario, measurement) pair this interleaves process() with the
+ * toggles ON and OFF within each round and reports min-over-rounds for both,
+ * so the ratio is immune to this machine's clock drift. All other toggles stay
+ * ON, so each number is "what does removing just this optimization cost on
+ * top of the current code". A measurement can also be a group of flags
+ * toggled off together (e.g. the #11877 removal candidates).
+ *
+ * NOTE: this measures node's V8 on ts-jest output. The browser harness
+ * (pnpm ablation:browser) runs the same matrix on the production bundle in
+ * real Chromium/Firefox, which is the number that actually ships; the
+ * un-unroll incident proved these can disagree.
  *
  * Run with:
- *   change test.skip -> test below, then
  *   npx jest process.ablation --silent=false
  *
  * Env:
@@ -16,197 +21,25 @@
  *                          (falls back to the checked-in test stores)
  *   LO_BENCH_ITEMS=n       per-bucket cap for real-vault scenarios (default 25)
  *   LO_BENCH_ROUNDS=n      rounds per pair (default 5)
+ *   LO_BENCH_FLAGS=a,b+c   only run these measurement labels
  *   LO_ABLATE=a,b          handled by ablation-toggles.ts; don't combine with
  *                          this test, which drives the toggles itself
  */
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
-import { getBuckets } from 'app/destiny2/d2-buckets';
-import { DimItem } from 'app/inventory/item-types';
-import { buildStores } from 'app/inventory/store/d2-store-factory';
-import { armorStats } from 'app/search/d2-known-values';
-import { emptySet } from 'app/utils/empty';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { noop } from 'es-toolkit';
-import fs from 'node:fs';
-import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { getAutoMods, mapAutoMods, mapDimItemToProcessItems } from '../process/mappers';
-import { ArmorBucketHashes, DesiredStatRange, MIN_LO_ITEM_ENERGY } from '../types';
+import { buildSyntheticScenarios, buildVaultScenarios, Scenario } from './ablation-corpus';
 import { ablation, AblationFlag, ablationFlags } from './ablation-toggles';
 import { process as processArmor, ProcessInputs } from './process';
-import { ProcessItem, ProcessItemsByBucket, ProcessResult } from './types';
+import { ProcessResult } from './types';
 
 const ROUNDS = Number(process.env.LO_BENCH_ROUNDS) || 5;
 const PER_BUCKET = Number(process.env.LO_BENCH_ITEMS) || 25;
 
-// ---------------------------------------------------------------------------
-// Corpus builders (mirrors process.bench.test.ts, plus set bonus/perk options)
-// ---------------------------------------------------------------------------
-
-function makeRng(seed: number) {
-  let s = seed >>> 0;
-  return () => {
-    s = (s * 1664525 + 1013904223) >>> 0;
-    return s / 4294967296;
-  };
-}
-
-interface MakeItemsOpts {
-  activityTag?: string;
-  minEnergy?: number;
-  /** Give ~50% of items this set bonus, ~20% a wildcard socket. */
-  setBonusHash?: number;
-  /** Give ~40% of items this intrinsic perk. */
-  perkHash?: number;
-}
-
-function makeItems(
-  bucket: number,
-  count: number,
-  rng: () => number,
-  opts?: MakeItemsOpts,
-): ProcessItem[] {
-  const minEnergy = opts?.minEnergy ?? 10;
-  return Array.from({ length: count }, (_, i): ProcessItem => {
-    const stats: { [statHash: number]: number } = {};
-    for (const statHash of armorStats) {
-      stats[statHash] = 5 + Math.floor(rng() * 25); // 5..29
-    }
-    return {
-      id: `${bucket}-${i}`,
-      name: `Item ${bucket}-${i}`,
-      isExotic: i === 0,
-      isArtifice: rng() < 0.4,
-      remainingEnergyCapacity:
-        minEnergy < 10 ? minEnergy + Math.floor(rng() * (11 - minEnergy)) : 10,
-      power: 1500,
-      stats,
-      compatibleActivityMod: opts?.activityTag && rng() < 0.6 ? opts.activityTag : undefined,
-      setBonus: opts?.setBonusHash !== undefined && rng() < 0.5 ? opts.setBonusHash : undefined,
-      hasSetBonusModSocket: opts?.setBonusHash !== undefined && rng() < 0.2,
-      intrinsicPerks: opts?.perkHash !== undefined && rng() < 0.4 ? [opts.perkHash] : undefined,
-    };
-  });
-}
+// Restrict measurements to specific labels, e.g.
+// LO_BENCH_FLAGS=maxBoostMemo+energyCache+convergenceGate+unrolledAdds
+const FLAG_FILTER = process.env.LO_BENCH_FLAGS?.split(',');
 
 const clone = (inputs: ProcessInputs): ProcessInputs =>
   JSON.parse(JSON.stringify(inputs)) as ProcessInputs;
-
-const minimums: DesiredStatRange[] = armorStats.map((statHash, i) => ({
-  statHash,
-  minStat: i === 0 || i === 1 ? 90 : i === 2 ? 60 : 0,
-  maxStat: 200,
-}));
-const showAll: DesiredStatRange[] = armorStats.map((statHash) => ({
-  statHash,
-  minStat: 0,
-  maxStat: 200,
-}));
-
-const baseInputs = {
-  modStatTotals: Object.fromEntries(
-    armorStats.map((h) => [h, 0]),
-  ) as ProcessInputs['modStatTotals'],
-  setBonuses: {},
-  requiredPerks: [],
-  desiredStatRanges: minimums,
-  anyExotic: false,
-  autoStatMods: true,
-  strictUpgrades: false,
-  stopOnFirstSet: false,
-};
-
-async function loadRealVaultItems(perBucket: number): Promise<{
-  filteredItems: ProcessItemsByBucket;
-  autoModOptions: ProcessInputs['autoModOptions'];
-}> {
-  const defs = await getTestDefinitions();
-  const profilePath = process.env.LO_BENCH_PROFILE;
-  const stores = profilePath
-    ? buildStores({
-        defs,
-        buckets: getBuckets(defs),
-        profileResponse: readProfileFixture(profilePath),
-        customStats: [],
-      })
-    : await getTestStores();
-  const autoModOptions = mapAutoMods(getAutoMods(defs, emptySet()));
-  const armorEnergyRules = {
-    assumeArmorMasterwork: AssumeArmorMasterwork.None,
-    minItemEnergy: MIN_LO_ITEM_ENERGY,
-  };
-  // Unlike the isArmor2* test predicates (legendary-only, no equippingLabel,
-  // which silently exclude every exotic), admit any energy-bearing armor so
-  // exotics and their tuning variants are represented like in production.
-  const isBenchArmor = (item: DimItem, bucketHash: BucketHashes) =>
-    Boolean(item.energy) && item.bucket.hash === bucketHash;
-  const bucketPredicates: [BucketHashes, (item: DimItem) => unknown][] = ArmorBucketHashes.map(
-    (bucketHash) => [bucketHash, (item: DimItem) => isBenchArmor(item, bucketHash)],
-  );
-  const helmsByClass = new Map<number, number>();
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (isBenchArmor(item, BucketHashes.Helmet)) {
-        helmsByClass.set(item.classType, (helmsByClass.get(item.classType) ?? 0) + 1);
-      }
-    }
-  }
-  const classType = [...helmsByClass.entries()].sort((a, b) => b[1] - a[1])[0][0];
-  const filteredItems: ProcessItemsByBucket = {
-    [BucketHashes.Helmet]: [],
-    [BucketHashes.Gauntlets]: [],
-    [BucketHashes.ChestArmor]: [],
-    [BucketHashes.LegArmor]: [],
-    [BucketHashes.ClassArmor]: [],
-  };
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (item.classType !== classType) {
-        continue;
-      }
-      for (const [bucketHash, predicate] of bucketPredicates) {
-        if (predicate(item)) {
-          const mapped = mapDimItemToProcessItems({
-            dimItem: item,
-            armorEnergyRules,
-            desiredStatRanges: minimums,
-            autoStatMods: true,
-          })[0];
-          if (mapped) {
-            filteredItems[bucketHash as keyof ProcessItemsByBucket].push(mapped);
-          }
-        }
-      }
-    }
-  }
-  for (const bucketHash of ArmorBucketHashes) {
-    const items = filteredItems[bucketHash];
-    items.sort(
-      (a, b) =>
-        armorStats.reduce((t, h) => t + b.stats[h], 0) -
-        armorStats.reduce((t, h) => t + a.stats[h], 0),
-    );
-    items.splice(perBucket);
-  }
-  return { filteredItems, autoModOptions };
-}
-
-function readProfileFixture(profilePath: string): DestinyProfileResponse {
-  const raw = JSON.parse(fs.readFileSync(profilePath, 'utf-8')) as
-    DestinyProfileResponse | { Response: DestinyProfileResponse };
-  return 'Response' in raw ? raw.Response : raw;
-}
-
-// ---------------------------------------------------------------------------
-// Ablation runner
-// ---------------------------------------------------------------------------
-
-interface Scenario {
-  name: string;
-  inputs: ProcessInputs;
-  /** Flags whose ablation can matter in this scenario (others are skipped). */
-  relevant?: AblationFlag[];
-}
 
 async function timeOnce(inputs: ProcessInputs): Promise<[number, ProcessResult]> {
   const inp = clone(inputs);
@@ -219,10 +52,6 @@ function fmtCounters(result: ProcessResult): string {
   const s = result.processInfo.statistics.skipReasons;
   return `subtree ${s.subtreePruned} tuningGate ${s.tuningGatePruned} trackerFloor ${s.trackerFloorPruned} lowTier ${s.skippedLowTier} dblExotic ${s.doubleExotic} noExotic ${s.noExotic} perks ${s.insufficientPerks} setBonus ${s.insufficientSetBonus}`;
 }
-
-// Restrict measurements to specific labels, e.g.
-// LO_BENCH_FLAGS=maxBoostMemo+energyCache+convergenceGate+unrolledAdds
-const FLAG_FILTER = process.env.LO_BENCH_FLAGS?.split(',');
 
 /** A measurement is one flag, or a group of flags toggled off together. */
 async function runScenario(scenario: Scenario, measurements: (AblationFlag | AblationFlag[])[]) {
@@ -307,123 +136,19 @@ const removalCandidates: AblationFlag[] = [
 ];
 
 test('ablation: synthetic scenarios', async () => {
-  const defs = await getTestDefinitions();
-  const autoModOptions = mapAutoMods(getAutoMods(defs, emptySet()));
-  const items = (rng: () => number, opts?: MakeItemsOpts) => ({
-    [BucketHashes.Helmet]: makeItems(0, 18, rng, opts),
-    [BucketHashes.Gauntlets]: makeItems(1, 18, rng, opts),
-    [BucketHashes.ChestArmor]: makeItems(2, 18, rng, opts),
-    [BucketHashes.LegArmor]: makeItems(3, 18, rng, opts),
-    [BucketHashes.ClassArmor]: makeItems(4, 4, rng, opts),
-  });
-  const noMods = { generalMods: [], activityMods: [] };
-
-  // tuningPreGate needs tuningVariants, which synthetic items don't have.
-  const synthFlags = ablationFlags.filter((f) => f !== 'tuningPreGate');
-
-  const scenarios: Scenario[] = [
-    {
-      name: 'synth minimums',
-      inputs: {
-        ...baseInputs,
-        filteredItems: items(makeRng(1234)),
-        lockedMods: noMods,
-        autoModOptions,
-      },
-    },
-    {
-      name: 'synth showAll',
-      inputs: {
-        ...baseInputs,
-        desiredStatRanges: showAll,
-        filteredItems: items(makeRng(1234)),
-        lockedMods: noMods,
-        autoModOptions,
-      },
-    },
-    {
-      name: 'synth anyExotic',
-      inputs: {
-        ...baseInputs,
-        filteredItems: items(makeRng(1234)),
-        lockedMods: noMods,
-        anyExotic: true,
-        autoModOptions,
-      },
-    },
-    {
-      name: 'synth mods+energy',
-      inputs: {
-        ...baseInputs,
-        filteredItems: items(makeRng(1234), { activityTag: 'bench', minEnergy: 4 }),
-        lockedMods: {
-          generalMods: [
-            { hash: 1001, energyCost: 3 },
-            { hash: 1002, energyCost: 4 },
-          ],
-          activityMods: [
-            { hash: 2001, energyCost: 1, tag: 'bench' },
-            { hash: 2002, energyCost: 2, tag: 'bench' },
-            { hash: 2003, energyCost: 3, tag: 'bench' },
-          ],
-        },
-        autoModOptions,
-      },
-    },
-    {
-      name: 'synth setBonus+perks',
-      inputs: {
-        ...baseInputs,
-        filteredItems: items(makeRng(1234), { setBonusHash: 777, perkHash: 888 }),
-        lockedMods: noMods,
-        setBonuses: { 777: 2 },
-        requiredPerks: [{ hash: 888, count: 2 }],
-        autoModOptions,
-      },
-    },
-  ];
-
-  for (const scenario of scenarios) {
-    await runScenario(scenario, [...synthFlags, removalCandidates]);
+  for (const scenario of await buildSyntheticScenarios()) {
+    await runScenario(scenario, [...ablationFlags, removalCandidates]);
   }
 }, 600000);
 
 test('ablation: real vault scenarios', async () => {
-  const { filteredItems, autoModOptions } = await loadRealVaultItems(PER_BUCKET);
-  const noMods = { generalMods: [], activityMods: [] };
+  const scenarios = await buildVaultScenarios(PER_BUCKET);
   // eslint-disable-next-line no-console
   console.log(
-    `real vault items/bucket ${ArmorBucketHashes.map((h) => filteredItems[h].length).join('/')}${process.env.LO_BENCH_PROFILE ? '' : ' (checked-in test fixture; set LO_BENCH_PROFILE for a real vault)'}`,
+    process.env.LO_BENCH_PROFILE
+      ? `real vault from ${process.env.LO_BENCH_PROFILE}`
+      : 'checked-in test fixture; set LO_BENCH_PROFILE for a real vault',
   );
-
-  const scenarios: Scenario[] = [
-    {
-      name: 'vault showAll',
-      inputs: {
-        ...baseInputs,
-        desiredStatRanges: showAll,
-        filteredItems,
-        lockedMods: noMods,
-        autoModOptions,
-      },
-    },
-    {
-      name: 'vault minimums',
-      inputs: { ...baseInputs, filteredItems, lockedMods: noMods, autoModOptions },
-    },
-    {
-      name: 'vault anyExotic',
-      inputs: {
-        ...baseInputs,
-        desiredStatRanges: showAll,
-        filteredItems,
-        lockedMods: noMods,
-        anyExotic: true,
-        autoModOptions,
-      },
-    },
-  ];
-
   for (const scenario of scenarios) {
     await runScenario(scenario, [...ablationFlags, removalCandidates]);
   }
