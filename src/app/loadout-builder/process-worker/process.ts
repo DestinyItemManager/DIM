@@ -315,10 +315,6 @@ export async function process(
   const statBoundsOf = (soa: BucketSoA, n: number) => {
     const max = [0, 0, 0, 0, 0, 0];
     const min = [MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT];
-    // Lowest value each stat can reach including the worst exotic tuning delta,
-    // matching how the tail lowers minStat. (Legendary tuning is already in the
-    // base stats.) Used to seed the exact stat floor.
-    const floorMin = [MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT, MAX_STAT];
     let hasArtifice = false;
     // The single highest enabled-stat total any one item reaches — a tighter
     // upper bound than summing the per-stat maxes (which come from different,
@@ -326,7 +322,6 @@ export async function process(
     let maxTotal = 0;
     for (let i = 0; i < n; i++) {
       const b = i * 6;
-      const entry = soa.tuning[i];
       let itemTotal = 0;
       for (let s = 0; s < 6; s++) {
         const v = soa.stats[b + s];
@@ -335,10 +330,6 @@ export async function process(
         }
         if (v < min[s]) {
           min[s] = v;
-        }
-        const fv = entry ? v + entry.minDeltas[s] : v;
-        if (fv < floorMin[s]) {
-          floorMin[s] = fv;
         }
         if (maxStatConstraints[s] > 0) {
           itemTotal += v;
@@ -349,7 +340,7 @@ export async function process(
       }
       hasArtifice ||= soa.artifice[i] === 1;
     }
-    return { max, min, floorMin, hasArtifice, maxTotal };
+    return { max, min, hasArtifice, maxTotal };
   };
   const addVec = (a: number[], b: number[]) => {
     const out = [0, 0, 0, 0, 0, 0];
@@ -358,7 +349,8 @@ export async function process(
     }
     return out;
   };
-  const helmB = statBoundsOf(helmSoA, helms.length);
+  // The helm bucket needs no bounds: suffix bounds cover the buckets after
+  // each level, and the range seeding computes its own floors.
   const gauntB = statBoundsOf(gauntSoA, gauntlets.length);
   const chestB = statBoundsOf(chestSoA, chests.length);
   const legB = statBoundsOf(legSoA, legs.length);
@@ -557,23 +549,62 @@ export async function process(
   // when there are no minimums).
   const canSeed = !anyExotic && numPerks === 0 && numSetBonuses === 0;
   if (canSeed) {
-    for (let i = 0; i < 6; i++) {
-      if (maxStatConstraints[i] > 0) {
-        const floor =
-          modStatsInStatOrder[i] +
-          helmB.floorMin[i] +
-          gauntB.floorMin[i] +
-          chestB.floorMin[i] +
-          legB.floorMin[i] +
-          classB.floorMin[i];
-        const clamped = Math.min(floor, maxStatConstraints[i]);
-        if (clamped < statRanges[i].minStat) {
-          statRanges[i].minStat = clamped;
-        }
-      }
-    }
     const soas = [helmSoA, gauntSoA, chestSoA, legSoA, classItemSoA];
     const buckets = [helms, gauntlets, chests, legs, classItems];
+    for (let i = 0; i < 6; i++) {
+      if (maxStatConstraints[i] === 0) {
+        continue;
+      }
+      // The floor must respect the one-exotic rule: summing unconstrained
+      // per-bucket minimums can combine two exotics into a "set" the loop
+      // skips as double-exotic, seeding a minimum no real set reaches. Take
+      // each bucket's non-exotic minimum, then allow the single best exotic
+      // swap. Exotic minimums include their worst tuning delta, matching how
+      // the tail lowers minStat. (Legendary tuning is already in base stats.)
+      let floor = modStatsInStatOrder[i];
+      let bestSwap = Infinity;
+      let forcedExotics = 0;
+      for (let b = 0; b < 5; b++) {
+        const soa = soas[b];
+        const n = buckets[b].length;
+        let minNonExotic = Infinity;
+        let minExotic = Infinity;
+        for (let k = 0; k < n; k++) {
+          const entry = soa.tuning[k];
+          const v = soa.stats[k * 6 + i] + (entry ? entry.minDeltas[i] : 0);
+          if (soa.exotic[k] === 1) {
+            if (v < minExotic) {
+              minExotic = v;
+            }
+          } else if (v < minNonExotic) {
+            minNonExotic = v;
+          }
+        }
+        if (minNonExotic === Infinity) {
+          // The bucket only has exotics, so it must supply the set's one
+          // exotic.
+          forcedExotics++;
+          floor += minExotic;
+        } else {
+          floor += minNonExotic;
+          if (minExotic - minNonExotic < bestSwap) {
+            bestSwap = minExotic - minNonExotic;
+          }
+        }
+      }
+      if (forcedExotics > 1) {
+        // Every completion is a double exotic; there are no valid sets to
+        // seed.
+        continue;
+      }
+      if (forcedExotics === 0 && bestSwap < 0) {
+        floor += bestSwap;
+      }
+      const clamped = Math.min(floor, maxStatConstraints[i]);
+      if (clamped < statRanges[i].minStat) {
+        statRanges[i].minStat = clamped;
+      }
+    }
     for (let i = 0; i < 6; i++) {
       if (maxStatConstraints[i] === 0) {
         continue;

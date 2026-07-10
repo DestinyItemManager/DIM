@@ -204,6 +204,27 @@ describe('process equivalence', () => {
     expect(await runAndDigest(inputs)).toMatchSnapshot();
   });
 
+  it('stat range minimums respect the one-exotic rule', async () => {
+    const statHash = armorStats[0];
+    const inputs = cloneInputs((inputs) => {
+      // Fix the first stat for every item, then make the lowest item in two
+      // buckets an exotic. A set combining both exotics is invalid (double
+      // exotic), so the reachable minimum can only include one of them.
+      eachBucket(inputs, (items) => {
+        for (const item of items) {
+          item.stats[statHash] = 10;
+        }
+      });
+      inputs.filteredItems[BucketHashes.Helmet][0].isExotic = true;
+      inputs.filteredItems[BucketHashes.Helmet][0].stats[statHash] = 2;
+      inputs.filteredItems[BucketHashes.Gauntlets][0].isExotic = true;
+      inputs.filteredItems[BucketHashes.Gauntlets][0].stats[statHash] = 2;
+    });
+    const result = await process(1, inputs, noProgress);
+    // One exotic at 2 plus four items at 10, not both exotics at 2.
+    expect(result.statRangesFiltered[statHash].minStat).toBe(42);
+  });
+
   it('anyExotic with synthesized exotics', async () => {
     const inputs = cloneInputs((inputs) => {
       inputs.anyExotic = true;
