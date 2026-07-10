@@ -124,7 +124,7 @@ function packEnergyVector(capacities: number[]) {
 }
 
 /** Stat needs are 0-200, so 8 bits per stat packs all six exactly into 48 bits. */
-export function packStatNeeds(neededStats: number[]): number {
+function packStatNeeds(neededStats: number[]): number {
   return (
     neededStats[0] +
     neededStats[1] * 0x100 +
@@ -135,7 +135,7 @@ export function packStatNeeds(neededStats: number[]): number {
   );
 }
 
-export function buildContextKey(
+function buildContextKey(
   remainingEnergyCapacities: number[][],
   numArtificeMods: number,
   remainingTotalEnergy: number,

@@ -8,14 +8,7 @@ import {
   majorStatBoost,
   MinMaxStat,
 } from '../types';
-import {
-  AutoModsCache,
-  buildAutoModsMap,
-  buildContextKey,
-  chooseAutoMods,
-  ModsPick,
-  packStatNeeds,
-} from './auto-stat-mod-utils';
+import { AutoModsCache, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
@@ -40,11 +33,6 @@ export interface LoSessionInfo {
    * a few thousand energy multisets and a few hundred stat patterns each.
    */
   autoModsMemo: Map<number | string, Map<number, ModsPick[] | null>>;
-  /**
-   * Memoized maximum single-stat boosts for updateMaxStats, keyed like
-   * autoModsMemo, then by (statIndex, packed other-stat minimums).
-   */
-  maxBoostMemo: Map<number | string, Map<number, number>>;
 }
 
 export function precalculateStructures(
@@ -73,7 +61,6 @@ export function precalculateStructures(
       return acc;
     }, {}),
     autoModsMemo: new Map(),
-    maxBoostMemo: new Map(),
   };
 }
 
@@ -223,7 +210,6 @@ export function updateMaxStats(
     info.numAvailableGeneralMods * majorStatBoost + numArtificeMods * artificeStatBoost;
 
   let remainingEnergyResult: ReturnType<typeof getRemainingEnergiesPerAssignment> | undefined;
-  let boostMemo: Map<number, number> | undefined;
 
   // You wouldn't believe it, but Firefox is actually slow loading constants
   // from another module.
@@ -250,52 +236,31 @@ export function updateMaxStats(
     const { remainingEnergiesPerAssignment, setEnergy } = remainingEnergyResult;
     const energyBudget = setEnergy - info.totalModEnergyCost;
 
-    // The largest boost this stat can get (holding the other stats at their
-    // minimums) doesn't depend on the stat's current value or on the running
-    // max, so it can be memoized across sets that share the same energy
-    // profile and minimums.
-    if (boostMemo === undefined) {
-      const contextKey = buildContextKey(
-        remainingEnergiesPerAssignment,
-        numArtificeMods,
-        energyBudget,
-      );
-      boostMemo = info.maxBoostMemo.get(contextKey);
-      if (boostMemo === undefined) {
-        boostMemo = new Map();
-        info.maxBoostMemo.set(contextKey, boostMemo);
-      }
-    }
     const previousRequiredMinimum = requiredMinimumExtraStats[statIndex];
-    requiredMinimumExtraStats[statIndex] = 0;
-    const boostKey = statIndex * 0x1000000000000 + packStatNeeds(requiredMinimumExtraStats);
-    let maxBoost = boostMemo.get(boostKey);
-    if (maxBoost === undefined) {
-      // Binary search for the largest achievable boost. chooseAutoMods is
-      // monotonic in a single stat's requirement, so this is exact. -1 means
-      // even the base minimums can't be met.
-      let good = -1;
-      let high = maxSingleStatBonus;
-      while (good < high) {
-        const mid = (good + high + 1) >> 1;
-        requiredMinimumExtraStats[statIndex] = mid;
-        if (
-          chooseAutoMods(
-            info,
-            requiredMinimumExtraStats,
-            numArtificeMods,
-            remainingEnergiesPerAssignment,
-            energyBudget,
-          )
-        ) {
-          good = mid;
-        } else {
-          high = mid - 1;
-        }
+    // Binary search for the largest achievable boost. chooseAutoMods is
+    // monotonic in a single stat's requirement, so this is exact. -1 means
+    // even the base minimums can't be met. chooseAutoMods memoizes the
+    // underlying solves, so repeats across sets stay cheap.
+    let good = -1;
+    let high = maxSingleStatBonus;
+    while (good < high) {
+      const mid = (good + high + 1) >> 1;
+      requiredMinimumExtraStats[statIndex] = mid;
+      if (
+        chooseAutoMods(
+          info,
+          requiredMinimumExtraStats,
+          numArtificeMods,
+          remainingEnergiesPerAssignment,
+          energyBudget,
+        )
+      ) {
+        good = mid;
+      } else {
+        high = mid - 1;
       }
-      maxBoost = good;
-      boostMemo.set(boostKey, maxBoost);
     }
+    const maxBoost = good;
     requiredMinimumExtraStats[statIndex] = previousRequiredMinimum;
 
     // The first loop already raised the running max to at least `value`, so
