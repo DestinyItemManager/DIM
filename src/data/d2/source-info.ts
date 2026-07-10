@@ -967,7 +967,6 @@ const D2Sources: {
       2129814338, // Prosecutor
       2130249527, // Death Adder
       2226158470, // Unworthy
-      2344383760, // Eighty-Six
       2477408004, // Wilderflight (Adept)
       2485881870, // Unloved
       2730671571, // Terminus Horizon
@@ -2963,7 +2962,6 @@ const D2Sources: {
       93061497, // VS Gravitic Arrest
       1762785662, // VS Chill Inhibitor
       1762785663, // VS Velocity Baton
-      2344383760, // Eighty-Six
       4232480042, // VS Pyroelectric Propellant
     ],
     sourceHashes: [
@@ -2976,7 +2974,6 @@ const D2Sources: {
       93061497, // VS Gravitic Arrest
       1762785662, // VS Chill Inhibitor
       1762785663, // VS Velocity Baton
-      2344383760, // Eighty-Six
       4232480042, // VS Pyroelectric Propellant
     ],
     sourceHashes: [
