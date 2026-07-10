@@ -1,7 +1,16 @@
 # Loadout Optimizer optimization ablation study
 
-**Date:** 2026-07-09. **Branch:** `lo-ablation-bench` (master + #11873 + #11874 + bench-only toggles; never to be merged).
+**Date:** 2026-07-09, browser pass 2026-07-10. **Branch:** `lo-ablation-bench` (master + #11873 + #11874 + bench-only toggles; never to be merged).
 **Context:** bhollis's #11868 review suggested that once the optimization PRs landed it would be worth "undoing optimizations that aren't that meaningful." This measures each optimization's individual contribution.
+
+> **READ THE BROWSER PASS SECTION FIRST.** The node/jest numbers below misled us
+> once: Rob observed a ~30s LO slowdown on the pr.dim.gg/11877 production build
+> that node could not reproduce at any scale. A Playwright harness running this
+> same matrix on the production bundle in real Chromium and Firefox
+> (`pnpm ablation:browser`) shows several optimizations that measured at noise
+> in jest are real wins in the shipping engines, and it reverses the removal
+> recommendations. The jest matrix remains useful for correctness assertions
+> and quick iteration, but the browser numbers are the ones that count.
 
 ## Method
 
@@ -67,19 +76,56 @@ Slicing (bench test 3, real profile, 60/bucket, 6 slices, minimums, exotic-free 
 - **autoModsMemo** (#11860): helps 1.06-1.20x when there's a single energy vector (packed number keys) but **hurts** badly with locked activity mods, where multiple energy vectors force the string-key path: removing the memo made that scenario 1.9x faster (60ms vs 32ms). Recommendation: keep the memo but bypass it when `remainingEnergyCapacities.length > 1`, i.e. never build string keys. bhollis was right to be suspicious of that path.
   **Validated:** with the gate applied (branch `lo-automods-memo-gate`, based on origin/master), the locked-mods scenario's all-on time dropped from ~60ms to 29.6ms, the memo ablation there flattened to 1.00x (no downside left), and the single-vector wins survived unchanged (1.22x vault showAll, 1.08x vault minimums). Results byte-identical in every scenario.
 
-**Removal candidates (no measurable value anywhere, per the <2% criterion):**
+**Removal candidates (SUPERSEDED by the browser pass below; kept for the record):**
 
-- **maxBoostMemo** (#11860, +62/-33 lines): 0.96-1.01x everywhere. The convergence gate and the cheap upper-bound check inside updateMaxStats already keep the binary search rare; the second memo layer never pays for itself.
-- **energyCache** (#11860, +43/-7 lines): 0.99-1.03x everywhere, including the locked-activity-mods scenario it targets.
-- **unrolledAdds** (#11860, ~12 lines): 0.98-1.02x. After the helper extraction in #11874 the manual unrolling no longer measures; plain loops read better.
-- **convergenceGate** (#11860, +28/-9 lines): 0.97-1.05x, borderline. Cheap to keep, cheap to drop; grouping it with the removals is defensible.
-- **interleaved slicing** (#11868, process-wrapper): no difference vs contiguous on this profile (5444 vs 5464ms). The code delta vs contiguous is small either way; reverting is optional but the data doesn't support keeping it on merit.
+The node numbers said these four measured under 2% everywhere and #11877 proposed removing them. Rob then observed a ~30s slower LO on the pr.dim.gg/11877 production build in Chrome, which node could not reproduce even with all four toggled off together (0.96-1.04x, +2.8% at 60 items/bucket). The browser pass explains it: three of the four are real optimizations in the shipping engines and only energyCache is free. See below.
+
+- **maxBoostMemo** (#11860, +62/-33 lines): 0.96-1.01x in node, **1.07x Chromium** on vault minimums.
+- **energyCache** (#11860, +43/-7 lines): 0.99-1.03x everywhere, in node and both browsers. The one genuinely free removal.
+- **unrolledAdds** (#11860, ~12 lines): 0.98-1.02x in node, **1.06-1.08x Chromium and 1.05-1.11x Firefox** on real scenarios. The original "engines don't unroll loops" comment was right about browsers; node was the outlier. Already dropped from #11877.
+- **convergenceGate** (#11860, +28/-9 lines): 0.97-1.05x in node, **1.20x Chromium / 1.16x Firefox** on vault showAll.
+- **interleaved slicing** (#11868, process-wrapper): no difference vs contiguous on this profile (5444 vs 5464ms, node, exotic-free corpus). Still needs a clean re-measure; its original commit recorded +16%.
+
+## Browser pass (2026-07-10, production bundle, Playwright)
+
+`pnpm ablation:browser` builds the same matrix into a real Web Worker through
+DIM's production rspack/babel pipeline and runs it in headless Chromium and
+Firefox (cross-origin isolated for fine timers), same interleaved min-over-5
+methodology, same result-equality checks. Real profile, 25 items/bucket.
+
+Key rows (removal cost, Chromium / Firefox):
+
+| Measurement | vault showAll | vault minimums |
+|---|---|---|
+| subtreePrune | 45.4x / 48.7x | 6.8x / 6.9x |
+| autoModsMemo | 1.05x / 1.09x | **1.51x / 1.54x** |
+| tuningPreGate | 1.05x / 1.07x | **1.28x / 1.33x** |
+| convergenceGate | **1.20x / 1.16x** | 1.05x / 1.03x |
+| unrolledAdds | **1.08x / 1.05x** | 1.06x / 1.05x |
+| maxBoostMemo | 1.02x / 1.00x | 1.07x / 1.05x |
+| energyCache | 1.00x / 1.00x | 0.99x / 1.03x |
+| strictBeat | 1.19x / 1.15x | 1.02x / 1.02x |
+| #11877 group (4 removals) | **1.28x / 1.20x** | **1.18x / 1.18x** |
+
+Also confirmed in-browser: the #11876 memo gate is worth **4.25x (Chromium) /
+3.05x (Firefox)** on the locked-activity-mods scenario, and highStatSort is
+worth up to **3.7x (Chromium) / 4.4x (Firefox)** on unsorted input. Firefox's
+vault-anyExotic rows are bimodal at the 7-12ms scale and should be ignored.
+
+**Revised verdict: keep everything.** Every optimization except energyCache
+measurably pays in at least one shipping engine, and energyCache's removal buys
+nothing but a slightly smaller file. The answer to the original "undo
+optimizations that aren't meaningful" question is that after measuring all of
+them individually and in combination, in node and in both browser engines, they
+are meaningful. The un-unroll incident is the standing lesson: **jest/node
+benchmarks are necessary but not sufficient for LO hot-loop decisions; the
+browser harness is the arbiter.**
 
 **Not measured, with reasons:**
 
 - **SoA layout** (#11860): structurally load-bearing; every prune reads it. Unmeasurable without a rewrite.
 - **Tail-resolved exotic tuning** (#11862): a feature as much as an optimization (its bounds feed subtreePrune); ablating it means restoring per-mod item expansion.
-- **Warm worker pool** (#11868): real Workers don't run under jest; it's a latency feature (saves worker spawn + comlink handshake per run), not throughput. Not measured in this study; a browser-side timing would be needed and wasn't attempted.
+- **Warm worker pool** (#11868): it's a latency feature (saves worker spawn + comlink handshake per run), not throughput, so the ablation methodology doesn't apply; the browser harness could time cold worker spawns if this ever needs a number.
 
 ## Bugs and gaps found by the harness
 
@@ -91,8 +137,12 @@ Slicing (bench test 3, real profile, 60/bucket, 6 slices, minimums, exotic-free 
 
 ```
 git checkout lo-ablation-bench
-# flip test.skip -> test in process.ablation.bench.test.ts, then:
+# node/jest matrix (fast iteration + correctness assertions):
 LO_BENCH_PROFILE=path/to/profile.json npx jest process.ablation --silent=false
+# browser matrix (the numbers that count); first time: pnpm exec playwright install chromium firefox
+LO_BENCH_PROFILE=path/to/profile.json pnpm ablation:browser
+#   options: --browsers=chromium,firefox --rounds=5 --flags=a,b+c --scenarios=vault
+#            --skip-fixtures --skip-build
 # parity under any ablation:
 LO_ABLATE=autoModsMemo npx jest process-parity
 ```
