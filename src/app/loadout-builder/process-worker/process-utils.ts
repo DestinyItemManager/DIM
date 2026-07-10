@@ -120,30 +120,6 @@ function getRemainingEnergiesPerAssignment(
   return { setEnergy, remainingEnergiesPerAssignment };
 }
 
-/**
- * Per-armor-set cache for the result of getRemainingEnergiesPerAssignment, so
- * updateMaxStats and pickOptimalStatMods compute it at most once per set. The
- * caller owns one instance and must clear `result` for each new armor set.
- */
-export interface SetEnergyCache {
-  result: ReturnType<typeof getRemainingEnergiesPerAssignment> | undefined;
-}
-
-function computeRemainingEnergies(
-  info: LoSessionInfo,
-  items: readonly ProcessItem[],
-  cache: SetEnergyCache | undefined,
-) {
-  if (cache?.result) {
-    return cache.result;
-  }
-  const result = getRemainingEnergiesPerAssignment(info.activityModPermutations, items);
-  if (cache) {
-    cache.result = result;
-  }
-  return result;
-}
-
 // How many extra points we need to add to each stat to hit the minimums. We
 // reuse a single array to avoid allocations.
 const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
@@ -165,8 +141,6 @@ export function updateMaxStats(
   desiredStatRanges: readonly DesiredStatRange[],
   /** Current stat ranges across all sets we've seen so far. */
   statRanges: MinMaxStat[], // mutated
-  /** Optional per-set cache shared with pickOptimalStatMods. */
-  energyCache?: SetEnergyCache,
 ): boolean {
   let foundAnyImprovement = false;
 
@@ -232,7 +206,10 @@ export function updateMaxStats(
       continue;
     }
 
-    remainingEnergyResult ??= computeRemainingEnergies(info, armor, energyCache);
+    remainingEnergyResult ??= getRemainingEnergiesPerAssignment(
+      info.activityModPermutations,
+      armor,
+    );
     const { remainingEnergiesPerAssignment, setEnergy } = remainingEnergyResult;
     const energyBudget = setEnergy - info.totalModEnergyCost;
 
@@ -410,13 +387,10 @@ export function pickOptimalStatMods(
   desiredStatRanges: DesiredStatRange[],
   /** Number of artifice items in the set, if the caller already knows it. */
   numArtificeMods?: number,
-  /** Optional per-set cache shared with updateMaxStats. */
-  energyCache?: SetEnergyCache,
 ): { mods: number[]; bonusStats: number[] } | undefined {
-  const { remainingEnergiesPerAssignment, setEnergy } = computeRemainingEnergies(
-    info,
+  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
+    info.activityModPermutations,
     items,
-    energyCache,
   );
   if (remainingEnergiesPerAssignment.length === 0) {
     // No valid activity mod assignments
