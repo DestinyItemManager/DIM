@@ -189,7 +189,7 @@ export async function buildSyntheticScenarios(): Promise<Scenario[]> {
   ];
 }
 
-async function loadRealVaultItems(perBucket: number): Promise<{
+export async function loadRealVaultItems(perBucket: number): Promise<{
   filteredItems: ProcessItemsByBucket;
   autoModOptions: ProcessInputs['autoModOptions'];
 }> {

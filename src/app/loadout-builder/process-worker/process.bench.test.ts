@@ -289,81 +289,6 @@ test.skip('benchmark process(): real vault', async () => {
   });
 }, 300000);
 
-// Build a real-vault ProcessItemsByBucket (see the real-vault test above).
-async function loadRealVaultItems(perBucket: number): Promise<{
-  filteredItems: ProcessItemsByBucket;
-  autoModOptions: ProcessInputs['autoModOptions'];
-}> {
-  const defs = await getTestDefinitions();
-  const profilePath = process.env.LO_BENCH_PROFILE;
-  const stores = profilePath
-    ? buildStores({
-        defs,
-        buckets: getBuckets(defs),
-        profileResponse: readProfileFixture(profilePath),
-        customStats: [],
-      })
-    : await getTestStores();
-  const autoModOptions = mapAutoMods(getAutoMods(defs, emptySet()));
-  const armorEnergyRules = {
-    assumeArmorMasterwork: AssumeArmorMasterwork.None,
-    minItemEnergy: MIN_LO_ITEM_ENERGY,
-  };
-  const bucketPredicates: [BucketHashes, (item: DimItem) => unknown][] = [
-    [BucketHashes.Helmet, isArmor2Helmet],
-    [BucketHashes.Gauntlets, isArmor2Arms],
-    [BucketHashes.ChestArmor, isArmor2Chest],
-    [BucketHashes.LegArmor, isArmor2Legs],
-    [BucketHashes.ClassArmor, isArmor2ClassItem],
-  ];
-  const helmsByClass = new Map<number, number>();
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (isArmor2Helmet(item)) {
-        helmsByClass.set(item.classType, (helmsByClass.get(item.classType) ?? 0) + 1);
-      }
-    }
-  }
-  const classType = [...helmsByClass.entries()].sort((a, b) => b[1] - a[1])[0][0];
-  const filteredItems: ProcessItemsByBucket = {
-    [BucketHashes.Helmet]: [],
-    [BucketHashes.Gauntlets]: [],
-    [BucketHashes.ChestArmor]: [],
-    [BucketHashes.LegArmor]: [],
-    [BucketHashes.ClassArmor]: [],
-  };
-  for (const store of stores) {
-    for (const item of store.items) {
-      if (item.classType !== classType) {
-        continue;
-      }
-      for (const [bucketHash, predicate] of bucketPredicates) {
-        if (predicate(item)) {
-          const mapped = mapDimItemToProcessItems({
-            dimItem: item,
-            armorEnergyRules,
-            desiredStatRanges,
-            autoStatMods: true,
-          })[0];
-          if (mapped) {
-            filteredItems[bucketHash as keyof ProcessItemsByBucket].push(mapped);
-          }
-        }
-      }
-    }
-  }
-  for (const bucketHash of ArmorBucketHashes) {
-    const items = filteredItems[bucketHash];
-    items.sort(
-      (a, b) =>
-        armorStats.reduce((t, h) => t + b.stats[h], 0) -
-        armorStats.reduce((t, h) => t + a.stats[h], 0),
-    );
-    items.splice(perBucket);
-  }
-  return { filteredItems, autoModOptions };
-}
-
 // Slice the longest bucket across `n` workers the way process-wrapper does
 // (contiguous) vs. round-robin (interleaved). Interleaving gives each worker a
 // representative stat mix, so their tracker floors — and thus how hard each can
@@ -400,7 +325,10 @@ function sliceLongestBucket(base: ProcessInputs, n: number, interleaved: boolean
 // slice sequentially (each worker is independent), reporting the wall-clock a
 // perfectly-parallel run would see (max slice) and the imbalance (max/min).
 test.skip('load balancing: contiguous vs interleaved', async () => {
-  const { filteredItems, autoModOptions } = await loadRealVaultItems(
+  // Use the exotic-inclusive corpus loader; the local one above shares the
+  // isArmor2* blind spot that excludes all exotics.
+  const { loadRealVaultItems: loadFixedCorpus } = await import('./ablation-corpus');
+  const { filteredItems, autoModOptions } = await loadFixedCorpus(
     Number(process.env.LO_BENCH_ITEMS) || 60,
   );
   const concurrency = Number(process.env.LO_BENCH_CORES) || 6;

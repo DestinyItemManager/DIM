@@ -84,7 +84,7 @@ The node numbers said these four measured under 2% everywhere and #11877 propose
 - **energyCache** (#11860, +43/-7 lines): 0.99-1.03x everywhere, in node and both browsers. The one genuinely free removal.
 - **unrolledAdds** (#11860, ~12 lines): 0.98-1.02x in node, **1.06-1.08x Chromium and 1.05-1.11x Firefox** on real scenarios. The original "engines don't unroll loops" comment was right about browsers; node was the outlier. Already dropped from #11877.
 - **convergenceGate** (#11860, +28/-9 lines): 0.97-1.05x in node, **1.20x Chromium / 1.16x Firefox** on vault showAll.
-- **interleaved slicing** (#11868, process-wrapper): no difference vs contiguous on this profile (5444 vs 5464ms, node, exotic-free corpus). Still needs a clean re-measure; its original commit recorded +16%.
+- **interleaved slicing** (#11868, process-wrapper): RESOLVED 2026-07-10, **keep it**. On the exotic-inclusive corpus (60/bucket, minimums, 6-way split): contiguous wall 55.6s at 2.01x imbalance vs interleaved wall 50.2s at 1.26x imbalance, ~10% wall and half the imbalance, consistent with the original +16% claim. The earlier "no difference" (5444 vs 5464ms) was an artifact of the exotic-free corpus.
 
 ## Browser pass (2026-07-10, production bundle, Playwright)
 
@@ -111,6 +111,15 @@ Also confirmed in-browser: the #11876 memo gate is worth **4.25x (Chromium) /
 3.05x (Firefox)** on the locked-activity-mods scenario, and highStatSort is
 worth up to **3.7x (Chromium) / 4.4x (Firefox)** on unsorted input. Firefox's
 vault-anyExotic rows are bimodal at the 7-12ms scale and should be ignored.
+
+**Scale note (explains the #11877 field report):** with exotics and their
+tuning variants in the corpus, a single worker at 60 items/bucket under
+minimums takes **236s** in node (9.5s exotic-free, a 25x difference), and a
+perfect 6-way split still runs ~50s wall. Real LO searches on a big vault live
+at this scale, so a 1.2-1.3x combined-removal cost is 10-30 seconds of wall
+time, exactly matching Rob's observation on pr.dim.gg/11877. It also marks the
+tuning-variant tail as the dominant cost under stat minimums, which is worth a
+look as a future optimization target.
 
 **Revised verdict: keep everything.** Every optimization except energyCache
 measurably pays in at least one shipping engine, and energyCache's removal buys
