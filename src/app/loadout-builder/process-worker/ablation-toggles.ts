@@ -20,6 +20,11 @@ export const ablation = {
   rangeSeeding: true,
   /** #11860: chooseAutoMods memoization (autoModsMemo packed keys). */
   autoModsMemo: true,
+  /**
+   * lo-automods-memo-gate: bypass the memo for multi-vector contexts (string
+   * keys). OFF restores the pre-gate behavior of memoizing everything.
+   */
+  memoGate: true,
   /** #11860: updateMaxStats max-boost memoization (maxBoostMemo). */
   maxBoostMemo: true,
   /** #11860: mayImproveMax convergence gate before updateMaxStats. */

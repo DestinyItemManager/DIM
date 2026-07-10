@@ -48,6 +48,8 @@ export interface LoSessionInfo {
   maxBoostMemo: Map<number | string, Map<number, number>>;
   /** Ablation bench only: whether to use autoModsMemo. */
   useAutoModsMemo: boolean;
+  /** Ablation bench only: whether the multi-vector memo bypass is active. */
+  useMemoGate: boolean;
   /** Ablation bench only: whether to use maxBoostMemo. */
   useMaxBoostMemo: boolean;
 }
@@ -80,6 +82,7 @@ export function precalculateStructures(
     autoModsMemo: new Map(),
     maxBoostMemo: new Map(),
     useAutoModsMemo: ablation.autoModsMemo,
+    useMemoGate: ablation.memoGate,
     useMaxBoostMemo: ablation.maxBoostMemo,
   };
 }
