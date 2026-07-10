@@ -220,7 +220,12 @@ function fmtCounters(result: ProcessResult): string {
   return `subtree ${s.subtreePruned} tuningGate ${s.tuningGatePruned} trackerFloor ${s.trackerFloorPruned} lowTier ${s.skippedLowTier} dblExotic ${s.doubleExotic} noExotic ${s.noExotic} perks ${s.insufficientPerks} setBonus ${s.insufficientSetBonus}`;
 }
 
-async function runScenario(scenario: Scenario, flags: AblationFlag[]) {
+// Restrict measurements to specific labels, e.g.
+// LO_BENCH_FLAGS=maxBoostMemo+energyCache+convergenceGate+unrolledAdds
+const FLAG_FILTER = process.env.LO_BENCH_FLAGS?.split(',');
+
+/** A measurement is one flag, or a group of flags toggled off together. */
+async function runScenario(scenario: Scenario, measurements: (AblationFlag | AblationFlag[])[]) {
   const { name, inputs } = scenario;
   // Warm both hot-path shapes.
   await timeOnce(inputs);
@@ -230,30 +235,40 @@ async function runScenario(scenario: Scenario, flags: AblationFlag[]) {
     `\n=== ${name}: combos ${allOnResult.combos} | valid ${allOnResult.processInfo.numValidSets} | returned ${allOnResult.sets.length}\n    counters: ${fmtCounters(allOnResult)}`,
   );
 
-  for (const flag of flags) {
-    if (scenario.relevant && !scenario.relevant.includes(flag)) {
+  for (const measurement of measurements) {
+    const group = Array.isArray(measurement) ? measurement : [measurement];
+    const label = group.join('+');
+    if (FLAG_FILTER && !FLAG_FILTER.includes(label)) {
       continue;
     }
+    if (scenario.relevant && !group.every((f) => scenario.relevant!.includes(f))) {
+      continue;
+    }
+    const setGroup = (value: boolean) => {
+      for (const f of group) {
+        ablation[f] = value;
+      }
+    };
     const onTimes: number[] = [];
     const offTimes: number[] = [];
     let offResult: ProcessResult | undefined;
     try {
       // Warm the OFF shape too before timing it.
-      ablation[flag] = false;
+      setGroup(false);
       await timeOnce(inputs);
-      ablation[flag] = true;
+      setGroup(true);
 
       for (let round = 0; round < ROUNDS; round++) {
-        ablation[flag] = true;
+        setGroup(true);
         const [tOn] = await timeOnce(inputs);
         onTimes.push(tOn);
-        ablation[flag] = false;
+        setGroup(false);
         const [tOff, r] = await timeOnce(inputs);
         offTimes.push(tOff);
         offResult ??= r;
       }
     } finally {
-      ablation[flag] = true;
+      setGroup(true);
     }
 
     // strictBeat (admission of ties) and highStatSort (visit order) change
@@ -261,7 +276,7 @@ async function runScenario(scenario: Scenario, flags: AblationFlag[]) {
     // asserted for them; parity covers the retained-set invariants. Everything
     // else must be exactly result-preserving.
     if (offResult) {
-      const orderSensitive = flag === 'strictBeat' || flag === 'highStatSort';
+      const orderSensitive = group.some((f) => f === 'strictBeat' || f === 'highStatSort');
       if (!orderSensitive) {
         expect(offResult.processInfo.numValidSets).toBe(allOnResult.processInfo.numValidSets);
         expect(offResult.sets.length).toBe(allOnResult.sets.length);
@@ -274,7 +289,7 @@ async function runScenario(scenario: Scenario, flags: AblationFlag[]) {
     const cost = offTimes[0] / onTimes[0];
     // eslint-disable-next-line no-console
     console.log(
-      `ABL ${name} | ${flag.padEnd(17)} on ${onTimes[0].toFixed(1).padStart(7)}ms  off ${offTimes[0]
+      `ABL ${name} | ${label.padEnd(17)} on ${onTimes[0].toFixed(1).padStart(7)}ms  off ${offTimes[0]
         .toFixed(1)
         .padStart(7)}ms  removal costs ${cost.toFixed(2)}x  (on ${onTimes
         .map((t) => t.toFixed(0))
@@ -282,6 +297,14 @@ async function runScenario(scenario: Scenario, flags: AblationFlag[]) {
     );
   }
 }
+
+/** The four removals proposed in #11877, toggled off together. */
+const removalCandidates: AblationFlag[] = [
+  'maxBoostMemo',
+  'energyCache',
+  'convergenceGate',
+  'unrolledAdds',
+];
 
 test('ablation: synthetic scenarios', async () => {
   const defs = await getTestDefinitions();
@@ -361,7 +384,7 @@ test('ablation: synthetic scenarios', async () => {
   ];
 
   for (const scenario of scenarios) {
-    await runScenario(scenario, synthFlags);
+    await runScenario(scenario, [...synthFlags, removalCandidates]);
   }
 }, 600000);
 
@@ -402,6 +425,6 @@ test('ablation: real vault scenarios', async () => {
   ];
 
   for (const scenario of scenarios) {
-    await runScenario(scenario, ablationFlags);
+    await runScenario(scenario, [...ablationFlags, removalCandidates]);
   }
 }, 600000);
