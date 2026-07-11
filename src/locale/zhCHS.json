@@ -66,7 +66,7 @@
     "Title_other": "更改 {{count}} 个物品的备注"
   },
   "BungieAlert": {
-    "Title": "一则来自Bungie的信息:"
+    "Title": "一则来自Bungie的信息："
   },
   "BungieService": {
     "AppNotPermitted": "DIM 没有权限执行此操作。",
@@ -121,7 +121,7 @@
     "Days_other": "{{count}} 天"
   },
   "Csv": {
-    "EmptyFile": "文件中没有行",
+    "EmptyFile": "文件中没有行。",
     "ImportConfirm": "您确定要从CSV导入标签/笔记？这将覆盖您电子表格中所包含的所有项目/标记。",
     "ImportFailed": "从 CSV 导入标签/注释失败: {{error}}",
     "ImportSuccess_other": "为{{count}} 个物品加载的标签/注释。",
@@ -205,7 +205,7 @@
     "BulkRevert_other": "恢复 {{count}} 件物品标签。",
     "BulkTag_other": "将 {{count}} 件选择物品标记为 {{tag}}。",
     "Catalyst": "按状态显示催化。catalyst:complete 显示你已解锁并应用的催化，catalyst:incomplete 显示你已解锁但尚未完成目标且应用的催化，而 catalyst:missing 显示你尚未解锁催化的物品。",
-    "Class": "按照职业类别显示.",
+    "Class": "按照职业类别显示。",
     "Combine": "可以用括号来组合过滤器，或用“or”和“and”来进一步筛选你的搜索，例如“{{example}}”。",
     "ContributePower": "显示拥有光等的物品。",
     "Cosmetic": "显示饰品或装饰物品。",
@@ -214,7 +214,7 @@
     "Curated": "显示拥有指定特性的物品。",
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑任意自定义属性总和里的属性。",
-    "DamageType": "按照伤害类型显示.",
+    "DamageType": "按照伤害类型显示。",
     "Deepsight": "显示可提取模式或可通过深视协调器激活深视共振的武器。",
     "Deprecated": "此过滤器已不受支持。",
     "Description": "描述",
@@ -249,31 +249,31 @@
     "Foundry": "按武器铸造厂显示物品。",
     "Glimmer": "显示与增加微光获取有关的消耗品。",
     "Harrowed": "（痛苦）",
-    "HasNotes": "显示已有备注的物品",
+    "HasNotes": "显示已有备注的物品。",
     "HasOrnament": "显示已应用皮肤的物品。",
-    "HasShader": "显示已应用着色器的物品",
+    "HasShader": "显示已应用着色器的物品。",
     "Holofoil": "显示带有全息箔的武器。",
     "InDimLoadout": "is:indimgameloadout 指令会显示全部DIM配装中的物品。",
     "InInGameLoadout": "is:iningameloadout 指令会显示任何游戏内配装系统保存的物品。",
     "InInventory": "显示在库存中已拥有的物品。仅在商贩和记录页面中有效。",
     "InLoadout": "is:inloadout 指令显示在全部配装中包含的物品。在 inloadout: 指令下搜索可显示所有配装中的与搜索名称相符的物品。在 inloadout: 指令后使用#标签可显示配装中有含有该标签的物品或注释。若指定范围，则显示在多个配装中的物品。",
-    "Infusable": "显示可以灌注的物品.",
+    "Infusable": "显示可以灌注的物品。",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
     "IsAdept": "显示可安装专家模组的武器。",
     "IsCrafted": "显示制作获取的武器。",
     "ItemHash": "显示具有给定物品 hash 的物品。此为高级用户选项。",
     "ItemId": "显示具有给定物品 ID 的物品。此为高级用户选项。",
     "Leveling": {
-      "Complete": "{{term}}-显示完全完成的物品-每次升级均解锁.",
-      "Incomplete": "{{term}}-显示尚未完成的物品-至少升一级才能解锁.",
-      "NeedsXP": "{{term}} - 显示仍能获得经验值的物品.",
+      "Complete": "{{term}}-显示完全完成的物品-每次升级均解锁。",
+      "Incomplete": "{{term}}-显示尚未完成的物品-至少升一级才能解锁。",
+      "NeedsXP": "{{term}} - 显示仍能获得经验值的物品。",
       "Upgraded": "{{term}}-显示具有足够 XP 解锁其所有节点的物品， 但并非所有节点都已解锁。",
       "XPComplete": "{{term}}-显示无法获得更多XP的物品 (无论升级是否完成)。"
     },
     "Location": "根据物品在App中的位置排列。左/中/右显示您的角色信息，您的角色会显示在最左边，中间和右边是否会显示角色取决于您一共创建了几位角色。现在显示的您已经登陆的角色(有黄色三角的那个)。",
     "LockAllFailed": "锁定道具失败",
     "LockAllSuccess": "已经锁定 {{num}} 件道具",
-    "Locked": "根据物品锁定状态显示.",
+    "Locked": "根据物品锁定状态显示。",
     "Masterwork": "按大师杰作属性或等级显示物品。",
     "MasterworkKills": "按大师杰作击杀追踪器显示物品。",
     "MaxPower": "显示每个槽位最高光等的物品。",
@@ -284,25 +284,25 @@
       "Y3": "显示已应用模组的装备。"
     },
     "Name": "使用 (exactname:) 精确搜索某名称的物品，或使用 (name:) 搜索部分匹配某名称的物品。使用引号搜索整个词条。",
-    "NamedStat": "显示重要防具.",
+    "NamedStat": "显示重要防具。",
     "Negate": "要否定搜索，为搜索添加一个减号或单词“not”前缀，例如“{{notexample}}”或“{{notexample2}}”。",
     "Notes": "搜索已添加了自定义备注的物品。",
     "OriginTrait": "显示具有原始perk的武器。",
-    "Ornament": "显示带有装饰物和过滤器的物品.",
+    "Ornament": "显示带有装饰物和过滤器的物品。",
     "PartialMatch": "显示名称/描述/特性/模组与筛选器部分匹配的物品。使用引号来搜索包含空格的文本。",
     "PatternUnlocked": "显示制作样式已解锁的武器，即使该武器并非制造而来。",
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
     "PerkName": "使用 (exactperk:) 精确搜索某特性或模组的物品，或使用 (perkname:) 搜索部分匹配某特性或模组的物品。使用引号搜索整个词条。",
     "PinnacleReward": "显示提供巅峰奖励的追猎目标。",
-    "Postmaster": "目前在邮政官处的物品.",
+    "Postmaster": "目前在邮政官处的物品。",
     "PowerKeywords": "使用 pinnaclecap 或 softcap 关键字而不是数字来表达当前赛季的光等限制。",
     "PowerLevel": "按能量等级显示物品。$t(Filter.PowerKeywords)",
     "PowerfulReward": "显示提供强力奖励的追猎目标。",
     "PrismaticDamageType": "根据伤害类型为光能或暗影来显示物品。光能类型为电弧，烈日和虚空。暗影类型为冰影和缚丝。",
-    "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'.",
-    "RandomRoll": "显示可以随机特性掉落的物品",
-    "RarityTier": "按照稀有度显示.",
-    "Reforgeable": "显示可以在造枪匠那里重新锻造的物品.",
+    "Quality": "根据其统计品质百分比来显示物品'{{percentage}}'别名'{{quality}}'。",
+    "RandomRoll": "显示可以随机特性掉落的物品。",
+    "RarityTier": "按照稀有度显示。",
+    "Reforgeable": "显示可以在造枪匠那里重新锻造的物品。",
     "Release": "显示在特定版本或事件中可用的物品。",
     "RequiredLevel": "根据等级需求显示物品。",
     "RetiredPerk": "显示带有已无法获取特性的武器。",
@@ -338,11 +338,11 @@
     "WeaponLevel": "按武器等级显示武器。",
     "WeaponType": "按武器类型显示武器。",
     "Wishlist": "显示处于您的愿望单中的物品。",
-    "WishlistDupe": "显示有至少一个复制品在你愿望单中的物品堆叠",
+    "WishlistDupe": "显示有至少一个复制品在你愿望单中的物品堆叠。",
     "WishlistEnabled": "显示与愿望清单特性组合相匹配的物品。",
-    "WishlistNotes": "显示与搜索相匹配的愿望清单物品",
+    "WishlistNotes": "显示与搜索相匹配的愿望清单物品。",
     "WishlistUnknown": "显示愿望清单中没有特性推荐的物品。",
-    "Year": "按照物品推出年份显示."
+    "Year": "按照物品推出年份显示。"
   },
   "General": {
     "ClickForDetails": "点击查看详情",
@@ -365,7 +365,7 @@
     "Quickfall": "急坠",
     "RespawnRestricted": "重生受限",
     "ScorchCannon": "灼烧发射器",
-    "SearchSymbols": "搜索符号...",
+    "SearchSymbols": "搜索符号……",
     "Smoke": "烟幕"
   },
   "Header": {
@@ -379,7 +379,7 @@
     "FilterHelp": "搜索物品、特性、{{example}}，和更多",
     "FilterHelpBrief": "搜索物品",
     "FilterHelpLoadouts": "搜索配装名称和备注",
-    "FilterHelpMenuItem": "过滤器帮助...",
+    "FilterHelpMenuItem": "过滤器帮助……",
     "FilterHelpOptimizer": "过滤包含在配装中的护甲，如 {{example}}",
     "FilterHelpProgress": "搜索里程碑和悬赏",
     "FilterHelpRecords": "搜索成就和收藏品",
@@ -406,13 +406,13 @@
     "WhatsNew": "新增内容"
   },
   "Help": {
-    "CannotMove": "无法从该角色中移出物品.",
+    "CannotMove": "无法从该角色中移出物品。",
     "NoStorage": "DIM无法存储数据",
     "NoStorageMessage": "DIM 无法在你的浏览器中存储数据。这可能是因为你在使用无痕或隐身模式，或磁盘空间不足。请尝试重启你的电脑！在修解决此问题前你将无法登录或使用 DIM。"
   },
   "Hotkey": {
     "Armory": "显示物品详情",
-    "CheatSheetTitle": "键盘快捷键",
+    "CheatSheetTitle": "键盘快捷键：",
     "ClearDialog": "关闭对话",
     "Enter": "回车",
     "ItemPopupTab": "切换至物品细节页面",
@@ -479,23 +479,23 @@
   },
   "ItemMove": {
     "Consolidate": "合并{{name}}",
-    "Distributed": "拆分{{name}}\n{{name}} 已平均拆分于所有角色上.",
+    "Distributed": "拆分{{name}}\n{{name}} 已平均拆分于所有角色上。",
     "MovingItem": "转移到保险柜",
     "MovingItem_female": "转移到{{target}}",
     "MovingItem_male": "转移到{{target}}",
-    "ToStore": "所有{{name}} 都已移动至您的 {{store}} 之中.",
-    "ToVault": "所有 {{name}} 都已移动至您的保险库之中."
+    "ToStore": "所有{{name}} 都已移动至您的 {{store}} 之中。",
+    "ToVault": "所有 {{name}} 都已移动至您的保险库之中。"
   },
   "ItemPicker": {
-    "ChooseItem": "选择一件物品:",
+    "ChooseItem": "选择一件物品：",
     "SearchPlaceholder": "搜索物品"
   },
   "ItemService": {
     "BucketFull": {
-      "Guardian": "您的{{store}} 上有太多 “{{itemtype}}” 的物品.",
-      "Guardian_female": "您的{{store}} 上有太多 “{{itemtype}}” 的物品.",
-      "Guardian_male": "您的{{store}} 上有太多 “{{itemtype}}” 的物品.",
-      "Vault": "您的{{store}} 上有太多 “{{itemtype}}” 的物品."
+      "Guardian": "您的{{store}} 上有太多 “{{itemtype}}” 的物品。",
+      "Guardian_female": "您的{{store}} 上有太多 “{{itemtype}}” 的物品。",
+      "Guardian_male": "您的{{store}} 上有太多 “{{itemtype}}” 的物品。",
+      "Vault": "您的{{store}} 上有太多 “{{itemtype}}” 的物品。"
     },
     "Classified": "该物品是加密的，现在无法被转移。",
     "Classified2": "加密物品。Bungie 尚未提供该物品的相关信息。为该物品添加备注，以方便您使用搜索过滤器找到它。",
@@ -533,13 +533,13 @@
     "Current": "当前",
     "Equip": "装备在{{character}}",
     "Exclude": "已排除的物品",
-    "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
+    "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组。",
     "ExistingBuildStats": "现有配装属性",
     "ExistingBuildStatsNote": "仅显示更高属性的配装。",
     "FilterSets": "组合过滤",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
-      "ChangeNodes": "如要创建一个配装,请改变智力,训练和力量的比例,如图所示.",
+      "ChangeNodes": "如要创建一个配装,请改变智力,训练和力量的比例,如图所示。",
       "Discipline": "训练可以加速手榴弹的充能时间",
       "DragAndDrop": "拖放一个物品到选择框内以创建一个具有该特定装甲的配装",
       "Help": "需要帮助吗？",
@@ -550,9 +550,9 @@
       "NoPerk": "如果没有显示特性(Perk)，则代表你未拥有带有这个特性(Perk) 的防具",
       "Or": "将使用具有任何这些特性(Perk) 的防具(\"or\")",
       "ShiftClick": "Shift+单击创建一项空白的套装组",
-      "StatsIncrease": "当一项物品的防御等级增加时,该物品的(智力/训练/力量)数据也会增加.",
+      "StatsIncrease": "当一项物品的防御等级增加时,该物品的(智力/训练/力量)数据也会增加。",
       "Strength": "力量会加速近战的充能时间",
-      "Synergy": "寻找能增加当前武器载弹量的防具特性(Perk).",
+      "Synergy": "寻找能增加当前武器载弹量的防具特性(Perk)。",
       "Tier11Example": "4/5/2(11级)代表智力4、训练5、力量2(4+5+2=11级)"
     },
     "HideAllConfigs": "隐藏所有配置",
@@ -560,20 +560,20 @@
     "IncompatibleWithOptimizer": "此物品与优化器不兼容。请从收藏中重新获取一个新版本。",
     "LB": "配装优化器",
     "LightMode": {
-      "HelpCurrent": "计算当前防御等级.",
-      "HelpScaled": "计算使所有角色都都拥有350防御.",
+      "HelpCurrent": "计算当前防御等级。",
+      "HelpScaled": "计算使所有角色都都拥有350防御。",
       "LightMode": "光亮模式"
     },
     "Loading": "正在载入最佳套装",
     "LockEquipped": "锁定装备",
     "LockPerk": "锁定特性",
     "Locked": "锁定的物品",
-    "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品.",
-    "Missing2": "缺少稀有,传奇,或异域物品用来打造套装!",
+    "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品。",
+    "Missing2": "缺少稀有,传奇,或异域物品用来打造套装！",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
-      "HelpFast": "只看你最好的装备.",
+      "HelpFast": "只看你最好的装备。",
       "HelpFull": "查看更多装备，但是需要更长时间。",
       "ProcessingMode": "处理模式"
     },
@@ -596,11 +596,11 @@
     "Vendor": "包括商贩物品"
   },
   "Loading": {
-    "Accounts": "正在加载命运账户...",
-    "Code": "正在加载 DIM 代码...",
-    "FilterHelp": "正在加载搜索帮助...",
-    "Profile": "正在加载命运档案...",
-    "Vendors": "正在加载命运商人..."
+    "Accounts": "正在加载命运账户……",
+    "Code": "正在加载 DIM 代码……",
+    "FilterHelp": "正在加载搜索帮助……",
+    "Profile": "正在加载命运档案……",
+    "Vendors": "正在加载命运商人……"
   },
   "LoadoutAnalysis": {
     "Analyzed": "已分析 {{numLoadouts}} 个配装",
@@ -689,9 +689,8 @@
     "ExistingLoadout": "已有配装",
     "Exotic": "异域护甲",
     "ExoticSpecialCategory": "特殊",
-    "ExoticTuningNote": "锁定一件特定的异域装备，或选择任意异域装备，并同时考虑其调整模组。",
     "Filter": "设置",
-    "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性。",
+    "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性",
     "IncreaseStatPriority": "提高属性优先级",
     "Legendary": "传说",
     "LockItem": "固定物品",
@@ -717,7 +716,7 @@
       "Perks": "DIM 无法构建包含全部所选护甲特性的配装。",
       "RemoveMods": "移除这些模组",
       "RemoveSetBonuses": "尝试移除一些套装加成",
-      "SetBonuses": "没有合适的装备用于激活选中的套装加成"
+      "SetBonuses": "没有合适的装备用于激活选中的套装加成。"
     },
     "NoExotic": "非异域",
     "NoExoticDescription": "等同于在搜索栏中搜索“not:exotic” ，即配装将不含任何异域护甲。",
@@ -732,11 +731,11 @@
     "OptimizerSet": "优化器组合",
     "PinnedItems": "固定物品",
     "PinnedItemsFinePrint": "搜索过滤器已被保存在配装优化器设置中，但不含固定物品和排除物品。当 DIM 发现存在更高属性的配装时，固定物品和排除物品将被忽略。",
-    "ProcessingSets": "寻找最高属性配装…",
+    "ProcessingSets": "寻找最高属性配装……",
     "SaveAs": "保存为",
     "SetBonus": "套装加成",
     "SetBonusModWarning": "组合中包含带有可配置套装加成模组的装备。手动应用正确的模组以激活所需的套装加成。",
-    "SpeedReport": "在 {{time}} 秒内使用 {{cpus}} 个 CPU 核心生成了 {{combos, number}} 个组合",
+    "SpeedReport": "在 {{time}} 秒内使用 {{cpus}} 个 CPU 核心生成了 {{combos, number}} 个组合。",
     "StatConstraints": "属性优先级和范围",
     "StatMax": "最大值",
     "StatMin": "最小值",
@@ -838,7 +837,7 @@
     "MakeRoomDone_female_other": "通过从{{store}} 上移动了{{movedNum}} 项物品，成功为邮政官腾出了{{count}} 个物品空间。",
     "MakeRoomDone_male_other": "通过从{{store}} 上移动了{{movedNum}} 项物品，成功为邮政官腾出了{{count}} 个物品空间。",
     "MakeRoomDone_other": "通过从{{store}} 上移动了{{movedNum}} 项物品，成功为邮政官腾出了{{count}} 个物品空间。",
-    "MakeRoomError": "无法为邮政官腾出物品空间:{{error}}.",
+    "MakeRoomError": "无法为邮政官腾出物品空间:{{error}}。",
     "ManageLoadouts": "管理配装",
     "MaxSlots": "一个配装里最多只能有 {{slots}} 个{{bucketName}}。",
     "MaximizeLight": "最大光等",
@@ -879,7 +878,7 @@
       "Super": "超能"
     },
     "PullFromPostmaster": "从邮政官处取回物品",
-    "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}.",
+    "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}。",
     "PullFromPostmasterGeneralError": "无法从邮政官拉取所有物品。",
     "PullFromPostmasterNotification_female_other": "正在从邮政官处取回{{count}} 项物品至{{store}}。",
     "PullFromPostmasterNotification_male_other": "正在从邮政官处取回{{count}} 项物品至{{store}}。",
@@ -889,7 +888,7 @@
     "Randomize": "随机配装",
     "RandomizeButton": "随机搭配",
     "RandomizeNew": "随机创建",
-    "RandomizeQueryHint": "提示：请先搜索物品以限制随机物品池",
+    "RandomizeQueryHint": "提示：请先搜索物品以限制随机物品池。",
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
     "Redo": "重做",
@@ -932,7 +931,7 @@
     "SubclassOptionsSearch": "搜索{{subclass}}选项",
     "Succeeded": "配装成功",
     "SyncFromEquipped": "同步已装备物品",
-    "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
+    "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的。",
     "TuningMods": "调整模组",
     "UnassignedModError": "模组不适合你当前的护甲",
     "Undo": "撤销",
@@ -941,9 +940,9 @@
     "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除："
   },
   "Manifest": {
-    "Download": "正在从 Bungie 下载最新的命运信息数据库...",
+    "Download": "正在从 Bungie 下载最新的命运信息数据库……",
     "Error": "加载命运信息数据库时出错：\n{{error}}\n请刷新重试。",
-    "Load": "正在加载命运信息数据库..."
+    "Load": "正在加载命运信息数据库……"
   },
   "Milestone": {
     "Daily": "每日挑战",
@@ -1025,8 +1024,8 @@
     "WeaponLevel": "武器等级 {{level}}"
   },
   "Notes": {
-    "Error": "错误! 备注不能超过120个字符.",
-    "Help": "添加备注、#标签、和 :符号:"
+    "Error": "错误! 备注不能超过120个字符。",
+    "Help": "添加备注、#标签、和 :符号："
   },
   "Notification": {
     "Cancel": "取消",
@@ -1236,7 +1235,7 @@
     "SortByRating": "护甲质量（D1）",
     "SortByRecent": "最近获得（D2）",
     "SortBySeason": "赛季（D2）",
-    "SortByTag": "标签{{taglist}}",
+    "SortByTag": "标签({{taglist}})",
     "SortByTier": "阶级（D2）",
     "SortByType": "类型",
     "SortByWeaponElement": "伤害类型",
@@ -1289,8 +1288,8 @@
     "DamageResistance": "PvE伤害减免",
     "Discipline": "训练",
     "DropLevel": "账户光等",
-    "DropLevelExplanation1": "账户光等是计算奖励包裹提升光等时的基准值",
-    "DropLevelExplanation2": "账户光等取决于每个装备栏最高光等的物品，而不考虑装备的职业要求或只能同时装备一件异域护甲/武器的规则",
+    "DropLevelExplanation1": "账户光等是计算奖励包裹提升光等时的基准值。",
+    "DropLevelExplanation2": "账户光等取决于每个装备栏最高光等的物品，而不考虑装备的职业要求或只能同时装备一件异域护甲/武器的规则。",
     "EquippableGear": "可用装备",
     "FlinchResistance": "退缩抗性",
     "HP": "生命值",
@@ -1303,9 +1302,9 @@
     "NoBonus": "无加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
-    "PercentHelp": "点击获取更多关于品质属性的信息.",
+    "PercentHelp": "点击获取更多关于品质属性的信息。",
     "Percentage": "%",
-    "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5明亮之尘之前.",
+    "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5明亮之尘之前。",
     "Quality": "品质",
     "ShieldHP": "护盾容量",
     "StrafingSpeed": "侧向移动速度",
@@ -1383,13 +1382,13 @@
     "MissingAuthorization": "您必须授权 Stream Deck 应用程序连接 DIM。请在设置中点击“连接应用程序”。",
     "Tooltip": {
       "Application": "Stream Deck 应用程序",
-      "AuthRequired": "点击此按钮或在设置中点击“连接应用程序”",
+      "AuthRequired": "点击此按钮或在设置中点击“连接应用程序”。",
       "Error": "您的 Stream Deck 插件已不受支持，请更新到最新版本。此插件的最低版本要求：",
       "ErrorConnection": "如果您已经在使用最新版本，请检查某些浏览器扩展是否正在阻止连接。",
       "ExtensionIssue": "扩展问题",
       "Plugin": "插件",
       "Title": "DIM Stream Deck 插件",
-      "Version": "版本:"
+      "Version": "版本："
     }
   },
   "StripSockets": {
@@ -1431,7 +1430,7 @@
     "HighStats": "高属性",
     "InLoadouts": "在配装中",
     "OwnedCount": "# 已拥有",
-    "PerkBetterArmorDesc": "相同、更多特性，或特殊模组槽位的护甲",
+    "PerkBetterArmorDesc": "相同、更多特性，或特殊模组槽位的护甲。",
     "PerkWorseArmorDesc": "固有特性相同或不存在。",
     "SimilarItems": "相似物品",
     "StatBetterArmorDesc": "所有属性均持平，并有至少一个属性更高。",
@@ -1478,15 +1477,15 @@
       "FAQMobile": "DIM支持移动端吗？是否会提供一个APP？",
       "FAQMobileAnswer": "DIM网站已可以在手机和平板上加载，您可以将其添加至主页以获得应用一样的体验。",
       "GitHub": "Github",
-      "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址！",
+      "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址。",
       "Header": "DIM (命运物品管理器)",
-      "HowItsMade": "DIM是一个由社区开发者在Bungie.net和Destiny Companion 应用程序使用的同类服务基础上开发的免费、开源的应用",
+      "HowItsMade": "DIM是一个由社区开发者在Bungie.net和Destiny Companion 应用程序使用的同类服务基础上开发的免费、开源的应用。",
       "Schedule": {
-        "beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
+        "beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦！",
         "release": "此版本的DIM将于太平洋时间的每周日午夜进行例行版本更新。"
       },
       "Translation": "加入翻译小组！",
-      "TranslationText": "我们使用 {{link}} 工具来使得翻译工作更加简便。如果您希望为 DIM 的语言翻译出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",
+      "TranslationText": "我们使用 {{link}} 工具来使得翻译工作更加简便。如果您希望为 DIM 的语言翻译出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧。",
       "Version": "当前版本 {{version}} ({{flavor}})，编译于：{{date}}",
       "Wiki": "DIM 用户指南",
       "WikiHelp": "了解 DIM 各项功能的使用方法。"
@@ -1497,7 +1496,7 @@
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "了解账户与登录",
       "NewAccount": "使用其他 Bungie.net 账户登录",
-      "Permission": "我们需要您的授权"
+      "Permission": "我们需要您的授权……"
     },
     "Support": {
       "BackersDetail": "您可以选择一次性捐助或者每月捐助，以便我们能更加积极地开发。",

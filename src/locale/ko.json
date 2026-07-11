@@ -689,7 +689,6 @@
     "ExistingLoadout": "기존 로드아웃",
     "Exotic": "경이 방어구",
     "ExoticSpecialCategory": "특수",
-    "ExoticTuningNote": "Lock a specific exotic, or choose Any Exotic, to also consider its tuning mods.",
     "Filter": "설정",
     "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
     "IncreaseStatPriority": "능력치 우선도 증가",
