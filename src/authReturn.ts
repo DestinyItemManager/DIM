@@ -5,18 +5,6 @@ import { getAccessTokenFromCode } from './app/bungie-api/oauth';
 import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/sentry';
 
-/**
- * The OAuth `state` Bungie sends back has to match the random value we generated
- * and stored before redirecting to login. A missing stored value (or a missing
- * returned state) must count as a mismatch: otherwise a callback that carries no
- * state at all satisfies a plain equality check whenever localStorage is empty
- * (both sides are `null`), which would let someone hand a victim a return link
- * with an attacker-supplied `code` and sign them into the wrong account.
- */
-export function authStateMatches(state: string | null, storedState: string | null): boolean {
-  return Boolean(storedState) && state === storedState;
-}
-
 async function handleAuthReturn() {
   const queryParams = new URL(window.location.href).searchParams;
   const code = queryParams.get('code');
@@ -35,7 +23,10 @@ async function handleAuthReturn() {
   }
 
   const authorizationState = localStorage.getItem('authorizationState');
-  if (!authStateMatches(state, authorizationState)) {
+  // A missing stored state must count as a mismatch: without the `!authorizationState`
+  // guard a callback carrying no state passes on an empty localStorage (null !== null
+  // is false), which would exchange an attacker-supplied code into the victim's session.
+  if (!authorizationState || state !== authorizationState) {
     let error = "We expected the state parameter to match what we stored, but it didn't.";
     if (!authorizationState || authorizationState.length === 0) {
       error +=
@@ -71,8 +62,4 @@ function setError(error: string) {
   document.getElementById('user-agent')!.textContent = navigator.userAgent;
 }
 
-// Skip the automatic run under unit tests so the state check can be imported and
-// exercised in isolation.
-if ($DIM_FLAVOR !== 'test') {
-  handleAuthReturn();
-}
+handleAuthReturn();
