@@ -7,9 +7,11 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
 import { AppIcon, shoppingCart } from 'app/shell/icons';
 import { isEventArmorRerollSocket, trustBungieVisibility } from 'app/utils/socket-utils';
+import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { use } from 'react';
 import { pickPlugPositions } from '../mod-assignment-utils';
 import PlugDef from './PlugDef';
 import * as styles from './Sockets.m.scss';
@@ -33,11 +35,13 @@ function Sockets({
   size,
   onSocketClick,
   automaticallyPickedMods,
+  storeId,
 }: {
   item: DimItem;
   lockedMods?: PluggableInventoryItemDefinition[];
   automaticallyPickedMods?: number[];
   size?: 'small';
+  storeId: string;
   onSocketClick?: (
     plugDef: PluggableInventoryItemDefinition,
     /** An allow-list of plug category hashes that can be inserted into this socket */
@@ -112,7 +116,11 @@ function Sockets({
   }
 
   return (
-    <div className={clsx(styles.lockedItems, { [styles.small]: size === 'small' })}>
+    <div
+      className={clsx(styles.lockedItems, {
+        [styles.small]: size === 'small',
+      })}
+    >
       {modsAndWhitelist.map(({ plugDef, whitelist, automaticallyPicked }, index) => (
         <PlugDef
           className={clsx({ [styles.automaticallyPicked]: automaticallyPicked })}
@@ -123,15 +131,16 @@ function Sockets({
           item={item}
         />
       ))}
-      {item.vendor && <VendorItemPlug item={item} />}
+      {item.vendor && <VendorItemPlug item={item} storeId={storeId} />}
     </div>
   );
 }
 
-function VendorItemPlug({ item }: { item: DimItem }) {
+function VendorItemPlug({ item, storeId }: { item: DimItem; storeId: string }) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer(item.owner);
   const vendorDef = defs.Vendor.get(item.vendor!.vendorHash);
+  const showVendor = use(SingleVendorSheetContext)!;
   return (
     <PressTip
       elementType="span"
@@ -144,7 +153,15 @@ function VendorItemPlug({ item }: { item: DimItem }) {
         );
       }}
     >
-      <div className={clsx('item', styles.vendorItem)}>
+      <div
+        className={clsx('item', styles.vendorItem)}
+        onClick={() =>
+          showVendor?.({
+            characterId: storeId,
+            vendorHash: item.vendor!.vendorHash,
+          })
+        }
+      >
         <AppIcon icon={shoppingCart} />
       </div>
     </PressTip>
