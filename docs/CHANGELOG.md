@@ -1,6 +1,7 @@
 ## Next
 
 * Reject Bungie OAuth callbacks whose state parameter is missing when no state was stored, closing a login CSRF where an attacker-supplied code could be exchanged.
+* The Loadout Optimizer is up to 2x faster when activity mods are locked.
 
 ## 8.133.0 <span class="changelog-date">(2026-07-12)</span>
 
