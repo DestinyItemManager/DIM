@@ -182,7 +182,7 @@ export default memo(function LoadoutBuilder({
     [resolvedMods, autoStatMods],
   );
 
-  const { vendorItems, vendorItemsLoading } = useLoVendorItems(selectedStoreId);
+  const { vendorItems } = useLoVendorItems(selectedStoreId);
   const armorItems = useArmorItems(classType, vendorItems);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
@@ -285,9 +285,6 @@ export default memo(function LoadoutBuilder({
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
     strictUpgrades: Boolean(strictUpgradesStatConstraints && !mergedConstraintsImplyStrictUpgrade),
-    // Vendor items get merged into the process inputs once they load, so
-    // starting before that just wastes a run that immediately gets restarted.
-    pauseProcessing: vendorItemsLoading,
   });
 
   const resultSets = result?.sets;

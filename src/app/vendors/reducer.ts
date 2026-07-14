@@ -16,12 +16,6 @@ export interface VendorsState {
       /** ms epoch time */
       lastLoaded?: number;
       error?: Error;
-      /**
-       * Whether the first load has settled, including the follow-up per-vendor
-       * item component fetches. Stays true across refreshes, since the
-       * existing data remains usable while it updates.
-       */
-      fullyLoaded?: boolean;
     };
   }>;
   showUnacquiredOnly: boolean;
@@ -51,7 +45,6 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
           vendorsResponse: vendorsResponse,
           lastLoaded: Date.now(),
           error: undefined,
-          fullyLoaded: state.vendorsByCharacter[characterId]?.fullyLoaded,
         };
         if (oldItemComponents) {
           draft.vendorsByCharacter[characterId].vendorsResponse!.itemComponents = oldItemComponents;
@@ -95,20 +88,6 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
           [characterId]: {
             ...state.vendorsByCharacter[characterId],
             error,
-          },
-        },
-      };
-    }
-
-    case getType(actions.finishedLoading): {
-      const { characterId } = action.payload;
-      return {
-        ...state,
-        vendorsByCharacter: {
-          ...state.vendorsByCharacter,
-          [characterId]: {
-            ...state.vendorsByCharacter[characterId],
-            fullyLoaded: true,
           },
         },
       };
