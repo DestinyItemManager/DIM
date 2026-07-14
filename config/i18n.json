@@ -611,6 +611,7 @@
     },
     "Scaled": "Scaled",
     "SearchAMod": "Search for mod name or description",
+    "SearchASetBonus": "Search for set bonus name, perk name or description",
     "SearchAnExotic": "Search for exotic name or description",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",

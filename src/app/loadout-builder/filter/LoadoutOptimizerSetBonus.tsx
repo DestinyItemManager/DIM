@@ -1,5 +1,6 @@
 import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { languageSelector } from 'app/dim-api/selectors';
 import Sheet from 'app/dim-ui/Sheet';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { TileGrid, TileGridTile } from 'app/dim-ui/TileGrid';
@@ -12,10 +13,17 @@ import { setBonusModToSet } from 'app/loadout/known-values';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { SearchInput } from 'app/search/SearchInput';
+import { startWordRegexp } from 'app/search/text-utils';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { isiOSBrowser } from 'app/utils/browsers';
 import { filterMap, mapValues, minOf } from 'app/utils/collections';
 import { getActiveSetBonusHash, getSetBonusModSocket } from 'app/utils/socket-utils';
-import { DestinyClass, DestinyItemSetPerkDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyClass,
+  DestinyEquipableItemSetDefinition,
+  DestinyItemSetPerkDefinition,
+} from 'bungie-api-ts/destiny2';
 import { sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -178,10 +186,11 @@ export function SetBonusPicker({
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
+  const isPhonePortrait = useIsPhonePortrait();
 
-  // TODO search functionality
-  // const language = useSelector(languageSelector);
-  // const [query, setQuery] = useState('');
+  const language = useSelector(languageSelector);
+  const [query, setQuery] = useState('');
+
   const [setBonuses, setSetBonuses] = useState(initialSetBonuses);
 
   const allItems = useSelector(allItemsSelector);
@@ -191,10 +200,30 @@ export function SetBonusPicker({
     [defs, allItems, vendorItems, classType],
   );
 
-  // Only allow choosing set bonuses the user has items for
-  const sets = Object.keys(possibleSetBonuses)
-    .map((h) => defs.EquipableItemSet.get(parseInt(h, 10)))
-    .filter((set) => !set.redacted);
+  const sets = useMemo(() => {
+    const allSets = Object.keys(possibleSetBonuses)
+      .map((h) => defs.EquipableItemSet.get(parseInt(h, 10)))
+      .filter((set) => !set.redacted);
+
+    if (!query.length) {
+      return allSets;
+    }
+
+    const regexp = startWordRegexp(query, language);
+    const searchFilter = (set: DestinyEquipableItemSetDefinition) =>
+      regexp.test(set.displayProperties.name) ||
+      regexp.test(set.displayProperties.description) ||
+      set.setPerks.some((perk) => {
+        const perkDef = defs.SandboxPerk.get(perk.sandboxPerkHash);
+        return (
+          perkDef &&
+          (regexp.test(perkDef.displayProperties.name) ||
+            regexp.test(perkDef.displayProperties.description))
+        );
+      });
+
+    return allSets.filter((set) => searchFilter(set));
+  }, [query, possibleSetBonuses, defs, language]);
 
   const totalSelected = sum(Object.values(setBonuses));
 
@@ -235,18 +264,20 @@ export function SetBonusPicker({
     });
   };
 
+  // On iOS at least, focusing the keyboard pushes the content off the screen
+  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
+
   return (
     <Sheet
       header={
         <div>
           <h1>{t('LB.ChooseASetBonus')}</h1>
-          {/* TODO search functionality
           <SearchInput
             query={query}
             onQueryChanged={setQuery}
             placeholder={t('LB.SearchASetBonus')}
-            autoFocus
-          /> */}
+            autoFocus={nativeAutoFocus}
+          />
         </div>
       }
       footer={footer}
