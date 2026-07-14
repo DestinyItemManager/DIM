@@ -761,7 +761,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
-    "UnlockItem": "Unpin Item"
+    "UnlockItem": "Unpin Item",
+    "WhySlow": "Why is this slow?"
   },
   "LoadoutFilter": {
     "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",

@@ -724,7 +724,8 @@
     "UnlockItem": "Unpin Item",
     "IncreaseStatPriority": "Increase stat priority",
     "DecreaseStatPriority": "Decrease stat priority",
-    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets"
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
+    "WhySlow": "Why is this slow?"
   },
   "Loadouts": {
     "Abilities": "Abilities",
