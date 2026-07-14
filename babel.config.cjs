@@ -61,7 +61,7 @@ module.exports = function (api) {
     }
 
     // In dev, compile TS with babel
-    plugins.push(['@babel/plugin-transform-typescript', { isTSX: true, optimizeConstEnums: true }]);
+    plugins.push(['@babel/plugin-transform-typescript', { optimizeConstEnums: true }]);
   }
 
   const presetEnvOptions = {
@@ -74,19 +74,40 @@ module.exports = function (api) {
   if (isTest) {
     presetEnvOptions.targets = { node: 'current' };
     presetEnvOptions.modules = 'auto';
+    // import.meta is ESM-only. When Babel converts node_modules (like react-router) from
+    // ESM to CJS for Jest, import.meta remains and causes SyntaxErrors. Replace with {}.
+    plugins.push(function replaceImportMeta({ types: t }) {
+      return {
+        visitor: {
+          MetaProperty(path) {
+            if (path.node.meta.name === 'import' && path.node.property.name === 'meta') {
+              path.replaceWith(t.objectExpression([]));
+            }
+          },
+        },
+      };
+    });
   }
 
   return {
-    presets: [
-      ['@babel/preset-env', presetEnvOptions],
-      [
-        '@babel/preset-react',
-        {
-          runtime: 'automatic',
-        },
-      ],
-    ],
+    presets: [['@babel/preset-env', presetEnvOptions]],
     plugins,
+    // Apply React JSX transform only to JSX files; enabling it globally in Babel 8
+    // causes TypeScript generic arrow functions like <T>() => ... in .ts files to
+    // fail because the JSX parser treats <T> as an opening JSX element.
+    overrides: [
+      {
+        test: /\.tsx$/,
+        presets: [
+          [
+            '@babel/preset-react',
+            {
+              runtime: 'automatic',
+            },
+          ],
+        ],
+      },
+    ],
     // https://babeljs.io/docs/en/assumptions
     assumptions: {
       noDocumentAll: true,

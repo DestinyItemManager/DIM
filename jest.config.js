@@ -29,10 +29,11 @@ export default {
   // Without this, jest-config resolves babel-jest from its own node_modules which uses @babel/core@7.
   transform: {
     '\\.[jt]sx?$': require.resolve('babel-jest'),
+    '\\.mjs$': require.resolve('babel-jest'),
   },
   // Babel transform is required to handle some es modules?
   transformIgnorePatterns: [
-    'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@floating-ui|@react-hook)',
+    'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@floating-ui|@react-hook|react-router|cookie-es)',
   ],
   globals: {
     $BROWSERS: [],
