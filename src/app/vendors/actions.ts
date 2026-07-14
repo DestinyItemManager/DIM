@@ -31,14 +31,6 @@ export const loadedError = createAction('vendors/LOADED_ERROR')<{
   error: Error;
 }>();
 
-/**
- * The load kicked off by loadAllVendors has settled, successfully or not,
- * including the follow-up per-vendor item component fetches.
- */
-export const finishedLoading = createAction('vendors/FINISHED_LOADING')<{
-  characterId: string;
-}>();
-
 export const setShowUnacquiredOnly = createAction('vendors/SHOW_UNCOLLECTED_ONLY')<boolean>();
 
 export function loadAllVendors(
@@ -160,7 +152,6 @@ export function loadAllVendors(
       const error = convertToError(e);
       dispatch(loadedError({ characterId, error }));
     } finally {
-      dispatch(finishedLoading({ characterId }));
       infoLog(
         'Vendors',
         [
