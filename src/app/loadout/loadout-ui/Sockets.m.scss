@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   > span {
-    color: var(--theme-accent-secondary);
+    color: var(--theme-accent-primary);
     font-size: calc(var(--item-icon-size) * 2 / 3);
   }
 }

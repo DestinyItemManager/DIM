@@ -133,6 +133,7 @@ export default function ModAssignmentDrawer({
                     item={item}
                     lockedMods={itemModAssignments[item.id]}
                     onSocketClick={onUpdateMods ? onSocketClick : undefined}
+                    storeId={storeId}
                   />
                 </div>
               );
