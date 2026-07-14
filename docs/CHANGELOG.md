@@ -1,5 +1,7 @@
 ## Next
 
+* Reject Bungie OAuth callbacks whose state parameter is missing when no state was stored, closing a login CSRF where an attacker-supplied code could be exchanged.
+
 ## 8.133.0 <span class="changelog-date">(2026-07-12)</span>
 
 * Fixed saved loadouts placing tuning mods on the wrong armor piece when applying or previewing them. You must re-save the loadout via optimizer one time.
