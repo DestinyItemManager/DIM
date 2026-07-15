@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { clearAllHotkeysForTest, registerHotkeys, removeHotkeysById } from './hotkeys';
 
 beforeEach(clearAllHotkeysForTest);

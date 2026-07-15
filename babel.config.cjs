@@ -73,20 +73,6 @@ module.exports = function (api) {
 
   if (isTest) {
     presetEnvOptions.targets = { node: 'current' };
-    presetEnvOptions.modules = 'auto';
-    // import.meta is ESM-only. When Babel converts node_modules (like react-router) from
-    // ESM to CJS for Jest, import.meta remains and causes SyntaxErrors. Replace with {}.
-    plugins.push(function replaceImportMeta({ types: t }) {
-      return {
-        visitor: {
-          MetaProperty(path) {
-            if (path.node.meta.name === 'import' && path.node.property.name === 'meta') {
-              path.replaceWith(t.objectExpression([]));
-            }
-          },
-        },
-      };
-    });
   }
 
   return {

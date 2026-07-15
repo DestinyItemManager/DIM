@@ -52,7 +52,7 @@ const dimLangToBrowserLang = invert(browserLangToDimLang);
 
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)
-if (module.hot) {
+if (typeof module !== 'undefined' && module.hot) {
   module.hot.accept('../../config/i18n.json', () => {
     i18next.reloadResources('en', undefined, () => {
       infoLog('i18n', 'Reloaded translations');

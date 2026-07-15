@@ -38,7 +38,7 @@ export async function getTestManifestJson() {
   fetchMock.dontMock();
   try {
     // download and parse manifest
-    const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
+    const cacheDir = path.resolve(process.cwd(), 'manifest-cache');
 
     // In this mode we assume the last-written file in the manifest-cache directory is the one we want
     if (process.env.LOCAL_MANIFEST) {

@@ -14,7 +14,7 @@ test('precache manifest', async () => {
 
   // This is for our CI workers - it prevents the cache from accumulating manifests
   if (process.env.CLEAN_MANIFEST_CACHE) {
-    const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
+    const cacheDir = path.resolve(process.cwd(), 'manifest-cache');
     const files = (await fs.readdir(cacheDir)).filter((f) => f !== path.basename(filename));
     console.log(
       'Cleaning manifest cache of files',

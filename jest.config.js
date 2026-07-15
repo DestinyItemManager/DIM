@@ -15,10 +15,13 @@ export default {
   verbose: true,
   testTimeout: 60000,
   roots: ['<rootDir>'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   modulePaths: tsconfig.compilerOptions.baseUrl ? [tsconfig.compilerOptions.baseUrl] : [],
   moduleNameMapper: {
-    '\\.(jpg|jpeg|a?png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)(\\?react)?$':
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)(\\?react)?$':
       '<rootDir>/src/__mocks__/fileMock.js',
+    '\\.svg$': '<rootDir>/src/__mocks__/svgMock.mjs',
+    '\\.apng$': '<rootDir>/src/__mocks__/svgMock.mjs',
     // Automatically include paths from tsconfig
     ...pathsToModuleNameMapper(tsconfigPaths, { prefix: '<rootDir>/' }),
     '^.+\\.s?css$': 'identity-obj-proxy',
