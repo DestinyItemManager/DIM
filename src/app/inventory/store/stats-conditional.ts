@@ -5,7 +5,7 @@ import { weakMemoize } from 'app/utils/memoize';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
-import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
+import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json' with { type: 'json' };
 import {
   DimItem,
   DimPlugInvestmentStat,

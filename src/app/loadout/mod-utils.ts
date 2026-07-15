@@ -8,7 +8,7 @@ import { LookupTable } from 'app/utils/util-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
+import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json' with { type: 'json' };
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
 import { knownModPlugCategoryHashes } from './known-values';
 

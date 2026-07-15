@@ -10,7 +10,7 @@ import {
   SocketCategoryHashes,
   StatHashes,
 } from 'data/d2/generated-enums';
-import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
+import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json' with { type: 'json' };
 import { DimItem, DimMasterwork, DimSockets } from '../item-types';
 
 /**

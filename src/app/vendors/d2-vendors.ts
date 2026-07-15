@@ -16,8 +16,8 @@ import {
   DestinyVendorsResponse,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import specialVendorStrings from 'data/d2/special-vendors-strings.json';
-import vendorIconOverrides from 'data/d2/vendor-image-overrides.json';
+import specialVendorStrings from 'data/d2/special-vendors-strings.json' with { type: 'json' };
+import vendorIconOverrides from 'data/d2/vendor-image-overrides.json' with { type: 'json' };
 import { VendorItem, vendorItemForDefinitionItem, vendorItemForSaleItem } from './vendor-item';
 export interface D2VendorGroup {
   def: DestinyVendorGroupDefinition;

@@ -4,7 +4,7 @@ import {
 } from 'app/search/d2-known-values';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json';
+import raidModPlugCategoryHashes from 'data/d2/raid-mod-plug-category-hashes.json' with { type: 'json' };
 
 export const slotSpecificPlugCategoryHashes = [
   armor2PlugCategoryHashesByName.helmet,

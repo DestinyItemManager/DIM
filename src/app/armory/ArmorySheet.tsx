@@ -2,7 +2,7 @@ import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import Sheet from 'app/dim-ui/Sheet';
 import { DimItem } from 'app/inventory/item-types';
 import { filterMap } from 'app/utils/collections';
-import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
+import focusingItemOutputs from 'data/d2/focusing-item-outputs.json' with { type: 'json' };
 import { Suspense, useMemo } from 'react';
 import * as styles from './ArmorySheet.m.scss';
 import Armory from './LazyArmory';

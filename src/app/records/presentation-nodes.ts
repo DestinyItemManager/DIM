@@ -4,7 +4,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
 import { compact, count, filterMap } from 'app/utils/collections';
-import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json' with { type: 'json' };
 
 import { DimTitle } from 'app/inventory/store-types';
 import { getTitleInfo } from 'app/inventory/store/d2-store-factory';

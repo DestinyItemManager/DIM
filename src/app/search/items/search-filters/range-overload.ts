@@ -3,7 +3,7 @@ import { getSeason } from 'app/inventory/store/season';
 import { powerLevelByKeyword } from 'app/search/power-levels';
 import { allStatNames, statHashByName } from 'app/search/search-filter-values';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import seasonTags from 'data/d2/season-tags.json';
+import seasonTags from 'data/d2/season-tags.json' with { type: 'json' };
 import { ItemFilterDefinition } from '../item-filter-types';
 
 export const seasonTagToNumber = {

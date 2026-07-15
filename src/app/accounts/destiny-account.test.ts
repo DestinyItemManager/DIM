@@ -4,8 +4,8 @@ import {
   DestinyLinkedProfilesResponse,
   PlatformErrorCodes,
 } from 'bungie-api-ts/destiny2';
-import d1Profile from 'testing/data/d1profiles-2022-10-24.json';
-import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json';
+import d1Profile from 'testing/data/d1profiles-2022-10-24.json' with { type: 'json' };
+import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json' with { type: 'json' };
 
 // Native ESM: use unstable_mockModule + dynamic import for mocking ES modules
 let generatePlatforms: typeof import('./destiny-account').generatePlatforms;

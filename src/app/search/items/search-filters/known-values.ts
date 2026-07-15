@@ -20,9 +20,9 @@ import {
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
-import focusingOutputs from 'data/d2/focusing-item-outputs.json';
+import focusingOutputs from 'data/d2/focusing-item-outputs.json' with { type: 'json' };
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import powerfulSources from 'data/d2/powerful-rewards.json';
+import powerfulSources from 'data/d2/powerful-rewards.json' with { type: 'json' };
 import { ItemFilterDefinition } from '../item-filter-types';
 import D2Sources from './d2-sources';
 

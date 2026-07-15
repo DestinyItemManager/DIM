@@ -19,7 +19,7 @@ import {
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
+import catalystIcons from 'data/d2/catalyst-triumph-icons.json' with { type: 'json' };
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import osteoStrigaCatalyst from 'images/osteo-striga-catalyst.jpg';
 import praxicBladeCatalyst from 'images/praxic-blade-catalyst.jpg';

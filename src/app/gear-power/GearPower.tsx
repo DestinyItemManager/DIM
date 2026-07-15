@@ -10,7 +10,7 @@ import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
-import rarityIcons from 'data/d2/engram-rarity-icons.json';
+import rarityIcons from 'data/d2/engram-rarity-icons.json' with { type: 'json' };
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
