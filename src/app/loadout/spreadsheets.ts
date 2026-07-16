@@ -82,6 +82,7 @@ export function downloadLoadoutsCsv(): ThunkResult {
       const fragments = subclassPlugs.filter((p) =>
         fragmentSocketCategoryHashes.includes(p.socketCategoryHash),
       );
+      // TODO artifact and artifactPlugs
       const stats: CsvRow = {};
       const equippedArmor = resolvedLoadout.resolvedLoadoutItems.filter(
         (i) => i.loadoutItem.equip && i.item.bucket.inArmor,
