@@ -108,14 +108,16 @@ export function addItem(
     if (socketOverrides) {
       loadoutItem.socketOverrides = socketOverrides;
     }
-    if (item.sockets && item.bucket.hash === BucketHashes.Subclass && !socketOverrides) {
-      loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
-    }
-    if (item.sockets && item.bucket.hash === BucketHashes.Artifacts && !socketOverrides) {
+    if (
+      item.sockets &&
+      !socketOverrides &&
+      (item.bucket.hash === BucketHashes.Subclass || item.bucket.hash === BucketHashes.Artifacts)
+    ) {
       loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
     }
 
     if (item.bucket.hash === BucketHashes.Artifacts) {
+      // clear out legacy artifact unlocks
       delete draftLoadout.parameters?.artifactUnlocks;
     }
 

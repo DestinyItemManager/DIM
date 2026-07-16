@@ -100,9 +100,8 @@ export default function LoadoutEdit({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket],
   );
 
-  const itemsWithoutArtifact = items.filter((i) => i.item.bucket.hash !== BucketHashes.Artifacts);
   const categories = Object.groupBy(
-    itemsWithoutArtifact.concat(warnitems),
+    items.concat(warnitems).filter((i) => i.item.bucket.hash !== BucketHashes.Artifacts),
     (li) => li.item.bucket.sort ?? 'unknown',
   );
 
