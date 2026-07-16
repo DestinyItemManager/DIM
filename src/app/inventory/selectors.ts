@@ -412,18 +412,15 @@ export const dynamicStringsSelector = createSelector(profileResponseSelector, (p
 });
 
 /** List of artifacts for a given character */
-export const availableArtifactsSelector = createSelector(
-  allItemsSelector,
-  (_state: unknown, storeId: string) => storeId,
-  (allItems, storeId) =>
-    allItems
-      .filter(
-        (item) =>
-          item.bucket.hash === BucketHashes.Artifacts &&
-          item.owner === storeId &&
-          itemCanBeInLoadout(item),
-      )
-      .sort(compareBy((i) => i.hash)),
+export const availableArtifactsSelector = currySelector(
+  createSelector(
+    (state: RootState, storeId: string) => singleStoreSelector(storeId)(state),
+    (store) =>
+      store?.items
+        .filter((item) => item.bucket.hash === BucketHashes.Artifacts && itemCanBeInLoadout(item))
+        // TODO may not even need to sort, but find a way to sort by season or InventoryItem index field
+        .sort(compareBy((i) => i.hash)) ?? emptyArray<DimItem>(),
+  ),
 );
 
 /** Item infos (tags/notes) */

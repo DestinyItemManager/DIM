@@ -52,7 +52,6 @@ import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/lo
 import { LoadoutArtifactMods, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
-import { RootState } from 'app/store/types';
 import { count } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { stubTrue } from 'app/utils/functions';
@@ -482,9 +481,7 @@ function LoadoutEditArtifactSection({
   const handleClosePlugDrawer = () => setPlugDrawerOpen(false);
   const handleApplySocketOverrides = useUpdater(applySocketOverrides);
 
-  const availableArtifacts = useSelector((state: RootState) =>
-    availableArtifactsSelector(state, store.id),
-  );
+  const availableArtifacts = useSelector(availableArtifactsSelector(store.id));
 
   const handleSyncArtifactFromEquipped = useDefsStoreUpdater(setLoadoutArtifactFromEquipped);
   const handleAddArtifact = useDefsUpdater(addItem);
