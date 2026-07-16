@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 import ModPicker from '../ModPicker';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
-import { createGetModRenderKey } from '../mod-utils';
+import { createGetModRenderKey, sortMods } from '../mod-utils';
 import * as styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
@@ -101,6 +101,14 @@ export const LoadoutMods = memo(function LoadoutMods({
   // otherwise we'd duplicate auto mods into loadout parameter mods when confirming
   const [resolvedMods] = useLoadoutMods(loadout, storeId);
 
+  // Mods are stored/resolved in the order the loadout keeps them (slot order for
+  // tuning mods, which the assignment code relies on); sort here purely for a
+  // stable grouped display.
+  const sortedMods = useMemo(
+    () => allMods.toSorted((a, b) => sortMods(a.resolvedMod, b.resolvedMod)),
+    [allMods],
+  );
+
   // TODO: filter down by usable mods?
   // TODO: Hide the "Add Mod" button when no more mods can fit
   // TODO: turn the mod assignment drawer into a super mod editor?
@@ -125,7 +133,7 @@ export const LoadoutMods = memo(function LoadoutMods({
   return (
     <div>
       <div className={styles.modsGrid}>
-        {allMods.map((mod) => (
+        {sortedMods.map((mod) => (
           <LoadoutMod
             className={clsx({
               [styles.missingItem]: !(

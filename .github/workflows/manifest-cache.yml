@@ -23,13 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # A unique key always saves a fresh entry; restore-keys reuses the previous
       # one so an unchanged manifest is a no-op. PRs find this via the shared
       # `destiny-manifest-` prefix.
       - name: Cache Manifest
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: manifest-cache
           key: destiny-manifest-${{ github.run_id }}

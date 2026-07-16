@@ -740,7 +740,6 @@
     "ExistingLoadout": "Istniejące uzbrojenie",
     "Exotic": "Egzotyczny pancerz",
     "ExoticSpecialCategory": "Specjalne",
-    "ExoticTuningNote": "Lock a specific exotic, or choose Any Exotic, to also consider its tuning mods.",
     "Filter": "Ustawienia",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",

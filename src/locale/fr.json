@@ -706,7 +706,6 @@
     "ExistingLoadout": "Équipement existant",
     "Exotic": "Armure exotique",
     "ExoticSpecialCategory": "Spécial",
-    "ExoticTuningNote": "Lock a specific exotic, or choose Any Exotic, to also consider its tuning mods.",
     "Filter": "Paramètres",
     "IgnoreStat": "Si décoché, l'optimiseur d'équipement prétendra que cette stat n'existe pas lors du calcul des ensembles",
     "IncreaseStatPriority": "Augmenter la priorité de la stat",

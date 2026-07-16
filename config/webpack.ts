@@ -52,7 +52,7 @@ export default (env: Env) => {
     }
   });
 
-  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+  if (env.dev && env.RSPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
     console.log('Generating certificate');
     execSync('mkcert create-ca --validity 825');
     execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');

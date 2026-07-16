@@ -59,7 +59,46 @@ export function chooseAutoMods(
   remainingEnergyCapacities: number[][],
   remainingTotalEnergy: number,
 ): ModsPick[] | undefined {
-  return recursivelyChooseMods(
+  // For a fixed session, the result is a pure function of the arguments, and
+  // the energy vectors only matter as multisets (they're sorted descending at
+  // construction), so memoize on a packed key. The binary searches in updateMaxStats
+  // and greedyPickStatMods re-ask with only one neededStats entry changing,
+  // and huge numbers of sets share the same energy profile, so hit rates are
+  // very high in large searches. Callers must not mutate returned arrays.
+  if (remainingTotalEnergy < 0 || remainingEnergyCapacities.length > 1) {
+    // Negative budgets (impossible via the process loop) would corrupt the
+    // packed key, and unlike a 0 budget they reject even cost-0 picks.
+    // Multiple energy vectors (locked activity mods with several valid
+    // assignments) would need string keys, and building those costs more than
+    // the solver saves: benchmarked ~1.9x slower than not memoizing at all.
+    return recursivelyChooseMods(
+      info.autoModOptions,
+      info.generalModCosts,
+      neededStats,
+      0,
+      info.numAvailableGeneralMods,
+      numArtificeMods,
+      remainingEnergyCapacities,
+      remainingTotalEnergy,
+      undefined,
+    );
+  }
+  const contextKey = buildContextKey(
+    remainingEnergyCapacities,
+    numArtificeMods,
+    remainingTotalEnergy,
+  );
+  let memo = info.autoModsMemo.get(contextKey);
+  if (memo === undefined) {
+    memo = new Map();
+    info.autoModsMemo.set(contextKey, memo);
+  }
+  const needsKey = packStatNeeds(neededStats);
+  const cached = memo.get(needsKey);
+  if (cached !== undefined) {
+    return cached ?? undefined;
+  }
+  const result = recursivelyChooseMods(
     info.autoModOptions,
     info.generalModCosts,
     neededStats,
@@ -70,6 +109,50 @@ export function chooseAutoMods(
     remainingTotalEnergy,
     undefined,
   );
+  memo.set(needsKey, result ?? null);
+  return result;
+}
+
+/**
+ * Pack one 5-item energy vector into a number. Capacities must be sorted
+ * descending (done at construction) so equal multisets pack to equal keys.
+ */
+function packEnergyVector(capacities: number[]) {
+  // Remaining energies are 0-10, well within 5 bits each
+  let packed = 0;
+  for (let i = 0; i < capacities.length; i++) {
+    packed = packed * 32 + capacities[i];
+  }
+  return packed;
+}
+
+/** Stat needs are 0-200, so 8 bits per stat packs all six exactly into 48 bits. */
+export function packStatNeeds(neededStats: number[]): number {
+  return (
+    neededStats[0] +
+    neededStats[1] * 0x100 +
+    neededStats[2] * 0x10000 +
+    neededStats[3] * 0x1000000 +
+    neededStats[4] * 0x100000000 +
+    neededStats[5] * 0x10000000000
+  );
+}
+
+export function buildContextKey(
+  remainingEnergyCapacities: number[][],
+  numArtificeMods: number,
+  remainingTotalEnergy: number,
+): number | string {
+  // The common case (no locked activity mods) has exactly one energy vector
+  // and packs into a plain number; multiple vectors fall back to a string key.
+  if (remainingEnergyCapacities.length === 1) {
+    return (
+      (packEnergyVector(remainingEnergyCapacities[0]) * 8 + numArtificeMods) * 64 +
+      remainingTotalEnergy
+    );
+  }
+  const packed = remainingEnergyCapacities.map(packEnergyVector).sort((a, b) => b - a);
+  return `${packed.join(',')}|${numArtificeMods}|${remainingTotalEnergy}`;
 }
 
 /**
@@ -94,10 +177,9 @@ function doGeneralModsFit(
     generalModCosts.sort((a, b) => b - a);
   }
 
-  return remainingEnergyCapacities.some((capacities) => {
-    capacities.sort((a, b) => b - a);
-    return generalModCosts.every((cost, index) => cost <= capacities[index]);
-  });
+  return remainingEnergyCapacities.some((capacities) =>
+    generalModCosts.every((cost, index) => cost <= capacities[index]),
+  );
 }
 
 /**

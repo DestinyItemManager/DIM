@@ -7,6 +7,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
@@ -30,6 +31,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
+import { userGuideUrl } from 'app/shell/links';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { filterMap } from 'app/utils/collections';
 import { emptyArray, emptyObject } from 'app/utils/empty';
@@ -282,10 +284,6 @@ export default memo(function LoadoutBuilder({
     armorEnergyRules,
     desiredStatRanges,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
-    // Only pay for exotic tuning variants when the user is actually targeting an
-    // exotic (any exotic, or a specific one), not on the default unfiltered run.
-    expandExoticTuning:
-      lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC || (lockedExoticHash ?? 0) > 0,
     autoStatMods,
     strictUpgrades: Boolean(strictUpgradesStatConstraints && !mergedConstraintsImplyStrictUpgrade),
   });
@@ -463,6 +461,12 @@ export default memo(function LoadoutBuilder({
   const remainingCombos = (totalCombos || 1) - completedCombos;
   const eta = remainingCombos / speed;
 
+  const whySlow = (
+    <ExternalLink href={userGuideUrl('Why-Loadout-Optimizer-is-slow-or-uses-a-lot-of-CPU')}>
+      {t('LoadoutBuilder.WhySlow')}
+    </ExternalLink>
+  );
+
   return (
     <PageWithMenu className={styles.page}>
       <PageWithMenu.Menu className={clsx(styles.menuContent, styles.wide)}>
@@ -504,6 +508,7 @@ export default memo(function LoadoutBuilder({
                       )}
                     </span>
                   )}
+                {whySlow}
               </div>
             </span>
           ) : (
@@ -514,6 +519,7 @@ export default memo(function LoadoutBuilder({
                   time: (result.processTime / 1000).toFixed(2),
                   cpus: getMaxParallelCores(),
                 })}
+                {whySlow}
               </span>
             )
           )}

@@ -15,11 +15,7 @@ import { calculateAssumedItemEnergy, isAssumedMasterworked } from 'app/loadout/a
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
-import {
-  isInsertableArmor2Mod,
-  mapToAvailableModCostVariant,
-  sortMods,
-} from 'app/loadout/mod-utils';
+import { isInsertableArmor2Mod, mapToAvailableModCostVariant } from 'app/loadout/mod-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import {
@@ -926,7 +922,11 @@ export function resolveLoadoutModHashes(
     }
   }
 
-  return mods.sort((a, b) => sortMods(a.resolvedMod, b.resolvedMod));
+  // Return mods in their stored order. The worker stores tuning mods in slot
+  // order and fitMostMods relies on that to place each one back on its item, so
+  // this resolver must not reorder them. Display sorting (see sortMods) is done by
+  // the components that render mods, not here.
+  return mods;
 }
 
 /**

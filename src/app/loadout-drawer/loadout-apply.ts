@@ -21,6 +21,7 @@ import { updateManualMoveTimestamp } from 'app/inventory/manual-moves';
 import {
   allItemsSelector,
   storesSelector,
+  unlockedExoticOrnamentsSelector,
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -302,11 +303,16 @@ function doApplyLoadout(
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
       const unlockedPlugSetItems = once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
+      // Exotic ornament unlocks only show up on item instances, not in the plug sets
+      const unlockedExoticOrnaments = once(() => unlockedExoticOrnamentsSelector(getState()));
       const checkMod = (h: number) => {
         const mod = defs.InventoryItem.get(h);
         return (
           Boolean(mod) &&
-          (unlockedPlugSetItems().has(h) || h === DEFAULT_SHADER || DEFAULT_ORNAMENTS.includes(h))
+          (unlockedPlugSetItems().has(h) ||
+            unlockedExoticOrnaments().has(h) ||
+            h === DEFAULT_SHADER ||
+            DEFAULT_ORNAMENTS.includes(h))
         );
       };
 
