@@ -21,7 +21,11 @@ const loadoutFilters: ItemFilterDefinition[] = [
   {
     keywords: 'inloadout',
     format: ['simple', 'range', 'freeform'],
-    suggestionsGenerator: ({ loadouts }) => loadouts?.flatMap(loadoutToSuggestions),
+    suggestionsGenerator: ({ loadouts }) => [
+      'is:inloadout',
+      'not:inloadout',
+      ...(loadouts?.flatMap(loadoutToSuggestions) ?? []),
+    ],
     description: tl('Filter.InLoadout'),
     filter: ({ lhs, filterValue, loadoutsByItem, compare }) => {
       // the range search for how many loadouts an item is in:
