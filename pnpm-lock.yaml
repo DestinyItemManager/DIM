@@ -126,8 +126,8 @@ importers:
         specifier: ^19.2.7
         version: 19.2.7(react@19.2.7)
       react-dropzone:
-        specifier: ^15.0.0
-        version: 15.0.0(react@19.2.7)
+        specifier: ^17.0.0
+        version: 17.0.0(react@19.2.7)
       react-redux:
         specifier: ^9.3.0
         version: 9.3.0(@types/react@19.2.17)(react@19.2.7)(redux@5.0.1)
@@ -424,8 +424,8 @@ importers:
         specifier: ^17.0.0
         version: 17.0.0(@rspack/core@2.1.4(@swc/helpers@0.5.23))(sass@1.101.0)(webpack@5.108.4(postcss@8.5.19))
       sonda:
-        specifier: ^0.13.1
-        version: 0.13.1
+        specifier: ^0.14.0
+        version: 0.14.0
       source-map-loader:
         specifier: ^5.0.0
         version: 5.0.0(webpack@5.108.4(postcss@8.5.19))
@@ -6221,11 +6221,11 @@ packages:
     peerDependencies:
       react: ^19.2.7
 
-  react-dropzone@15.0.0:
-    resolution: {integrity: sha512-lGjYV/EoqEjEWPnmiSvH4v5IoIAwQM2W4Z1C0Q/Pw2xD0eVzKPS359BQTUMum+1fa0kH2nrKjuavmTPOGhpLPg==}
-    engines: {node: '>= 10.13'}
+  react-dropzone@17.0.0:
+    resolution: {integrity: sha512-yedj9VzdC/boq15u0XfzWRGX0Mqpb8dxy/TRDqOIFlISl8nhh38R9QKbztyFqxqLMwLdViVtLbXkv6x/b8gP8A==}
+    engines: {node: '>= 20'}
     peerDependencies:
-      react: '>= 16.8 || 18.0.0'
+      react: '>= 18'
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
@@ -6571,8 +6571,8 @@ packages:
   snake-case@3.0.4:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
 
-  sonda@0.13.1:
-    resolution: {integrity: sha512-ocQ4bSr1IaalYphlSga5UlHkywAqOm79ojfmGe8brKgHFMrqPPSjyzz0YDVpPOh9u4VbE5omYY4C9trJSUtzLg==}
+  sonda@0.14.0:
+    resolution: {integrity: sha512-NAneRzAkk8KTW1G/Z8n3kUIUjZ8u6B1yRGq1onkD+D93CSOq/aTRVkHHutD/9R6M72Jei3AIpCbkSr8tjzZVdw==}
     engines: {node: '>=22.12'}
     hasBin: true
 
@@ -14057,11 +14057,10 @@ snapshots:
       react: 19.2.7
       scheduler: 0.27.0
 
-  react-dropzone@15.0.0(react@19.2.7):
+  react-dropzone@17.0.0(react@19.2.7):
     dependencies:
       attr-accept: 2.2.5
       file-selector: 2.1.2
-      prop-types: 15.8.1
       react: 19.2.7
 
   react-is@18.3.1: {}
@@ -14452,7 +14451,7 @@ snapshots:
       dot-case: 3.0.4
       tslib: 2.8.1
 
-  sonda@0.13.1:
+  sonda@0.14.0:
     dependencies:
       '@jridgewell/remapping': 2.3.5
       tiny-open: 1.3.0
