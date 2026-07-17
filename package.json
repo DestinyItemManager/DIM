@@ -98,6 +98,7 @@
     "@eslint-react/eslint-plugin": "^5.10.0",
     "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
+    "@jest/globals": "^30.4.1",
     "@rspack/cli": "^2.1.1",
     "@rspack/core": "^2.1.1",
     "@rspack/dev-server": "^2.1.0",

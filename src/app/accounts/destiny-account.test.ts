@@ -9,23 +9,23 @@ import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json' with { 
 
 // Native ESM: use unstable_mockModule + dynamic import for mocking ES modules
 let generatePlatforms: typeof import('./destiny-account').generatePlatforms;
-let Tokens: typeof import('app/bungie-api/oauth-tokens').Tokens;
 
 beforeAll(async () => {
-  await jest.unstable_mockModule('app/bungie-api/oauth-tokens', () => ({
-    getToken: (): unknown =>
-      ({
-        accessToken: { value: 'foo' },
-      }) as unknown,
-    setToken: () => {},
-    removeToken: () => {},
+  jest.unstable_mockModule('app/bungie-api/oauth-tokens', () => ({
+    getToken: (): unknown => ({
+      accessToken: { value: 'foo' },
+    }),
+    setToken: () => {
+      /* empty */
+    },
+    removeToken: () => {
+      /* empty */
+    },
     hasValidAuthTokens: () => true,
     removeAccessToken: () => {},
     hasTokenExpired: () => false,
   }));
 
-  const oauth = await import('app/bungie-api/oauth-tokens');
-  Tokens = oauth.Tokens;
   const dc = await import('./destiny-account');
   generatePlatforms = dc.generatePlatforms;
 });

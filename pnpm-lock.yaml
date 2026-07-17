@@ -222,6 +222,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.6.0)
+      '@jest/globals':
+        specifier: ^30.4.1
+        version: 30.4.1
       '@rspack/cli':
         specifier: ^2.1.1
         version: 2.1.1(@rspack/core@2.1.1(@swc/helpers@0.5.23))(@rspack/dev-server@2.1.0(@rspack/core@2.1.1(@swc/helpers@0.5.23)))
