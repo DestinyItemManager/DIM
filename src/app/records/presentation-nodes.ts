@@ -310,6 +310,27 @@ export function hideCompletedRecords(node: DimPresentationNode): DimPresentation
   return node;
 }
 
+/** Filter the node tree down to only collectibles that haven't been acquired yet. */
+export function hideAcquiredCollectibles(node: DimPresentationNode): DimPresentationNode {
+  if (node.childPresentationNodes) {
+    return {
+      ...node,
+      childPresentationNodes: filterMap(node.childPresentationNodes, (node) =>
+        dropEmptyNodes(hideAcquiredCollectibles(node)),
+      ),
+    };
+  }
+
+  if (node.collectibles) {
+    return {
+      ...node,
+      collectibles: node.collectibles.filter((c) => c.state & DestinyCollectibleState.NotAcquired),
+    };
+  }
+
+  return node;
+}
+
 // TODO: how to flatten this down to individual category trees
 // TODO: how to handle simple searches plus bigger queries
 // TODO: this uses the entire search field as one big string search. no "and". no fun.

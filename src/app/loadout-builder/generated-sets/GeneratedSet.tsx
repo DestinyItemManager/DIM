@@ -187,6 +187,7 @@ export default memo(function GeneratedSet({
               autoStatMods={autoStatMods}
               automaticallyPickedMods={autoModsPerItem[item.id]}
               energy={resultingItemEnergies[item.id]}
+              storeId={selectedStore.id}
             />
           ))}
         </div>

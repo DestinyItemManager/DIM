@@ -144,7 +144,32 @@ export function moveItemTo(
 
         const movePromise = queueAction(() =>
           loadingTracker.addPromise(
-            dispatch(executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession)),
+            (async (): Promise<DimItem> => {
+              // By the time this runs (moves are queued), an earlier request may
+              // have already moved this item - e.g. the user clicked twice while
+              // Bungie.net was slow. Re-resolve the item to its current location
+              // so we operate on the live copy, and if it's already where we
+              // asked, finish with a no-op instead of failing. See #10046.
+              const liveItem = item.instanced
+                ? storesSelector(getState())
+                    .flatMap((s) => s.items)
+                    .find((i) => i.id === item.id)
+                : item;
+              if (!liveItem) {
+                // The item is gone (already moved/consumed) - nothing to do.
+                return item;
+              }
+              if (
+                liveItem.owner === store.id &&
+                !liveItem.location.inPostmaster &&
+                liveItem.equipped === equip
+              ) {
+                return liveItem;
+              }
+              return dispatch(
+                executeMoveItem(liveItem, store, { equip, amount: moveAmount }, moveSession),
+              );
+            })(),
           ),
         );
         showNotification(moveItemNotification(item, store, movePromise, cancel));

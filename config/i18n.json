@@ -712,7 +712,7 @@
     "ProcessingSets": "Finding highest stat sets...",
     "SaveAs": "Save as",
     "SetBonus": "Set Bonuses",
-    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores.",
+    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores. Adjust max cores in Settings.",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
     "StatMin": "Min",
@@ -724,7 +724,8 @@
     "UnlockItem": "Unpin Item",
     "IncreaseStatPriority": "Increase stat priority",
     "DecreaseStatPriority": "Decrease stat priority",
-    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets"
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
+    "WhySlow": "Why is this slow?"
   },
   "Loadouts": {
     "Abilities": "Abilities",

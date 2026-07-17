@@ -23,7 +23,10 @@ async function handleAuthReturn() {
   }
 
   const authorizationState = localStorage.getItem('authorizationState');
-  if (state !== authorizationState) {
+  // A missing stored state must count as a mismatch: without the `!authorizationState`
+  // guard a callback carrying no state passes on an empty localStorage (null !== null
+  // is false), which would exchange an attacker-supplied code into the victim's session.
+  if (!authorizationState || state !== authorizationState) {
     let error = "We expected the state parameter to match what we stored, but it didn't.";
     if (!authorizationState || authorizationState.length === 0) {
       error +=

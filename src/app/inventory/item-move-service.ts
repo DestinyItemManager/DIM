@@ -71,11 +71,15 @@ export interface MoveSession {
   /** A token that can be checked to see if the whole operation is canceled. */
   readonly cancelToken: CancelToken;
   /**
-   * Items explicitly involved in the requested move.
-   * Used to distinguish user-intentional moves vs make-space moves.
-   * Contains instanceIds, or for uninstanced items, item hashes.
+   * Items explicitly involved in the requested move, as {id, hash} exclusions.
+   * Two uses:
+   *  - distinguish user-intentional moves vs incidental make-space moves (so a
+   *    deliberately-moved consumable isn't penalized as if it were incidental).
+   *  - when we de-equip an item to move it, none of these may be chosen as the
+   *    replacement to equip - they're items the user is actively moving, so
+   *    equipping one would fight the move it's part of.
    */
-  involvedItems: Set<string | number>;
+  involvedItems: Exclusion[];
   // TODO: a record of moves? something to prevent infinite moves loops?
 }
 
@@ -84,13 +88,9 @@ export function createMoveSession(
   /** Items explicitly involved in the move. */
   items: DimItem[],
 ): MoveSession {
-  const involvedItems = new Set<string | number>();
-  for (const item of items) {
-    involvedItems.add(item.instanced ? item.id : item.hash);
-  }
   return {
     bucketsFullOnCurrentStore: new Set(),
-    involvedItems,
+    involvedItems: items.map((item) => ({ id: item.id, hash: item.hash })),
     cancelToken,
   };
 }
@@ -257,6 +257,11 @@ export function getSimilarItem(
  * Returns a map of item ids to their success status (PlatformErrorCodes.Success if it succeeded), which can be less
  * that what was passed in or even more than what was passed in because
  * sometimes we have to de-equip an exotic to equip another exotic.
+ *
+ * Precondition: every item in `items` must already be on `store` - the
+ * Bungie.net equip API only succeeds for items in the character's inventory.
+ * Callers (loadout-apply) are responsible for moving them into place first,
+ * including de-equip replacements pulled from the vault. See #9416 (point 3).
  */
 export function equipItems(
   store: DimStore,
@@ -375,7 +380,12 @@ function dequipItem(
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
-    const similarItem = getSimilarItem(getState, stores, item, { excludeExotic });
+    // Don't replace the de-equipped item with something the user is already
+    // moving - that item is on its way elsewhere. See issues #8418 and #9416.
+    const similarItem = getSimilarItem(getState, stores, item, {
+      excludeExotic,
+      exclusions: session.involvedItems,
+    });
     if (!similarItem) {
       throw new DimError('ItemService.Deequip', t('ItemService.Deequip', { itemname: item.name }));
     }
@@ -779,7 +789,10 @@ function ensureCanMoveToStore(
 
       // if this is a consumable, and wasn't an explicitly requested move,
       // pretend the consumables bucket is 1 stack smaller, so we don't automatically max it out
-      if (i.bucket.hash === BucketHashes.Consumables && !session.involvedItems.has(i.hash)) {
+      if (
+        i.bucket.hash === BucketHashes.Consumables &&
+        !session.involvedItems.some((e) => e.hash === i.hash)
+      ) {
         left -= i.maxStackSize;
       }
 
@@ -801,8 +814,18 @@ function ensureCanMoveToStore(
     const storeReservations: { [storeId: string]: number } = {};
     storeReservations[store.id] = amount;
 
-    // guardian-to-guardian transfer will also need space in the vault
-    if (item.owner !== 'vault' && !store.isVault && item.owner !== store.id) {
+    // A guardian-to-guardian transfer routes through the vault, so it also needs
+    // transient space there. Account-wide items (consumables, etc.) are the
+    // exception: they go straight to the current character without a vault hop,
+    // so reserving vault space for them is wrong and can trigger needless
+    // move-asides (e.g. pulling a stackable from another character's postmaster
+    // when the vault is full). See #7935.
+    if (
+      item.owner !== 'vault' &&
+      !store.isVault &&
+      item.owner !== store.id &&
+      !item.bucket.accountWide
+    ) {
       storeReservations.vault = amount;
     }
 
@@ -1005,7 +1028,11 @@ export function executeMoveItem(
       !session.bucketsFullOnCurrentStore.has(item.bucket.hash) &&
       // don't blind move consumables to character,
       // because we don't want to unintentionally max out consumables
-      item.bucket.hash !== BucketHashes.Consumables
+      item.bucket.hash !== BucketHashes.Consumables &&
+      // don't blind move an exotic we're about to equip - the blind move skips
+      // the one-exotic check, so it would equip a second exotic without moving
+      // aside the one that's already equipped (and fail). See issue #9121.
+      !(equip && item.equippingLabel)
     ) {
       try {
         infoLog(TAG, 'Try blind move of', item.name, 'to', target.name);

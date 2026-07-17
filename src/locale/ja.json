@@ -734,7 +734,7 @@
     "ProcessingSets": "最高理論値の組み合わせを検索しています…",
     "SaveAs": "名前をつけて保存",
     "SetBonus": "セットボーナス",
-    "SetBonusModWarning": "This set contains an item with a configurable set bonus mod. Manually apply the correct mod to activate the desired set bonus.",
+    "SetBonusModWarning": "このセットには、セットボーナスMODを設定できるアイテムが含まれています。目的のセットボーナスを発動させるには、対応するMODを手動で装着してください。",
     "SpeedReport": "PCのCPUコア {{cpus}} コアを使用し、{{time}} 秒で {{combos, number}} 種類の組み合わせを探しました。",
     "StatConstraints": "ステータス値の優先度と範囲",
     "StatMax": "最大",

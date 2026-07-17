@@ -752,7 +752,7 @@
     "SaveAs": "Save as",
     "SetBonus": "Set Bonuses",
     "SetBonusModWarning": "This set contains an item with a configurable set bonus mod. Manually apply the correct mod to activate the desired set bonus.",
-    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores.",
+    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores. Adjust max cores in Settings.",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
     "StatMin": "Min",
@@ -761,7 +761,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
-    "UnlockItem": "Unpin Item"
+    "UnlockItem": "Unpin Item",
+    "WhySlow": "Why is this slow?"
   },
   "LoadoutFilter": {
     "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",

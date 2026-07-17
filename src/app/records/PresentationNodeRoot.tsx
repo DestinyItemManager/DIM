@@ -10,6 +10,7 @@ import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 import { makeItemsForCatalystRecords } from './catalysts';
 import {
   filterPresentationNodesToSearch,
+  hideAcquiredCollectibles,
   hideCompletedRecords,
   toPresentationNodeTree,
 } from './presentation-nodes';
@@ -23,6 +24,7 @@ interface Props {
   isTriumphs?: boolean;
   overrideName?: string;
   completedRecordsHidden?: boolean;
+  acquiredCollectiblesHidden?: boolean;
 
   /** Whether to show extra plugsets */
   showPlugSets?: boolean;
@@ -50,6 +52,7 @@ export default function PresentationNodeRoot({
   isTriumphs,
   overrideName,
   completedRecordsHidden,
+  acquiredCollectiblesHidden,
 }: Props) {
   const itemCreationContext = useSelector(createItemContextSelector);
   const defs = useD2Definitions()!;
@@ -81,13 +84,16 @@ export default function PresentationNodeRoot({
     [itemCreationContext, presentationNodeHash, showPlugSets, currentStore?.genderHash],
   );
 
-  const nodeTree = useMemo(
-    () =>
-      unfilteredNodeTree && completedRecordsHidden
-        ? hideCompletedRecords(unfilteredNodeTree)
-        : unfilteredNodeTree,
-    [completedRecordsHidden, unfilteredNodeTree],
-  );
+  const nodeTree = useMemo(() => {
+    let tree = unfilteredNodeTree;
+    if (tree && completedRecordsHidden) {
+      tree = hideCompletedRecords(tree);
+    }
+    if (tree && acquiredCollectiblesHidden) {
+      tree = hideAcquiredCollectibles(tree);
+    }
+    return tree;
+  }, [completedRecordsHidden, acquiredCollectiblesHidden, unfilteredNodeTree]);
 
   if (!nodeTree) {
     return null;

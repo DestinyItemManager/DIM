@@ -1,8 +1,21 @@
 import { MAX_STAT } from 'app/loadout/known-values';
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import { ArmorStatHashes, artificeStatBoost, DesiredStatRange, MinMaxStat } from '../types';
-import { AutoModsCache, buildAutoModsMap, chooseAutoMods, ModsPick } from './auto-stat-mod-utils';
+import {
+  ArmorStatHashes,
+  artificeStatBoost,
+  DesiredStatRange,
+  majorStatBoost,
+  MinMaxStat,
+} from '../types';
+import {
+  AutoModsCache,
+  buildAutoModsMap,
+  buildContextKey,
+  chooseAutoMods,
+  ModsPick,
+  packStatNeeds,
+} from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
 /**
@@ -21,6 +34,17 @@ export interface LoSessionInfo {
   activityModPermutations: (ProcessMod | null)[][];
   /** How many activity mods we have per tag. */
   activityTagCounts: { [tag: string]: number };
+  /**
+   * Memoized chooseAutoMods results, keyed by (energy capacities + artifice
+   * count + energy budget) then by packed needed stats. Bounded: there are only
+   * a few thousand energy multisets and a few hundred stat patterns each.
+   */
+  autoModsMemo: Map<number | string, Map<number, ModsPick[] | null>>;
+  /**
+   * Memoized maximum single-stat boosts for updateMaxStats, keyed like
+   * autoModsMemo, then by (statIndex, packed other-stat minimums).
+   */
+  maxBoostMemo: Map<number | string, Map<number, number>>;
 }
 
 export function precalculateStructures(
@@ -48,6 +72,8 @@ export function precalculateStructures(
       }
       return acc;
     }, {}),
+    autoModsMemo: new Map(),
+    maxBoostMemo: new Map(),
   };
 }
 
@@ -63,8 +89,8 @@ function getRemainingEnergiesPerAssignment(
   /** Total remaining energy capacity across the set */
   setEnergy: number;
   /**
-   * For each valid permutation, how much energy is left on per item? These
-   * lists are NOT sorted.
+   * For each valid permutation, how much energy is left on per item? Each list
+   * is sorted descending; consumers treat them as multisets.
    */
   remainingEnergiesPerAssignment: number[][];
 } {
@@ -98,10 +124,37 @@ function getRemainingEnergiesPerAssignment(
         remainingEnergyCapacities[i] -= activityMod.energyCost;
       }
     }
+    // Sort once at construction so key packing and fit checks can rely on the
+    // order instead of re-sorting per call.
+    remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
 
   return { setEnergy, remainingEnergiesPerAssignment };
+}
+
+/**
+ * Per-armor-set cache for the result of getRemainingEnergiesPerAssignment, so
+ * updateMaxStats and pickOptimalStatMods compute it at most once per set. The
+ * caller owns one instance and must clear `result` for each new armor set.
+ */
+export interface SetEnergyCache {
+  result: ReturnType<typeof getRemainingEnergiesPerAssignment> | undefined;
+}
+
+function computeRemainingEnergies(
+  info: LoSessionInfo,
+  items: readonly ProcessItem[],
+  cache: SetEnergyCache | undefined,
+) {
+  if (cache?.result) {
+    return cache.result;
+  }
+  const result = getRemainingEnergiesPerAssignment(info.activityModPermutations, items);
+  if (cache) {
+    cache.result = result;
+  }
+  return result;
 }
 
 // How many extra points we need to add to each stat to hit the minimums. We
@@ -125,6 +178,8 @@ export function updateMaxStats(
   desiredStatRanges: readonly DesiredStatRange[],
   /** Current stat ranges across all sets we've seen so far. */
   statRanges: MinMaxStat[], // mutated
+  /** Optional per-set cache shared with pickOptimalStatMods. */
+  energyCache?: SetEnergyCache,
 ): boolean {
   let foundAnyImprovement = false;
 
@@ -162,7 +217,13 @@ export function updateMaxStats(
     return foundAnyImprovement;
   }
 
+  // Cheap upper bound on what auto mods can add to one stat (ignoring energy and
+  // slot limits), used to skip the search for sets that can't raise the max.
+  const maxSingleStatBonus =
+    info.numAvailableGeneralMods * majorStatBoost + numArtificeMods * artificeStatBoost;
+
   let remainingEnergyResult: ReturnType<typeof getRemainingEnergiesPerAssignment> | undefined;
+  let boostMemo: Map<number, number> | undefined;
 
   // You wouldn't believe it, but Firefox is actually slow loading constants
   // from another module.
@@ -179,53 +240,73 @@ export function updateMaxStats(
       continue;
     }
 
-    remainingEnergyResult ??= getRemainingEnergiesPerAssignment(
-      info.activityModPermutations,
-      armor,
-    );
+    // If even the best-case mod bonus can't beat the running max, the search
+    // below would just fail, so skip it (and its energy precompute).
+    if (value + maxSingleStatBonus <= statRange.maxStat) {
+      continue;
+    }
+
+    remainingEnergyResult ??= computeRemainingEnergies(info, armor, energyCache);
     const { remainingEnergiesPerAssignment, setEnergy } = remainingEnergyResult;
+    const energyBudget = setEnergy - info.totalModEnergyCost;
 
-    // Since we calculate the maximum stat value we can hit for a stat in
-    // isolation, require all other stats to hit their constrained minimums, but
-    // for this stat we start from the highest stat max we've observed. Remember
-    // that this array is expressed in terms of additional stat points.
-    const previousRequiredMinimum = requiredMinimumExtraStats[statIndex];
-    requiredMinimumExtraStats[statIndex] = statRange.maxStat - value;
-
-    // TODO: Rather than iterating one point at a time, we could run our greedy
-    // assignment search that maximizes stats but with stat ranges that prevent
-    // us from going over our minimum? Or maybe do a binary search for the
-    // maximum we can reach?
-    while (statRange.maxStat < maxStat) {
-      // Now that tiers no longer matter (since Edge of Fate), we consider any
-      // stat point increase a "tier". This should be a short-term change -
-      // ideally we'd reconsider all these algorithms to see if they could be
-      // simplified now that the tier concept is gone.
-      requiredMinimumExtraStats[statIndex] += 1;
-
-      // Now see if there's any way to hit that stat with mods.
-      if (
-        !chooseAutoMods(
-          info,
-          requiredMinimumExtraStats,
-          numArtificeMods,
-          remainingEnergiesPerAssignment,
-          setEnergy - info.totalModEnergyCost,
-        )
-      ) {
-        break;
+    // The largest boost this stat can get (holding the other stats at their
+    // minimums) doesn't depend on the stat's current value or on the running
+    // max, so it can be memoized across sets that share the same energy
+    // profile and minimums.
+    if (boostMemo === undefined) {
+      const contextKey = buildContextKey(
+        remainingEnergiesPerAssignment,
+        numArtificeMods,
+        energyBudget,
+      );
+      boostMemo = info.maxBoostMemo.get(contextKey);
+      if (boostMemo === undefined) {
+        boostMemo = new Map();
+        info.maxBoostMemo.set(contextKey, boostMemo);
       }
+    }
+    const previousRequiredMinimum = requiredMinimumExtraStats[statIndex];
+    requiredMinimumExtraStats[statIndex] = 0;
+    const boostKey = statIndex * 0x1000000000000 + packStatNeeds(requiredMinimumExtraStats);
+    let maxBoost = boostMemo.get(boostKey);
+    if (maxBoost === undefined) {
+      // Binary search for the largest achievable boost. chooseAutoMods is
+      // monotonic in a single stat's requirement, so this is exact. -1 means
+      // even the base minimums can't be met.
+      let good = -1;
+      let high = maxSingleStatBonus;
+      while (good < high) {
+        const mid = (good + high + 1) >> 1;
+        requiredMinimumExtraStats[statIndex] = mid;
+        if (
+          chooseAutoMods(
+            info,
+            requiredMinimumExtraStats,
+            numArtificeMods,
+            remainingEnergiesPerAssignment,
+            energyBudget,
+          )
+        ) {
+          good = mid;
+        } else {
+          high = mid - 1;
+        }
+      }
+      maxBoost = good;
+      boostMemo.set(boostKey, maxBoost);
+    }
+    requiredMinimumExtraStats[statIndex] = previousRequiredMinimum;
 
-      const newValue = value + requiredMinimumExtraStats[statIndex];
+    // The first loop already raised the running max to at least `value`, so
+    // this only updates when mods genuinely beat it (the old probe condition).
+    const newValue = value + Math.min(maxBoost, maxStat - value);
+    if (newValue > statRange.maxStat) {
       // filter.minStat < filter.maxStat just checks to make sure you can
       // actually improve the stat given the user's new constraints.
       foundAnyImprovement ||= filter.minStat < filter.maxStat && newValue > filter.minStat;
       statRange.maxStat = newValue;
-
-      // Keep going until we hit the max or we can no longer find mods to improve the stat.
     }
-
-    requiredMinimumExtraStats[statIndex] = previousRequiredMinimum;
   }
 
   return foundAnyImprovement;
@@ -319,6 +400,9 @@ export function pickAndAssignSlotIndependentMods(
       remainingEnergyCapacities[idx] =
         item.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0);
     }
+    // Descending order is required for the greedy fit check below and assumed
+    // by chooseAutoMods' key packing.
+    remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
       const result = chooseAutoMods(
@@ -359,10 +443,15 @@ export function pickOptimalStatMods(
   items: ProcessItem[],
   setStats: number[],
   desiredStatRanges: DesiredStatRange[],
+  /** Number of artifice items in the set, if the caller already knows it. */
+  numArtificeMods?: number,
+  /** Optional per-set cache shared with updateMaxStats. */
+  energyCache?: SetEnergyCache,
 ): { mods: number[]; bonusStats: number[] } | undefined {
-  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
-    info.activityModPermutations,
+  const { remainingEnergiesPerAssignment, setEnergy } = computeRemainingEnergies(
+    info,
     items,
+    energyCache,
   );
   if (remainingEnergiesPerAssignment.length === 0) {
     // No valid activity mod assignments
@@ -388,7 +477,7 @@ export function pickOptimalStatMods(
     }
   }
 
-  const numArtificeMods = count(items, (i) => i.isArtifice);
+  numArtificeMods ??= count(items, (i) => i.isArtifice);
   const picks = greedyPickStatMods(
     info,
     explorationStats,
@@ -452,7 +541,8 @@ export function greedyPickStatMods(
   /** The total amount of energy left over in this set */
   totalModEnergyCapacity: number,
 ): ModsPick[] {
-  if (remainingEnergyCapacities[0].every((e) => e === 0) && numArtificeMods === 0) {
+  // Vectors are sorted descending, so a 0 in front means all-zero.
+  if (remainingEnergyCapacities[0][0] === 0 && numArtificeMods === 0) {
     return [];
   }
   let picks: ModsPick[] | undefined = chooseAutoMods(

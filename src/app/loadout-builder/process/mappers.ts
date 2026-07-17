@@ -23,7 +23,7 @@ import {
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { StatHashes } from 'data/d2/generated-enums';
 import { minBy } from 'es-toolkit';
-import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadata,
@@ -109,61 +109,81 @@ export function mapDimItemToProcessItems({
 
   const tuningSocket = getArmor3TuningSocket(dimItem);
 
-  // Make a version of the item for each possible tuning mod that could be applied.
-  //
-  // exclude tuning mods for exotics since they have so many tuning options that it blows up the combinations.
-  //
-  if (autoStatMods && !isExotic && tuningSocket?.reusablePlugItems?.length) {
-    const processItems: ProcessItem[] = [];
-    const allPlugs = tuningSocket.plugSet?.plugs;
-    // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums
-    const defaultDumpStat =
-      desiredStatRanges.findLast((r) => r.maxStat === 0)?.statHash ??
-      minBy(Array.from(desiredStatRanges.entries()), ([i, r]) => r.maxStat * 1000 - i)?.[1]
-        .statHash;
-
-    for (const { plugItemHash, enabled } of tuningSocket.reusablePlugItems) {
-      if (!enabled || emptyPlugHashes.has(plugItemHash)) {
-        continue;
-      }
-      const plug = allPlugs?.find((p) => p.plugDef.hash === plugItemHash);
-      if (plug) {
-        const def = plug.plugDef;
-        if (isPluggableItem(def) && def.investmentStats?.length) {
-          const tunedStats = { ...stats };
-          let dumpStatHash: StatHashes | undefined = undefined;
-          for (const { statTypeHash, activationRule, value } of mapAndFilterInvestmentStats(def)) {
-            if (
-              armorStats.includes(statTypeHash) &&
-              isPlugStatActive(activationRule, { item: dimItem, statHash: statTypeHash })
-            ) {
-              tunedStats[statTypeHash] = Math.min(MAX_STAT, tunedStats[statTypeHash] + value);
-              if (value < 0) {
-                dumpStatHash = statTypeHash;
-              }
-            }
-          }
-          const desiredMax = dumpStatHash
-            ? desiredStatRanges.find((r) => r.statHash === dumpStatHash)!.maxStat
-            : 0;
-          // If we are dumping
-          if (
-            // This is balanced tuning
-            dumpStatHash === undefined ||
-            // This is dumping the stat we want to dump
-            (defaultDumpStat && dumpStatHash === defaultDumpStat) ||
-            // The maximum is low enough that we might actually want to dump this stat to benefit others
-            (desiredMax > 0 && desiredMax <= 175)
-          ) {
-            processItems.push({ ...processItem, includedTuningMod: def.hash, stats: tunedStats });
-          }
-        }
-      }
+  if (autoStatMods && tuningSocket?.reusablePlugItems?.length) {
+    const variants = buildTuningVariants(dimItem, stats, tuningSocket, desiredStatRanges);
+    if (isExotic) {
+      // Exotics expose every tuning mod, and expanding them into separate items
+      // multiplies the search, so the worker picks among the variants per set
+      // instead (a valid set has at most one exotic).
+      return variants.length ? [{ ...processItem, tuningVariants: variants }] : [processItem];
     }
-    return processItems;
+    // Make a version of the item for each possible tuning mod that could be applied.
+    return variants.map((v) => ({
+      ...processItem,
+      includedTuningMod: v.modHash,
+      stats: v.stats,
+    }));
   }
 
   return [processItem];
+}
+
+/**
+ * The tuning mods worth considering for this item, with the item's stats as
+ * tuned by each. The dump-stat filter keeps the number of variants bounded.
+ */
+function buildTuningVariants(
+  dimItem: DimItem,
+  stats: { [statHash: number]: number },
+  tuningSocket: DimSocket,
+  desiredStatRanges: DesiredStatRange[],
+): { modHash: number; stats: { [statHash: number]: number } }[] {
+  const variants: { modHash: number; stats: { [statHash: number]: number } }[] = [];
+  const allPlugs = tuningSocket.plugSet?.plugs;
+  // By default, we'll sacrifice the last ignored stat, or the last from among the lowest maximums
+  const defaultDumpStat =
+    desiredStatRanges.findLast((r) => r.maxStat === 0)?.statHash ??
+    minBy(Array.from(desiredStatRanges.entries()), ([i, r]) => r.maxStat * 1000 - i)?.[1].statHash;
+
+  for (const { plugItemHash, enabled } of tuningSocket.reusablePlugItems ?? []) {
+    if (!enabled || emptyPlugHashes.has(plugItemHash)) {
+      continue;
+    }
+    const plug = allPlugs?.find((p) => p.plugDef.hash === plugItemHash);
+    if (plug) {
+      const def = plug.plugDef;
+      if (isPluggableItem(def) && def.investmentStats?.length) {
+        const tunedStats = { ...stats };
+        let dumpStatHash: StatHashes | undefined = undefined;
+        for (const { statTypeHash, activationRule, value } of mapAndFilterInvestmentStats(def)) {
+          if (
+            armorStats.includes(statTypeHash) &&
+            isPlugStatActive(activationRule, { item: dimItem, statHash: statTypeHash })
+          ) {
+            tunedStats[statTypeHash] = Math.min(MAX_STAT, tunedStats[statTypeHash] + value);
+            if (value < 0) {
+              dumpStatHash = statTypeHash;
+            }
+          }
+        }
+        const desiredMax = dumpStatHash
+          ? desiredStatRanges.find((r) => r.statHash === dumpStatHash)!.maxStat
+          : 0;
+        // If we are dumping
+        if (
+          // This is balanced tuning
+          dumpStatHash === undefined ||
+          // This is dumping the stat we want to dump
+          (defaultDumpStat && dumpStatHash === defaultDumpStat) ||
+          // The maximum is low enough that we might actually want to dump this stat to benefit others
+          (desiredMax > 0 && desiredMax <= 175)
+        ) {
+          variants.push({ modHash: def.hash, stats: tunedStats });
+        }
+      }
+    }
+  }
+  return variants;
 }
 
 export function mapAutoMods(defs: AutoModDefs): AutoModData {

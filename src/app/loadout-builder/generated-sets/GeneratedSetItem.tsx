@@ -46,6 +46,7 @@ export default function GeneratedSetItem({
   autoStatMods,
   automaticallyPickedMods,
   energy,
+  storeId,
   lbDispatch,
 }: {
   item: DimItem;
@@ -54,6 +55,7 @@ export default function GeneratedSetItem({
   autoStatMods: boolean;
   automaticallyPickedMods?: number[];
   energy: { energyCapacity: number; energyUsed: number };
+  storeId: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
@@ -130,6 +132,7 @@ export default function GeneratedSetItem({
           automaticallyPickedMods={automaticallyPickedMods}
           onSocketClick={onSocketClick}
           size="small"
+          storeId={storeId}
         />
       </div>
     </div>

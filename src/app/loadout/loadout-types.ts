@@ -37,7 +37,7 @@ export type InGameLoadout = DestinyLoadoutComponent & {
   /**
    * The index of the loadout in the list of the user's loadouts.
    *
-   * 0-indexed and maxes out at 9, under the current game setup.
+   * 0-indexed and maxes out at 19, under the current game setup.
    * Make sure to add 1 for the loadout's display number.
    */
   index: number;

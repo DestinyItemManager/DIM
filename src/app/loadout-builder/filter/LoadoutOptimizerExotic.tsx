@@ -222,7 +222,7 @@ function ChosenExoticOption({
         ),
       };
       break;
-    case undefined: {
+    case undefined:
       info = {
         title: t('LoadoutBuilder.NoExoticPreference'),
         description: t('LoadoutBuilder.NoExoticPreferenceDescription'),
@@ -233,7 +233,6 @@ function ChosenExoticOption({
         ),
       };
       break;
-    }
     default: {
       const exoticArmor = defs.InventoryItem.get(lockedExoticHash);
       const fakeItem = makeFakeItem(itemCreationContext, exoticArmor.hash);
