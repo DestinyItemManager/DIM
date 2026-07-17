@@ -22,7 +22,9 @@ beforeAll(async () => {
       /* empty */
     },
     hasValidAuthTokens: () => true,
-    removeAccessToken: () => {},
+    removeAccessToken: () => {
+      /* empty */
+    },
     hasTokenExpired: () => false,
   }));
 
