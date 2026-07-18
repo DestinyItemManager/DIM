@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
-import { DimItem, DimPlug } from 'app/inventory/item-types';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import {
   matchText,
@@ -11,6 +11,7 @@ import {
 } from 'app/search/text-utils';
 import { filterMap } from 'app/utils/collections';
 import { isD1Item } from 'app/utils/item-utils';
+import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import memoizeOne from 'memoize-one';
@@ -107,8 +108,19 @@ const freeformFilters: ItemFilterDefinition[] = [
     description: tl('Filter.Perk'),
     format: 'freeform',
     filter: ({ filterValue, language, d2Definitions }) => {
-      const startWord = startWordRegexp(plainString(filterValue, language), language);
+      const { text, columns } = parsePerkColumns(filterValue);
+      const startWord = startWordRegexp(plainString(text, language), language);
       const test = (s: string) => startWord.test(plainString(s, language));
+      if (columns) {
+        return (item) =>
+          testStringsFromPerkColumns(
+            test,
+            item,
+            d2Definitions,
+            columns,
+            /* includeDescription */ true,
+          );
+      }
       return (item) =>
         (isD1Item(item) &&
           item.talentGrid &&
@@ -160,7 +172,18 @@ const freeformFilters: ItemFilterDefinition[] = [
       }
     },
     filter: ({ lhs, filterValue, language, d2Definitions }) => {
-      const test = matchText(filterValue, language, /* exact */ lhs === 'exactperk');
+      const { text, columns } = parsePerkColumns(filterValue);
+      const test = matchText(text, language, /* exact */ lhs === 'exactperk');
+      if (columns) {
+        return (item) =>
+          testStringsFromPerkColumns(
+            test,
+            item,
+            d2Definitions,
+            columns,
+            /* includeDescription */ false,
+          );
+      }
       return (item) =>
         (isD1Item(item) &&
           testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false)) ||
@@ -229,32 +252,94 @@ function testStringsFromAllSockets(
     return false;
   }
   for (const socket of item.sockets.allSockets) {
-    for (const plug of socket.plugOptions) {
-      if (
-        testStringsFromDisplayPropertiesMap(
-          test,
-          plug.plugDef.displayProperties,
-          includeDescription,
-        ) ||
-        (includeDescription && test(plug.plugDef.itemTypeDisplayName)) ||
-        (defs &&
-          getPlugPerks(plug, defs).some((perk) =>
-            testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription),
-          ))
-      ) {
-        return true;
-      }
+    if (testStringsFromSocket(test, socket, defs, includeDescription)) {
+      return true;
     }
-    // include tooltips from the plugged item
-    if (socket.plugged?.plugDef.tooltipNotifications) {
-      for (const t of socket.plugged.plugDef.tooltipNotifications) {
-        if (test(t.displayString)) {
-          return true;
-        }
+  }
+  return false;
+}
+
+/** includes name and description unless you set the arg flag */
+function testStringsFromSocket(
+  test: (str: string) => boolean,
+  socket: DimSocket,
+  defs: D2ManifestDefinitions | undefined,
+  includeDescription = true,
+): boolean {
+  for (const plug of socket.plugOptions) {
+    if (
+      testStringsFromDisplayPropertiesMap(
+        test,
+        plug.plugDef.displayProperties,
+        includeDescription,
+      ) ||
+      (includeDescription && test(plug.plugDef.itemTypeDisplayName)) ||
+      (defs &&
+        getPlugPerks(plug, defs).some((perk) =>
+          testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription),
+        ))
+    ) {
+      return true;
+    }
+  }
+  // include tooltips from the plugged item
+  if (socket.plugged?.plugDef.tooltipNotifications) {
+    for (const t of socket.plugged.plugDef.tooltipNotifications) {
+      if (test(t.displayString)) {
+        return true;
       }
     }
   }
   return false;
+}
+
+const perkColumnRegexp = /\+col(\d+)$/;
+
+/**
+ * Splits a perk filter value like `rangefinder+col3+col4` into the perk text and
+ * the 1-based perk column indexes it must appear in. Returns undefined columns
+ * when no `+colN` tokens are present, preserving the default any-column behavior.
+ * Trailing `+colN` tokens are consumed greedily; anything else is left as perk text,
+ * so a literal perk name that happens to contain a `+` is unaffected.
+ */
+export function parsePerkColumns(filterValue: string): {
+  text: string;
+  columns: number[] | undefined;
+} {
+  let text = filterValue;
+  const columns: number[] = [];
+  let match: RegExpExecArray | null;
+  while ((match = perkColumnRegexp.exec(text))) {
+    columns.unshift(parseInt(match[1], 10));
+    text = text.slice(0, match.index);
+  }
+  return { text, columns: columns.length ? columns : undefined };
+}
+
+/**
+ * Tests whether a matching perk appears in any of the requested 1-based perk
+ * columns. Columns are the item's visible perk sockets, left to right (e.g. on a
+ * weapon: barrel=1, magazine=2, trait1=3, trait2=4, origin=5).
+ */
+function testStringsFromPerkColumns(
+  test: (str: string) => boolean,
+  item: DimItem,
+  defs: D2ManifestDefinitions | undefined,
+  columns: number[],
+  includeDescription: boolean,
+): boolean {
+  if (!item.sockets) {
+    return false;
+  }
+  const perks = getDisplayedItemSockets(item, /* excludeEmptySockets */ true)?.perks;
+  if (!perks) {
+    return false;
+  }
+  const perkSockets = getSocketsByIndexes(item.sockets, perks.socketIndexes);
+  return columns.some((column) => {
+    const socket = perkSockets[column - 1];
+    return socket !== undefined && testStringsFromSocket(test, socket, defs, includeDescription);
+  });
 }
 
 function testStringsFromSetBonuses(

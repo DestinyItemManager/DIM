@@ -320,6 +320,11 @@ const booleanKeywords = /(not|\s+or|\s+and)\s+/y;
 const filterName = /[a-z]+:/y;
 // Arguments to filters are pretty unconstrained
 const filterArgs = /[^\s()]+/y;
+// A run of `+colN` perk-column selectors. When a filter argument is quoted
+// (e.g. perkname:"kill clip"+col3) these fall outside the quotes, so we
+// re-attach them to the argument here. In the unquoted form filterArgs already
+// swallows them as part of the argument.
+const perkColumnSuffix = /(?:\+col\d+)+/y;
 // Words without quotes are basically any non-whitespace that doesn't terminate a group
 const bareWords = /[^\s)]+/y;
 // Whitespace that doesn't match anything else is an implicit `and`
@@ -483,6 +488,12 @@ export function* lexer(query: string): Generator<Token> {
         try {
           quoted = true;
           args = consumeString(nextChar);
+          // Re-attach a trailing +colN perk-column selector that sits outside
+          // the quotes so filters like perkname: see it as part of their value.
+          const colSuffix = extract(perkColumnSuffix);
+          if (colSuffix !== undefined) {
+            args += colSuffix;
+          }
         } catch (e) {
           if (e instanceof QueryLexerOpenQuotesError) {
             // Rethrow but include the filter prefix (e.g. name:) in the range

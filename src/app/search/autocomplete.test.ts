@@ -33,6 +33,17 @@ describe('autocompleteTermSuggestions', () => {
     ['not(', 'Expected failure'],
     ['memento:', 'memento:any'],
     ['foo memento:', 'foo memento:any'],
+    // Perk column selectors: typing `+` right after the value (no space) offers
+    // `+colN`, whether the value is bare or quoted (the tricky post-quote case).
+    ['perkname:rangefinder+', 'perkname:rangefinder+col1'],
+    ['perkname:rangefinder+co', 'perkname:rangefinder+col1'],
+    ['perkname:"firefly"+', 'perkname:"firefly"+col1'],
+    ['exactperk:"kill clip"+', 'exactperk:"kill clip"+col1'],
+    ['perkname:rangefinder+col3+', 'perkname:rangefinder+col3+col1'],
+    ['is:weapon perkname:"firefly"+| -is:exotic', 'is:weapon perkname:"firefly"+col1 -is:exotic'],
+    // The `+` multiquery suggestions for non-perk filters (e.g. dupe) must NOT be
+    // hijacked by the perk-column path.
+    ['dupe:tag+', 'dupe:item'],
   ];
 
   const plainStringCases: [query: string, mockCandidate: string][] = [['jotu', 'jötunn']];
