@@ -30,7 +30,7 @@ import {
   TierType,
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
-import missingSources from 'data/d1/missing_sources.json';
+import missingSources from 'data/d1/missing_sources.json' with { type: 'json' };
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp, memoize } from 'es-toolkit';
 import { vaultTypes } from '../../destiny1/d1-buckets';

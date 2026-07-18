@@ -7,8 +7,8 @@ import {
   DestinyInventoryItemDefinition,
   DestinyPresentationNodeDefinition,
 } from 'bungie-api-ts/destiny2';
-import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
-import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
+import focusingItemOutputs from 'data/d2/focusing-item-outputs.json' with { type: 'json' };
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json' with { type: 'json' };
 import { keyBy, once } from 'es-toolkit';
 import memoizeOne from 'memoize-one';
 

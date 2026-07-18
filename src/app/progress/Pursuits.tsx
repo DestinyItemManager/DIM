@@ -8,7 +8,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { MILESTONE_QUEST_BUCKET } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import pursuitsInfoFile from 'data/d2/pursuits.json';
+import pursuitsInfoFile from 'data/d2/pursuits.json' with { type: 'json' };
 import { useState } from 'react';
 import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';

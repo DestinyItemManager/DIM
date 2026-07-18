@@ -8,7 +8,7 @@ import {
   toPresentationNodeTree,
 } from 'app/records/presentation-nodes';
 import { DestinyPresentationNodeDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
+import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json' with { type: 'json' };
 import { useSelector } from 'react-redux';
 import { PursuitsGroup } from './Pursuits';
 import { recordToPursuitItem } from './milestone-items';

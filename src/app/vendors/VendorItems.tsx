@@ -6,7 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import FactionIcon from 'app/progress/FactionIcon';
 import { ReputationRank } from 'app/progress/ReputationRank';
 import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
-import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
+import focusingItemOutputs from 'data/d2/focusing-item-outputs.json' with { type: 'json' };
 import { ReactNode } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';

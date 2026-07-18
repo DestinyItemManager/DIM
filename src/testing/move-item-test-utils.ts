@@ -30,9 +30,9 @@ import { getTestDefinitions, getTestProfile, testAccount as rawTestAccount } fro
  * and provide small "fixture" helpers that immutably set up the kinds of edge
  * cases (full buckets, partial stacks, etc.) that item movement has to handle.
  *
- * The Bungie.net transfer/equip/lock APIs must be mocked by the test file itself
- * (via `jest.mock('app/bungie-api/destiny2-api')`), since jest module mocks have
- * to be declared at the top of the test module. See item-move-service.test.ts.
+ * The Bungie.net transfer/equip/lock APIs must be mocked before importing this
+ * module - use `mockDestiny2Api()` from testing/destiny2-api-mocks. See
+ * item-move-service.test.ts.
  */
 
 const testAccount = rawTestAccount as unknown as DestinyAccount;

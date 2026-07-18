@@ -5,7 +5,7 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getItemYear } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json' with { type: 'json' };
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
 import { plainString } from './text-utils';
 

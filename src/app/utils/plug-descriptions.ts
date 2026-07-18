@@ -14,7 +14,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
-import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
+import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json' with { type: 'json' };
 import { compareBy } from './comparators';
 import { unenhancedVersion } from './perk-utils';
 import { isArmorArchetypePlug } from './socket-utils';

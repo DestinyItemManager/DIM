@@ -1,37 +1,51 @@
-import { equip, transfer } from 'app/bungie-api/destiny2-api';
 import { BucketHashes } from 'data/d2/generated-enums';
-import {
-  addItemToStore,
-  buildFreshStores,
-  cloneItem,
-  findItemsByBucket,
-  getTestBuckets,
-  getVault,
-  makeBucketUnmovable,
-  placeItemInPostmaster,
-  removeItemFromStore,
-  setBucketFreeSlots,
-  setupMoveTestStore,
-  setVaultBucketFull,
-} from 'testing/move-item-test-utils';
-import { setupi18n } from 'testing/test-utils';
-import { DimError } from '../utils/dim-error';
-import { DimItem } from './item-types';
-import { DimStore } from './store-types';
-import { amountOfItem } from './stores-helpers';
+import type { Destiny2ApiMocks } from 'testing/destiny2-api-mocks';
+import { mockDestiny2Api } from 'testing/destiny2-api-mocks';
+import type { DimItem } from './item-types';
+import type { DimStore } from './store-types';
 
-// Mock the Bungie.net write APIs so moves don't hit the network (see
-// item-move-service.test.ts for why resolving is enough).
-jest.mock('app/bungie-api/destiny2-api', () => ({
-  transfer: jest.fn().mockResolvedValue({}),
-  equip: jest.fn().mockResolvedValue({}),
-  equipItems: jest.fn(),
-  setLockState: jest.fn().mockResolvedValue({}),
-  setTrackedState: jest.fn().mockResolvedValue({}),
-}));
+// Native ESM: mock the Bungie.net APIs, then dynamically import everything that
+// transitively depends on them (see testing/destiny2-api-mocks).
+let transferMock: Destiny2ApiMocks['transferMock'];
+let resetMocks: Destiny2ApiMocks['resetMocks'];
 
-const transferMock = transfer as jest.Mock;
-const equipMock = equip as jest.Mock;
+let DimError: typeof import('../utils/dim-error').DimError;
+let amountOfItem: typeof import('./stores-helpers').amountOfItem;
+let addItemToStore: typeof import('testing/move-item-test-utils').addItemToStore;
+let buildFreshStores: typeof import('testing/move-item-test-utils').buildFreshStores;
+let cloneItem: typeof import('testing/move-item-test-utils').cloneItem;
+let findItemsByBucket: typeof import('testing/move-item-test-utils').findItemsByBucket;
+let getTestBuckets: typeof import('testing/move-item-test-utils').getTestBuckets;
+let getVault: typeof import('testing/move-item-test-utils').getVault;
+let makeBucketUnmovable: typeof import('testing/move-item-test-utils').makeBucketUnmovable;
+let placeItemInPostmaster: typeof import('testing/move-item-test-utils').placeItemInPostmaster;
+let removeItemFromStore: typeof import('testing/move-item-test-utils').removeItemFromStore;
+let setBucketFreeSlots: typeof import('testing/move-item-test-utils').setBucketFreeSlots;
+let setupMoveTestStore: typeof import('testing/move-item-test-utils').setupMoveTestStore;
+let setVaultBucketFull: typeof import('testing/move-item-test-utils').setVaultBucketFull;
+let setupi18n: typeof import('testing/test-utils').setupi18n;
+
+beforeAll(async () => {
+  ({ transferMock, resetMocks } = await mockDestiny2Api());
+
+  ({ DimError } = await import('../utils/dim-error'));
+  ({ amountOfItem } = await import('./stores-helpers'));
+  ({
+    addItemToStore,
+    buildFreshStores,
+    cloneItem,
+    findItemsByBucket,
+    getTestBuckets,
+    getVault,
+    makeBucketUnmovable,
+    placeItemInPostmaster,
+    removeItemFromStore,
+    setBucketFreeSlots,
+    setupMoveTestStore,
+    setVaultBucketFull,
+  } = await import('testing/move-item-test-utils'));
+  ({ setupi18n } = await import('testing/test-utils'));
+});
 
 /**
  * A parameterized "movement matrix" for the item-move-service - the
@@ -140,10 +154,7 @@ describe('item-move matrix', () => {
   });
 
   beforeEach(async () => {
-    transferMock.mockClear();
-    equipMock.mockClear();
-    transferMock.mockResolvedValue({});
-    equipMock.mockResolvedValue({});
+    resetMocks();
     stores = await buildFreshStores();
   });
 

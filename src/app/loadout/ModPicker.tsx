@@ -16,7 +16,7 @@ import { isClassCompatible, modMetadataByPlugCategoryHash } from 'app/utils/item
 import { getSocketsByCategoryHashes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import unstackableModHashes from 'data/d2/unstackable-mods.json';
+import unstackableModHashes from 'data/d2/unstackable-mods.json' with { type: 'json' };
 import { produce } from 'immer';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';

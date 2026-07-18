@@ -1,6 +1,6 @@
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { invert } from 'app/utils/collections';
-import exoticToCatalystRecordHash from 'data/d2/exotic-to-catalyst-record.json';
+import exoticToCatalystRecordHash from 'data/d2/exotic-to-catalyst-record.json' with { type: 'json' };
 
 export function makeItemsForCatalystRecords(itemCreationContext: ItemCreationContext) {
   return new Map(

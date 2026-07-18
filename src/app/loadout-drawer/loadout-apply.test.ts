@@ -1,36 +1,46 @@
-import { equipItems, transfer } from 'app/bungie-api/destiny2-api';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
-import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
-import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { setD2Manifest } from 'app/manifest/actions';
+import type { DimItem } from 'app/inventory/item-types';
+import type { DimStore } from 'app/inventory/store-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import {
-  addItemToStore,
-  buildFreshStores,
-  cloneItem,
-  findItemsByBucket,
-  getVault,
-  removeItemFromStore,
-  setupMoveTestStore,
-} from 'testing/move-item-test-utils';
-import { getTestDefinitions, setupi18n } from 'testing/test-utils';
+import type { Destiny2ApiMocks } from 'testing/destiny2-api-mocks';
+import { mockDestiny2Api } from 'testing/destiny2-api-mocks';
 
-// Mock the Bungie.net write APIs (and the post-apply character refresh) so
-// applying a loadout doesn't hit the network. The in-memory model is updated by
-// the reducer, so resolving is enough. (jest hoists this above the imports.)
-jest.mock('app/bungie-api/destiny2-api', () => ({
-  transfer: jest.fn().mockResolvedValue({}),
-  equip: jest.fn().mockResolvedValue({}),
-  equipItems: jest.fn().mockResolvedValue({}),
-  setLockState: jest.fn().mockResolvedValue({}),
-  setTrackedState: jest.fn().mockResolvedValue({}),
-  getCharacters: jest.fn().mockResolvedValue({ characters: { data: {} } }),
-}));
+// Native ESM: mock the Bungie.net APIs, then dynamically import everything that
+// transitively depends on them (see testing/destiny2-api-mocks).
+let transferMock: Destiny2ApiMocks['transferMock'];
+let equipItemsMock: Destiny2ApiMocks['equipItemsMock'];
+let resetMocks: Destiny2ApiMocks['resetMocks'];
 
-const transferMock = transfer as jest.Mock;
-const equipItemsApiMock = equipItems as jest.Mock;
+let itemMoveLoadout: typeof import('app/loadout-drawer/auto-loadouts').itemMoveLoadout;
+let applyLoadout: typeof import('app/loadout-drawer/loadout-apply').applyLoadout;
+let setD2Manifest: typeof import('app/manifest/actions').setD2Manifest;
+let addItemToStore: typeof import('testing/move-item-test-utils').addItemToStore;
+let buildFreshStores: typeof import('testing/move-item-test-utils').buildFreshStores;
+let cloneItem: typeof import('testing/move-item-test-utils').cloneItem;
+let findItemsByBucket: typeof import('testing/move-item-test-utils').findItemsByBucket;
+let getVault: typeof import('testing/move-item-test-utils').getVault;
+let removeItemFromStore: typeof import('testing/move-item-test-utils').removeItemFromStore;
+let setupMoveTestStore: typeof import('testing/move-item-test-utils').setupMoveTestStore;
+let getTestDefinitions: typeof import('testing/test-utils').getTestDefinitions;
+let setupi18n: typeof import('testing/test-utils').setupi18n;
+
+beforeAll(async () => {
+  ({ transferMock, equipItemsMock, resetMocks } = await mockDestiny2Api());
+
+  ({ itemMoveLoadout } = await import('app/loadout-drawer/auto-loadouts'));
+  ({ applyLoadout } = await import('app/loadout-drawer/loadout-apply'));
+  ({ setD2Manifest } = await import('app/manifest/actions'));
+  ({
+    addItemToStore,
+    buildFreshStores,
+    cloneItem,
+    findItemsByBucket,
+    getVault,
+    removeItemFromStore,
+    setupMoveTestStore,
+  } = await import('testing/move-item-test-utils'));
+  ({ getTestDefinitions, setupi18n } = await import('testing/test-utils'));
+});
 
 describe('applyLoadout', () => {
   beforeAll(async () => {
@@ -38,10 +48,7 @@ describe('applyLoadout', () => {
   });
 
   beforeEach(() => {
-    transferMock.mockClear();
-    transferMock.mockResolvedValue({});
-    equipItemsApiMock.mockReset();
-    equipItemsApiMock.mockResolvedValue({});
+    resetMocks();
   });
 
   // Regression test for #8872 / #8506: bulk-moving consumables via a filtered
@@ -142,7 +149,7 @@ describe('applyLoadout', () => {
   // resolved id, not the stale loadout-item id.
   it('excludes a crafted loadout item from de-equip replacements by its resolved id', async () => {
     // Bulk-equip API succeeds only for items actually in the target's inventory.
-    equipItemsApiMock.mockImplementation((_account: unknown, store: DimStore, items: DimItem[]) =>
+    equipItemsMock.mockImplementation((_account: unknown, store: DimStore, items: DimItem[]) =>
       Promise.resolve(
         Object.fromEntries(
           items.map((i) => [

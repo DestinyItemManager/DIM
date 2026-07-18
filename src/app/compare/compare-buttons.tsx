@@ -22,7 +22,7 @@ import {
   getWeaponArchetype,
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import rarityIcons from 'data/d2/engram-rarity-icons.json';
+import rarityIcons from 'data/d2/engram-rarity-icons.json' with { type: 'json' };
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import archetypeIcon from 'images/armorArchetype.png';
 import React from 'react';

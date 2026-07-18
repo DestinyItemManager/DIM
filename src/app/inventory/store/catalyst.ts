@@ -3,7 +3,7 @@ import {
   DestinyProfileRecordsComponent,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
-import exoticToCatalystRecordHash from 'data/d2/exotic-to-catalyst-record.json';
+import exoticToCatalystRecordHash from 'data/d2/exotic-to-catalyst-record.json' with { type: 'json' };
 import { DimCatalyst } from '../item-types';
 
 export function buildCatalystInfo(

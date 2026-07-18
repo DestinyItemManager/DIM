@@ -1,4 +1,5 @@
 import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { jest } from '@jest/globals';
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';

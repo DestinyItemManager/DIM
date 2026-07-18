@@ -1,21 +1,29 @@
-import { setD2Manifest } from 'app/manifest/actions';
-import { buildFreshStores, getVault, setupMoveTestStore } from 'testing/move-item-test-utils';
-import { getTestDefinitions, setupi18n } from 'testing/test-utils';
-import { moveItemTo } from './move-item';
+import type { Destiny2ApiMocks } from 'testing/destiny2-api-mocks';
+import { mockDestiny2Api } from 'testing/destiny2-api-mocks';
+import type { DimStore } from './store-types';
 
-jest.mock('app/bungie-api/destiny2-api', () => ({
-  transfer: jest.fn().mockResolvedValue({}),
-  equip: jest.fn().mockResolvedValue({}),
-  equipItems: jest.fn().mockResolvedValue({}),
-  setLockState: jest.fn().mockResolvedValue({}),
-  setTrackedState: jest.fn().mockResolvedValue({}),
-  getCharacters: jest.fn().mockResolvedValue({ characters: { data: {} } }),
-}));
+// Native ESM: mock the Bungie.net APIs, then dynamically import everything that
+// transitively depends on them (see testing/destiny2-api-mocks).
+let transferMock: Destiny2ApiMocks['transferMock'];
+let resetMocks: Destiny2ApiMocks['resetMocks'];
 
-import { transfer } from 'app/bungie-api/destiny2-api';
-import { DimStore } from './store-types';
+let setD2Manifest: typeof import('app/manifest/actions').setD2Manifest;
+let buildFreshStores: typeof import('testing/move-item-test-utils').buildFreshStores;
+let getVault: typeof import('testing/move-item-test-utils').getVault;
+let setupMoveTestStore: typeof import('testing/move-item-test-utils').setupMoveTestStore;
+let getTestDefinitions: typeof import('testing/test-utils').getTestDefinitions;
+let setupi18n: typeof import('testing/test-utils').setupi18n;
+let moveItemTo: typeof import('./move-item').moveItemTo;
 
-const transferMock = transfer as jest.Mock;
+beforeAll(async () => {
+  ({ transferMock, resetMocks } = await mockDestiny2Api());
+
+  ({ setD2Manifest } = await import('app/manifest/actions'));
+  ({ buildFreshStores, getVault, setupMoveTestStore } =
+    await import('testing/move-item-test-utils'));
+  ({ getTestDefinitions, setupi18n } = await import('testing/test-utils'));
+  ({ moveItemTo } = await import('./move-item'));
+});
 
 function findTransferableWeapon(store: DimStore) {
   return store.items.find(
@@ -35,8 +43,7 @@ describe('moveItemTo', () => {
   });
 
   beforeEach(() => {
-    transferMock.mockClear();
-    transferMock.mockResolvedValue({});
+    resetMocks();
   });
 
   // Regression test for #10046: requesting the same move twice (e.g. the user

@@ -2,12 +2,12 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
-import D2Events from 'data/d2/events.json';
+import D2Events from 'data/d2/events.json' with { type: 'json' };
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import D2Season from 'data/d2/seasons.json';
-import D2SeasonFromSource from 'data/d2/source-to-season-v2.json';
-import D2EventFromOverlay from 'data/d2/watermark-to-event.json';
-import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
+import D2Season from 'data/d2/seasons.json' with { type: 'json' };
+import D2SeasonFromSource from 'data/d2/source-to-season-v2.json' with { type: 'json' };
+import D2EventFromOverlay from 'data/d2/watermark-to-event.json' with { type: 'json' };
+import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json' with { type: 'json' };
 import { DimItem } from '../item-types';
 
 /** The Destiny season (D2) that a specific item belongs to. */
