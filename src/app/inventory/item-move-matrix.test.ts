@@ -1,24 +1,13 @@
-import { jest } from '@jest/globals';
-import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import type { Destiny2ApiMocks } from 'testing/destiny2-api-mocks';
+import { mockDestiny2Api } from 'testing/destiny2-api-mocks';
 import type { DimItem } from './item-types';
 import type { DimStore } from './store-types';
 
-// Native ESM: use unstable_mockModule + dynamic import for mocking ES modules.
-// Mock the Bungie.net write APIs so moves don't hit the network (see
-// item-move-service.test.ts for why resolving is enough).
-let transferMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').transfer>;
-let equipMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').equip>;
-
-/** A successful Bungie.net write response - the move logic just awaits these, it ignores the body. */
-const successResponse: ServerResponse<number> = {
-  Response: 0,
-  ErrorCode: PlatformErrorCodes.Success,
-  ThrottleSeconds: 0,
-  ErrorStatus: 'Success',
-  Message: '',
-  MessageData: {},
-};
+// Native ESM: mock the Bungie.net APIs, then dynamically import everything that
+// transitively depends on them (see testing/destiny2-api-mocks).
+let transferMock: Destiny2ApiMocks['transferMock'];
+let resetMocks: Destiny2ApiMocks['resetMocks'];
 
 let DimError: typeof import('../utils/dim-error').DimError;
 let amountOfItem: typeof import('./stores-helpers').amountOfItem;
@@ -37,25 +26,7 @@ let setVaultBucketFull: typeof import('testing/move-item-test-utils').setVaultBu
 let setupi18n: typeof import('testing/test-utils').setupi18n;
 
 beforeAll(async () => {
-  jest.unstable_mockModule('app/bungie-api/destiny2-api', () => {
-    // Spread the real module so every export is present for ESM link-time
-    // binding; only the write APIs the tests exercise are mocked.
-    const actual = jest.requireActual<typeof import('app/bungie-api/destiny2-api')>(
-      'app/bungie-api/destiny2-api',
-    );
-    return {
-      ...actual,
-      transfer: jest.fn(() => Promise.resolve(successResponse)),
-      equip: jest.fn(() => Promise.resolve(successResponse)),
-      equipItems: jest.fn(),
-      setLockState: jest.fn(() => Promise.resolve(successResponse)),
-      setTrackedState: jest.fn(() => Promise.resolve(successResponse)),
-    };
-  });
-
-  const destiny2Api = await import('app/bungie-api/destiny2-api');
-  transferMock = destiny2Api.transfer as jest.MockedFunction<typeof destiny2Api.transfer>;
-  equipMock = destiny2Api.equip as jest.MockedFunction<typeof destiny2Api.equip>;
+  ({ transferMock, resetMocks } = await mockDestiny2Api());
 
   ({ DimError } = await import('../utils/dim-error'));
   ({ amountOfItem } = await import('./stores-helpers'));
@@ -183,10 +154,7 @@ describe('item-move matrix', () => {
   });
 
   beforeEach(async () => {
-    transferMock.mockClear();
-    equipMock.mockClear();
-    transferMock.mockResolvedValue(successResponse);
-    equipMock.mockResolvedValue(successResponse);
+    resetMocks();
     stores = await buildFreshStores();
   });
 

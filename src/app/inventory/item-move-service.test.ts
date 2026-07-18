@@ -1,26 +1,16 @@
-import { jest } from '@jest/globals';
-import { DestinyClass, PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
+import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import type { Destiny2ApiMocks } from 'testing/destiny2-api-mocks';
+import { mockDestiny2Api } from 'testing/destiny2-api-mocks';
 import type { DimItem } from './item-types';
 import type { DimStore } from './store-types';
 
-// Mock the Bungie.net write APIs so moves don't hit the network. Each just
-// reports success - the in-memory store model is updated by the reducer, not by
-// these responses, so resolving is enough to drive the move logic.
-// Native ESM: use unstable_mockModule + dynamic import for mocking ES modules.
-let transferMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').transfer>;
-let equipMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').equip>;
-let equipItemsApiMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').equipItems>;
-
-/** A successful Bungie.net write response - the move logic just awaits these, it ignores the body. */
-const successResponse: ServerResponse<number> = {
-  Response: 0,
-  ErrorCode: PlatformErrorCodes.Success,
-  ThrottleSeconds: 0,
-  ErrorStatus: 'Success',
-  Message: '',
-  MessageData: {},
-};
+// Native ESM: mock the Bungie.net APIs, then dynamically import everything that
+// transitively depends on them (see testing/destiny2-api-mocks).
+let transferMock: Destiny2ApiMocks['transferMock'];
+let equipMock: Destiny2ApiMocks['equipMock'];
+let equipItemsMock: Destiny2ApiMocks['equipItemsMock'];
+let resetMocks: Destiny2ApiMocks['resetMocks'];
 
 let neverCanceled: typeof import('app/utils/cancel').neverCanceled;
 let DimError: typeof import('../utils/dim-error').DimError;
@@ -41,26 +31,7 @@ let setupMoveTestStore: typeof import('testing/move-item-test-utils').setupMoveT
 let setupi18n: typeof import('testing/test-utils').setupi18n;
 
 beforeAll(async () => {
-  jest.unstable_mockModule('app/bungie-api/destiny2-api', () => {
-    // Spread the real module so every export is present for ESM link-time
-    // binding; only the write APIs the tests exercise are mocked.
-    const actual = jest.requireActual<typeof import('app/bungie-api/destiny2-api')>(
-      'app/bungie-api/destiny2-api',
-    );
-    return {
-      ...actual,
-      transfer: jest.fn(() => Promise.resolve(successResponse)),
-      equip: jest.fn(() => Promise.resolve(successResponse)),
-      equipItems: jest.fn(),
-      setLockState: jest.fn(() => Promise.resolve(successResponse)),
-      setTrackedState: jest.fn(() => Promise.resolve(successResponse)),
-    };
-  });
-
-  const destiny2Api = await import('app/bungie-api/destiny2-api');
-  transferMock = destiny2Api.transfer as jest.MockedFunction<typeof destiny2Api.transfer>;
-  equipMock = destiny2Api.equip as jest.MockedFunction<typeof destiny2Api.equip>;
-  equipItemsApiMock = destiny2Api.equipItems as jest.MockedFunction<typeof destiny2Api.equipItems>;
+  ({ transferMock, equipMock, equipItemsMock, resetMocks } = await mockDestiny2Api());
 
   ({ neverCanceled } = await import('app/utils/cancel'));
   ({ DimError } = await import('../utils/dim-error'));
@@ -142,10 +113,7 @@ describe('item-move-service', () => {
   });
 
   beforeEach(async () => {
-    transferMock.mockClear();
-    equipMock.mockClear();
-    transferMock.mockResolvedValue(successResponse);
-    equipMock.mockResolvedValue(successResponse);
+    resetMocks();
     stores = await buildFreshStores();
   });
 
@@ -496,7 +464,7 @@ describe('item-move-service', () => {
   it('equips items already on the store and leaves off-store items for the caller', async () => {
     // Model the real bulk-equip API: it only succeeds for items that are
     // actually in the target character's inventory.
-    equipItemsApiMock.mockImplementation((_account: unknown, store: DimStore, items: DimItem[]) =>
+    equipItemsMock.mockImplementation((_account: unknown, store: DimStore, items: DimItem[]) =>
       Promise.resolve(
         Object.fromEntries(
           items.map((i) => [

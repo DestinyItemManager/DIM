@@ -1,19 +1,11 @@
-import { jest } from '@jest/globals';
-import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
+import type { Destiny2ApiMocks } from 'testing/destiny2-api-mocks';
+import { mockDestiny2Api } from 'testing/destiny2-api-mocks';
 import type { DimStore } from './store-types';
 
-// Native ESM: use unstable_mockModule + dynamic import for mocking ES modules.
-let transferMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').transfer>;
-
-/** A successful Bungie.net write response - the move logic just awaits these, it ignores the body. */
-const successResponse: ServerResponse<number> = {
-  Response: 0,
-  ErrorCode: PlatformErrorCodes.Success,
-  ThrottleSeconds: 0,
-  ErrorStatus: 'Success',
-  Message: '',
-  MessageData: {},
-};
+// Native ESM: mock the Bungie.net APIs, then dynamically import everything that
+// transitively depends on them (see testing/destiny2-api-mocks).
+let transferMock: Destiny2ApiMocks['transferMock'];
+let resetMocks: Destiny2ApiMocks['resetMocks'];
 
 let setD2Manifest: typeof import('app/manifest/actions').setD2Manifest;
 let buildFreshStores: typeof import('testing/move-item-test-utils').buildFreshStores;
@@ -24,25 +16,7 @@ let setupi18n: typeof import('testing/test-utils').setupi18n;
 let moveItemTo: typeof import('./move-item').moveItemTo;
 
 beforeAll(async () => {
-  jest.unstable_mockModule('app/bungie-api/destiny2-api', () => {
-    // Spread the real module so every export is present for ESM link-time
-    // binding; only the write APIs the tests exercise are mocked.
-    const actual = jest.requireActual<typeof import('app/bungie-api/destiny2-api')>(
-      'app/bungie-api/destiny2-api',
-    );
-    return {
-      ...actual,
-      transfer: jest.fn(() => Promise.resolve(successResponse)),
-      equip: jest.fn(() => Promise.resolve(successResponse)),
-      equipItems: jest.fn(() => Promise.resolve({})),
-      setLockState: jest.fn(() => Promise.resolve(successResponse)),
-      setTrackedState: jest.fn(() => Promise.resolve(successResponse)),
-      getCharacters: jest.fn(() => Promise.resolve({ characters: { data: {} } })),
-    };
-  });
-
-  const destiny2Api = await import('app/bungie-api/destiny2-api');
-  transferMock = destiny2Api.transfer as jest.MockedFunction<typeof destiny2Api.transfer>;
+  ({ transferMock, resetMocks } = await mockDestiny2Api());
 
   ({ setD2Manifest } = await import('app/manifest/actions'));
   ({ buildFreshStores, getVault, setupMoveTestStore } =
@@ -69,8 +43,7 @@ describe('moveItemTo', () => {
   });
 
   beforeEach(() => {
-    transferMock.mockClear();
-    transferMock.mockResolvedValue(successResponse);
+    resetMocks();
   });
 
   // Regression test for #10046: requesting the same move twice (e.g. the user
