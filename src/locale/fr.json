@@ -752,7 +752,7 @@
     "SaveAs": "Enregistrer sous",
     "SetBonus": "Bonus d'ensemble",
     "SetBonusModWarning": "Cet ensemble contient un objet avec un mod de bonus d'ensemble configurable. Appliquez manuellement le bon mod pour activer le bonus d'ensemble désiré.",
-    "SpeedReport": "{{combos, number}} combinaisons évaluées en {{time}} secondes, en utilisant {{cpus}} cœurs de processeur.",
+    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores. Adjust max cores in Settings.",
     "StatConstraints": "Priorités et fourchettes de stats",
     "StatMax": "Max",
     "StatMin": "Min",
@@ -761,7 +761,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Impossible d'ajouter tous les mods.",
     "UnableToAddAllModsBody": "Il n'y avait pas assez d'emplacements de mod disponibles pour placer {{mods}}.",
-    "UnlockItem": "Désépingler Objet"
+    "UnlockItem": "Désépingler Objet",
+    "WhySlow": "Why is this slow?"
   },
   "LoadoutFilter": {
     "Contains": "Affiche les équipements ayant un objet ou un mod correspondant au texte du filtre. Recherchez des objets ayant des espaces dans leur nom en utilisant des guillemets.",
