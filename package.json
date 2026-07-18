@@ -178,7 +178,7 @@
     "ts-jest": "^29.4.11",
     "ts-loader": "^9.6.2",
     "ts-unused-exports": "^11.0.1",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.64.0",
     "webpack-stats-plugin": "^1.1.3"
   },
