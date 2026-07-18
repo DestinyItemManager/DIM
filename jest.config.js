@@ -26,8 +26,17 @@ export default {
     ...pathsToModuleNameMapper(tsconfigPaths, { prefix: '<rootDir>/' }),
     '^.+\\.s?css$': 'identity-obj-proxy',
     'Library\\.mjs$': 'identity-obj-proxy',
+    // @fortawesome/fontawesome-svg-core's "import" export condition points at an
+    // ESM-syntax file in a package without "type": "module", so Jest
+    // misclassifies it as CJS and cjs-module-lexer chokes on its export
+    // statements. Force the real CJS build.
+    '^@fortawesome/fontawesome-svg-core$':
+      '<rootDir>/node_modules/@fortawesome/fontawesome-svg-core/index.js',
   },
   setupFiles: ['./src/testing/jest-setup.cjs'],
+  // Redirects ESM-syntax-.js resolutions (e.g. @react-hook/* dist/module) to
+  // their real ESM (.mjs) builds - see the file for why.
+  resolver: '<rootDir>/config/jest-resolver.cjs',
   // Explicitly resolve babel-jest from the project root to ensure @babel/core@8 is used.
   // Without this, jest-config resolves babel-jest from its own node_modules which uses @babel/core@7.
   transform: {

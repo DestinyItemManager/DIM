@@ -1,36 +1,76 @@
-import { equipItems, transfer } from 'app/bungie-api/destiny2-api';
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
-import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
-import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { setD2Manifest } from 'app/manifest/actions';
-import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { jest } from '@jest/globals';
+import type { DimItem } from 'app/inventory/item-types';
+import type { DimStore } from 'app/inventory/store-types';
+import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import {
-  addItemToStore,
-  buildFreshStores,
-  cloneItem,
-  findItemsByBucket,
-  getVault,
-  removeItemFromStore,
-  setupMoveTestStore,
-} from 'testing/move-item-test-utils';
-import { getTestDefinitions, setupi18n } from 'testing/test-utils';
 
 // Mock the Bungie.net write APIs (and the post-apply character refresh) so
 // applying a loadout doesn't hit the network. The in-memory model is updated by
-// the reducer, so resolving is enough. (jest hoists this above the imports.)
-jest.mock('app/bungie-api/destiny2-api', () => ({
-  transfer: jest.fn().mockResolvedValue({}),
-  equip: jest.fn().mockResolvedValue({}),
-  equipItems: jest.fn().mockResolvedValue({}),
-  setLockState: jest.fn().mockResolvedValue({}),
-  setTrackedState: jest.fn().mockResolvedValue({}),
-  getCharacters: jest.fn().mockResolvedValue({ characters: { data: {} } }),
-}));
+// the reducer, so resolving is enough.
+// Native ESM: use unstable_mockModule + dynamic import for mocking ES modules.
+let transferMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').transfer>;
+let equipItemsApiMock: jest.MockedFunction<typeof import('app/bungie-api/destiny2-api').equipItems>;
 
-const transferMock = transfer as jest.Mock;
-const equipItemsApiMock = equipItems as jest.Mock;
+/** A successful Bungie.net write response - the move logic just awaits these, it ignores the body. */
+const successResponse: ServerResponse<number> = {
+  Response: 0,
+  ErrorCode: PlatformErrorCodes.Success,
+  ThrottleSeconds: 0,
+  ErrorStatus: 'Success',
+  Message: '',
+  MessageData: {},
+};
+
+let itemMoveLoadout: typeof import('app/loadout-drawer/auto-loadouts').itemMoveLoadout;
+let applyLoadout: typeof import('app/loadout-drawer/loadout-apply').applyLoadout;
+let setD2Manifest: typeof import('app/manifest/actions').setD2Manifest;
+let addItemToStore: typeof import('testing/move-item-test-utils').addItemToStore;
+let buildFreshStores: typeof import('testing/move-item-test-utils').buildFreshStores;
+let cloneItem: typeof import('testing/move-item-test-utils').cloneItem;
+let findItemsByBucket: typeof import('testing/move-item-test-utils').findItemsByBucket;
+let getVault: typeof import('testing/move-item-test-utils').getVault;
+let removeItemFromStore: typeof import('testing/move-item-test-utils').removeItemFromStore;
+let setupMoveTestStore: typeof import('testing/move-item-test-utils').setupMoveTestStore;
+let getTestDefinitions: typeof import('testing/test-utils').getTestDefinitions;
+let setupi18n: typeof import('testing/test-utils').setupi18n;
+
+beforeAll(async () => {
+  jest.unstable_mockModule('app/bungie-api/destiny2-api', () => {
+    // Spread the real module so every export is present for ESM link-time
+    // binding; only the write APIs the tests exercise are mocked (plus the
+    // post-apply character refresh).
+    const actual = jest.requireActual<typeof import('app/bungie-api/destiny2-api')>(
+      'app/bungie-api/destiny2-api',
+    );
+    return {
+      ...actual,
+      transfer: jest.fn(() => Promise.resolve(successResponse)),
+      equip: jest.fn(() => Promise.resolve(successResponse)),
+      equipItems: jest.fn(() => Promise.resolve({})),
+      setLockState: jest.fn(() => Promise.resolve(successResponse)),
+      setTrackedState: jest.fn(() => Promise.resolve(successResponse)),
+      getCharacters: jest.fn(() => Promise.resolve({ characters: { data: {} } })),
+    };
+  });
+
+  const destiny2Api = await import('app/bungie-api/destiny2-api');
+  transferMock = destiny2Api.transfer as jest.MockedFunction<typeof destiny2Api.transfer>;
+  equipItemsApiMock = destiny2Api.equipItems as jest.MockedFunction<typeof destiny2Api.equipItems>;
+
+  ({ itemMoveLoadout } = await import('app/loadout-drawer/auto-loadouts'));
+  ({ applyLoadout } = await import('app/loadout-drawer/loadout-apply'));
+  ({ setD2Manifest } = await import('app/manifest/actions'));
+  ({
+    addItemToStore,
+    buildFreshStores,
+    cloneItem,
+    findItemsByBucket,
+    getVault,
+    removeItemFromStore,
+    setupMoveTestStore,
+  } = await import('testing/move-item-test-utils'));
+  ({ getTestDefinitions, setupi18n } = await import('testing/test-utils'));
+});
 
 describe('applyLoadout', () => {
   beforeAll(async () => {
@@ -39,7 +79,7 @@ describe('applyLoadout', () => {
 
   beforeEach(() => {
     transferMock.mockClear();
-    transferMock.mockResolvedValue({});
+    transferMock.mockResolvedValue(successResponse);
     equipItemsApiMock.mockReset();
     equipItemsApiMock.mockResolvedValue({});
   });
