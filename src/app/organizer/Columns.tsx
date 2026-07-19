@@ -71,7 +71,6 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { BreakerTypeHashes, BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import shapedOverlay from 'images/shapedOverlay.png';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
@@ -278,7 +277,6 @@ export function getColumns(
             {(ref, onClick) => (
               <div ref={ref} onClick={onClick} className="item">
                 <ItemIcon item={item} />
-                {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
               </div>
             )}
           </ItemPopupTrigger>

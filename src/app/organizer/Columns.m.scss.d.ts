@@ -34,7 +34,6 @@ interface CssExports {
   'positive': string;
   'row': string;
   'selection': string;
-  'shapedIconOverlay': string;
   'shiftHeld': string;
   'sorter': string;
   'stats': string;
