@@ -1,4 +1,4 @@
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json' with { type: 'json' };
 import { invert } from './collections';
 
 // map an enhanced perk hash to the unenhanced version.

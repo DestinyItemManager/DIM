@@ -1,5 +1,10 @@
+import { createRequire } from 'module';
 import { pathsToModuleNameMapper } from 'ts-jest';
 import tsconfig from './tsconfig.json' with { type: 'json' };
+
+// Resolve babel-jest from the project root so it uses @babel/core@8 (the project's
+// version) rather than the @babel/core@7 version bundled with jest-config.
+const require = createRequire(import.meta.url);
 
 const tsconfigPaths = { ...tsconfig.compilerOptions.paths };
 delete tsconfigPaths['*'];
@@ -10,19 +15,37 @@ export default {
   verbose: true,
   testTimeout: 60000,
   roots: ['<rootDir>'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts'],
   modulePaths: tsconfig.compilerOptions.baseUrl ? [tsconfig.compilerOptions.baseUrl] : [],
   moduleNameMapper: {
-    '\\.(jpg|jpeg|a?png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)(\\?react)?$':
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)(\\?react)?$':
       '<rootDir>/src/__mocks__/fileMock.js',
+    '\\.svg$': '<rootDir>/src/__mocks__/svgMock.mjs',
+    '\\.apng$': '<rootDir>/src/__mocks__/svgMock.mjs',
     // Automatically include paths from tsconfig
     ...pathsToModuleNameMapper(tsconfigPaths, { prefix: '<rootDir>/' }),
     '^.+\\.s?css$': 'identity-obj-proxy',
     'Library\\.mjs$': 'identity-obj-proxy',
+    // @fortawesome/fontawesome-svg-core's "import" export condition points at an
+    // ESM-syntax file in a package without "type": "module", so Jest
+    // misclassifies it as CJS and cjs-module-lexer chokes on its export
+    // statements. Force the real CJS build.
+    '^@fortawesome/fontawesome-svg-core$':
+      '<rootDir>/node_modules/@fortawesome/fontawesome-svg-core/index.js',
   },
   setupFiles: ['./src/testing/jest-setup.cjs'],
+  // Redirects ESM-syntax-.js resolutions (e.g. @react-hook/* dist/module) to
+  // their real ESM (.mjs) builds - see the file for why.
+  resolver: '<rootDir>/config/jest-resolver.cjs',
+  // Explicitly resolve babel-jest from the project root to ensure @babel/core@8 is used.
+  // Without this, jest-config resolves babel-jest from its own node_modules which uses @babel/core@7.
+  transform: {
+    '\\.[jt]sx?$': require.resolve('babel-jest'),
+    '\\.mjs$': require.resolve('babel-jest'),
+  },
   // Babel transform is required to handle some es modules?
   transformIgnorePatterns: [
-    'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@floating-ui|@react-hook)',
+    'node_modules/.pnpm/(?!bungie-api-ts|@destinyitemmanager|@floating-ui|@react-hook|react-router|cookie-es)',
   ],
   globals: {
     $BROWSERS: [],

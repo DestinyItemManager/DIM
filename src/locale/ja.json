@@ -735,7 +735,7 @@
     "SaveAs": "名前をつけて保存",
     "SetBonus": "セットボーナス",
     "SetBonusModWarning": "このセットには、セットボーナスMODを設定できるアイテムが含まれています。目的のセットボーナスを発動させるには、対応するMODを手動で装着してください。",
-    "SpeedReport": "PCのCPUコア {{cpus}} コアを使用し、{{time}} 秒で {{combos, number}} 種類の組み合わせを探しました。",
+    "SpeedReport": "{{time}} 秒で{{combos, number}}通りの組み合わせをCPUの{{cpus}}コアを使用して検証しました。最大使用コア数は設定から変更できます。",
     "StatConstraints": "ステータス値の優先度と範囲",
     "StatMax": "最大",
     "StatMin": "最小",
@@ -744,7 +744,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
     "UnableToAddAllModsBody": "{{mods}} を適用するのに十分なModスロットがありませんでした。",
-    "UnlockItem": "アイテムのピン留めを解除"
+    "UnlockItem": "アイテムのピン留めを解除",
+    "WhySlow": "処理が遅い理由"
   },
   "LoadoutFilter": {
     "Contains": "フィルターテキストに一致するアイテムまたはMODを持つロードアウトを表示します。アイテム名にスペースが含まれる場合、引用符で囲んで検索してください。",

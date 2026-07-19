@@ -8,7 +8,7 @@ import {
   DestinyObjectiveUiStyle,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
-import trialsHashes from 'data/d2/d2-trials-objectives.json';
+import trialsHashes from 'data/d2/d2-trials-objectives.json' with { type: 'json' };
 
 /**
  * These are the utilities that deal with figuring out Objectives for items.

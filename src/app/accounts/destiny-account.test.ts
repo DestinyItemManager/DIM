@@ -1,20 +1,36 @@
-import { Tokens } from 'app/bungie-api/oauth-tokens';
+import { beforeAll, jest } from '@jest/globals';
 import {
   BungieMembershipType,
   DestinyLinkedProfilesResponse,
   PlatformErrorCodes,
 } from 'bungie-api-ts/destiny2';
-import d1Profile from 'testing/data/d1profiles-2022-10-24.json';
-import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json';
-import { generatePlatforms } from './destiny-account';
+import d1Profile from 'testing/data/d1profiles-2022-10-24.json' with { type: 'json' };
+import linkedAccounts from 'testing/data/linkedaccounts-2025-07-15.json' with { type: 'json' };
 
-jest.mock('app/bungie-api/oauth-tokens', () => ({
-  getToken: (): Tokens =>
-    ({
+// Native ESM: use unstable_mockModule + dynamic import for mocking ES modules
+let generatePlatforms: typeof import('./destiny-account').generatePlatforms;
+
+beforeAll(async () => {
+  jest.unstable_mockModule('app/bungie-api/oauth-tokens', () => ({
+    getToken: (): unknown => ({
       accessToken: { value: 'foo' },
-    }) as Tokens,
-  hasTokenExpired: () => false,
-}));
+    }),
+    setToken: () => {
+      /* empty */
+    },
+    removeToken: () => {
+      /* empty */
+    },
+    hasValidAuthTokens: () => true,
+    removeAccessToken: () => {
+      /* empty */
+    },
+    hasTokenExpired: () => false,
+  }));
+
+  const dc = await import('./destiny-account');
+  generatePlatforms = dc.generatePlatforms;
+});
 
 // This relies on knowing what the accounts that go with the linkedaccounts data are
 beforeEach(() => {

@@ -752,7 +752,7 @@
     "SaveAs": "Salva come",
     "SetBonus": "Bonus set",
     "SetBonusModWarning": "Questo set contiene un oggetto con una modifica configurabile per bonus set. Applica manualmente la modifica per attivare il bonus set desiderato.",
-    "SpeedReport": "Controllate {{combos, number}} combinazioni in {{time}} secondi utilizzando {{cpus}} core della CPU.",
+    "SpeedReport": "Valutate {{combos, number}} combinazioni in {{time}} secondi utilizzando {{cpus}} core CPU.\nRegola il numero massimo di core nelle Impostazioni.",
     "StatConstraints": "Priorità e limiti statistiche",
     "StatMax": "Max",
     "StatMin": "Min",
@@ -761,7 +761,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Impossibile aggiungere tutte le modifiche.",
     "UnableToAddAllModsBody": "Non c'erano abbastanza spazi disponibili per installare {{mods}}.",
-    "UnlockItem": "Sblocca oggetto"
+    "UnlockItem": "Sblocca oggetto",
+    "WhySlow": "Perché è lento?"
   },
   "LoadoutFilter": {
     "Contains": "Mostra le dotazioni che hanno un oggetto o una modifica che corrisponde al testo del filtro. Cerca oggetti con spazi nel nome usando le virgolette.",

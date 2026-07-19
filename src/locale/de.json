@@ -752,7 +752,7 @@
     "SaveAs": "Speichern unter",
     "SetBonus": "Set-Boni",
     "SetBonusModWarning": "Dieses Set enthält einen Gegenstand mit einem konfigurierbaren Set-Bonus-Mod. Setze manuell den korrekten Mod ein, um den gewünschten Set-Bonus zu aktivieren.",
-    "SpeedReport": "Evaluiert {{combos, number}} Kombinationen in {{time}} Sekunden mit {{cpus}} CPU Kernen.",
+    "SpeedReport": "{{combos, number}} Kombination(en) in {{time}} Sekunden mit {{cpus}} CPU-Kern(en) evaluiert. Max. Kerne in den Einstellungen anpassen.",
     "StatConstraints": "Stat-Prioritäten und Bereiche",
     "StatMax": "Max",
     "StatMin": "Min",
@@ -761,7 +761,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Nicht in der Lage, alle Mods hinzuzufügen.",
     "UnableToAddAllModsBody": "Es waren nicht genügend Mod-Slots verfügbar für {{mods}}.",
-    "UnlockItem": "Abpinnen"
+    "UnlockItem": "Abpinnen",
+    "WhySlow": "Warum ist das langsam?"
   },
   "LoadoutFilter": {
     "Contains": "Zeigt Loadouts an, die einen Gegenstand oder ein Mod haben, das dem Filtertext entspricht. Für eine Suche mit Leerzeichen in ihrem Namen, benutze Anführungszeichen.",

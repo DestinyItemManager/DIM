@@ -16,7 +16,7 @@ import {
   DestinySeasonPassReference,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import brightEngramsBonus from 'data/d2/bright-engram-bonus.json';
+import brightEngramsBonus from 'data/d2/bright-engram-bonus.json' with { type: 'json' };
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import * as styles from './SeasonalRank.m.scss';

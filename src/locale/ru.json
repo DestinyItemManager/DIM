@@ -786,7 +786,7 @@
     "SaveAs": "Сохранить как",
     "SetBonus": "Set Bonuses",
     "SetBonusModWarning": "This set contains an item with a configurable set bonus mod. Manually apply the correct mod to activate the desired set bonus.",
-    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores.",
+    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores. Adjust max cores in Settings.",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Макс.",
     "StatMin": "Min",
@@ -795,7 +795,8 @@
     "TierNumber": "Т{{tier}}",
     "UnableToAddAllMods": "Не удалось добавить все моды.",
     "UnableToAddAllModsBody": "Не хватает слотов для модов для применения {{mods}}.",
-    "UnlockItem": "Открепить"
+    "UnlockItem": "Открепить",
+    "WhySlow": "Why is this slow?"
   },
   "LoadoutFilter": {
     "Contains": "Отображает комплекты, в которых есть предмет или модификатор, соответствующий тексту фильтра. Ищите предметы с пробелами в имени используя кавычки.",

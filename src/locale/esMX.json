@@ -752,7 +752,7 @@
     "SaveAs": "Guardar como",
     "SetBonus": "Set de Bonificación",
     "SetBonusModWarning": "Este conjunto contiene un objeto con un modificador de bonus de conjunto configurable. Aplica manualmente el modificador correcto para activar el bonificador de conjunto deseado.",
-    "SpeedReport": "Evaluados {{combos, number}} combinaciones en {{time}} segundos usando {{cpus}} núcleos de CPU.",
+    "SpeedReport": "Evaluadas {{combos, number} combinaciones en {{time}} segundos usando {{cpus}} núcleos de la CPU. Ajusta los núcleos máximos en Configuración.",
     "StatConstraints": "Prioridades & Rangos de Estadísticas",
     "StatMax": "Máx",
     "StatMin": "Min",
@@ -761,7 +761,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "No se pueden agregar todos los mods.",
     "UnableToAddAllModsBody": "No había suficientes espacios disponibles para que cupiera el mod de {{mods}}.",
-    "UnlockItem": "Desanclar objeto"
+    "UnlockItem": "Desanclar objeto",
+    "WhySlow": "¿Por qué va tan lento?"
   },
   "LoadoutFilter": {
     "Contains": "Muestra equipaciones las cuales tengan un objeto o un mod que coincidan con el texto filtrado. Busca por objetos con espacios en su nombre usando comillas.",

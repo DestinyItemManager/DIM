@@ -114,7 +114,7 @@ export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
   validateStat?: (filterContext?: FilterCtx) => (stat: string) => boolean;
 
   /**
-   * A custom function used to generate suggestions instead of default permutation generation from suggestions.
+   * A custom function used to generate suggestions **instead** of default permutation generation from suggestions.
    *
    * This should only be necessary for freeform or custom formats.
    */

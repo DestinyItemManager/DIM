@@ -10,23 +10,23 @@ import { F_OK } from 'constants';
 import { maxBy, once } from 'es-toolkit';
 import i18next from 'i18next';
 import fetchMock from 'jest-fetch-mock';
-import de from 'locale/de.json';
-import en from 'locale/en.json';
-import es from 'locale/es.json';
-import esMX from 'locale/esMX.json';
-import fr from 'locale/fr.json';
-import it from 'locale/it.json';
-import ja from 'locale/ja.json';
-import ko from 'locale/ko.json';
-import pl from 'locale/pl.json';
-import ptBR from 'locale/ptBR.json';
-import ru from 'locale/ru.json';
-import zhCHS from 'locale/zhCHS.json';
-import zhCHT from 'locale/zhCHT.json';
+import de from 'locale/de.json' with { type: 'json' };
+import en from 'locale/en.json' with { type: 'json' };
+import es from 'locale/es.json' with { type: 'json' };
+import esMX from 'locale/esMX.json' with { type: 'json' };
+import fr from 'locale/fr.json' with { type: 'json' };
+import it from 'locale/it.json' with { type: 'json' };
+import ja from 'locale/ja.json' with { type: 'json' };
+import ko from 'locale/ko.json' with { type: 'json' };
+import pl from 'locale/pl.json' with { type: 'json' };
+import ptBR from 'locale/ptBR.json' with { type: 'json' };
+import ru from 'locale/ru.json' with { type: 'json' };
+import zhCHS from 'locale/zhCHS.json' with { type: 'json' };
+import zhCHT from 'locale/zhCHT.json' with { type: 'json' };
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import profile from 'testing/data/profile-2026-06-09.json';
-import vendors from 'testing/data/vendors-2026-06-29.json';
+import profile from 'testing/data/profile-2026-06-09.json' with { type: 'json' };
+import vendors from 'testing/data/vendors-2026-06-29.json' with { type: 'json' };
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 
 /**
@@ -38,7 +38,7 @@ export async function getTestManifestJson() {
   fetchMock.dontMock();
   try {
     // download and parse manifest
-    const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
+    const cacheDir = path.resolve(process.cwd(), 'manifest-cache');
 
     // In this mode we assume the last-written file in the manifest-cache directory is the one we want
     if (process.env.LOCAL_MANIFEST) {

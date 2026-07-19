@@ -41,9 +41,9 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import extendedBreaker from 'data/d2/extended-breaker.json';
-import extendedFoundry from 'data/d2/extended-foundry.json';
-import extendedICH from 'data/d2/extended-ich.json';
+import extendedBreaker from 'data/d2/extended-breaker.json' with { type: 'json' };
+import extendedFoundry from 'data/d2/extended-foundry.json' with { type: 'json' };
+import extendedICH from 'data/d2/extended-ich.json' with { type: 'json' };
 import { BucketHashes, ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import { keyBy, memoize } from 'es-toolkit';
 import { Draft } from 'immer';

@@ -12,7 +12,7 @@ import { compact, filterMap } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
-import glimmerMats from 'data/d2/spider-mats.json';
+import glimmerMats from 'data/d2/spider-mats.json' with { type: 'json' };
 import { useSelector } from 'react-redux';
 import * as styles from './MaterialCounts.m.scss';
 

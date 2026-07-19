@@ -1,20 +1,20 @@
 import { setTag } from '@sentry/browser';
 import i18next from 'i18next';
 import HttpApi, { HttpBackendOptions } from 'i18next-http-backend';
-import de from 'locale/de.json';
-import en from 'locale/en.json';
-import es from 'locale/es.json';
-import esMX from 'locale/esMX.json';
-import fr from 'locale/fr.json';
-import it from 'locale/it.json';
-import ja from 'locale/ja.json';
-import ko from 'locale/ko.json';
-import pl from 'locale/pl.json';
-import ptBR from 'locale/ptBR.json';
-import ru from 'locale/ru.json';
-import zhCHS from 'locale/zhCHS.json';
-import zhCHT from 'locale/zhCHT.json';
-import enSrc from '../../config/i18n.json';
+import de from 'locale/de.json' with { type: 'json' };
+import en from 'locale/en.json' with { type: 'json' };
+import es from 'locale/es.json' with { type: 'json' };
+import esMX from 'locale/esMX.json' with { type: 'json' };
+import fr from 'locale/fr.json' with { type: 'json' };
+import it from 'locale/it.json' with { type: 'json' };
+import ja from 'locale/ja.json' with { type: 'json' };
+import ko from 'locale/ko.json' with { type: 'json' };
+import pl from 'locale/pl.json' with { type: 'json' };
+import ptBR from 'locale/ptBR.json' with { type: 'json' };
+import ru from 'locale/ru.json' with { type: 'json' };
+import zhCHS from 'locale/zhCHS.json' with { type: 'json' };
+import zhCHT from 'locale/zhCHT.json' with { type: 'json' };
+import enSrc from '../../config/i18n.json' with { type: 'json' };
 import { languageSelector } from './dim-api/selectors';
 import { percent } from './shell/formatters';
 import { humanBytes } from './storage/human-bytes';
@@ -52,7 +52,7 @@ const dimLangToBrowserLang = invert(browserLangToDimLang);
 
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)
-if (module.hot) {
+if (typeof module !== 'undefined' && module.hot) {
   module.hot.accept('../../config/i18n.json', () => {
     i18next.reloadResources('en', undefined, () => {
       infoLog('i18n', 'Reloaded translations');

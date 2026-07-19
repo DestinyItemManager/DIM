@@ -735,7 +735,7 @@
     "SaveAs": "保存為",
     "SetBonus": "防具套裝加成",
     "SetBonusModWarning": "This set contains an item with a configurable set bonus mod. Manually apply the correct mod to activate the desired set bonus.",
-    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores.",
+    "SpeedReport": "Evaluated {{combos, number}} combinations in {{time}} seconds using {{cpus}} CPU cores. Adjust max cores in Settings.",
     "StatConstraints": "Stat Priorities & Ranges",
     "StatMax": "Max",
     "StatMin": "Min",
@@ -744,7 +744,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "無法添加所有模組。",
     "UnableToAddAllModsBody": "模組插槽不足，無法裝下 {{mods}}。",
-    "UnlockItem": "取消固定物品"
+    "UnlockItem": "取消固定物品",
+    "WhySlow": "爲什麽會慢？"
   },
   "LoadoutFilter": {
     "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",

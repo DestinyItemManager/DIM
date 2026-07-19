@@ -41,7 +41,7 @@ import { fragmentSocketCategoryHashes, getSocketsByCategoryHashes } from 'app/ut
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import seasonalMods from 'data/d2/seasonal-armor-mods.json';
+import seasonalMods from 'data/d2/seasonal-armor-mods.json' with { type: 'json' };
 import {
   LoadoutAnalysisContext,
   LoadoutAnalysisResult,

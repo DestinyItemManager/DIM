@@ -735,7 +735,7 @@
     "SaveAs": "다른 이름으로 저장",
     "SetBonus": "세트 보너스",
     "SetBonusModWarning": "이 세트는 선택 가능한 세트 보너스 개조 부품을 포함하고 있습니다. 원하는 세트 보너스를 활성화하려면 수동으로 개조 부품을 적용하세요.",
-    "SpeedReport": "{{cpus}}개의 CPU 코어로 {{time}}초 동안 {{combos, number}}개 조합을 계산하였습니다.",
+    "SpeedReport": "{{cpus}}개의 CPU 코어로 {{time}}초 동안 {{combos, number}}개 조합을 계산하였습니다. 설정에서 최대 코어 수를 조절할 수 있습니다.",
     "StatConstraints": "능력치 우선도 & 범위",
     "StatMax": "최대",
     "StatMin": "최소",
@@ -744,7 +744,8 @@
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
     "UnableToAddAllModsBody": "{{mods}}개의 개조 부품을 장착할 수 있는 공간이 없습니다.",
-    "UnlockItem": "아이템 고정 해제"
+    "UnlockItem": "아이템 고정 해제",
+    "WhySlow": "왜 이렇게 느린가요?"
   },
   "LoadoutFilter": {
     "Contains": "아이템이나 개조 부품이 필터와 일치하는 로드아웃을 표시합니다. 따옴표를 사용하여 이름에 공백이 포함된 아이템을 검색합니다.",

@@ -18,7 +18,7 @@ import {
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import craftingMementos from 'data/d2/crafting-mementos.json';
+import craftingMementos from 'data/d2/crafting-mementos.json' with { type: 'json' };
 import {
   ItemCategoryHashes,
   PlugCategoryHashes,

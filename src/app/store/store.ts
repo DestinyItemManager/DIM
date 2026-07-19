@@ -26,7 +26,7 @@ const store = createStore<RootState, any>(
 );
 
 // Allow hot-reloading reducers
-if (module.hot) {
+if (typeof module !== 'undefined' && module.hot) {
   module.hot.accept('./reducers', () => {
     store.replaceReducer(allReducers);
   });
