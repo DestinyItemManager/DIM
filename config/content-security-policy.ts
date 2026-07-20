@@ -79,6 +79,10 @@ export default function csp(
     objectSrc: SELF,
     // Web app manifest
     manifestSrc: SELF,
+    // Injected markup can't repoint relative URLs or post to another origin.
+    // None of our forms submit cross-origin.
+    baseUri: [SELF],
+    formAction: [SELF],
   };
 
   // Turn on CSP reporting to sentry.io on beta only
