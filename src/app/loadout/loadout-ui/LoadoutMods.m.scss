@@ -20,7 +20,14 @@
     min-width: none;
   }
 
+  &.compact {
+    min-width: calc(2 * var(--item-icon-size) + 1 * var(--item-margin));
+  }
+
   :global(.item) {
+    --item-size: var(--item-icon-size);
+  }
+  :global(.item-drag-container) {
     --item-size: var(--item-icon-size);
   }
   :global(.item-img) {

@@ -2,10 +2,13 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
+import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import { autoAssignmentPCHs } from 'app/loadout-builder/types';
-import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
+import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';
@@ -13,7 +16,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModPicker from '../ModPicker';
 import ModAssignmentDrawer from '../mod-assignment-drawer/ModAssignmentDrawer';
@@ -231,83 +234,82 @@ export const LoadoutMods = memo(function LoadoutMods({
 /**
  * Shows artifact unlocks in the loadout view.
  */
-export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
-  artifactUnlocks,
+export const LoadoutArtifactMods = memo(function LoadoutArtifactMods({
+  artifact,
+  legacyArtifactUnlocks,
   classType,
-  storeId,
   className,
-  onRemoveMod,
-  onSyncFromEquipped,
+  showArtifactItem,
+  compact,
 }: {
-  artifactUnlocks: LoadoutParameters['artifactUnlocks'];
+  artifact?: ResolvedLoadoutItem | undefined;
+  legacyArtifactUnlocks: LoadoutParameters['artifactUnlocks'];
   classType: DestinyClass;
-  storeId: string;
   className?: string;
-  onRemoveMod?: (mod: number) => void;
-  onSyncFromEquipped?: () => void;
+  showArtifactItem?: boolean;
+  compact?: boolean;
 }) {
   const defs = useD2Definitions()!;
-  const unlockedArtifactMods = useSelector(artifactUnlocksSelector(storeId));
 
-  const loadoutArtifactMods: ResolvedLoadoutMod[] = useMemo(
+  const legacyArtifactMods: ResolvedLoadoutMod[] = useMemo(
     () =>
-      hashesToPluggableItems(defs, artifactUnlocks?.unlockedItemHashes ?? []).map((def) => ({
+      hashesToPluggableItems(defs, legacyArtifactUnlocks?.unlockedItemHashes ?? []).map((def) => ({
         originalModHash: def.hash,
         resolvedMod: def,
       })) ?? [],
-    [defs, artifactUnlocks?.unlockedItemHashes],
+    [defs, legacyArtifactUnlocks?.unlockedItemHashes],
   );
 
-  const handleRemoveMod = useCallback(
-    (mod: ResolvedLoadoutMod) => onRemoveMod!(mod.originalModHash),
-    [onRemoveMod],
+  const artifactOverrides: ResolvedLoadoutMod[] = useMemo(
+    () =>
+      artifact
+        ? hashesToPluggableItems(
+            defs,
+            Object.values(artifact.loadoutItem.socketOverrides ?? {}),
+          ).map((def) => ({
+            originalModHash: def.hash,
+            resolvedMod: def,
+          }))
+        : [],
+    [defs, artifact],
   );
-  const artifactTitle = artifactUnlocks
-    ? t('Loadouts.ArtifactUnlocksWithSeason', {
-        seasonNumber: artifactUnlocks?.seasonNumber,
-      })
-    : t('Loadouts.ArtifactUnlocks');
 
-  if (!unlockedArtifactMods?.unlockedItemHashes.length) {
-    return null;
-  }
+  const artifactMods = artifactOverrides?.length > 0 ? artifactOverrides : legacyArtifactMods;
 
-  return (
+  const artifactTitle =
+    legacyArtifactUnlocks && !artifact
+      ? t('Loadouts.ArtifactUnlocksWithSeason', {
+          seasonNumber: legacyArtifactUnlocks?.seasonNumber,
+        })
+      : t('Bucket.Artifact');
+
+  return artifact || artifactMods.length > 0 ? (
     <div className={className}>
-      {loadoutArtifactMods.length > 0 ? (
-        <>
-          {!onRemoveMod && <h3>{artifactTitle}</h3>}
-          <div className={styles.modsGrid}>
-            {loadoutArtifactMods.map((mod) => {
-              const unlocked = unlockedArtifactMods?.unlockedItemHashes.includes(
-                mod.resolvedMod.hash,
-              );
-              return (
-                <LoadoutMod
-                  key={mod.resolvedMod.hash}
-                  mod={mod}
-                  className={clsx({
-                    [styles.artifactUnlock]: unlocked,
-                    [styles.missingItem]: !unlocked,
-                  })}
-                  classType={classType}
-                  onRemoveMod={onRemoveMod ? handleRemoveMod : undefined}
-                />
-              );
-            })}
-          </div>
-        </>
-      ) : (
-        onSyncFromEquipped && (
-          <div className={styles.buttons}>
-            <button className="dim-button" type="button" onClick={onSyncFromEquipped}>
-              {t('Loadouts.SyncFromEquipped')}
-            </button>
-          </div>
-        )
-      )}
+      {showArtifactItem && artifactTitle && <h3>{artifactTitle}</h3>}
+      <div className={clsx(styles.modsGrid, { [styles.compact]: compact })}>
+        {showArtifactItem && artifact ? (
+          <DraggableInventoryItem item={artifact.item}>
+            <ItemPopupTrigger
+              item={artifact.item}
+              extraData={{ socketOverrides: artifact.loadoutItem.socketOverrides }}
+            >
+              {(ref, onClick) => (
+                <ConnectedInventoryItem ref={ref} onClick={onClick} item={artifact.item} />
+              )}
+            </ItemPopupTrigger>
+          </DraggableInventoryItem>
+        ) : null}
+        {artifactMods.map((mod) => (
+          <LoadoutMod
+            key={mod.resolvedMod.hash}
+            mod={mod}
+            className={styles.artifactUnlock}
+            classType={classType}
+          />
+        ))}
+      </div>
     </div>
-  );
+  ) : null;
 });
 
 /**

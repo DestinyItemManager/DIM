@@ -23,7 +23,6 @@ import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import {
   allItemsSelector,
-  artifactUnlocksSelector,
   storesSelector,
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
@@ -149,8 +148,6 @@ export default function LoadoutDrawer({
   const tags = useSelector(loadoutsHashtagsSelector);
   useAutocomplete(ref, tags);
 
-  const artifactUnlocks = useSelector(artifactUnlocksSelector(storeId));
-
   if (!loadout || !store) {
     return null;
   }
@@ -163,8 +160,7 @@ export default function LoadoutDrawer({
   const handleNotesChanged: React.ChangeEventHandler<HTMLTextAreaElement> = (e) =>
     setLoadout(setNotes(e.target.value));
   const handleNameChanged = withUpdater(setName);
-  const handleFillLoadoutFromEquipped = () =>
-    setLoadout(fillLoadoutFromEquipped(defs, store, artifactUnlocks));
+  const handleFillLoadoutFromEquipped = () => setLoadout(fillLoadoutFromEquipped(defs, store));
   const handleFillLoadoutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, store));
   const handleRandomizeLoadout = () =>
     setLoadout(randomizeFullLoadout(defs, store, allItems, searchFilter, unlockedPlugs));

@@ -1,4 +1,4 @@
-import { ItemHashTag, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { currentProfileSelector, customStatsSelector } from 'app/dim-api/selectors';
@@ -8,11 +8,12 @@ import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import { compareBy } from 'app/utils/comparators';
 import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { currySelector } from 'app/utils/selectors';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import {
   BucketHashes,
   ItemCategoryHashes,
@@ -410,36 +411,17 @@ export const dynamicStringsSelector = createSelector(profileResponseSelector, (p
   }
 });
 
-/** A flat list of all currently active artifact unlocks. */
-export const artifactUnlocksSelector = currySelector(
+/** List of artifacts for a given character */
+export const availableArtifactsSelector = currySelector(
   createSelector(
-    profileResponseSelector,
-    (_state: RootState, characterId: string) => characterId,
-    (profileResponse: DestinyProfileResponse | undefined, characterId: string) =>
-      profileResponse && getArtifactUnlocks(profileResponse, characterId),
+    (state: RootState, storeId: string) => singleStoreSelector(storeId)(state),
+    (store) =>
+      store?.items
+        .filter((item) => item.bucket.hash === BucketHashes.Artifacts && itemCanBeInLoadout(item))
+        // TODO may not even need to sort, but find a way to sort by season or InventoryItem index field
+        .sort(compareBy((i) => i.hash)) ?? emptyArray<DimItem>(),
   ),
 );
-
-/** A flat list of all currently active artifact unlocks. */
-function getArtifactUnlocks(
-  profileResponse: DestinyProfileResponse,
-  characterId: string,
-): LoadoutParameters['artifactUnlocks'] {
-  // Lots of optional chaining because apparently this can be missing sometimes?
-  const artifactData = profileResponse?.characterProgressions.data?.[characterId]?.seasonalArtifact;
-  if (!artifactData?.tiers) {
-    return undefined;
-  }
-  const unlockedItemHashes =
-    artifactData.tiers
-      ?.flatMap((tier) => tier.items)
-      .filter((item) => item.isVisible && item.isActive)
-      .map((item) => item.itemHash) || [];
-  return {
-    unlockedItemHashes,
-    seasonNumber: D2CalculatedSeason,
-  };
-}
 
 /** Item infos (tags/notes) */
 export const itemInfosSelector = (state: RootState): ItemInfos =>

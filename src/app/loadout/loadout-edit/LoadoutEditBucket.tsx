@@ -28,12 +28,13 @@ import { OptimizerButton, armorItemsMissing } from '../loadout-ui/OptimizerButto
 import * as styles from './LoadoutEditBucket.m.scss';
 import { useEquipDropTargets } from './useEquipDropTargets';
 
-export type EditableCategories = 'Weapons' | 'Armor' | 'General';
+export type EditableCategories = 'Weapons' | 'Armor' | 'General' | 'Artifact';
 
 const categoryStyles: LookupTable<EditableCategories, string> = {
   Weapons: styles.categoryWeapons,
   Armor: styles.categoryArmor,
   General: styles.categoryGeneral,
+  Artifact: styles.categoryArtifact,
 };
 
 export default function LoadoutEditBucket({
@@ -64,11 +65,13 @@ export default function LoadoutEditBucket({
   const buckets = useSelector(bucketsSelector)!;
   const itemsByBucket = Object.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const bucketOrder =
-    category === 'Weapons' || category === 'Armor'
-      ? buckets.byCategory[category]
-      : [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle].map(
-          (h) => buckets.byHash[h],
-        );
+    category === 'Artifact'
+      ? [buckets.byHash[BucketHashes.Artifacts]]
+      : category === 'Weapons' || category === 'Armor'
+        ? buckets.byCategory[category]
+        : [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle].map(
+            (h) => buckets.byHash[h],
+          );
   const isArmor = category === 'Armor';
 
   return (
