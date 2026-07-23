@@ -1,5 +1,7 @@
 ## Next
 
+* In Loadout Optimizer, set bonuses are now searchable. They also always show up in a single column instead of side-by-side.
+
 ## 8.134.0 <span class="changelog-date">(2026-07-19)</span>
 
 * Reject Bungie OAuth callbacks whose state parameter is missing when no state was stored, closing a login CSRF where an attacker-supplied code could be exchanged.
