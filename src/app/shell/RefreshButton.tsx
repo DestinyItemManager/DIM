@@ -16,13 +16,13 @@ import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import ErrorPanel from './ErrorPanel';
 import * as styles from './RefreshButton.m.scss';
-import { AppIcon, faClock, faExclamationTriangle, refreshIcon } from './icons';
+import { AppIcon, faClock, faExclamationTriangle, faHourglass, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 import { refresh } from './refresh-events';
 
 /** We consider the profile stale if it's out of date with respect to the game data by this much */
 const STALE_PROFILE_THRESHOLD = 90_000;
-const MIN_SPIN = 1000; // 1 second
+const WAIT_TIME = 1_000;
 
 export default function RefreshButton({ className }: { className?: string }) {
   const [disabled, setDisabled] = useState(false);
@@ -34,24 +34,33 @@ export default function RefreshButton({ className }: { className?: string }) {
   );
   const active = useSubscription(loadingTracker.active$);
 
-  // Always show the spinner for at least MIN_SPIN milliseconds
-  const [spin, setSpin] = useState(active ? Date.now() : 0);
+  // Track the minted date to detect if a refresh brought new data
+  const [lastMintedDate, setLastMintedDate] = useState(new Date(-1));
+  const [showHourglass, setShowHourglass] = useState(false);
+  const [wasRecentlyActive, setWasRecentlyActive] = useState(false);
+
+  const profileMintedDate = useSelector(profileMintedSelector);
+
   useEffect(() => {
-    if (active && spin === 0) {
-      setSpin(Date.now());
-    } else if (!active && spin !== 0) {
-      const elapsed = Date.now() - spin;
-      const remainingTime = Math.max(0, MIN_SPIN - elapsed);
-      if (remainingTime > 0) {
+    if (active && !wasRecentlyActive) {
+      // Refresh just started
+      setWasRecentlyActive(true);
+    } else if (!active && wasRecentlyActive) {
+      // Refresh just completed - check if we got new data
+      if (profileMintedDate.getTime() === lastMintedDate.getTime()) {
+        // No new data from this refresh - show hourglass
+        setShowHourglass(true);
         const timer = window.setTimeout(() => {
-          setSpin(0);
-        }, remainingTime);
+          setShowHourglass(false);
+        }, WAIT_TIME);
         return () => window.clearTimeout(timer);
       } else {
-        setSpin(0);
+        // New data received - update our tracking
+        setLastMintedDate(profileMintedDate);
       }
+      setWasRecentlyActive(false);
     }
-  }, [active, spin]);
+  }, [active, profileMintedDate, lastMintedDate, wasRecentlyActive]);
 
   useEventBusListener(isDragging$, handleChanges);
 
@@ -80,7 +89,9 @@ export default function RefreshButton({ className }: { className?: string }) {
         title={t('Header.Refresh') + (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '')}
         aria-keyshortcuts="R"
       >
-        <AppIcon icon={refreshIcon} spinning={spin !== 0} />
+        {(showHourglass && (
+          <AppIcon className={styles.fixedIcon} icon={faHourglass} fading={true} />
+        )) || <AppIcon className={styles.fixedIcon} icon={refreshIcon} spinning={active} />}
         {autoRefresh && <div className={styles.userIsPlaying} />}
         {(profileError || showOutOfDateWarning) && (
           <div className={styles.outOfDate}>
