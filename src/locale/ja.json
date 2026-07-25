@@ -580,7 +580,7 @@
     "RemoveStack": "この Mod をスタックから1つ外す",
     "Scaled": "縮尺",
     "SearchAMod": "Mod名または説明で検索",
-    "SearchASetBonus": "",
+    "SearchASetBonus": "セットボーナス名、パーツ名、または説明を検索",
     "SearchAnExotic": "エキゾチック名または説明で検索",
     "SelectExotic": "使用するエキゾチックを選ぶ",
     "SelectMods": "Mod を選択",
