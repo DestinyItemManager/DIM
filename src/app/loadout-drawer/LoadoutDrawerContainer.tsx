@@ -164,6 +164,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
             storeId={initialLoadout.storeId}
             onClose={handleDrawerClose}
             fromExternal={initialLoadout.fromExternal}
+            account={account}
           />
         ) : (
           <D1LoadoutDrawer

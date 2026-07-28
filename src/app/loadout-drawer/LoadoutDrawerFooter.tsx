@@ -3,7 +3,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { loadoutSavedSelector } from 'app/loadout/selectors';
-import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
+import { AppIcon, deleteIcon, redoIcon, shareIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { isEmpty } from 'app/utils/collections';
 import { isClassCompatible } from 'app/utils/item-utils';
@@ -38,6 +38,7 @@ export default function LoadoutDrawerFooter({
   redo,
   hasUndo,
   hasRedo,
+  onShare,
 }: {
   loadout: Readonly<Loadout>;
   undo?: () => void;
@@ -46,6 +47,7 @@ export default function LoadoutDrawerFooter({
   hasRedo?: boolean;
   onSaveLoadout: (e: React.FormEvent, saveAsNew: boolean) => void;
   onDeleteLoadout: () => void;
+  onShare?: () => void;
 }) {
   const isSaved = useSelector(loadoutSavedSelector(loadout.id));
   const clashingLoadout = useSelector(clashingLoadoutSelector(loadout));
@@ -142,6 +144,16 @@ export default function LoadoutDrawerFooter({
             disabled={!hasRedo}
           >
             <AppIcon icon={redoIcon} />
+          </button>
+        )}
+        {onShare && (
+          <button
+            className="dim-button"
+            type="button"
+            onClick={onShare}
+            title={t('Loadouts.ShareLoadout')}
+          >
+            <AppIcon icon={shareIcon} /> {t('Loadouts.ShareLoadout')}
           </button>
         )}
         <UserGuideLink topic="Loadouts" />
