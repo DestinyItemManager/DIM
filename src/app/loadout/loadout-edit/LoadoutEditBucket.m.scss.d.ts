@@ -5,6 +5,7 @@ interface CssExports {
   'buttons': string;
   'canDrop': string;
   'categoryArmor': string;
+  'categoryArtifact': string;
   'categoryGeneral': string;
   'categoryWeapons': string;
   'equipped': string;

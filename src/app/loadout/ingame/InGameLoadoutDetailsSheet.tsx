@@ -116,6 +116,7 @@ function InGameLoadoutItemDetail({
 }) {
   // We can't just go off the plugItemHashes because they can contain UNSET_PLUG_HASH for
   // perks with a single option
+  // TODO exclude 'reset artifact' socket
   const validSockets = item.sockets?.allSockets.filter(
     (s) =>
       loadoutItem.socketOverrides?.[s.socketIndex] ||

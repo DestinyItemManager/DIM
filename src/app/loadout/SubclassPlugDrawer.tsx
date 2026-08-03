@@ -44,7 +44,7 @@ export default function SubclassPlugDrawer({
 
     const { plugSets } = getPlugsForSubclass(defs, subclass, initiallySelected);
 
-    // A flat list of possible subclass plugs we use this to figure out how to sort plugs
+    // A flat list of possible subclass plugs, we use this to figure out how to sort plugs
     // and the different sections in the plug picker
     const flatPlugs = plugSets.flatMap((set) => set.plugs);
     // This ensures the plug groups are ordered by the socket order in the item def.

@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux';
 import * as styles from './LoadoutView.m.scss';
 import { InGameLoadoutIconFromIdentifiers } from './ingame/InGameLoadoutIcon';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
-import { LoadoutArtifactUnlocks, LoadoutMods } from './loadout-ui/LoadoutMods';
+import { LoadoutArtifactMods, LoadoutMods } from './loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
 import { useLoadoutMods } from './mod-assignment-drawer/selectors';
 
@@ -40,6 +40,7 @@ export function getItemsAndSubclassFromLoadout(
   },
 ): [
   items: ResolvedLoadoutItem[],
+  artifact: ResolvedLoadoutItem | undefined,
   subclass: ResolvedLoadoutItem | undefined,
   warnitems: ResolvedLoadoutItem[],
 ] {
@@ -54,13 +55,19 @@ export function getItemsAndSubclassFromLoadout(
     .concat(warnitems)
     .find((li) => li.item.bucket.hash === BucketHashes.Subclass);
 
+  const artifact = items
+    .concat(warnitems)
+    .find((li) => li.item.bucket.hash === BucketHashes.Artifacts);
+
   items = items.filter((li) => itemCanBeEquippedBy(li.item, store, true));
-  if (subclass) {
-    items = items.filter((li) => li.item.hash !== subclass.item.hash);
-    warnitems = warnitems.filter((li) => li.item.hash !== subclass.item.hash);
+  if (subclass || artifact) {
+    const valid = (li: ResolvedLoadoutItem) =>
+      li.item.hash !== subclass?.item.hash && li.item.hash !== artifact?.item.hash;
+    items = items.filter(valid);
+    warnitems = warnitems.filter(valid);
   }
 
-  return [items, subclass, warnitems];
+  return [items, artifact, subclass, warnitems];
 }
 
 /**
@@ -68,7 +75,7 @@ export function getItemsAndSubclassFromLoadout(
  *
  * The only functionality this provides outside of
  * rendering is the ability to show the mod assignment drawer. If mods are present on the loadout a
- * button will by present under the mods section to activate the drawer.
+ * button will be present under the mods section to activate the drawer.
  */
 export default function LoadoutView({
   loadout,
@@ -98,7 +105,7 @@ export default function LoadoutView({
   } = loadout.parameters?.modsByBucket ?? emptyObject();
 
   // Turn loadout items into real DimItems, filtering out unequippable items
-  const [items, subclass, warnitems] = useMemo(
+  const [items, artifact, subclass, warnitems] = useMemo(
     () =>
       getItemsAndSubclassFromLoadout(
         itemCreationContext,
@@ -117,6 +124,9 @@ export default function LoadoutView({
     (li) => li.item.bucket.sort ?? 'Unknown',
   );
   const power = loadoutPower(store, loadoutItemsByCategory);
+
+  const displayLoadout =
+    items.length > 0 || subclass || artifact || allMods.length > 0 || !isEmpty(modsByBucket);
 
   return (
     <div className={styles.loadout} id={loadout.id}>
@@ -164,7 +174,7 @@ export default function LoadoutView({
         <ColorDestinySymbols className={styles.loadoutNotes} text={loadout.notes} />
       )}
       <div className={styles.contents}>
-        {(items.length > 0 || subclass || allMods.length > 0 || !isEmpty(modsByBucket)) && (
+        {displayLoadout && (
           <>
             {(!isPhonePortrait || subclass) && (
               <LoadoutSubclassSection subclass={subclass} power={power} />
@@ -190,11 +200,12 @@ export default function LoadoutView({
                 hideShowModPlacements={hideShowModPlacements}
                 missingSockets={missingSockets}
               />
-              <LoadoutArtifactUnlocks
-                artifactUnlocks={loadout.parameters?.artifactUnlocks}
+              <LoadoutArtifactMods
+                artifact={artifact}
+                legacyArtifactUnlocks={loadout.parameters?.artifactUnlocks}
                 classType={loadout.classType}
-                storeId={store.id}
                 className={styles.artifactMods}
+                showArtifactItem
               />
             </div>
           </>

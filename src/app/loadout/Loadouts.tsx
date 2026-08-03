@@ -9,7 +9,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { VirtualListRef, WindowVirtualList } from 'app/dim-ui/VirtualList';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
-import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
+import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import {
   MakeLoadoutAnalysisAvailable,
@@ -112,11 +112,9 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const savedLoadouts = useSelector(loadoutsForClassTypeSelector(classType));
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
-  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStore.id));
-
   const currentLoadout = useMemo(
-    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, artifactUnlocks),
-    [artifactUnlocks, selectedStore],
+    () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore),
+    [selectedStore],
   );
 
   useUpdateLoadoutAnalysisContext(selectedStore.id);

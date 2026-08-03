@@ -6,7 +6,12 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import * as styles from './BucketPlaceholder.m.scss';
 
-const badgeLessBuckets = [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships];
+const badgeLessBuckets = [
+  BucketHashes.Ghost,
+  BucketHashes.Emblems,
+  BucketHashes.Ships,
+  BucketHashes.Artifacts,
+];
 
 export function BucketPlaceholder({
   bucketHash,

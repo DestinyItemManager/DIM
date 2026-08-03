@@ -1007,81 +1007,206 @@ function applySocketOverrides(
         // we need to translate from actual item socket index to socketOverride index.
         const itemSocketToLoadoutOverrideSocket: { [itemSocketIndex: number]: number } = {};
 
-        for (const category of categories) {
-          // So this is a bit awkward but subclasses use socketOverrides (socketIndex => hash)
-          // for aspects and fragments, but the actual order is not important and we don't want
-          // to plug fragments and aspects to match some arbitrary order. So here we untangle the
-          // aspects and fragments and assign them similar to armor mods where it doesn't really
-          // matter where they are.
-          // For fragments, socketIndices only specifies the active sockets, all sockets beyond that
-          // are ignored even if they contain a needed fragment, so that we will plug it somewhere
-          // in an earlier, active socket.
-          const handleShuffledSockets = (socketIndices: number[]) => {
-            const sockets = getSocketsByIndexes(dimItem.sockets!, socketIndices);
-            const neededOverrides = filterMap(socketIndices, (socketIndex) => {
+        if (dimItem.bucket.hash === BucketHashes.Artifacts) {
+          // artifacts get their own special handling because categories affect each other
+          const sockets = dimItem.sockets?.allSockets || [];
+          const neededOverrides = filterMap(
+            sockets.map((s) => s.socketIndex),
+            (socketIndex) => {
               const hash = loadoutItem.socketOverrides![socketIndex];
-              return hash ? { hash, loadoutSocketIndex: socketIndex } : undefined;
-            });
-            const excessSockets = [];
-            // If the loadout doesn't specify aspects/fragments, don't touch them because that's how it worked for a long time.
-            if (neededOverrides.length) {
-              for (const socket of sockets) {
-                if (socket.plugged) {
-                  const idx = neededOverrides.findIndex(
-                    ({ hash }) => hash === socket.plugged!.plugDef.hash,
-                  );
-                  if (idx !== -1) {
-                    const overrideIndex = neededOverrides[idx].loadoutSocketIndex;
-                    neededOverrides.splice(idx, 1);
-                    modsForItem.push({
-                      socketIndex: socket.socketIndex,
-                      mod: socket.plugged.plugDef,
-                      requested: true,
-                    });
-                    itemSocketToLoadoutOverrideSocket[socket.socketIndex] = overrideIndex;
-                  } else {
-                    excessSockets.push(socket);
-                  }
-                }
+              return hash
+                ? { hash, loadoutSocketIndex: socketIndex, originalIndex: socketIndex }
+                : undefined;
+            },
+          );
+
+          // 1st pass: iterate sockets and update neededOverrides with any swaps
+          // For each socket that has a mod matching the loadout:
+          // - Correct mod in socket: keep it, remove from neededOverrides
+          // - Incorrect mod in socket: check if mod meant for current socket can fit into intended socket for incorrect mod
+          //   - Yes: keep incorrect mod, remove from neededOverrides, reassign other mod to other socket
+          //   - No: Empty current socket
+          //   - Socket had no override: remap current mod to stay here
+          // Ignores mods not in loadout
+
+          for (const socket of sockets) {
+            if (!socket.plugged) {
+              continue;
+            }
+
+            const currentHash = socket.plugged.plugDef.hash;
+            // find the override for the currently equipped mod
+            const idx = neededOverrides.findIndex((o) => o.hash === currentHash);
+            if (idx === -1) {
+              // mod not in loadout
+              continue;
+            }
+
+            const currentOverride = neededOverrides[idx];
+            if (currentOverride.loadoutSocketIndex === socket.socketIndex) {
+              // mod already in its correct socket - keep
+              neededOverrides.splice(idx, 1);
+              modsForItem.push({
+                socketIndex: socket.socketIndex,
+                mod: socket.plugged.plugDef,
+                requested: true,
+              });
+              itemSocketToLoadoutOverrideSocket[socket.socketIndex] = currentOverride.originalIndex;
+            } else {
+              // mod belongs in another socket
+              // check current socket's intended override
+              const intendedOverrideIdx = neededOverrides.findIndex(
+                (o) => o.loadoutSocketIndex === socket.socketIndex,
+              );
+              if (intendedOverrideIdx === -1) {
+                // nothing intended for this socket - remap mod to stay here
+                currentOverride.loadoutSocketIndex = socket.socketIndex;
+                // remove from neededOverrides since it's already equipped
+                neededOverrides.splice(idx, 1);
+                modsForItem.push({
+                  socketIndex: socket.socketIndex,
+                  mod: socket.plugged.plugDef,
+                  requested: true,
+                });
+                itemSocketToLoadoutOverrideSocket[socket.socketIndex] =
+                  currentOverride.originalIndex;
+                continue;
               }
-              for (const socket of excessSockets) {
-                // For every socket we didn't find a corresponding requested socketOverride for,
-                // we assign the remaining plugs, resetting all remaining sockets beyond that to empty
-                let override = neededOverrides.pop();
-                let requested = true;
-                if (!override) {
-                  override = {
-                    hash: socket.emptyPlugItemHash!,
-                    loadoutSocketIndex: socket.socketIndex,
-                  };
-                  // These emptying actions are not marked as requested because we didn't create
-                  // the corresponding UI element to correctly report progress
-                  requested = false;
-                }
-                const mod = defs.InventoryItem.get(
-                  override.hash,
-                ) as PluggableInventoryItemDefinition;
-                modsForItem.push({ socketIndex: socket.socketIndex, mod, requested });
-                itemSocketToLoadoutOverrideSocket[socket.socketIndex] = override.loadoutSocketIndex;
+              const intendedOverride = neededOverrides[intendedOverrideIdx];
+              const otherSocket = sockets.find(
+                (s) => s.socketIndex === currentOverride.loadoutSocketIndex,
+              );
+
+              // check if we can put intendedOverride in otherSocket
+              // which would allow us to keep currentOverride here instead,
+              // requires that otherSocket plugSet accept intendedOverride mod
+              if (
+                otherSocket?.plugSet?.plugs.some((p) => p.plugDef.hash === intendedOverride.hash)
+              ) {
+                // keep currentOverride here
+                neededOverrides.splice(idx, 1);
+                modsForItem.push({
+                  socketIndex: socket.socketIndex,
+                  mod: socket.plugged.plugDef,
+                  requested: true,
+                });
+                itemSocketToLoadoutOverrideSocket[socket.socketIndex] =
+                  currentOverride.originalIndex;
+                // update intendedOverride to use otherSocket's index (currentOverride's index)
+                intendedOverride.loadoutSocketIndex = currentOverride.loadoutSocketIndex;
+              } else {
+                // intendedOverride doesn't fit in otherSocket, empty current socket to free the plug
+                modsForItem.push({
+                  socketIndex: socket.socketIndex,
+                  mod: defs.InventoryItem.get(
+                    socket.emptyPlugItemHash!,
+                  ) as PluggableInventoryItemDefinition,
+                  requested: false,
+                });
               }
             }
-          };
+          }
 
-          if (aspectSocketCategoryHashes.includes(category.category.hash)) {
-            handleShuffledSockets(category.socketIndexes);
-          } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
-            const resolved = { item: dimItem, loadoutItem };
-            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, resolved, true);
-            handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
-          } else {
-            const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
-            for (const socket of sockets) {
-              const socketIndex = socket.socketIndex;
-              const modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
-              if (modHash) {
-                const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-                // Supers and abilities simply go into their socket
-                modsForItem.push({ socketIndex, mod, requested: true });
+          // 2nd pass: apply remaining overrides
+          // neededOverrides should contain only overrides for sockets we're overwriting at this point
+          for (const override of neededOverrides) {
+            const targetSocketIdx = override.loadoutSocketIndex;
+            const targetSocket = sockets.find((s) => s.socketIndex === targetSocketIdx);
+
+            if (targetSocket) {
+              const mod = defs.InventoryItem.get(override.hash) as PluggableInventoryItemDefinition;
+              modsForItem.push({
+                socketIndex: targetSocket.socketIndex,
+                mod,
+                requested: true,
+              });
+              itemSocketToLoadoutOverrideSocket[targetSocket.socketIndex] = override.originalIndex;
+            } else {
+              errorLog(
+                TAG,
+                `[loadout-apply] FAILED to assign artifact mod ${override.hash} ` +
+                  `(intended for socket ${override.loadoutSocketIndex}) - socket ${targetSocketIdx} not found`,
+              );
+            }
+          }
+        } else {
+          for (const category of categories) {
+            // So this is a bit awkward but subclasses use socketOverrides (socketIndex => hash)
+            // for aspects and fragments, but the actual order is not important and we don't want
+            // to plug fragments and aspects to match some arbitrary order. So here we untangle the
+            // aspects and fragments and assign them similar to armor mods where it doesn't really
+            // matter where they are.
+            // For fragments, socketIndices only specifies the active sockets, all sockets beyond that
+            // are ignored even if they contain a needed fragment, so that we will plug it somewhere
+            // in an earlier, active socket.
+            const handleShuffledSockets = (socketIndices: number[]) => {
+              const sockets = getSocketsByIndexes(dimItem.sockets!, socketIndices);
+              const neededOverrides = filterMap(socketIndices, (socketIndex) => {
+                const hash = loadoutItem.socketOverrides![socketIndex];
+                return hash ? { hash, loadoutSocketIndex: socketIndex } : undefined;
+              });
+              const excessSockets = [];
+              // If the loadout doesn't specify aspects/fragments, don't touch them because that's how it worked for a long time.
+              if (neededOverrides.length) {
+                for (const socket of sockets) {
+                  if (socket.plugged) {
+                    const idx = neededOverrides.findIndex(
+                      ({ hash }) => hash === socket.plugged!.plugDef.hash,
+                    );
+                    if (idx !== -1) {
+                      const overrideIndex = neededOverrides[idx].loadoutSocketIndex;
+                      neededOverrides.splice(idx, 1);
+                      modsForItem.push({
+                        socketIndex: socket.socketIndex,
+                        mod: socket.plugged.plugDef,
+                        requested: true,
+                      });
+                      itemSocketToLoadoutOverrideSocket[socket.socketIndex] = overrideIndex;
+                    } else {
+                      excessSockets.push(socket);
+                    }
+                  }
+                }
+                for (const socket of excessSockets) {
+                  // For every socket we didn't find a corresponding requested socketOverride for,
+                  // we assign the remaining plugs, resetting all remaining sockets beyond that to empty
+                  let override = neededOverrides.pop();
+                  let requested = true;
+                  if (!override) {
+                    override = {
+                      hash: socket.emptyPlugItemHash!,
+                      loadoutSocketIndex: socket.socketIndex,
+                    };
+                    // These emptying actions are not marked as requested because we didn't create
+                    // the corresponding UI element to correctly report progress
+                    requested = false;
+                  }
+                  const mod = defs.InventoryItem.get(
+                    override.hash,
+                  ) as PluggableInventoryItemDefinition;
+                  modsForItem.push({ socketIndex: socket.socketIndex, mod, requested });
+                  itemSocketToLoadoutOverrideSocket[socket.socketIndex] =
+                    override.loadoutSocketIndex;
+                }
+              }
+            };
+
+            if (aspectSocketCategoryHashes.includes(category.category.hash)) {
+              handleShuffledSockets(category.socketIndexes);
+            } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
+              const resolved = { item: dimItem, loadoutItem };
+              const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, resolved, true);
+              handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
+            } else {
+              const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
+              for (const socket of sockets) {
+                const socketIndex = socket.socketIndex;
+                const modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
+                if (modHash) {
+                  const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
+                  // Supers and abilities simply go into their socket
+                  modsForItem.push({ socketIndex, mod, requested: true });
+                }
               }
             }
           }

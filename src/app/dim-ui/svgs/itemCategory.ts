@@ -32,6 +32,7 @@ import smg from 'destiny-icons/weapons/smg.svg?react';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg?react';
 import sword from 'destiny-icons/weapons/sword_heavy.svg?react';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg?react';
+import artifact from 'images/artifact.svg?react';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg?react';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg?react';
 import React from 'react';
@@ -95,6 +96,7 @@ export const itemCategoryIcons: LookupTable<ItemCategoryHashes, ItemCategoryIcon
   [ItemCategoryHashes.Sparrows]: monochrome(sparrow),
   [ItemCategoryHashes.Ships]: monochrome(ship),
   [ItemCategoryHashes.Emblems]: monochrome(emblem),
+  [ItemCategoryHashes.SeasonalArtifacts]: monochrome(artifact),
 
   [ItemCategoryHashes.Hunter]: monochrome(hunter),
   [ItemCategoryHashes.Titan]: monochrome(titan),
@@ -115,6 +117,7 @@ const bucketHashToItemCategoryHash: LookupTable<BucketHashes, ItemCategoryHashes
   [BucketHashes.Vehicle]: ItemCategoryHashes.Sparrows,
   [BucketHashes.Ships]: ItemCategoryHashes.Ships,
   [BucketHashes.Emblems]: ItemCategoryHashes.Emblems,
+  [BucketHashes.Artifacts]: ItemCategoryHashes.SeasonalArtifacts,
 } as const;
 
 /** an SVG of the weapon's type, if determinable */

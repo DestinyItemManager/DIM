@@ -38,6 +38,13 @@
   }
 }
 
+.artifactEditRow {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  gap: var(--item-margin);
+}
+
 // Align the "clear space" buttons on the bottom of the cell
 .clearButton {
   margin-top: auto;

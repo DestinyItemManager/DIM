@@ -117,7 +117,7 @@ export async function analyzeLoadout(
   }, {});
 
   const { modMap, unassignedMods } = categorizeArmorMods(originalModDefs, allItems);
-  if (unassignedMods.length) {
+  if (unassignedMods.length || loadoutParameters.artifactUnlocks) {
     findings.add(LoadoutFinding.InvalidMods);
   }
 

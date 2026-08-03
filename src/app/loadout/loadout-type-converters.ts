@@ -212,7 +212,8 @@ export function convertInGameLoadoutToDimLoadout(
 
     const socketOverrides =
       // TODO: Pretty soon we can capture all the socket overrides, but for now only copy over subclass config.
-      matchingItem.bucket.hash === BucketHashes.Subclass
+      matchingItem.bucket.hash === BucketHashes.Subclass ||
+      matchingItem.bucket.hash === BucketHashes.Artifacts
         ? convertInGameLoadoutPlugItemHashesToSocketOverrides(inGameItem.plugItemHashes)
         : undefined;
 

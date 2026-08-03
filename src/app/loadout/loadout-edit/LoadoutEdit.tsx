@@ -7,7 +7,7 @@ import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-bucke
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
   allItemsSelector,
-  artifactUnlocksSelector,
+  availableArtifactsSelector,
   createItemContextSelector,
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
@@ -19,7 +19,7 @@ import {
   applySocketOverrides,
   changeClearMods,
   changeIncludeRuntimeStats,
-  clearArtifactUnlocks,
+  clearArtifact,
   clearBucketCategory,
   clearLoadoutOptimizerParameters,
   clearMods,
@@ -30,13 +30,12 @@ import {
   randomizeLoadoutItems,
   randomizeLoadoutMods,
   randomizeLoadoutSubclass,
-  removeArtifactUnlock,
   removeItem,
   removeMod,
   replaceItem,
   setClearSpace,
+  setLoadoutArtifactFromEquipped,
   setLoadoutSubclassFromEquipped,
-  syncArtifactUnlocksFromEquipped,
   syncLoadoutCategoryFromEquipped,
   syncModsFromEquipped,
   toggleEquipped,
@@ -50,7 +49,7 @@ import {
 } from 'app/loadout-drawer/loadout-utils';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
 import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
-import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
+import { LoadoutArtifactMods, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { count } from 'app/utils/collections';
@@ -59,8 +58,10 @@ import { stubTrue } from 'app/utils/functions';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { BucketHashes } from 'data/d2/generated-enums';
+import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import ArtifactPlugDrawer from '../ArtifactPlugDrawer';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
@@ -87,7 +88,7 @@ export default function LoadoutEdit({
   } = loadout.parameters?.modsByBucket ?? emptyObject();
 
   // Turn loadout items into real DimItems, filtering out unequippable items
-  const [items, subclass, warnitems] = useMemo(
+  const [items, artifact, subclass, warnitems] = useMemo(
     () =>
       getItemsAndSubclassFromLoadout(
         itemCreationContext,
@@ -99,11 +100,12 @@ export default function LoadoutEdit({
     [itemCreationContext, loadout.items, store, allItems, modsByBucket],
   );
 
-  const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
   const categories = Object.groupBy(
-    items.concat(warnitems),
+    items.concat(warnitems).filter((i) => i.item.bucket.hash !== BucketHashes.Artifacts),
     (li) => li.item.bucket.sort ?? 'unknown',
   );
+
+  const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
   const power = loadoutPower(store, categories);
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
@@ -143,11 +145,13 @@ export default function LoadoutEdit({
         showClearUnsetModsSetting
         showModPlacementsButton
       />
-      <LoadoutArtifactUnlocksSection
-        artifactUnlocks={loadout.parameters?.artifactUnlocks}
+      <LoadoutEditArtifactSection
+        artifact={artifact}
+        legacyArtifactUnlocks={loadout.parameters?.artifactUnlocks}
         classType={loadout.classType}
-        storeId={store.id}
+        store={store}
         setLoadout={setLoadout}
+        loadout={loadout}
       />
     </div>
   );
@@ -314,8 +318,6 @@ function LoadoutEditCategorySection({
     [bucketHash: number]: number[] | undefined;
   } = loadout.parameters?.modsByBucket ?? emptyObject();
 
-  const artifactUnlocks = useSelector(artifactUnlocksSelector(store.id));
-
   const handleClearCategory = useDefsUpdater(clearBucketCategory);
   const handleModsByBucketUpdated = useUpdater(updateModsByBucket);
   const handleToggleEquipped = useDefsUpdater(toggleEquipped);
@@ -334,7 +336,7 @@ function LoadoutEditCategorySection({
       onClear={() => handleClearCategory(category)}
       onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
       hasRandomizeQuery={searchFilter !== stubTrue}
-      onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
+      onFillFromEquipped={() => handleFillCategoryFromEquipped(category)}
       fillFromEquippedDisabled={disableFillInForCategory(defs, items, category)}
       onSyncFromEquipped={() => handleSyncCategoryFromEquipped(category)}
       fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
@@ -455,62 +457,125 @@ export function LoadoutEditModsSection({
   );
 }
 
-function LoadoutArtifactUnlocksSection({
-  artifactUnlocks,
+function LoadoutEditArtifactSection({
+  artifact,
+  legacyArtifactUnlocks,
   classType,
-  storeId,
+  store,
   setLoadout,
+  loadout,
 }: {
-  artifactUnlocks: LoadoutParameters['artifactUnlocks'];
+  artifact: ResolvedLoadoutItem | undefined;
+  legacyArtifactUnlocks: LoadoutParameters['artifactUnlocks'];
   classType: DestinyClass;
-  storeId: string;
+  store: DimStore;
   setLoadout: (updater: LoadoutUpdateFunction) => void;
+  loadout: Loadout;
 }) {
-  const unlockedArtifactMods = useSelector(artifactUnlocksSelector(storeId));
+  const defs = useD2Definitions()!;
+  const showItemPicker = useItemPicker();
+  const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
+  const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
+  const handleOpenPlugDrawer = () => setPlugDrawerOpen(true);
+  const handleClosePlugDrawer = () => setPlugDrawerOpen(false);
+  const handleApplySocketOverrides = useUpdater(applySocketOverrides);
 
-  function useUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
-    return useCallback((...args: T) => setLoadout(fn(...args)), [fn]);
-  }
+  const availableArtifacts = useSelector(availableArtifactsSelector(store.id));
 
-  const handleSyncArtifactUnlocksFromEquipped = useCallback(
-    () => setLoadout(syncArtifactUnlocksFromEquipped(unlockedArtifactMods)),
-    [setLoadout, unlockedArtifactMods],
-  );
-  const handleClearArtifactUnlocks = useUpdater(clearArtifactUnlocks);
-  const handleRemoveArtifactUnlock = useUpdater(removeArtifactUnlock);
+  const handleSyncArtifactFromEquipped = useDefsStoreUpdater(setLoadoutArtifactFromEquipped);
+  const handleAddArtifact = useDefsUpdater(addItem);
+  const handleReplaceArtifact = useUpdater(replaceItem);
+  const handleToggleEquipped = (resolvedItem: ResolvedLoadoutItem) =>
+    setLoadout(toggleEquipped(defs, resolvedItem));
+  const handleRemoveArtifactItem = useDefsUpdater(removeItem);
 
-  const artifactTitle = artifactUnlocks
+  const handleClearArtifact = useDefsUpdater(clearArtifact);
+
+  const handleClickPlaceholder = ({ bucket, equip }: { bucket: InventoryBucket; equip: boolean }) =>
+    pickLoadoutItem(
+      showItemPicker,
+      defs,
+      loadout,
+      bucket,
+      (item) => handleAddArtifact(item, equip),
+      store,
+    );
+
+  const fixWarnItem = async (li: ResolvedLoadoutItem) => {
+    const warnItem = li.item;
+
+    const item = await showItemPicker({
+      filterItems: (item: DimItem) =>
+        item.bucket.hash === warnItem.bucket.hash &&
+        itemCanBeInLoadout(item) &&
+        isItemLoadoutCompatible(item.classType, loadout.classType),
+      prompt: t('Loadouts.FindAnother', {
+        name: warnItem.bucket.name,
+      }),
+    });
+
+    if (item) {
+      handleReplaceArtifact(li, item);
+    }
+  };
+
+  const artifactTitle = legacyArtifactUnlocks
     ? t('Loadouts.ArtifactUnlocksWithSeason', {
-        seasonNumber: artifactUnlocks?.seasonNumber,
+        seasonNumber: legacyArtifactUnlocks?.seasonNumber,
       })
-    : t('Loadouts.ArtifactUnlocks');
+    : t('Bucket.Artifact');
 
   // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
   // or there are unlocked artifact mods we could copy into this loadout.
   const showArtifactUnlocks = Boolean(
-    unlockedArtifactMods?.unlockedItemHashes.length || artifactUnlocks?.unlockedItemHashes.length,
+    artifact || availableArtifacts?.length || legacyArtifactUnlocks?.unlockedItemHashes.length,
   );
 
   return (
     showArtifactUnlocks && (
       <LoadoutEditSection
         title={artifactTitle}
-        titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
         className={styles.section}
-        onClear={handleClearArtifactUnlocks}
-        onSyncFromEquipped={
-          unlockedArtifactMods ? handleSyncArtifactUnlocksFromEquipped : undefined
-        }
+        onClear={handleClearArtifact}
+        onSyncFromEquipped={availableArtifacts ? handleSyncArtifactFromEquipped : undefined}
       >
-        <LoadoutArtifactUnlocks
-          artifactUnlocks={artifactUnlocks}
-          classType={classType}
-          storeId={storeId}
-          onRemoveMod={handleRemoveArtifactUnlock}
-          onSyncFromEquipped={
-            unlockedArtifactMods ? handleSyncArtifactUnlocksFromEquipped : undefined
-          }
-        />
+        <div className={styles.artifactEditRow}>
+          <LoadoutEditBucket
+            category="Artifact"
+            storeId={store.id}
+            classType={classType}
+            items={artifact ? [artifact] : []}
+            modsByBucket={{}}
+            onClickPlaceholder={handleClickPlaceholder}
+            onClickWarnItem={fixWarnItem}
+            onRemoveItem={handleRemoveArtifactItem}
+            onToggleEquipped={handleToggleEquipped}
+          />
+          <LoadoutArtifactMods
+            artifact={artifact}
+            legacyArtifactUnlocks={legacyArtifactUnlocks}
+            classType={classType}
+            compact
+            showArtifactItem={false}
+          />
+        </div>
+        {artifact?.item.sockets && (
+          <>
+            <div className={styles.buttons}>
+              <button type="button" className="dim-button" onClick={handleOpenPlugDrawer}>
+                {t('LB.SelectArtifactOptions')}
+              </button>
+            </div>
+            {plugDrawerOpen && (
+              <ArtifactPlugDrawer
+                artifact={artifact.item}
+                socketOverrides={artifact?.loadoutItem?.socketOverrides ?? {}}
+                onClose={handleClosePlugDrawer}
+                onAccept={(overrides) => handleApplySocketOverrides(artifact, overrides)}
+              />
+            )}
+          </>
+        )}
       </LoadoutEditSection>
     )
   );
