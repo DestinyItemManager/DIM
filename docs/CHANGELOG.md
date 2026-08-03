@@ -1,6 +1,7 @@
 ## Next
 
 * Added a share button to the loadout edit sheet.
+* Add basic handling for using Artifacts in loadouts
 
 ## 8.136.0 <span class="changelog-date">(2026-08-02)</span>
 
