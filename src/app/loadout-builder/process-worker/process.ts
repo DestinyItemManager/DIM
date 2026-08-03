@@ -2,7 +2,7 @@ import { SetBonusCounts } from '@destinyitemmanager/dim-api-types';
 import { MAX_STAT } from 'app/loadout/known-values';
 import { compact, filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { sum } from 'es-toolkit';
+import { clamp, sum } from 'es-toolkit';
 import { infoLog } from '../../utils/log';
 import {
   ArmorBucketHashes,
@@ -1021,12 +1021,12 @@ export async function process(
 
               const { bonusStats, mods } = optimalResult;
               const finalStats = [
-                effectiveStats[0] + bonusStats[0],
-                effectiveStats[1] + bonusStats[1],
-                effectiveStats[2] + bonusStats[2],
-                effectiveStats[3] + bonusStats[3],
-                effectiveStats[4] + bonusStats[4],
-                effectiveStats[5] + bonusStats[5],
+                clamp(effectiveStats[0] + bonusStats[0], 0, MAX_STAT),
+                clamp(effectiveStats[1] + bonusStats[1], 0, MAX_STAT),
+                clamp(effectiveStats[2] + bonusStats[2], 0, MAX_STAT),
+                clamp(effectiveStats[3] + bonusStats[3], 0, MAX_STAT),
+                clamp(effectiveStats[4] + bonusStats[4], 0, MAX_STAT),
+                clamp(effectiveStats[5] + bonusStats[5], 0, MAX_STAT),
               ];
               const finalTotalStats =
                 finalStats[0] +
