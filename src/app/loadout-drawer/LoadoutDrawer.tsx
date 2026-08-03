@@ -1,3 +1,4 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
@@ -7,6 +8,7 @@ import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
 import InGameLoadoutIdentifiersSelectButton from 'app/loadout/ingame/InGameLoadoutIdentifiersSelectButton';
+import LoadoutShareSheet from 'app/loadout/loadout-share/LoadoutShareSheet';
 import { useDefinitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
@@ -16,7 +18,7 @@ import { useEventBusListener } from 'app/utils/hooks';
 import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import Sheet from '../dim-ui/Sheet';
@@ -59,6 +61,7 @@ export default function LoadoutDrawer({
   storeId,
   fromExternal,
   onClose,
+  account,
 }: {
   initialLoadout: Loadout;
   /**
@@ -69,6 +72,7 @@ export default function LoadoutDrawer({
   storeId: string;
   fromExternal: boolean;
   onClose: () => void;
+  account: DestinyAccount;
 }) {
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
@@ -85,6 +89,10 @@ export default function LoadoutDrawer({
     canRedo,
   } = useHistory(initialLoadout);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
+
+  const [sharing, setSharing] = useState(false);
+  const startShare = () => setSharing(true);
+  const closeShare = () => setSharing(false);
 
   function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
     return (...args: T) => setLoadout(fn(...args));
@@ -214,6 +222,7 @@ export default function LoadoutDrawer({
       redo={redo}
       hasUndo={canUndo}
       hasRedo={canRedo}
+      onShare={startShare}
     />
   );
 
@@ -258,6 +267,7 @@ export default function LoadoutDrawer({
           </CheckButton>
         </div>
       </LoadoutDrawerDropTarget>
+      {sharing && <LoadoutShareSheet account={account} loadout={loadout} onClose={closeShare} />}
     </Sheet>
   );
 }
