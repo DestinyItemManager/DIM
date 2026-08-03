@@ -1,6 +1,6 @@
 import { sumBy } from 'app/utils/collections';
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
-import { sum } from 'es-toolkit';
+import { clamp, sum } from 'es-toolkit';
 import { ArmorSet, ArmorStatHashes, ArmorStats, DesiredStatRange } from '../types';
 import { getPower } from '../utils';
 
@@ -37,6 +37,6 @@ export function sortGeneratedSets(
 export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
   return sumBy(desiredStatRanges, (constraint) => {
     const statHash: ArmorStatHashes = constraint.statHash;
-    return Math.min(stats[statHash], constraint.maxStat);
+    return clamp(stats[statHash], 0, constraint.maxStat);
   });
 }
