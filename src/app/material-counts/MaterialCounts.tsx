@@ -139,11 +139,11 @@ export function MaterialCounts({
   const content = [
     ...[
       includeCurrencies ? currencies : [],
-      seasonalMatsAsCurrencies,
       upgradeMatsAsCurrencies,
       glimmerMatsAsCurrencies,
       remainingMatsAsCurrencies,
       transmogCurrencies,
+      seasonalMatsAsCurrencies,
     ].map(
       (currencies) =>
         currencies.length > 0 && (
