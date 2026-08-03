@@ -1,5 +1,7 @@
 ## Next
 
+* Added a share button to the loadout edit sheet.
+
 ## 8.136.0 <span class="changelog-date">(2026-08-02)</span>
 
 ## 8.135.0 <span class="changelog-date">(2026-07-26)</span>
