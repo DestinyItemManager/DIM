@@ -65,6 +65,8 @@ export default function ErrorPanel({
     title = t('ErrorPanel.BrowserTooOldTitle');
     name = 'BrowserTooOld';
     message = `${t('ErrorPanel.BrowserTooOld')}\n${navigator.userAgent}`;
+  } else if (message?.includes('removeChild')) {
+    message = `${message}\n\n${t('ErrorPanel.TranslateExtension')}`;
   }
 
   const content = (

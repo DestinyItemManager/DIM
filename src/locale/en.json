@@ -154,6 +154,7 @@
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps.",
     "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
+    "TranslateExtension": "Disable automatic translation as it can break DIM and other apps.",
     "Troubleshooting": "Troubleshooting Guide"
   },
   "FarmingMode": {
