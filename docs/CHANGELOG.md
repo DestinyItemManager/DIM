@@ -1,5 +1,7 @@
 ## Next
 
+## 8.136.0 <span class="changelog-date">(2026-08-02)</span>
+
 ## 8.135.0 <span class="changelog-date">(2026-07-26)</span>
 
 * In Loadout Optimizer, set bonuses are now searchable. They also always show up in a single column instead of side-by-side.
