@@ -108,6 +108,7 @@ const visibleCurrencies = [
   3159615086, // Glimmer
   2817410917, // Bright Dust
   3147280338, // Silver
+  4041218086, // Chronologs
   2534352370, // Legendary Marks (D1)
   2749350776, // Silver (D1)
 ];

@@ -1,5 +1,7 @@
+import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import { t } from 'app/i18next-t';
 import {
   currenciesSelector,
   materialsSelector,
@@ -63,7 +65,22 @@ export function MaterialCounts({
     materials.delete(h);
   }
 
-  const currencies = useSelector(currenciesSelector);
+  let currencies = useSelector(currenciesSelector);
+  const destinyVersion = useSelector(destinyVersionSelector);
+  let missingSilver = false;
+
+  if (
+    destinyVersion === 2 &&
+    defs &&
+    !currencies.some((c) => c.itemHash === 3147280338 /* Silver */)
+  ) {
+    const silverDef = defs.InventoryItem.get(3147280338);
+    missingSilver = true;
+    currencies = [
+      ...currencies,
+      { itemHash: silverDef.hash, quantity: 0, displayProperties: silverDef.displayProperties },
+    ];
+  }
   let transmogCurrencies = useSelector(transmogCurrenciesSelector);
   const upgradeCurrencies = useSelector(upgradeCurrenciesSelector);
 
@@ -130,7 +147,12 @@ export function MaterialCounts({
     ].map(
       (currencies) =>
         currencies.length > 0 && (
-          <CurrencyGroup key={currencies[0].itemHash} currencies={currencies} defs={defs} />
+          <CurrencyGroup
+            key={currencies[0].itemHash}
+            currencies={currencies}
+            defs={defs}
+            missingSilver={missingSilver}
+          />
         ),
     ),
   ];
@@ -150,9 +172,11 @@ export function MaterialCounts({
 function CurrencyGroup({
   currencies,
   defs,
+  missingSilver,
 }: {
   currencies: AccountCurrency[];
   defs: D2ManifestDefinitions;
+  missingSilver: boolean;
 }) {
   return currencies
     .toSorted(
@@ -161,11 +185,17 @@ function CurrencyGroup({
         compareBy(({ displayProperties }) => displayProperties.name),
       ),
     )
-    .map((currency) => (
-      <div className={styles.material} key={currency.itemHash}>
-        <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
-        <BungieImage src={currency.displayProperties.icon} />
-        <span>{currency.displayProperties.name}</span>
-      </div>
-    ));
+    .map((currency) => {
+      const isMissingSilver = missingSilver && currency.itemHash === 3147280338;
+      const title = isMissingSilver ? t('Inventory.MissingSilver') : undefined;
+      return (
+        <div className={styles.material} key={currency.itemHash}>
+          <span className={styles.amount} title={title}>
+            {isMissingSilver ? '???' : currency.quantity.toLocaleString()}
+          </span>
+          <BungieImage src={currency.displayProperties.icon} />
+          <span>{currency.displayProperties.name}</span>
+        </div>
+      );
+    });
 }
