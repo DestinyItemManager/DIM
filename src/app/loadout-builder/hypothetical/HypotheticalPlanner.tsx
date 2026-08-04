@@ -7,6 +7,7 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -19,6 +20,7 @@ import { releaseProxy, wrap } from 'comlink';
 import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { allItemsSelector } from '../../inventory/selectors';
+import { mapAutoMods } from '../process/mappers';
 import { useAutoMods } from '../process/useProcess';
 import {
   ArmorBucketHashes,
@@ -31,13 +33,21 @@ import {
   PinnedItems,
 } from '../types';
 import {
-  assumedMasterworkStats,
   buildHypotheticalBlocks,
   deriveArmor3ArchetypeModel,
+  isArmor3ModelSourceItem,
+  MAX_GEAR_TIER,
   SetBonusRequirement,
+  tuningVariantStats,
 } from './hypothetical-items';
 import * as styles from './HypotheticalPlanner.m.scss';
-import { PlannerExoticMode, PlannerInputs, PlannerPiece, PlannerResult } from './planner';
+import {
+  PlannerExoticMode,
+  PlannerInputs,
+  PlannerPiece,
+  PlannerResult,
+  totalFarmCount,
+} from './planner';
 
 const modEnergyCost = (mod: PluggableInventoryItemDefinition) =>
   mod.plug.energyCost?.energyCost ?? 0;
@@ -64,14 +74,15 @@ interface PlanState {
  * Run the planner in a web worker whenever the inputs change, keeping the
  * last result while a new one computes. A still-running computation is
  * terminated (worker and all) when new inputs arrive so stale work never
- * blocks fresh work.
+ * blocks fresh work — the search is synchronous inside the worker, so
+ * termination is the only way to cancel it. An idle worker is deliberately
+ * kept alive between runs to skip the spawn cost on the common path.
  */
 function usePlannerWorker(inputs: PlannerInputs | undefined): PlanState | undefined {
   const [planState, setPlanState] = useState<PlanState>();
   const workerRef = useRef<ReturnType<typeof createPlannerWorker>>(undefined);
   const busyRef = useRef(false);
 
-  // Terminate the worker on unmount.
   useEffect(
     () => () => {
       workerRef.current?.cleanup();
@@ -117,7 +128,7 @@ function usePlannerWorker(inputs: PlannerInputs | undefined): PlanState | undefi
 }
 
 /**
- * PROTOTYPE for https://github.com/DestinyItemManager/DIM/issues/11832
+ * Stat-target planner — https://github.com/DestinyItemManager/DIM/issues/11832
  *
  * Answers "what armor do I still need to farm to hit these stat targets?"
  * Keeps as many owned pieces as possible (the locked exotic, pinned items,
@@ -136,7 +147,7 @@ export default memo(function HypotheticalPlanner({
   autoStatMods,
   lockedModMap,
   storeId,
-  ownedSetsFound,
+  ownedSets,
   className,
 }: {
   desiredStatRanges: DesiredStatRange[];
@@ -151,11 +162,13 @@ export default memo(function HypotheticalPlanner({
   storeId: string;
   /**
    * Whether the real Loadout Optimizer worker found sets meeting the targets
-   * from owned armor. The worker models things the planner doesn't (tuning
-   * mods, artifice sockets, every exotic copy), so when it found sets there's
-   * nothing to farm no matter what the planner's model says.
+   * from owned armor. The worker models things the planner doesn't (artifice
+   * sockets, every exotic copy), so when it found sets there's nothing to farm
+   * no matter what the planner's model says. 'pending' means it's still
+   * searching — we say nothing rather than tell someone to farm for a build
+   * that's about to resolve as already buildable.
    */
-  ownedSetsFound: boolean;
+  ownedSets: 'pending' | 'found' | 'none';
   className?: string;
 }) {
   const defs = useD2Definitions()!;
@@ -166,26 +179,37 @@ export default memo(function HypotheticalPlanner({
   // build from drops alone. The locked exotic and pins are respected either way.
   const [keepOwned, setKeepOwned] = useState(true);
 
+  // Opt-in: this is extra work on top of what LO already does, so it stays off
+  // until asked for. Gating `inputs` (not just the rendering) is what makes it
+  // an actual off switch — collapsing the section would still run the worker.
+  const [enabled, setEnabled] = useState(false);
+
   // Let stat slider drags repaint before we recompute the plan.
   const deferredStatRanges = useDeferredValue(desiredStatRanges);
 
+  // Whether the section renders at all — a cheap probe, unlike the model.
+  const hasModelSource = useMemo(() => allItems.some(isArmor3ModelSourceItem), [allItems]);
+
+  // Deriving the model scans all items (and, once per manifest, the whole
+  // InventoryItem table), so don't pay for it until the feature is enabled.
   const modelAndBlocks = useMemo(() => {
+    if (!enabled) {
+      return undefined;
+    }
     const model = deriveArmor3ArchetypeModel(allItems, defs);
     return model && { model, blocks: buildHypotheticalBlocks(model) };
-  }, [allItems, defs]);
+  }, [enabled, allItems, defs]);
 
   const hasTargets = deferredStatRanges.some((r) => r.maxStat > 0 && r.minStat > 0);
+  // Farmed pieces only get credit for their tuning slot when there's a stat to
+  // dump the paired -5 into, so say so when there isn't one.
+  const hasIgnoredStat = deferredStatRanges.some((r) => r.maxStat === 0);
 
-  // What the +10/+5 general mods cost per stat.
+  // What the +10/+5 general mods cost per stat, via the LO worker's own mapping.
   const autoModCosts = useMemo(
     () =>
-      mapValues(autoModDefs.generalMods, (mods) =>
-        mods
-          ? {
-              major: mods.majorMod.plug.energyCost?.energyCost ?? 0,
-              minor: mods.minorMod.plug.energyCost?.energyCost ?? 0,
-            }
-          : undefined,
+      mapValues(mapAutoMods(autoModDefs).generalMods, (mods) =>
+        mods ? { major: mods.majorMod.cost, minor: mods.minorMod.cost } : undefined,
       ),
     [autoModDefs],
   );
@@ -222,24 +246,39 @@ export default memo(function HypotheticalPlanner({
       filteredItems[bucketHash]
         // Guard against stat-less (e.g. classified) items poisoning sums with NaN
         .filter((item) => item.stats?.length)
-        .map((item): PlannerPiece => {
+        .flatMap((item): PlannerPiece[] => {
           itemsById.set(item.id, item);
-          return {
+          const stats = calculateAssumedMasterworkStats(item, armorEnergyRules);
+          const piece: PlannerPiece = {
             id: item.id,
+            itemId: item.id,
             isExotic: item.isExotic,
             name: describeItem(item),
-            stats: assumedMasterworkStats(item, armorEnergyRules) as ArmorStats,
+            stats: stats as ArmorStats,
             setBonusHash: item.setBonus?.hash,
             energy:
               calculateAssumedItemEnergy(item, armorEnergyRules) - bucketSpecificCosts[bucketIdx],
           };
+          // One candidate per way the item's tuning slot could be plugged. The
+          // untuned piece stays in the running — a tuning mod always dumps a
+          // stat somewhere, which isn't always worth the stat it adds.
+          return [
+            piece,
+            ...tuningVariantStats(item, stats).map(
+              ({ modHash, stats: tunedStats }): PlannerPiece => {
+                const variantId = `${item.id}|tuned|${modHash}`;
+                itemsById.set(variantId, item);
+                return { ...piece, id: variantId, stats: tunedStats as ArmorStats };
+              },
+            ),
+          ];
         }),
     );
     return { piecesByBucket, itemsById };
   }, [filteredItems, armorEnergyRules, describeItem, bucketSpecificCosts]);
 
   const inputs = useMemo((): PlannerInputs | undefined => {
-    if (!modelAndBlocks || !hasTargets) {
+    if (!enabled || !modelAndBlocks || !hasTargets) {
       return undefined;
     }
 
@@ -270,8 +309,9 @@ export default memo(function HypotheticalPlanner({
       exoticMode,
       keepOwned,
       setBonusRequirements,
-      // Mirror the worker: auto stat mods use the general sockets not taken by
-      // user-locked general mods, and none at all when the toggle is off.
+      // Mirror the worker (process-utils' precalculateStructures): auto stat
+      // mods use the general sockets not taken by user-locked general mods,
+      // and none at all when the toggle is off.
       numGeneralMods: autoStatMods ? Math.max(0, 5 - lockedModMap.generalMods.length) : 0,
       autoModCosts,
       lockedGeneralModCosts: lockedModMap.generalMods.map(modEnergyCost),
@@ -292,50 +332,74 @@ export default memo(function HypotheticalPlanner({
     lockedModMap,
     bucketSpecificCosts,
     keepOwned,
+    enabled,
   ]);
 
   const planState = usePlannerWorker(inputs);
 
-  if (!modelAndBlocks) {
+  if (!hasModelSource) {
     return null;
   }
 
   const plan = planState?.result;
-  const farmCount = plan?.farm.reduce((total, { count }) => total + count, 0) ?? 0;
+  const farmCount = plan ? totalFarmCount(plan.farm) : 0;
   const keepItems: DimItem[] = plan
     ? filterMap([plan.exoticId, ...plan.keepIds], (id) =>
         id !== undefined ? mapped.itemsById.get(id) : undefined,
       )
     : [];
-  // The worker is ground truth for owned armor — it models tuning mods,
-  // artifice sockets and every exotic copy, which the planner's model doesn't.
-  const alreadyBuildable = keepOwned && ownedSetsFound;
+  // The worker is ground truth for owned armor — it models artifice sockets and
+  // every exotic copy, which the planner's model doesn't.
+  const alreadyBuildable = keepOwned && ownedSets === 'found';
+  // Its verdict decides whether we say anything at all, so wait for it.
+  const awaitingWorker = keepOwned && ownedSets === 'pending';
 
   const modLines = plan
     ? armorStats.flatMap((statHash) => {
         const statDef = defs.Stat.get(statHash);
-        const lines: { key: string; numMods: number; label: string }[] = [];
-        if (plan.modsPerStat[statHash] > 0) {
-          lines.push({
-            key: `${statHash}-major`,
+        const stat = statDef?.displayProperties.name ?? statHash;
+        const kinds = [
+          {
+            suffix: 'major',
             numMods: plan.modsPerStat[statHash],
-            label: t('LoadoutBuilder.FarmingPlannerMod', {
-              stat: statDef?.displayProperties.name ?? statHash,
-            }),
-          });
-        }
-        if (plan.minorModsPerStat[statHash] > 0) {
-          lines.push({
-            key: `${statHash}-minor`,
+            label: t('LoadoutBuilder.FarmingPlannerMod', { stat }),
+          },
+          {
+            suffix: 'minor',
             numMods: plan.minorModsPerStat[statHash],
-            label: t('LoadoutBuilder.FarmingPlannerModMinor', {
-              stat: statDef?.displayProperties.name ?? statHash,
-            }),
-          });
-        }
-        return lines.map((line) => ({ ...line, statDef }));
+            label: t('LoadoutBuilder.FarmingPlannerModMinor', { stat }),
+          },
+          {
+            suffix: 'tuning',
+            numMods: plan.tunesPerStat[statHash],
+            label: t('LoadoutBuilder.FarmingPlannerTuning', { stat }),
+          },
+        ];
+        return kinds
+          .filter(({ numMods }) => numMods > 0)
+          .map(({ suffix, numMods, label }) => ({
+            key: `${statHash}-${suffix}`,
+            numMods,
+            label,
+            statDef,
+          }));
       })
     : [];
+
+  // The single outcome line. The worker-verified "already buildable" and the
+  // planner's own zero-farm result read the same to the user.
+  let verdict: string | undefined;
+  if (plan) {
+    if (alreadyBuildable || (plan.shortfall === 0 && farmCount === 0)) {
+      verdict = t('LoadoutBuilder.FarmingPlannerAlreadyBuildable');
+    } else if (plan.shortfall > 0) {
+      verdict = t('LoadoutBuilder.FarmingPlannerUnreachable', { points: plan.shortfall });
+    } else if (keepOwned) {
+      verdict = t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount });
+    } else {
+      verdict = t('LoadoutBuilder.FarmingPlannerNeedIdeal', { count: farmCount });
+    }
+  }
 
   return (
     <CollapsibleTitle
@@ -343,117 +407,130 @@ export default memo(function HypotheticalPlanner({
       sectionId="lo-farming-planner"
       className={className}
     >
-      <CheckButton name="lo-farming-planner-keep-owned" checked={keepOwned} onChange={setKeepOwned}>
-        {t('LoadoutBuilder.FarmingPlannerKeepOwned')}
+      <CheckButton name="lo-farming-planner-enabled" checked={enabled} onChange={setEnabled}>
+        {t('LoadoutBuilder.FarmingPlannerEnable')}
       </CheckButton>
-      {!hasTargets ? (
+      {enabled && (
+        <CheckButton
+          name="lo-farming-planner-keep-owned"
+          checked={keepOwned}
+          onChange={setKeepOwned}
+        >
+          {t('LoadoutBuilder.FarmingPlannerKeepOwned')}
+        </CheckButton>
+      )}
+      {!enabled ? null : !hasTargets ? (
         <div className={styles.fineprint}>{t('LoadoutBuilder.FarmingPlannerNoTargets')}</div>
       ) : (
         plan &&
-        planState && (
+        planState &&
+        !awaitingWorker && (
           <>
-            <div className={styles.verdict}>
-              {alreadyBuildable
-                ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
-                : plan.shortfall > 0
-                  ? t('LoadoutBuilder.FarmingPlannerUnreachable', { points: plan.shortfall })
-                  : farmCount === 0
-                    ? t('LoadoutBuilder.FarmingPlannerAlreadyBuildable')
-                    : keepOwned
-                      ? t('LoadoutBuilder.FarmingPlannerNeed', { count: farmCount })
-                      : t('LoadoutBuilder.FarmingPlannerNeedIdeal', { count: farmCount })}
-            </div>
-            {!alreadyBuildable && farmCount > 0 && (
-              <ul className={styles.recipe}>
-                {plan.farm.map(({ block, count }) => {
-                  const archetypeDef = defs.InventoryItem.get(block.archetypePlugHash);
-                  const statDef = defs.Stat.get(block.tertiaryStatHash);
-                  return (
-                    <li key={`${block.archetypePlugHash}-${block.tertiaryStatHash}`}>
-                      <span className={styles.count}>{count}×</span>
-                      {archetypeDef && (
-                        <BungieImage
-                          className={styles.icon}
-                          src={archetypeDef.displayProperties.icon}
-                        />
-                      )}
-                      <span>{block.archetypeName}</span>
-                      <span className={styles.tertiary}>
+            <div className={styles.verdict}>{verdict}</div>
+            {!alreadyBuildable && (
+              <>
+                {farmCount > 0 && (
+                  <ul className={styles.recipe}>
+                    {plan.farm.map(({ block, count }) => {
+                      const archetypeDef = defs.InventoryItem.get(block.archetypePlugHash);
+                      const statDef = defs.Stat.get(block.tertiaryStatHash);
+                      return (
+                        <li key={`${block.archetypePlugHash}-${block.tertiaryStatHash}`}>
+                          <span className={styles.count}>{count}×</span>
+                          {archetypeDef && (
+                            <BungieImage
+                              className={styles.icon}
+                              src={archetypeDef.displayProperties.icon}
+                            />
+                          )}
+                          <span>{block.archetypeName}</span>
+                          <span className={styles.tertiary}>
+                            {statDef && (
+                              <BungieImage
+                                className={styles.icon}
+                                src={statDef.displayProperties.icon}
+                              />
+                            )}
+                            {statDef?.displayProperties.name}
+                          </span>
+                        </li>
+                      );
+                    })}
+                    {plan.farmExotic && !plan.anyExoticMissing && (
+                      <li className={styles.setNote}>
+                        {t('LoadoutBuilder.FarmingPlannerFarmExotic')}
+                      </li>
+                    )}
+                    {plan.farmFromSets.map(({ setHash, count }) => (
+                      <li key={setHash} className={styles.setNote}>
+                        {t('LoadoutBuilder.FarmingPlannerFromSet', {
+                          numPieces: count,
+                          set:
+                            defs.EquipableItemSet.get(setHash)?.displayProperties.name ?? setHash,
+                        })}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {modLines.length > 0 && (
+                  <ul className={styles.recipe}>
+                    {modLines.map(({ key, numMods, label, statDef }) => (
+                      <li key={key}>
+                        <span className={styles.count}>{numMods}×</span>
                         {statDef && (
                           <BungieImage
                             className={styles.icon}
                             src={statDef.displayProperties.icon}
                           />
                         )}
-                        {statDef?.displayProperties.name}
-                      </span>
-                    </li>
-                  );
-                })}
-                {plan.farmFromSets.map(({ setHash, count }) => (
-                  <li key={setHash} className={styles.setNote}>
-                    {t('LoadoutBuilder.FarmingPlannerFromSet', {
-                      numPieces: count,
-                      set: defs.EquipableItemSet.get(setHash)?.displayProperties.name ?? setHash,
-                    })}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {!alreadyBuildable && modLines.length > 0 && (
-              <ul className={styles.recipe}>
-                {modLines.map(({ key, numMods, label, statDef }) => (
-                  <li key={key}>
-                    <span className={styles.count}>{numMods}×</span>
-                    {statDef && (
-                      <BungieImage className={styles.icon} src={statDef.displayProperties.icon} />
-                    )}
-                    <span>{label}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {!alreadyBuildable && (farmCount > 0 || plan.shortfall > 0) && keepItems.length > 0 && (
-              <div className={styles.keep}>
-                {t('LoadoutBuilder.FarmingPlannerKeep')}
-                <div className={styles.keepItems}>
-                  {keepItems.map((item) => (
-                    <DraggableInventoryItem item={item} key={item.id}>
-                      <ItemPopupTrigger item={item}>
-                        {(ref, onClick) => (
-                          <ConnectedInventoryItem item={item} onClick={onClick} ref={ref} />
-                        )}
-                      </ItemPopupTrigger>
-                    </DraggableInventoryItem>
-                  ))}
-                </div>
-              </div>
-            )}
-            {!alreadyBuildable && plan.exoticMissing && (
-              <div className={styles.keep}>{t('LoadoutBuilder.FarmingPlannerExoticMissing')}</div>
-            )}
-            {!alreadyBuildable && plan.anyExoticMissing && (
-              <div className={styles.keep}>
-                {t('LoadoutBuilder.FarmingPlannerAnyExoticMissing')}
-              </div>
-            )}
-            {!alreadyBuildable && plan.setBonusUnsatisfiable && (
-              <div className={styles.verdict}>
-                {t('LoadoutBuilder.FarmingPlannerSetImpossible')}
-              </div>
+                        <span>{label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {(farmCount > 0 || plan.shortfall > 0) && keepItems.length > 0 && (
+                  <div className={styles.keep}>
+                    {t('LoadoutBuilder.FarmingPlannerKeep')}
+                    <div className={styles.keepItems}>
+                      {keepItems.map((item) => (
+                        <DraggableInventoryItem item={item} key={item.id}>
+                          <ItemPopupTrigger item={item}>
+                            {(ref, onClick) => (
+                              <ConnectedInventoryItem item={item} onClick={onClick} ref={ref} />
+                            )}
+                          </ItemPopupTrigger>
+                        </DraggableInventoryItem>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {plan.exoticMissing && (
+                  <div className={styles.keep}>
+                    {t('LoadoutBuilder.FarmingPlannerExoticMissing')}
+                  </div>
+                )}
+                {plan.anyExoticMissing && (
+                  <div className={styles.keep}>
+                    {t('LoadoutBuilder.FarmingPlannerAnyExoticMissing')}
+                  </div>
+                )}
+                {plan.setBonusUnsatisfiable && (
+                  <div className={styles.verdict}>
+                    {t('LoadoutBuilder.FarmingPlannerSetImpossible')}
+                  </div>
+                )}
+              </>
             )}
             <div className={styles.fineprint}>
               {keepOwned
-                ? t('LoadoutBuilder.FarmingPlannerFinePrint', {
-                    tier: modelAndBlocks.model.gearTier,
-                    combos: plan.combosExamined.toLocaleString(),
-                    time: Math.round(planState.planTimeMs),
-                  })
-                : t('LoadoutBuilder.FarmingPlannerFinePrintIdeal', {
-                    tier: modelAndBlocks.model.gearTier,
-                    combos: plan.combosExamined.toLocaleString(),
-                    time: Math.round(planState.planTimeMs),
-                  })}
+                ? t('LoadoutBuilder.FarmingPlannerFinePrint', { tier: MAX_GEAR_TIER })
+                : t('LoadoutBuilder.FarmingPlannerFinePrintIdeal', { tier: MAX_GEAR_TIER })}{' '}
+              {!hasIgnoredStat && t('LoadoutBuilder.FarmingPlannerTuningUncredited')}
+            </div>
+            {/* Debug timings for evaluating the search — deliberately not localized. */}
+            <div className={styles.fineprint}>
+              {plan.combosExamined.toLocaleString()} combinations,{' '}
+              {Math.round(planState.planTimeMs)}ms
             </div>
           </>
         )

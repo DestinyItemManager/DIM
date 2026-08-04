@@ -8,12 +8,12 @@ import {
   PlannerOwnedPiece,
   zeroArmorStats,
 } from './hypothetical-items';
-import { planForTargets, PlannerInputs, PlannerPiece } from './planner';
+import { planForTargets, PlannerInputs, PlannerPiece, totalFarmCount } from './planner';
 
 /**
  * Synthetic-fixture tests for the acquisition planner — no manifest needed.
- * These cover the areas the code review flagged as bug-rich: pins, set-bonus
- * deficits, the ideal-bound fallback, and mod/energy accounting.
+ * These cover the bug-prone areas: pins, set-bonus deficits, the ideal-bound
+ * fallback, and mod/energy accounting.
  */
 
 const G = StatHashes.Grenade as ArmorStatHashes;
@@ -68,16 +68,16 @@ function makeOwned(
   return { name, stats, ...extra };
 }
 
-function makeRanges(targets: Partial<Record<ArmorStatHashes, number>>): DesiredStatRange[] {
+function makeRanges(
+  targets: Partial<Record<ArmorStatHashes, number>>,
+  ignored: ArmorStatHashes[] = [],
+): DesiredStatRange[] {
   return armorStats.map((statHash) => ({
     statHash,
     minStat: targets[statHash] ?? 0,
-    maxStat: 200,
+    maxStat: ignored.includes(statHash) ? 0 : 200,
   }));
 }
-
-const farmTotal = (plan: { farm: { count: number }[] }) =>
-  plan.farm.reduce((total, { count }) => total + count, 0);
 
 const modTotal = (mods: ArmorStats) => armorStats.reduce((total, h) => total + mods[h], 0);
 
@@ -93,7 +93,7 @@ describe('planMinimumAcquisitions', () => {
       numGeneralMods: 0,
     });
     expect(plan.shortfall).toBe(0);
-    expect(farmTotal(plan)).toBe(0);
+    expect(totalFarmCount(plan.farm)).toBe(0);
     expect(plan.keep).toHaveLength(5);
   });
 
@@ -110,7 +110,7 @@ describe('planMinimumAcquisitions', () => {
       numGeneralMods: 0,
     });
     expect(plan.shortfall).toBe(0);
-    expect(farmTotal(plan)).toBe(3);
+    expect(totalFarmCount(plan.farm)).toBe(3);
     expect(plan.keep).toHaveLength(2);
   });
 
@@ -131,7 +131,7 @@ describe('planMinimumAcquisitions', () => {
     expect(plan.shortfall).toBe(0);
     expect(plan.keep.map((p) => p.name)).toContain('pinned');
     // 0 + 10k + 30(4-k) >= 110 forces k = 0: keep only the pin, farm 4.
-    expect(farmTotal(plan)).toBe(4);
+    expect(totalFarmCount(plan.farm)).toBe(4);
   });
 
   it('counts how many farmed pieces must come from a required set', () => {
@@ -152,7 +152,7 @@ describe('planMinimumAcquisitions', () => {
     });
     expect(plan.shortfall).toBe(0);
     expect(plan.keep).toHaveLength(2);
-    expect(farmTotal(plan)).toBe(3);
+    expect(totalFarmCount(plan.farm)).toBe(3);
     expect(plan.farmFromSets).toEqual([{ setHash: SET, count: 2 }]);
     expect(plan.setBonusUnsatisfiable).toBe(false);
   });
@@ -187,7 +187,48 @@ describe('planMinimumAcquisitions', () => {
     // (weaker) pieces can't help, so the ideal composition is the answer.
     expect(plan.shortfall).toBe(50);
     expect(plan.keep).toHaveLength(0);
-    expect(farmTotal(plan)).toBe(5);
+    expect(totalFarmCount(plan.farm)).toBe(5);
+  });
+});
+
+describe('farmed-piece tuning', () => {
+  // 5 farmed blocks reach Grenade 150; the target is 5 higher than that.
+  const plan = (ignored: ArmorStatHashes[]) =>
+    planMinimumAcquisitions({
+      blocks: BLOCKS,
+      desiredStatRanges: makeRanges({ [G]: 155 }, ignored),
+      // Five empty slots: nothing owned, so all five are farmed.
+      ownedByBucket: [[], [], [], [], []],
+      numGeneralMods: 0,
+    });
+
+  it('spends a farmed tuning slot to close the last few points', () => {
+    const result = plan([H]);
+    expect(result.shortfall).toBe(0);
+    expect(result.tunesPerStat[G]).toBe(1);
+  });
+
+  it('grants no tuning when there is no stat to dump into', () => {
+    // Every stat is wanted, so the -5 would cost as much as the +5 buys.
+    const result = plan([]);
+    expect(result.shortfall).toBe(5);
+    expect(modTotal(result.tunesPerStat)).toBe(0);
+  });
+
+  it('gives kept pieces no farmed tuning — only the farmed ones', () => {
+    // Four owned pieces at Grenade 30 plus one farmed block also reach 150,
+    // so only that single farmed piece brings a tuning slot: +5, not +25.
+    const result = planMinimumAcquisitions({
+      blocks: BLOCKS,
+      desiredStatRanges: makeRanges({ [G]: 155 }, [H]),
+      ownedByBucket: [
+        ...Array.from({ length: 4 }, (_, i) => [makeOwned(`owned-${i}`, { [G]: 30 })]),
+        [],
+      ],
+      numGeneralMods: 0,
+    });
+    expect(result.shortfall).toBe(0);
+    expect(modTotal(result.tunesPerStat)).toBe(1);
   });
 });
 
@@ -252,7 +293,7 @@ describe('mod and energy accounting', () => {
       autoModCosts: { [G]: { major: 4, minor: 2 } },
     });
     expect(plan.shortfall).toBe(0);
-    expect(farmTotal(plan)).toBe(0);
+    expect(totalFarmCount(plan.farm)).toBe(0);
     expect(plan.keep).toHaveLength(5);
     expect(plan.minorModsPerStat[G]).toBe(2);
     expect(plan.modsPerStat[G]).toBe(0);
@@ -264,9 +305,25 @@ describe('planForTargets (worker orchestration)', () => {
     id: string,
     statValues: Partial<Record<ArmorStatHashes, number>>,
     isExotic = false,
+    itemId = id,
   ): PlannerPiece {
-    return { ...makeOwned(id, statValues), id, isExotic };
+    return { ...makeOwned(id, statValues), id, itemId, isExotic };
   }
+
+  it('pins by item, so every tuning variant of the pinned item stays eligible', () => {
+    // Same item, two tuning options. Only the second gets the set to 150.
+    const untuned = makePiece('helm|untuned', { [G]: 25 }, false, 'helm');
+    const tuned = makePiece('helm|tuned', { [G]: 30 }, false, 'helm');
+    const result = planForTargets(
+      makeInputs({
+        piecesByBucket: [[untuned, tuned], [], [], [], []],
+        pinnedIds: ['helm', undefined, undefined, undefined, undefined],
+        desiredStatRanges: makeRanges({ [G]: 150 }),
+      }),
+    );
+    expect(result.shortfall).toBe(0);
+    expect(result.keepIds).toContain('helm|tuned');
+  });
 
   function makeInputs(overrides: Partial<PlannerInputs>): PlannerInputs {
     return {
@@ -285,15 +342,12 @@ describe('planForTargets (worker orchestration)', () => {
     };
   }
 
-  const farmTotalOf = (result: { farm: { count: number }[] }) =>
-    result.farm.reduce((total, { count }) => total + count, 0);
-
   it('flags a locked exotic the user does not own and farms its slot', () => {
     const result = planForTargets(makeInputs({ exoticMode: { type: 'locked', bucketIndex: 0 } }));
     expect(result.exoticMissing).toBe(true);
     expect(result.exoticId).toBeUndefined();
     expect(result.shortfall).toBe(0);
-    expect(farmTotalOf(result)).toBe(5);
+    expect(totalFarmCount(result.farm)).toBe(5);
   });
 
   it('builds around the best owned copy of a locked exotic', () => {
@@ -310,8 +364,27 @@ describe('planForTargets (worker orchestration)', () => {
     expect(result.exoticId).toBe('geomag');
     expect(result.shortfall).toBe(0);
     // The exotic covers its slot; the other four are farmed.
-    expect(farmTotalOf(result)).toBe(4);
+    expect(totalFarmCount(result.farm)).toBe(4);
     expect(result.keepIds).not.toContain('geomag');
+    // An equally good plan that costs an extra drop is not an improvement.
+    expect(result.farmExotic).toBe(false);
+  });
+
+  it('farms a fresh copy of a locked exotic when the owned one falls short', () => {
+    const weakExotic = makePiece('geomag-weak', { [G]: 5 }, true);
+    const result = planForTargets(
+      makeInputs({
+        piecesByBucket: [[], [], [weakExotic], [], []],
+        desiredStatRanges: makeRanges({ [G]: 150 }),
+        exoticMode: { type: 'locked', bucketIndex: 2 },
+      }),
+    );
+    // Owned: 5 + 4×30 = 125. Farmed: 5×30 = 150.
+    expect(result.farmExotic).toBe(true);
+    expect(result.exoticId).toBeUndefined();
+    expect(result.exoticMissing).toBe(false);
+    expect(result.shortfall).toBe(0);
+    expect(totalFarmCount(result.farm)).toBe(5);
   });
 
   it('Any Exotic: tries each slot and picks the exotic that minimizes the gap', () => {
@@ -328,6 +401,24 @@ describe('planForTargets (worker orchestration)', () => {
     expect(result.exoticId).toBe('strong-exotic');
     expect(result.shortfall).toBe(0);
     expect(result.anyExoticMissing).toBe(false);
+    expect(result.farmExotic).toBe(false);
+  });
+
+  it('Any Exotic: farms a new exotic when no owned copy is good enough', () => {
+    const wrongStat = makePiece('weapons-exotic', { [W]: 30 }, true);
+    const result = planForTargets(
+      makeInputs({
+        piecesByBucket: [[wrongStat], [], [], [], []],
+        desiredStatRanges: makeRanges({ [G]: 150 }),
+        exoticMode: { type: 'any' },
+      }),
+    );
+    // Keeping it: 0 + 4×30 = 120. Farming one: 5×30 = 150.
+    expect(result.farmExotic).toBe(true);
+    expect(result.exoticId).toBeUndefined();
+    // They do own an exotic — it just isn't worth using.
+    expect(result.anyExoticMissing).toBe(false);
+    expect(result.shortfall).toBe(0);
   });
 
   it('Any Exotic with no owned exotics degrades to ideal drops plus a note', () => {
@@ -335,7 +426,7 @@ describe('planForTargets (worker orchestration)', () => {
     expect(result.anyExoticMissing).toBe(true);
     expect(result.exoticId).toBeUndefined();
     expect(result.shortfall).toBe(0);
-    expect(farmTotalOf(result)).toBe(5);
+    expect(totalFarmCount(result.farm)).toBe(5);
   });
 
   it('Any Exotic respects a pinned exotic as the chosen one', () => {

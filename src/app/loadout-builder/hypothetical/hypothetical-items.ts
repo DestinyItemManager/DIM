@@ -1,26 +1,33 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
+import {
+  isPlugStatActive,
+  mapAndFilterInvestmentStats,
+} from 'app/inventory/store/stats-conditional';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { armorStats } from 'app/search/d2-known-values';
 import { sumBy } from 'app/utils/collections';
 import { getArmor3StatFocus, isArmor3 } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/memoize';
-import { getArmorArchetype } from 'app/utils/socket-utils';
-import armorArchetypeStats from 'data/d2/armor-archetypes.json';
+import { getArmor3TuningSocket, getArmorArchetype } from 'app/utils/socket-utils';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ProcessItem } from '../process-worker/types';
 import {
-  ArmorEnergyRules,
   ArmorStatHashes,
   ArmorStats,
   DesiredStatRange,
   majorStatBoost,
   minorStatBoost,
   permissiveArmorEnergyRules,
+  tuningStatBoost,
 } from '../types';
+import armorArchetypeStats from './armor-archetypes.json';
 
 /**
- * PROTOTYPE for https://github.com/DestinyItemManager/DIM/issues/11832
+ * Stat-target planner — https://github.com/DestinyItemManager/DIM/issues/11832
  *
  * A "stat-target planner" needs to reason about armor the user does not own.
  * The insight that keeps this from blowing up combinatorially: the stat block
@@ -65,11 +72,37 @@ export interface Armor3TierValues {
 
 export interface Armor3ArchetypeModel {
   archetypes: Armor3Archetype[];
-  /** Stat values by gear tier (1-5), for the tiers present in the sample. */
+  /** Stat values by gear tier (1-5): tiers seen in the sample, plus MAX_GEAR_TIER. */
   valuesByTier: Map<number, Armor3TierValues>;
-  /** The best gear tier observed — hypothetical blocks are built at this tier. */
+  /** The tier hypothetical blocks are built at — always MAX_GEAR_TIER. */
   gearTier: number;
 }
+
+/** The highest tier Armor 3.0 can drop at. Tuning slots only unlock here. */
+export const MAX_GEAR_TIER = 5;
+
+/**
+ * Canonical assumed-masterwork values at MAX_GEAR_TIER, used when the player
+ * owns nothing that good and we have no sample to read them off. Deterministic
+ * at the max tier, unlike the ranges that roll at lower tiers.
+ */
+const maxGearTierValues: Armor3TierValues = {
+  primaryValue: 30,
+  secondaryValue: 25,
+  tertiaryValue: 20,
+  baselineValue: 5,
+};
+
+/**
+ * Energy capacity of a fully masterworked piece at MAX_GEAR_TIER. Tier 5 armor
+ * has 11, everything below has 10 — see `maxEnergyCapacity` in d2-known-values.
+ * Hypothetical pieces are tier 5 by construction, so they get 11; owned pieces
+ * are passed their real capacity and only fall back to this.
+ */
+export const MAX_ENERGY = 11;
+
+/** Cap on blocks the owned search considers (it materializes multisets). */
+export const MAX_SEARCH_BLOCKS = 24;
 
 /** A hypothetical armor piece, i.e. one stat-distinct (archetype, tertiary) combination. */
 export interface HypotheticalArmorBlock {
@@ -87,7 +120,7 @@ export function zeroArmorStats(): ArmorStats {
 }
 
 /** Is this an item the planner's stat model can be derived from? */
-function isModelSourceItem(item: DimItem) {
+export function isArmor3ModelSourceItem(item: DimItem) {
   return (
     item.bucket.inArmor &&
     item.rarity === 'Legendary' &&
@@ -98,24 +131,60 @@ function isModelSourceItem(item: DimItem) {
 }
 
 /**
- * The item's stats under the given armor energy rules (assumed masterwork),
- * untuned — the canonical stat block for planning.
+ * Every way this owned piece's tuning slot could be plugged, as stat blocks.
+ * Unlike a farmed piece — which we assume rolls its tuning wherever we want —
+ * an owned legendary can only take the tuning mods its slot actually rolled.
+ * (Exotics have no such restriction and expose all of them.)
+ *
+ * This deliberately keeps none of the LO mapper's dump-stat filtering: that
+ * filter needs the desired stat ranges, and the planner ranks and caps these
+ * candidates itself. Staying independent of the stat ranges is what lets the
+ * caller rebuild these on inventory changes alone rather than per slider drag.
  */
-export function assumedMasterworkStats(
+export function tuningVariantStats(
   item: DimItem,
-  armorEnergyRules: ArmorEnergyRules = permissiveArmorEnergyRules,
-): { [statHash: number]: number } {
-  return calculateAssumedMasterworkStats(item, armorEnergyRules);
+  stats: { [statHash: number]: number },
+): { modHash: number; stats: { [statHash: number]: number } }[] {
+  const tuningSocket = getArmor3TuningSocket(item);
+  if (!tuningSocket?.reusablePlugItems?.length) {
+    return [];
+  }
+  const plugDefsByHash = new Map(
+    tuningSocket.plugSet?.plugs.map((p) => [p.plugDef.hash, p.plugDef]),
+  );
+  const variants: { modHash: number; stats: { [statHash: number]: number } }[] = [];
+  for (const { plugItemHash, enabled } of tuningSocket.reusablePlugItems) {
+    if (!enabled || emptyPlugHashes.has(plugItemHash)) {
+      continue;
+    }
+    const def = plugDefsByHash.get(plugItemHash);
+    if (!def || !isPluggableItem(def) || !def.investmentStats?.length) {
+      continue;
+    }
+    const tunedStats = { ...stats };
+    for (const { statTypeHash, activationRule, value } of mapAndFilterInvestmentStats(def)) {
+      if (
+        armorStats.includes(statTypeHash) &&
+        isPlugStatActive(activationRule, { item, statHash: statTypeHash })
+      ) {
+        tunedStats[statTypeHash] = Math.min(MAX_STAT, tunedStats[statTypeHash] + value);
+      }
+    }
+    variants.push({ modHash: def.hash, stats: tunedStats });
+  }
+  return variants;
 }
 
 /**
  * All armor archetypes from the manifest. The primary/secondary stats come
- * from the generated armor-archetypes.json table (built by d2ai — the defs
- * carry no structured stat data for these plugs). Archetypes the table
- * doesn't know yet (a new season before a d2ai refresh) fall back to parsing
- * the plug description ("Primary Stat: X\nSecondary Stat: Y"), which only
- * works on an English manifest. Memoized per manifest since it scans the
- * whole InventoryItem table.
+ * from the armor-archetypes.json table next to this file — the defs carry no
+ * structured stat data for these plugs, so the table is hand-maintained for
+ * now. It deliberately does NOT live in src/data/d2, which the d2ai build
+ * clears and regenerates; shipping this for real means generating it there
+ * instead (see the module comment above). Archetypes the table doesn't know
+ * yet fall back to parsing the plug description ("Primary Stat: X\nSecondary
+ * Stat: Y"), which only works on an English manifest. Memoized per manifest
+ * since it scans the whole InventoryItem table.
  */
 export const archetypesFromManifest = weakMemoize(
   (defs: D2ManifestDefinitions): Armor3Archetype[] => {
@@ -191,10 +260,10 @@ export function deriveArmor3ArchetypeModel(
   }
 
   const valuesByTier = new Map<number, Armor3TierValues>();
-  let gearTier = 0;
+  let observedTier = 0;
 
   for (const item of allItems) {
-    if (!isModelSourceItem(item)) {
+    if (!isArmor3ModelSourceItem(item)) {
       continue;
     }
     const archetypePlug = getArmorArchetype(item);
@@ -223,13 +292,13 @@ export function deriveArmor3ArchetypeModel(
     archetype.observedTertiaries.add(tertiary);
 
     // Stat values scale with gear tier, so collect them per tier.
-    gearTier = Math.max(gearTier, item.tier);
+    observedTier = Math.max(observedTier, item.tier);
     let values = valuesByTier.get(item.tier);
     if (!values) {
       values = { primaryValue: 0, secondaryValue: 0, tertiaryValue: 0, baselineValue: 0 };
       valuesByTier.set(item.tier, values);
     }
-    const stats = assumedMasterworkStats(item);
+    const stats = calculateAssumedMasterworkStats(item, permissiveArmorEnergyRules);
     values.primaryValue = Math.max(values.primaryValue, stats[primary]);
     values.secondaryValue = Math.max(values.secondaryValue, stats[secondary]);
     values.tertiaryValue = Math.max(values.tertiaryValue, stats[tertiary]);
@@ -240,12 +309,20 @@ export function deriveArmor3ArchetypeModel(
     }
   }
 
-  // Without at least one real item we have no stat values to build blocks from.
-  if (!gearTier) {
+  // Without at least one real item we can't sanity-check the model at all.
+  if (!observedTier) {
     return undefined;
   }
 
-  return { archetypes: [...archetypes.values()], valuesByTier, gearTier };
+  // Hypothetical pieces are future drops, so they're planned at the highest
+  // tier armor can roll, not the best tier this player happens to own —
+  // otherwise a player without max-tier armor is told a reachable target
+  // is impossible.
+  if (!valuesByTier.has(MAX_GEAR_TIER)) {
+    valuesByTier.set(MAX_GEAR_TIER, { ...maxGearTierValues });
+  }
+
+  return { archetypes: [...archetypes.values()], valuesByTier, gearTier: MAX_GEAR_TIER };
 }
 
 /**
@@ -277,9 +354,9 @@ export function predictStats(
 }
 
 /**
- * Enumerate every stat-distinct hypothetical armor piece at the best observed
- * gear tier: each archetype with each possible tertiary stat (any armor stat
- * not already primary/secondary).
+ * Enumerate every stat-distinct hypothetical armor piece at the model's gear
+ * tier (always MAX_GEAR_TIER): each archetype with each possible tertiary stat
+ * (any armor stat not already primary/secondary).
  */
 export function buildHypotheticalBlocks(model: Armor3ArchetypeModel): HypotheticalArmorBlock[] {
   const blocks: HypotheticalArmorBlock[] = [];
@@ -316,7 +393,7 @@ export function hypotheticalProcessItem(
     name: block.name,
     isExotic: false,
     isArtifice: false,
-    remainingEnergyCapacity: 10,
+    remainingEnergyCapacity: MAX_ENERGY,
     power: 10,
     stats: { ...block.stats },
   };
@@ -340,6 +417,8 @@ export function pruneBlocksForTargets(
   if (blocks.length <= limit) {
     return blocks;
   }
+  // A stat with a max but no min is neither targeted nor ignored: it ranks
+  // last, but its blocks aren't collapsed the way ignored-stat blocks are.
   const targeted = desiredStatRanges
     .filter((r) => r.maxStat > 0 && r.minStat > 0)
     .map(({ statHash }): ArmorStatHashes => statHash);
@@ -348,15 +427,7 @@ export function pruneBlocksForTargets(
   );
 
   // Group by archetype, preserving block order within each group.
-  const groups = new Map<number, HypotheticalArmorBlock[]>();
-  for (const block of blocks) {
-    const group = groups.get(block.archetypePlugHash);
-    if (group) {
-      group.push(block);
-    } else {
-      groups.set(block.archetypePlugHash, [block]);
-    }
-  }
+  const groups = Map.groupBy(blocks, (block) => block.archetypePlugHash);
 
   const rank = (block: HypotheticalArmorBlock) => {
     const idx = targeted.indexOf(block.tertiaryStatHash);
@@ -424,6 +495,15 @@ interface ModContext {
   lockedCosts: number[];
   /** The largest cost that might need to fit on a piece. */
   maxCost: number;
+  /**
+   * Whether a farmed piece's tuning slot is worth a free +5 to a targeted stat.
+   * A farmed drop can be assumed to roll its tuning wherever we want, and the
+   * paired -5 is free when there's an ignored stat to dump into. With every
+   * stat targeted the -5 would cost as much as the +5 buys, so we grant
+   * nothing rather than model the redistribution. Owned pieces don't use this
+   * — their tuning is fixed at drop time and comes in as stat variants.
+   */
+  tuningPerFarmedPiece: number;
 }
 
 function buildModContext(
@@ -431,20 +511,88 @@ function buildModContext(
   statOrder: ArmorStatHashes[],
   autoModCosts?: PlannerAutoModCosts,
   lockedGeneralModCosts?: number[],
+  desiredStatRanges?: DesiredStatRange[],
 ): ModContext {
   const majorCosts = statOrder.map((statHash) => autoModCosts?.[statHash]?.major ?? 0);
   const minorCosts = statOrder.map((statHash) => autoModCosts?.[statHash]?.minor ?? 0);
   const lockedCosts = [...(lockedGeneralModCosts ?? [])].sort((a, b) => b - a);
   const maxCost = Math.max(0, ...majorCosts, ...minorCosts, ...lockedCosts);
-  return { numAutoMods, majorCosts, minorCosts, lockedCosts, maxCost };
+  const hasDumpStat = Boolean(desiredStatRanges?.some((r) => r.maxStat === 0));
+  return {
+    numAutoMods,
+    majorCosts,
+    minorCosts,
+    lockedCosts,
+    maxCost,
+    tuningPerFarmedPiece: hasDumpStat ? tuningStatBoost : 0,
+  };
+}
+
+/**
+ * Spend each farmed piece's tuning slot on the largest remaining need. Free in
+ * both energy and sockets, so this runs before the general mods rather than
+ * competing with them. Mutates `needed` and `tunes`; returns the new shortfall.
+ */
+function applyFarmedTuning(
+  needed: number[],
+  tunes: number[],
+  shortfall: number,
+  numFarmed: number,
+  ctx: ModContext,
+): number {
+  if (!ctx.tuningPerFarmedPiece) {
+    return shortfall;
+  }
+  for (let piece = 0; piece < numFarmed && shortfall > 0; piece++) {
+    let bestStat = -1;
+    let bestReduction = 0;
+    for (let s = 0; s < needed.length; s++) {
+      const reduction = Math.min(needed[s], ctx.tuningPerFarmedPiece);
+      if (reduction > bestReduction) {
+        bestStat = s;
+        bestReduction = reduction;
+      }
+    }
+    if (bestStat < 0) {
+      break;
+    }
+    needed[bestStat] -= bestReduction;
+    shortfall -= bestReduction;
+    tunes[bestStat]++;
+  }
+  return shortfall;
+}
+
+/**
+ * Remove the smallest budget that fits `cost` from `budgets` (descending),
+ * in place and allocation-free. When nothing fits, the smallest budget is
+ * consumed anyway — the planner errs on the optimistic side.
+ */
+function consumeSmallestFittingBudget(budgets: number[], cost: number) {
+  let pick = budgets.length - 1;
+  for (let i = budgets.length - 1; i >= 0; i--) {
+    if (budgets[i] >= cost) {
+      pick = i;
+      break;
+    }
+  }
+  budgets.copyWithin(pick, pick + 1);
+  budgets.length--;
+}
+
+function refillScratch(scratch: number[], source: number[]): number[] {
+  scratch.length = source.length;
+  for (let i = 0; i < source.length; i++) {
+    scratch[i] = source[i];
+  }
+  return scratch;
 }
 
 /**
  * Reserve pieces for the user's locked general mods (each piece has one
  * general socket) and return the energy budgets left for auto mods, sorted
  * descending. Each locked mod takes the smallest budget that fits it, keeping
- * the big budgets available for auto mods. A locked mod nothing fits consumes
- * the smallest budget anyway — the planner errs on the optimistic side.
+ * the big budgets available for auto mods.
  */
 function budgetsAfterLockedMods(budgets: number[], ctx: ModContext): number[] {
   const remaining = [...budgets].sort((a, b) => b - a);
@@ -452,15 +600,7 @@ function budgetsAfterLockedMods(budgets: number[], ctx: ModContext): number[] {
     if (!remaining.length) {
       break;
     }
-    let pick = remaining.length - 1;
-    for (let i = remaining.length - 1; i >= 0; i--) {
-      if (remaining[i] >= cost) {
-        pick = i;
-        break;
-      }
-    }
-    remaining.copyWithin(pick, pick + 1);
-    remaining.length--;
+    consumeSmallestFittingBudget(remaining, cost);
   }
   return remaining;
 }
@@ -530,13 +670,7 @@ function applyGreedyMods(
       minors[bestStat]++;
     }
     if (budgets) {
-      // Consume the smallest budget that fits, allocation-free.
-      let pick = budgets.length - 1;
-      while (budgets[pick] < bestCost) {
-        pick--;
-      }
-      budgets.copyWithin(pick, pick + 1);
-      budgets.length--;
+      consumeSmallestFittingBudget(budgets, bestCost);
     }
   }
   return shortfall;
@@ -571,6 +705,8 @@ export interface HypotheticalPlan {
   modsPerStat: ArmorStats;
   /** Number of +5 general stat mods assigned per stat. */
   minorModsPerStat: ArmorStats;
+  /** Number of farmed pieces to tune +5 into each stat. */
+  tunesPerStat: ArmorStats;
   /** How many 5-piece compositions were examined. */
   combosExamined: number;
 }
@@ -585,10 +721,11 @@ export interface HypotheticalPlan {
  * we enumerate index combinations i0 <= i1 <= ... <= i4, which is C(n+4, 5)
  * combinations instead of n^5 — for n=48 that's ~2.6M instead of ~255M.
  *
- * Simplifications vs. the real worker (fine for a feasibility prototype):
- * set bonuses and tuning mods are ignored; stat mods are up to numGeneralMods
- * majors (+10) or minors (+5) assigned greedily, respecting per-piece energy
- * budgets when modOptions provides them.
+ * Simplifications vs. the real worker: set bonuses are ignored; each farmed
+ * piece's tuning slot is assumed to roll a free +5 into the neediest stat
+ * (only when some stat is ignored, to absorb the paired -5); stat mods are up
+ * to numGeneralMods majors (+10) or minors (+5) assigned greedily, respecting
+ * per-piece energy budgets when modOptions provides them.
  */
 export function planBestComposition(
   blocks: HypotheticalArmorBlock[],
@@ -615,6 +752,7 @@ export function planBestComposition(
     statOrder,
     modOptions?.autoModCosts,
     modOptions?.lockedGeneralModCosts,
+    desiredStatRanges,
   );
   // Energy budgets only matter when some cost exceeds some piece's budget;
   // otherwise every mod fits everywhere and we can skip the bookkeeping.
@@ -631,6 +769,7 @@ export function planBestComposition(
   let bestIndices: number[] | undefined;
   let bestMajors: number[] | undefined;
   let bestMinors: number[] | undefined;
+  let bestTunes: number[] | undefined;
 
   // Partial sums hoisted out of the inner loops, plus scratch arrays, all
   // reused across iterations to avoid allocation. partials[d] holds the sum of
@@ -639,6 +778,7 @@ export function planBestComposition(
   const needed = new Array<number>(numStats);
   const majors = new Array<number>(numStats);
   const minors = new Array<number>(numStats);
+  const tunes = new Array<number>(numStats);
   const indices = new Array<number>(numSlots);
 
   const evaluate = (prev: number[], lastIdx: number) => {
@@ -654,16 +794,15 @@ export function planBestComposition(
       score += value;
       majors[s] = 0;
       minors[s] = 0;
+      tunes[s] = 0;
     }
     if (shortfall > 0) {
-      let budgets: number[] | undefined;
-      if (autoBudgets && budgetScratch) {
-        budgetScratch.length = autoBudgets.length;
-        for (let i = 0; i < autoBudgets.length; i++) {
-          budgetScratch[i] = autoBudgets[i];
-        }
-        budgets = budgetScratch;
-      }
+      // Every slot here is a farmed piece, so every slot brings a tuning slot.
+      shortfall = applyFarmedTuning(needed, tunes, shortfall, numSlots, ctx);
+    }
+    if (shortfall > 0) {
+      const budgets =
+        autoBudgets && budgetScratch ? refillScratch(budgetScratch, autoBudgets) : undefined;
       shortfall = applyGreedyMods(needed, majors, minors, shortfall, ctx, budgets);
     }
     if (shortfall < bestShortfall || (shortfall === bestShortfall && score > bestScore)) {
@@ -672,6 +811,7 @@ export function planBestComposition(
       bestIndices = indices.slice();
       bestMajors = majors.slice();
       bestMinors = minors.slice();
+      bestTunes = tunes.slice();
     }
   };
 
@@ -697,7 +837,7 @@ export function planBestComposition(
     enumerate(0, 0);
   }
 
-  if (!bestIndices || !bestMajors || !bestMinors) {
+  if (!bestIndices || !bestMajors || !bestMinors || !bestTunes) {
     // No blocks or no enabled stats — nothing to plan.
     return {
       shortfall: 0,
@@ -705,6 +845,7 @@ export function planBestComposition(
       armorTotals: zeroArmorStats(),
       modsPerStat: zeroArmorStats(),
       minorModsPerStat: zeroArmorStats(),
+      tunesPerStat: zeroArmorStats(),
       combosExamined,
     };
   }
@@ -723,6 +864,7 @@ export function planBestComposition(
     armorTotals,
     modsPerStat: modsToArmorStats(bestMajors, statOrder),
     minorModsPerStat: modsToArmorStats(bestMinors, statOrder),
+    tunesPerStat: modsToArmorStats(bestTunes, statOrder),
     combosExamined,
   };
 }
@@ -758,6 +900,8 @@ export interface AcquisitionPlan<T extends PlannerOwnedPiece = PlannerOwnedPiece
   modsPerStat: ArmorStats;
   /** Number of +5 general stat mods assigned per stat. */
   minorModsPerStat: ArmorStats;
+  /** Number of farmed pieces to tune +5 into each stat. */
+  tunesPerStat: ArmorStats;
   /** How many combinations were examined. */
   combosExamined: number;
 }
@@ -777,9 +921,9 @@ export interface AcquisitionPlan<T extends PlannerOwnedPiece = PlannerOwnedPiece
  * count owned pieces of the set plus farmed pieces (all archetypes drop from
  * all sources, so a farmed piece can always come from the required set).
  *
- * Same simplifications as planBestComposition: tuning mods are ignored; stat
- * mods are up to `numGeneralMods` majors (+10) or minors (+5) assigned
- * greedily, respecting per-piece energy when the energy inputs are provided.
+ * Same simplifications as planBestComposition: set bonuses aside, farmed
+ * pieces get a free tuning +5 and stat mods are assigned greedily, respecting
+ * per-piece energy when the energy inputs are provided.
  */
 export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
   blocks,
@@ -790,11 +934,12 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
   requiredSlots = [],
   setBonusRequirements = [],
   numGeneralMods = 5,
-  searchBlockLimit = 24,
+  searchBlockLimit = MAX_SEARCH_BLOCKS,
   autoModCosts,
   lockedGeneralModCosts,
   fixedPieceEnergies,
   farmedEnergyBySlot,
+  boundCache,
 }: {
   blocks: HypotheticalArmorBlock[];
   desiredStatRanges: DesiredStatRange[];
@@ -814,10 +959,17 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
   autoModCosts?: PlannerAutoModCosts;
   /** Energy costs of user-locked general mods. */
   lockedGeneralModCosts?: number[];
-  /** Energy left for stat mods on each fixed piece (parallel to fixedPieces). Default 10. */
+  /** Energy left for stat mods on each fixed piece (parallel to fixedPieces). */
   fixedPieceEnergies?: number[];
   /** Energy a farmed piece would have in each slot (10 minus that slot's locked mod costs). */
   farmedEnergyBySlot?: number[];
+  /**
+   * Cross-call cache for the full-block ideal bound. Only pass the same object
+   * to calls whose bound inputs (blocks, ranges, base stats, slot count,
+   * energy budgets) are identical — e.g. the farmed-exotic candidates of one
+   * "Any Exotic" plan, which differ only in owned candidates.
+   */
+  boundCache?: { plan?: HypotheticalPlan };
 }): AcquisitionPlan<T> {
   const enabledRanges = desiredStatRanges.filter((r) => r.maxStat > 0);
   const numStats = enabledRanges.length;
@@ -836,16 +988,22 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
   const reqSetCounts = setBonusRequirements.map((r) => r.count);
   const reqSetTotal = sumBy(setBonusRequirements, (r) => r.count);
 
-  // Energy left for stat mods per piece (10 = a masterworked piece with no
-  // other mods; matches hypotheticalProcessItem).
-  const fixedEnergies = fixedPieces.map((_, i) => fixedPieceEnergies?.[i] ?? 10);
-  const farmedEnergies = ownedByBucket.map((_, i) => farmedEnergyBySlot?.[i] ?? 10);
-  const ctx = buildModContext(numGeneralMods, statOrder, autoModCosts, lockedGeneralModCosts);
+  // Energy left for stat mods per piece (MAX_ENERGY = a masterworked piece
+  // with no other mods; matches hypotheticalProcessItem).
+  const fixedEnergies = fixedPieces.map((_, i) => fixedPieceEnergies?.[i] ?? MAX_ENERGY);
+  const farmedEnergies = ownedByBucket.map((_, i) => farmedEnergyBySlot?.[i] ?? MAX_ENERGY);
+  const ctx = buildModContext(
+    numGeneralMods,
+    statOrder,
+    autoModCosts,
+    lockedGeneralModCosts,
+    desiredStatRanges,
+  );
   // Energy budgets only bind when some mod cost exceeds some piece's budget.
   let minBudget = Math.min(...fixedEnergies, ...farmedEnergies);
   for (const list of ownedByBucket) {
     for (const piece of list) {
-      minBudget = Math.min(minBudget, piece.energy ?? 10);
+      minBudget = Math.min(minBudget, piece.energy ?? MAX_ENERGY);
     }
   }
   const constrained = ctx.maxCost > minBudget;
@@ -853,18 +1011,19 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
   // Exact ideal bound over the FULL block list, which doubles as the answer
   // when no owned candidates are provided (ideal mode) or when the targets
   // are unreachable even with perfect drops everywhere.
-  const bound = planBestComposition(
-    blocks,
-    desiredStatRanges,
-    numGeneralMods,
-    baseTotals,
-    numSlots,
-    {
+  const cachedBound = boundCache?.plan;
+  const bound =
+    cachedBound ??
+    planBestComposition(blocks, desiredStatRanges, numGeneralMods, baseTotals, numSlots, {
       autoModCosts,
       lockedGeneralModCosts,
       energyBudgets: [...fixedEnergies, ...farmedEnergies],
-    },
-  );
+    });
+  if (boundCache) {
+    boundCache.plan = bound;
+  }
+  // A cached bound did no new work, so it contributes nothing to the count.
+  const boundCombos = cachedBound ? 0 : bound.combosExamined;
   const boundAsPlan = (): AcquisitionPlan<T> => ({
     shortfall: bound.shortfall,
     farm: bound.counts,
@@ -875,7 +1034,8 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
     setBonusUnsatisfiable: reqSetTotal > numSlots,
     modsPerStat: bound.modsPerStat,
     minorModsPerStat: bound.minorModsPerStat,
-    combosExamined: bound.combosExamined,
+    tunesPerStat: bound.tunesPerStat,
+    combosExamined: boundCombos,
   });
 
   const anyOwned = ownedByBucket.some((list) => list.length > 0);
@@ -891,7 +1051,7 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
     list.map((piece) => ({
       piece,
       stats: statOrder.map((statHash) => piece.stats[statHash]),
-      energy: piece.energy ?? 10,
+      energy: piece.energy ?? MAX_ENERGY,
     })),
   );
   // Component-wise best owned stats per bucket, for upper-bound pruning.
@@ -935,7 +1095,7 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
     }
   };
 
-  let combosExamined = bound.combosExamined;
+  let combosExamined = boundCombos;
   let setBonusUnsatisfiable = false;
   interface Best {
     shortfall: number;
@@ -945,6 +1105,7 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
     multisetIndices: number[];
     majors: number[];
     minors: number[];
+    tunes: number[];
     setDeficits: number[];
   }
   let best: Best | undefined;
@@ -952,6 +1113,7 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
   const needed = new Array<number>(numStats);
   const majors = new Array<number>(numStats);
   const minors = new Array<number>(numStats);
+  const tunes = new Array<number>(numStats);
   const chosen: { bucket: number; index: number }[] = [];
   // Per-depth scratch arrays so the recursion allocates nothing per node.
   const partialStack = Array.from({ length: numSlots + 1 }, () => new Array<number>(numStats));
@@ -977,18 +1139,19 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
       score += value;
       majors[s] = 0;
       minors[s] = 0;
+      tunes[s] = 0;
     }
     if (shortfall > 0) {
-      let budgets: number[] | undefined;
-      if (leafAutoBudgets) {
-        budgetScratch.length = leafAutoBudgets.length;
-        for (let i = 0; i < leafAutoBudgets.length; i++) {
-          budgetScratch[i] = leafAutoBudgets[i];
-        }
-        budgets = budgetScratch;
-      }
+      // Kept pieces already carry their own (fixed) tuning in their stats.
+      shortfall = applyFarmedTuning(needed, tunes, shortfall, m, ctx);
+    }
+    if (shortfall > 0) {
+      const budgets = leafAutoBudgets ? refillScratch(budgetScratch, leafAutoBudgets) : undefined;
       shortfall = applyGreedyMods(needed, majors, minors, shortfall, ctx, budgets);
     }
+    // Preference order: fewer missing stat points, then fewer farmed pieces,
+    // then higher total stats. The middle term is what makes this a
+    // minimum-acquisition search rather than a best-stats search.
     let better = false;
     if (!best) {
       better = true;
@@ -1006,6 +1169,7 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
         multisetIndices: multiset.indices,
         majors: majors.slice(),
         minors: minors.slice(),
+        tunes: tunes.slice(),
         setDeficits: deficits.slice(),
       };
     }
@@ -1025,6 +1189,10 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
       shortfall += needed[s];
       majors[s] = 0;
       minors[s] = 0;
+      tunes[s] = 0;
+    }
+    if (shortfall > 0) {
+      shortfall = applyFarmedTuning(needed, tunes, shortfall, m, ctx);
     }
     // Deliberately unconstrained by energy — this must stay an upper bound.
     return shortfall <= 0 || applyGreedyMods(needed, majors, minors, shortfall, ctx) <= 0;
@@ -1130,6 +1298,7 @@ export function planMinimumAcquisitions<T extends PlannerOwnedPiece>({
     setBonusUnsatisfiable,
     modsPerStat: modsToArmorStats(result.majors, statOrder),
     minorModsPerStat: modsToArmorStats(result.minors, statOrder),
+    tunesPerStat: modsToArmorStats(result.tunes, statOrder),
     combosExamined,
   };
 }

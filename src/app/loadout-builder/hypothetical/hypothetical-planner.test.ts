@@ -1,5 +1,7 @@
+import { jest } from '@jest/globals';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
+import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { getArmor3StatFocus } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
@@ -20,14 +22,15 @@ import {
 import {
   archetypesFromManifest,
   Armor3ArchetypeModel,
-  assumedMasterworkStats,
   buildHypotheticalBlocks,
   deriveArmor3ArchetypeModel,
   HypotheticalArmorBlock,
   hypotheticalProcessItem,
+  MAX_GEAR_TIER,
   planBestComposition,
   predictStats,
   pruneBlocksForTargets,
+  zeroArmorStats,
 } from './hypothetical-items';
 
 /**
@@ -37,7 +40,7 @@ import {
  * These tests derive the hypothetical-armor stat model from the real test
  * profile, validate it against every owned item, and benchmark both a
  * dedicated multiset enumerator and the unmodified LO worker over the
- * hypothetical item space. The console output is the deliverable.
+ * hypothetical item space.
  */
 
 jest.setTimeout(600_000);
@@ -57,8 +60,6 @@ function makeDesiredStatRanges(targets: { [statHash: number]: number }): Desired
   }));
 }
 
-const zeroStats = () => Object.fromEntries(armorStats.map((h) => [h, 0])) as ArmorStats;
-
 describe('stat-target planner prototype (#11832)', () => {
   let defs: D2ManifestDefinitions;
   let allItems: DimItem[];
@@ -74,6 +75,28 @@ describe('stat-target planner prototype (#11832)', () => {
 
   const describeStats = (stats: ArmorStats) =>
     armorStats.map((h) => `${statName(h)} ${stats[h]}`).join(', ');
+
+  /** Run the unmodified LO worker with the standard options these tests share. */
+  const runWorker = (filteredItems: ProcessItemsByBucket, ranges: DesiredStatRange[]) =>
+    runLoProcess(
+      0,
+      {
+        filteredItems,
+        modStatTotals: zeroArmorStats(),
+        lockedMods: { generalMods: [], activityMods: [] },
+        setBonuses: {},
+        requiredPerks: [],
+        desiredStatRanges: ranges,
+        anyExotic: false,
+        autoModOptions: mapAutoMods(getAutoMods(defs, new Set())),
+        autoStatMods: true,
+        strictUpgrades: false,
+        stopOnFirstSet: false,
+      },
+      () => {
+        /* progress not needed */
+      },
+    );
 
   beforeAll(async () => {
     const [defsResult, stores] = await Promise.all([getTestDefinitions(), getTestStores()]);
@@ -120,6 +143,11 @@ describe('stat-target planner prototype (#11832)', () => {
       expect(manifestEntry?.secondaryStatHash).toBe(archetype.secondaryStatHash);
     }
 
+    // Blocks are always planned at the tier drops can actually roll, never at
+    // whatever the player happens to own — otherwise someone without max-tier
+    // armor gets told a reachable target is impossible.
+    expect(model.gearTier).toBe(MAX_GEAR_TIER);
+
     const bestValues = model.valuesByTier.get(model.gearTier)!;
     expect(bestValues.primaryValue).toBeGreaterThan(bestValues.secondaryValue);
     expect(bestValues.secondaryValue).toBeGreaterThan(bestValues.tertiaryValue);
@@ -152,7 +180,7 @@ describe('stat-target planner prototype (#11832)', () => {
         continue;
       }
       checked++;
-      const actual = assumedMasterworkStats(item);
+      const actual = calculateAssumedMasterworkStats(item, permissiveArmorEnergyRules);
       let exact = true;
       for (const statHash of armorStats) {
         if (actual[statHash] > predicted[statHash]) {
@@ -243,28 +271,6 @@ describe('stat-target planner prototype (#11832)', () => {
       },
     ];
 
-    const autoModOptions = mapAutoMods(getAutoMods(defs, new Set()));
-    const runWorker = (filteredItems: ProcessItemsByBucket, ranges: DesiredStatRange[]) =>
-      runLoProcess(
-        0,
-        {
-          filteredItems,
-          modStatTotals: zeroStats(),
-          lockedMods: { generalMods: [], activityMods: [] },
-          setBonuses: {},
-          requiredPerks: [],
-          desiredStatRanges: ranges,
-          anyExotic: false,
-          autoModOptions,
-          autoStatMods: true,
-          strictUpgrades: false,
-          stopOnFirstSet: false,
-        },
-        () => {
-          /* progress not needed */
-        },
-      );
-
     for (const { name, targets } of cases) {
       const ranges = makeDesiredStatRanges(targets);
       const plan = planBestComposition(blocks, ranges);
@@ -329,7 +335,6 @@ describe('stat-target planner prototype (#11832)', () => {
       `pruned hypothetical space from ${blocks.length} to ${relevantBlocks.length} blocks for the worker path`,
     );
 
-    const autoModOptions = mapAutoMods(getAutoMods(defs, new Set()));
     const filteredItems = Object.fromEntries(
       ArmorBucketHashes.map((bucketHash) => [
         bucketHash,
@@ -338,25 +343,7 @@ describe('stat-target planner prototype (#11832)', () => {
     ) as ProcessItemsByBucket;
 
     const start = performance.now();
-    const result = await runLoProcess(
-      0,
-      {
-        filteredItems,
-        modStatTotals: zeroStats(),
-        lockedMods: { generalMods: [], activityMods: [] },
-        setBonuses: {},
-        requiredPerks: [],
-        desiredStatRanges,
-        anyExotic: false,
-        autoModOptions,
-        autoStatMods: true,
-        strictUpgrades: false,
-        stopOnFirstSet: false,
-      },
-      () => {
-        /* progress not needed */
-      },
-    );
+    const result = await runWorker(filteredItems, desiredStatRanges);
     const ms = performance.now() - start;
 
     infoLog(
@@ -421,27 +408,8 @@ describe('stat-target planner prototype (#11832)', () => {
       }),
     ) as ProcessItemsByBucket;
 
-    const autoModOptions = mapAutoMods(getAutoMods(defs, new Set()));
     const start = performance.now();
-    const result = await runLoProcess(
-      0,
-      {
-        filteredItems,
-        modStatTotals: zeroStats(),
-        lockedMods: { generalMods: [], activityMods: [] },
-        setBonuses: {},
-        requiredPerks: [],
-        desiredStatRanges,
-        anyExotic: false,
-        autoModOptions,
-        autoStatMods: true,
-        strictUpgrades: false,
-        stopOnFirstSet: false,
-      },
-      () => {
-        /* progress not needed */
-      },
-    );
+    const result = await runWorker(filteredItems, desiredStatRanges);
     const ms = performance.now() - start;
     infoLog(
       'planner prototype',

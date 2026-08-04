@@ -397,7 +397,7 @@ export default memo(function LoadoutBuilder({
           autoStatMods={autoStatMods}
           lockedModMap={lockedModMap}
           storeId={selectedStore.id}
-          ownedSetsFound={!processing && (resultSets?.length ?? 0) > 0}
+          ownedSets={processing ? 'pending' : (resultSets?.length ?? 0) > 0 ? 'found' : 'none'}
           className={styles.loadoutEditSection}
         />
       )}
