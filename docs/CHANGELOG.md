@@ -4,6 +4,7 @@
 * Add basic handling for using Artifacts in loadouts
 * Show chronologs under the vault instead of silver.
 * Add error advice to turn off auto translation.
+* Add a warning about PS3/XB360 not happening
 
 ## 8.136.0 <span class="changelog-date">(2026-08-02)</span>
 
