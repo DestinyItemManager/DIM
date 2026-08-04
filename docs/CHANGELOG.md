@@ -3,6 +3,7 @@
 * Added a share button to the loadout edit sheet.
 * Add basic handling for using Artifacts in loadouts
 * Show chronologs under the vault instead of silver.
+* Add error advice to turn off auto translation.
 
 ## 8.136.0 <span class="changelog-date">(2026-08-02)</span>
 
