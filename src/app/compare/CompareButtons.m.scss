@@ -12,11 +12,14 @@
 }
 
 :global(.dim-button) {
-  @include interactive($hover: true, $active: true, $selectedClass: '.selected') {
+  @include interactive($hover: true, $active: true, $selectedClass: ':global(.selected)') {
     .svgIcon {
       :global(.item-img) {
         filter: invert(1);
       }
+    }
+    .inlineImageIcon {
+      filter: invert(1);
     }
   }
 }
@@ -26,13 +29,4 @@
   vertical-align: middle;
   height: 1.3em;
   width: 1.3em;
-}
-
-.intrinsicIcon {
-  transform: scale(1.2);
-}
-
-.statIconAdjust {
-  width: 1.1em;
-  object-fit: cover;
 }

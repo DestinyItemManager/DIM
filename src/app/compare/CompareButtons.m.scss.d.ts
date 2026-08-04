@@ -2,9 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'inlineImageIcon': string;
-  'intrinsicIcon': string;
-  'selected': string;
-  'statIconAdjust': string;
   'svgIcon': string;
 }
 export const cssExports: CssExports;
