@@ -41,32 +41,27 @@ export default memo(function CompareSuggestions({
     items: categoryItems.filter(filterFactory(button.query)),
   }));
 
-  const keptPenultimateButton = false;
-
   // Filter out useless buttons
-  const filteredCompareButtons = compareButtonsWithItems.filter((compareButton, index) => {
-    const nextCompareButton = compareButtonsWithItems[index + 1];
-
-    // always print the final button, unless it matched the penultimate button
-    if (!nextCompareButton) {
-      return !keptPenultimateButton;
-    }
-    // skip empty buttons or buttons that only contain the example item (except the first item-specific button and the example item specific button)
-    if (
-      compareButton.items.length < 2 &&
-      !compareButton.query.includes('name:') &&
-      !compareButton.query.includes('id:')
-    ) {
-      return false;
-    }
-    // if the next button has [all of, & only] the exact same items in it
-    return !(
-      compareButton.items.length === nextCompareButton?.items.length &&
-      compareButton.items.every((setItem) =>
-        nextCompareButton.items.some((nextSetItem) => nextSetItem === setItem),
-      )
-    );
-  });
+  const filteredCompareButtons = compareButtonsWithItems
+    .filter(
+      (compareButton) =>
+        compareButton.items.length >= 2 ||
+        !compareButton.query.includes('exactname:') ||
+        !compareButton.query.includes('id:'),
+    )
+    .filter((compareButton, index) => {
+      if (index === 0) {
+        return true;
+      }
+      const prevCompareButton = compareButtonsWithItems[index - 1];
+      // if the previous button has [all of, & only] the exact same items in it
+      return !(
+        compareButton.items.length === prevCompareButton?.items.length &&
+        compareButton.items.every((setItem) =>
+          prevCompareButton.items.some((nextSetItem) => nextSetItem === setItem),
+        )
+      );
+    });
 
   const parsedQuery = currentQuery && canonicalizeQuery(parseQuery(currentQuery));
 
