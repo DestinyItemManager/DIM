@@ -1,7 +1,23 @@
+@use '../variables.scss' as *;
+
 .svgIcon {
+  --item-size: 1.3em;
   img,
   svg {
     height: 1.3em;
+  }
+  :global(.item-img) {
+    border: none;
+  }
+}
+
+:global(.dim-button) {
+  @include interactive($hover: true, $active: true, $selectedClass: '.selected') {
+    .svgIcon {
+      :global(.item-img) {
+        filter: invert(1);
+      }
+    }
   }
 }
 

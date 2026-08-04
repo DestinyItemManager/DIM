@@ -3,6 +3,7 @@
 interface CssExports {
   'inlineImageIcon': string;
   'intrinsicIcon': string;
+  'selected': string;
   'statIconAdjust': string;
   'svgIcon': string;
 }

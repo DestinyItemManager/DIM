@@ -4,7 +4,12 @@ import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import clsx from 'clsx';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
+import {
+  defaultComparisons,
+  findSimilarArmors,
+  findSimilarWeapons,
+  weaponTypeIcon,
+} from './compare-buttons';
 import { compareCategoryItemsSelector, compareQuerySelector } from './selectors';
 
 /**
@@ -75,6 +80,7 @@ export default memo(function CompareSuggestions({
 
   return (
     <>
+      {exampleItem.bucket.inWeapons && weaponTypeIcon(exampleItem)}
       {filteredCompareButtons.map(({ query, items, buttonLabel }) => (
         <button
           key={query}

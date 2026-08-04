@@ -4,10 +4,11 @@ import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCa
 import { PressTip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
+import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
-import { AppIcon, clearIcon } from 'app/shell/icons';
+import { AppIcon, asteriskIcon, clearIcon } from 'app/shell/icons';
 import { compact, filterMap } from 'app/utils/collections';
 import {
   getArmor3StatFocus,
@@ -217,67 +218,65 @@ const getRpm = (i: DimItem) => {
   return itemRpmStat?.value || -99999999;
 };
 
+export function weaponTypeIcon(exampleItem: DimItem) {
+  return <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />;
+}
+
 /**
  * Generate possible comparisons for weapons, given a reference item.
  */
 export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
-  const intrinsic = getWeaponArchetype(exampleItem);
-  const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
+  const archetype = getWeaponArchetype(exampleItem);
+  const archetypeName = archetype?.displayProperties.name || t('Compare.Archetype');
   const adeptStripped = stripAdept(exampleItem.name);
   const bucketHash: keyof typeof bucketToSearch = exampleItem.bucket.hash;
 
+  const archetypeIcon = archetype && (
+    <PressTip minimal elementType="span" tooltip={archetypeName} className={styles.svgIcon}>
+      <DefItemIcon key="icon" itemDef={archetype} />
+    </PressTip>
+  );
+  const archetypeQuery =
+    exampleItem.destinyVersion === 2 && archetype
+      ? `exactperk:${quoteFilterString(archetype.displayProperties.name)}`
+      : `stat:rpm:${getRpm(exampleItem)}`;
+
+  const elementIcon = (
+    <ElementIcon
+      key={exampleItem.id}
+      element={exampleItem.element}
+      className={clsx(styles.inlineImageIcon, 'dontInvert')}
+    />
+  );
+  const elementQuery = exampleItem.element ? `is:${getItemDamageShortName(exampleItem)}` : '';
+
+  const slotIcon = <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />;
+  const slotQuery = bucketToSearch[bucketHash];
+
   let comparisonSets: CompareButton[] = compact([
-    // same weapon type
     {
-      // TODO: replace typeName with a lookup of itemCategoryHash
-      buttonLabel: [<WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />],
+      buttonLabel: [<AppIcon key="icon" icon={asteriskIcon} />],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
-    // above but also has to be legendary
-    exampleItem.destinyVersion === 2 &&
-      exampleItem.rarity === 'Legendary' && {
-        buttonLabel: [
-          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
-          <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
-        ],
-        query: 'is:legendary',
-      },
-
-    // above, but also matching intrinsic (rpm+impact..... ish)
     {
-      buttonLabel: [
-        intrinsicName,
-        <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
-      ],
-      query: `(${bucketToSearch[bucketHash]} ${
-        exampleItem.destinyVersion === 2 && intrinsic
-          ? `exactperk:${quoteFilterString(intrinsic.displayProperties.name)}`
-          : `stat:rpm:${getRpm(exampleItem)}`
-      })`,
+      buttonLabel: [slotIcon],
+      query: slotQuery,
     },
 
-    // above, but also same (kinetic/energy/heavy) slot
-    {
-      buttonLabel: [
-        <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
-      ],
-      query: bucketToSearch[bucketHash],
-    },
-
-    // same weapon type and also matching element (& usually same-slot because same element)
     exampleItem.element && {
-      buttonLabel: [
-        <ElementIcon
-          key={exampleItem.id}
-          element={exampleItem.element}
-          className={clsx(styles.inlineImageIcon, 'dontInvert')}
-        />,
-        <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
-      ],
-      query: `is:${getItemDamageShortName(exampleItem)}`,
+      buttonLabel: [elementIcon],
+      query: elementQuery,
+    },
+
+    archetype && {
+      buttonLabel: [archetypeIcon, slotIcon],
+      query: `(${archetypeQuery} ${slotQuery})`,
+    },
+
+    exampleItem.element && {
+      buttonLabel: [archetypeIcon, elementIcon],
+      query: `(${archetypeQuery} ${elementQuery} )`,
     },
 
     // exact same weapon, judging by name. might span multiple expansions.
