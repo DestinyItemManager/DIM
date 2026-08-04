@@ -3,6 +3,7 @@
 interface CssExports {
   'errorDetails': string;
   'errorTooltip': string;
+  'fixedIcon': string;
   'outOfDate': string;
   'refreshButton': string;
   'userIsPlaying': string;

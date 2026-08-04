@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use 'sass:math';
 @use '../variables' as *;
 @use '../dim-ui/tooltip-mixins' as *;
 
@@ -52,4 +53,11 @@
   p {
     margin-bottom: 1em;
   }
+}
+
+.fixedIcon {
+  display: inline-block;
+  width: math.div(20em, 16); // $fa-fw-width from AppIcon
+  text-align: center;
+  line-height: 1;
 }
