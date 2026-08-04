@@ -99,7 +99,6 @@
     "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
-    "NoModArmor": "Pre-mods",
     "Button": "Compare",
     "Archetype": "Archetype",
     "ButtonHelp": "Compare Items",

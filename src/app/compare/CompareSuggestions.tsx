@@ -1,4 +1,3 @@
-import { PressTip } from 'app/dim-ui/PressTip';
 import { DimItem } from 'app/inventory/item-types';
 import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
@@ -67,11 +66,9 @@ export default memo(function CompareSuggestions({
 
   return (
     <>
-      <PressTip tooltip={currentQuery}>
-        {exampleItem.bucket.inArmor
-          ? armorSlotIcon(exampleItem)
-          : exampleItem.bucket.inWeapons && weaponTypeIcon(exampleItem)}
-      </PressTip>
+      {exampleItem.bucket.inArmor
+        ? armorSlotIcon(exampleItem)
+        : exampleItem.bucket.inWeapons && weaponTypeIcon(exampleItem)}
       {filteredCompareButtons.map(({ query, items, buttonLabel }) => (
         <button
           key={query}
