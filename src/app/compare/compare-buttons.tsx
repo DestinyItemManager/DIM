@@ -74,7 +74,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             exampleItem.rarity === 'Legendary' ? (
               <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />
             ) : null,
-            <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
           ],
           query: `${archetype ? 'is:armor3.0' : modernArmor} perk:${quoteFilterString(intrinsic.name)} is:${exampleItem.rarity}`,
         }))
@@ -84,10 +83,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
   return compact([
     // same slot on the same class
     {
-      buttonLabel: [
-        <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        `+ ${t('Compare.NoModArmor')}`,
-      ],
+      buttonLabel: [`+ ${t('Compare.NoModArmor')}`],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
@@ -102,7 +98,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItem.rarity === 'Legendary' && {
         buttonLabel: [
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `${modernArmor} is:legendary`,
       },
@@ -113,7 +108,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         buttonLabel: [
           <SpecialtyModSlotIcon className={styles.inlineImageIcon} key="1" item={exampleItem} />,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `${modernArmor} modslot:${exampleItemModSlotMetadata.slotTag || 'none'}`,
       },
@@ -126,7 +120,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             <BungieImage className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
           </PressTip>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `${modernArmor} perk:${quoteFilterString(exampleItemIntrinsic.name)} is:${exampleItem.rarity}`,
       },
@@ -139,7 +132,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           <img key="1" src={archetypeIcon} />,
           <span key="2">{t('Compare.Archetype')}</span>,
           <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `is:armor3.0 is:legendary`,
       },
@@ -150,7 +142,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         buttonLabel: [
           <BungieImage key="1" src={archetype.displayProperties.icon} />,
           <span key="2">{archetype.displayProperties.name}</span>,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `${modernArmor} perk:${quoteFilterString(archetype.displayProperties.name)} is:${exampleItem.rarity}`,
       },
@@ -181,7 +172,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
             className={styles.statIconAdjust}
             src={tertiaryStatDisplayProperties.icon}
           />,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `${modernArmor} perk:${quoteFilterString(archetype.displayProperties.name)} tertiarystat:${tertiaryStat} is:${exampleItem.rarity}`,
       },
@@ -192,7 +182,6 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     // basically stuff with the same name & categories
     {
       buttonLabel: [exampleItem.name],
-      // TODO: I'm gonna get in trouble for this but I think it should just match on name which includes reissues. The old logic used dupeID which is more discriminating.
       query: compareNameQuery(exampleItem),
     },
     // Exact armor based on ID
@@ -220,6 +209,10 @@ const getRpm = (i: DimItem) => {
 
 export function weaponTypeIcon(exampleItem: DimItem) {
   return <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />;
+}
+
+export function armorSlotIcon(exampleItem: DimItem) {
+  return <ArmorSlotIcon key="type" item={exampleItem} className={styles.svgIcon} />;
 }
 
 /**
@@ -301,8 +294,7 @@ export function defaultComparisons(exampleItem: DimItem): CompareButton[] {
   let comparisonSets: CompareButton[] = [
     // same item type
     {
-      // TODO: replace typeName with a lookup of itemCategoryHash
-      buttonLabel: [exampleItem.typeName],
+      buttonLabel: [<AppIcon key="icon" icon={asteriskIcon} />],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
 
