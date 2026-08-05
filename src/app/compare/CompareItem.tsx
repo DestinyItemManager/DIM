@@ -1,6 +1,7 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { ColumnSort, SortDirection } from 'app/dim-ui/table-columns';
+import { useAlternateClick } from 'app/dim-ui/useAlternateClick';
 import { t } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -11,7 +12,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { ColumnDefinition, Row, TableContext } from 'app/organizer/table-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { noop } from 'app/utils/functions';
-import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
+import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { nonPullablePostmasterItem } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useRef } from 'react';
@@ -158,7 +159,6 @@ export function CompareHeaders({
   toggleColumnSort: (columnId: string, shiftHeld: boolean, sort?: SortDirection) => () => void;
   filteredColumns: ColumnDefinition[];
 }) {
-  const isShiftHeld = useShiftHeld();
   return (
     <>
       <div key="spacer-1" className={styles.spacer} />
@@ -171,50 +171,69 @@ export function CompareHeaders({
         />
       ))}
       <div key="spacer-2" className={styles.spacer} />
-      {filteredColumns.map((column) => {
-        const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
-        return (
-          <div
-            key={column.id}
-            className={clsx(
-              styles.header,
-              column.headerClassName,
-              columnSort
-                ? columnSort.sort === SortDirection.ASC
-                  ? styles.sortDesc
-                  : styles.sortAsc
-                : undefined,
-              {
-                [styles.highlighted]: highlight === column.id,
-              },
-            )}
-            onPointerEnter={() => setHighlight(column.id)}
-            onPointerLeave={() => setHighlight(undefined)}
-            onClick={
-              column.noSort
-                ? undefined
-                : toggleColumnSort(column.id, isShiftHeld, column.defaultSort)
-            }
-            role="rowheader"
-            aria-sort={
-              columnSort
-                ? columnSort.sort === SortDirection.ASC
-                  ? 'ascending'
-                  : 'descending'
-                : 'none'
-            }
-          >
-            <div className={styles.headerContent}>
-              {column.header}
-              {columnSort && (
-                <AppIcon
-                  icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft}
-                />
-              )}
-            </div>
-          </div>
-        );
-      })}
+      {filteredColumns.map((column) => (
+        <CompareHeader
+          key={column.id}
+          column={column}
+          columnSorts={columnSorts}
+          setHighlight={setHighlight}
+          highlight={highlight}
+          toggleColumnSort={toggleColumnSort}
+        />
+      ))}
     </>
+  );
+}
+
+function CompareHeader({
+  column,
+  columnSorts,
+  setHighlight,
+  highlight,
+  toggleColumnSort,
+}: {
+  column: ColumnDefinition;
+  columnSorts: ColumnSort[];
+  setHighlight: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  highlight: string | number | undefined;
+  toggleColumnSort: (columnId: string, shiftHeld: boolean, sort?: SortDirection) => () => void;
+}) {
+  const alterateClickProps = useAlternateClick((alt) => {
+    if (!column.noSort) {
+      toggleColumnSort(column.id, alt, column.defaultSort)();
+    }
+  });
+
+  const columnSort = !column.noSort && columnSorts.find((c) => c.columnId === column.id);
+  return (
+    <div
+      key={column.id}
+      className={clsx(
+        styles.header,
+        column.headerClassName,
+        columnSort
+          ? columnSort.sort === SortDirection.ASC
+            ? styles.sortDesc
+            : styles.sortAsc
+          : undefined,
+        {
+          [styles.highlighted]: highlight === column.id,
+        },
+      )}
+      onPointerEnter={() => setHighlight(column.id)}
+      onPointerLeave={() => setHighlight(undefined)}
+      role="rowheader"
+      aria-sort={
+        columnSort ? (columnSort.sort === SortDirection.ASC ? 'ascending' : 'descending') : 'none'
+      }
+      {...alterateClickProps}
+    >
+      <div className={styles.headerContent}>
+        {column.header}
+        {columnSort && (
+          <AppIcon icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft} />
+        )}
+      </div>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
-import { mergeProps, useLongPress, usePress } from 'react-aria';
 import * as styles from './FilterPills.m.scss';
+import { useAlternateClick } from './useAlternateClick';
 
 export interface Option<T> {
   readonly key: string;
@@ -76,15 +76,8 @@ function Pill<T>({
   selected: boolean;
   onClick: (option: Option<T>, shiftHeld: boolean) => void;
 }) {
-  const { longPressProps } = useLongPress({
-    onLongPress: () => {
-      onClick(option, true);
-    },
-  });
-  const { pressProps } = usePress({
-    onPress: (e) => {
-      onClick(option, e.shiftKey);
-    },
+  const altClickProps = useAlternateClick((alt) => {
+    onClick(option, alt);
   });
   return (
     <button
@@ -92,7 +85,7 @@ function Pill<T>({
       className={clsx(styles.pill, {
         [styles.selected]: selected,
       })}
-      {...mergeProps(longPressProps, pressProps)}
+      {...altClickProps}
     >
       {option.content}
     </button>
