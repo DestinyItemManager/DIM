@@ -78,7 +78,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     (exampleItem.destinyVersion === 2 &&
       filterMap(getExtraIntrinsicPerkSockets(exampleItem), (s) => s.plugged?.plugDef)
         ?.map((intrinsic) => ({
-          buttonLabel: [perkIcon(intrinsic)],
+          buttonLabel: [perkIcon(intrinsic), intrinsic.displayProperties.name],
           query: perkQuery(intrinsic),
         }))
         .reverse()) ||
