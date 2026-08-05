@@ -3,6 +3,7 @@ import { saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import RadioButtons, { Option } from 'app/dim-ui/RadioButtons';
 import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
+import { useAlternateClick } from 'app/dim-ui/useAlternateClick';
 import { t } from 'app/i18next-t';
 import {
   AppIcon,
@@ -14,7 +15,6 @@ import {
 } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { useShiftHeld } from 'app/utils/hooks';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as styles from './SearchHistory.m.scss';
@@ -44,8 +44,6 @@ export default function SearchHistory() {
     { columnId: 'last_used', sort: SortDirection.DESC },
   ]);
 
-  const shiftHeld = useShiftHeld();
-
   const deleteSearch = (e: React.MouseEvent, item: Search) => {
     e.stopPropagation();
     dispatch(searchDeleted({ query: item.query, type: item.type }));
@@ -61,7 +59,7 @@ export default function SearchHistory() {
     }
   };
 
-  const onToggleSort = (columnId: string, defaultDirection: SortDirection) =>
+  const onToggleSort = (columnId: string, defaultDirection: SortDirection, shiftHeld: boolean) =>
     toggleColumnSort(columnId, shiftHeld, defaultDirection);
 
   const headers: [string, React.ReactNode, SortDirection][] = [
@@ -164,11 +162,14 @@ function ColumnHeader({
   children: React.ReactNode;
   defaultDirection: SortDirection;
   columnSorts: ColumnSort[];
-  toggleColumnSort: (columnId: string, direction: SortDirection) => () => void;
+  toggleColumnSort: (columnId: string, direction: SortDirection, shiftHeld: boolean) => () => void;
 }) {
+  const alterateClickProps = useAlternateClick((alt) => {
+    toggleColumnSort(columnId, defaultDirection, alt)();
+  });
   const sort = columnSorts.find((c) => c.columnId === columnId);
   return (
-    <th onClick={toggleColumnSort(columnId, defaultDirection)}>
+    <th {...alterateClickProps}>
       {children}
       {sort && (
         <AppIcon
