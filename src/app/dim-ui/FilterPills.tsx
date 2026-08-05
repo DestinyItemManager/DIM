@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
+import { mergeProps, useLongPress, usePress } from 'react-aria';
 import * as styles from './FilterPills.m.scss';
 
 export interface Option<T> {
@@ -27,10 +28,9 @@ export default function FilterPills<T>({
   darkBackground?: boolean;
   extra?: React.ReactNode;
 }) {
-  const onClickPill = (e: React.MouseEvent, option: Option<T>) => {
-    e.stopPropagation();
+  const onClickPill = (option: Option<T>, shiftHeld: boolean) => {
     const match = (o: Option<T>) => o.key === option.key;
-    if (e.shiftKey) {
+    if (shiftHeld) {
       const existing = selectedOptions.find(match);
       if (existing) {
         onOptionsSelected(selectedOptions.filter((o) => !match(o)));
@@ -55,18 +55,46 @@ export default function FilterPills<T>({
       onClick={clearSelection}
     >
       {options.map((o) => (
-        <button
-          type="button"
+        <Pill
           key={o.key}
-          className={clsx(styles.pill, {
-            [styles.selected]: selectedOptions.some((other) => other.key === o.key),
-          })}
-          onClick={(e) => onClickPill(e, o)}
-        >
-          {o.content}
-        </button>
+          option={o}
+          selected={selectedOptions.some((other) => other.key === o.key)}
+          onClick={onClickPill}
+        />
       ))}
       {extra}
     </div>
+  );
+}
+
+function Pill<T>({
+  onClick,
+  option,
+  selected,
+}: {
+  option: Option<T>;
+  selected: boolean;
+  onClick: (option: Option<T>, shiftHeld: boolean) => void;
+}) {
+  const { longPressProps } = useLongPress({
+    onLongPress: () => {
+      onClick(option, true);
+    },
+  });
+  const { pressProps } = usePress({
+    onPress: (e) => {
+      onClick(option, e.shiftKey);
+    },
+  });
+  return (
+    <button
+      type="button"
+      className={clsx(styles.pill, {
+        [styles.selected]: selected,
+      })}
+      {...mergeProps(longPressProps, pressProps)}
+    >
+      {option.content}
+    </button>
   );
 }
