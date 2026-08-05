@@ -52,7 +52,7 @@ export default function Plug({
   }
 
   const selectable = socketInfo.plugOptions.length > 1;
-  const doClick = (hasMenu || selectable) && onClick ? () => onClick(plug) : undefined;
+  const doClick = onClick ? () => onClick(plug) : undefined;
 
   return (
     <div
