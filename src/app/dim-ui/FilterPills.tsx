@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 import * as styles from './FilterPills.m.scss';
+import { useAlternateClick } from './useAlternateClick';
 
 export interface Option<T> {
   readonly key: string;
@@ -27,10 +28,9 @@ export default function FilterPills<T>({
   darkBackground?: boolean;
   extra?: React.ReactNode;
 }) {
-  const onClickPill = (e: React.MouseEvent, option: Option<T>) => {
-    e.stopPropagation();
+  const onClickPill = (option: Option<T>, shiftHeld: boolean) => {
     const match = (o: Option<T>) => o.key === option.key;
-    if (e.shiftKey) {
+    if (shiftHeld) {
       const existing = selectedOptions.find(match);
       if (existing) {
         onOptionsSelected(selectedOptions.filter((o) => !match(o)));
@@ -55,18 +55,39 @@ export default function FilterPills<T>({
       onClick={clearSelection}
     >
       {options.map((o) => (
-        <button
-          type="button"
+        <Pill
           key={o.key}
-          className={clsx(styles.pill, {
-            [styles.selected]: selectedOptions.some((other) => other.key === o.key),
-          })}
-          onClick={(e) => onClickPill(e, o)}
-        >
-          {o.content}
-        </button>
+          option={o}
+          selected={selectedOptions.some((other) => other.key === o.key)}
+          onClick={onClickPill}
+        />
       ))}
       {extra}
     </div>
+  );
+}
+
+function Pill<T>({
+  onClick,
+  option,
+  selected,
+}: {
+  option: Option<T>;
+  selected: boolean;
+  onClick: (option: Option<T>, shiftHeld: boolean) => void;
+}) {
+  const altClickProps = useAlternateClick((alt) => {
+    onClick(option, alt);
+  });
+  return (
+    <button
+      type="button"
+      className={clsx(styles.pill, {
+        [styles.selected]: selected,
+      })}
+      {...altClickProps}
+    >
+      {option.content}
+    </button>
   );
 }

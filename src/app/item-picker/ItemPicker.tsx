@@ -1,4 +1,5 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import { useAlternateClick } from 'app/dim-ui/useAlternateClick';
 import { t } from 'app/i18next-t';
 import { hideItemPopup, showItemPopup, showItemPopup$ } from 'app/item-popup/item-popup';
 import SearchBar from 'app/search/SearchBar';
@@ -7,7 +8,7 @@ import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
-import { mergeProps, useKeyboard, useLongPress, usePress } from 'react-aria';
+import { mergeProps, useKeyboard } from 'react-aria';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import '../inventory-page/StoreBucket.scss';
@@ -110,21 +111,14 @@ function ItemPickerItem({
   onItemSelectedFn: (item: DimItem, onClose: () => void) => void;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
-  const { longPressProps } = useLongPress({
-    onLongPress: () => {
+  const alternateClickProps = useAlternateClick((altClick) => {
+    if (altClick) {
       showItemPopup(item, ref.current!);
-    },
-  });
-  const { pressProps } = usePress({
-    onPress: (e) => {
-      if (e.shiftKey) {
-        showItemPopup(item, ref.current!);
-      } else if (showItemPopup$.getCurrentValue()?.item) {
-        hideItemPopup();
-      } else {
-        onItemSelectedFn(item, onClose);
-      }
-    },
+    } else if (showItemPopup$.getCurrentValue()?.item) {
+      hideItemPopup();
+    } else {
+      onItemSelectedFn(item, onClose);
+    }
   });
 
   const { keyboardProps } = useKeyboard({
@@ -151,7 +145,7 @@ function ItemPickerItem({
       ref={ref}
       className={styles.itemPickerItem}
       aria-keyshortcuts="i"
-      {...mergeProps(pressProps, longPressProps, keyboardProps)}
+      {...mergeProps(alternateClickProps, keyboardProps)}
     >
       <ConnectedInventoryItem
         item={item}

@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import { useAlternateClick } from 'app/dim-ui/useAlternateClick';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
@@ -176,10 +177,51 @@ export default function BountyGuide({
 
   flattened.sort(chainComparator(reverseComparator(compareBy((f) => f.bounties.length))));
 
-  const onClickPill = (e: React.MouseEvent, type: DefType, value: number) => {
+  const clearSelection = (e: React.MouseEvent) => {
     e.stopPropagation();
+    onSelectedFiltersChanged([]);
+  };
+
+  return (
+    <div className={styles.guide} onClick={clearSelection}>
+      {flattened.map(({ type, value, bounties }) => (
+        <Pill
+          key={type + value}
+          selectedFilters={selectedFilters}
+          onSelectedFiltersChanged={onSelectedFiltersChanged}
+          type={type}
+          value={value}
+          bounties={bounties}
+          pursuitsInfo={pursuitsInfo}
+          pullItemCategory={pullItemCategory}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Pill({
+  selectedFilters,
+  onSelectedFiltersChanged,
+  type,
+  value,
+  pursuitsInfo,
+  bounties,
+  pullItemCategory,
+}: {
+  selectedFilters: BountyFilter[];
+  onSelectedFiltersChanged: (filters: BountyFilter[]) => void;
+  type: DefType;
+  value: number;
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } };
+  bounties: DimItem[];
+  pullItemCategory: (e: React.MouseEvent, itemCategory: number) => void;
+}) {
+  const defs = useD2Definitions()!;
+
+  const alternateClickProps = useAlternateClick((altClick) => {
     const match = (f: BountyFilter) => f.type === type && f.hash === value;
-    if (e.shiftKey) {
+    if (altClick) {
       const existing = selectedFilters.find(match);
       if (existing) {
         onSelectedFiltersChanged(selectedFilters.filter((f) => !match(f)));
@@ -191,43 +233,33 @@ export default function BountyGuide({
     } else {
       onSelectedFiltersChanged([]);
     }
-  };
-
-  const clearSelection = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onSelectedFiltersChanged([]);
-  };
+  });
 
   return (
-    <div className={styles.guide} onClick={clearSelection}>
-      {flattened.map(({ type, value, bounties }) => (
-        <button
-          type="button"
-          key={type + value}
-          className={clsx(styles.pill, {
-            [styles.selected]: matchPill(type, value, selectedFilters),
-            // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
-            [styles.synergy]:
-              selectedFilters.length > 0 &&
-              bounties.some((i) => matchBountyFilters(defs, i, selectedFilters, pursuitsInfo)),
-          })}
-          onClick={(e) => onClickPill(e, type, value)}
+    <button
+      type="button"
+      className={clsx(styles.pill, {
+        [styles.selected]: matchPill(type, value, selectedFilters),
+        // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
+        [styles.synergy]:
+          selectedFilters.length > 0 &&
+          bounties.some((i) => matchBountyFilters(defs, i, selectedFilters, pursuitsInfo)),
+      })}
+      {...alternateClickProps}
+    >
+      <PillContent defs={defs} type={type} value={value} />
+      <span className={styles.count}>({bounties.length})</span>
+      {type === 'ItemCategory' && (
+        <span
+          className={styles.pullItem}
+          onClick={(e) => {
+            pullItemCategory(e, value);
+          }}
         >
-          <PillContent defs={defs} type={type} value={value} />
-          <span className={styles.count}>({bounties.length})</span>
-          {type === 'ItemCategory' && (
-            <span
-              className={styles.pullItem}
-              onClick={(e) => {
-                pullItemCategory(e, value);
-              }}
-            >
-              <AppIcon icon={addIcon} />
-            </span>
-          )}
-        </button>
-      ))}
-    </div>
+          <AppIcon icon={addIcon} />
+        </span>
+      )}
+    </button>
   );
 }
 
