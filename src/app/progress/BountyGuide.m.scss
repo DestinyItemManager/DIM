@@ -28,7 +28,7 @@
 }
 
 .selected {
-  border-color: var(--theme-accent-primary);
+  border-color: var(--theme-accent-primary) !important;
   background: rgb(0, 0, 0, 0.6);
 }
 
