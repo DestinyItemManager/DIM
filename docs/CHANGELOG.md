@@ -9,6 +9,7 @@
 * Most places that support shift-click (sorting columns in Compare, selecting pills in Loadouts and Bounties) now also support long-press on mobile.
 * Clamp stats in Loadout Optimizer sets so negative stats don't reduce the total.
 * Prevent armory links from overlapping the close button
+* Fixed the Loadout Optimizer returning no builds when a search (like tier:5) matched only exotic armor in multiple slots.
 
 ## 8.136.0 <span class="changelog-date">(2026-08-02)</span>
 
