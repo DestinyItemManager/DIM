@@ -239,9 +239,20 @@ export function filterItems({
 
     // If a search filters out all the possible items for a bucket, we ignore
     // the search. This allows users to filter some buckets without getting
-    // stuck making no sets.
-    let finalFilteredItems = searchFilteredItems.length ? searchFilteredItems : itemsThatFitMods;
-    const removedBySearchFilter = searchFilteredItems.length
+    // stuck making no sets. A loadout can hold at most one exotic, so a bucket
+    // whose only matches are exotic can't be paired with another such bucket, so
+    // treat those the same as an empty result and ignore the search there.
+    // Otherwise a query like `tier:5` that happens to match only exotics in
+    // several buckets leaves those buckets exotic-only and no valid sets can be
+    // built. Buckets already restricted to a specific exotic (pinned or locked)
+    // have no legendaries left to fall back to, so they keep their exotic-only
+    // matches.
+    const searchMatchedUsableItem =
+      searchFilteredItems.length > 0 &&
+      (searchFilteredItems.some((item) => !item.isExotic) ||
+        !itemsThatFitMods.some((item) => !item.isExotic));
+    let finalFilteredItems = searchMatchedUsableItem ? searchFilteredItems : itemsThatFitMods;
+    const removedBySearchFilter = searchMatchedUsableItem
       ? itemsThatFitMods.length - searchFilteredItems.length
       : 0;
     filterInfo.searchQueryEffective ||= removedBySearchFilter > 0;
