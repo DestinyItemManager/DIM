@@ -305,6 +305,28 @@ describe('loadout-builder item-filter', () => {
     expect(originalExotics.length).toBe(filteredExotics.length);
   });
 
+  it('ignores an exotic-only search match so multiple buckets do not force double exotics', () => {
+    // Simulate a search (e.g. `tier:5`) that happens to match only exotics: a
+    // filter that keeps every exotic but no legendaries. Since a set can hold
+    // just one exotic, keeping several exotic-only buckets would make every
+    // combination invalid, so the search should be ignored per bucket instead.
+    const [filteredItems, filterInfo] = filterItems({
+      ...defaultArgs,
+      defs,
+      items,
+      lockedModMap: noMods.modMap,
+      unassignedMods: noMods.unassignedMods,
+      searchFilter: (item) => item.isExotic,
+    });
+
+    noPinInvariants(filteredItems, filterInfo);
+    expect(filterInfo.searchQueryEffective).toBe(false);
+    // Every bucket keeps its legendaries rather than collapsing to exotics only.
+    for (const bucketHash of ArmorBucketHashes) {
+      expect(filteredItems[bucketHash].some((item) => !item.isExotic)).toBe(true);
+    }
+  });
+
   it('mod assignment may cause exotic slot to not have options', () => {
     // Find a leg armor exotic where every copy does not have 10 energy
     const exotic = items.find(
