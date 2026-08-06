@@ -3,6 +3,7 @@ import { addCompareItem } from 'app/compare/actions';
 import { stripAdept } from 'app/compare/compare-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
+import BreakerType from 'app/dim-ui/BreakerTypeIcon';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
 import ElementIcon from 'app/dim-ui/ElementIcon';
@@ -126,6 +127,9 @@ export default function Armory({
         <h1>{item.name}</h1>
         <div className={styles.headerContent}>
           <div className={styles.subtitle}>
+            {item.breakerType && (
+              <BreakerType breakerType={item.breakerType} className={styles.element} />
+            )}
             <ElementIcon element={item.element} className={styles.element} />
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <div>{itemTypeName(item)}</div>
