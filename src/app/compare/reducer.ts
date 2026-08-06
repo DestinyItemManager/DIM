@@ -163,7 +163,7 @@ function initialCompareQuery(item: DimItem) {
     return compareNameQuery(item);
   } else {
     // For D2 armor, we match by rarity, intrinsic and interesting mod sockets
-    const factors = [`is:${item.rarity.toLowerCase()}`];
+    const factors = [/* `is:${item.rarity.toLowerCase()}` */];
 
     const intrinsicSocket = item.sockets?.allSockets.find(
       (socket) =>
@@ -184,6 +184,10 @@ function initialCompareQuery(item: DimItem) {
     const archetype = getArmorArchetype(item);
     if (archetype) {
       factors.push(`perk:${quoteFilterString(archetype.displayProperties.name)}`);
+    }
+
+    if (factors.length === 0) {
+      factors.push(compareNameQuery(item));
     }
 
     return factors.join(' ');

@@ -1,7 +1,26 @@
+@use '../variables.scss' as *;
+
 .svgIcon {
+  --item-size: 1.3em;
   img,
   svg {
     height: 1.3em;
+  }
+  :global(.item-img) {
+    border: none;
+  }
+}
+
+:global(.dim-button) {
+  @include interactive($hover: true, $active: true, $selectedClass: ':global(.selected)') {
+    .svgIcon {
+      :global(.item-img) {
+        filter: invert(1);
+      }
+    }
+    .inlineImageIcon {
+      filter: invert(1);
+    }
   }
 }
 
@@ -12,11 +31,7 @@
   width: 1.3em;
 }
 
-.intrinsicIcon {
-  transform: scale(1.2);
-}
-
-.statIconAdjust {
-  width: 1.1em;
-  object-fit: cover;
+.itemIcon {
+  --item-size: calc(1.3em + 8px);
+  margin: -4px 4px -4px -10px;
 }

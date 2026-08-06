@@ -4,7 +4,13 @@ import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import clsx from 'clsx';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
+import {
+  armorSlotIcon,
+  defaultComparisons,
+  findSimilarArmors,
+  findSimilarWeapons,
+  weaponTypeIcon,
+} from './compare-buttons';
 import { compareCategoryItemsSelector, compareQuerySelector } from './selectors';
 
 /**
@@ -34,47 +40,35 @@ export default memo(function CompareSuggestions({
     items: categoryItems.filter(filterFactory(button.query)),
   }));
 
-  let keptPenultimateButton = false;
-
   // Filter out useless buttons
-  const filteredCompareButtons = compareButtonsWithItems.filter((compareButton, index) => {
-    const nextCompareButton = compareButtonsWithItems[index + 1];
-
-    // always print the final button, unless it matched the penultimate button
-    if (!nextCompareButton) {
-      return !keptPenultimateButton;
-    }
-    // skip empty buttons or buttons that only contain the example item (except the first item-specific button and the example item specific button)
-    if (
-      compareButton.items.length < 2 &&
-      !compareButton.query.includes('name:') &&
-      !compareButton.query.includes('id:')
-    ) {
-      return false;
-    }
-    // if the next button has [all of, & only] the exact same items in it
-    if (
-      compareButton.items.length === nextCompareButton?.items.length &&
-      compareButton.items.every((setItem) =>
-        nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem),
-      )
-    ) {
-      // do include this button, if the next button is the "includes armor 2.0 items" button.
-      // that's a confusing label to users with no armor 2.0 items.
-      if (exampleItem.bucket.inArmor && !nextCompareButton?.query.includes('is:armor2.0')) {
-        keptPenultimateButton = true;
+  const filteredCompareButtons = compareButtonsWithItems
+    .filter(
+      (compareButton) =>
+        compareButton.items.length >= 2 ||
+        !compareButton.query.includes('exactname:') ||
+        !compareButton.query.includes('id:'),
+    )
+    .filter((compareButton, index) => {
+      if (index === 0) {
         return true;
       }
-      // otherwise skip it. it's a redundant button.
-      return false;
-    }
-    return true;
-  });
+      const prevCompareButton = compareButtonsWithItems[index - 1];
+      // if the previous button has [all of, & only] the exact same items in it
+      return !(
+        compareButton.items.length === prevCompareButton?.items.length &&
+        compareButton.items.every((setItem) =>
+          prevCompareButton.items.some((nextSetItem) => nextSetItem === setItem),
+        )
+      );
+    });
 
   const parsedQuery = currentQuery && canonicalizeQuery(parseQuery(currentQuery));
 
   return (
     <>
+      {exampleItem.bucket.inArmor
+        ? armorSlotIcon(exampleItem)
+        : exampleItem.bucket.inWeapons && weaponTypeIcon(exampleItem)}
       {filteredCompareButtons.map(({ query, items, buttonLabel }) => (
         <button
           key={query}

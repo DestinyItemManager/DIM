@@ -2,6 +2,7 @@
 
 // IMPORTANT: run `pnpm fa-subset` after changing this file or new icons won't show up
 
+export const asteriskIcon = 'fas fa-asterisk';
 export const archiveIcon = 'fas fa-archive';
 export const updateIcon = 'fas fa-arrow-circle-up';
 export const rightArrowIcon = 'fas fa-arrow-right';
