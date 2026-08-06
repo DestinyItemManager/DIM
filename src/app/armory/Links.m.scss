@@ -10,14 +10,14 @@
   gap: 4px;
 
   @include phone-portrait {
-    margin-right: 38px;
+    margin-right: 48px;
   }
 
   @media (max-width: 675px) {
-    margin: 0 0 8px 0;
+    margin: 0 48px 8px 0;
     float: none;
     flex-flow: row wrap;
-    justify-content: space-between;
+    gap: 8px;
     > li {
       padding: 8px;
     }
