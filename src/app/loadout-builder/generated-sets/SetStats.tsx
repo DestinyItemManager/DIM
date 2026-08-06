@@ -10,7 +10,7 @@ import StatTooltip from 'app/store-stats/StatTooltip';
 import { sumBy } from 'app/utils/collections';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { sum } from 'es-toolkit';
+import { clamp } from 'es-toolkit';
 import {
   ArmorStatHashes,
   ArmorStats,
@@ -49,12 +49,8 @@ export function TierlessSetStats({
   setBonusModWarning?: boolean;
 }) {
   const defs = useD2Definitions()!;
-  const totalStats = sum(Object.values(stats));
+  const totalStats = sumBy(Object.values(stats), (stat) => clamp(stat, 0, MAX_STAT));
   const countedStatsTotal = sumEnabledStats(stats, desiredStatRanges); // Total of the stats that were within the desired ranges
-
-  // TODO: Lots of changes needed here once we drop tiers. Maybe we just show a
-  // total stat sum? Doesn't seem that useful...
-  // TODO: Highlight enhanced stats?
 
   return (
     <div className={clsx(styles.container, className)}>
