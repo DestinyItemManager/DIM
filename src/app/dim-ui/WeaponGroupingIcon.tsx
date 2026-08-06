@@ -1,6 +1,7 @@
 import TagIcon from 'app/inventory/TagIcon';
 import { AmmoIcon } from 'app/item-popup/AmmoIcon';
 import { VaultGroupIcon } from 'app/shell/item-comparators';
+import BreakerType from './BreakerTypeIcon';
 import ElementIcon from './ElementIcon';
 import { getWeaponTypeSvgIconFromCategoryHashes } from './svgs/itemCategory';
 import * as styles from './WeaponGroupingIcon.m.scss';
@@ -46,6 +47,14 @@ export default function WeaponGroupingIcon({
       return (
         <div className={className}>
           <ElementIcon className={styles.elementIcon} element={icon.element} />
+        </div>
+      );
+    }
+
+    case 'breakerType': {
+      return (
+        <div className={className}>
+          <BreakerType className={styles.breakerTypeIcon} breakerType={icon.breakerType!} />
         </div>
       );
     }
