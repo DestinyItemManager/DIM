@@ -7,6 +7,7 @@
 * Add a warning about PS3/XB360 not happening
 * Perks with more than one option are now shift-clickable in Organizer.
 * Most places that support shift-click (sorting columns in Compare, selecting pills in Loadouts and Bounties) now also support long-press on mobile.
+* Clamp stats in Loadout Optimizer sets so negative stats don't reduce the total.
 
 ## 8.136.0 <span class="changelog-date">(2026-08-02)</span>
 
