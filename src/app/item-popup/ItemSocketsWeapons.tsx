@@ -50,7 +50,6 @@ export default function ItemSocketsWeapons({
     includeFakeMasterwork: Boolean(item.crafted),
   })!;
 
-  // Improve this when we use iterator-helpers
   const mods = [...modSocketsByCategory.values()].flat();
 
   const keyStats =
