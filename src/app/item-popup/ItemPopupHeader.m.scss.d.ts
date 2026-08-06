@@ -11,7 +11,6 @@ interface CssExports {
   'itemType': string;
   'legendary': string;
   'masterwork': string;
-  'power': string;
   'pursuit': string;
   'rare': string;
   'subtitle': string;

@@ -74,3 +74,15 @@
   filter: brightness(var(--theme-item-polaroid-element-adjust-brightness)) saturate(2.5);
   background-color: transparent !important;
 }
+
+.breakerIcon {
+  filter: invert(1);
+  width: calc((8 / 50) * var(--item-size));
+  height: calc((8 / 50) * var(--item-size));
+  opacity: 0.6;
+}
+
+.elementIcon {
+  width: calc((10 / 50) * var(--item-size));
+  height: calc((10 / 50) * var(--item-size));
+}

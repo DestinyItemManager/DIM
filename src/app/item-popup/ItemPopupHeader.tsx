@@ -35,8 +35,6 @@ export default function ItemPopupHeader({
   const [showArmory, setShowArmory] = useState(false);
   useHotkey('a', t('Hotkey.Armory'), () => setShowArmory(true));
 
-  const showElementIcon = Boolean(item.element);
-
   const linkToArmory = !noLink && item.destinyVersion === 2;
 
   return (
@@ -66,8 +64,16 @@ export default function ItemPopupHeader({
         </div>
 
         <div className={styles.details}>
-          {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
-          <div className={styles.power}>{item.primaryStat?.value}</div>
+          {item.breakerType && (
+            <BungieImage
+              src={item.breakerType.displayProperties.icon}
+              title={item.breakerType.displayProperties.description}
+            />
+          )}
+          {Boolean(item.element) && (
+            <ElementIcon element={item.element} className={styles.elementIcon} />
+          )}
+          <div>{item.primaryStat?.value}</div>
           {item.maxStackSize > 1 &&
             !item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament) && (
               <div className={styles.itemType}>

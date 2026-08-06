@@ -1,3 +1,4 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getD1QualityColor } from 'app/shell/formatters';
 import { isD1Item } from 'app/utils/item-utils';
@@ -94,11 +95,18 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
         </div>
       )}
       {summaryIcon}
+      {item.breakerType && (
+        <BungieImage
+          className={styles.breakerIcon}
+          src={item.breakerType.displayProperties.icon}
+          title={item.breakerType.displayProperties.description}
+        />
+      )}
       {item.element &&
         !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
           <ElementIcon
             element={item.element}
-            className={clsx({ [styles.fixContrast]: fixContrast })}
+            className={clsx(styles.elementIcon, { [styles.fixContrast]: fixContrast })}
             d1Badge={item.destinyVersion === 1}
           />
         )}

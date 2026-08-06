@@ -59,13 +59,22 @@ $iconOverlayScale: math.div(65, 96);
   align-items: center;
 }
 
-.type {
-  flex: 1;
+.details {
+  gap: 2px;
+  > img {
+    height: 16px;
+    width: 16px;
+  }
 }
 
 .elementIcon {
-  height: 16px;
   width: 16px;
+  height: 16px;
+}
+
+.type {
+  gap: 6px;
+  flex: 1;
 }
 
 .rare,
@@ -78,10 +87,6 @@ $iconOverlayScale: math.div(65, 96);
 
 .itemType {
   opacity: 0.7;
-}
-
-.power {
-  margin: 0 4px 0 2px;
 }
 
 .masterwork {

@@ -3,8 +3,10 @@
 interface CssExports {
   'badge': string;
   'badgeContent': string;
+  'breakerIcon': string;
   'capped': string;
   'deepsight': string;
+  'elementIcon': string;
   'engram': string;
   'fixContrast': string;
   'fullstack': string;
