@@ -4,7 +4,7 @@ import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCa
 import { PressTip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
-import { DefItemIcon } from 'app/inventory/ItemIcon';
+import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
@@ -158,7 +158,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
 
     // basically stuff with the same name & categories
     {
-      buttonLabel: [exampleItem.name],
+      buttonLabel: [<ItemIcon key="icon" item={exampleItem} className={styles.itemIcon} />],
       query: compareNameQuery(exampleItem),
     },
     // Exact armor based on ID

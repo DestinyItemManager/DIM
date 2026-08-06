@@ -30,3 +30,8 @@
   height: 1.3em;
   width: 1.3em;
 }
+
+.itemIcon {
+  --item-size: calc(1.3em + 8px);
+  margin: -4px 4px -4px -10px;
+}

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'inlineImageIcon': string;
+  'itemIcon': string;
   'svgIcon': string;
 }
 export const cssExports: CssExports;
