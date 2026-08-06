@@ -76,6 +76,7 @@ import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
 
 import CompareStat from 'app/compare/CompareStat';
+import BreakerTypeIcon from 'app/dim-ui/BreakerTypeIcon';
 import {
   buildNodeNames,
   buildSocketNames,
@@ -521,12 +522,9 @@ export function getColumns(
         id: 'breaker',
         header: t('Organizer.Columns.Breaker'),
         value: (item) => item.breakerType?.displayProperties.name,
-        cell: (value, item) =>
-          value && (
-            <BungieImage
-              className={styles.inlineIcon}
-              src={item.breakerType!.displayProperties.icon}
-            />
+        cell: (_, item) =>
+          item.breakerType && (
+            <BreakerTypeIcon className={styles.inlineIcon} breakerType={item.breakerType} />
           ),
         filter: (_val, item) =>
           item.breakerType

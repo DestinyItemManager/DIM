@@ -1,0 +1,10 @@
+@use '../variables.scss' as *;
+
+.breakerIcon {
+  width: var(--breaker-size, calc(#{dim-item-px(24)}));
+  height: var(--breaker-size, calc(#{dim-item-px(24)}));
+}
+
+.invert {
+  filter: invert(0.7);
+}

@@ -1,5 +1,6 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { itemConstants } from 'app/destiny2/d2-definitions';
+import BreakerTypeIcon from 'app/dim-ui/BreakerTypeIcon';
 import BungieImage, { bungieBackgroundStyles } from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
@@ -9,6 +10,7 @@ import type { ItemRarityName } from 'app/search/d2-known-values';
 import { compact } from 'app/utils/collections';
 import { itemTypeName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
+import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { useState } from 'react';
@@ -60,19 +62,21 @@ export default function ItemPopupHeader({
       <div className={styles.subtitle}>
         <div className={styles.type}>
           <div className={styles.itemType}>{itemTypeName(item)}</div>
-          {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
+          {item.destinyVersion === 2 && item.ammoType > 0 && (
+            <AmmoIcon
+              className={clsx(styles.elementIcon, {
+                [styles.fade]: item.ammoType === DestinyAmmunitionType.Primary,
+              })}
+              type={item.ammoType}
+            />
+          )}
         </div>
 
         <div className={styles.details}>
           {item.breakerType && (
-            <BungieImage
-              src={item.breakerType.displayProperties.icon}
-              title={item.breakerType.displayProperties.description}
-            />
+            <BreakerTypeIcon breakerType={item.breakerType} className={styles.elementIcon} />
           )}
-          {Boolean(item.element) && (
-            <ElementIcon element={item.element} className={styles.elementIcon} />
-          )}
+          {item.element && <ElementIcon element={item.element} className={styles.elementIcon} />}
           <div>{item.primaryStat?.value}</div>
           {item.maxStackSize > 1 &&
             !item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament) && (

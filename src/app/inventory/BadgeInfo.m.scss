@@ -1,6 +1,8 @@
 @use '../variables.scss' as *;
 
 .badge {
+  --breaker-size: calc(#{dim-item-px(8)});
+  --element-size: calc(#{dim-item-px(10)});
   margin-top: -1 * $item-border-width;
   background-color: var(--theme-item-polaroid);
   color: var(--theme-item-polaroid-txt);
@@ -67,22 +69,4 @@
   border-left: 1px solid $deepsight-border-color;
   border-right: 1px solid $deepsight-border-color;
   padding: 0 1px;
-}
-
-/* some elements icons (arc / void / strand) don't show up well on polaroid white. we darken these. */
-.fixContrast {
-  filter: brightness(var(--theme-item-polaroid-element-adjust-brightness)) saturate(2.5);
-  background-color: transparent !important;
-}
-
-.breakerIcon {
-  filter: invert(1);
-  width: calc((8 / 50) * var(--item-size));
-  height: calc((8 / 50) * var(--item-size));
-  opacity: 0.6;
-}
-
-.elementIcon {
-  width: calc((10 / 50) * var(--item-size));
-  height: calc((10 / 50) * var(--item-size));
 }

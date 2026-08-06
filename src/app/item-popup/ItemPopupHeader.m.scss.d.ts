@@ -6,6 +6,7 @@ interface CssExports {
   'details': string;
   'elementIcon': string;
   'exotic': string;
+  'fade': string;
   'header': string;
   'iconOverlay': string;
   'itemType': string;

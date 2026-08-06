@@ -1,9 +1,8 @@
-import BungieImage from 'app/dim-ui/BungieImage';
+import BreakerTypeIcon from 'app/dim-ui/BreakerTypeIcon';
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getD1QualityColor } from 'app/shell/formatters';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
-import { DamageType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -65,12 +64,6 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
     (isGeneric && item.primaryStat?.value.toString()) ||
     (item.classified && <ClassifiedNotes item={item} />);
 
-  const fixContrast =
-    item.element &&
-    (item.element.enumValue === DamageType.Arc ||
-      item.element.enumValue === DamageType.Void ||
-      item.element.enumValue === DamageType.Strand);
-
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
   const summaryIcon = wishlistRollIcon !== undefined && (
     <RatingIcon uiWishListRoll={wishlistRollIcon} />
@@ -95,21 +88,10 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
         </div>
       )}
       {summaryIcon}
-      {item.breakerType && (
-        <BungieImage
-          className={styles.breakerIcon}
-          src={item.breakerType.displayProperties.icon}
-          title={item.breakerType.displayProperties.description}
-        />
+      {item.breakerType && <BreakerTypeIcon breakerType={item.breakerType} lightBackground />}
+      {item.element && (
+        <ElementIcon element={item.element} d1Badge={item.destinyVersion === 1} lightBackground />
       )}
-      {item.element &&
-        !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
-          <ElementIcon
-            element={item.element}
-            className={clsx(styles.elementIcon, { [styles.fixContrast]: fixContrast })}
-            d1Badge={item.destinyVersion === 1}
-          />
-        )}
       <span className={styles.badgeContent}>{badgeContent}</span>
     </div>
   );

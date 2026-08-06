@@ -60,6 +60,7 @@ $iconOverlayScale: math.div(65, 96);
 }
 
 .details {
+  --element-size: 16px;
   gap: 2px;
   > img {
     height: 16px;
@@ -67,21 +68,20 @@ $iconOverlayScale: math.div(65, 96);
   }
 }
 
-.elementIcon {
-  width: 16px;
-  height: 16px;
-}
-
 .type {
   gap: 6px;
   flex: 1;
+}
+
+.fade {
+  opacity: 0.9;
 }
 
 .rare,
 .common,
 .exotic {
   .elementIcon {
-    filter: drop-shadow(0 0 1px #222) drop-shadow(0 0 0 #222);
+    filter: drop-shadow(0 0 1px #2228) drop-shadow(0 0 0 #2228);
   }
 }
 
