@@ -364,6 +364,17 @@ const socketFilters: ItemFilterDefinition[] = [
         s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
       ),
   },
+  {
+    keywords: 'tieredweapon',
+    description: tl('Filter.TieredWeapon'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      // only legendary weapons
+      item.rarity === 'Legendary' &&
+      // non-exotic craftable weapons & weapons with tier upgrade slots
+      (Boolean(item.patternUnlockRecord) ||
+        item.sockets?.allSockets?.some((s) => s.socketDefinition.socketTypeHash === 1236068212)),
+  },
 ];
 
 export default socketFilters;
