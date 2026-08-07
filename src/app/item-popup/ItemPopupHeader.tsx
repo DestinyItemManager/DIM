@@ -11,6 +11,10 @@ import { itemTypeName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import tier2 from 'images/tier-2.svg';
+import tier3 from 'images/tier-3.svg';
+import tier4 from 'images/tier-4.svg';
+import tier5 from 'images/tier-5.svg';
 import { useState } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { AmmoIcon } from './AmmoIcon';
@@ -23,6 +27,7 @@ const rarityClassName: LookupTable<ItemRarityName, string> = {
   Legendary: styles.legendary,
   Exotic: styles.exotic,
 };
+const pips = [undefined, `~${tier2}`, `~${tier3}`, `~${tier4}`, `~${tier5}`];
 
 export default function ItemPopupHeader({
   item,
@@ -99,7 +104,7 @@ function SeasonTierBanner({ item }: { item: DimItem }) {
   const seasonIcon = item.iconDef.secondaryBackground;
   const backgrounds = compact([
     // Tier pips
-    item.tier > 0 && itemConstants.gearTierOverlayImagePaths[Math.min(item.tier - 1, 4)],
+    item.tier > 0 && pips[Math.min(item.tier - 1, 4)],
     // Black stripe
     item.iconDef.secondaryBackground && itemConstants.watermarkDropShadowPath,
   ]);

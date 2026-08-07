@@ -17,6 +17,10 @@ import {
 } from 'data/d2/generated-enums';
 import holofoilAnim from 'images/holofoil-anim.apng';
 import pursuitComplete from 'images/pursuitComplete.svg';
+import tier2 from 'images/tier-2.svg';
+import tier3 from 'images/tier-3.svg';
+import tier4 from 'images/tier-4.svg';
+import tier5 from 'images/tier-5.svg';
 import { DimItem } from './item-types';
 import * as styles from './ItemIcon.m.scss';
 import { isPluggableItem } from './store/sockets';
@@ -39,6 +43,8 @@ const strandWrongColorPlugCategoryHashes = [
   PlugCategoryHashes.HunterStrandMovement,
   PlugCategoryHashes.WarlockStrandMovement,
 ];
+
+const pips = [undefined, `~${tier2}`, `~${tier3}`, `~${tier4}`, `~${tier5}`];
 
 export function getItemImageStyles(item: DimItem, className?: string) {
   const isCapped = item.maxStackSize > 1 && item.amount === item.maxStackSize && item.uniqueStack;
@@ -146,10 +152,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
   ]);
   // These are aligned with the border, not the image
   const seasonAndPips = compact([
-    // Tier pips
-    item.tier > 0 &&
-      !item.isEngram &&
-      itemConstants?.gearTierOverlayImagePaths[Math.min(item.tier - 1, 4)],
+    item.tier > 0 && !item.isEngram && pips[Math.min(item.tier - 1, 4)],
   ]);
 
   if (craftedOverlays.length === 0 && seasonBanner) {
