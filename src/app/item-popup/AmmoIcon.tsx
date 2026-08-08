@@ -13,16 +13,5 @@ const ammoIcons: LookupTable<DestinyAmmunitionType, string> = {
 };
 
 export function AmmoIcon({ type, className }: { type: DestinyAmmunitionType; className?: string }) {
-  return (
-    <img
-      className={clsx(
-        styles.ammoIcon,
-        {
-          [styles.primary]: type === DestinyAmmunitionType.Primary,
-        },
-        className,
-      )}
-      src={ammoIcons[type]}
-    />
-  );
+  return <img className={clsx(styles.ammoIcon, className)} src={ammoIcons[type]} />;
 }

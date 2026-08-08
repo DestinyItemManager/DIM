@@ -185,6 +185,7 @@ export default function SettingsPage() {
     season: t('Settings.SortBySeason'),
     acquisitionRecency: t('Settings.SortByRecent'),
     elementWeapon: t('Settings.SortByWeaponElement'),
+    breakerType: t('Settings.SortByBreakerType'),
     masterworked: t('Settings.Masterworked'),
     crafted: t('Settings.SortByCrafted'),
     deepsight: t('Settings.SortByDeepsight'),
@@ -201,6 +202,7 @@ export default function SettingsPage() {
     ammoType: t('Settings.SortByAmmoType'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     elementWeapon: t('Settings.SortByWeaponElement'),
+    breakerType: t('Settings.SortByBreakerType'),
   });
 
   const descriptionDisplayOptions = mapToOptions({

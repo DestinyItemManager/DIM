@@ -6,7 +6,6 @@ interface CssExports {
   'capped': string;
   'deepsight': string;
   'engram': string;
-  'fixContrast': string;
   'fullstack': string;
   'masterwork': string;
   'quality': string;

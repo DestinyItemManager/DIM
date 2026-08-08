@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'breakerIcon': string;
+  'invert': string;
 }
 export const cssExports: CssExports;
 export = cssExports;
