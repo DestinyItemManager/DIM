@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "Fehler beim Laden deiner Destiny {{version}} Charaktere und des Inventars",
     "ErrorLoadManifest": "Destiny Info-Datenbank kann nicht von Bungie geladen werden",
     "ErrorLoading": "Destiny Accounts können nicht von Bungie.net geladen werden",
-    "MissingAccountWarning": "Wenn du dein Konto hier nicht siehst, hast du dich möglicherweise nicht mit dem richtigen Bungie.net-Konto eingeloggt oder Bungie.net ist wegen Wartungsarbeiten möglicherweise nicht verfügbar.",
+    "MissingAccountWarning": "Wenn du deinen Account hier nicht siehst, hast du dich möglicherweise nicht auf dem richtigen Bungie.net Account eingeloggt oder Bungie.net kann wegen Wartungsarbeiten nicht geladen werden. DIM kann keine PS3 oder Xbox 360 Destiny 1 Konten laden.",
     "MissingDescription": "Das Konto, das du sehen möchtest, ist kein, mit deinem Bungie.net-Profil, verknüpftes Konto. Wähle eines deiner Konten unten.",
     "MissingTitle": "Account nicht gefunden",
     "NoCharacters": "Zu diesem Bungie.net-Account können keine Destiny-Charaktere gefunden werden. Versuche dich mit einem anderen Account einzuloggen.",
@@ -49,6 +49,7 @@
   },
   "Bucket": {
     "Armor": "Rüstung",
+    "Artifact": "Artefakt",
     "Class": "Fokus",
     "General": "Allgemein",
     "Ghost": "Geist",
@@ -111,8 +112,7 @@
       "Unmatched": "Dieser Gegenstand stimmt nicht mit der Art der zu vergleichenden Gegenstände überein."
     },
     "InitialItem": "Das ist der Gegenstand, von dem aus der Vergleich gestartet wurde",
-    "IsVendorItem": "Dieser Gegenstand ist nicht in deinem Inventar, aber {{vendorName}} verkauft ihn.",
-    "NoModArmor": "Pre-Mods"
+    "IsVendorItem": "Dieser Gegenstand ist nicht in deinem Inventar, aber {{vendorName}} verkauft ihn."
   },
   "Cooldown": {
     "Grenade": "Granaten-Abklingzeit: {{cooldown}}",
@@ -153,6 +153,7 @@
     "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
     "ReadTheGuide": "Lies unser Benutzerhandbuch (im Menü verlinkt) für Schritte zur Fehlerbehebung.",
     "SystemDown": "Dies betrifft alle Destiny-Apps, und das DIM-Team kann es nicht reparieren oder umgehen.",
+    "TranslateExtension": "Deaktiviere die automatische Übersetzung, da sie DIM und andere Apps beschädigen kann.",
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
@@ -599,6 +600,7 @@
     "SearchAMod": "Suche Mod-Name oder -Beschreibung",
     "SearchASetBonus": "Suche nach Set-Bonus-Namen, Perk-Namen oder Beschreibung",
     "SearchAnExotic": "Suche Namen oder Beschreibung von Exotischen",
+    "SelectArtifactOptions": "Artefakt anpassen",
     "SelectExotic": "Wähle Exotik",
     "SelectMods": "Mods auswählen",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -787,8 +789,6 @@
     "ApplyMods": "Wende Mods an",
     "ApplySearch": "Übertrage Suche \"{{query}}\"",
     "ArmorStats": "Rüstungs-Stats",
-    "ArtifactUnlocks": "Artefakt-Freischaltungen",
-    "ArtifactUnlocksDesc": "Aufgrund von Bungie.net-Einschränkungen kann DIM dein Artefakt nicht automatisch konfigurieren. Du musst diese Freischaltungen im Spiel durchführen, bevor du das Loadout anwenden kannst.",
     "ArtifactUnlocksWithSeason": "Artefakt-Freischaltungen – S{{seasonNumber}}",
     "BadLoadoutShare": "Konnte geteiltes Loadout nicht laden",
     "BadLoadoutShareBody": "Das Loadout, das du zu laden versuchst, ist ungültig: {{error}}",
@@ -954,7 +954,7 @@
     "ShareLoadout": "Teilen",
     "ShowModPlacement": "Mod-Platzierung anzeigen",
     "Snapshot": "Als In-Game-Loadout speichern",
-    "SocketOverrides": "Ändere Fokus-Optionen",
+    "SocketOverrides": "Unterklassen-/Artefakt-Optionen ändern",
     "SortByEditTime": "Nach Änderungsdatum sortieren",
     "SortByName": "Nach Namen sortieren",
     "SubclassOptions": "{{subclass}}-Optionen",

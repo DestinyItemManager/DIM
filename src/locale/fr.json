@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny {{version}}",
     "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
     "ErrorLoading": "Impossible de charger les comptes Destiny depuis Bungie.net",
-    "MissingAccountWarning": "Si vous ne voyez pas votre compte ici, vous ne vous êtes peut-être pas connecté au bon compte Bungie.net, ou Bungie.net est peut-être hors-ligne pour maintenance.",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance. DIM cannot load PS3 or Xbox 360 Destiny 1 accounts.",
     "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net. Sélectionnez un de vos comptes ci-dessous.",
     "MissingTitle": "Compte Introuvable",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
@@ -49,6 +49,7 @@
   },
   "Bucket": {
     "Armor": "Armure",
+    "Artifact": "Artifact",
     "Class": "Doctrine",
     "General": "Général",
     "Ghost": "Spectre",
@@ -111,8 +112,7 @@
       "Unmatched": "Cet objet ne correspond pas au type d'objet comparé."
     },
     "InitialItem": "C'est l'objet depuis lequel l'outil de comparaison a été lancé",
-    "IsVendorItem": "Cet objet n'est pas dans votre inventaire, mais {{vendorName}} le vend.",
-    "NoModArmor": "Avant les mods"
+    "IsVendorItem": "Cet objet n'est pas dans votre inventaire, mais {{vendorName}} le vend."
   },
   "Cooldown": {
     "Grenade": "Délai de la Grenade: {{cooldown}}",
@@ -153,6 +153,7 @@
     "Description": "Essayez de charger votre inventaire dans l'application Compagnon de Destiny 2 pour voir si Bungie.net est hors-ligne.",
     "ReadTheGuide": "Lisez notre manuel d'utilisation (lien dans le menu) pour les étapes de dépannage.",
     "SystemDown": "Ceci affecte toutes les applications Destiny et l'équipe DIM ne peut pas le réparer ou le contourner.",
+    "TranslateExtension": "Disable automatic translation as it can break DIM and other apps.",
     "Troubleshooting": "Guide de Dépannage"
   },
   "FarmingMode": {
@@ -599,6 +600,7 @@
     "SearchAMod": "Rechercher un nom ou une description de mod",
     "SearchASetBonus": "Search for set bonus name, perk name or description",
     "SearchAnExotic": "Rechercher un nom ou une description d'exotique",
+    "SelectArtifactOptions": "Customize artifact",
     "SelectExotic": "Sélectionner exotique",
     "SelectMods": "Sélectionner les Mods",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -787,8 +789,6 @@
     "ApplyMods": "Ajout des mods",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
     "ArmorStats": "Statistiques d'armure",
-    "ArtifactUnlocks": "Déverrouillages d'artefact",
-    "ArtifactUnlocksDesc": "En raison des limitations de Bungie.net, DIM ne peut pas configurer automatiquement votre artefact. Vous devez effectuer ces déverrouillages en jeu avant d'appliquer l'équipement.",
     "ArtifactUnlocksWithSeason": "Déverrouillages d'artefact – S{{seasonNumber}}",
     "BadLoadoutShare": "Impossible de charger l'équipement partagé",
     "BadLoadoutShareBody": "L'équipement que vous essayez de charger est invalide : {{error}}",
@@ -954,7 +954,7 @@
     "ShareLoadout": "Partager",
     "ShowModPlacement": "Afficher le placement des mods",
     "Snapshot": "Sauvegarder comme équipement en jeu",
-    "SocketOverrides": "Changement des options de doctrine",
+    "SocketOverrides": "Changing subclass/artifact options",
     "SortByEditTime": "Trier par dernière modification",
     "SortByName": "Trier par nom",
     "SubclassOptions": "Options de {{subclass}}",
