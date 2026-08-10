@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "Não foi possível carregar os seus personagens e inventário de Destiny {{version}}",
     "ErrorLoadManifest": "Não foi possível carregar as informações de banco de dados de Destiny da Bungie",
     "ErrorLoading": "Não foi possível carregar as contas de Destiny da Bungie.net",
-    "MissingAccountWarning": "Caso não encontre sua conta aqui, significa que você ainda não a autorizou através da Bungie.net ou o serviço da Bungie pode estar em manutenção no momento.",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance. DIM cannot load PS3 or Xbox 360 Destiny 1 accounts.",
     "MissingDescription": "A conta que você está tentando visualizar não está vinculada ao seu perfil da Bungie.net. Selecione uma das suas contas abaixo.",
     "MissingTitle": "Conta não encontrada",
     "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente se logar com uma conta diferente.",
@@ -49,6 +49,7 @@
   },
   "Bucket": {
     "Armor": "Armaduras",
+    "Artifact": "Artifact",
     "Class": "Subclasse",
     "General": "Geral",
     "Ghost": "Fantasma",
@@ -111,8 +112,7 @@
       "Unmatched": "Este item não corresponde ao tipo dos itens que estão sendo comparados."
     },
     "InitialItem": "A ferramenta de Comparação foi ativada a partir deste item",
-    "IsVendorItem": "Esse item não está em seu inventário, mas {{vendorName}} o vende.",
-    "NoModArmor": "Pré mods"
+    "IsVendorItem": "Esse item não está em seu inventário, mas {{vendorName}} o vende."
   },
   "Cooldown": {
     "Grenade": "Tempo de carga da granada: {{cooldown}}",
@@ -153,6 +153,7 @@
     "Description": "Tente carregar seu inventário no app Destiny 2 Companion para saber se a Bungie.net está fora do ar.",
     "ReadTheGuide": "Leia nosso Guia do Usuário (link do menu) para etapas de solução de problemas.",
     "SystemDown": "Este problema afeta todos os apps de Destiny. Sendo assim, nem mesmo o DIM será capaz de resolver.",
+    "TranslateExtension": "Disable automatic translation as it can break DIM and other apps.",
     "Troubleshooting": "Guia para Solução de Problemas"
   },
   "FarmingMode": {
@@ -599,6 +600,7 @@
     "SearchAMod": "Busca pelo nome ou descrição do mod",
     "SearchASetBonus": "Search for set bonus name, perk name or description",
     "SearchAnExotic": "Busca pelo nome ou descrição do exótico",
+    "SelectArtifactOptions": "Customize artifact",
     "SelectExotic": "Selecionar exótico",
     "SelectMods": "Selecionar mods",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -787,8 +789,6 @@
     "ApplyMods": "Aplicando mods",
     "ApplySearch": "Transferir a busca \"{{query}}\"",
     "ArmorStats": "Atributos de Armadura",
-    "ArtifactUnlocks": "Desbloqueado no Artefato",
-    "ArtifactUnlocksDesc": "Devido a limitações da Bungie.net, DIM não pode configurar automaticamente seu artefato. Você precisa executar estes desbloqueios no jogo antes de aplicar o Arsenal.",
     "ArtifactUnlocksWithSeason": "Desbloqueado no Artefato – T{{seasonNumber}}",
     "BadLoadoutShare": "Não foi possível carregar este set compartilhado",
     "BadLoadoutShareBody": "O set que você está tentando carregar é inválido: {{error}}",
@@ -954,7 +954,7 @@
     "ShareLoadout": "Compartilhar",
     "ShowModPlacement": "Exibir Localização do Mod",
     "Snapshot": "Salvar como Set no jogo",
-    "SocketOverrides": "Alterando opções de subclasse",
+    "SocketOverrides": "Changing subclass/artifact options",
     "SortByEditTime": "Ordenar pela última alteração",
     "SortByName": "Ordenar por nome",
     "SubclassOptions": "Opções da {{subclass}}",

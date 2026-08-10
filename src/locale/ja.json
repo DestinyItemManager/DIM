@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "Destiny {{version}} のキャラクターと所持アイテムの情報をロードできません",
     "ErrorLoadManifest": "Bungieからのデータ読み込みに失敗しました",
     "ErrorLoading": "Bungie.netからDestinyのアカウント情報をロードできません",
-    "MissingAccountWarning": "ここに自分のアカウントが表示されない場合は、正しい Bungie.net アカウントにログインしていないか、 Bungie.net がメンテナンスでダウンしている可能性があります。",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance. DIM cannot load PS3 or Xbox 360 Destiny 1 accounts.",
     "MissingDescription": "表示しようとしているアカウントは、Bungie.netプロフィールにリンクされていません。以下のアカウントから選択してください。",
     "MissingTitle": "アカウントが見つかりません",
     "NoCharacters": "このBungie.netアカウントには、Destinyのキャラクターが関連付けられていません。別のアカウントでログインしてみてください。",
@@ -47,6 +47,7 @@
   },
   "Bucket": {
     "Armor": "防具",
+    "Artifact": "Artifact",
     "Class": "サブクラス",
     "General": "全般",
     "Ghost": "ゴースト",
@@ -108,8 +109,7 @@
       "Unmatched": "このアイテムは比較されているアイテムのタイプと一致しません。"
     },
     "InitialItem": "比較ツールが起動されたアイテムです",
-    "IsVendorItem": "このアイテムは保管庫にありませんが、 {{vendorName}} が販売しています。",
-    "NoModArmor": "Pre-mods"
+    "IsVendorItem": "このアイテムは保管庫にありませんが、 {{vendorName}} が販売しています。"
   },
   "Cooldown": {
     "Grenade": "グレネードのクールダウン: {{cooldown}}",
@@ -147,6 +147,7 @@
     "Description": "Bungie.net がダウンしているか確認するには、Destiny 2公式アプリで所持品データを読み込めるか試してください。",
     "ReadTheGuide": "トラブルシューティングの手順については、ユーザーガイド(メニュー内のリンク) をご覧ください。",
     "SystemDown": "Destinyに関連するすべてのアプリに影響する内容で、 DIM チームにて修正したり回避ができない内容です。",
+    "TranslateExtension": "Disable automatic translation as it can break DIM and other apps.",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -582,6 +583,7 @@
     "SearchAMod": "Mod名または説明で検索",
     "SearchASetBonus": "セットボーナス名、パーツ名、または説明を検索",
     "SearchAnExotic": "エキゾチック名または説明で検索",
+    "SelectArtifactOptions": "Customize artifact",
     "SelectExotic": "使用するエキゾチックを選ぶ",
     "SelectMods": "Mod を選択",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -770,8 +772,6 @@
     "ApplyMods": "Modを適用",
     "ApplySearch": "検索 {{query}} を転送",
     "ArmorStats": "防具のステータス",
-    "ArtifactUnlocks": "アーティファクトのロック解除",
-    "ArtifactUnlocksDesc": "Bungie.net の仕様で DIM はアーティファクトmodをロードアウトに合わせて解除変更できません。ロードアウトを適用する前に、ゲーム内で使用するModのロック解除をする必要があります。",
     "ArtifactUnlocksWithSeason": "解除済のアーティファクト – シーズン{{seasonNumber}}",
     "BadLoadoutShare": "シェアしたロードアウトを読み込めません",
     "BadLoadoutShareBody": "読み込もうとしているロードアウトは無効です: {{error}}",
@@ -925,7 +925,7 @@
     "ShareLoadout": "共有",
     "ShowModPlacement": "装備中のModを表示",
     "Snapshot": "ゲーム内ロードアウトとして保存",
-    "SocketOverrides": "サブクラスオプションの変更",
+    "SocketOverrides": "Changing subclass/artifact options",
     "SortByEditTime": "最終更新でソート",
     "SortByName": "名前でソート",
     "SubclassOptions": "{{subclass}} オプション",

@@ -530,6 +530,12 @@ const D2Sources: {
     ],
   },
   duality: {
+    itemHashes: [
+      1780464822, // New Purpose
+      2026087437, // Lingering Dread
+      3000847393, // Unforgiven
+      3652506829, // Stormchaser
+    ],
     sourceHashes: [
       1282207663, // Source: Dungeon "Duality"
     ],
@@ -550,46 +556,67 @@ const D2Sources: {
       4051531374, // Complete the "Shattered Throne" dungeon.
     ],
     itemHashes: [
+      8293111, // Long Arm
       14929251, // Long Arm
       93061497, // VS Gravitic Arrest
       185321778, // The Eternal Return
       189194532, // No Survivors (Adept)
       233402416, // New Pacific Epitaph (Adept)
       291447487, // Cold Comfort
+      435821040, // Darkest Before
+      435821041, // Relentless
+      487205709, // Terminus Horizon
       492673102, // New Pacific Epitaph
+      559523765, // Wilderflight (Adept)
       749483159, // Prosecutor (Adept)
       814876684, // Wish-Ender
       839344841, // Vengeful Whisper
       839786290, // Cold Comfort
+      880829467, // Prosecutor
+      1013434963, // Adjudicator
       1050582210, // Greasy Luck (Adept)
       1066598837, // Relentless (Adept)
       1125217994, // New Pacific Epitaph
       1157220231, // No Survivors (Adept)
+      1206729100, // Wilderflight
       1303313141, // Unsworn
       1460079227, // Liminal Vigil
+      1626437786, // A Sudden Death (Adept)
       1685406703, // Greasy Luck
       1757202961, // Greasy Luck
       1762785662, // VS Chill Inhibitor
       1762785663, // VS Velocity Baton
       1773934241, // Judgment
+      1780464822, // New Purpose
       1817605554, // Cold Comfort (Adept)
+      1827058652, // Relentless (Adept)
       1904170910, // A Sudden Death
+      1905934655, // Liminal Vigil (Adept)
       1969802090, // Premonition
+      1976481399, // A Sudden Death
       1987644603, // Judgment (Adept)
+      2026087437, // Lingering Dread
       2059741649, // New Pacific Epitaph
       2126543269, // Cold Comfort (Adept)
       2129814338, // Prosecutor
       2130249527, // Death Adder
+      2210806903, // Terminus Horizon (Adept)
       2226158470, // Unworthy
+      2226572694, // Judgment
+      2306182339, // Wilderflight
       2477408004, // Wilderflight (Adept)
       2485881870, // Unloved
+      2575844666, // Liminal Vigil
       2730671571, // Terminus Horizon
       2760833884, // Cold Comfort
       2764074355, // A Sudden Death (Adept)
       2806569825, // Naeem's Lance
       2844014413, // Pallas Galliot
       2934305134, // Greasy Luck
+      2969415423, // Judgment
       2982006965, // Wilderflight
+      3000847393, // Unforgiven
+      3138208275, // Liminal Vigil
       3185151619, // New Pacific Epitaph (Adept)
       3210739171, // Greasy Luck (Adept)
       3262192268, // No Survivors
@@ -597,14 +624,22 @@ const D2Sources: {
       3360937899, // Unvoiced
       3381450498, // Indebted Kindness
       3421639790, // Liminal Vigil (Adept)
+      3483591058, // Prosecutor
       3490736392, // Seventh Seraph Officer Revolver
+      3652506829, // Stormchaser
       3668817296, // Dragoncult Sickle
       3681280908, // Relentless
       3692140710, // Long Arm (Adept)
+      3733988413, // Relentless
+      3984556130, // Terminus Horizon
+      4025177550, // Prosecutor (Adept)
       4059111040, // Survivor's Epitaph
+      4097972038, // A Sudden Death
       4193602194, // No Survivors
       4228149269, // No Survivors
       4232480042, // VS Pyroelectric Propellant
+      4239378215, // Long Arm (Adept)
+      4249949938, // Long Arm
       4267192886, // Terminus Horizon (Adept)
     ],
   },
@@ -681,17 +716,26 @@ const D2Sources: {
   events: {
     itemHashes: [
       425681240, // Acosmic
+      495940989, // Avalanche
       601948197, // Zephyr
       689294985, // Jurassic Green
+      1123433952, // Stay Frosty
+      1183116657, // Glacioclasm
       1280894514, // Mechabre
+      1845372864, // Albedo Wing
+      1845978721, // Avalanche
       2477980485, // Mechabre
       2603335652, // Jurassic Green
+      2812100428, // Stay Frosty
+      2814093983, // Cold Front
       2869466318, // BrayTech Werewolf
       2873681799, // Zephyr
       3003492238, // Zephyr
+      3240434620, // Something New
       3400256755, // Zephyr
       3558681245, // BrayTech Werewolf
       3559361670, // The Title
+      3573686365, // Glacioclasm
     ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
@@ -1011,17 +1055,25 @@ const D2Sources: {
       247984830, // Allied Demand
       293709640, // Pressurized Precision
       293709641, // The Wizened Rebuke
+      487361141, // Gunnora's Axe
       491956886, // Tusk of the Boar
+      540880995, // Dark Decider
+      888872889, // Point of the Stag
+      1161561386, // The Guiding Sight
       1162929425, // The Golden Standard
       1435062001, // Riiswalker
       1448664466, // Iron Bone
       1448664467, // Iron Gold
       1617917863, // Crimil's Dagger
       1661191199, // Grizzled Wolf
+      1764868900, // Riiswalker
       1968711238, // Warlord's Spear
       1987234560, // Iron Ruby
+      1999697514, // The Wizened Rebuke
+      2189073092, // Lethal Abundance
       2204165992, // The Time-Worn Spire
       2448092902, // Rusted Iron
+      2488587246, // The Hero's Burden
       2851703775, // Bite of the Fox
       2881109029, // Roar of the Bear
       3026836571, // Multimach CCX
@@ -1029,6 +1081,7 @@ const D2Sources: {
       3203303472, // Frontier's Cry
       3634548598, // Jorum's Claw
       3634548599, // Claws of the Wolf
+      4009352833, // Roar of the Bear
       4222913208, // The Hero's Burden
     ],
     sourceHashes: [
@@ -1438,7 +1491,29 @@ const D2Sources: {
   },
   prophecy: {
     itemHashes: [
+      435821040, // Darkest Before
+      435821041, // Relentless
+      749483159, // Prosecutor (Adept)
+      880829467, // Prosecutor
+      1013434963, // Adjudicator
+      1066598837, // Relentless (Adept)
+      1626437786, // A Sudden Death (Adept)
+      1773934241, // Judgment
+      1827058652, // Relentless (Adept)
+      1904170910, // A Sudden Death
+      1976481399, // A Sudden Death
+      1987644603, // Judgment (Adept)
+      2129814338, // Prosecutor
       2130249527, // Death Adder
+      2226572694, // Judgment
+      2764074355, // A Sudden Death (Adept)
+      2969415423, // Judgment
+      3329218848, // Judgment (Adept)
+      3483591058, // Prosecutor
+      3681280908, // Relentless
+      3733988413, // Relentless
+      4025177550, // Prosecutor (Adept)
+      4097972038, // A Sudden Death
     ],
     sourceHashes: [
       506073192, // Source: "Prophecy" Dungeon
@@ -1759,8 +1834,28 @@ const D2Sources: {
   },
   spireofthewatcher: {
     itemHashes: [
+      8293111, // Long Arm
+      14929251, // Long Arm
+      487205709, // Terminus Horizon
+      559523765, // Wilderflight (Adept)
+      1206729100, // Wilderflight
+      1460079227, // Liminal Vigil
+      1905934655, // Liminal Vigil (Adept)
+      2210806903, // Terminus Horizon (Adept)
+      2306182339, // Wilderflight
+      2477408004, // Wilderflight (Adept)
+      2575844666, // Liminal Vigil
+      2730671571, // Terminus Horizon
+      2982006965, // Wilderflight
+      3138208275, // Liminal Vigil
+      3421639790, // Liminal Vigil (Adept)
       3490736392, // Seventh Seraph Officer Revolver
+      3692140710, // Long Arm (Adept)
+      3984556130, // Terminus Horizon
       4059111040, // Survivor's Epitaph
+      4239378215, // Long Arm (Adept)
+      4249949938, // Long Arm
+      4267192886, // Terminus Horizon (Adept)
     ],
     sourceHashes: [
       1597738585, // Source: "Spire of the Watcher" Dungeon
@@ -2004,19 +2099,33 @@ const D2Sources: {
   },
   trials: {
     itemHashes: [
+      2307365, // The Inquisitor (Adept)
+      711889599, // Whistler's Whim (Adept)
+      825554997, // The Inquisitor (Adept)
       1117787139, // Exile's Curse
       1185633760, // The Inquisitor
+      1401300690, // Eye of Sol
+      1574601402, // Whistler's Whim
       1803480512, // Yesterday's Question
       1940352487, // Tomorrow's Answer
+      2059255495, // Eye of Sol (Adept)
+      2185327324, // The Inquisitor
+      2421180981, // Incisor (Adept)
       2499834164, // Keen Thistle
       2499834165, // Eye of Sol
+      2653171212, // The Inquisitor
+      2759251821, // Unwavering Duty (Adept)
       2776092652, // Igneous Hammer
       2776092653, // Exalted Truth
+      3102421004, // Exalted Truth
       3267997292, // Reed's Regret
       3614211586, // Aisha's Care
+      3624844116, // Unwavering Duty
       3747667917, // Shayura's Wrath
       3790632261, // The Scholar
+      3920882229, // Exalted Truth (Adept)
       4089030727, // Sola's Scar
+      4248997900, // Incisor
       4277548087, // The Messenger
     ],
     sourceHashes: [

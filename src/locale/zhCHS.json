@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "无法加载你的《命运 {{version}}》角色和库存",
     "ErrorLoadManifest": "无法从 Bungie 加载命运信息数据库",
     "ErrorLoading": "无法从 Bungie.net 加载命运账户",
-    "MissingAccountWarning": "如果你的账户没有显示，你可能登录了错误的 Bungie.net 账户，或 Bungie.net 可能正在停机维护。",
+    "MissingAccountWarning": "若在此处看不到你的账号，可能是你登录的Bungie.net账号有误，或是Bungie.net正在停机维护。DIM无法读取PS3、Xbox 360平台的《命运1》账号。",
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。请在下方选择你的账户。",
     "MissingTitle": "找不到账户",
     "NoCharacters": "没有找到与此 Bungie.net 账号相关联的《命运》角色，登录其它账号试试看。",
@@ -47,6 +47,7 @@
   },
   "Bucket": {
     "Armor": "防具",
+    "Artifact": "神器",
     "Class": "子职业",
     "General": "杂项",
     "Ghost": "机灵",
@@ -108,8 +109,7 @@
       "Unmatched": "此物品和要比较的物品类别不同。"
     },
     "InitialItem": "比较工具从这个物品启动",
-    "IsVendorItem": "你不拥有此物品，但{{vendorName}}售卖它。",
-    "NoModArmor": "旧版模组"
+    "IsVendorItem": "你不拥有此物品，但{{vendorName}}售卖它。"
   },
   "Cooldown": {
     "Grenade": "手雷冷却：{{cooldown}}",
@@ -147,6 +147,7 @@
     "Description": "请尝试在命运同伴 App 中加载你的物品栏，以检测是否 Bungie.net 出现了问题。",
     "ReadTheGuide": "阅读我们的用户指南（链接位于菜单中）以了解故障排除步骤。",
     "SystemDown": "这一问题影响所有命运应用程序，DIM团队也无法修复或绕过。",
+    "TranslateExtension": "请关闭自动翻译功能，它可能导致DIM以及其他程序崩溃。",
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
@@ -582,6 +583,7 @@
     "SearchAMod": "搜索模组名称或描述",
     "SearchASetBonus": "搜索套装效果、特性名称或描述",
     "SearchAnExotic": "搜索异域装备名称或描述",
+    "SelectArtifactOptions": "自定义神器",
     "SelectExotic": "选择异域装备",
     "SelectMods": "选择模组",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -770,8 +772,6 @@
     "ApplyMods": "正在应用模组",
     "ApplySearch": "转移搜索 \"{{query}}\"",
     "ArmorStats": "护甲属性",
-    "ArtifactUnlocks": "神器解锁",
-    "ArtifactUnlocksDesc": "由于 Bungie.net 的限制，DIM无法自动配置你的神器模组。你需要在游戏中进行解锁，然后再应用到配装。",
     "ArtifactUnlocksWithSeason": "神器解锁 - 第 {{seasonNumber}} 赛季",
     "BadLoadoutShare": "无法载入共享配装",
     "BadLoadoutShareBody": "你试图载入的配装无效：{{error}}",
@@ -925,7 +925,7 @@
     "ShareLoadout": "分享",
     "ShowModPlacement": "显示模组位置",
     "Snapshot": "保存为游戏内配装",
-    "SocketOverrides": "正在更改子职业选项",
+    "SocketOverrides": "切换分支/神器配置",
     "SortByEditTime": "按最后编辑时间排序",
     "SortByName": "按名称排序",
     "SubclassOptions": "{{subclass}}选项",

@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "데스티니 {{version}} 캐릭터와 소지품 불러오기 실패",
     "ErrorLoadManifest": "Bungie에서 데스티니 정보 데이터베이스 불러오기 실패",
     "ErrorLoading": "Bungie.net에서 데스티니 계정 불러오기 실패",
-    "MissingAccountWarning": "여기에 계정이 보이지 않는다면 잘못된 Bungie.net 계정으로 로그인하였거나 Bungie.net이 점검 중일 수 있습니다.",
+    "MissingAccountWarning": "여기에 계정이 보이지 않는다면 잘못된 Bungie.net 계정으로 로그인하였거나 Bungie.net이 점검 중일 수 있습니다. DIM은 PS3이나 Xbox 360의 데스티니 1 계정을 불러올 수 없습니다.",
     "MissingDescription": "지금 확인하려는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다. 아래에서 본인의 계정을 선택하세요.",
     "MissingTitle": "계정을 찾을 수 없습니다",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
@@ -47,6 +47,7 @@
   },
   "Bucket": {
     "Armor": "방어구",
+    "Artifact": "유물",
     "Class": "하위직업",
     "General": "일반",
     "Ghost": "고스트",
@@ -108,8 +109,7 @@
       "Unmatched": "비교되는 아이템의 유형과 일치하지 않습니다."
     },
     "InitialItem": "비교 도구가 실행된 아이템입니다.",
-    "IsVendorItem": "이 아이템은 소지품에 없으며, {{vendorName}}이(가) 판매하고 있습니다.",
-    "NoModArmor": "구형 방어구"
+    "IsVendorItem": "이 아이템은 소지품에 없으며, {{vendorName}}이(가) 판매하고 있습니다."
   },
   "Cooldown": {
     "Grenade": "수류탄 재사용 대기시간: {{cooldown}}",
@@ -147,6 +147,7 @@
     "Description": "Destiny 2 컴패니언 앱에서 소지품을 불러와서 Bungie.net 서버 상태를 확인해 보세요.",
     "ReadTheGuide": "문제가 발생한 경우 사용 설명서(메뉴의 링크)를 읽어보세요.",
     "SystemDown": "이 문제는 모든 데스티니 앱에 해당되며, DIM 팀이 고치거나 우회할 수 없습니다.",
+    "TranslateExtension": "DIM 및 다른 앱의 오작동을 방지하려면 자동 번역을 끄세요.",
     "Troubleshooting": "문제 해결 가이드"
   },
   "FarmingMode": {
@@ -582,6 +583,7 @@
     "SearchAMod": "개조 부품 이름이나 설명 검색",
     "SearchASetBonus": "세트 보너스 이름, 특성 이름이나 설명 검색",
     "SearchAnExotic": "경이 이름이나 설명 검색",
+    "SelectArtifactOptions": "유물 사용자 정의",
     "SelectExotic": "경이 선택",
     "SelectMods": "개조 부품 선택",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -770,8 +772,6 @@
     "ApplyMods": "개조 부품 적용 중",
     "ApplySearch": "\"{{query}}\"로 검색된 아이템 이동",
     "ArmorStats": "방어구 능력치",
-    "ArtifactUnlocks": "유물 잠금 해제",
-    "ArtifactUnlocksDesc": "Bungie.net의 제한으로 인해 DIM이 유물을 자동으로 관리할 수 없습니다. 로드아웃을 적용하기 전에 게임 내에서 유물을 잠금 해제해야 합니다.",
     "ArtifactUnlocksWithSeason": "유물 잠금 해제 – S{{seasonNumber}}",
     "BadLoadoutShare": "공유된 로드아웃 불러오기 실패",
     "BadLoadoutShareBody": "불러오려는 로드아웃이 잘못되었습니다: {{error}}",
@@ -925,7 +925,7 @@
     "ShareLoadout": "공유",
     "ShowModPlacement": "개조 부품 배치 표시",
     "Snapshot": "게임 내 로드아웃으로 저장",
-    "SocketOverrides": "하위직업 옵션 변경 중",
+    "SocketOverrides": "하위직업/유물 옵션 변경 중",
     "SortByEditTime": "수정한 날짜순 정렬",
     "SortByName": "이름순 정렬",
     "SubclassOptions": "{{subclass}} 옵션",

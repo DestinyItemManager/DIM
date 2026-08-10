@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "Не удалось загрузить персонажей и инвентарь Destiny {{version}}",
     "ErrorLoadManifest": "Не удается загрузить информацию базы данных Destiny c Bungie.net",
     "ErrorLoading": "Не удалось загрузить учётные записи Destiny с Bungie.net",
-    "MissingAccountWarning": "Если вы не видите здесь свой аккаунт, возможно, вы не вошли в нужный аккаунт Bungie.net, или Bungie.net находится на обслуживании.",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance. DIM cannot load PS3 or Xbox 360 Destiny 1 accounts.",
     "MissingDescription": "Учетная запись, которую вы пытаетесь просмотреть, не связана с вашим профилем Bungie.net. Выберите одну из ваших учетных записей ниже.",
     "MissingTitle": "Аккаунт не найден",
     "NoCharacters": "На данном аккаунте Bungie.net не имеется ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
@@ -53,6 +53,7 @@
   },
   "Bucket": {
     "Armor": "Броня",
+    "Artifact": "Artifact",
     "Class": "Подкласс",
     "General": "Общее",
     "Ghost": "Призрак",
@@ -117,8 +118,7 @@
       "Unmatched": "Этот предмет не соответствует выбранным критериям сравниваемых предметов."
     },
     "InitialItem": "Это предмет, с которого была запущена функция Сравнить",
-    "IsVendorItem": "Этот предмет не находится в вашем инвентаре, но {{vendorName}} продаёт его.",
-    "NoModArmor": "До модов"
+    "IsVendorItem": "Этот предмет не находится в вашем инвентаре, но {{vendorName}} продаёт его."
   },
   "Cooldown": {
     "Grenade": "Перезарядка гранаты: {{cooldown}}",
@@ -165,6 +165,7 @@
     "Description": "Попробуйте загрузить свой инвентарь в приложении-компаньоне Destiny 2, чтобы убедиться, что Bungie.net недоступен.",
     "ReadTheGuide": "Прочтите наше Руководство (ссылка находится в меню) для того, чтобы узнать о шагах по устранению неполадок.",
     "SystemDown": "Это влияет на все приложения Destiny, и команда DIM не может это исправить или обойти.",
+    "TranslateExtension": "Disable automatic translation as it can break DIM and other apps.",
     "Troubleshooting": "Устранение неполадок"
   },
   "FarmingMode": {
@@ -633,6 +634,7 @@
     "SearchAMod": "Поиск по имени модификатора или описанию",
     "SearchASetBonus": "Search for set bonus name, perk name or description",
     "SearchAnExotic": "Поиск по имени экзота или описанию",
+    "SelectArtifactOptions": "Customize artifact",
     "SelectExotic": "Выбрать экзот",
     "SelectMods": "Выбрать моды",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -821,8 +823,6 @@
     "ApplyMods": "Применение модов",
     "ApplySearch": "Передаю запрос \"{{query}}\"",
     "ArmorStats": "Характеристики брони",
-    "ArtifactUnlocks": "Разблокировка артефакта",
-    "ArtifactUnlocksDesc": "Из-за ограничений Bungie.net, DIM не может автоматически сконфигурировать ваш артефакт. Перед применением комплекта вам будет необходимо применить эти изменения в игре.",
     "ArtifactUnlocksWithSeason": "Разблокировка артефакта – Сезон {{seasonNumber}}",
     "BadLoadoutShare": "Не удается загрузить общий набор",
     "BadLoadoutShareBody": "Набор, который вы пытаетесь загрузить, недействителен: {{error}}",
@@ -1012,7 +1012,7 @@
     "ShareLoadout": "Поделиться",
     "ShowModPlacement": "Показать расположение модов",
     "Snapshot": "Сохранить как Набор в игре",
-    "SocketOverrides": "Изменение параметров подкласса",
+    "SocketOverrides": "Changing subclass/artifact options",
     "SortByEditTime": "Сортировать по дате обновления",
     "SortByName": "Сортировать по имени",
     "SubclassOptions": "Параметры {{subclass}}",
