@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "無法加載你的《命運 {{version}}》角色和庫存",
     "ErrorLoadManifest": "無法從 Bungie 加載命運信息數據庫",
     "ErrorLoading": "無法從 Bungie.net 加載命運賬戶",
-    "MissingAccountWarning": "如果你的賬戶沒有在此處顯示，你可能登入了錯誤的 Bungie.net 賬戶，或 Bungie.net 可能正在停機維修。",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance. DIM cannot load PS3 or Xbox 360 Destiny 1 accounts.",
     "MissingDescription": "你試圖查看的賬戶並未連接到你的 Bungie.net 賬戶。請在下方選取你的賬戶。",
     "MissingTitle": "找不到帳戶",
     "NoCharacters": "沒有找到與此Bungie.net賬戶相關聯的Destiny角色，登入其它賬戶試試看。",
@@ -47,6 +47,7 @@
   },
   "Bucket": {
     "Armor": "防具",
+    "Artifact": "Artifact",
     "Class": "子職業",
     "General": "一般",
     "Ghost": "機靈",
@@ -108,8 +109,7 @@
       "Unmatched": "此物品和要比較的物品類別不同。"
     },
     "InitialItem": "比較工具從這個物品啟動",
-    "IsVendorItem": "這個物品不在你的物品欄裏，但是在 {{vendorName}} 処出售。",
-    "NoModArmor": "Pre-mods"
+    "IsVendorItem": "這個物品不在你的物品欄裏，但是在 {{vendorName}} 処出售。"
   },
   "Cooldown": {
     "Grenade": "手榴彈冷卻：{{cooldown}}",
@@ -147,6 +147,7 @@
     "Description": "嘗試使用命運2同伴App來載入你的物品欄以測試Bungie.net是否出現問題。",
     "ReadTheGuide": "閲讀我們的用戶指南（連接在菜單）以瞭解故障排除步驟。",
     "SystemDown": "這一問題影響所有的命運應用程序，DIM團隊也無法修復或繞過。",
+    "TranslateExtension": "Disable automatic translation as it can break DIM and other apps.",
     "Troubleshooting": "故障排除指南"
   },
   "FarmingMode": {
@@ -582,6 +583,7 @@
     "SearchAMod": "搜索模組或描述",
     "SearchASetBonus": "Search for set bonus name, perk name or description",
     "SearchAnExotic": "搜索異域裝備或描述",
+    "SelectArtifactOptions": "Customize artifact",
     "SelectExotic": "選擇異域裝備",
     "SelectMods": "選擇模組",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -770,8 +772,6 @@
     "ApplyMods": "正在應用模組",
     "ApplySearch": "轉移搜尋 \"{{query}}\"",
     "ArmorStats": "防具屬性",
-    "ArtifactUnlocks": "神器解鎖",
-    "ArtifactUnlocksDesc": "由於 Bungie.net 的限制，DIM無法自動配置你的神器模組。你需要在游戲中進行解鎖，然後再應用到配裝。",
     "ArtifactUnlocksWithSeason": "神器解鎖 - {{seasonNumber}} 賽季",
     "BadLoadoutShare": "無法加載共享配装",
     "BadLoadoutShareBody": "您嘗試加載的配装無效: {{error}}",
@@ -925,7 +925,7 @@
     "ShareLoadout": "分享",
     "ShowModPlacement": "顯示模組位置",
     "Snapshot": "保存爲游戲内配裝",
-    "SocketOverrides": "正在更改子職業選項",
+    "SocketOverrides": "Changing subclass/artifact options",
     "SortByEditTime": "按最後編輯時間排序",
     "SortByName": "按名稱排序",
     "SubclassOptions": "{{subclass}} 選項",

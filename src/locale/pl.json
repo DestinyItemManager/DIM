@@ -12,7 +12,7 @@
     "ErrorLoadInventory": "Nie można załadować Twoich postaci Destiny {{version}} oraz ekwipunku",
     "ErrorLoadManifest": "Nie można załadować bazy danych informacji Destiny od Bungie",
     "ErrorLoading": "Nie można załadować kont Destiny z Bungie.net",
-    "MissingAccountWarning": "Jeśli nie widzisz tutaj swojego konta, prawdopodobnie nie zalogowałeś się na odpowiednie konto Bungie.net lub Bungie.net może być wyłączony na czas prac technicznych.",
+    "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance. DIM cannot load PS3 or Xbox 360 Destiny 1 accounts.",
     "MissingDescription": "Konto, które próbujesz wyświetlić nie jest kontem połączonym z Twoim profilem Bungie.net. Wybierz jedno z poniższych kont.",
     "MissingTitle": "Nie znaleziono konta",
     "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
@@ -53,6 +53,7 @@
   },
   "Bucket": {
     "Armor": "Zbroja",
+    "Artifact": "Artifact",
     "Class": "Podklasa",
     "General": "Ogólne",
     "Ghost": "Duch",
@@ -117,8 +118,7 @@
       "Unmatched": "Ten przedmiot nie pasuje do typu porównywanych przedmiotów."
     },
     "InitialItem": "To przedmiot dla którego uruchomiono narzędzie porównania",
-    "IsVendorItem": "Ten przedmiot nie znajduje się w Twoim ekwipunku, jednak sprzedaje go {{vendorName}}.",
-    "NoModArmor": "Pre-mods"
+    "IsVendorItem": "Ten przedmiot nie znajduje się w Twoim ekwipunku, jednak sprzedaje go {{vendorName}}."
   },
   "Cooldown": {
     "Grenade": "Odnowienie granatu: {{cooldown}}",
@@ -165,6 +165,7 @@
     "Description": "Spróbuj załadować swój ekwipunek w aplikacji Destiny 2 Companion, aby sprawdzić, czy Bungie.net jest wyłączony.",
     "ReadTheGuide": "Przeczytaj nasz podręcznik użytkownika (link w menu), aby uzyskać informacje na temat rozwiązywania problemów.",
     "SystemDown": "Ma to wpływ na wszystkie aplikacje Destiny, a zespół DIM nie może tego naprawić ani obejść.",
+    "TranslateExtension": "Disable automatic translation as it can break DIM and other apps.",
     "Troubleshooting": "Przewodnik rozwiązywania problemów"
   },
   "FarmingMode": {
@@ -633,6 +634,7 @@
     "SearchAMod": "Search for mod name or description",
     "SearchASetBonus": "Search for set bonus name, perk name or description",
     "SearchAnExotic": "Search for exotic name or description",
+    "SelectArtifactOptions": "Customize artifact",
     "SelectExotic": "Wybierz egzotyk",
     "SelectMods": "Wybierz modyfikacje",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
@@ -821,8 +823,6 @@
     "ApplyMods": "Zastosowywanie modyfikacji",
     "ApplySearch": "Przenieś wyszukanie \"{{query}}\"",
     "ArmorStats": "Statystyki Pancerza",
-    "ArtifactUnlocks": "Artifact Unlocks",
-    "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
     "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
     "BadLoadoutShare": "Nie można załadować udostępnionego Uzbrojenia",
     "BadLoadoutShareBody": "Uzbrojenie, które próbujesz załadować, jest nieprawidłowe: {{error}}",
@@ -1012,7 +1012,7 @@
     "ShareLoadout": "Udostępnij",
     "ShowModPlacement": "Pokaż Umieszczenie Modyfikacji",
     "Snapshot": "Save As In-Game Loadout",
-    "SocketOverrides": "Zmiana opcji podklasy",
+    "SocketOverrides": "Changing subclass/artifact options",
     "SortByEditTime": "Sortuj według ostatniej modyfikacji",
     "SortByName": "Sortuj według nazwy",
     "SubclassOptions": "Opcje {{subclass}}",
