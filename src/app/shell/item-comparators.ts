@@ -11,7 +11,11 @@ import {
   isD1Item,
 } from 'app/utils/item-utils';
 import { getWeaponArchetype } from 'app/utils/socket-utils';
-import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
+import {
+  DestinyAmmunitionType,
+  DestinyBreakerTypeDefinition,
+  DestinyDamageTypeDefinition,
+} from 'bungie-api-ts/destiny2';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
 import {
@@ -148,12 +152,18 @@ interface VaultGroupIconElementWeapon {
   element: DestinyDamageTypeDefinition | null;
 }
 
+interface VaultGroupIconBreakerType {
+  type: 'breakerType';
+  breakerType: DestinyBreakerTypeDefinition | null;
+}
+
 export type VaultGroupIcon =
   | VaultGroupIconNone
   | VaultGroupIconTag
   | VaultGroupIconTypeName
   | VaultGroupIconAmmoType
-  | VaultGroupIconElementWeapon;
+  | VaultGroupIconElementWeapon
+  | VaultGroupIconBreakerType;
 
 interface VaultGroup {
   groupingValue: VaultGroupValue;
@@ -245,6 +255,26 @@ const GROUP_BY_GETTERS_AND_COMPARATORS: {
       };
     },
   },
+  breakerType: {
+    comparator: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
+    getValue: (item) => {
+      if (item.bucket.inWeapons) {
+        return item.breakerType?.enumValue ?? Number.MAX_SAFE_INTEGER;
+      }
+    },
+    getIcon: (item) => {
+      if (item.bucket.inWeapons) {
+        return {
+          type: 'breakerType',
+          breakerType: item.breakerType,
+        };
+      }
+
+      return {
+        type: 'none',
+      };
+    },
+  },
 };
 
 const ITEM_COMPARATORS: {
@@ -281,6 +311,11 @@ const ITEM_COMPARATORS: {
   elementWeapon: compareBy((item) => {
     if (item.bucket.inWeapons) {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
+    }
+  }),
+  breakerType: compareBy((item) => {
+    if (item.bucket.inWeapons) {
+      return item.breakerType?.enumValue ?? Number.MAX_SAFE_INTEGER;
     }
   }),
   // masterwork -> not masterwork

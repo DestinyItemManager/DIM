@@ -3,6 +3,8 @@
 interface CssExports {
   'd1Badge': string;
   'element': string;
+  'fixContrast': string;
+  'invert': string;
 }
 export const cssExports: CssExports;
 export = cssExports;
