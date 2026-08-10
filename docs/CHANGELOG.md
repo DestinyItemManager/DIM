@@ -1,5 +1,7 @@
 ## Next
 
+* Hide the combat flair mod socket on non-Tier-5 weapons.
+
 ## 8.137.0 <span class="changelog-date">(2026-08-09)</span>
 
 * Added a share button to the loadout edit sheet.
