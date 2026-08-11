@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 
-.archetype {
-  margin-bottom: 4px;
+.archetype + .perks {
+  margin-top: 4px;
 }
 
 .perks {

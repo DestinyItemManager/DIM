@@ -6,12 +6,12 @@ interface CssExports {
   'details': string;
   'elementIcon': string;
   'exotic': string;
+  'fade': string;
   'header': string;
   'iconOverlay': string;
   'itemType': string;
   'legendary': string;
   'masterwork': string;
-  'power': string;
   'pursuit': string;
   'rare': string;
   'subtitle': string;

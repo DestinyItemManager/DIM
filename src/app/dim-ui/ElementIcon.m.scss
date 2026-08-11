@@ -1,8 +1,8 @@
 @use '../variables.scss' as *;
 
 .element {
-  width: calc(#{dim-item-px(8)});
-  height: calc(#{dim-item-px(8)});
+  width: calc(var(--element-size, #{dim-item-px(8)}));
+  height: calc(var(--element-size, #{dim-item-px(8)}));
   margin-right: 1px;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -12,7 +12,16 @@
   // The D1 icons are a bit too small in the item badge, so we'll make them a
   // bit bigger
   &.d1Badge {
-    width: calc(#{dim-item-px(10)});
-    height: calc(#{dim-item-px(10)});
+    width: calc(1.25 * var(--element-size, #{dim-item-px(8)}));
+    height: calc(1.25 * var(--element-size, #{dim-item-px(8)}));
+  }
+
+  // Really this is just Kinetic damage
+  &.invert {
+    filter: invert(0.7);
+  }
+
+  &.fixContrast {
+    filter: brightness(var(--theme-item-polaroid-element-adjust-brightness)) saturate(2.5);
   }
 }

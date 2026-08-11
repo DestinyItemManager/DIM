@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'ammoIcon': string;
+  'breakerTypeIcon': string;
   'elementIcon': string;
   'weaponTypeIcon': string;
 }
