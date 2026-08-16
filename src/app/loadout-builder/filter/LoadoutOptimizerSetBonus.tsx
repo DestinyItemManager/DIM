@@ -18,6 +18,7 @@ import { startWordRegexp } from 'app/search/text-utils';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { filterMap, mapValues, minOf } from 'app/utils/collections';
+import { localizedSorter } from 'app/utils/intl';
 import { getActiveSetBonusHash, getSetBonusModSocket } from 'app/utils/socket-utils';
 import {
   DestinyClass,
@@ -203,7 +204,8 @@ export function SetBonusPicker({
   const sets = useMemo(() => {
     const allSets = Object.keys(possibleSetBonuses)
       .map((h) => defs.EquipableItemSet.get(parseInt(h, 10)))
-      .filter((set) => !set.redacted);
+      .filter((set) => !set.redacted)
+      .sort(localizedSorter(language, (set) => set.displayProperties.name));
 
     if (!query.length) {
       return allSets;
