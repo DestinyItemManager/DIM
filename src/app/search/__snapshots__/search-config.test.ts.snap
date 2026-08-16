@@ -137,6 +137,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "sunset",
   "sword",
   "tagged",
+  "tieredweapon",
   "titan",
   "tracerifle",
   "transferable",
