@@ -2,6 +2,7 @@
 
 .svgIcon {
   --item-size: 1.3em;
+  --breaker-size: 1.3em;
   img,
   svg {
     height: 1.3em;
@@ -13,12 +14,12 @@
 
 :global(.dim-button) {
   @include interactive($hover: true, $active: true, $selectedClass: ':global(.selected)') {
-    .svgIcon {
+    .svgIcon:not(:global(.dontInvert)) {
       :global(.item-img) {
         filter: invert(1);
       }
     }
-    .inlineImageIcon {
+    .inlineImageIcon:not(:global(.dontInvert)) {
       filter: invert(1);
     }
   }
