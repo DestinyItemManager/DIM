@@ -3,6 +3,7 @@
 * Added anti-champion type to the item tile and moved it next to damage type in the item popup.
 * You can now sort and group by anti-champion type in the inventory screen.
 * Added `is:tieredweapon` filter to list weapons with tiers.
+* Add compare filter buttons for breaker type, breaker type + slot, and breaker type + element.
 
 ## 8.137.0 <span class="changelog-date">(2026-08-09)</span>
 
