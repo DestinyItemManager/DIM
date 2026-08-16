@@ -1,6 +1,7 @@
 ## Next
 
-* Hide the combat flair mod socket on non-Tier-5 weapons.
+* Added anti-champion type to the item tile and moved it next to damage type in the item popup.
+* You can now sort and group by anti-champion type in the inventory screen.
 
 ## 8.137.0 <span class="changelog-date">(2026-08-09)</span>
 

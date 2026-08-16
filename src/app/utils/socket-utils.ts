@@ -552,10 +552,7 @@ export function getWeaponSockets(
       // only show memento socket if it isn't empty
       (socket.plugged.plugDef.plug.plugCategoryHash !==
         PlugCategoryHashes.CraftingRecipesEmptySocket ||
-        !isSocketEmpty(socket)) &&
-      // don't show the combat flair socket if the item isn't tier 5
-      (socket.plugged.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.WeaponTieringKillVfx ||
-        item.tier === 5),
+        !isSocketEmpty(socket)),
   );
 
   return {
