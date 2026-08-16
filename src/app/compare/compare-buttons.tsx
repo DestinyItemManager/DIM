@@ -1,3 +1,4 @@
+import BreakerTypeIcon from 'app/dim-ui/BreakerTypeIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ArmorSlotIcon, WeaponSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
@@ -6,7 +7,7 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
+import { breakerTypeNames, realD2ArmorStatSearchByHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { AppIcon, asteriskIcon, clearIcon } from 'app/shell/icons';
 import { compact, filterMap } from 'app/utils/collections';
@@ -22,9 +23,10 @@ import {
   getIntrinsicArmorPerkSocket,
   getWeaponArchetype,
 } from 'app/utils/socket-utils';
+import { DamageType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import rarityIcons from 'data/d2/engram-rarity-icons.json' with { type: 'json' };
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
+import { BreakerTypeHashes, BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import * as styles from './CompareButtons.m.scss';
 import { compareNameQuery, stripAdept } from './compare-utils';
@@ -215,10 +217,28 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     <ElementIcon
       key={exampleItem.id}
       element={exampleItem.element}
-      className={clsx(styles.inlineImageIcon, 'dontInvert')}
+      className={clsx(
+        styles.inlineImageIcon,
+        exampleItem.element?.enumValue !== DamageType.Kinetic ? 'dontInvert' : undefined,
+      )}
     />
   );
   const elementQuery = exampleItem.element ? `is:${getItemDamageShortName(exampleItem)}` : '';
+
+  const breakerIcon = exampleItem.breakerType && (
+    <PressTip
+      minimal
+      elementType="span"
+      tooltip={exampleItem.breakerType.displayProperties.name}
+      className={styles.svgIcon}
+    >
+      <BreakerTypeIcon breakerType={exampleItem.breakerType} />
+    </PressTip>
+  );
+  const breakerQuery = exampleItem.breakerType
+    ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      `breaker:${breakerTypeNames[exampleItem.breakerType.hash as BreakerTypeHashes]}`
+    : '';
 
   const slotIcon = <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />;
   const slotQuery = bucketToSearch[bucketHash];
@@ -234,9 +254,19 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       query: slotQuery,
     },
 
+    exampleItem.breakerType && {
+      buttonLabel: [breakerIcon],
+      query: breakerQuery,
+    },
+
     exampleItem.element && {
       buttonLabel: [elementIcon],
       query: elementQuery,
+    },
+
+    exampleItem.breakerType && {
+      buttonLabel: [breakerIcon, slotIcon],
+      query: `(${breakerQuery} ${slotQuery})`,
     },
 
     archetype && {
@@ -246,8 +276,14 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
 
     exampleItem.element && {
       buttonLabel: [archetypeIcon, elementIcon],
-      query: `(${archetypeQuery} ${elementQuery} )`,
+      query: `(${archetypeQuery} ${elementQuery})`,
     },
+
+    exampleItem.breakerType &&
+      exampleItem.element && {
+        buttonLabel: [breakerIcon, elementIcon],
+        query: `(${breakerQuery} ${elementQuery})`,
+      },
 
     // exact same weapon, judging by name. might span multiple expansions.
     {
