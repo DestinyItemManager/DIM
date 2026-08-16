@@ -339,6 +339,7 @@
       "Tagged": "Shows items that have any tag."
     },
     "Tier": "Shows items based on their tier from 0-5.",
+    "TieredWeapon": "Shows weapons that can drop tiered or be upgraded to have tiers.",
     "Timelost": "\\(Timelost\\)",
     "Tracked": "Shows quests/bounties based on their tracked status.",
     "Transferable": "Items that can be moved between characters.",
