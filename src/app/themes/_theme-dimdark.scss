@@ -71,6 +71,8 @@
   --theme-item-polaroid-capped-txt: var(--theme-text);
   --theme-item-polaroid-godroll: var(--theme-text);
   --theme-item-polaroid-trashroll: var(--theme-text);
+  --theme-item-polaroid-invert: invert(0.1); // Invert light colors for light polaroids.
+  --theme-item-polaroid-invert-mw: invert(0.1);
   --theme-item-polaroid-element-adjust-brightness: 100%; // Adjust brightness level of Arc, Strand, Void icons
 
   // Item popup
