@@ -506,7 +506,8 @@ function LoadoutEditArtifactSection({
 
     const item = await showItemPicker({
       filterItems: (item: DimItem) =>
-        item.bucket.hash === warnItem.bucket.hash &&
+        item.hash === warnItem.hash &&
+        item.owner === store.id &&
         itemCanBeInLoadout(item) &&
         isItemLoadoutCompatible(item.classType, loadout.classType),
       prompt: t('Loadouts.FindAnother', {

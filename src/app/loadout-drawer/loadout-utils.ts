@@ -582,6 +582,7 @@ const matchByHash = [
   BucketHashes.Emotes,
   D1BucketHashes.Horn,
   D1BucketHashes.Shader,
+  BucketHashes.Artifacts,
 ];
 
 /**
@@ -716,13 +717,16 @@ export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: Loadou
  */
 const itemsByHash = weakMemoize((allItems: DimItem[]) => Map.groupBy(allItems, (i) => i.hash));
 
+/**
+ * This is for subclasses, artifacts, and emblems - it finds all matching items
+ * by hash and then picks the one that's on the desired character It's also used
+ * for moving consumables in search loadouts
+ */
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
   hash: number,
   storeId: string | undefined,
 ) {
-  // This is for subclasses and emblems - it finds all matching items by hash and then picks the one that's on the desired character
-  // It's also used for moving consumables in search loadouts
   const candidates = itemsByHash(allItems).get(hash) ?? [];
   // the copy of this item being held by the specified store
   const heldItem =
