@@ -6,5 +6,5 @@
 }
 
 .invert {
-  filter: invert(0.7);
+  filter: var(--theme-item-polaroid-invert);
 }
