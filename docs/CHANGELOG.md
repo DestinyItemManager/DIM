@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed bad contrast on anti-champion/kinetic element icons
+
 ## 8.138.0 <span class="changelog-date">(2026-08-16)</span>
 
 * Added anti-champion type to the item tile and moved it next to damage type in the item popup.
