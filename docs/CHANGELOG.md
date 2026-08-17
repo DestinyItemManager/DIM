@@ -1,5 +1,7 @@
 ## Next
 
+* Replaced tier pips to better match the in-game graphics.
+
 ## 8.138.1 <span class="changelog-date">(2026-08-17)</span>
 
 * Fixed bad contrast on anti-champion/kinetic element icons
