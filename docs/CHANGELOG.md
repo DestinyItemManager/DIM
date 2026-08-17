@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed bad contrast on anti-champion/kinetic element icons
+* Fixed items that didn't have an anti-champion type
 
 ## 8.138.0 <span class="changelog-date">(2026-08-16)</span>
 
