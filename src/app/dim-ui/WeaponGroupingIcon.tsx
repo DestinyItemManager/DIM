@@ -1,5 +1,6 @@
 import TagIcon from 'app/inventory/TagIcon';
 import { AmmoIcon } from 'app/item-popup/AmmoIcon';
+import { AppIcon, banIcon } from 'app/shell/icons';
 import { VaultGroupIcon } from 'app/shell/item-comparators';
 import BreakerType from './BreakerTypeIcon';
 import ElementIcon from './ElementIcon';
@@ -54,7 +55,11 @@ export default function WeaponGroupingIcon({
     case 'breakerType': {
       return (
         <div className={className}>
-          <BreakerType className={styles.breakerTypeIcon} breakerType={icon.breakerType!} />
+          {icon.breakerType ? (
+            <BreakerType className={styles.breakerTypeIcon} breakerType={icon.breakerType} />
+          ) : (
+            <AppIcon icon={banIcon} />
+          )}
         </div>
       );
     }

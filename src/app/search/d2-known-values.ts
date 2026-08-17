@@ -400,10 +400,28 @@ export const breakerTypes = {
   unstoppable: [BreakerTypeHashes.Stagger],
 };
 
+// TODO: This would be better from d2ai
 export const breakerTypeByPerkHash: Partial<Record<number, BreakerTypeHashes>> = {
   2917776374: BreakerTypeHashes.Stagger,
-  3469621377: BreakerTypeHashes.ShieldPiercing,
+  164592134: BreakerTypeHashes.Stagger,
+  1134361550: BreakerTypeHashes.Stagger,
+  2084279142: BreakerTypeHashes.Stagger,
+  2612240126: BreakerTypeHashes.Stagger,
   472686235: BreakerTypeHashes.Disruption,
+  15807694: BreakerTypeHashes.Disruption,
+  656925452: BreakerTypeHashes.Disruption,
+  1478638730: BreakerTypeHashes.Disruption,
+  2026681315: BreakerTypeHashes.Disruption,
+  3033353825: BreakerTypeHashes.Disruption,
+  4114351468: BreakerTypeHashes.Disruption,
+  3469621377: BreakerTypeHashes.ShieldPiercing,
+  4000621756: BreakerTypeHashes.ShieldPiercing,
+  549294277: BreakerTypeHashes.ShieldPiercing,
+  1235808583: BreakerTypeHashes.ShieldPiercing,
+  1435986861: BreakerTypeHashes.ShieldPiercing,
+  1839099519: BreakerTypeHashes.ShieldPiercing,
+  3437929382: BreakerTypeHashes.ShieldPiercing,
+  3656570035: BreakerTypeHashes.ShieldPiercing,
 };
 
 export const breakerTypeNames = Object.entries(breakerTypes)
