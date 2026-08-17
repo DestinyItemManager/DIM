@@ -1,5 +1,7 @@
 ## Next
 
+## 8.138.0 <span class="changelog-date">(2026-08-16)</span>
+
 * Added anti-champion type to the item tile and moved it next to damage type in the item popup.
 * You can now sort and group by anti-champion type in the inventory screen.
 * Added `is:tieredweapon` filter to list weapons with tiers.
