@@ -40,8 +40,14 @@ async function handleAuthReturn() {
   try {
     const token = await getAccessTokenFromCode(code);
     setToken(token);
-    // If we have a stored path from before we logged in (e.g. a loadout or armory link), send them back to that
-    window.location.href = localStorage.getItem('returnPath') ?? $PUBLIC_PATH;
+    // If we have a stored path from before we logged in (e.g. a loadout or armory link), send them back to that.
+    // Only follow it if it stays on our own origin - a crafted value like "//evil.com" would otherwise be treated
+    // as a protocol-relative URL and redirect the user off-site once they've logged in.
+    const returnPath = localStorage.getItem('returnPath');
+    window.location.href =
+      returnPath && new URL(returnPath, window.location.origin).origin === window.location.origin
+        ? returnPath
+        : $PUBLIC_PATH;
   } catch (error) {
     if (error instanceof TypeError || (error instanceof HttpStatusError && error.status === -1)) {
       setError(
