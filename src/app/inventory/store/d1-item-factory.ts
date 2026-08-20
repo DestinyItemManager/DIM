@@ -33,6 +33,7 @@ import {
 import missingSources from 'data/d1/missing_sources.json' with { type: 'json' };
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { clamp, memoize } from 'es-toolkit';
+import memoizeOne from 'memoize-one';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
 import { reportException } from '../../utils/sentry';
@@ -128,6 +129,11 @@ const toD2DamageType = memoize(
         alpha: 0,
       },
     },
+);
+
+const getKineticDamageType = memoizeOne(
+  (defs: D1ManifestDefinitions): D1DamageTypeDefinition | undefined =>
+    Object.values(defs.DamageType.getAll()).find((d) => d.enumValue === DamageType.Kinetic),
 );
 
 export function makeFakeItem(
@@ -277,7 +283,9 @@ function makeItem(
   }
 
   const element =
-    (item.damageTypeHash && toD2DamageType(defs.DamageType.get(item.damageTypeHash))) || null;
+    (item.damageTypeHash && toD2DamageType(defs.DamageType.get(item.damageTypeHash))) ||
+    (normalBucket.inWeapons && toD2DamageType(getKineticDamageType(defs))) ||
+    null;
 
   itemDef.sourceHashes ||= [];
 
