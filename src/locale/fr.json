@@ -339,6 +339,7 @@
       "Tagged": "Affiche les objets portant une étiquette."
     },
     "Tier": "Affiche les objets selon leur palier de 0 à 5.",
+    "TieredWeapon": "Shows weapons that can drop tiered or be upgraded to have tiers.",
     "Timelost": "\\(temps perdu\\)",
     "Tracked": "Affiche les quêtes/contrats selon si elles sont suivis ou non.",
     "Transferable": "Objets qui peuvent êtres déplacés entre les personnages.",

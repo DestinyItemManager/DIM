@@ -339,6 +339,7 @@
       "Tagged": "Exibe itens que possuam qualquer etiqueta."
     },
     "Tier": "Shows items based on their tier from 0-5.",
+    "TieredWeapon": "Shows weapons that can drop tiered or be upgraded to have tiers.",
     "Timelost": "\\(Retroperda\\)",
     "Tracked": "Exibir jornadas/contratos baseados em seu status de rastreamento.",
     "Transferable": "Itens que podem ser movidos entre personagens.",

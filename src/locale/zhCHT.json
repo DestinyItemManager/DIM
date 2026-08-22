@@ -324,6 +324,7 @@
       "Tagged": "顯示具有任何標籤的物品。"
     },
     "Tier": "Shows items based on their tier from 0-5.",
+    "TieredWeapon": "顯示掉落帶有等級或可升級等級的武器。",
     "Timelost": "（失時）",
     "Tracked": "根據追蹤狀態顯示任務/賞金.",
     "Transferable": "可在角色間移動的物品.",

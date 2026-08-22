@@ -369,6 +369,7 @@
       "Tagged": "Pokazuje przedmioty, które mają dowolny tag."
     },
     "Tier": "Shows items based on their tier from 0-5.",
+    "TieredWeapon": "Shows weapons that can drop tiered or be upgraded to have tiers.",
     "Timelost": "\\(zagubion(y|a) w czasie\\)",
     "Tracked": "Pokazuje zadania/zlecenia na podstawie ich śledzonego stanu.",
     "Transferable": "Przedmioty, które można przenosić między postaciami.",

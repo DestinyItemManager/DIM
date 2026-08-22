@@ -339,6 +339,7 @@
       "Tagged": "Muestra objetos que tengan cualquier etiqueta."
     },
     "Tier": "Muestra objetos basados en su nivel del 0-5.",
+    "TieredWeapon": "Muestra armas que pueden soltarse con niveles o pueden actualizarse con niveles.",
     "Timelost": "\\(tiempo perdido\\)",
     "Tracked": "Muestra aventuras/contratos basados en su estado de seguimiento.",
     "Transferable": "Objetos que pueden moverse entre personajes.",

@@ -369,6 +369,7 @@
       "Tagged": "С любым Тэгом."
     },
     "Tier": "Shows items based on their tier from 0-5.",
+    "TieredWeapon": "Shows weapons that can drop tiered or be upgraded to have tiers.",
     "Timelost": "\\(вневременн(ой|ая)\\)",
     "Tracked": "Контракты/Преследования по статусу отслеживания.",
     "Transferable": "Перемещаемые.",
