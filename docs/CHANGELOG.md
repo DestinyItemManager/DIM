@@ -1,5 +1,7 @@
 ## Next
 
+## 8.139.0 <span class="changelog-date">(2026-08-23)</span>
+
 * Replaced tier pips to better match the in-game graphics.
 * Fixed some D1 weapons not showing kinetic damage type
 
