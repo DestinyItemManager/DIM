@@ -95,13 +95,23 @@ async function getDimSharedLoadout(shareId: string) {
  * constraints are in the correct range.
  */
 function preprocessReceivedLoadout(loadout: Loadout): Loadout {
-  loadout.id = globalThis.crypto.randomUUID();
-  loadout.items = loadout.items.map((item) => ({
+  // A shared loadout arrives as attacker-controlled JSON (a ?loadout= link or a
+  // dim.gg share), and convertDimApiLoadoutToLoadout spreads every top-level key
+  // it happens to carry into the loadout we store. Rebuild it from only the fields
+  // a loadout is allowed to have, so a crafted link can't smuggle extra keys into
+  // something we then persist and sync. This mirrors the newLoadout construction
+  // used for the url parameters case above.
+  const items = loadout.items.map((item) => ({
     ...item,
     id: item.id === '0' ? generateMissingLoadoutItemId() : item.id,
     hash: Number(item.hash),
   }));
-  for (const constraint of loadout.parameters?.statConstraints ?? []) {
+  const received = newLoadout(loadout.name ?? '', items, loadout.classType);
+  received.notes = loadout.notes;
+  received.parameters = loadout.parameters;
+  received.clearSpace = loadout.clearSpace;
+
+  for (const constraint of received.parameters?.statConstraints ?? []) {
     // min/maxTier are deprecated as of Edge of Fate, but we still support them
     // for backwards compatibility.
     if (constraint.maxTier !== undefined) {
@@ -123,5 +133,5 @@ function preprocessReceivedLoadout(loadout: Loadout): Loadout {
     }
   }
 
-  return loadout;
+  return received;
 }
