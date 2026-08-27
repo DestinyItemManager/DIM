@@ -106,7 +106,7 @@ export default function LoadoutShareSheet({
                 {t('Loadouts.Share.Summary')}
                 <ul>
                   {numItems > 0 && <li>{t('Loadouts.Share.NumItems', { count: numItems })}</li>}
-                  {numMods > 0 && <li>{t('Loadouts.Share.NumMods', { count: numItems })}</li>}
+                  {numMods > 0 && <li>{t('Loadouts.Share.NumMods', { count: numMods })}</li>}
                   {hasFashion && <li>{t('Loadouts.Share.Fashion')}</li>}
                   {hasOverrides && <li>{t('Loadouts.Share.SocketOverrides')}</li>}
                   {hasLoParams && <li>{t('Loadouts.Share.LoadoutOptimizer')}</li>}
