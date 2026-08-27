@@ -948,7 +948,7 @@
       "NumMods_one": "{{count}} mod",
       "NumMods_other": "{{count}} mods",
       "Placeholder": "Loading share link",
-      "Subclass": "Subclass customization",
+      "SocketOverrides": "Subclass/artifact customization",
       "Summary": "Share this loadout containing:",
       "Title": "Share \"{{name}}\""
     },
