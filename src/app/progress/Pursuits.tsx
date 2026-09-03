@@ -28,7 +28,7 @@ export const sortPursuits = chainComparator(
   compareBy((item) => item.name),
 );
 
-const pursuitsOrder = ['Bounties', 'Quests', 'Items'] as const;
+const pursuitsOrder = ['Orders', 'Bounties', 'Quests', 'Items'] as const;
 
 /**
  * List out all the Pursuits for the character, grouped out in a useful way.
@@ -56,6 +56,13 @@ export default function Pursuits({ store }: { store: DimStore }) {
 
     return 'Bounties';
   });
+
+  // Orders from the seasonal hub are categorized as bounties, but they live in
+  // their own bucket rather than the Quests bucket, so they need to be pulled in separately.
+  const orders = findItemsByBucket(store, BucketHashes.Orders);
+  if (orders.length) {
+    pursuits.Orders = orders;
+  }
 
   return (
     <>
