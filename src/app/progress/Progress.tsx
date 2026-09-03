@@ -14,6 +14,7 @@ import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { compact } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
+import { DestinyRecordToastStyle } from 'bungie-api-ts/destiny2';
 import { PanInfo, motion } from 'motion/react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -119,7 +120,8 @@ export default function Progress({ account }: { account: DestinyAccount }) {
       id: 'event',
       title: eventCard.displayProperties.name || t('Progress.SeasonalHub'),
     },
-    objectivesNodeHash && { id: 'objectives', title: t('Progress.Objectives') },
+    objectivesNodeHash && { id: 'dailyObjectives', title: t('Progress.DailyObjectives') },
+    objectivesNodeHash && { id: 'weeklyObjectives', title: t('Progress.WeeklyObjectives') },
     { id: 'milestones', title: t('Progress.Milestones') },
     paleHeartPathfinderNode && {
       id: 'paleHeartPathfinder',
@@ -192,19 +194,40 @@ export default function Progress({ account }: { account: DestinyAccount }) {
           )}
 
           {objectivesNodeHash !== undefined && (
-            <section id="objectives">
-              <CollapsibleTitle title={t('Progress.Objectives')} sectionId="objectives">
-                <div className="progress-row">
-                  <PresentationNodeChallenges
-                    rootNodeHash={objectivesNodeHash}
-                    store={selectedStore}
-                    buckets={buckets}
-                    typeName={t('Progress.Objectives')}
-                    emptyMessage={t('Progress.NoObjectives')}
-                  />
-                </div>
-              </CollapsibleTitle>
-            </section>
+            <>
+              <section id="dailyObjectives">
+                <CollapsibleTitle title={t('Progress.DailyObjectives')} sectionId="dailyObjectives">
+                  <div className="progress-row">
+                    <PresentationNodeChallenges
+                      rootNodeHash={objectivesNodeHash}
+                      store={selectedStore}
+                      buckets={buckets}
+                      typeName={t('Progress.DailyObjectives')}
+                      emptyMessage={t('Progress.NoDailyObjectives')}
+                      exclusiveToastStyle={DestinyRecordToastStyle.SeasonDailyComplete}
+                    />
+                  </div>
+                </CollapsibleTitle>
+              </section>
+
+              <section id="weeklyObjectives">
+                <CollapsibleTitle
+                  title={t('Progress.WeeklyObjectives')}
+                  sectionId="weeklyObjectives"
+                >
+                  <div className="progress-row">
+                    <PresentationNodeChallenges
+                      rootNodeHash={objectivesNodeHash}
+                      store={selectedStore}
+                      buckets={buckets}
+                      typeName={t('Progress.WeeklyObjectives')}
+                      emptyMessage={t('Progress.NoWeeklyObjectives')}
+                      exclusiveToastStyle={DestinyRecordToastStyle.SeasonWeeklyComplete}
+                    />
+                  </div>
+                </CollapsibleTitle>
+              </section>
+            </>
           )}
 
           <section id="milestones">

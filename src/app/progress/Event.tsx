@@ -10,6 +10,7 @@ import {
   DestinyEventCardDefinition,
   DestinyPresentationNodeState,
   DestinyRecordState,
+  DestinyRecordToastStyle,
 } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import * as styles from './Event.m.scss';
@@ -52,12 +53,14 @@ export function PresentationNodeChallenges({
   buckets,
   typeName,
   emptyMessage,
+  exclusiveToastStyle,
 }: {
   rootNodeHash: number;
   store: DimStore;
   buckets: InventoryBuckets;
   typeName: string;
   emptyMessage: string;
+  exclusiveToastStyle?: DestinyRecordToastStyle;
 }) {
   const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector)!;
@@ -95,6 +98,12 @@ export function PresentationNodeChallenges({
       .filter((r) => {
         // Bungie left unused placeholder records in some of these nodes.
         if (!r.recordDef.displayProperties.name) {
+          return false;
+        }
+        if (
+          exclusiveToastStyle !== undefined &&
+          r.recordDef.completionInfo.toastStyle !== exclusiveToastStyle
+        ) {
           return false;
         }
         // Don't show records that have been redeemed
