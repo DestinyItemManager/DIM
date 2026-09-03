@@ -82,7 +82,9 @@ export function downloadLoadoutsCsv(): ThunkResult {
       const fragments = subclassPlugs.filter((p) =>
         fragmentSocketCategoryHashes.includes(p.socketCategoryHash),
       );
-      // TODO artifact and artifactPlugs
+      const artifact = resolvedLoadout.resolvedLoadoutItems.find(
+        (item) => item.item.bucket.hash === BucketHashes.Artifacts,
+      );
       const stats: CsvRow = {};
       const equippedArmor = resolvedLoadout.resolvedLoadoutItems.filter(
         (i) => i.loadoutItem.equip && i.item.bucket.inArmor,
@@ -122,7 +124,12 @@ export function downloadLoadoutsCsv(): ThunkResult {
       );
 
       const equippedItems = resolvedLoadout.resolvedLoadoutItems
-        .filter((i) => i.loadoutItem.equip && i.item.bucket.hash !== BucketHashes.Subclass)
+        .filter(
+          (i) =>
+            i.loadoutItem.equip &&
+            i.item.bucket.hash !== BucketHashes.Subclass &&
+            i.item.bucket.hash !== BucketHashes.Artifacts,
+        )
         .sort(sortItems);
 
       const equippedItemValues = Object.fromEntries(
@@ -163,9 +170,16 @@ export function downloadLoadoutsCsv(): ThunkResult {
         Aspects: localizeResolvedPlugs(aspects),
         Fragments: localizeResolvedPlugs(fragments),
         Mods: mods.map((mod) => mod.displayProperties.name),
-        'Artifact Season': loadout.parameters?.artifactUnlocks?.seasonNumber,
-        'Artifact Unlocks': loadout.parameters?.artifactUnlocks?.unlockedItemHashes.map(
-          (modHash) => defs.InventoryItem.get(modHash)?.displayProperties.name,
+        'Artifact Season':
+          artifact?.item.name || loadout.parameters?.artifactUnlocks?.seasonNumber || '',
+        'Artifact Unlocks': (
+          artifact?.item.sockets?.allSockets?.map(
+            (s) => artifact?.loadoutItem.socketOverrides?.[s.socketIndex] || 0,
+          ) ||
+          loadout.parameters?.artifactUnlocks?.unlockedItemHashes ||
+          []
+        ).map(
+          (modHash) => (modHash && defs.InventoryItem.get(modHash)?.displayProperties.name) || '',
         ),
       };
     });
