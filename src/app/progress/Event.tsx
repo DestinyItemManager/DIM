@@ -31,65 +31,90 @@ export function Event({
   store: DimStore;
   buckets: InventoryBuckets;
 }) {
+  return (
+    <PresentationNodeChallenges
+      rootNodeHash={card.triumphsPresentationNodeHash}
+      store={store}
+      buckets={buckets}
+      typeName={card.displayProperties.name}
+      emptyMessage={t('Progress.NoEventChallenges')}
+    />
+  );
+}
+
+/**
+ * Show the records underneath a presentation node as pursuit tiles. Event cards point at
+ * a few of these - the event's triumphs, and separately the rotating daily/weekly objectives.
+ */
+export function PresentationNodeChallenges({
+  rootNodeHash,
+  store,
+  buckets,
+  typeName,
+  emptyMessage,
+}: {
+  rootNodeHash: number;
+  store: DimStore;
+  buckets: InventoryBuckets;
+  typeName: string;
+  emptyMessage: string;
+}) {
   const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector)!;
   const trackedRecords = useSelector(trackedTriumphsSelector);
 
-  const challengesRootNode = defs.PresentationNode.get(card.triumphsPresentationNodeHash);
+  const challengesRootNode = defs.PresentationNode.get(rootNodeHash);
   const childrenNodes = challengesRootNode.children.presentationNodes;
-  const classSpecificNodeHash =
+
+  // Some of these nodes hide children that don't apply right now - Solstice has three
+  // different nodes for the three classes and makes two of them invisible. Drop the ones
+  // the game explicitly hides, but keep any node it doesn't report on at all, and fall
+  // back to every child if that leaves us with nothing.
+  const visibleChildrenNodes =
     childrenNodes.length === 1
-      ? // If we only have one node, it's probably the right node.
-        childrenNodes[0]
-      : // This is for Solstice, which has three different nodes for the three characters.
-        // The PresentationNodes component makes two of them invisible per character and one
-        // stays visible, so find the one that's actually visible.
-        childrenNodes.find((node) => {
+      ? childrenNodes
+      : childrenNodes.filter((node) => {
           const relevantNodeInfo =
             profileResponse.characterPresentationNodes?.data?.[store.id]?.nodes[
               node.presentationNodeHash
             ];
           return (
-            relevantNodeInfo &&
+            !relevantNodeInfo ||
             (relevantNodeInfo.state & DestinyPresentationNodeState.Invisible) === 0
           );
         });
 
-  const classSpecificNode =
-    classSpecificNodeHash && defs.PresentationNode.get(classSpecificNodeHash.presentationNodeHash);
+  const presentationNodes = (
+    visibleChildrenNodes.length ? visibleChildrenNodes : childrenNodes
+  ).map((n) => defs.PresentationNode.get(n.presentationNodeHash));
 
-  const presentationNodes = classSpecificNode
-    ? [classSpecificNode]
-    : childrenNodes.map((n) => defs.PresentationNode.get(n.presentationNodeHash));
-
-  const records = presentationNodes.flatMap((n) =>
-    filterMap(n.children.records, (h) => toRecord(defs, profileResponse, h.recordHash)),
+  // Sort within each child node rather than across all of them, so the nodes stay in the order
+  // the manifest lists them.
+  const pursuits = presentationNodes.flatMap((n) =>
+    filterMap(n.children.records, (h) => toRecord(defs, profileResponse, h.recordHash))
+      .filter((r) => {
+        // Bungie left unused placeholder records in some of these nodes.
+        if (!r.recordDef.displayProperties.name) {
+          return false;
+        }
+        // Don't show records that have been redeemed
+        const state = r.recordComponent.state;
+        const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
+        return !acquired;
+      })
+      .map((r) =>
+        recordToPursuitItem(r, buckets, store, typeName, trackedRecords.includes(r.recordDef.hash)),
+      )
+      .sort(sortPursuits),
   );
 
-  const pursuits = records
-    .filter((r) => {
-      // Don't show records that have been redeemed
-      const state = r.recordComponent.state;
-      const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
-      return !acquired;
-    })
-    .map((r) =>
-      recordToPursuitItem(
-        r,
-        buckets,
-        store,
-        card.displayProperties.name,
-        trackedRecords.includes(r.recordDef.hash),
-      ),
-    );
-
   if (!pursuits.length) {
-    return <div className={styles.noRecords}>{t('Progress.NoEventChallenges')}</div>;
+    return <div className={styles.noRecords}>{emptyMessage}</div>;
   }
 
   return (
     <PursuitGrid>
-      {pursuits.sort(sortPursuits).map((item) => (
+      {pursuits.map((item) => (
         <Pursuit item={item} key={item.index} />
       ))}
     </PursuitGrid>

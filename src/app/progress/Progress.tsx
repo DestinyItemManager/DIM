@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import { Event } from './Event';
+import { Event, PresentationNodeChallenges } from './Event';
 import Milestones from './Milestones';
 import Pathfinder from './Pathfinder';
 import * as styles from './Progress.m.scss';
@@ -87,7 +87,24 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const raidTitle = raidNode?.displayProperties.name;
 
   const eventCardHash = profileInfo.profile.data?.activeEventCardHash;
-  const eventCard = eventCardHash !== undefined && defs.EventCard.get(eventCardHash);
+  const activeEventCard =
+    eventCardHash !== undefined ? defs.EventCard.getOptional(eventCardHash) : undefined;
+
+  // The rotating daily and weekly objectives are in the seasonal hub's event card.
+  const seasonalHubCard = coreSettings?.seasonalHubEventCardHash
+    ? defs.EventCard.getOptional(coreSettings.seasonalHubEventCardHash)
+    : undefined;
+  const objectivesNodeHash =
+    seasonalHubCard?.weeklyChallengesPresentationNodeHash ||
+    seasonalHubCard?.triumphsPresentationNodeHash ||
+    undefined;
+
+  // While an event is running its card is usually a different one, but if it *is* the
+  // seasonal hub card we'd render the same node under two headings.
+  const eventCard =
+    activeEventCard && activeEventCard.triumphsPresentationNodeHash !== objectivesNodeHash
+      ? activeEventCard
+      : undefined;
 
   const seasonalChallengesPresentationNode =
     coreSettings?.seasonalChallengesPresentationNodeHash !== undefined &&
@@ -102,6 +119,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
       id: 'event',
       title: eventCard.displayProperties.name || t('Progress.SeasonalHub'),
     },
+    objectivesNodeHash && { id: 'objectives', title: t('Progress.Objectives') },
     { id: 'milestones', title: t('Progress.Milestones') },
     paleHeartPathfinderNode && {
       id: 'paleHeartPathfinder',
@@ -111,6 +129,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
       id: 'seasonal-challenges',
       title: seasonalChallengesPresentationNode.displayProperties.name,
     },
+    { id: 'Orders', title: t('Progress.Orders') },
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
@@ -167,6 +186,22 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               >
                 <div className="progress-row">
                   <Event card={eventCard} store={selectedStore} buckets={buckets} />
+                </div>
+              </CollapsibleTitle>
+            </section>
+          )}
+
+          {objectivesNodeHash !== undefined && (
+            <section id="objectives">
+              <CollapsibleTitle title={t('Progress.Objectives')} sectionId="objectives">
+                <div className="progress-row">
+                  <PresentationNodeChallenges
+                    rootNodeHash={objectivesNodeHash}
+                    store={selectedStore}
+                    buckets={buckets}
+                    typeName={t('Progress.Objectives')}
+                    emptyMessage={t('Progress.NoObjectives')}
+                  />
                 </div>
               </CollapsibleTitle>
             </section>
