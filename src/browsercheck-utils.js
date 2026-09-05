@@ -68,5 +68,5 @@ export const samsungInternet = {
   'zh-chs':
     '启用深色模式时，三星浏览器可能会导致网页显示过于黑暗。在设置 > 通用 > 使用网页深色主题或使用其他浏览器来解决此问题。',
   'zh-cht':
-    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+    '當暗黑模式啓用時，三星瀏覽器可能讓頁面顯示過於黑暗。開啓三星瀏覽器的“設定 > 實驗室 > 采用網站的暗黑模式”，或使用另一個瀏覽器。',
 };
