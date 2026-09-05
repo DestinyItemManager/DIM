@@ -68,6 +68,7 @@ import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { ReferenceConstraints } from './generated-sets/SetStats';
 import { sortGeneratedSets } from './generated-sets/utils';
+import HypotheticalPlanner from './hypothetical/HypotheticalPlanner';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
@@ -384,6 +385,22 @@ export default memo(function LoadoutBuilder({
         lbDispatch={lbDispatch}
         className={styles.loadoutEditSection}
       />
+      {$featureFlags.loFarmingPlanner && (
+        <HypotheticalPlanner
+          desiredStatRanges={desiredStatRanges}
+          filteredItems={filteredItems}
+          pinnedItems={pinnedItems}
+          lockedExoticHash={lockedExoticHash}
+          setBonuses={setBonuses}
+          modStatChanges={modStatChanges}
+          armorEnergyRules={armorEnergyRules}
+          autoStatMods={autoStatMods}
+          lockedModMap={lockedModMap}
+          storeId={selectedStore.id}
+          ownedSets={processing ? 'pending' : (resultSets?.length ?? 0) > 0 ? 'found' : 'none'}
+          className={styles.loadoutEditSection}
+        />
+      )}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={2}>
