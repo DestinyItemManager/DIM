@@ -41,4 +41,27 @@ describe('dim.gg loadout share links parsing', () => {
     }
     expect(decoded.loadout.parameters!.mods!.length).not.toBe(0);
   });
+
+  test('unknown top-level fields on a shared loadout are dropped', () => {
+    const loadout = {
+      name: 'Simple Loadout',
+      classType: 1,
+      equipped: [],
+      unequipped: [],
+      parameters: { mods: [2623485440] },
+      // Not part of the loadout schema - a crafted link should not be able to
+      // smuggle arbitrary keys through the import boundary.
+      injected: 'evil',
+    };
+    const url = `https://app.destinyitemmanager.com/loadouts?loadout=${encodeURIComponent(
+      JSON.stringify(loadout),
+    )}`;
+    const decoded = decodeShareUrl(url);
+    if (decoded?.tag !== 'urlLoadout') {
+      throw new Error();
+    }
+    expect(decoded.loadout.name).toBe('Simple Loadout');
+    expect(decoded.loadout.parameters!.mods).toEqual([2623485440]);
+    expect('injected' in decoded.loadout).toBe(false);
+  });
 });
