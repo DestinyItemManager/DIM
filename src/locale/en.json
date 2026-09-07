@@ -1149,10 +1149,14 @@
     "Bounties": "Bounties",
     "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Ranks",
+    "DailyObjectives": "Daily Objectives",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
+    "NoDailyObjectives": "You have completed all your daily objectives",
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
+    "NoWeeklyObjectives": "You have completed all your weekly objectives",
+    "Orders": "Orders",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentMax": "{{pct}}% to maximum",
     "PercentPrestige": "{{pct}}% to reset",
@@ -1173,7 +1177,8 @@
     "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
     "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Stat Trackers",
-    "TrackedTriumphs": "Tracked Triumphs"
+    "TrackedTriumphs": "Tracked Triumphs",
+    "WeeklyObjectives": "Weekly Objectives"
   },
   "RecordBooks": {
     "HideCompleted": "Hide completed records",
