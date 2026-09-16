@@ -901,7 +901,8 @@
       "Fashion": "Fashion (shaders & ornaments)",
       "Subclass": "Subclass customization",
       "LoadoutOptimizer": "Loadout Optimizer settings",
-      "Notes": "Notes"
+      "Notes": "Notes",
+      "SocketOverrides": "Subclass/artifact customization"
     },
     "ShareLoadout": "Share",
     "ShowModPlacement": "Show Mod Placement",
