@@ -19,28 +19,30 @@ export default function Links({ item }: { item: DimItem }) {
   const language = useSelector(languageSelector);
   const isPhonePortrait = useIsPhonePortrait();
 
-  const links = [
+  const links = compact([
     {
       name: 'DIM',
       icon: logo,
       link: `/armory/${item.hash}?perks=${buildSocketParam(item)}`,
     },
-    {
+    item.destinyVersion === 2 && {
       name: 'Light.gg',
       icon: lightgg,
       link: `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
     },
-    !isPhonePortrait && {
-      name: 'data.destinysets.com',
-      icon: destinysets,
-      link: `https://data.destinysets.com/i/InventoryItem:${item.hash}?lang=${language}`,
-    },
-    item.loreHash && {
-      name: t('MovePopup.ReadLoreLink'),
-      icon: ishtarLogo,
-      link: `http://www.ishtar-collective.net/entries/${item.loreHash}`,
-    },
-  ];
+    item.destinyVersion === 2 &&
+      !isPhonePortrait && {
+        name: 'data.destinysets.com',
+        icon: destinysets,
+        link: `https://data.destinysets.com/i/InventoryItem:${item.hash}?lang=${language}`,
+      },
+    item.destinyVersion === 2 &&
+      item.loreHash && {
+        name: t('MovePopup.ReadLoreLink'),
+        icon: ishtarLogo,
+        link: `http://www.ishtar-collective.net/entries/${item.loreHash}`,
+      },
+  ]);
 
   return (
     <ul className={styles.links}>
