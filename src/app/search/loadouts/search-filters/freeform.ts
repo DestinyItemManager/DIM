@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { tl } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromString } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
@@ -10,6 +10,7 @@ import { matchText, plainString } from 'app/search/text-utils';
 import { compact, filterMap } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedByStoreId } from 'app/utils/item-utils';
+import { DamageType } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { FilterDefinition } from '../../filter-types';
 import { quoteFilterString } from '../../query-parser';
@@ -148,6 +149,10 @@ const freeformFilters: FilterDefinition<
           return [
             `subclass:${quoteFilterString(subclass.name.toLowerCase())}`,
             damageName && `subclass:${quoteFilterString(damageName.toLowerCase())}`,
+            // Prismatic subclasses use the Kinetic damage type.
+            subclass.element?.enumValue === DamageType.Kinetic
+              ? `subclass:${quoteFilterString(t('Glyphs.Prismatic').toLowerCase())}`
+              : undefined,
           ];
         }),
       );
@@ -170,7 +175,10 @@ const freeformFilters: FilterDefinition<
         }
 
         const damageName = subclass.element?.displayProperties.name;
-        return damageName !== undefined && test(damageName);
+        return (
+          (damageName !== undefined && test(damageName)) ||
+          (subclass.element?.enumValue === DamageType.Kinetic && test(t('Glyphs.Prismatic')))
+        );
       };
     },
   },
