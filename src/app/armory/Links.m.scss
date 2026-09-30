@@ -7,7 +7,7 @@
   margin: 0 0 0 32px;
   padding: 0;
   list-style: none;
-  gap: 4px;
+  min-width: calc(48px + 6em);
 
   @include phone-portrait {
     margin-right: 48px;
