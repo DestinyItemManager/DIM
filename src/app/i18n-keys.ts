@@ -19,7 +19,7 @@ export const BUCKETS = [
 ] as const satisfies readonly BucketSortType[];
 
 /** Pursuit groupings rendered as `Progress.<group>` titles. */
-export const PROGRESS_GROUPS = ['Bounties', 'Items', 'Quests'] as const;
+export const PROGRESS_GROUPS = ['Orders', 'Bounties', 'Items', 'Quests'] as const;
 
 /** Socket categories rendered as `Sockets.Insert.<kind>` / `Sockets.Select.<kind>`. */
 export const SOCKET_KINDS = [
