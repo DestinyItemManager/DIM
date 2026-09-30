@@ -177,8 +177,8 @@ export function downloadLoadoutsCsv(): ThunkResult {
             (s) => artifact?.loadoutItem.socketOverrides?.[s.socketIndex] || 0,
           ) ||
           loadout.parameters?.artifactUnlocks?.unlockedItemHashes ||
-          []
-        ).map(
+          undefined
+        )?.map(
           (modHash) => (modHash && defs.InventoryItem.get(modHash)?.displayProperties.name) || '',
         ),
       };
