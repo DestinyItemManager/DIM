@@ -1,5 +1,7 @@
 ## Next
 
+* Add `subclass:prismatic` autocomplete to Loadouts search.
+
 ## 8.144.0 <span class="changelog-date">(2026-09-27)</span>
 
 ## 8.143.0 <span class="changelog-date">(2026-09-20)</span>
