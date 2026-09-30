@@ -77,7 +77,7 @@ export default function LoadoutShareSheet({
   const numMods = loadout.parameters?.mods?.length ?? 0;
   const numItems = count(loadout.items, (i) => !i.socketOverrides);
   const hasFashion = Boolean(loadout.parameters?.modsByBucket);
-  const hasSubclass = loadout.items.some((i) => i.equip && i.socketOverrides);
+  const hasOverrides = loadout.items.some((i) => i.equip && i.socketOverrides);
   const hasLoParams = Boolean(
     loadout.parameters &&
     (loadout.parameters.query ||
@@ -106,9 +106,9 @@ export default function LoadoutShareSheet({
                 {t('Loadouts.Share.Summary')}
                 <ul>
                   {numItems > 0 && <li>{t('Loadouts.Share.NumItems', { count: numItems })}</li>}
-                  {numMods > 0 && <li>{t('Loadouts.Share.NumMods', { count: numItems })}</li>}
+                  {numMods > 0 && <li>{t('Loadouts.Share.NumMods', { count: numMods })}</li>}
                   {hasFashion && <li>{t('Loadouts.Share.Fashion')}</li>}
-                  {hasSubclass && <li>{t('Loadouts.Share.Subclass')}</li>}
+                  {hasOverrides && <li>{t('Loadouts.Share.SocketOverrides')}</li>}
                   {hasLoParams && <li>{t('Loadouts.Share.LoadoutOptimizer')}</li>}
                   {loadout.notes && <li>{t('Loadouts.Share.Notes')}</li>}
                 </ul>
