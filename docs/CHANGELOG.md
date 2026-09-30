@@ -1,6 +1,7 @@
 ## Next
 
 * Add `subclass:prismatic` autocomplete to Loadouts search.
+* Fix external site links in Armory overlapping the sheet close button.
 
 ## 8.144.0 <span class="changelog-date">(2026-09-27)</span>
 
