@@ -524,7 +524,7 @@ function getStatProblems(
     return {
       stats,
       canHitStats: resolvedStatConstraints.every(
-        (c) => c.ignored || (stats[c.statHash].value ?? 0) >= c.minStat,
+        (c) => c.ignored || Math.max(0, stats[c.statHash].value ?? 0) >= c.minStat,
       ),
     };
   };
