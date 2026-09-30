@@ -4,6 +4,7 @@
 * Fix external site links in Armory overlapping the sheet close button.
 * Loadout CSV export now handles new artifacts
 * Add seasonal hub orders and daily & weekly objectives to progress page
+* Loadouts with negative stats will no longer be marked as "Wrong Stat Minimums".
 
 ## 8.144.0 <span class="changelog-date">(2026-09-27)</span>
 
