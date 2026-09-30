@@ -2,6 +2,12 @@
 
 .progress {
   --item-size: 50px;
+
+  h2 {
+    margin-top: 1.5em !important;
+    margin-bottom: 1em;
+    font-size: 13px;
+  }
 }
 
 .menuLinks {

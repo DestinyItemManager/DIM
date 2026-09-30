@@ -8,7 +8,6 @@ import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
-import * as styles from './Milestones.m.scss';
 import Pursuit from './Pursuit';
 import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';
@@ -53,7 +52,7 @@ export default function Milestones({
     <>
       {[...milestonesByPower.keys()].sort(sortPowerBonus).map((powerBonus) => (
         <div key={powerBonus ?? -1}>
-          <h2 className={styles.header}>
+          <h2>
             {powerBonus === undefined
               ? t('Progress.PowerBonusHeaderUndefined')
               : t('Progress.PowerBonusHeader', { powerBonus })}
