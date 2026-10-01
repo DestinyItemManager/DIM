@@ -108,14 +108,7 @@ export default function LoadoutItemCategorySection({
   const hasSetBonus = setBonusStatus.activePerks.size > 0;
 
   return (
-    <div
-      key={category}
-      className={clsx(
-        styles.itemCategory,
-        categoryStyles[category],
-        hasSetBonus && styles.hasSetBonus,
-      )}
-    >
+    <div key={category} className={clsx(styles.itemCategory, categoryStyles[category])}>
       {items || hasFashion ? (
         <div className={styles.itemsInCategory}>
           {bucketOrder.map((bucket) => (

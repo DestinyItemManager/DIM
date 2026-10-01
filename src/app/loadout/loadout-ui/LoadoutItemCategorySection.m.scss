@@ -60,10 +60,7 @@
   @include items-width(3);
 }
 .categoryArmor {
-  @include items-width(5);
-  &.hasSetBonus {
-    @include items-width(6);
-  }
+  @include items-width(6);
 }
 .categoryGeneral {
   // 2x2 grid

@@ -6,7 +6,6 @@ interface CssExports {
   'categoryGeneral': string;
   'categoryWeapons': string;
   'equipped': string;
-  'hasSetBonus': string;
   'itemBucket': string;
   'itemCategory': string;
   'items': string;
