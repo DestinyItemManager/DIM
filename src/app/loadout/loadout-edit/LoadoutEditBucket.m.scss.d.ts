@@ -15,6 +15,7 @@ interface CssExports {
   'items': string;
   'itemsInCategory': string;
   'missingItem': string;
+  'setBonusWrapper': string;
   'unequipped': string;
 }
 export const cssExports: CssExports;

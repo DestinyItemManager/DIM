@@ -7,8 +7,10 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
+import { SetBonusesStatus, getSetBonusStatus } from 'app/item-popup/SetBonus';
 import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
@@ -97,8 +99,34 @@ export default function LoadoutEditBucket({
             }
           />
         ))}
+        {isArmor && (
+          <ArmorSetBonusDisplay bucketOrder={bucketOrder} itemsByBucket={itemsByBucket} />
+        )}
       </div>
       {children}
+    </div>
+  );
+}
+
+interface ArmorSetBonusDisplayProps {
+  bucketOrder: InventoryBucket[];
+  itemsByBucket: Record<string, ResolvedLoadoutItem[]>;
+}
+function ArmorSetBonusDisplay({ bucketOrder, itemsByBucket }: ArmorSetBonusDisplayProps) {
+  const defs = useD2Definitions()!;
+  const equippedArmors = bucketOrder
+    .map((bucket) => itemsByBucket[bucket.hash]?.at(0)?.item)
+    .filter((armor) => armor !== undefined);
+  const setBonusStatus = getSetBonusStatus(defs, equippedArmors);
+  const hasSetBonus = setBonusStatus.activePerks.size > 0;
+
+  if (!hasSetBonus) {
+    return null;
+  }
+
+  return (
+    <div className={styles.setBonusWrapper}>
+      <SetBonusesStatus setBonusStatus={setBonusStatus} />
     </div>
   );
 }
