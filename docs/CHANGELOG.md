@@ -5,6 +5,7 @@
 * Loadout CSV export now handles new artifacts
 * Add seasonal hub orders and daily & weekly objectives to progress page
 * Loadouts with negative stats will no longer be marked as "Wrong Stat Minimums".
+* Always reserve space for the set bonus on the loadouts page, which keeps everything lined up.
 
 ## 8.144.0 <span class="changelog-date">(2026-09-27)</span>
 
