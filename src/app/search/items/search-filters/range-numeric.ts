@@ -1,5 +1,5 @@
 import { tl } from 'app/i18next-t';
-import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
+import { getItemCurrentKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
 import { ItemFilterDefinition } from '../item-filter-types';
 
 const simpleRangeFilters: ItemFilterDefinition[] = [
@@ -41,7 +41,7 @@ const simpleRangeFilters: ItemFilterDefinition[] = [
     filter:
       ({ filterValue, compare }) =>
       (item) => {
-        const killTrackerInfo = getItemKillTrackerInfo(item);
+        const killTrackerInfo = getItemCurrentKillTrackerInfo(item);
         return Boolean(
           killTrackerInfo &&
           (!filterValue.length || filterValue === killTrackerInfo.type) &&
