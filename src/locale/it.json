@@ -948,7 +948,7 @@
       "NumMods_one": "{{count}} modifica",
       "NumMods_other": "{{count}} Modifiche",
       "Placeholder": "Caricamento collegamento di condivisione",
-      "Subclass": "Personalizzazione sottoclasse",
+      "SocketOverrides": "Personalizzazione sottoclasse/artefatto",
       "Summary": "Condividi questa dotazione contenente:",
       "Title": "Condividi \"{{name}}\""
     },
@@ -1149,10 +1149,15 @@
     "Bounties": "Taglie",
     "CatalystSource": "Fonte: {{source}}",
     "CrucibleRank": "Gradi",
+    "DailyObjectives": "Obbiettivi giornalieri",
     "Items": "Oggetti Imprese",
     "Milestones": "Pietre miliari & Sfide",
+    "NoDailyObjectives": "Hai completato tutti i tuoi obbiettivi giornalieri",
     "NoEventChallenges": "Hai completato tutte le sfide dell'evento",
     "NoTrackedTriumph": "Non stai seguendo alcun Trionfo. Segui tutti quelli che vuoi su DIM.",
+    "NoWeeklyObjectives": "Hai completato tutti i tuoi obbiettivi settimanali",
+    "Objectives": "Obbiettivi",
+    "Orders": "Ordini",
     "PaleHeartPathfinder": "Strumento di Scoperta del Pallido Cuore",
     "PercentMax": "{{pct}}% al massimo",
     "PercentPrestige": "{{pct}}% al reset",
@@ -1173,7 +1178,8 @@
     "RewardPassPrestigeRank": "Grado Prestigio {{rank}}",
     "SeasonalHub": "Hub stagionale",
     "StatTrackers": "Contatori Statistiche",
-    "TrackedTriumphs": "Trionfi Seguiti"
+    "TrackedTriumphs": "Trionfi Seguiti",
+    "WeeklyObjectives": "Obbiettivi settimanali"
   },
   "RecordBooks": {
     "HideCompleted": "Nascondi completati",

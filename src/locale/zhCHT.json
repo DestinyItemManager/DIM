@@ -919,7 +919,7 @@
       "NumItems_other": "{{count}} 個項目 - 將提示被分享者從他們的庫存中選擇可比較的項目",
       "NumMods_other": "{{count}} 個模組",
       "Placeholder": "正在載入分享連結",
-      "Subclass": "自定義子職業",
+      "SocketOverrides": "Subclass/artifact customization",
       "Summary": "分享包含如下内容的配裝：",
       "Title": "分享“{{name}}”"
     },
@@ -1120,10 +1120,15 @@
     "Bounties": "賞金",
     "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "排名",
+    "DailyObjectives": "Daily Objectives",
     "Items": "任務物品",
     "Milestones": "里程碑和挑戰",
+    "NoDailyObjectives": "You have completed all your daily objectives",
     "NoEventChallenges": "你已經完成了所有活動挑戰",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
+    "NoWeeklyObjectives": "You have completed all your weekly objectives",
+    "Objectives": "Objectives",
+    "Orders": "Orders",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentMax": "{{pct}}% to maximum",
     "PercentPrestige": "重置百分比{{pct}}%",
@@ -1142,7 +1147,8 @@
     "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
     "SeasonalHub": "賽季樞紐",
     "StatTrackers": "數據追蹤器",
-    "TrackedTriumphs": "跟蹤的成就"
+    "TrackedTriumphs": "跟蹤的成就",
+    "WeeklyObjectives": "Weekly Objectives"
   },
   "RecordBooks": {
     "HideCompleted": "隱藏完成事件",

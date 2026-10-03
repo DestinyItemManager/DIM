@@ -948,7 +948,7 @@
       "NumMods_one": "{{count}} mod",
       "NumMods_other": "{{count}} mods",
       "Placeholder": "Carregando link de compartilhamento",
-      "Subclass": "Personalização de subclasse",
+      "SocketOverrides": "Subclass/artifact customization",
       "Summary": "Compartilhar este set contendo:",
       "Title": "Compartilhar \"{{name}}\""
     },
@@ -1149,10 +1149,15 @@
     "Bounties": "Contratos",
     "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Ranque",
+    "DailyObjectives": "Daily Objectives",
     "Items": "Itens de Jornada",
     "Milestones": "Marcos e Desafios",
+    "NoDailyObjectives": "You have completed all your daily objectives",
     "NoEventChallenges": "Você concluiu todos os desafios do evento",
     "NoTrackedTriumph": "Você não está rastreando triunfos. Rastreie quantos quiser no DIM.",
+    "NoWeeklyObjectives": "You have completed all your weekly objectives",
+    "Objectives": "Objectives",
+    "Orders": "Orders",
     "PaleHeartPathfinder": "Desbravamento do Coração Pálido",
     "PercentMax": "{{pct}}% do máximo",
     "PercentPrestige": "{{pct}}% para resetar",
@@ -1173,7 +1178,8 @@
     "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
     "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Estatísticas",
-    "TrackedTriumphs": "Triunfos Rastreados"
+    "TrackedTriumphs": "Triunfos Rastreados",
+    "WeeklyObjectives": "Weekly Objectives"
   },
   "RecordBooks": {
     "HideCompleted": "Esconder os recordes completados",

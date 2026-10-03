@@ -948,7 +948,7 @@
       "NumMods_one": "{{count}} Mod",
       "NumMods_other": "{{count}} Mods",
       "Placeholder": "Teilen-Link wird geladen\n",
-      "Subclass": "Fokus-Anpassung",
+      "SocketOverrides": "Fokus-/Artefakt-Anpassung",
       "Summary": "Teile dieses Loadout mit:",
       "Title": "Teile \"{{name}}\""
     },
@@ -1149,10 +1149,15 @@
     "Bounties": "Beutezüge",
     "CatalystSource": "Quelle: {{source}}",
     "CrucibleRank": "Ränge",
+    "DailyObjectives": "Tägliche Ziele",
     "Items": "Quest-Gegenstände",
     "Milestones": "Meilensteine & Herausforderungen",
+    "NoDailyObjectives": "Du hast alle deine täglichen Ziele erreicht",
     "NoEventChallenges": "Du hast alle Event-Herausforderungen abgeschlossen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge so viele wie du möchtest in DIM.",
+    "NoWeeklyObjectives": "Du hast alle deine wöchentlichen Ziele erreicht",
+    "Objectives": "Ziele",
+    "Orders": "Aufträge",
     "PaleHeartPathfinder": "Bleiches Herz Pfadfinder",
     "PercentMax": "{{pct}}% des Maximums",
     "PercentPrestige": "{{pct}}% des max. Rangs",
@@ -1173,7 +1178,8 @@
     "RewardPassPrestigeRank": "Prestige-Rang {{rank}}",
     "SeasonalHub": "Saisonaler Hub",
     "StatTrackers": "Stat Tracker",
-    "TrackedTriumphs": "Verfolgte Triumphe"
+    "TrackedTriumphs": "Verfolgte Triumphe",
+    "WeeklyObjectives": "Wöchentliche Ziele"
   },
   "RecordBooks": {
     "HideCompleted": "Abgeschlossene Urkunden nicht anzeigen",

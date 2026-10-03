@@ -919,7 +919,7 @@
       "NumItems_other": "{{count}} 個 - 受信者は在庫から同等のアイテムを選択するよう求められます",
       "NumMods_other": "{{count}} 個のmod",
       "Placeholder": "共有リンクをロードしています",
-      "Subclass": "サブクラスのカスタマイズ",
+      "SocketOverrides": "Subclass/artifact customization",
       "Summary": "以下を含むこのロードアウトをシェアする：",
       "Title": "\"{{name}}\" をシェアする"
     },
@@ -1120,10 +1120,15 @@
     "Bounties": "バウンティ",
     "CatalystSource": "ソース: {{source}}",
     "CrucibleRank": "ランク",
+    "DailyObjectives": "Daily Objectives",
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
+    "NoDailyObjectives": "You have completed all your daily objectives",
     "NoEventChallenges": "すべてのイベントの挑戦を完了しました。",
     "NoTrackedTriumph": "追跡中の勝利の道のりはありません。DIM で好きなだけ追跡してください。",
+    "NoWeeklyObjectives": "You have completed all your weekly objectives",
+    "Objectives": "Objectives",
+    "Orders": "Orders",
     "PaleHeartPathfinder": "ペイルハートパスファインダー",
     "PercentMax": "最高まで{{pct}}%達成",
     "PercentPrestige": "リセットまで{{pct}}％達成",
@@ -1142,7 +1147,8 @@
     "RewardPassPrestigeRank": "プレステージランク {{rank}}",
     "SeasonalHub": "シーズンハブ",
     "StatTrackers": "追跡中ステータス",
-    "TrackedTriumphs": "追跡中の勝利の道のり"
+    "TrackedTriumphs": "追跡中の勝利の道のり",
+    "WeeklyObjectives": "Weekly Objectives"
   },
   "RecordBooks": {
     "HideCompleted": "完了した記録を非表示にする",

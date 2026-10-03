@@ -1006,7 +1006,7 @@
       "NumMods_one": "{{count}} мод",
       "NumMods_other": "{{count}} мода(-ов)",
       "Placeholder": "Идёт загрузка общей ссылки",
-      "Subclass": "Настройка подкласса",
+      "SocketOverrides": "Subclass/artifact customization",
       "Summary": "Поделиться этим набором содержащим:",
       "Title": "Поделиться \"{{name}}\""
     },
@@ -1207,10 +1207,15 @@
     "Bounties": "Баунти",
     "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Ранги",
+    "DailyObjectives": "Daily Objectives",
     "Items": "Предметы Заданий",
     "Milestones": "Испытания",
+    "NoDailyObjectives": "You have completed all your daily objectives",
     "NoEventChallenges": "Вы выполнили все испытания мероприятия",
     "NoTrackedTriumph": "Нет Отслеживаемых Триумфов. Отслеживайте сколько угодно в DIM.",
+    "NoWeeklyObjectives": "You have completed all your weekly objectives",
+    "Objectives": "Objectives",
+    "Orders": "Orders",
     "PaleHeartPathfinder": "Навигатор Бледного Сердца",
     "PercentMax": "{{pct}}% to maximum",
     "PercentPrestige": "{{pct}}% обнуления",
@@ -1235,7 +1240,8 @@
     "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
     "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Трекеры",
-    "TrackedTriumphs": "Отслеживаемые Триумфы"
+    "TrackedTriumphs": "Отслеживаемые Триумфы",
+    "WeeklyObjectives": "Weekly Objectives"
   },
   "RecordBooks": {
     "HideCompleted": "Скрыть завершенные",

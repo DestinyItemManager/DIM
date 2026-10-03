@@ -948,7 +948,7 @@
       "NumMods_one": "{{count}} modificador",
       "NumMods_other": "{{count}} modificadores",
       "Placeholder": "Cargando enlace compartido",
-      "Subclass": "Personalización de subclase",
+      "SocketOverrides": "Personalización de artefacto/subclase",
       "Summary": "Compartir esta equipación que contiene:",
       "Title": "Compartir \"{{name}}\""
     },
@@ -1149,10 +1149,15 @@
     "Bounties": "Contratos",
     "CatalystSource": "Fuente: {{source}}",
     "CrucibleRank": "NIveles",
+    "DailyObjectives": "Objetivos Diarios",
     "Items": "Objetos de Aventuras",
     "Milestones": "Hazañas & Desafíos",
+    "NoDailyObjectives": "Has completado todos tus objetivos diarios",
     "NoEventChallenges": "Has completado todos los desafíos del evento",
     "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue tantos como quieras en DIM.",
+    "NoWeeklyObjectives": "Has completado todos tus objetivos semanales",
+    "Objectives": "Objetivos",
+    "Orders": "Pedidos",
     "PaleHeartPathfinder": "Pionero Débil Corazón",
     "PercentMax": "{{pct}}% hacia el máximo",
     "PercentPrestige": "{{pct}}% hacia el reinicio",
@@ -1173,7 +1178,8 @@
     "RewardPassPrestigeRank": "Rango de Prestigio {{rank}}",
     "SeasonalHub": "Centro de Operaciones de la Temporada",
     "StatTrackers": "Analizadores Estadísticos",
-    "TrackedTriumphs": "Triunfos Seguidos"
+    "TrackedTriumphs": "Triunfos Seguidos",
+    "WeeklyObjectives": "Objetivos Semanales"
   },
   "RecordBooks": {
     "HideCompleted": "Ocultar hazañas completadas",

@@ -1006,7 +1006,7 @@
       "NumMods_one": "{{count}} Modyfikacja",
       "NumMods_other": "{{count}} Modyfikacje(-ji)",
       "Placeholder": "Wczytywanie linku udostępniania",
-      "Subclass": "Dostosowanie podklasy",
+      "SocketOverrides": "Subclass/artifact customization",
       "Summary": "Udostępnij to Uzbrojenie zawierające:",
       "Title": "Udostępnij \"{{name}}\""
     },
@@ -1207,10 +1207,15 @@
     "Bounties": "Zlecenia",
     "CatalystSource": "Source: {{source}}",
     "CrucibleRank": "Rangi",
+    "DailyObjectives": "Daily Objectives",
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
+    "NoDailyObjectives": "You have completed all your daily objectives",
     "NoEventChallenges": "Ukończyłeś wszystkie wyzwania wydarzenia",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
+    "NoWeeklyObjectives": "You have completed all your weekly objectives",
+    "Objectives": "Objectives",
+    "Orders": "Orders",
     "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentMax": "{{pct}}% to maximum",
     "PercentPrestige": "{{pct}}% do resetu",
@@ -1235,7 +1240,8 @@
     "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
     "SeasonalHub": "Seasonal Hub",
     "StatTrackers": "Śledzenie statystyk",
-    "TrackedTriumphs": "Śledzone triumfy"
+    "TrackedTriumphs": "Śledzone triumfy",
+    "WeeklyObjectives": "Weekly Objectives"
   },
   "RecordBooks": {
     "HideCompleted": "Ukryj ukończone zapisy",

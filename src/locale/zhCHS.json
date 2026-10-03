@@ -919,7 +919,7 @@
       "NumItems_other": "{{count}} 个物品 - 被分享者需要从他们的库存中选择替代物品",
       "NumMods_other": "{{count}} 个模组",
       "Placeholder": "正在加载分享链接",
-      "Subclass": "自定义子职业",
+      "SocketOverrides": "子职业/神器自定义",
       "Summary": "分享包含如下内容的配装：",
       "Title": "分享“{{name}}”"
     },
@@ -1120,10 +1120,15 @@
     "Bounties": "赏金",
     "CatalystSource": "来源：{{source}}",
     "CrucibleRank": "排名",
+    "DailyObjectives": "每日目标",
     "Items": "任务物品",
     "Milestones": "里程碑和挑战",
+    "NoDailyObjectives": "你已完成所有每日目标",
     "NoEventChallenges": "你已经完成了所有活动挑战",
     "NoTrackedTriumph": "你没有正在追踪的成就，您可以在 DIM 中追踪任意数量。",
+    "NoWeeklyObjectives": "你已完成所有每周目标",
+    "Objectives": "目标",
+    "Orders": "指令",
     "PaleHeartPathfinder": "苍白之心寻路者",
     "PercentMax": "{{pct}}% 最大值",
     "PercentPrestige": "重置百分比 {{pct}} %",
@@ -1142,7 +1147,8 @@
     "RewardPassPrestigeRank": "威望等级 {{rank}}",
     "SeasonalHub": "赛季中心",
     "StatTrackers": "数据追踪器",
-    "TrackedTriumphs": "跟踪的成就"
+    "TrackedTriumphs": "跟踪的成就",
+    "WeeklyObjectives": "每周目标"
   },
   "RecordBooks": {
     "HideCompleted": "隐藏完成事件",

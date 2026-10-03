@@ -919,7 +919,7 @@
       "NumItems_other": "아이템 {{count}}개 - 받는 사람은 소지품에서 유사한 아이템을 선택하라는 메시지가 표시됩니다",
       "NumMods_other": "개조 부품 {{count}}개",
       "Placeholder": "공유 주소 가져오는 중",
-      "Subclass": "하위직업 사용자 정의",
+      "SocketOverrides": "하위직업/유물 사용자 정의",
       "Summary": "다음을 포함하는 로드아웃 공유:",
       "Title": "\"{{name}}\" 공유"
     },
@@ -1120,10 +1120,15 @@
     "Bounties": "현상금",
     "CatalystSource": "출처: {{source}}",
     "CrucibleRank": "등급",
+    "DailyObjectives": "일일 활동 목표",
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
+    "NoDailyObjectives": "모든 일일 활동 목표를 완료했습니다",
     "NoEventChallenges": "모든 이벤트 도전 완료",
     "NoTrackedTriumph": "추적 중인 업적이 없습니다. DIM에서 원하는 만큼 추적하세요.",
+    "NoWeeklyObjectives": "모든 주간 활동 목표를 완료했습니다",
+    "Objectives": "목표",
+    "Orders": "명령",
     "PaleHeartPathfinder": "창백한 심장 길잡이",
     "PercentMax": "최대까지 {{pct}}%",
     "PercentPrestige": "초기화까지 {{pct}}%",
@@ -1142,7 +1147,8 @@
     "RewardPassPrestigeRank": "명예 등급 {{rank}}",
     "SeasonalHub": "시즌 허브",
     "StatTrackers": "통계 추적기",
-    "TrackedTriumphs": "추적 중인 업적"
+    "TrackedTriumphs": "추적 중인 업적",
+    "WeeklyObjectives": "주간 활동 목표"
   },
   "RecordBooks": {
     "HideCompleted": "완료한 기록 숨기기",
