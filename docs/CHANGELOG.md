@@ -1,5 +1,7 @@
 ## Next
 
+## 8.145.0 <span class="changelog-date">(2026-10-04)</span>
+
 * Add `subclass:prismatic` autocomplete to Loadouts search.
 * Fix external site links in Armory overlapping the sheet close button.
 * Loadout CSV export now handles new artifacts
