@@ -83,8 +83,18 @@
   }
 }
 
+.improvedValue {
+  color: $green;
+}
+
 .boostedValue {
   color: $stat-modded;
+}
+
+.boostedImprovedValue {
+  text-decoration: underline;
+  text-decoration-color: $green;
+  text-underline-offset: 2px;
 }
 
 .statBarWarningIcon {

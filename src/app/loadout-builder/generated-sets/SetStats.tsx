@@ -30,6 +30,7 @@ export function TierlessSetStats({
   getStatsBreakdown,
   maxPower,
   desiredStatRanges,
+  referenceStatConstraints,
   boostedStats,
   className,
   existingLoadoutName,
@@ -41,6 +42,7 @@ export function TierlessSetStats({
   getStatsBreakdown: () => ModStatChanges;
   maxPower: number;
   desiredStatRanges: DesiredStatRange[];
+  referenceStatConstraints?: ResolvedStatConstraint[];
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
@@ -61,6 +63,13 @@ export function TierlessSetStats({
         const statHash: ArmorStatHashes = c.statHash;
         const statDef = defs.Stat.get(statHash);
         const value = stats[statHash];
+        const effectiveValue = Math.min(value, c.maxStat);
+        const referenceConstraint = referenceStatConstraints?.find((r) => r.statHash === statHash);
+        const isImproved =
+          c.maxStat > 0 &&
+          referenceConstraint !== undefined &&
+          !referenceConstraint.ignored &&
+          effectiveValue > Math.min(referenceConstraint.minStat, c.maxStat);
         return (
           <PressTip
             key={statHash}
@@ -79,9 +88,10 @@ export function TierlessSetStats({
             <TierlessStat
               isActive={c.maxStat > 0}
               isBoosted={boostedStats.has(statHash)}
+              isImproved={isImproved}
               stat={statDef}
               value={value}
-              effectiveValue={Math.min(value, c.maxStat)}
+              effectiveValue={effectiveValue}
             />
           </PressTip>
         );
@@ -110,12 +120,14 @@ function TierlessStat({
   stat,
   isActive,
   isBoosted,
+  isImproved,
   value,
   effectiveValue,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   isBoosted: boolean;
+  isImproved: boolean;
   value: number;
   effectiveValue: number;
 }) {
@@ -144,7 +156,15 @@ function TierlessStat({
           [styles.boostedValue]: isBoosted,
         })}
       >
-        {shownValue}
+        <span
+          className={clsx({
+            [styles.improvedValue]: isImproved,
+            [styles.boostedValue]: isBoosted,
+            [styles.boostedImprovedValue]: isBoosted && isImproved,
+          })}
+        >
+          {shownValue}
+        </span>
         {showIgnoredExcess && <span className={styles.nonActiveStat}>+{ignoredExcess}</span>}
       </span>
     </span>
