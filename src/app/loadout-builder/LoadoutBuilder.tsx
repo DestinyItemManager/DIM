@@ -560,6 +560,7 @@ export default memo(function LoadoutBuilder({
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
             desiredStatRanges={desiredStatRanges}
+            referenceStatConstraints={strictUpgradesStatConstraints}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             armorEnergyRules={result.armorEnergyRules}

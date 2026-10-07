@@ -12,6 +12,7 @@ import {
   DesiredStatRange,
   ModStatChanges,
   PinnedItems,
+  ResolvedStatConstraint,
 } from '../types';
 import GeneratedSet, { containerClass } from './GeneratedSet';
 
@@ -25,6 +26,7 @@ export default function GeneratedSets({
   sets,
   equippedHashes,
   desiredStatRanges,
+  referenceStatConstraints,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -38,6 +40,7 @@ export default function GeneratedSets({
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   desiredStatRanges: DesiredStatRange[];
+  referenceStatConstraints?: ResolvedStatConstraint[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -61,6 +64,7 @@ export default function GeneratedSets({
             pinnedItems={pinnedItems}
             lbDispatch={lbDispatch}
             desiredStatRanges={desiredStatRanges}
+            referenceStatConstraints={referenceStatConstraints}
             modStatChanges={modStatChanges}
             loadouts={loadouts}
             armorEnergyRules={armorEnergyRules}
