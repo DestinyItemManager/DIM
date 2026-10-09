@@ -321,14 +321,16 @@ export function hideAcquiredCollectibles(node: DimPresentationNode): DimPresenta
     };
   }
 
-  if (node.collectibles) {
-    return {
-      ...node,
-      collectibles: node.collectibles.filter((c) => c.state & DestinyCollectibleState.NotAcquired),
-    };
+  if (!node.collectibles && !node.plugs) {
+    return node;
   }
 
-  return node;
+  // should only need to filter collectibles/plugs, not metrics/records/craftables/etc
+  return {
+    ...node,
+    collectibles: node.collectibles?.filter((c) => c.state & DestinyCollectibleState.NotAcquired),
+    plugs: node.plugs?.filter((p) => !p.unlocked),
+  };
 }
 
 // TODO: how to flatten this down to individual category trees
