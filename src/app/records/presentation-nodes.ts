@@ -321,6 +321,10 @@ export function hideAcquiredCollectibles(node: DimPresentationNode): DimPresenta
     };
   }
 
+  if (!node.collectibles && !node.plugs) {
+    return node;
+  }
+
   // should only need to filter collectibles/plugs, not metrics/records/craftables/etc
   return {
     ...node,
