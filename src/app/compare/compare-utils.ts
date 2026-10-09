@@ -25,10 +25,12 @@ function matchString(name: string) {
  * correctly quoting/escaping the name.
  */
 export function compareNameQuery(item: DimItem) {
+  const baseName = stripAdept(item.name);
   return item.bucket.inWeapons
     ? `${[
         item.name,
-        ...getAdeptSuffixes().map((suffix) => `${item.name} ${suffix.replaceAll('\\', '')}`),
+        baseName,
+        ...getAdeptSuffixes().map((suffix) => `${baseName} ${suffix.replaceAll('\\', '')}`),
       ]
         .map(matchString)
         .join(' or ')}`
