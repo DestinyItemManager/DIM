@@ -197,10 +197,24 @@ export function armorSlotIcon(exampleItem: DimItem) {
 /**
  * Generate possible comparisons for weapons, given a reference item.
  */
-export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
+export function findSimilarWeapons(
+  exampleItem: DimItem,
+  categoryItems: DimItem[],
+): CompareButton[] {
   const archetype = getWeaponArchetype(exampleItem);
   const archetypeName = archetype?.displayProperties.name || t('Compare.Archetype');
   const adeptStripped = stripAdept(exampleItem.name);
+  // Use actual names: localized variant markers can be prefixes or regex alternatives.
+  const nameQuery = [
+    ...new Set([
+      exampleItem.name,
+      ...filterMap(categoryItems, (item) =>
+        stripAdept(item.name) === adeptStripped ? item.name : undefined,
+      ),
+    ]),
+  ]
+    .map((name) => `exactname:${quoteFilterString(name)}`)
+    .join(' or ');
   const bucketHash: keyof typeof bucketToSearch = exampleItem.bucket.hash;
 
   const archetypeIcon = archetype && (
@@ -288,7 +302,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     // exact same weapon, judging by name. might span multiple expansions.
     {
       buttonLabel: [adeptStripped],
-      query: compareNameQuery(exampleItem),
+      query: nameQuery,
     },
     // Exact weapon based on ID
     {
