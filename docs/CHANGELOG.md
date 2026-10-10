@@ -1,5 +1,7 @@
 ## Next
 
+* Display active armor set bonuses in the loadout editor.
+
 ## 8.145.0 <span class="changelog-date">(2026-10-04)</span>
 
 * Add `subclass:prismatic` autocomplete to Loadouts search.
