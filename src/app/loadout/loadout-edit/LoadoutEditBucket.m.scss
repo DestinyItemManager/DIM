@@ -60,7 +60,7 @@
   @include items-width(3);
 }
 .categoryArmor {
-  @include items-width(5);
+  @include items-width(6);
 }
 .categoryGeneral {
   // 2x2 grid
@@ -99,4 +99,12 @@
 .isOver {
   filter: invert(40%);
   background-color: rgb(255, 255, 255, 0.4);
+}
+
+.setBonusWrapper {
+  --set-bonus-icon-size: calc(var(--item-size) * 0.58);
+  align-self: start;
+  * {
+    flex-direction: column;
+  }
 }
