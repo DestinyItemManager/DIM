@@ -1,5 +1,7 @@
 ## Next
 
+## 8.146.0 <span class="changelog-date">(2026-10-12)</span>
+
 * Display active armor set bonuses in the loadout editor.
 * Fix "Only show uncollected items" not hiding acquired emotes/ghost projections
 
