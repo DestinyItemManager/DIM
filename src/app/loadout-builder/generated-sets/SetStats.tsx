@@ -154,17 +154,10 @@ function TierlessStat({
       <span
         className={clsx(styles.tier, {
           [styles.boostedValue]: isBoosted,
+          [styles.improvedValue]: isImproved,
         })}
       >
-        <span
-          className={clsx({
-            [styles.improvedValue]: isImproved,
-            [styles.boostedValue]: isBoosted,
-            [styles.boostedImprovedValue]: isBoosted && isImproved,
-          })}
-        >
-          {shownValue}
-        </span>
+        {shownValue}
         {showIgnoredExcess && <span className={styles.nonActiveStat}>+{ignoredExcess}</span>}
       </span>
     </span>
