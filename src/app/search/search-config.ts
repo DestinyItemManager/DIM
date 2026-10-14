@@ -16,6 +16,7 @@ export interface FiltersMap<I, FilterCtx, SuggestionsCtx> {
   kvFilters: Record<string, FilterDefinition<I, FilterCtx, SuggestionsCtx>>;
 }
 
+// TODO: Let's not compute both rawText and plainText until we need both. Maybe we can use an i18n comparison instead?
 export interface Suggestion {
   /** The original suggestion text. */
   rawText: string;
