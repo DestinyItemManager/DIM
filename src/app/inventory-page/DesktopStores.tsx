@@ -18,6 +18,7 @@ import D1ReputationSection from './D1ReputationSection';
 import * as styles from './DesktopStores.m.scss';
 import HeaderShadowDiv from './HeaderShadowDiv';
 import InventoryCollapsibleTitle from './InventoryCollapsibleTitle';
+import { ResettableReputation } from './ResettableReputation';
 import { StoreBuckets } from './StoreBuckets';
 import './Stores.scss';
 
@@ -107,14 +108,30 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
           {$featureFlags.issueBanner && <IssueAwarenessBanner />}
         </HeaderShadowDiv>
 
-        <StoresInventory
-          stores={headerStores}
-          vault={vault}
-          currentStore={currentStore}
-          buckets={buckets}
-          singleCharacter={singleCharacter}
-          vaultUnder={vaultUnder}
-        />
+        {stores[0].destinyVersion === 2 && (
+          <InventoryCollapsibleTitle
+            title={t(`Bucket.Reputation`)}
+            sectionId="Reputation"
+            stores={stores}
+          >
+            <ResettableReputation />
+          </InventoryCollapsibleTitle>
+        )}
+
+        {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
+          <CollapsibleContainer
+            key={category}
+            buckets={buckets}
+            stores={headerStores}
+            currentStore={currentStore}
+            vault={vault}
+            singleCharacter={singleCharacter}
+            category={category}
+            inventoryBucket={inventoryBucket}
+            vaultUnder={vaultUnder}
+          />
+        ))}
+        {stores[0].destinyVersion === 1 && <D1ReputationSection stores={stores} />}
       </div>
       {$featureFlags.itemFeed && <ItemFeedSidebar />}
     </div>
@@ -185,33 +202,5 @@ function CollapsibleContainer({
         />
       ))}
     </InventoryCollapsibleTitle>
-  );
-}
-
-function StoresInventory({
-  buckets,
-  stores,
-  currentStore,
-  vault,
-  singleCharacter,
-  vaultUnder,
-}: InventoryContainerProps) {
-  return (
-    <>
-      {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
-        <CollapsibleContainer
-          key={category}
-          buckets={buckets}
-          stores={stores}
-          currentStore={currentStore}
-          vault={vault}
-          singleCharacter={singleCharacter}
-          category={category}
-          inventoryBucket={inventoryBucket}
-          vaultUnder={vaultUnder}
-        />
-      ))}
-      {stores[0].destinyVersion === 1 && <D1ReputationSection stores={stores} />}
-    </>
   );
 }
