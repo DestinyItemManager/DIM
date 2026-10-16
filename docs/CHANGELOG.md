@@ -1,5 +1,7 @@
 ## Next
 
+* Highlight improved stats in Loadout Optimizer's better-stats mode.
+
 ## 8.146.0 <span class="changelog-date">(2026-10-12)</span>
 
 * Display active armor set bonuses in the loadout editor.
