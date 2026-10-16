@@ -8,7 +8,7 @@ import { getArmorArchetype } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ActionType, Reducer, getType } from 'typesafe-actions';
 import * as actions from './actions';
-import { compareNameQuery } from './compare-utils';
+import { compareNameQuery, stripAdept } from './compare-utils';
 
 export interface CompareSession {
   /**
@@ -160,6 +160,10 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
 function initialCompareQuery(item: DimItem) {
   if (isD1Item(item) || !item.bucket.inArmor || item.isExotic) {
     // D1 items, weapons, and exotic armor match by name
+    if (item.bucket.inWeapons && stripAdept(item.name) !== item.name.trim()) {
+      // Opening a variant stays narrow; the Name button can expand its family.
+      return `exactname:${quoteFilterString(item.name)}`;
+    }
     return compareNameQuery(item);
   } else {
     // For D2 armor, we match by rarity, intrinsic and interesting mod sockets
