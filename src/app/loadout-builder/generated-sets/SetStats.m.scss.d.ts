@@ -4,6 +4,7 @@ interface CssExports {
   'boostedValue': string;
   'container': string;
   'existingLoadout': string;
+  'improvedValue': string;
   'light': string;
   'loadoutName': string;
   'nonActiveStat': string;
