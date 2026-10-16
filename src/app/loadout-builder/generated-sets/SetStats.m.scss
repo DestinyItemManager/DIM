@@ -83,6 +83,18 @@
   }
 }
 
+.improvedValue {
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 11px;
+    mask-image: url('images/enhancedArrow.svg');
+    background-color: $enhancedYellow;
+    margin-left: 2px;
+  }
+}
+
 .boostedValue {
   color: $stat-modded;
 }
