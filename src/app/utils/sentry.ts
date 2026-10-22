@@ -33,6 +33,8 @@ const options: BrowserOptions = {
   attachStacktrace: true,
   // Only send trace headers to our own server
   tracePropagationTargets: ['https://api.destinyitemmanager.com'],
+  // Don't send the OAuth authorization code from return.html's URL along with error reports
+  dataCollection: { urlQueryParams: { deny: ['code'] } },
   integrations: [
     browserTracingIntegration({
       beforeStartSpan: (context) => ({
