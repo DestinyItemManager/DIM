@@ -131,6 +131,7 @@ describe('process candidate parity', () => {
       modStatTotals: Object.fromEntries(armorStats.map((h) => [h, 0])) as ArmorStats,
       lockedMods: { generalMods: [], activityMods: [] },
       setBonuses: {},
+      anySetBonusHashes: [],
       requiredPerks: [],
       desiredStatRanges: defaultRanges(),
       anyExotic: false,

@@ -648,6 +648,9 @@
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
+    "AnySetBonus": "Any Set Bonus",
+    "AnySetBonusDescription": "Require a {{pieces}}-piece bonus from any single armor set.",
+    "AnySetBonusSelection": "Any {{pieces}}-Piece",
     "Artifice": "Artifice",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {

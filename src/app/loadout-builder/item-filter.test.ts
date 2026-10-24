@@ -8,14 +8,19 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { count, sumBy } from 'app/utils/collections';
 import { stubFalse, stubTrue } from 'app/utils/functions';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { getExtraIntrinsicPerkHashes, getExtraIntrinsicPerkSockets } from 'app/utils/socket-utils';
+import { getArmor3TuningStat, isArtifice, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import {
+  getExtraIntrinsicPerkHashes,
+  getExtraIntrinsicPerkSockets,
+  getSetBonusModSocket,
+} from 'app/utils/socket-utils';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { maxBy } from 'es-toolkit';
 import { elementalChargeModHash, stacksOnStacksModHash } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { FilterInfo, filterItems } from './item-filter';
 import {
+  ANY_SET_BONUS,
   ArmorBucketHash,
   ArmorBucketHashes,
   ArmorEnergyRules,
@@ -115,6 +120,158 @@ describe('loadout-builder item-filter', () => {
     });
 
     expectItemCount(filterInfo, items.length);
+  });
+
+  it('preserves different set identities for Any set-bonus filtering', () => {
+    const source = items.find(
+      (item) =>
+        !item.isExotic &&
+        Boolean(item.stats?.length) &&
+        item.power > 0 &&
+        !isArtifice(item) &&
+        !getArmor3TuningStat(item) &&
+        !getSetBonusModSocket(item),
+    );
+
+    if (!source?.stats) {
+      throw new Error('Expected a suitable armor item for the Any set-bonus test');
+    }
+
+    const bucketHash: ArmorBucketHash = source.bucket.hash;
+
+    const fakeSetBonus = (hash: number) =>
+      ({
+        hash,
+        setPerks: [
+          {
+            requiredSetCount: 2,
+            sandboxPerkHash: hash,
+          },
+        ],
+      }) as NonNullable<DimItem['setBonus']>;
+
+    const weaker: DimItem = {
+      ...source,
+      id: `${source.id}-set-a`,
+      setBonus: fakeSetBonus(111111),
+    };
+
+    const stronger: DimItem = {
+      ...source,
+      id: `${source.id}-set-b`,
+      stats: source.stats.map((stat) => ({
+        ...stat,
+        base: stat.base + 1,
+        value: stat.value + 1,
+      })),
+      setBonus: fakeSetBonus(222222),
+    };
+
+    const testItems: DimItem[] = [weaker, stronger];
+
+    // Keep one ordinary item in every other bucket to avoid empty-bucket noise.
+    for (const otherBucketHash of ArmorBucketHashes) {
+      if (otherBucketHash !== bucketHash) {
+        const filler = items.find((item) => item.bucket.hash === otherBucketHash && !item.isExotic);
+
+        if (!filler) {
+          throw new Error(`Expected a filler item for armor bucket ${otherBucketHash}`);
+        }
+
+        testItems.push(filler);
+      }
+    }
+
+    const runFilter = (setBonuses?: Parameters<typeof filterItems>[0]['setBonuses']) =>
+      filterItems({
+        ...defaultArgs,
+        defs,
+        items: testItems,
+        lockedModMap: noMods.modMap,
+        unassignedMods: noMods.unassignedMods,
+        setBonuses,
+      })[0][bucketHash];
+
+    // Without an Any requirement, the stronger clone safely dominates the weaker one.
+    expect(runFilter().map((item) => item.id)).toEqual([stronger.id]);
+
+    // With Any 2 selected, the two set identities must remain available.
+    expect(
+      runFilter({ [ANY_SET_BONUS]: 2 })
+        .map((item) => item.id)
+        .sort(),
+    ).toEqual([weaker.id, stronger.id].sort());
+  });
+
+  it('keeps Any 4 set pieces when an exotic is locked', () => {
+    const targetExotic = items.find(
+      (item) => item.isExotic && item.bucket.hash !== BucketHashes.ClassArmor,
+    );
+
+    if (!targetExotic) {
+      throw new Error('Expected a non-class-item exotic for the Any 4 test');
+    }
+
+    const targetExoticBucketHash: ArmorBucketHash = targetExotic.bucket.hash;
+
+    const setHash = 111111;
+    const fakeSetBonus = {
+      hash: setHash,
+      setPerks: [
+        {
+          requiredSetCount: 4,
+          sandboxPerkHash: setHash,
+        },
+      ],
+    } as NonNullable<DimItem['setBonus']>;
+
+    const testItems: DimItem[] = [targetExotic];
+    const expectedSetItems = new Map<ArmorBucketHash, string>();
+
+    for (const bucketHash of ArmorBucketHashes) {
+      if (bucketHash === targetExoticBucketHash) {
+        continue;
+      }
+
+      const source = items.find(
+        (item) => item.bucket.hash === bucketHash && !item.isExotic && !getSetBonusModSocket(item),
+      );
+
+      if (!source) {
+        throw new Error(`Expected a legendary item for armor bucket ${bucketHash}`);
+      }
+
+      const setItem: DimItem = {
+        ...source,
+        id: `${source.id}-any-4`,
+        setBonus: fakeSetBonus,
+      };
+
+      const ordinaryItem: DimItem = {
+        ...source,
+        id: `${source.id}-ordinary`,
+        setBonus: undefined,
+      };
+
+      testItems.push(setItem, ordinaryItem);
+      expectedSetItems.set(bucketHash, setItem.id);
+    }
+
+    const [filteredItems] = filterItems({
+      ...defaultArgs,
+      defs,
+      items: testItems,
+      lockedModMap: noMods.modMap,
+      unassignedMods: noMods.unassignedMods,
+      lockedExoticHash: targetExotic.hash,
+      setBonuses: { [ANY_SET_BONUS]: 4 },
+    });
+
+    expect(filteredItems[targetExoticBucketHash].map((item) => item.id)).toContain(targetExotic.id);
+
+    for (const [bucketHash, expectedId] of expectedSetItems) {
+      expect(filteredItems[bucketHash].map((item) => item.id)).toEqual([expectedId]);
+    }
   });
 
   it('filters out items with insufficient energy capacity', () => {

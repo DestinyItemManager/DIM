@@ -19,7 +19,13 @@ import {
   mapAutoMods,
   mapDimItemToProcessItems,
 } from '../process/mappers';
-import { ArmorBucketHashes, ArmorStats, DesiredStatRange, MIN_LO_ITEM_ENERGY } from '../types';
+import {
+  ANY_SET_BONUS,
+  ArmorBucketHashes,
+  ArmorStats,
+  DesiredStatRange,
+  MIN_LO_ITEM_ENERGY,
+} from '../types';
 import { process, ProcessInputs } from './process';
 import { ProcessItem, ProcessItemsByBucket, ProcessMod, ProcessResult } from './types';
 
@@ -138,6 +144,7 @@ describe('process equivalence', () => {
       modStatTotals: Object.fromEntries(armorStats.map((h) => [h, 0])) as ArmorStats,
       lockedMods: { generalMods: [], activityMods: [] },
       setBonuses: {},
+      anySetBonusHashes: [],
       requiredPerks: [],
       desiredStatRanges: defaultRanges(),
       anyExotic: false,
@@ -159,6 +166,37 @@ describe('process equivalence', () => {
   function eachBucket(inputs: ProcessInputs, fn: (items: ProcessItem[]) => void) {
     for (const bucketHash of ArmorBucketHashes) {
       fn(inputs.filteredItems[bucketHash]);
+    }
+  }
+
+  function configureSingleCombination(
+    inputs: ProcessInputs,
+    setBonuses: ProcessInputs['setBonuses'],
+    setBonusHashes: readonly (number | undefined)[],
+    wildcardIndexes: readonly number[] = [],
+    eligibleAnySetBonusHashes: readonly number[] = [],
+  ) {
+    inputs.setBonuses = setBonuses;
+    inputs.anySetBonusHashes = [...eligibleAnySetBonusHashes];
+
+    for (const [index, bucketHash] of ArmorBucketHashes.entries()) {
+      const item = inputs.filteredItems[bucketHash][0];
+
+      item.isExotic = false;
+      delete item.setBonus;
+      delete item.hasSetBonusModSocket;
+      delete item.tuningVariants;
+
+      const setBonusHash = setBonusHashes[index];
+      if (setBonusHash !== undefined) {
+        item.setBonus = setBonusHash;
+      }
+
+      if (wildcardIndexes.includes(index)) {
+        item.hasSetBonusModSocket = true;
+      }
+
+      inputs.filteredItems[bucketHash] = [item];
     }
   }
 
@@ -253,6 +291,128 @@ describe('process equivalence', () => {
       inputs.setBonuses = { [setA]: 2 };
     });
     expect(await runAndDigest(inputs)).toMatchSnapshot();
+  });
+
+  describe('any set bonuses', () => {
+    const setA = 111111;
+    const setB = 222222;
+    const setC = 333333;
+    const setD = 444444;
+
+    const cases: [
+      name: string,
+      setBonuses: ProcessInputs['setBonuses'],
+      setBonusHashes: (number | undefined)[],
+      wildcardIndexes: number[],
+      eligibleAnySetBonusHashes: number[],
+      expected: boolean,
+    ][] = [
+      [
+        'Any 2 accepts two matching pieces',
+        { [ANY_SET_BONUS]: 2 },
+        [setA, setA, setB, setC, undefined],
+        [],
+        [setA, setB, setC],
+        true,
+      ],
+      [
+        'Any 2 rejects pieces from different sets',
+        { [ANY_SET_BONUS]: 2 },
+        [setA, setB, setC, setD, undefined],
+        [],
+        [setA, setB, setC, setD],
+        false,
+      ],
+      [
+        'Any 4 accepts four matching pieces',
+        { [ANY_SET_BONUS]: 4 },
+        [setA, setA, setA, setA, setB],
+        [],
+        [setA, setB],
+        true,
+      ],
+      [
+        'Any 4 rejects two separate pairs',
+        { [ANY_SET_BONUS]: 4 },
+        [setA, setA, setB, setB, setC],
+        [],
+        [setA, setB, setC],
+        false,
+      ],
+      [
+        'a specific 2-set plus Any 2 accepts a different matching pair',
+        { [setA]: 2, [ANY_SET_BONUS]: 2 },
+        [setA, setA, setB, setB, setC],
+        [],
+        [setA, setB, setC],
+        true,
+      ],
+      [
+        'a specific 2-set plus Any 2 rejects four pieces of the specific set',
+        { [setA]: 2, [ANY_SET_BONUS]: 2 },
+        [setA, setA, setA, setA, setC],
+        [],
+        [setA, setC],
+        false,
+      ],
+      [
+        'specific and Any requirements consume separate wildcards',
+        { [setA]: 2, [ANY_SET_BONUS]: 2 },
+        [setA, setB, undefined, undefined, undefined],
+        [2, 3],
+        [setA, setB],
+        true,
+      ],
+      [
+        'a wildcard cannot be reused by specific and Any requirements',
+        { [setA]: 2, [ANY_SET_BONUS]: 2 },
+        [setA, setB, undefined, undefined, undefined],
+        [2],
+        [setA, setB],
+        false,
+      ],
+      [
+        'Any 2 can be satisfied entirely by wildcard sockets',
+        { [ANY_SET_BONUS]: 2 },
+        [undefined, undefined, undefined, undefined, undefined],
+        [0, 1],
+        [],
+        true,
+      ],
+      [
+        'matching pieces do not count if the set lacks the requested perk count',
+        { [ANY_SET_BONUS]: 2 },
+        [setA, setA, setB, undefined, undefined],
+        [],
+        [setB],
+        false,
+      ],
+    ];
+
+    it.each(cases)(
+      '%s',
+      async (
+        _name,
+        setBonuses,
+        setBonusHashes,
+        wildcardIndexes,
+        eligibleAnySetBonusHashes,
+        expected,
+      ) => {
+        const inputs = cloneInputs((inputs) => {
+          configureSingleCombination(
+            inputs,
+            setBonuses,
+            setBonusHashes,
+            wildcardIndexes,
+            eligibleAnySetBonusHashes,
+          );
+        });
+
+        const result = await process(1, inputs, noProgress);
+        expect(result.sets.length > 0).toBe(expected);
+      },
+    );
   });
 
   it('locked general and activity mods', async () => {
