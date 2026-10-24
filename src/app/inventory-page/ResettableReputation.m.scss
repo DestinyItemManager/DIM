@@ -1,0 +1,9 @@
+@use '../variables.scss' as *;
+
+.reputation-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-left: var(--inventory-column-padding);
+  margin: var(--inventory-column-padding) 0;
+}
