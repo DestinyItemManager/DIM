@@ -51,6 +51,8 @@ export function makeFeatureFlags(env: {
     customStatWeights: false,
     // On the Loadouts page, run Loadout Optimizer to find better tiers for loadouts.
     runLoInBackground: true,
+    // Loadout Optimizer "Armor to Farm" planner (stat-target planner, #11832)
+    loFarmingPlanner: !env.release,
     // Whether to allow setting in-game loadout identifiers on DIM loadouts.
     editInGameLoadoutIdentifiers: false,
     // Whether to sync DIM API data instead of loading everything
