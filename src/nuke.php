@@ -15,7 +15,7 @@
     // Set the success message
     $message = 'Requested that your browser delete all DIM data.';
   } else {
-    $message = 'CSRF token validation failed! token:' . $token . " posted:" . htmlspecialchars($_POST['token'] ?? '');
+    $message = 'CSRF token validation failed!';
   }
  }
 
