@@ -4,7 +4,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { isExoticClassItemWithPerks } from 'app/inventory/store/exotic-class-item';
 import { calculateAssumedMasterworkStats } from 'app/loadout-drawer/loadout-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
-import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
+import { assignBucketSpecificMods, ModMap } from 'app/loadout/mod-assignment-utils';
 import { armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { sumBy } from 'app/utils/collections';
@@ -16,10 +16,12 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { sum } from 'es-toolkit';
 import { Draft } from 'immer';
 import {
+  ANY_SET_BONUS,
   ArmorBucketHash,
   ArmorBucketHashes,
   ArmorEnergyRules,
   ExcludedItems,
+  getSpecificSetBonusHashes,
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
   LOCKED_EXOTIC_NO_EXOTIC,
@@ -133,6 +135,14 @@ export function filterItems({
   }
   const requiredModTagsArray = Array.from(requiredModTags).sort();
 
+  const anySetBonusCount = setBonuses?.[ANY_SET_BONUS] ?? 0;
+  const hasAnySetBonus = anySetBonusCount > 0;
+  const specificSetBonusHashes = setBonuses ? getSpecificSetBonusHashes(setBonuses) : [];
+
+  const canContributeToAnySetBonus = (item: DimItem) =>
+    hasAnySetBonus &&
+    Boolean(item.setBonus?.setPerks.some((perk) => perk.requiredSetCount === anySetBonusCount));
+
   // Currently set bonuses take 2 or 4 pieces. Exotics are 1 item. Armor is 5 pieces total.
   // 2 + 2 + 1 = 4 + 1 = 5
   // If the user has locked an exotic, AND they have asked for set bonus(es) that require 4 items,
@@ -141,7 +151,7 @@ export function filterItems({
   /** If set, only use items with these set bonuses. */
   let includeOnlySetBonusHashes: undefined | number[];
   if (setBonuses && sum(Object.values(setBonuses)) >= 4 && lockedExoticDef) {
-    includeOnlySetBonusHashes = Object.keys(setBonuses).map(Number);
+    includeOnlySetBonusHashes = specificSetBonusHashes;
   }
 
   for (const bucket of ArmorBucketHashes) {
@@ -214,7 +224,9 @@ export function filterItems({
     if (includeOnlySetBonusHashes && !lockedExoticApplicable) {
       firstPassFilteredItems = firstPassFilteredItems.filter(
         (item) =>
-          (item.setBonus && includeOnlySetBonusHashes.includes(item.setBonus.hash)) ||
+          (item.setBonus &&
+            (includeOnlySetBonusHashes.includes(item.setBonus.hash) ||
+              canContributeToAnySetBonus(item))) ||
           getSetBonusModSocket(item),
       );
     }
@@ -259,6 +271,18 @@ export function filterItems({
 
     let removedStrictlyWorse = 0;
     if (finalFilteredItems.length > 1) {
+      const comparisonSetBonusHashes = new Set(specificSetBonusHashes);
+
+      if (hasAnySetBonus) {
+        for (const item of finalFilteredItems) {
+          if (item.setBonus && canContributeToAnySetBonus(item)) {
+            comparisonSetBonusHashes.add(item.setBonus.hash);
+          }
+        }
+      }
+
+      const sortedComparisonSetBonusHashes = [...comparisonSetBonusHashes].sort((a, b) => a - b);
+
       // One last pass - remove items that are strictly worse than others. This
       // uses the same general logic as the `is:statlower` search filter, but
       // also considers the energy capacity of the items and the set of activity
@@ -287,15 +311,24 @@ export function filterItems({
             statHash: -3, // ←↑ Dummy/temp stat hashes. Just need to not match real armor stat hashes.
             value: compatibleModSeason === tag ? 1 : 0,
           })),
-          // Add a comparison stat for each required set bonus. An item that has that bonus scores 1, others score zero.
-          // Statlower will make sure any matching set bonus item won't lose to an item without it.
-          ...Object.keys(setBonuses || {}).map((h) => {
-            const setBonusHash = parseInt(h, 10);
-            return {
-              statHash: -10 - setBonusHash,
-              value: item.setBonus?.hash === setBonusHash ? 1 : 0,
-            };
-          }),
+          // When Any is selected, keep armor with a Set Bonus mod socket distinct so its
+          // flexible set contribution is not removed as strictly worse.
+          ...(hasAnySetBonus
+            ? [
+                {
+                  statHash: -4,
+                  value: getSetBonusModSocket(item) ? 1 : 0,
+                },
+              ]
+            : []),
+
+          // Add a comparison dimension for each relevant set. An item scores 1 for its
+          // own set and 0 for the others, so pieces from different sets cannot eliminate
+          // each other while weaker pieces from the same set still can.
+          ...sortedComparisonSetBonusHashes.map((setBonusHash) => ({
+            statHash: -10 - setBonusHash,
+            value: item.setBonus?.hash === setBonusHash ? 1 : 0,
+          })),
         ];
       };
 
