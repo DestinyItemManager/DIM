@@ -1,5 +1,7 @@
 ## Next
 
+## 8.148.0 <span class="changelog-date">(2026-10-25)</span>
+
 ## 8.147.0 <span class="changelog-date">(2026-10-18)</span>
 
 * Highlight improved stats in Loadout Optimizer's better-stats mode.
