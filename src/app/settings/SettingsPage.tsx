@@ -1,8 +1,10 @@
 import { OrnamentDisplay, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
-import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
+import { clarityDiscordLinkDirect, clarityLinkDirect } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
+import ExternalLink from 'app/dim-ui/ExternalLink';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import TranslatedText from 'app/dim-ui/TranslatedText';
 import { t } from 'app/i18next-t';
 import TagIcon from 'app/inventory/TagIcon';
 import { itemTagList } from 'app/inventory/dim-item-info';
@@ -531,15 +533,19 @@ export default function SettingsPage() {
                   options={descriptionDisplayOptions}
                   onChange={changeDescriptionDisplay}
                 />
-                <div
-                  className={styles.fineprint}
-                  dangerouslySetInnerHTML={{
-                    __html: t('Views.About.CommunityInsight', {
-                      clarityLink,
-                      clarityDiscordLink,
-                    }),
-                  }}
-                />
+                <div className={styles.fineprint}>
+                  <TranslatedText
+                    text={t('Views.About.CommunityInsight')}
+                    values={{
+                      clarityLink: <ExternalLink href={clarityLinkDirect}>Clarity</ExternalLink>,
+                      clarityDiscordLink: (
+                        <ExternalLink href={clarityDiscordLinkDirect}>
+                          Clarity Discord Server
+                        </ExternalLink>
+                      ),
+                    }}
+                  />
+                </div>
               </div>
             )}
 
