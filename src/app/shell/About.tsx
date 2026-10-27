@@ -1,6 +1,7 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
-import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
+import { clarityDiscordLinkDirect, clarityLinkDirect } from 'app/clarity/about';
 import StaticPage from 'app/dim-ui/StaticPage';
+import TranslatedText from 'app/dim-ui/TranslatedText';
 import { t } from 'app/i18next-t';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { usePageTitle } from 'app/utils/hooks';
@@ -20,11 +21,17 @@ const bungieLinkDirect = 'https://www.bungie.net';
 const openCollectiveLinkDirect = 'https://opencollective.com/dim';
 const storeLinkDirect = 'https://www.designbyhumans.com/shop/DestinyItemManager/';
 
-const githubLink = `<a href='${githubLinkDirect}' target='_blank' rel='noopener noreferrer'>GitHub</a>`;
-const crowdinLink = `<a href='${crowdinLinkDirect}' target='_blank' rel='noopener noreferrer'>Crowdin</a>`;
-const bungieLink = `<a href='${bungieLinkDirect}' target='_blank' rel='noopener noreferrer'>Bungie.net</a>`;
-const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank' rel='noopener noreferrer'>OpenCollective</a>`;
-const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
+const githubLink = <ExternalLink href={githubLinkDirect}>GitHub</ExternalLink>;
+const crowdinLink = <ExternalLink href={crowdinLinkDirect}>Crowdin</ExternalLink>;
+const bungieLink = <ExternalLink href={bungieLinkDirect}>Bungie.net</ExternalLink>;
+const openCollectiveLink = (
+  <ExternalLink href={openCollectiveLinkDirect}>OpenCollective</ExternalLink>
+);
+const storeLink = <ExternalLink href={storeLinkDirect}>DesignByHumans</ExternalLink>;
+const clarityLink = <ExternalLink href={clarityLinkDirect}>Clarity</ExternalLink>;
+const clarityDiscordLink = (
+  <ExternalLink href={clarityDiscordLinkDirect}>Clarity Discord Server</ExternalLink>
+);
 
 export default function About() {
   usePageTitle(t('Header.About'));
@@ -92,14 +99,12 @@ export default function About() {
             </ExternalLink>
           </li>
         )}
-        <li
-          dangerouslySetInnerHTML={{
-            __html: t('Views.About.CommunityInsight', {
-              clarityLink,
-              clarityDiscordLink,
-            }),
-          }}
-        />
+        <li>
+          <TranslatedText
+            text={t('Views.About.CommunityInsight')}
+            values={{ clarityLink, clarityDiscordLink }}
+          />
+        </li>
       </ul>
       <div className={styles.social}>
         {!iOSApp && (
@@ -110,11 +115,12 @@ export default function About() {
                 {t('Views.Support.Support')}
               </ExternalLink>
             </h2>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
-              }}
-            />
+            <div>
+              <TranslatedText
+                text={t('Views.Support.OpenCollective')}
+                values={{ link: openCollectiveLink }}
+              />
+            </div>
           </div>
         )}
         <div>
@@ -134,11 +140,9 @@ export default function About() {
                 {t('Header.Shop')}
               </ExternalLink>
             </h2>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: t('Views.Support.Store', { link: storeLink }),
-              }}
-            />
+            <div>
+              <TranslatedText text={t('Views.Support.Store')} values={{ link: storeLink }} />
+            </div>
           </div>
         )}
         <div>
@@ -157,21 +161,20 @@ export default function About() {
               {t('Views.About.GitHub')}
             </ExternalLink>
           </h2>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: t('Views.About.GitHubHelp', { link: githubLink }),
-            }}
-          />
+          <div>
+            <TranslatedText text={t('Views.About.GitHubHelp')} values={{ link: githubLink }} />
+          </div>
         </div>
         <div>
           <h2>
             <ExternalLink href={crowdinLinkDirect}>{t('Views.About.Translation')}</ExternalLink>
           </h2>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: t('Views.About.TranslationText', { link: crowdinLink }),
-            }}
-          />
+          <div>
+            <TranslatedText
+              text={t('Views.About.TranslationText')}
+              values={{ link: crowdinLink }}
+            />
+          </div>
         </div>
       </div>
 
@@ -185,11 +188,12 @@ export default function About() {
         <dd>{t('Views.About.FAQKeyboardAnswer')}</dd>
         <dt>{t('Views.About.FAQLostItem')}</dt>
         <dd>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: t('Views.About.FAQLostItemAnswer', { link: bungieLink }),
-            }}
-          />
+          <div>
+            <TranslatedText
+              text={t('Views.About.FAQLostItemAnswer')}
+              values={{ link: bungieLink }}
+            />
+          </div>
           {token && (
             <p>
               <ExternalLink
@@ -209,10 +213,9 @@ export default function About() {
           <h1>{t('Views.Support.Support')}</h1>
           <p>{t('Views.Support.FreeToDownload')}</p>
           <p>
-            <span
-              dangerouslySetInnerHTML={{
-                __html: t('Views.Support.OpenCollective', { link: openCollectiveLink }),
-              }}
+            <TranslatedText
+              text={t('Views.Support.OpenCollective')}
+              values={{ link: openCollectiveLink }}
             />{' '}
           </p>
           {t('Views.Support.BackersDetail')}
