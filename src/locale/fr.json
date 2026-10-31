@@ -948,7 +948,7 @@
       "NumMods_one": "{{count}} mod",
       "NumMods_other": "{{count}} mods",
       "Placeholder": "Chargement du lien de partage",
-      "SocketOverrides": "Subclass/artifact customization",
+      "SocketOverrides": "Personnalisation de doctrine/artéfact",
       "Summary": "Partager cet équipement contenant :",
       "Title": "Partager \"{{name}}\""
     },
@@ -1149,15 +1149,15 @@
     "Bounties": "Contrats",
     "CatalystSource": "Source : {{source}}",
     "CrucibleRank": "Rangs",
-    "DailyObjectives": "Daily Objectives",
+    "DailyObjectives": "Objectifs quotidiens",
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
-    "NoDailyObjectives": "You have completed all your daily objectives",
+    "NoDailyObjectives": "Vous avez terminé tous vos objectifs quotidiens",
     "NoEventChallenges": "Vous avez terminé tous les défis d'événement",
     "NoTrackedTriumph": "Vous n'avez aucun triomphe suivi. Suivez en autant que vous voulez sur DIM.",
-    "NoWeeklyObjectives": "You have completed all your weekly objectives",
-    "Objectives": "Objectives",
-    "Orders": "Orders",
+    "NoWeeklyObjectives": "Vous avez terminé tous vos objectifs hebdomadaires",
+    "Objectives": "Objectifs",
+    "Orders": "Ordres",
     "PaleHeartPathfinder": "Cheminement du cœur pâle",
     "PercentMax": "{{pct}}% du maximum",
     "PercentPrestige": "{{pct}}% du rang maximum",
@@ -1179,7 +1179,7 @@
     "SeasonalHub": "Hub saisonnier",
     "StatTrackers": "Compteur de Statistiques",
     "TrackedTriumphs": "Triomphes Suivis",
-    "WeeklyObjectives": "Weekly Objectives"
+    "WeeklyObjectives": "Objectifs hebdomadaires"
   },
   "RecordBooks": {
     "HideCompleted": "Cacher les exploits complétés",
