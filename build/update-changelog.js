@@ -137,6 +137,15 @@ function extractChangelogEntriesFromText(text, source = 'unknown') {
   return entries;
 }
 
+// Entries come from commit messages and PR bodies, and the changelog is rendered
+// as raw HTML in the app, so escape any HTML outside of `code` spans.
+function escapeEntryHtml(entry) {
+  return entry
+    .split(/((?<![`\\])`[^`]*`(?!`))/)
+    .map((part, i) => (i % 2 ? part : part.replaceAll('<', '&lt;')))
+    .join('');
+}
+
 function updateChangelog(entries, originalChangelog) {
   if (entries.length === 0) {
     // No entries to add, return original content unchanged
@@ -174,7 +183,7 @@ function updateChangelog(entries, originalChangelog) {
   }
 
   // Format new entries as bullet points
-  const newEntries = entries.map((entry) => `* ${entry}`).join('\n');
+  const newEntries = entries.map((entry) => `* ${escapeEntryHtml(entry)}`).join('\n');
 
   // Build the new content for the "## Next" section
   let newNextContent = '';
