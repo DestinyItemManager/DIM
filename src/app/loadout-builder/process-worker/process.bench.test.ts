@@ -134,6 +134,7 @@ const baseInputs = {
     armorStats.map((h) => [h, 0]),
   ) as ProcessInputs['modStatTotals'],
   setBonuses: {},
+  anySetBonusHashes: [],
   requiredPerks: [],
   desiredStatRanges,
   anyExotic: false,
