@@ -14,7 +14,9 @@ import D1ReputationSection from './D1ReputationSection';
 import HeaderShadowDiv from './HeaderShadowDiv';
 import * as styles from './PhoneStores.m.scss';
 import PhoneStoresHeader from './PhoneStoresHeader';
+import { ResettableReputation } from './ResettableReputation';
 import { StoreBuckets } from './StoreBuckets';
+import { bucketLabel } from './StoreBuckets.m.scss';
 import './Stores.scss';
 
 /**
@@ -153,6 +155,8 @@ function StoresInventory({
   vault: DimStore;
   singleCharacter: boolean;
 }) {
+  const showMaxReputations =
+    currentStore.destinyVersion === 2 && selectedCategoryId === 'Inventory';
   const showPostmaster =
     (currentStore.destinyVersion === 2 && selectedCategoryId === 'Inventory') ||
     (currentStore.destinyVersion === 1 && selectedCategoryId === 'General');
@@ -177,6 +181,12 @@ function StoresInventory({
         (store.isVault && selectedCategoryId === 'Inventory')) && (
         <div className="store-cell" style={{ paddingBottom: 8 }}>
           <StoreStats store={store} />
+        </div>
+      )}
+      {showMaxReputations && (
+        <div className="store-row">
+          <div className={bucketLabel}>{t(`Bucket.Reputation`)}</div>
+          <ResettableReputation />
         </div>
       )}
       {showPostmaster && buckets.byCategory.Postmaster.map(renderBucket)}

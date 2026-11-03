@@ -83,7 +83,7 @@ export function ReputationRank({
   );
 }
 
-function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
+export function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
   const defs = useD2Definitions()!;
 
   const progressionDef = defs.Progression.get(progress.progressionHash);
