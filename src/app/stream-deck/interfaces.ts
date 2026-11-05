@@ -71,13 +71,25 @@ export interface SelectionAction {
   type?: SelectionType;
 }
 
+export interface RequestLoadoutsAction {
+  action: 'requestLoadouts';
+  device: string;
+  requestId: string;
+}
+
 // request perks definitions
 export interface RequestPerksAction {
   action: 'requestPerks';
 }
 
+// Sent by the plugin as soon as the local connection opens.
+export interface ConnectionAction {
+  action: 'connected';
+}
+
 // | FreeBucketSlotAction
 export type StreamDeckMessage = (
+  | ConnectionAction
   | SearchAction
   | RandomizeAction
   | CollectPostmasterAction
@@ -86,6 +98,7 @@ export type StreamDeckMessage = (
   | MaxPowerAction
   | PullItemAction
   | EquipLoadoutAction
+  | RequestLoadoutsAction
   | RequestPickerItemsAction
   | RequestPerksAction
   | SelectionAction
@@ -166,12 +179,40 @@ interface SendPickerItemsArgs {
       overlay?: string;
       isExotic?: boolean;
       element?: string;
+      power?: number;
+      breaker?: string;
+      badge?: string;
+      seasonIcon?: string;
+      craftedOverlay?: string;
+      craftedBackground?: string;
+      masterwork?: boolean;
+      locked?: boolean;
     }[];
   };
 }
 
+export interface BrowserLoadout {
+  loadout: string;
+  character: string;
+  classType: DestinyClass;
+  label: string;
+  tags: string[];
+  icon?: string;
+  inGameIcon?: { icon: string; background: string };
+}
+
+interface SendLoadoutsArgs {
+  action: 'loadouts';
+  data: {
+    device: string;
+    requestId: string;
+    currentCharacter: string;
+    loadouts: BrowserLoadout[];
+  };
+}
+
 export type SendToStreamDeckArgs =
-  SendStateArgs | SendFarmingModeArgs | SendPickerItemsArgs | SendPerksArgs;
+  SendStateArgs | SendFarmingModeArgs | SendPickerItemsArgs | SendPerksArgs | SendLoadoutsArgs;
 
 export interface HandlerArgs<T> {
   msg: T;
@@ -182,5 +223,7 @@ export interface HandlerArgs<T> {
 type ActionMatching<TAction> = Extract<StreamDeckMessage, { action: TAction }>;
 
 export type MessageHandler = {
-  [key in StreamDeckMessage['action']]: (args: HandlerArgs<ActionMatching<key>>) => ThunkResult;
+  [key in Exclude<StreamDeckMessage['action'], 'connected'>]: (
+    args: HandlerArgs<ActionMatching<key>>,
+  ) => ThunkResult;
 };

@@ -1,0 +1,40 @@
+.popover {
+  composes: tooltip from '../dim-ui/PressTip.m.scss';
+  width: min(440px, calc(100vw - 20px));
+  max-width: none;
+  white-space: normal;
+  pointer-events: auto;
+}
+
+.content {
+  padding: 12px;
+  max-height: calc(100dvh - var(--header-height) - 32px);
+  overflow-y: auto;
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+  }
+
+  ol {
+    margin: 0;
+    padding-left: 24px;
+  }
+
+  li + li {
+    margin-top: 8px;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.arrow {
+  composes: arrow from '../dim-ui/PressTip.m.scss';
+}

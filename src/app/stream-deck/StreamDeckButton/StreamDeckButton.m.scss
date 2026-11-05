@@ -5,9 +5,6 @@
   composes: resetButton from '../../dim-ui/common.m.scss';
   position: relative;
 
-  @container (max-width: 540px) {
-    display: none;
-  }
   & img {
     max-width: 19px;
     margin: 0 8px;
@@ -41,28 +38,7 @@
   }
 }
 
-.tooltipTitle {
-  font-weight: bold;
-  width: 100%;
-  padding-bottom: 4px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid rgb(255, 255, 255, 0.1);
-}
-
-.versionTable {
-  background: rgb(255, 255, 255, 0.05);
-  padding: 2px;
-  width: 100%;
-  margin-top: 4px;
-  margin-bottom: 12px;
-  td {
-    padding: 8px;
-  }
-  td:first-child {
-    font-weight: bold;
-    padding-right: 8px;
-  }
-  tr:first-child td {
-    border-bottom: 1px solid rgb(255, 255, 255, 0.1);
-  }
+.checking {
+  composes: connected;
+  background-color: $dim-brand;
 }

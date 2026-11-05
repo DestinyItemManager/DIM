@@ -18,6 +18,7 @@ import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
 import { filterFactorySelector } from 'app/search/items/item-search-filter';
@@ -39,9 +40,10 @@ import {
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
 import { delay } from 'app/utils/promises';
-import { DamageType } from 'bungie-api-ts/destiny2';
-import { streamDeckSelection } from './actions';
+import { streamDeckApprovalRequired, streamDeckSelection, streamDeckSetup } from './actions';
 import { sendToStreamDeck } from './async-module';
+import { streamDeckItemAppearance } from './item-appearance';
+import { requestLoadoutsHandler } from './loadout-browser';
 import { perks, streamDeckClearId } from './util/packager';
 
 // Calc location path
@@ -71,14 +73,7 @@ function requestPickerItemsHandler({
           label: item.name,
           item: streamDeckClearId(item.index),
           icon: item.icon,
-          tier: item.tier,
-          overlay: item.iconOverlay,
-          isExotic: item.isExotic,
-          isCrafted: Boolean(item.crafted),
-          element:
-            item.element?.enumValue === DamageType.Kinetic
-              ? undefined
-              : item.element?.displayProperties?.icon,
+          ...streamDeckItemAppearance(item, d2ManifestSelector(state)),
         })),
       },
     });
@@ -230,24 +225,37 @@ const handlers: MessageHandler = {
   equipLoadout: equipLoadoutHandler,
   pullItem: pullItemHandler,
   requestPickerItems: requestPickerItemsHandler,
+  requestLoadouts: requestLoadoutsHandler,
   selection: selectionHandler,
   requestPerks: requestPerksHandler,
 };
 
 // handle actions coming from the stream deck instance
-export function handleStreamDeckMessage(msg: StreamDeckMessage, token: string): ThunkResult {
+export function handleStreamDeckMessage(
+  msg: StreamDeckMessage,
+  token: string | undefined,
+): ThunkResult {
   return async (dispatch, getState) => {
-    const state = getState();
-    const store = currentStoreSelector(state);
-    if (!msg.token || msg.token !== token) {
-      showNotification({
-        type: 'error',
-        title: 'Stream Deck',
-        body: t('StreamDeck.MissingAuthorization'),
-      });
-      throw new Error(!msg.token ? 'missing-token' : 'invalid-token');
+    if (!token || !msg.token || msg.token !== token) {
+      dispatch(streamDeckApprovalRequired(true));
+      if (msg.action !== 'connected') {
+        dispatch(streamDeckSetup(false));
+        showNotification({
+          type: 'error',
+          title: t('StreamDeck.Error.Title'),
+          body: t('StreamDeck.Error.Authorization'),
+          duration: 10000,
+        });
+      }
+      return;
     }
 
+    dispatch(streamDeckApprovalRequired(false));
+    if (msg.action === 'connected') {
+      return;
+    }
+    const state = getState();
+    const store = currentStoreSelector(state);
     if (store) {
       // handle stream deck actions
       const handler = handlers[msg.action] as (args: HandlerArgs<StreamDeckMessage>) => ThunkResult;

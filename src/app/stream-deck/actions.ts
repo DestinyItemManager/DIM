@@ -1,5 +1,11 @@
 import { createAction } from 'typesafe-actions';
 
+export const streamDeckChecking = createAction('stream-deck/CHECKING')();
+
+export const streamDeckApprovalRequired = createAction('stream-deck/APPROVAL_REQUIRED')<boolean>();
+
+export const streamDeckSetup = createAction('stream-deck/SETUP')<boolean>();
+
 export type SelectionType = 'item' | 'loadout' | 'inventory-item' | 'postmaster' | undefined;
 
 export interface StreamDeckAuth {

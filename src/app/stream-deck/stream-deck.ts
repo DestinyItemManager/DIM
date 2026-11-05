@@ -14,9 +14,7 @@ export const lazyLoadStreamDeck = async () => {
   const core = await import(/* webpackChunkName: "streamdeck" */ './async-module');
   // load only once
   if (!lazyLoaded.start) {
-    Object.assign(lazyLoaded, {
-      ...core.default,
-    });
+    Object.assign(lazyLoaded, core.default);
   }
 };
 
