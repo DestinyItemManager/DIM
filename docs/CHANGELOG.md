@@ -1,5 +1,7 @@
 ## Next
 
+* Compare opened from an Adept, Timelost, or Harrowed weapon now includes its ordinary version.
+
 ## 8.149.0 <span class="changelog-date">(2026-11-01)</span>
 
 ## 8.148.0 <span class="changelog-date">(2026-10-25)</span>
