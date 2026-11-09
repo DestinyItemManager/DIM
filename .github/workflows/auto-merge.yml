@@ -11,7 +11,11 @@ jobs:
   auto-merge:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.actor == 'd2ai-bot' || github.actor == 'dependabot[bot]'
+    # github.actor is whoever triggered this event, not the PR author, so a fork PR that
+    # a bot happens to push to would pass an actor check. Key off the PR itself instead.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (github.event.pull_request.user.login == 'd2ai-bot' || github.event.pull_request.user.login == 'dependabot[bot]')
     steps:
       - name: Generate token
         uses: actions/create-github-app-token@v3
@@ -21,20 +25,20 @@ jobs:
           private-key: ${{ secrets.AUTOMERGE_PRIVATE_KEY }}
 
       - name: Dependabot metadata
-        if: github.actor == 'dependabot[bot]'
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
         id: metadata
         uses: dependabot/fetch-metadata@v3
         with:
           github-token: ${{ steps.app-token.outputs.token }}
 
       - name: Enable auto-merge for d2ai PRs
-        if: github.actor == 'd2ai-bot'
+        if: github.event.pull_request.user.login == 'd2ai-bot'
         run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url }}"
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Enable auto-merge for Dependabot PRs
-        if: github.actor == 'dependabot[bot]' && (steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor')
+        if: github.event.pull_request.user.login == 'dependabot[bot]' && (steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor')
         run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url }}"
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
