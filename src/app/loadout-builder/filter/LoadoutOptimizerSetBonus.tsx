@@ -15,6 +15,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
 import { startWordRegexp } from 'app/search/text-utils';
+import { AppIcon, asteriskIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { filterMap, mapValues, minOf } from 'app/utils/collections';
@@ -25,11 +26,15 @@ import {
   DestinyEquipableItemSetDefinition,
   DestinyItemSetPerkDefinition,
 } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { sum } from 'es-toolkit';
 import { Dispatch, memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { ANY_SET_BONUS, getSpecificSetBonusHashes } from '../types';
 import * as styles from './LoadoutOptimizerSetBonus.m.scss';
+
+const ANY_SET_BONUS_COUNTS = [2, 4] as const;
 
 const LoadoutOptimizerSetBonus = memo(function LoadoutOptimizerSetBonus({
   storeId,
@@ -228,6 +233,23 @@ export function SetBonusPicker({
   }, [query, possibleSetBonuses, defs, language]);
 
   const totalSelected = sum(Object.values(setBonuses));
+  const selectedAnySetBonusCount = setBonuses[ANY_SET_BONUS] ?? 0;
+
+  const anySetBonusSelected = (requiredSetCount: number) =>
+    selectedAnySetBonusCount === requiredSetCount;
+
+  const anySetBonusDisabled = (requiredSetCount: number) =>
+    // At least one available set must actually have a perk at this piece count.
+    !Object.entries(possibleSetBonuses).some(([setHash, possibleCount]) => {
+      const setDef = defs.EquipableItemSet.get(Number(setHash));
+      return (
+        (possibleCount ?? 0) >= requiredSetCount &&
+        setDef.setPerks.some((perk) => perk.requiredSetCount === requiredSetCount)
+      );
+    }) ||
+    // Selecting this option must still fit within five armor slots.
+    (!anySetBonusSelected(requiredSetCount) &&
+      totalSelected - selectedAnySetBonusCount + requiredSetCount > 5);
 
   const selected = (perk: DestinyItemSetPerkDefinition, setHash: number) =>
     (setBonuses[setHash] ?? 0) >= perk.requiredSetCount;
@@ -287,6 +309,23 @@ export function SetBonusPicker({
       freezeInitialHeight={true}
     >
       <div className={styles.container}>
+        <TileGrid header={t('LoadoutBuilder.AnySetBonus')}>
+          {ANY_SET_BONUS_COUNTS.map((requiredSetCount) => (
+            <TileGridTile
+              key={requiredSetCount}
+              selected={anySetBonusSelected(requiredSetCount)}
+              disabled={anySetBonusDisabled(requiredSetCount)}
+              title={t('Item.SetBonus.NPiece', { count: requiredSetCount })}
+              icon={<AnySetBonusIcon active={anySetBonusSelected(requiredSetCount)} />}
+              onClick={handlePerkClick(ANY_SET_BONUS, requiredSetCount)}
+            >
+              {t('LoadoutBuilder.AnySetBonusDescription', {
+                pieces: requiredSetCount,
+              })}
+            </TileGridTile>
+          ))}
+        </TileGrid>
+
         {sets.map((set) => (
           <TileGrid key={set.hash} header={set.displayProperties.name}>
             {set.setPerks.map((perk) => {
@@ -318,6 +357,27 @@ export function SetBonusPicker({
   );
 }
 
+function AnySetBonusIcon({ active = false }: { active?: boolean }) {
+  return (
+    <span className={clsx(styles.anySetBonusIcon, active && styles.activeAnySetBonusIcon)}>
+      <AppIcon icon={asteriskIcon} ariaHidden />
+    </span>
+  );
+}
+
+function AnySetBonusDisplay({ setCount }: { setCount: number }) {
+  return (
+    <div className={styles.anySetBonus}>
+      <AnySetBonusIcon />
+      <span>
+        {t('LoadoutBuilder.AnySetBonusSelection', {
+          pieces: setCount,
+        })}
+      </span>
+    </div>
+  );
+}
+
 function Footer({
   setBonuses,
   onSubmit,
@@ -344,13 +404,21 @@ function Footer({
 
 function SetBonusDisplay({ setBonuses }: { setBonuses: SetBonusCounts }) {
   const defs = useD2Definitions()!;
-  return Object.keys(setBonuses).map((setHash) => {
-    const setDef = defs.EquipableItemSet.get(Number(setHash));
-    return (
-      setDef &&
-      !setDef.redacted && (
-        <SetBonus key={setDef.hash} setBonus={setDef} setCount={setBonuses[Number(setHash)]} />
-      )
-    );
-  });
+  const anySetBonusCount = setBonuses[ANY_SET_BONUS];
+
+  return (
+    <>
+      {anySetBonusCount !== undefined && <AnySetBonusDisplay setCount={anySetBonusCount} />}
+
+      {getSpecificSetBonusHashes(setBonuses).map((setHash) => {
+        const setDef = defs.EquipableItemSet.get(setHash);
+        return (
+          setDef &&
+          !setDef.redacted && (
+            <SetBonus key={setDef.hash} setBonus={setDef} setCount={setBonuses[setHash]} />
+          )
+        );
+      })}
+    </>
+  );
 }

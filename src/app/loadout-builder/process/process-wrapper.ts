@@ -18,6 +18,7 @@ import {
   ProcessStatistics,
 } from '../process-worker/types';
 import {
+  ANY_SET_BONUS,
   ArmorBucketHash,
   ArmorEnergyRules,
   AutoModDefs,
@@ -166,12 +167,25 @@ export function runProcess({
     perkCountMap.set(hash, (perkCountMap.get(hash) ?? 0) + 1);
   }
   const requiredPerks = Array.from(perkCountMap, ([hash, count]) => ({ hash, count }));
+  const anySetBonusCount = setBonuses[ANY_SET_BONUS];
+  const anySetBonusHashes = new Set<number>();
+
+  if (anySetBonusCount !== undefined) {
+    for (const items of Object.values(filteredItems)) {
+      for (const item of items) {
+        if (item.setBonus?.setPerks.some((perk) => perk.requiredSetCount === anySetBonusCount)) {
+          anySetBonusHashes.add(item.setBonus.hash);
+        }
+      }
+    }
+  }
 
   const input: ProcessInputs = {
     filteredItems: processItems,
     modStatTotals: mapValues(modStatChanges, (stat) => stat.value),
     lockedMods: lockedProcessMods,
     setBonuses,
+    anySetBonusHashes: [...anySetBonusHashes].sort((a, b) => a - b),
     requiredPerks,
     desiredStatRanges,
     anyExotic,

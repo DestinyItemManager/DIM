@@ -5,11 +5,13 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { sum } from 'es-toolkit';
 import { infoLog } from '../../utils/log';
 import {
+  ANY_SET_BONUS,
   ArmorBucketHashes,
   ArmorStatHashes,
   ArmorStats,
   artificeStatBoost,
   DesiredStatRange,
+  getSpecificSetBonusHashes,
   majorStatBoost,
   MinMaxStat,
   StatRanges,
@@ -45,6 +47,8 @@ export interface ProcessInputs {
   lockedMods: LockedProcessMods;
   /** If we're requiring any set bonuses, the number of items desired from each set */
   setBonuses: SetBonusCounts;
+  /** Real set hashes that have a perk at the selected Any 2/4 piece count. */
+  anySetBonusHashes: number[];
   /**
    * Required armor perks and how many items in the set must have each perk.
    * Duplicate entries in the source perks array are collapsed into counts here.
@@ -76,6 +80,7 @@ export async function process(
     modStatTotals,
     lockedMods,
     setBonuses,
+    anySetBonusHashes,
     requiredPerks,
     desiredStatRanges,
     anyExotic,
@@ -212,8 +217,20 @@ export async function process(
   );
   const hasMods = Boolean(activityMods.length || generalMods.length);
 
-  const setBonusHashes = Object.keys(setBonuses).map((h) => Number(h));
-  const setBonusCounts = Object.values(setBonuses) as number[]; // TS won't figure this out itself?
+  // Separate Any requirement from explicitly selected sets
+  const anySetBonusCount = setBonuses[ANY_SET_BONUS] ?? 0;
+  const hasAnySetBonus = anySetBonusCount > 0;
+
+  const setBonusHashes = getSpecificSetBonusHashes(setBonuses);
+  const setBonusCounts = setBonusHashes.map((setBonusHash) => setBonuses[setBonusHash] ?? 0);
+  const numSetBonuses = setBonusHashes.length;
+  const hasSetBonusRequirements = numSetBonuses > 0 || hasAnySetBonus;
+
+  // A set selected explicitly cannot also satisfy the separate Any requirement.
+  const allowedAnySetBonusHashes = new Set(anySetBonusHashes);
+  for (const setBonusHash of setBonusHashes) {
+    allowedAnySetBonusHashes.delete(setBonusHash);
+  }
 
   const yieldTask = makeYieldTask();
 
@@ -230,8 +247,6 @@ export async function process(
     buildBucketSoA(bucket, statsCache, setBonusHashes, perkHashes, statOrder, desiredStatRanges),
   );
   const [helmSoA, gauntSoA, chestSoA, legSoA, classItemSoA] = soas;
-
-  const numSetBonuses = setBonusHashes.length;
 
   // How many combinations a subtree prune at each loop level skips
   const combosPerHelm = gauntlets.length * chests.length * legs.length * classItems.length;
@@ -426,7 +441,7 @@ export async function process(
   // Seed the exact ranges whenever no exotic/perk/set-bonus requirement
   // couples the buckets, which makes the subtree range checks non-blocking so
   // the tracker-floor prune can skip almost the whole search.
-  if (!anyExotic && numPerks === 0 && numSetBonuses === 0) {
+  if (!anyExotic && numPerks === 0 && !hasSetBonusRequirements) {
     seedExactStatRanges(
       soas,
       buckets,
@@ -769,22 +784,47 @@ export async function process(
               }
             }
 
-            // Set bonuses; each slot can use one wildcard if present
-            if (numSetBonuses > 0) {
-              const classItemSet = classItemSoA.setBonusIdx[classItemIdx];
+            // Set bonuses; each slot can use one wildcard if present.
+            if (hasSetBonusRequirements) {
               let wildcardsRemaining = wildcardP4 + classItemSoA.wildcard[classItemIdx];
-              for (let i = 0; i < numSetBonuses; i++) {
-                const setNeededCount = setBonusCounts[i];
-                const setCount = setCountsAfterLeg[i] + (classItemSet === i ? 1 : 0);
-                if (setCount < setNeededCount) {
-                  const wildcardsNeeded = setNeededCount - setCount;
-                  if (wildcardsRemaining >= wildcardsNeeded) {
-                    wildcardsRemaining -= wildcardsNeeded;
-                  } else {
-                    skipInsufficientSetBonus++;
-                    continue innerloop;
+
+              // Preserve the existing validation and satisfy explicitly selected sets first so that
+              // those requirements consume wildcard contributions first.
+              if (numSetBonuses > 0) {
+                const classItemSet = classItemSoA.setBonusIdx[classItemIdx];
+
+                for (let i = 0; i < numSetBonuses; i++) {
+                  const setNeededCount = setBonusCounts[i];
+                  const setCount = setCountsAfterLeg[i] + (classItemSet === i ? 1 : 0);
+
+                  if (setCount < setNeededCount) {
+                    const wildcardsNeeded = setNeededCount - setCount;
+
+                    if (wildcardsRemaining >= wildcardsNeeded) {
+                      wildcardsRemaining -= wildcardsNeeded;
+                    } else {
+                      skipInsufficientSetBonus++;
+                      continue innerloop;
+                    }
                   }
                 }
+              }
+
+              if (
+                hasAnySetBonus &&
+                !satisfiesAnySetBonus(
+                  anySetBonusCount,
+                  wildcardsRemaining,
+                  allowedAnySetBonusHashes,
+                  helm.setBonus,
+                  gaunt.setBonus,
+                  chest.setBonus,
+                  leg.setBonus,
+                  classItems[classItemIdx].setBonus,
+                )
+              ) {
+                skipInsufficientSetBonus++;
+                continue innerloop;
               }
             }
 
@@ -1203,6 +1243,117 @@ export async function process(
     statRangesFiltered,
     processInfo: processStatistics,
   };
+}
+
+/**
+ * Check whether one eligible armor set contributes enough matching pieces,
+ * supplemented by any wildcards not already consumed by
+ * explicitly requested set bonuses.
+ */
+function satisfiesAnySetBonus(
+  requiredCount: number,
+  wildcardsRemaining: number,
+  allowedSetBonusHashes: ReadonlySet<number>,
+  helmetSetBonus: number | undefined,
+  gauntletsSetBonus: number | undefined,
+  chestSetBonus: number | undefined,
+  legsSetBonus: number | undefined,
+  classItemSetBonus: number | undefined,
+): boolean {
+  const naturalPiecesNeeded = requiredCount - wildcardsRemaining;
+
+  // Enough unused Set Bonus mod sockets can satisfy Any without matching set pieces.
+  if (naturalPiecesNeeded <= 0) {
+    return true;
+  }
+
+  return (
+    setBonusHasEnoughPieces(
+      helmetSetBonus,
+      naturalPiecesNeeded,
+      allowedSetBonusHashes,
+      helmetSetBonus,
+      gauntletsSetBonus,
+      chestSetBonus,
+      legsSetBonus,
+      classItemSetBonus,
+    ) ||
+    setBonusHasEnoughPieces(
+      gauntletsSetBonus,
+      naturalPiecesNeeded,
+      allowedSetBonusHashes,
+      helmetSetBonus,
+      gauntletsSetBonus,
+      chestSetBonus,
+      legsSetBonus,
+      classItemSetBonus,
+    ) ||
+    setBonusHasEnoughPieces(
+      chestSetBonus,
+      naturalPiecesNeeded,
+      allowedSetBonusHashes,
+      helmetSetBonus,
+      gauntletsSetBonus,
+      chestSetBonus,
+      legsSetBonus,
+      classItemSetBonus,
+    ) ||
+    setBonusHasEnoughPieces(
+      legsSetBonus,
+      naturalPiecesNeeded,
+      allowedSetBonusHashes,
+      helmetSetBonus,
+      gauntletsSetBonus,
+      chestSetBonus,
+      legsSetBonus,
+      classItemSetBonus,
+    ) ||
+    setBonusHasEnoughPieces(
+      classItemSetBonus,
+      naturalPiecesNeeded,
+      allowedSetBonusHashes,
+      helmetSetBonus,
+      gauntletsSetBonus,
+      chestSetBonus,
+      legsSetBonus,
+      classItemSetBonus,
+    )
+  );
+}
+
+function setBonusHasEnoughPieces(
+  setBonusHash: number | undefined,
+  naturalPiecesNeeded: number,
+  allowedSetBonusHashes: ReadonlySet<number>,
+  helmetSetBonus: number | undefined,
+  gauntletsSetBonus: number | undefined,
+  chestSetBonus: number | undefined,
+  legsSetBonus: number | undefined,
+  classItemSetBonus: number | undefined,
+): boolean {
+  if (setBonusHash === undefined || !allowedSetBonusHashes.has(setBonusHash)) {
+    return false;
+  }
+
+  let matchingPieces = 0;
+
+  if (helmetSetBonus === setBonusHash) {
+    matchingPieces++;
+  }
+  if (gauntletsSetBonus === setBonusHash) {
+    matchingPieces++;
+  }
+  if (chestSetBonus === setBonusHash) {
+    matchingPieces++;
+  }
+  if (legsSetBonus === setBonusHash) {
+    matchingPieces++;
+  }
+  if (classItemSetBonus === setBonusHash) {
+    matchingPieces++;
+  }
+
+  return matchingPieces >= naturalPiecesNeeded;
 }
 
 /**
