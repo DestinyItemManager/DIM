@@ -1,6 +1,8 @@
 ## Next
 
 * Compare opened from an Adept, Timelost, or Harrowed weapon now includes its ordinary version.
+* Improved Stream Deck connection setup with step-by-step instructions and clearer error notifications.
+* Added Stream Deck loadout browsing support and richer item display metadata.
 
 ## 8.149.0 <span class="changelog-date">(2026-11-01)</span>
 
