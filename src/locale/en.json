@@ -1413,24 +1413,30 @@
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {
-    "Authorize": "Connect application",
     "Enable": "Stream Deck Plugin",
     "Error": {
+      "Authorization": "This Stream Deck action was blocked because the connection is not authorized. Click the Stream Deck icon in the toolbar and choose Connect Stream Deck to reconnect.",
       "Body": "There was an error sending data to the Stream Deck plugin. Please contact the plugin developer. {{error}}",
       "Title": "Stream Deck Plugin Error"
     },
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
-    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Setup": {
+      "ApproveStep": "Approve browser requests to open Stream Deck and allow local network access.",
+      "Checking": "Checking whether Stream Deck is connected and authorized…",
+      "ConfirmApproval": "Stream Deck is connected. Complete the approval prompts to finish setup.",
+      "Connect": "Connect Stream Deck",
+      "ConnectStep": "Choose Connect Stream Deck below.",
+      "Help": "Make sure Stream Deck is running and the DIM plugin is installed. In your browser's site permissions, allow local network access for DIM, then try again.",
+      "OpenApp": "Open Stream Deck and install the DIM plugin.",
+      "Retry": "Try again",
+      "Title": "Connect Stream Deck",
+      "outdated": "Your plugin is version {{version}}. Update it to {{minimum}} or newer, then try again.",
+      "unreachable": "DIM could not connect to the Stream Deck plugin on this computer.",
+      "waiting": "Waiting for connection approval…"
+    },
     "Tooltip": {
-      "Application": "Stream Deck Application",
-      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
-      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
-      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
-      "ExtensionIssue": "Extensions Issue",
-      "Plugin": "Plugin",
-      "Title": "DIM Stream Deck Plugin",
-      "Version": "Version:"
+      "Title": "DIM Stream Deck Plugin"
     }
   },
   "StripSockets": {

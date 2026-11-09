@@ -4,7 +4,12 @@ import { currentStoreSelector } from 'app/inventory/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { observe, unobserve } from 'app/store/observerMiddleware';
 import { RootState, ThunkResult } from 'app/store/types';
-import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
+import {
+  streamDeckApprovalRequired,
+  streamDeckChecking,
+  streamDeckConnected,
+  streamDeckDisconnected,
+} from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
 import { errorMessage } from 'app/utils/errors';
@@ -25,14 +30,12 @@ const STREAM_DECK_FARMING_OBSERVER_ID = 'stream-deck-farming-observer';
 const STREAM_DECK_INVENTORY_OBSERVER_ID = 'stream-deck-inventory-observer';
 
 let websocket: WebSocket;
+let connectionAttempt = 0;
+let verificationTimeout: number | undefined;
 
 export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
   if (websocket?.readyState === WebSocket.OPEN) {
-    websocket.send(
-      JSON.stringify({
-        ...msg,
-      }),
-    );
+    websocket.send(JSON.stringify(msg));
   }
 }
 
@@ -74,7 +77,11 @@ function refreshStreamDeck(state: RootState) {
 // stop the websocket's connection with the local stream deck instance
 function stop(): ThunkResult {
   return async (dispatch) => {
+    connectionAttempt++;
+    window.clearTimeout(verificationTimeout);
     websocket?.close();
+    dispatch(unobserve(STREAM_DECK_FARMING_OBSERVER_ID));
+    dispatch(unobserve(STREAM_DECK_INVENTORY_OBSERVER_ID));
     dispatch(streamDeckDisconnected());
   };
 }
@@ -111,7 +118,21 @@ function registerObservers(): ThunkResult {
 // start the websocket's connection with the local stream deck instance
 function start(): ThunkResult {
   return async (dispatch, getState) => {
+    const attempt = ++connectionAttempt;
+    window.clearTimeout(verificationTimeout);
+    const { enabled, auth } = getState().streamDeck;
+    if (!enabled) {
+      return;
+    }
+    if (!auth?.instance || !auth.token) {
+      dispatch(streamDeckApprovalRequired(true));
+    }
+    dispatch(streamDeckChecking());
+    const instance = auth?.instance || globalThis.crypto.randomUUID();
     const initWS = () => {
+      if (attempt !== connectionAttempt) {
+        return;
+      }
       const state = getState();
 
       // if settings/manifest/profile are not loaded retry after 1s
@@ -136,22 +157,29 @@ function start(): ThunkResult {
         websocket?.close();
       }
 
-      // if the plugin is enabled but the auth is not set stop
-      if (!auth) {
-        return;
-      }
-
       // try to connect to the stream deck local instance
-      websocket = new WebSocket(`ws://localhost:9120/${auth.instance}`);
+      websocket = new WebSocket(`ws://localhost:9120/${instance}`, 'dim-status');
 
+      let observing = false;
       websocket.onopen = () => {
+        if (attempt !== connectionAttempt) {
+          return;
+        }
         // update the connection status
         dispatch(streamDeckConnected());
-        // register the observers
-        dispatch(registerObservers());
+        // Older plugins may not send a status response. Never assume authorization.
+        verificationTimeout = window.setTimeout(() => {
+          if (attempt === connectionAttempt) {
+            dispatch(streamDeckApprovalRequired(true));
+          }
+        }, 5000);
       };
 
       websocket.onclose = () => {
+        if (attempt !== connectionAttempt) {
+          return;
+        }
+        window.clearTimeout(verificationTimeout);
         dispatch(streamDeckDisconnected());
         // if the plugin is still enabled and the websocket is closed
         if (enabled && websocket.readyState === WebSocket.CLOSED) {
@@ -164,12 +192,20 @@ function start(): ThunkResult {
       };
 
       websocket.onmessage = ({ data }) => {
-        dispatch(
-          handleStreamDeckMessage(JSON.parse(data as string) as StreamDeckMessage, auth.token),
-        );
+        if (attempt !== connectionAttempt) {
+          return;
+        }
+        window.clearTimeout(verificationTimeout);
+        const message = JSON.parse(data as string) as StreamDeckMessage;
+        dispatch(handleStreamDeckMessage(message, auth?.token));
+        if (auth?.token && message.token === auth.token && !observing) {
+          observing = true;
+          dispatch(registerObservers());
+        }
       };
 
-      websocket.onerror = () => websocket.close();
+      const socket = websocket;
+      socket.onerror = () => socket.close();
     };
 
     initWS();
