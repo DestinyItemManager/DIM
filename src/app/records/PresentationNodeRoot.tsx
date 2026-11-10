@@ -34,8 +34,6 @@ interface Props {
 const plugSetCollections = [
   // Emotes
   { hash: 2860926541, displayItem: 3960522253 },
-  // Projections
-  { hash: 2540258701, displayItem: 2544954628 },
 ];
 
 /**
