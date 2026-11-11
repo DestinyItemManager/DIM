@@ -50,6 +50,16 @@
   justify-content: center;
 }
 
+.tag {
+  composes: centered;
+  // Each cell is its own stacking context, so a tag menu opened from one row would
+  // be painted underneath the cells of the rows below it. Lift the cell while its
+  // menu is open, but keep it below the sticky header and icon cells.
+  &:has([aria-expanded='true']) {
+    z-index: table.$content-cells + 1;
+  }
+}
+
 .dmg {
   composes: centered;
   padding-top: calc(var(--item-size) * 0.75 * 0.5 - 2px);
