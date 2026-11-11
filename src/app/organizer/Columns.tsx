@@ -7,7 +7,6 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import TagIcon from 'app/inventory/TagIcon';
 import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
@@ -15,6 +14,7 @@ import { isHarmonizable } from 'app/inventory/store/deepsight';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
+import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
@@ -378,10 +378,11 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      className: styles.centered,
+      className: styles.tag,
       headerClassName: styles.centered,
       value: (item) => getTag(item) ?? '',
-      cell: (value) => value && <TagIcon tag={value} />,
+      cell: (_val, item) =>
+        item.taggable && <ItemTagSelector item={item} hideKeys hideButtonLabel />,
       sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
       csv: (value) => ['Tag', value || undefined],
