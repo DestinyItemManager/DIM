@@ -1380,24 +1380,30 @@
     "Usage": "このデバイス上でDIMが使用中の容量は {{usage, humanBytes}}です。(空き容量:{{quota, humanBytes}})\nBungie.net からダウンロードしたDestinyのアイテムデータも含みます。"
   },
   "StreamDeck": {
-    "Authorize": "アプリケーションに接続",
     "Enable": "Stream Deck プラグイン",
     "Error": {
+      "Authorization": "This Stream Deck action was blocked because the connection is not authorized. Click the Stream Deck icon in the toolbar and choose Connect Stream Deck to reconnect.",
       "Body": "Stream Deck プラグインへのデータ送信中にエラーが発生しました。プラグイン開発者に報告のご協力をお願いいたします。 {{error}}",
       "Title": "Stream Deck プラグイン エラー"
     },
     "FinePrint": "DIM Stream Deck プラグインとの接続を有効にします。 このプラグインは、DIM開発チームとは別のチームによるプロジェクトです。",
     "Install": "プラグインをインストールする",
-    "MissingAuthorization": "DIM に接続するには、Stream Deck アプリケーションを認証する必要があります。設定を開き、\"アプリケーションに接続\"をクリックします。",
+    "Setup": {
+      "ApproveStep": "Approve browser requests to open Stream Deck and allow local network access.",
+      "Checking": "Checking whether Stream Deck is connected and authorized…",
+      "ConfirmApproval": "Stream Deck is connected. Complete the approval prompts to finish setup.",
+      "Connect": "Connect Stream Deck",
+      "ConnectStep": "Choose Connect Stream Deck below.",
+      "Help": "Make sure Stream Deck is running and the DIM plugin is installed. In your browser's site permissions, allow local network access for DIM, then try again.",
+      "OpenApp": "Open Stream Deck and install the DIM plugin.",
+      "Retry": "Try again",
+      "Title": "Connect Stream Deck",
+      "outdated": "Your plugin is version {{version}}. Update it to {{minimum}} or newer, then try again.",
+      "unreachable": "DIM could not connect to the Stream Deck plugin on this computer.",
+      "waiting": "Waiting for connection approval…"
+    },
     "Tooltip": {
-      "Application": "Stream Deck アプリケーション",
-      "AuthRequired": "このボタンをクリックするか、設定から\"アプリケーションに接続\"をクリックします。",
-      "Error": "お使いのStream Deck プラグインはサポートが終了したため、最新バージョンにアップデートしてください。利用するには以下のバージョンが必要です：",
-      "ErrorConnection": "最新バージョンでも利用できない場合は、ブラウザの拡張機能や設定などでブロックしていないか確認してください。",
-      "ExtensionIssue": "拡張機能の問題",
-      "Plugin": "プラグイン",
-      "Title": "DIM Stream Deck プラグイン",
-      "Version": "バージョン:"
+      "Title": "DIM Stream Deck プラグイン"
     }
   },
   "StripSockets": {
