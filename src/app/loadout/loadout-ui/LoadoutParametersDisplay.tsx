@@ -8,8 +8,16 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { SetPerkIcon } from 'app/item-popup/SetBonus';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
+import { ANY_SET_BONUS, getSpecificSetBonusHashes } from 'app/loadout-builder/types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, equalsIcon, greaterThanIcon, lessThanIcon, searchIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  asteriskIcon,
+  equalsIcon,
+  greaterThanIcon,
+  lessThanIcon,
+  searchIcon,
+} from 'app/shell/icons';
 import clsx from 'clsx';
 import { MAX_STAT } from '../known-values';
 import { includesRuntimeStatMods } from '../stats';
@@ -150,26 +158,53 @@ function StatConstraintRangeExpression({ statConstraint }: { statConstraint: Sta
 
 function SetBonuses({ setBonuses }: { setBonuses: SetBonusCounts }) {
   const defs = useD2Definitions()!;
-  return Object.keys(setBonuses).map((setHash) => {
-    const setDef = defs.EquipableItemSet.get(Number(setHash));
-    const setCount = setBonuses[Number(setHash)] ?? 0;
-    return (
-      !setDef?.redacted && (
-        <div key={setHash} className={styles.setBonus}>
-          {setDef.setPerks.map((p) => {
-            if (!(p && setCount >= p.requiredSetCount)) {
-              return null;
-            }
-            const perkDef = defs.SandboxPerk.get(p.sandboxPerkHash);
-            return (
-              <div key={p.sandboxPerkHash} className={styles.perk}>
-                <SetPerkIcon perkDef={perkDef} />
-                <span>{perkDef.displayProperties.name}</span>
-              </div>
-            );
-          })}
+  const anySetBonusCount = setBonuses[ANY_SET_BONUS];
+
+  return (
+    <>
+      {anySetBonusCount !== undefined && (
+        <div className={styles.setBonus}>
+          <div className={styles.perk}>
+            <span className={styles.anySetBonusIcon}>
+              <AppIcon icon={asteriskIcon} />
+            </span>
+            <span>
+              {t('LoadoutBuilder.AnySetBonusSelection', {
+                pieces: anySetBonusCount,
+              })}
+            </span>
+          </div>
         </div>
-      )
-    );
-  });
+      )}
+
+      {getSpecificSetBonusHashes(setBonuses).map((setHash) => {
+        const setDef = defs.EquipableItemSet.get(setHash);
+
+        if (!setDef || setDef.redacted) {
+          return null;
+        }
+
+        const setCount = setBonuses[setHash] ?? 0;
+
+        return (
+          <div key={setHash} className={styles.setBonus}>
+            {setDef.setPerks.map((perk) => {
+              if (setCount < perk.requiredSetCount) {
+                return null;
+              }
+
+              const perkDef = defs.SandboxPerk.get(perk.sandboxPerkHash);
+
+              return (
+                <div key={perk.sandboxPerkHash} className={styles.perk}>
+                  <SetPerkIcon perkDef={perkDef} />
+                  <span>{perkDef.displayProperties.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </>
+  );
 }
