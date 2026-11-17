@@ -39,6 +39,7 @@ interface CssExports {
   'stats': string;
   'statsHeader': string;
   'table': string;
+  'tag': string;
   'talentGrid': string;
   'toolbar': string;
 }
