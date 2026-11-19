@@ -1,6 +1,8 @@
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t, tl } from 'app/i18next-t';
 import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
+import { getCraftedSocket } from 'app/inventory/store/crafted';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
@@ -10,7 +12,7 @@ import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
-import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
+import { getItemCurrentKillTrackerInfo, getItemKillTrackers, isD1Item } from 'app/utils/item-utils';
 import { SingleVendorSheetContext } from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -55,7 +57,14 @@ export default function ItemDetails({
 
   const ownerStore = useSelector((state: RootState) => getStore(storesSelector(state), item.owner));
 
-  const killTrackerInfo = getItemKillTrackerInfo(item);
+  const killTrackerInfo = getItemCurrentKillTrackerInfo(item);
+  const killTrackers = getItemKillTrackers(item);
+  const shapedDateObjective =
+    item.crafted &&
+    item.craftedInfo &&
+    getCraftedSocket(item)?.plugged?.plugObjectives.find(
+      (o) => o.progress === item.craftedInfo?.craftedDate,
+    );
 
   const showVendor = use(SingleVendorSheetContext);
 
@@ -103,15 +112,40 @@ export default function ItemDetails({
         </div>
       )}
 
-      {defs.isDestiny2 && <WeaponCraftedInfo item={item} className="crafted-progress" />}
+      <PressTip
+        tooltip={
+          (shapedDateObjective || killTrackers.length > 1) && (
+            <>
+              {shapedDateObjective && <Objective objective={shapedDateObjective} />}
+              {shapedDateObjective && killTrackers.length > 1 && <hr />}
+              {killTrackers.length > 1 &&
+                killTrackers.map((kt) => (
+                  <KillTrackerInfo
+                    key={kt?.trackerDef.hash}
+                    tracker={kt}
+                    showTextLabel
+                    className="masterwork-progress"
+                  />
+                ))}
+            </>
+          )
+        }
+        placement="bottom"
+      >
+        {defs.isDestiny2 && <WeaponCraftedInfo item={item} className="crafted-progress" />}
 
-      {defs.isDestiny2 && <WeaponDeepsightInfo item={item} />}
+        {defs.isDestiny2 && <WeaponDeepsightInfo item={item} />}
 
-      {defs.isDestiny2 && <WeaponCatalystInfo item={item} />}
+        {defs.isDestiny2 && <WeaponCatalystInfo item={item} />}
 
-      {killTrackerInfo && defs.isDestiny2 && (
-        <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />
-      )}
+        {killTrackerInfo && defs.isDestiny2 && (
+          <KillTrackerInfo
+            tracker={killTrackerInfo}
+            showTextLabel
+            className="masterwork-progress"
+          />
+        )}
+      </PressTip>
 
       {item.classified && <div className="item-details">{t('ItemService.Classified2')}</div>}
 
