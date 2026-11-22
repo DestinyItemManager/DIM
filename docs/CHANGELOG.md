@@ -1,5 +1,7 @@
 ## Next
 
+* Added Any 2-Piece and Any 4-Piece set bonus support to Loadout Optimizer.
+
 ## 8.151.0 <span class="changelog-date">(2026-11-15)</span>
 
 ## 8.150.0 <span class="changelog-date">(2026-11-08)</span>
