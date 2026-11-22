@@ -1,4 +1,8 @@
-import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  SetBonusCounts,
+  StatConstraint,
+} from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -159,6 +163,18 @@ export const LOCKED_EXOTIC_NO_EXOTIC = -1;
  * Special value for lockedExoticHash indicating the user would like an exotic, but doesn't care which one.
  */
 export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
+/**
+ * Special SetBonusCounts key indicating that any armor set with the
+ * associated required piece count is acceptable.
+ */
+export const ANY_SET_BONUS = -1;
+/** Return only real DestinyEquipableItemSetDefinition hashes. */
+export function getSpecificSetBonusHashes(setBonuses: SetBonusCounts): number[] {
+  return Object.keys(setBonuses)
+    .map(Number)
+    .filter((setBonusHash) => setBonusHash !== ANY_SET_BONUS)
+    .sort((a, b) => a - b);
+}
 /**
  * The minimum armour energy value used in the LO Builder
  */

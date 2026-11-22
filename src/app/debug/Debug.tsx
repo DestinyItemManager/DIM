@@ -2,7 +2,7 @@ import Account from 'app/accounts/Account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { BungieError, HttpStatusError } from 'app/bungie-api/http-client';
 import { Token, getToken } from 'app/bungie-api/oauth-tokens';
-import { clarityCharacterStatsSelector, clarityDescriptionsSelector } from 'app/clarity/selectors';
+import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { DimAuthToken, getToken as getDimApiToken } from 'app/dim-api/dim-api-helper';
 import {
   apiPermissionGrantedSelector,
@@ -54,7 +54,6 @@ export default function Debug() {
   const wishList = useSelector(wishListsSelector);
   const streamDeck = useSelector(streamDeckSelector);
   const clarityDescriptions = useSelector(clarityDescriptionsSelector);
-  const clarityCharacterStats = useSelector(clarityCharacterStatsSelector);
 
   useLoadStores(currentAccount);
 
@@ -261,9 +260,6 @@ export default function Debug() {
           <h3>Clarity</h3>
           <p>
             <b>Descriptions loaded?:</b> {JSON.stringify(Boolean(clarityDescriptions))}
-          </p>
-          <p>
-            <b>Character stats loaded?:</b> {JSON.stringify(Boolean(clarityCharacterStats))}
           </p>
         </section>
 

@@ -15,7 +15,7 @@ function Socials() {
         <div key={account} className={styles.timeline}>
           <iframe
             allowFullScreen
-            sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox"
+            sandbox="allow-top-navigation-by-user-activation allow-scripts allow-popups allow-popups-to-escape-sandbox"
             src={`https://www.mastofeed.com/apiv2/feed?userurl=${encodeURIComponent(
               account,
             )}&theme=dark&size=100&header=false&replies=false&boosts=true`}

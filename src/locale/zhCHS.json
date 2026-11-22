@@ -1380,24 +1380,30 @@
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品数据库。"
   },
   "StreamDeck": {
-    "Authorize": "连接应用程序",
     "Enable": "直播控制台插件",
     "Error": {
+      "Authorization": "此 Stream Deck 操作已被阻止，因为连接未获得授权。点击工具栏中的 Stream Deck 图标，并选择 “Connect Stream Deck” 以重新连接。",
       "Body": "在向 Stream Deck 插件传输数据时出现错误。请联系插件开发者。{{error}}",
       "Title": "Stream Deck 插件错误"
     },
     "FinePrint": "启用与DIM Stream Deck插件的连接。这个插件是一个独立的项目，既不是由DIM团队编写的，也不是由DIM团队支持的。",
     "Install": "安装插件",
-    "MissingAuthorization": "您必须授权 Stream Deck 应用程序连接 DIM。请在设置中点击“连接应用程序”。",
+    "Setup": {
+      "ApproveStep": "批准浏览器唤起 Stream Deck 的请求并开启本地网络访问权限。",
+      "Checking": "正在检测 Stream Deck 是否已连接并授权……",
+      "ConfirmApproval": "Stream Deck 已连接，请完成授权提示来完成设置。",
+      "Connect": "连接 Stream Deck",
+      "ConnectStep": "请选择下方连接 Stream Deck。",
+      "Help": "确认 Stream Deck 正在运行，并且已安装 DIM 插件。在浏览器的网站权限设置里，允许 DIM 访问本地网络，然后再试一次。",
+      "OpenApp": "打开 Stream Deck 并安装 DIM 插件。",
+      "Retry": "重试",
+      "Title": "连接 Stream Deck",
+      "outdated": "你当前插件版本为 {{version}}，请更新至 {{minimum}} 或更高版本后重试。",
+      "unreachable": "DIM 无法连接到此电脑上的 Stream Deck 插件。",
+      "waiting": "正在等待连接授权……"
+    },
     "Tooltip": {
-      "Application": "Stream Deck 应用程序",
-      "AuthRequired": "点击此按钮或在设置中点击“连接应用程序”。",
-      "Error": "您的 Stream Deck 插件已不受支持，请更新到最新版本。此插件的最低版本要求：",
-      "ErrorConnection": "如果您已经在使用最新版本，请检查某些浏览器扩展是否正在阻止连接。",
-      "ExtensionIssue": "扩展问题",
-      "Plugin": "插件",
-      "Title": "DIM Stream Deck 插件",
-      "Version": "版本："
+      "Title": "DIM Stream Deck 插件"
     }
   },
   "StripSockets": {
