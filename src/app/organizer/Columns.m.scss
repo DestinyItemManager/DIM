@@ -58,6 +58,18 @@
   &:has([aria-expanded='true']) {
     z-index: table.$content-cells + 1;
   }
+
+  // The tag selector is icon-only here: drop the label spacing so the icon sits
+  // centered in an evenly padded button.
+  button {
+    width: auto;
+    justify-content: center;
+    padding: 4px 6px;
+
+    :global(.app-icon) {
+      margin-right: 0;
+    }
+  }
 }
 
 .dmg {
