@@ -29,7 +29,7 @@ import {
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
-import { EFFECTIVE_MAX_STAT, MAX_STAT } from 'app/loadout/known-values';
+import { MAX_STAT } from 'app/loadout/known-values';
 import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
@@ -384,7 +384,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           shuffle(
             armorStats.map((s) => ({
               statHash: s,
-              minStat: Math.floor(Math.random() * EFFECTIVE_MAX_STAT),
+              minStat: Math.floor(Math.random() * MAX_STAT),
               maxStat: MAX_STAT,
               ignored: false,
             })),
