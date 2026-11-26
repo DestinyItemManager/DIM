@@ -33,6 +33,7 @@ describe('autocompleteTermSuggestions', () => {
     ['not(', 'Expected failure'],
     ['memento:', 'memento:any'],
     ['foo memento:', 'foo memento:any'],
+    ['dupe:stats shot', 'dupe:stats is:shotgun'],
   ];
 
   const plainStringCases: [query: string, mockCandidate: string][] = [['jotu', 'jötunn']];
