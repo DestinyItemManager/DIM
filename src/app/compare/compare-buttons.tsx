@@ -236,8 +236,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     </PressTip>
   );
   const breakerQuery = exampleItem.breakerType
-    ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      `breaker:${breakerTypeNames[exampleItem.breakerType.hash as BreakerTypeHashes]}`
+    ? `breaker:${breakerTypeNames[exampleItem.breakerType.hash as BreakerTypeHashes]}`
     : '';
 
   const slotIcon = <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />;
