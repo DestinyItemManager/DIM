@@ -3,8 +3,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
 
-import { useHeightFromViewportBottom } from 'app/utils/hooks';
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
+import { CSSProperties, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as styles from './Select.m.scss';
 import { usePopper } from './usePopper';
 
@@ -79,6 +78,26 @@ export default function Select<T>({
   );
   const [dropdownHeight, setDropdownHeight] = useState<number | undefined>();
 
+  // Size the menu to the larger side of the button at the moment it opens, so the
+  // popper can flip above the button instead of squeezing into the space below it.
+  // This is measured on open rather than on mount because the button may have moved
+  // (e.g. inside a scrolling table) since it was rendered.
+  useLayoutEffect(() => {
+    if (!isOpen || !buttonRef.current) {
+      return;
+    }
+    const { top, bottom } = buttonRef.current.getBoundingClientRect();
+    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+    const headerHeight =
+      parseInt(document.documentElement.style.getPropertyValue('--header-height'), 10) || 0;
+    const itemHeight = 28;
+    const padding = 10;
+    const below = viewportHeight - bottom - padding;
+    const above = top - headerHeight - padding;
+    const available = Math.floor(Math.max(below, above) / itemHeight) * itemHeight;
+    setDropdownHeight(Math.max(itemHeight, available));
+  }, [isOpen]);
+
   usePopper(
     {
       contents: menuRef,
@@ -86,7 +105,7 @@ export default function Select<T>({
       placement: 'bottom-start',
       offset: 2,
     },
-    [isOpen, items],
+    [isOpen, items, dropdownHeight],
   );
 
   if (!selectedItem) {
@@ -103,8 +122,6 @@ export default function Select<T>({
       setDropdownWidth(width);
     }
   }, [dropdownWidth, maxButtonWidth, maxDropdownWidth]);
-
-  useHeightFromViewportBottom(buttonRef, setDropdownHeight, 28, true);
 
   let buttonStyle: CSSProperties | undefined;
 
