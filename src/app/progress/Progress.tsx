@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import Dungeons from './Dungeons';
 import { Event, PresentationNodeChallenges } from './Event';
 import Milestones from './Milestones';
 import Pathfinder from './Pathfinder';
@@ -87,6 +88,9 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const raidNode = defs.PresentationNode.get(RAID_NODE);
   const raidTitle = raidNode?.displayProperties.name;
 
+  const dungeonTitle = t('Progress.Dungeons');
+  const hasCharacterActivities = Boolean(profileInfo.characterActivities?.data?.[selectedStore.id]);
+
   const eventCardHash = profileInfo.profile.data?.activeEventCardHash;
   const activeEventCard =
     eventCardHash !== undefined ? defs.EventCard.getOptional(eventCardHash) : undefined;
@@ -135,6 +139,10 @@ export default function Progress({ account }: { account: DestinyAccount }) {
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
     raidNode && { id: 'raids', title: raidTitle },
+    hasCharacterActivities && {
+      id: 'dungeons',
+      title: dungeonTitle,
+    },
   ]);
 
   return (
@@ -258,6 +266,16 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               <CollapsibleTitle title={raidTitle} sectionId="raids">
                 <div className="progress-row">
                   <Raids store={selectedStore} profileInfo={profileInfo} />
+                </div>
+              </CollapsibleTitle>
+            </section>
+          )}
+
+          {hasCharacterActivities && (
+            <section id="dungeons">
+              <CollapsibleTitle title={dungeonTitle} sectionId="dungeons">
+                <div className="progress-row">
+                  <Dungeons store={selectedStore} profileInfo={profileInfo} />
                 </div>
               </CollapsibleTitle>
             </section>

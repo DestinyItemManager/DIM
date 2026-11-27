@@ -79,6 +79,7 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.Characters,
     DestinyComponentType.CharacterInventories,
     DestinyComponentType.CharacterProgressions,
+    DestinyComponentType.CharacterActivities,
     DestinyComponentType.CharacterEquipment,
     // TODO: consider loading less item data, and then loading item details on click? Makes searches hard though.
     DestinyComponentType.ItemInstances,

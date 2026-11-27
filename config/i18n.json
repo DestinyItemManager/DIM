@@ -1170,6 +1170,8 @@
   "Progress": {
     "Bounties": "Bounties",
     "CrucibleRank": "Ranks",
+    "DungeonWeeklyChallenge": "Weekly challenge",
+    "Dungeons": "Dungeons",
     "RewardPassPrestigeRank": "Prestige Rank {{rank}}",
     "RewardPassEndsIn": "Reward Pass ends in ",
     "Items": "Quest Items",
