@@ -324,6 +324,7 @@ export const ENCOUNTERS_COMPLETED_OBJECTIVE = 1579649637;
 
 export const ARMSMASTER_ACTIVITY_MODIFIER = 3704166961;
 
+export const DUNGEON_ACTIVITY_TYPE_HASH = 608898761;
 export const RAID_ACTIVITY_TYPE_HASH = 2043403989;
 
 // milestones to manually mark as raid, because they don't adequately identify themselves in defs
