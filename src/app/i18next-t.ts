@@ -11,7 +11,7 @@ export const t = (
     | {
         [arg: string]: number | string;
       },
-): string => originalT(key, opts);
+): string => (opts ? originalT(key, opts) : originalT(key));
 
 /**
  * This is a "marker function" that tells our i18next-scanner that you will translate this string later (tl = translate later).
