@@ -20,6 +20,16 @@ import zlib from 'zlib';
 import csp from './content-security-policy.ts';
 import { makeFeatureFlags } from './feature-flags.ts';
 
+// ts-loader reports diagnostics by calling webpack 5's `module.addError`, which
+// rspack's Module doesn't implement, so any type error crashes the build with
+// "module.addError is not a function". ts-loader also pushes the same errors onto
+// `compilation.errors` (which rspack does support), so a no-op is enough to let
+// the real errors surface.
+const rspackModulePrototype = rspack.Module.prototype as { addError?: (error: Error) => void };
+rspackModulePrototype.addError ??= () => {
+  /* errors are reported via compilation.errors */
+};
+
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 import packageJson from '../package.json' with { type: 'json' };
