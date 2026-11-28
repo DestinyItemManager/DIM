@@ -13,7 +13,7 @@ exports[`autocompleteTermSuggestions autocomplete within query for plain string 
     "query": {
       "body": "name:"jötunn"",
       "fullText": "name:"jötunn"",
-      "helpText": undefined,
+      "helpText": "",
     },
     "type": 3,
   },
